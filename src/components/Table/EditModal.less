@@ -1,0 +1,31 @@
+
+.modal {
+
+  :global {
+    .ant-modal-body {
+      height: calc(~"100vh - 200px");
+      padding-bottom: 0;
+      padding-right: 48px;
+    }
+
+    .ant-form-item {
+      display: flex;
+
+      .ant-form-item-label {
+        width: 102px;
+      }
+
+      .ant-form-item-control-wrapper {
+        flex: 1;
+
+        .ant-form-item-children {
+          display: block;
+
+          .ant-calendar-picker {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
