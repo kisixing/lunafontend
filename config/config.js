@@ -69,7 +69,8 @@ export default {
   },
   proxy: {
     '/api': {
-      target: 'http://192.168.124.17:8080/',
+      // 具体的后台地址
+      target: 'http://127.0.0.1:7001/',
       changeOrigin: true,
       // pathRewrite: { '^/api': '' },
     },

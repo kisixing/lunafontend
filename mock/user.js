@@ -72,6 +72,15 @@ export default {
       address: 'Sidney No. 1 Lake Park',
     },
   ],
+  'POST /api/authenticate': (req, res) => {
+    const { password, username } = req.body;
+    res.send({
+      status: 'ok',
+      username,
+      currentAuthority: 'admin',
+      id_token: 'sdfswewdwe__werwer787xxx_sdfsfsf_',
+    });
+  },
   'POST /api/login/account': (req, res) => {
     const { password, username, type } = req.body;
     if (password === 'admin' && username === 'admin') {
