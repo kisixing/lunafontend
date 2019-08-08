@@ -73,7 +73,7 @@ export default {
     },
   ],
   'POST /api/authenticate': (req, res) => {
-    const { password, username } = req.body;
+    const { username } = req.body;
     res.send({
       status: 'ok',
       username,

@@ -1,4 +1,4 @@
-import mockjs from 'mockjs';
+// import mockjs from 'mockjs';
 
 function getFakeCaptcha(req, res) {
   return res.json('captcha-xxx');
