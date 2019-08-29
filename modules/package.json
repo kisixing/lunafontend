@@ -1,0 +1,27 @@
+{
+  "name": "root",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "clean": "lerna clean",
+    "build:docs": "node ./scripts/docs.js build -i docs -o docs",
+    "start": "node ./scripts/docs.js start -i docs"
+  },
+  "dependencies": {
+    "@alifd/next": "^1.13.1",
+    "@uform/antd": "^0.4.0-beta.0",
+    "@uform/next": "^0.4.0-beta.0",
+    "@uform/printer": "^0.4.0-beta.0",
+    "antd": "^3.22.2",
+    "doc-scripts": "^1.7.29",
+    "fs-extra": "^8.1.0",
+    "lerna": "^3.16.4",
+    "react": "^16.9.0",
+    "react-site-renderer": "^0.1.37",
+    "rxjs": "^6.5.2",
+    "tsconfig-paths-webpack-plugin": "^3.2.0"
+  }
+}
