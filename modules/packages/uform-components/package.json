@@ -1,11 +1,11 @@
 {
-  "name": "jsonschema-form",
+  "name": "uform-components",
   "version": "1.0.0",
   "description": "> TODO: description",
   "author": "lxf <lixiaofan.dev@gmail.com>",
   "homepage": "https://github.com/kisixing/LUNA_FontEnd#readme",
   "license": "ISC",
-  "main": "lib/jsonschema-form.js",
+  "main": "lib/uform-components.js",
   "directories": {
     "lib": "lib",
     "test": "__tests__"
@@ -18,8 +18,7 @@
     "url": "git+https://github.com/kisixing/LUNA_FontEnd.git"
   },
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1",
-    "build": "tsc --declaration"
+    "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "bugs": {
     "url": "https://github.com/kisixing/LUNA_FontEnd/issues"
@@ -29,7 +28,6 @@
     "antd": "^3.14.1",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0",
-    "@uform/antd": "^0.4.0-beta.0",
-    "@uform/printer": "^0.4.0-beta.0"
+    "@uform/antd": "^0.4.0-beta.0"
   }
 }

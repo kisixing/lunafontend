@@ -2,6 +2,7 @@ const path = require('path');
 const fs = require('fs-extra');
 const { command } = require('doc-scripts');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+
 const HEAD_HTML = `
 <script>
 window.codeSandBoxDependencies = {
@@ -39,11 +40,12 @@ const createDocs = async () => {
       return {
         ...buf,
         [`@uform/${name}`]: `${_path}/src`,
+        [`@lianmed/${name}`]: `${_path}/src`,
       };
     }, {});
   command(
     {
-      title: 'UForm',
+      title: '莲印医疗',
       renderer: path.resolve(__dirname, './doc-renderer.js'),
       header: HEAD_HTML,
       footer: FOOTER_HTML,
@@ -70,9 +72,8 @@ const createDocs = async () => {
               },
             ],
           };
-        } else {
-          return rule;
         }
+        return rule;
       });
 
       Object.assign(webpackConfig.resolve.alias, {

@@ -1,60 +1,38 @@
-- 开发指南
-   - [UForm 是什么?1](./Tutorials/UForm是什么.md)
-   - [UForm 原理](./Tutorials/UForm原理.md)
-   - [快速入门](./Tutorials/快速入门.md)
-   - [Form Schema 扩展规范](./Tutorials/FormSchema扩展规范.md)
-   - [常见问题](./Tutorials/Questions.md)
-- API 文档
-   - @uform/next or antd
-     - [<SchemaForm/>](./API/SchemaForm.md)
-     - [<FormButtonGroup/>](./API/FormButtonGroup.md)
-     - [<Submit/>](./API/Submit.md)
-     - [<Reset/>](./API/Reset.md)
-     - [<FormLayout/>](./API/FormLayout.md)
-     - [<FormCard/>](./API/FormCard.md)
-     - [<FormBlock/>](./API/FormBlock.md)
-     - [<FormItemGrid/>](./API/FormItemGrid.md)
-     - [<FormSlot/>](./API/FormSlot.md)
-     - [<FormTextBox/>](./API/FormTextBox.md)
-   - @uform/react
-     - [<SchemaForm/>](./API/SchemaForm_React.md)
-     - [<Field/>](./API/Field_React.md)
-     - [<FormProvider/>](./API/FormProvider.md)
-     - [<FormConsumer/>](./API/FormConsumer.md)
-     - [registerFormField](./API/registerFormField.md)
-     - [registerFormFields](./API/registerFormFields.md)
-     - [registerFormWrapper](./API/registerFormWrapper.md)
-     - [registerFieldMiddleware](./API/registerFieldMiddleware.md)
-     - [createVirtualBox](./API/createVirtualBox.md)
-     - [connect](./API/connect.md)
-     - [createFormActions](./API/createFormActions.md)
-     - [createAsyncFormActions](./API/createAsyncFormActions.md)
-   - @uform/core
-     - [createForm](./API/createForm.md)
-     - [setValidationLocale](./API/setValidationLocale.md)
-     - [setValidationLanguage](./API/setValidationLanguage.md)
-     - [FormPath](./API/FormPath.md)
-- 场景案例
-  - Fusion Next
-     - [简单场景](./Examples/next/Sample.md)
-     - [表单详情](./Examples/next/Detail.md)
-     - [表单 List](./Examples/next/List.md)
-     - [表单布局](./Examples/next/Layout.md)
-     - [表单联动](./Examples/next/Relations.md)
-     - [表单校验](./Examples/next/Validation.md)
-     - [内外通讯联动](./Examples/next/Actions.md)
-     - [国际化](./Examples/next/International.md)
-     - [解构字段数据](./Examples/next/Deconstruction.md)
-  - Ant Design
-     - [简单场景](./Examples/antd/Sample.md)
-     - [表单详情](./Examples/antd/Detail.md)
-     - [表单 List](./Examples/antd/List.md)
-     - [表单布局](./Examples/antd/Layout.md)
-     - [表单联动](./Examples/antd/Relations.md)
-     - [表单校验](./Examples/antd/Validation.md)
-     - [内外通讯联动](./Examples/antd/Actions.md)
-     - [国际化](./Examples/antd/International.md)
-     - [解构字段数据](./Examples/next/Deconstruction.md)
-- [知乎专栏](https://zhuanlan.zhihu.com/uform)
-- [GitHub](https://github.com/alibaba/uform)
+
+- 核心功能组件
+   - 表单组件
+     - [配置](./表单组件/配置.md)
+   - 查询表格
+     - [示例](./README.md)
+   - 编辑类表格
+     - [示例](./README.md)
+   - 表单编辑器
+     - [示例](./README.md)
+
+- 整体框架功能
+   - 权限管理框架
+     - [示例](./README.md)
+   - 基本设置
+     - [示例](./README.md)
+   - 文档框架
+     - [示例](./README.md)
+   - 显示框架
+     - [示例](./README.md)
+- 业务专用组件
+   - 表单容器
+     - [示例](./业务专用组件/表单容器.md)
+   - 支持备注复选框组件
+     - [示例](./README.md)
+   - 医嘱组件
+     - [示例](./README.md)
+   - 基本曲线组件
+     - [示例](./README.md)
+   - 打印预览
+     - [示例](./README.md)
+   - 树状病历组件
+     - [示例](./README.md)
+
+
+
+  
 <!--- [PlayGround DEMO](../packages/builder/src/demo/index-1-x.js)-->
