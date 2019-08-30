@@ -106,6 +106,13 @@ export default function connectAdvanced({
 
     function ConnectFunction(props) {
       const _props = { ...props, saveActions, submit };
+      top.onbeforeunload = e => {
+        return false;
+        if (all.some(_ => _.getFormState().dirty)) {
+          return false;
+        }
+      };
+
       return <WrappedComponent {..._props} />;
     }
 
