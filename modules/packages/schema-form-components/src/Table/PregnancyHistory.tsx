@@ -162,7 +162,6 @@ function EditableTable(props: {
         }}
         bordered
         dataSource={data}
-        rowClassName="editable-row"
       >
         {columnData.map((d, index) => {
           if (!d.children) {

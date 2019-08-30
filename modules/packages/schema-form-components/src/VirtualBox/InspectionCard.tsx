@@ -14,7 +14,7 @@ export default createVirtualBox('inspection_card', (props: A) => {
         fontSize: '14px',
         lineHeight: '2',
         border: '1px solid #ccc',
-        marginBottom: '16px',
+        margin: '16px 0',
         borderRadius: '2px',
       }}
     >

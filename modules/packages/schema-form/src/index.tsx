@@ -2,9 +2,8 @@
 /* eslint-disable no-console */
 import React from 'react';
 import { SchemaForm, FormButtonGroup, Submit, Reset, createFormActions } from '@uform/antd';
-import Printer from '@uform/printer';
 import 'antd/dist/antd.css';
-
+import '@lianmed/schema-form-components';
 export default ({
   schema,
   initialValues,
@@ -38,10 +37,7 @@ export default ({
       }}
       {...props}
     >
-      <FormButtonGroup offset={7}>
-        <Submit />
-        <Reset />
-      </FormButtonGroup>
+      {props.children}
     </SchemaForm>
   );
 };

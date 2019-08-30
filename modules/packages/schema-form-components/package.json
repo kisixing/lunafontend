@@ -1,11 +1,11 @@
 {
-  "name": "uform-components",
+  "name": "@lianmed/schema-form-components",
   "version": "1.0.0",
   "description": "> TODO: description",
   "author": "lxf <lixiaofan.dev@gmail.com>",
   "homepage": "https://github.com/kisixing/LUNA_FontEnd#readme",
   "license": "ISC",
-  "main": "lib/uform-components.js",
+  "main": "lib/schema-form-components.js",
   "directories": {
     "lib": "lib",
     "test": "__tests__"
