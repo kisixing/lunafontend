@@ -1,3 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 require("./VirtualBox/InspectionCard");
+require("./ID");
+require("./PastHistory");
+require("./Enums");
+require("./SmokingAndDrinking");
+require("./Table");
+require("./common");
+require("./BloodPressure");
+require("./Abnormal");

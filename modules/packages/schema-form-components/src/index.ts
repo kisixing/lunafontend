@@ -1,9 +1,9 @@
 import './VirtualBox/InspectionCard';
-// import './ID';
-// import './PastHistory';
-// import './Enums';
-// import './SmokingAndDrinking';
-// import './Table';
-// import './common';
-// import './BloodPressure';
-// import './Abnormal';
+import './ID';
+import './PastHistory';
+import './Enums';
+import './SmokingAndDrinking';
+import './Table';
+import './common';
+import './BloodPressure';
+import './Abnormal';
