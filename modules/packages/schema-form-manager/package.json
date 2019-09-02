@@ -2,7 +2,7 @@
   "name": "@lianmed/schema-form-manager",
   "version": "1.0.0",
   "description": "> TODO: description",
-  "main": "lib/index.js",
+  "main": "src/index.tsx",
   "directories": {
     "lib": "lib"
   },
