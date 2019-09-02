@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-console */
 import React from 'react';
-import { SchemaForm, FormButtonGroup, Submit, Reset, createFormActions } from '@uform/antd';
+import { SchemaForm, createFormActions } from '@uform/antd';
 import 'antd/dist/antd.css';
 import '@lianmed/schema-form-components';
 export default ({

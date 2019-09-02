@@ -8,6 +8,7 @@
     "bootstrap": "lerna bootstrap",
     "clean": "lerna clean",
     "build:docs": "node ./scripts/docs.js build -i docs -o docs",
+    "build": "rm -rf packages/*/lib packages/*/esm && lerna run build",
     "start": "node ./scripts/docs.js start -i docs"
   },
   "dependencies": {

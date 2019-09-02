@@ -1,6 +1,5 @@
 import React from 'react';
-import { Select, Input } from 'antd';
-const { Option } = Select;
+import { Input } from 'antd';
 import { registerFormField, connect } from '@uform/antd';
 const styles = { width: '60px', marginRight: '10px' };
 export default registerFormField(

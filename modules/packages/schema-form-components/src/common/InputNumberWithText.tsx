@@ -1,5 +1,5 @@
 import React from 'react';
-import { Select, InputNumber } from 'antd';
+import { InputNumber } from 'antd';
 import { registerFormField, connect } from '@uform/antd';
 export default registerFormField(
   'input_number_with_text',

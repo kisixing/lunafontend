@@ -1,5 +1,5 @@
-import React, { Component, FunctionComponent } from 'react';
-import { Checkbox, Input, Table, Form, Tag, DatePicker } from 'antd';
+import React, { FunctionComponent } from 'react';
+import { Checkbox, Table, Form, DatePicker } from 'antd';
 import { registerFormField, connect } from '@uform/antd';
 import moment from 'moment';
 import { ComponentProps, ColumnProps, PregnancyHistoryItem } from './PregnancyHistory_interface';
@@ -186,8 +186,8 @@ export default registerFormField(
     const { value, onChange, readOnly } = props;
 
     const EditableFormTable: any = Form.create({
-      onValuesChange(props, keyValue, formData) {
-        const [keyRowIndex, cellValue] = Object.entries(keyValue)[0];
+      onValuesChange(props, keyValue) {
+        const [keyRowIndex, cellValue]: [string, any] = Object.entries(keyValue)[0];
         const [key, rowIndex] = keyRowIndex.split(':');
         onChange(
           value.map((v, index) => {

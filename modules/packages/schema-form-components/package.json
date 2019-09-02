@@ -18,7 +18,8 @@
     "url": "git+https://github.com/kisixing/LUNA_FontEnd.git"
   },
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "test": "echo \"Error: run tests from root\" && exit 1",
+    "build": "tsc --declaration"
   },
   "bugs": {
     "url": "https://github.com/kisixing/LUNA_FontEnd/issues"
