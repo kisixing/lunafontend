@@ -1,3 +1,8 @@
+interface IItem {
+  id: number;
+  pId: number;
+  name: string;
+}
 export default [
   { id: 1, pId: 0, name: '低风险:孕妇基本情况良好，未发现妊娠合并症、并发症' },
   { id: 2, pId: 0, name: '一般风险', open: true },
@@ -222,4 +227,4 @@ export default [
   { id: 505, pId: 5, name: '重症感染性肺炎' },
   { id: 506, pId: 5, name: '特殊病毒感染（H1N7、寨卡等）' },
   { id: 507, pId: 5, name: '传染病：其他' },
-];
+] as Array<IItem>;

@@ -1,13 +1,8 @@
-/**
- * 高危管理弹窗
- * created by ADMIN on 2019-07-25 17:56
- */
-
 import React, { Component } from 'react';
 import { Checkbox, Form, Icon, Input, Modal, Table, Select, Button } from 'antd';
 import ColorDot from './ColorDot';
 import { ColumnProps } from 'antd/lib/table';
-
+import HighRiskTree from './Tree';
 const Search = Input.Search;
 const plainOptions = [
   '乙肝大三阳',
@@ -116,6 +111,7 @@ class ManagementModal extends Component<
         title="风险管理"
         visible={visible}
         width={1080}
+        bodyStyle={{ overflowY: 'scroll', maxHeight: '80vh  ' }}
         footer={null}
         onCancel={() => onCancel(false)}
       >
@@ -171,7 +167,9 @@ class ManagementModal extends Component<
           </div>
         </div>
         <div style={{ flex: 1, overflowY: 'auto' }}>
-          <div style={{ height: '800px' }}>tree content</div>
+          <div style={{ height: '800px' }}>
+            <HighRiskTree />
+          </div>
         </div>
       </Modal>
     );

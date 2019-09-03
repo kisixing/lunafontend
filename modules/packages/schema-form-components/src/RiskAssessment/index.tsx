@@ -1,17 +1,10 @@
-/**
- * 高危管理
- * Created by ADMIN on 2019/7/25
- */
-
 import React, { Component, Fragment } from 'react';
-import { Table, Input, Button, Checkbox, Form, Icon } from 'antd';
-import ColorDot from './ColorDot';
+import { Table, Input, Button, Checkbox, Form } from 'antd';
 import RecordsModal from './RecordsModal';
 import ManagementModal from './ManagementModal';
 // import styles from './index.less';
 import { registerFormField, connect, IFieldProps } from '@uform/react';
-import { ColumnProps } from 'antd/lib/table';
-
+import columns from './tableColumns';
 const Search = Input.Search;
 const plainOptions = [
   '乙肝大三阳',
@@ -21,55 +14,6 @@ const plainOptions = [
   '结核病',
   '重症感染性肺炎',
   '其他',
-];
-const columns: Array<ColumnProps<any>> = [
-  {
-    title: '高危类型',
-    dataIndex: 'type',
-    align: 'center',
-    width: '25%',
-    render: function(text, record) {
-      const { type, factor } = record;
-      return (
-        <div style={{ color: '#f44336' }}>
-          <ColorDot />
-          {type}: {factor}
-        </div>
-      );
-    },
-  },
-  {
-    title: '治愈',
-    dataIndex: 'cure',
-    align: 'center',
-    width: '25%',
-    render: function(text, record) {
-      const { cure } = record;
-      return cure ? (
-        <Icon type="check" style={{ color: '#29b6f6' }} />
-      ) : (
-        <Icon type="close" style={{ color: '#f44336' }} />
-      );
-    },
-  },
-  {
-    title: '高危因素',
-    dataIndex: 'factor',
-    align: 'center',
-    width: '25%',
-    render: function(text, record) {
-      return <div style={{ color: '#f44336' }}>{text}</div>;
-    },
-  },
-  {
-    title: '备注',
-    dataIndex: 'remarks',
-    align: 'center',
-    width: '25%',
-    render: function(text, record) {
-      return <div style={{ color: '#f44336' }}>{text}</div>;
-    },
-  },
 ];
 const dataSource = [
   {
@@ -105,7 +49,7 @@ class HighRisk extends Component<fieldProps> {
     // 初始状态
     this.state = {
       checkedList: [],
-      managementVisible: false,
+      managementVisible: true,
       recordVisible: false,
     };
   }
@@ -147,7 +91,7 @@ class HighRisk extends Component<fieldProps> {
         <Form.Item label="传染病" style={{ display: 'flex' }}>
           <Checkbox.Group options={plainOptions} value={checkedList} onChange={this.onChange} />
         </Form.Item>
-        <div style={{ marginBottom: '18px' }}>
+        <div style={{ marginBottom: '18px', display: 'flex' }}>
           <Search
             placeholder="请输入关键字"
             enterButton="新增"
