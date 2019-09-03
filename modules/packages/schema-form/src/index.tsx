@@ -7,7 +7,7 @@ import '@lianmed/schema-form-components';
 export default ({
   schema,
   initialValues,
-  saveActions = actions => {
+  collectActions = actions => {
     return actions;
   },
   ...props
@@ -32,7 +32,7 @@ export default ({
       }}
       effects={$ => {
         $('onFormInit').subscribe(() => {
-          saveActions(actions);
+          collectActions(actions);
         });
       }}
       {...props}

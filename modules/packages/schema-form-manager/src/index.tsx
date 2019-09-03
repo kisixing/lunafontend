@@ -3,23 +3,18 @@ import React from 'react';
 import { IFormActions } from '@uform/types';
 import StorageHelp from './storage';
 import { message, Modal } from 'antd';
-
+import checkDirtyCreator from './checkDirtyCreator';
+import { IConfig } from './types';
 const hasSymbol = typeof Symbol === 'function' && Symbol.for;
 const $name: symbol | string = hasSymbol ? Symbol.for('lian.formName') : 'lian.formName';
 
-interface actionItem extends IFormActions {
-  name: string | symbol;
-}
 export default function connectAdvanced({
-  // validate = arr => {
-  //   Promise.all([]);
-  // },
   interrupted = false,
   cache = false,
   getStorageName = () => {
     return `${String(name)}_storage`;
   },
-  handleErr = (arr: Array<actionItem>) => {
+  handleErr = (arr: Array<IFormActions>) => {
     return arr;
   },
   name = $name,
@@ -33,30 +28,25 @@ export default function connectAdvanced({
       }
     });
   },
-  mergeFormValues = (arr: Array<actionItem>) => {
+  mergeFormValues = (arr: Array<IFormActions>) => {
     return arr.reduce((result, current) => {
       return [...result, current.getFormState().values];
     }, []);
   },
   forwardRef = false,
-} = {}) {
+}: IConfig) {
   const storageName = getStorageName();
   const storageHelp = new StorageHelp(storageName);
 
   let lastCommitData: Array<any> = [];
 
-  const all: Array<actionItem> = [];
-  const saveActions = function(actions: IFormActions) {
-    all.push({ name, ...actions });
+  const all: Array<IFormActions> = [];
+  const collectActions = function(actions: IFormActions) {
+    all.push(actions);
   };
-  const beforeunloadFn = function(e) {
-    if (!all.every(_ => _.getFormState().pristine)) {
-      const confirmationMessage = '表单未提交，是否离开？';
-      (e || window.event).returnValue = confirmationMessage; //Gecko + IE
-      return confirmationMessage; //Webkit, Safari, Chrome etc.
-    }
-  };
-  interrupted && top.addEventListener('beforeunload', beforeunloadFn);
+  const [checkIsDirty, onBeforeunloadCb] = checkDirtyCreator(all);
+
+  interrupted && top.addEventListener('beforeunload', onBeforeunloadCb);
 
   const submit = function(status = true) {
     const hide = message.loading('提交中..', 0);
@@ -71,7 +61,7 @@ export default function connectAdvanced({
           })
           .then(res => {
             cache && storageHelp.removeItem();
-            top.removeEventListener('beforeunload', beforeunloadFn);
+            top.removeEventListener('beforeunload', onBeforeunloadCb);
             message.success('成功！', 5);
           })
           .catch(err => {
@@ -115,7 +105,7 @@ export default function connectAdvanced({
     const displayName = getDisplayName(wrappedComponentName);
 
     function ConnectFunction(props) {
-      const _props = { ...props, saveActions, submit };
+      const _props = { ...props, collectActions, submit, checkIsDirty };
 
       return <WrappedComponent {..._props} />;
     }
