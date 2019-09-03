@@ -14,6 +14,7 @@ export default function connectAdvanced({
   // validate = arr => {
   //   Promise.all([]);
   // },
+  interrupted = false,
   cache = false,
   getStorageName = () => {
     return `${String(name)}_storage`;
@@ -48,6 +49,14 @@ export default function connectAdvanced({
   const saveActions = function(actions: IFormActions) {
     all.push({ name, ...actions });
   };
+  const beforeunloadFn = function(e) {
+    if (!all.every(_ => _.getFormState().pristine)) {
+      const confirmationMessage = '表单未提交，是否离开？';
+      (e || window.event).returnValue = confirmationMessage; //Gecko + IE
+      return confirmationMessage; //Webkit, Safari, Chrome etc.
+    }
+  };
+  interrupted && top.addEventListener('beforeunload', beforeunloadFn);
 
   const submit = function(status = true) {
     const hide = message.loading('提交中..', 0);
@@ -62,6 +71,7 @@ export default function connectAdvanced({
           })
           .then(res => {
             cache && storageHelp.removeItem();
+            top.removeEventListener('beforeunload', beforeunloadFn);
             message.success('成功！', 5);
           })
           .catch(err => {
@@ -106,12 +116,6 @@ export default function connectAdvanced({
 
     function ConnectFunction(props) {
       const _props = { ...props, saveActions, submit };
-      top.onbeforeunload = e => {
-        return false;
-        if (all.some(_ => _.getFormState().dirty)) {
-          return false;
-        }
-      };
 
       return <WrappedComponent {..._props} />;
     }
