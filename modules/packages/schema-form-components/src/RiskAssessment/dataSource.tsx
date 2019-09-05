@@ -1,9 +1,12 @@
-interface IItem {
-  id: number;
-  pId: number;
-  name: string;
+import { AntTreeNodeProps } from 'antd/lib/tree';
+
+export interface IItem extends AntTreeNodeProps {
+  title: string;
+  key: string;
+  pId?: string;
+  children?: Array<IItem>;
 }
-export default [
+export const listData: Array<IItem> = [
   { id: 1, pId: 0, name: '低风险:孕妇基本情况良好，未发现妊娠合并症、并发症' },
   { id: 2, pId: 0, name: '一般风险', open: true },
   { id: 201, pId: 2, name: '基本情况', open: true },
@@ -216,15 +219,31 @@ export default [
   { id: 4011003, pId: 40110, name: '重症肌无力（病变发展至延脑肌、肢带肌、躯干肌和呼吸肌）' },
   { id: 40111, pId: 401, name: '吸毒' },
   { id: 40112, pId: 401, name: '其他严重内、外科疾病等' },
-  { id: 5, pId: 0, name: '传染病', open: true },
-  { id: 501, pId: 5, name: '病毒性肝炎' },
-  { id: 50101, pId: 501, name: '乙肝病毒携带' },
-  { id: 50102, pId: 501, name: '乙肝小三阳' },
-  { id: 50103, pId: 501, name: '乙肝大三阳' },
-  { id: 502, pId: 5, name: '梅毒' },
-  { id: 503, pId: 5, name: 'HIV感染及艾滋病' },
-  { id: 504, pId: 5, name: '结核病' },
-  { id: 505, pId: 5, name: '重症感染性肺炎' },
-  { id: 506, pId: 5, name: '特殊病毒感染（H1N7、寨卡等）' },
-  { id: 507, pId: 5, name: '传染病：其他' },
-] as Array<IItem>;
+  // { id: 5, pId: 0, name: '传染病', open: true },
+  // { id: 501, pId: 5, name: '病毒性肝炎' },
+  // { id: 50101, pId: 501, name: '乙肝病毒携带' },
+  // { id: 50102, pId: 501, name: '乙肝小三阳' },
+  // { id: 50103, pId: 501, name: '乙肝大三阳' },
+  // { id: 502, pId: 5, name: '梅毒' },
+  // { id: 503, pId: 5, name: 'HIV感染及艾滋病' },
+  // { id: 504, pId: 5, name: '结核病' },
+  // { id: 505, pId: 5, name: '重症感染性肺炎' },
+  // { id: 506, pId: 5, name: '特殊病毒感染（H1N7、寨卡等）' },
+  // { id: 507, pId: 5, name: '传染病：其他' },
+].map(({ id, pId, name }) => ({ key: String(id), title: name, pId: String(pId) }));
+
+const formatDataSource = (rawDataSource: Array<IItem>, pId = '0', result: Array<IItem> = []) => {
+  const data: Array<IItem> = rawDataSource.filter(_ => _.pId === pId);
+
+  data.forEach(_ => {
+    _.children = formatDataSource(rawDataSource, _.key);
+    if (_.children.length === 0) {
+      _.checkable = true;
+    } else {
+      _.checkable = false;
+    }
+  });
+
+  return data;
+};
+export const treeData = formatDataSource(listData);

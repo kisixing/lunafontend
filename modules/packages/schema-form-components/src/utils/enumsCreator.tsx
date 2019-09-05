@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { ComponentType } from 'react';
 import { Radio, Select } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 interface datasetMap {
@@ -12,10 +12,7 @@ interface formItemProps {
 }
 
 const generator = (Wrap, Item) => {
-  return (
-    dataset: Array<datasetMap>,
-    size = 'default'
-  ): FunctionComponent<formItemProps> | Function => {
+  return (dataset: Array<datasetMap>, size = 'default'): ComponentType<any> => {
     const Cop = (props: formItemProps) => {
       //   const {value,onChange} = props
       let { value, onChange, readOnly } = props;
@@ -38,7 +35,7 @@ const generator = (Wrap, Item) => {
         </Wrap>
       );
     };
-    return Cop;
+    return Cop as any;
   };
 };
 

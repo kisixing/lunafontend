@@ -1,8 +1,7 @@
 import React from 'react';
-import { IFormCardProps } from '@uform/antd/esm/type';
-import { createVirtualBox } from '@uform/antd';
+import { createVirtualBox, IFieldProps } from '@uform/antd';
 // import style from 'FirstInspection.less';
-interface A extends IFormCardProps {
+interface A extends IFieldProps {
   title: string;
 }
 export default createVirtualBox('inspection_card', (props: A) => {

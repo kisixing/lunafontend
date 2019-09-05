@@ -1,10 +1,11 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Table, Input, Button, Checkbox, Form } from 'antd';
 import RecordsModal from './RecordsModal';
 import ManagementModal from './ManagementModal';
 // import styles from './index.less';
 import { registerFormField, connect, IFieldProps } from '@uform/react';
 import columns from './tableColumns';
+import context from './context';
 const Search = Input.Search;
 const plainOptions = [
   '乙肝大三阳',
@@ -42,89 +43,62 @@ const dataSource = [
   },
 ];
 interface fieldProps extends IFieldProps {}
-class HighRisk extends Component<fieldProps> {
-  // 构造
-  constructor(props) {
-    super(props);
-    // 初始状态
-    this.state = {
-      checkedList: [],
-      managementVisible: true,
-      recordVisible: false,
-    };
-  }
+const HighRisk = (props: fieldProps) => {
+  const { value, onChange } = props;
+  const [checkedList, setCheckedList] = useState([]);
+  const [managementVisible, setManagementVisible] = useState(true);
+  const [recordVisible, setRecordVisible] = useState(false);
 
-  onChange = value => {
-    this.setState({
-      checkedList: value,
-    });
+  const showRecords = bool => {
+    setRecordVisible(bool);
   };
 
-  showRecords = bool => {
-    this.setState({
-      recordVisible: bool,
-    });
+  const showManagement = bool => {
+    setManagementVisible(bool);
   };
 
-  showManagement = bool => {
-    this.setState({
-      managementVisible: bool,
-    });
-  };
-
-  onBlur() {
-    console.log('blur');
-  }
-
-  onFocus() {
-    console.log('focus');
-  }
-
-  onSearch(val) {
-    console.log('search:', val);
-  }
-
-  render() {
-    const { checkedList, managementVisible, recordVisible } = this.state as any;
-    return (
-      <Fragment>
-        <Form.Item label="传染病" style={{ display: 'flex' }}>
-          <Checkbox.Group options={plainOptions} value={checkedList} onChange={this.onChange} />
-        </Form.Item>
-        <div style={{ marginBottom: '18px', display: 'flex' }}>
-          <Search
-            placeholder="请输入关键字"
-            enterButton="新增"
-            onSearch={value => console.log(value)}
-          />
-          <Button
-            type="primary"
-            style={{ marginLeft: '24px', marginRight: '24px' }}
-            icon="edit"
-            onClick={() => this.showManagement(true)}
-          >
-            高危管理
-          </Button>
-        </div>
-        <Table
-          bordered
-          size="small"
-          rowKey="id"
-          pagination={false}
-          columns={columns}
-          dataSource={dataSource}
+  return (
+    <context.Provider value={[value, onChange]}>
+      <Form.Item label="传染病" style={{ display: 'flex' }}>
+        <Checkbox.Group
+          options={plainOptions}
+          value={checkedList}
+          onChange={value => console.log(value)}
         />
-        <div style={{ textAlign: 'right' }}>
-          <Button type="link" onClick={() => this.showRecords(true)}>
-            过程记录
-          </Button>
-        </div>
-        {/* 弹窗 */}
-        <RecordsModal visible={recordVisible} onCancel={this.showRecords} />
-        <ManagementModal visible={managementVisible} onCancel={this.showManagement} />
-      </Fragment>
-    );
-  }
-}
+      </Form.Item>
+      <div style={{ marginBottom: '18px', display: 'flex' }}>
+        <Search
+          placeholder="请输入关键字"
+          enterButton="新增"
+          onSearch={value => console.log(value)}
+        />
+        <Button
+          type="primary"
+          style={{ marginLeft: '24px', marginRight: '24px' }}
+          icon="edit"
+          onClick={() => showManagement(true)}
+        >
+          高危管理
+        </Button>
+      </div>
+      <Table
+        bordered
+        size="small"
+        rowKey="id"
+        pagination={false}
+        columns={columns}
+        dataSource={dataSource}
+      />
+      <div style={{ textAlign: 'right' }}>
+        <Button type="link" onClick={() => showRecords(true)}>
+          过程记录
+        </Button>
+      </div>
+      {/* 弹窗 */}
+      <RecordsModal visible={recordVisible} onCancel={showRecords} />
+      <ManagementModal visible={managementVisible} onCancel={showManagement} value={value} />
+    </context.Provider>
+  );
+};
 
 registerFormField('risk_assessment', connect()(HighRisk));

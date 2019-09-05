@@ -1,5 +1,5 @@
 {
-  "name": "@lianmed/schema-form-components",
+  "name": "@lianmed/components",
   "version": "1.0.0",
   "description": "> TODO: description",
   "author": "lxf <lixiaofan.dev@gmail.com>",
@@ -13,6 +13,12 @@
   "files": [
     "lib"
   ],
+  "peerDependencies": {
+    "@babel/runtime": "^7.4.4",
+    "antd": "^3.14.1",
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kisixing/LUNA_FontEnd.git"
@@ -24,13 +30,5 @@
   },
   "bugs": {
     "url": "https://github.com/kisixing/LUNA_FontEnd/issues"
-  },
-  "peerDependencies": {
-    "@babel/runtime": "^7.4.4",
-    "antd": "^3.14.1",
-    "react": ">=16.8.0",
-    "react-dom": ">=16.8.0",
-    "@uform/antd": "^0.4.0",
-    "@lianmed/components": "^1.0.0"
   }
 }

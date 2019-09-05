@@ -1,70 +1,50 @@
 import React from 'react';
-import { Tree } from 'antd';
+import { Tree, Input } from 'antd';
+import { treeData, listData, IItem } from './dataSource';
 
 const { TreeNode } = Tree;
+const { Search } = Input;
 
-const treeData = [
-  {
-    title: '0-0',
-    key: '0-0',
-    children: [
-      {
-        title: '0-0-0',
-        key: '0-0-0',
-        children: [
-          { title: '0-0-0-0', key: '0-0-0-0' },
-          { title: '0-0-0-1', key: '0-0-0-1' },
-          { title: '0-0-0-2', key: '0-0-0-2' },
-        ],
-      },
-      {
-        title: '0-0-1',
-        key: '0-0-1',
-        children: [
-          { title: '0-0-1-0', key: '0-0-1-0' },
-          { title: '0-0-1-1', key: '0-0-1-1' },
-          { title: '0-0-1-2', key: '0-0-1-2' },
-        ],
-      },
-      {
-        title: '0-0-2',
-        key: '0-0-2',
-      },
-    ],
-  },
-  {
-    title: '0-1',
-    key: '0-1',
-    children: [
-      { title: '0-1-0-0', key: '0-1-0-0' },
-      { title: '0-1-0-1', key: '0-1-0-1' },
-      { title: '0-1-0-2', key: '0-1-0-2' },
-    ],
-  },
-  {
-    title: '0-2',
-    key: '0-2',
-  },
-];
-
-export default class Demo extends React.Component {
+export default class SearchTree extends React.Component {
   state = {
-    expandedKeys: ['0-0-0', '0-0-1'],
+    expandedKeys: [],
+    searchValue: '',
     autoExpandParent: true,
-    checkedKeys: ['0-0-0'],
+    checkedKeys: ['1'],
     selectedKeys: [],
   };
 
   onExpand = expandedKeys => {
-    console.log('onExpand', expandedKeys);
-    // if not set autoExpandParent to false, if children expanded, parent can not collapse.
-    // or, you can remove all expanded children keys.
     this.setState({
       expandedKeys,
       autoExpandParent: false,
     });
   };
 
+  onChange = e => {
+    const { value } = e.target;
+    if (value === '' || value === ' ') {
+      this.setState({
+        expandedKeys: [],
+        searchValue: value,
+        autoExpandParent: false,
+      });
+      return;
+    }
+    const expandedKeys = listData
+      .map(item => {
+        if (item.title.indexOf(value) > -1) {
+          return item.pId;
+        }
+        return null;
+      })
+      .filter((item, i, self) => item && self.indexOf(item) === i);
+    this.setState({
+      expandedKeys,
+      searchValue: value,
+      autoExpandParent: true,
+    });
+  };
   onCheck = checkedKeys => {
     console.log('onCheck', checkedKeys);
     this.setState({ checkedKeys });
@@ -74,33 +54,55 @@ export default class Demo extends React.Component {
     console.log('onSelect', info);
     this.setState({ selectedKeys });
   };
-
-  renderTreeNodes = data =>
-    data.map(item => {
-      if (item.children) {
-        return (
-          <TreeNode title={item.title} key={item.key} dataRef={item}>
-            {this.renderTreeNodes(item.children)}
-          </TreeNode>
-        );
-      }
-      return <TreeNode key={item.key} {...item} />;
-    });
-
   render() {
+    const { searchValue, expandedKeys, autoExpandParent } = this.state;
+    const loop = (data: Array<IItem>) =>
+      data.map(item => {
+        const index = item.title.indexOf(searchValue);
+        const beforeStr = item.title.substr(0, index);
+        const afterStr = item.title.substr(index + searchValue.length);
+        const title =
+          index > -1 ? (
+            <span>
+              {beforeStr}
+              <span style={{ color: '#f50' }}>{searchValue}</span>
+              {afterStr}
+            </span>
+          ) : (
+            <span>{item.title}</span>
+          );
+        if (item.children) {
+          return (
+            <TreeNode key={item.key} title={title}>
+              {loop(item.children)}
+            </TreeNode>
+          );
+        }
+        return <TreeNode key={item.key} title={title} />;
+      });
     return (
-      <Tree
-        checkable
-        onExpand={this.onExpand}
-        expandedKeys={this.state.expandedKeys}
-        autoExpandParent={this.state.autoExpandParent}
-        onCheck={this.onCheck}
-        checkedKeys={this.state.checkedKeys}
-        onSelect={this.onSelect}
-        selectedKeys={this.state.selectedKeys}
-      >
-        {this.renderTreeNodes(treeData)}
-      </Tree>
+      <div>
+        <div style={{ margin: '8px 0', display: 'flex', alignItems: 'center', width: '50%' }}>
+          选择高危因素
+          <Search
+            placeholder="Search"
+            onChange={this.onChange}
+            style={{ flex: 1, marginLeft: '10px' }}
+          />
+        </div>
+        <Tree
+          onExpand={this.onExpand}
+          expandedKeys={expandedKeys}
+          autoExpandParent={autoExpandParent}
+          checkable
+          onCheck={this.onCheck}
+          checkedKeys={this.state.checkedKeys}
+          // onSelect={this.onSelect}
+          selectedKeys={this.state.selectedKeys}
+        >
+          {loop(treeData)}
+        </Tree>
+      </div>
     );
   }
 }

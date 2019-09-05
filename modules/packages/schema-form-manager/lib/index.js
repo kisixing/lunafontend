@@ -31,36 +31,38 @@ var hoist_non_react_statics_1 = __importDefault(require('hoist-non-react-statics
 var react_1 = __importDefault(require('react'));
 var storage_1 = __importDefault(require('./storage'));
 var antd_1 = require('antd');
+var checkDirtyCreator_1 = __importDefault(require('./checkDirtyCreator'));
 var hasSymbol = typeof Symbol === 'function' && Symbol.for;
 var $name = hasSymbol ? Symbol.for('lian.formName') : 'lian.formName';
 function connectAdvanced(_a) {
-  var _b = _a === void 0 ? {} : _a,
-    _c = _b.cache,
+  var _b = _a.interrupted,
+    interrupted = _b === void 0 ? false : _b,
+    _c = _a.cache,
     cache = _c === void 0 ? false : _c,
-    _d = _b.getStorageName,
+    _d = _a.getStorageName,
     getStorageName =
       _d === void 0
         ? function() {
             return String(name) + '_storage';
           }
         : _d,
-    _e = _b.handleErr,
+    _e = _a.handleErr,
     handleErr =
       _e === void 0
         ? function(arr) {
             return arr;
           }
         : _e,
-    _f = _b.name,
+    _f = _a.name,
     name = _f === void 0 ? $name : _f,
-    _g = _b.getDisplayName,
+    _g = _a.getDisplayName,
     getDisplayName =
       _g === void 0
         ? function(name) {
             return 'ConnectAdvanced(' + name + ')';
           }
         : _g,
-    _h = _b.onSubmit,
+    _h = _a.onSubmit,
     onSubmit =
       _h === void 0
         ? function(formData, status) {
@@ -77,7 +79,7 @@ function connectAdvanced(_a) {
             });
           }
         : _h,
-    _j = _b.mergeFormValues,
+    _j = _a.mergeFormValues,
     mergeFormValues =
       _j === void 0
         ? function(arr) {
@@ -86,15 +88,19 @@ function connectAdvanced(_a) {
             }, []);
           }
         : _j,
-    _k = _b.forwardRef,
+    _k = _a.forwardRef,
     forwardRef = _k === void 0 ? false : _k;
   var storageName = getStorageName();
   var storageHelp = new storage_1.default(storageName);
   var lastCommitData = [];
   var all = [];
   var collectActions = function(actions) {
-    all.push(__assign({ name: name }, actions));
+    all.push(actions);
   };
+  var _l = checkDirtyCreator_1.default(all),
+    checkIsDirty = _l[0],
+    onBeforeunloadCb = _l[1];
+  interrupted && top.addEventListener('beforeunload', onBeforeunloadCb);
   var submit = function(status) {
     if (status === void 0) {
       status = true;
@@ -114,6 +120,7 @@ function connectAdvanced(_a) {
           })
           .then(function(res) {
             cache && storageHelp.removeItem();
+            top.removeEventListener('beforeunload', onBeforeunloadCb);
             antd_1.message.success('成功！', 5);
           })
           .catch(function(err) {
@@ -156,17 +163,8 @@ function connectAdvanced(_a) {
       var _props = __assign(__assign({}, props), {
         collectActions: collectActions,
         submit: submit,
+        checkIsDirty: checkIsDirty,
       });
-      top.onbeforeunload = function(e) {
-        return false;
-        if (
-          all.some(function(_) {
-            return _.getFormState().dirty;
-          })
-        ) {
-          return false;
-        }
-      };
       return react_1.default.createElement(WrappedComponent, __assign({}, _props));
     }
     ConnectFunction.WrappedComponent = WrappedComponent;

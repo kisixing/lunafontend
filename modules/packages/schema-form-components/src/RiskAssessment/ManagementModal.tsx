@@ -1,9 +1,11 @@
-import React, { Component } from 'react';
-import { Checkbox, Form, Icon, Input, Modal, Table, Select, Button } from 'antd';
+import React, { useState, useContext } from 'react';
+import { Checkbox, Form, Icon, Modal, Table, Select, Button } from 'antd';
 import ColorDot from './ColorDot';
 import { ColumnProps } from 'antd/lib/table';
 import HighRiskTree from './Tree';
-const Search = Input.Search;
+import context from './context';
+import { RemarkCheckbox } from '@lianmed/components';
+// const Search = Input.Search;
 const plainOptions = [
   '乙肝大三阳',
   '乙肝小三阳',
@@ -89,91 +91,86 @@ const dataSource = [
   },
 ];
 
-class ManagementModal extends Component<
-  { visible: boolean; onCancel: (b: boolean) => void },
-  { checkedList: Array<any> }
-> {
-  constructor(props) {
-    super(props);
-    // 初始状态
-    this.state = {
-      checkedList: [],
-    };
-  }
-  onChange() {}
-  render() {
-    const { checkedList } = this.state;
-    const { visible, onCancel } = this.props;
-    return (
-      <Modal
-        destroyOnClose
-        centered
-        title="风险管理"
-        visible={visible}
-        width={1080}
-        bodyStyle={{ overflowY: 'scroll', maxHeight: '80vh  ' }}
-        footer={null}
-        onCancel={() => onCancel(false)}
-      >
-        <div>
-          <Form.Item label="传染病" style={{ display: 'flex' }}>
-            <Checkbox.Group options={plainOptions} value={checkedList} onChange={this.onChange} />
-          </Form.Item>
-          <div style={{ display: 'flex' }}>
-            <Table
-              bordered
-              size="small"
-              rowKey="id"
-              pagination={false}
-              columns={columns}
-              dataSource={dataSource}
-              style={{ flex: 1 }}
-            />
-            <div style={{ marginLeft: '24px', position: 'relative' }}>
-              <Form.Item label="高危等级" style={{ display: 'flex' }}>
-                <Select
-                  showSearch
-                  placeholder="选择..."
-                  style={{ width: '116px' }}
-                  optionFilterProp="children"
-                  // onChange={this.onChange}
-                  // onFocus={this.onFocus}
-                  // onBlur={this.onBlur}
-                  // onSearch={this.onSearch}
-                  filterOption={(input, option: any) =>
-                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                  }
-                >
-                  {selectOption.map(item => (
-                    <Select.Option key={item} value={item}>
-                      {item}
-                    </Select.Option>
-                  ))}
-                </Select>
-              </Form.Item>
-              <div
-                style={{ textAlign: 'center', position: 'absolute', width: '100%', bottom: '0' }}
+function ManagementModal(props) {
+  const [checkedList, setCheckedList] = useState([]);
+  const [value, onChange] = useContext(context);
+  const { infectiousDisease } = value;
+  // function onChange() {
+  //   setCheckedList([]);
+  // }
+  const { visible, onCancel } = props;
+  return (
+    <Modal
+      destroyOnClose
+      centered
+      title="风险管理"
+      visible={visible}
+      width={1080}
+      bodyStyle={{ overflowY: 'scroll', maxHeight: '80vh  ' }}
+      footer={null}
+      onCancel={() => onCancel(false)}
+    >
+      <div>
+        <Form.Item label="传染病" style={{ display: 'flex' }}>
+          {/* <Checkbox.Group
+            options={plainOptions}
+            value={checkedList}
+            onChange={value => console.log(value)}
+          /> */}
+          <RemarkCheckbox
+            dataset={{ HIV: '艾滋病', Heart: '心脏病' }}
+            value={infectiousDisease}
+            onChange={infectiousDisease => onChange({ ...value, infectiousDisease })}
+          />
+        </Form.Item>
+        <div style={{ display: 'flex' }}>
+          <Table
+            bordered
+            size="small"
+            rowKey="id"
+            pagination={false}
+            columns={columns}
+            dataSource={dataSource}
+            style={{ flex: 1 }}
+          />
+          <div style={{ marginLeft: '24px', position: 'relative' }}>
+            <Form.Item label="高危等级" style={{ display: 'flex' }}>
+              <Select
+                showSearch
+                placeholder="选择..."
+                style={{ width: '116px' }}
+                optionFilterProp="children"
+                // onChange={this.onChange}
+                // onFocus={this.onFocus}
+                // onBlur={this.onBlur}
+                // onSearch={this.onSearch}
+                filterOption={(input, option: any) =>
+                  option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                }
               >
-                <Button style={{ marginLeft: '12px', marginRight: '12px' }}>取消</Button>
-                <Button type="primary" style={{ marginLeft: '12px', marginRight: '12px' }}>
-                  保存
-                </Button>
-              </div>
+                {selectOption.map(item => (
+                  <Select.Option key={item} value={item}>
+                    {item}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <div style={{ textAlign: 'center', position: 'absolute', width: '100%', bottom: '0' }}>
+              <Button style={{ marginLeft: '12px', marginRight: '12px' }}>取消</Button>
+              <Button type="primary" style={{ marginLeft: '12px', marginRight: '12px' }}>
+                保存
+              </Button>
             </div>
           </div>
-          <div style={{ marginTop: '12px', display: 'flex', alignItems: 'center' }}>
-            <span style={{ marginRight: '12px' }}>选择高危因素：</span>
-            <Search enterButton placeholder="请输入关键字" onSearch={value => console.log(value)} />
-          </div>
         </div>
-        <div style={{ flex: 1, overflowY: 'auto' }}>
-          <div style={{ height: '800px' }}>
-            <HighRiskTree />
-          </div>
+      </div>
+      <div style={{ flex: 1, overflowY: 'auto' }}>
+        <div style={{ minHeight: '800px' }}>
+          <HighRiskTree />
         </div>
-      </Modal>
-    );
-  }
+      </div>
+    </Modal>
+  );
 }
 
 export default ManagementModal;

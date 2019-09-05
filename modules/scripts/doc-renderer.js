@@ -14,7 +14,13 @@ import SiteRenderer from 'react-site-renderer';
 export default ({ docs }) => {
   return (
     <SiteRenderer
-      logo={<img style={{ height: 46 }} src="//www.lian-med.com/upload/201804/1522654052.png" />}
+      logo={
+        <img
+          style={{ height: 46 }}
+          alt="莲印医疗"
+          src="//www.lian-med.com/upload/201804/1522654052.png"
+        />
+      }
       docs={docs}
     />
   );
