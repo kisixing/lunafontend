@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import { Table, Input, Button, Checkbox, Form } from 'antd';
 import RecordsModal from './RecordsModal';
-import ManagementModal from './ManagementModal';
+import ManagementModal from './ManagementModal/index';
 // import styles from './index.less';
 import { registerFormField, connect, IFieldProps } from '@uform/react';
 import columns from './tableColumns';

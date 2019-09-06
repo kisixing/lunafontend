@@ -2,16 +2,16 @@ import React from 'react';
 import { Checkbox, Input } from 'antd';
 interface IProps {
   dataset?: object;
-  onChange: (value: any) => void;
+  onChange: (value: object) => void;
   value: object;
 }
 export default (props: IProps) => {
   const { dataset = { heart: '心脏病' }, onChange = () => {}, value = {} } = props;
   console.log(value);
-  const _onChange = (key, _value) => {
+  const _onChange = data => {
     onChange({
       ...value,
-      [key]: _value,
+      ...data,
     });
   };
   const kvs = Object.entries(dataset);
@@ -20,21 +20,26 @@ export default (props: IProps) => {
       {kvs.map(([k, v]) => {
         const noteKey = k + 'Note';
         return (
-          <div key={k}>
+          <div key={k} style={{ display: 'inline-block', marginRight: '10px' }}>
             <Checkbox
               onChange={e => {
                 const bool = e.target.checked;
-                _onChange(k, bool);
-                if (!bool) {
-                  _onChange(noteKey, '');
-                }
+                console.log('bool', bool);
+                _onChange({
+                  [k]: bool,
+                  [noteKey]: bool ? value[noteKey] : '',
+                });
               }}
               checked={value[k]}
             >
               {v}
             </Checkbox>
             {value[k] && (
-              <Input onChange={e => _onChange(noteKey, e.target.value)} value={value[noteKey]} />
+              <Input
+                style={{ display: 'inline-block', maxWidth: '100px' }}
+                onChange={e => _onChange({ [noteKey]: e.target.value })}
+                value={value[noteKey]}
+              />
             )}
           </div>
         );

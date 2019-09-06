@@ -17,7 +17,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var react_1 = __importStar(require('react'));
 var antd_1 = require('antd');
 var RecordsModal_1 = __importDefault(require('./RecordsModal'));
-var ManagementModal_1 = __importDefault(require('./ManagementModal'));
+var index_1 = __importDefault(require('./ManagementModal/index'));
 var react_2 = require('@uform/react');
 var tableColumns_1 = __importDefault(require('./tableColumns'));
 var context_1 = __importDefault(require('./context'));
@@ -130,7 +130,7 @@ var HighRisk = function(props) {
       visible: recordVisible,
       onCancel: showRecords,
     }),
-    react_1.default.createElement(ManagementModal_1.default, {
+    react_1.default.createElement(index_1.default, {
       visible: managementVisible,
       onCancel: showManagement,
       value: value,

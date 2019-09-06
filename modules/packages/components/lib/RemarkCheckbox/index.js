@@ -29,9 +29,8 @@ exports.default = function(props) {
     _c = props.value,
     value = _c === void 0 ? {} : _c;
   console.log(value);
-  var _onChange = function(key, _value) {
-    var _a;
-    onChange(__assign(__assign({}, value), ((_a = {}), (_a[key] = _value), _a)));
+  var _onChange = function(data) {
+    onChange(__assign(__assign({}, value), data));
   };
   var kvs = Object.entries(dataset);
   return react_1.default.createElement(
@@ -43,16 +42,17 @@ exports.default = function(props) {
       var noteKey = k + 'Note';
       return react_1.default.createElement(
         'div',
-        { key: k },
+        { key: k, style: { display: 'inline-block', marginRight: '10px' } },
         react_1.default.createElement(
           antd_1.Checkbox,
           {
             onChange: function(e) {
+              var _a;
               var bool = e.target.checked;
-              _onChange(k, bool);
-              if (!bool) {
-                _onChange(noteKey, '');
-              }
+              console.log('bool', bool);
+              _onChange(
+                ((_a = {}), (_a[k] = bool), (_a[noteKey] = bool ? value[noteKey] : ''), _a)
+              );
             },
             checked: value[k],
           },
@@ -60,8 +60,10 @@ exports.default = function(props) {
         ),
         value[k] &&
           react_1.default.createElement(antd_1.Input, {
+            style: { display: 'inline-block', maxWidth: '100px' },
             onChange: function(e) {
-              return _onChange(noteKey, e.target.value);
+              var _a;
+              return _onChange(((_a = {}), (_a[noteKey] = e.target.value), _a));
             },
             value: value[noteKey],
           })
