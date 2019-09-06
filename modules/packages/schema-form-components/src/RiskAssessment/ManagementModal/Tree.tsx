@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Tree, Input } from 'antd';
 import { treeData, listData, IItem } from '../dataSource';
-import context from '../context';
+import context, { IRiskItem } from '../context';
 
 const { TreeNode } = Tree;
 const { Search } = Input;
@@ -63,7 +63,8 @@ export default props => {
       ...value,
       risks: checkedKeys.map(_ => {
         const preservedItem = risks.find(risk => risk.key === _);
-        const newItem = listData.find(risk => risk.key === _);
+        const target = listData.find(risk => risk.key === _);
+        const newItem: IRiskItem = { cured: false, fator: '', key: target.key, remark: '' };
         return preservedItem || newItem;
       }),
     });

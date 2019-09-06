@@ -10,3 +10,5 @@ require('./common');
 require('./BloodPressure');
 require('./Abnormal');
 require('./RiskAssessment');
+var RemarkCheckbox_1 = require('./RemarkCheckbox');
+exports.InfectiousDisease = RemarkCheckbox_1.InfectiousDisease;

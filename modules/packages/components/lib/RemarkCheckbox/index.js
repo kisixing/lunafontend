@@ -28,7 +28,6 @@ exports.default = function(props) {
     onChange = _b === void 0 ? function() {} : _b,
     _c = props.value,
     value = _c === void 0 ? {} : _c;
-  console.log(value);
   var _onChange = function(data) {
     onChange(__assign(__assign({}, value), data));
   };
@@ -49,7 +48,6 @@ exports.default = function(props) {
             onChange: function(e) {
               var _a;
               var bool = e.target.checked;
-              console.log('bool', bool);
               _onChange(
                 ((_a = {}), (_a[k] = bool), (_a[noteKey] = bool ? value[noteKey] : ''), _a)
               );

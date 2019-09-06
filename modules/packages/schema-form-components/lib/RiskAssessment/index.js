@@ -1,4 +1,18 @@
 'use strict';
+var __assign =
+  (this && this.__assign) ||
+  function() {
+    __assign =
+      Object.assign ||
+      function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+          s = arguments[i];
+          for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+      };
+    return __assign.apply(this, arguments);
+  };
 var __importStar =
   (this && this.__importStar) ||
   function(mod) {
@@ -18,43 +32,17 @@ var react_1 = __importStar(require('react'));
 var antd_1 = require('antd');
 var RecordsModal_1 = __importDefault(require('./RecordsModal'));
 var index_1 = __importDefault(require('./ManagementModal/index'));
+var Table_1 = __importDefault(require('./Table'));
 var react_2 = require('@uform/react');
-var tableColumns_1 = __importDefault(require('./tableColumns'));
 var context_1 = __importDefault(require('./context'));
+var RemarkCheckbox_1 = require('../RemarkCheckbox');
 var Search = antd_1.Input.Search;
-var plainOptions = ['乙肝大三阳', '乙肝小三阳', '梅毒', 'HIV', '结核病', '重症感染性肺炎', '其他'];
-var dataSource = [
-  {
-    id: '8794554',
-    date: '2019-03-25',
-    type: 'Ⅲ',
-    factor: '仅有妊娠期贫血，血红蛋白70-100 g/L',
-    cure: true,
-    remarks: '补血',
-  },
-  {
-    id: '8794558',
-    date: '2019-04-25',
-    type: 'Ⅳ',
-    factor: '妊娠糖尿病-A2级',
-    cure: false,
-    remarks: '控制血糖',
-  },
-  {
-    id: '87945582',
-    date: '2019-05-25',
-    type: 'Ⅳ',
-    factor: '妊娠糖尿病-A2级',
-    cure: false,
-    remarks: '控制血糖',
-  },
-];
 var HighRisk = function(props) {
   var value = props.value,
     onChange = props.onChange;
-  var _a = react_1.useState([]),
-    checkedList = _a[0],
-    setCheckedList = _a[1];
+  var _a = value,
+    risks = _a.risks,
+    infectiousDisease = _a.infectiousDisease;
   var _b = react_1.useState(true),
     managementVisible = _b[0],
     setManagementVisible = _b[1];
@@ -73,11 +61,10 @@ var HighRisk = function(props) {
     react_1.default.createElement(
       antd_1.Form.Item,
       { label: '\u4F20\u67D3\u75C5', style: { display: 'flex' } },
-      react_1.default.createElement(antd_1.Checkbox.Group, {
-        options: plainOptions,
-        value: checkedList,
-        onChange: function(value) {
-          return console.log(value);
+      react_1.default.createElement(RemarkCheckbox_1.InfectiousDisease, {
+        value: infectiousDisease,
+        onChange: function(infectiousDisease) {
+          return onChange(__assign(__assign({}, value), { infectiousDisease: infectiousDisease }));
         },
       })
     ),
@@ -104,14 +91,7 @@ var HighRisk = function(props) {
         '\u9AD8\u5371\u7BA1\u7406'
       )
     ),
-    react_1.default.createElement(antd_1.Table, {
-      bordered: true,
-      size: 'small',
-      rowKey: 'id',
-      pagination: false,
-      columns: tableColumns_1.default,
-      dataSource: dataSource,
-    }),
+    react_1.default.createElement(Table_1.default, { value: value }),
     react_1.default.createElement(
       'div',
       { style: { textAlign: 'right' } },

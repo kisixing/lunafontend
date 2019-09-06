@@ -1,14 +1,14 @@
 import React from 'react';
-interface IRisk {
+export interface IRiskItem {
   cured: boolean;
   fator: string;
   key: string;
   remark: string;
 }
-interface IValue {
+export interface IValue {
   level: string;
-  risks: Array<IRisk>;
+  risks: Array<IRiskItem>;
   infectiousDisease: object;
 }
-declare const context: React.Context<[IValue, (value: any) => void]>;
+declare const context: React.Context<[IValue, (value: IValue) => void]>;
 export default context;

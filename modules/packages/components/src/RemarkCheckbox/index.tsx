@@ -7,7 +7,6 @@ interface IProps {
 }
 export default (props: IProps) => {
   const { dataset = { heart: '心脏病' }, onChange = () => {}, value = {} } = props;
-  console.log(value);
   const _onChange = data => {
     onChange({
       ...value,
@@ -24,7 +23,6 @@ export default (props: IProps) => {
             <Checkbox
               onChange={e => {
                 const bool = e.target.checked;
-                console.log('bool', bool);
                 _onChange({
                   [k]: bool,
                   [noteKey]: bool ? value[noteKey] : '',

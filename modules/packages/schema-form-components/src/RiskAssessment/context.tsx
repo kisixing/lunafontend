@@ -1,17 +1,17 @@
 import React from 'react';
-interface IRisk {
+export interface IRiskItem {
   cured: boolean;
   fator: string;
   key: string;
   remark: string;
 }
-interface IValue {
+export interface IValue {
   level: string;
-  risks: Array<IRisk>;
+  risks: Array<IRiskItem>;
   infectiousDisease: object;
 }
 
-const data: [IValue, (value: any) => void] = [
+const data: [IValue, (value: IValue) => void] = [
   {
     level: '0',
     risks: [
@@ -28,7 +28,7 @@ const data: [IValue, (value: any) => void] = [
     },
   },
 
-  function(value: any): void {
+  function(value: IValue): void {
     console.log('default value', value);
   },
 ];

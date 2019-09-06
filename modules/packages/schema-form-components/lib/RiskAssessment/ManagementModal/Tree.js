@@ -99,9 +99,10 @@ exports.default = function(props) {
           var preservedItem = risks.find(function(risk) {
             return risk.key === _;
           });
-          var newItem = dataSource_1.listData.find(function(risk) {
+          var target = dataSource_1.listData.find(function(risk) {
             return risk.key === _;
           });
+          var newItem = { cured: false, fator: '', key: target.key, remark: '' };
           return preservedItem || newItem;
         }),
       })

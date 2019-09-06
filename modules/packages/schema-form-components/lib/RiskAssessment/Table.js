@@ -13,33 +13,21 @@ var __assign =
       };
     return __assign.apply(this, arguments);
   };
-var __importStar =
-  (this && this.__importStar) ||
-  function(mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result['default'] = mod;
-    return result;
-  };
 var __importDefault =
   (this && this.__importDefault) ||
   function(mod) {
     return mod && mod.__esModule ? mod : { default: mod };
   };
 Object.defineProperty(exports, '__esModule', { value: true });
-var react_1 = __importStar(require('react'));
+var react_1 = __importDefault(require('react'));
 var antd_1 = require('antd');
-var ColorDot_1 = __importDefault(require('../ColorDot'));
-var context_1 = __importDefault(require('../context'));
-var dataSource_1 = require('../dataSource');
-var index_1 = require('./index');
-function C(_a) {
-  var _b = _a.editable,
-    editable = _b === void 0 ? false : _b;
-  var _c = react_1.useContext(context_1.default),
-    value = _c[0],
-    onChange = _c[1];
+var ColorDot_1 = __importDefault(require('./ColorDot'));
+var dataSource_1 = require('./dataSource');
+var index_1 = require('./ManagementModal/index');
+function C(props) {
+  var editable = props.editable,
+    value = props.value,
+    onChange = props.onChange;
   var risks = value.risks;
   var changeField = function(targetKey, key, _value) {
     var data = risks.map(function(_) {
@@ -55,7 +43,6 @@ function C(_a) {
     {
       title: '高危类型',
       dataIndex: 'key',
-      align: 'center',
       width: '30%',
       render: function(key, record) {
         var item = dataSource_1.listData.find(function(_) {
@@ -76,7 +63,7 @@ function C(_a) {
       title: '治愈',
       dataIndex: 'cured',
       align: 'center',
-      width: '10%',
+      width: '100px',
       render: function(cured, record) {
         return editable
           ? react_1.default.createElement(antd_1.Checkbox, {

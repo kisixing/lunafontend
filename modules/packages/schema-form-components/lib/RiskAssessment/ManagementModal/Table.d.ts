@@ -1,3 +1,3 @@
 /// <reference types="react" />
-declare function C(props: any): JSX.Element;
+declare function C({ editable }: { editable?: boolean }): JSX.Element;
 export default C;
