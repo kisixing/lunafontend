@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Tree, Input } from 'antd';
+import { Tree, Input, Form } from 'antd';
 import { treeData, listData, IItem } from '../dataSource';
 import context, { IRiskItem } from '../context';
 
@@ -96,15 +96,10 @@ export default props => {
       return <TreeNode key={item.key} title={title} />;
     });
   return (
-    <div>
-      <div style={{ margin: '8px 0', display: 'flex', alignItems: 'center', width: '50%' }}>
-        选择高危因素
-        <Search
-          placeholder="Search"
-          onChange={onSearchChange}
-          style={{ flex: 1, marginLeft: '10px' }}
-        />
-      </div>
+    <div style={{ marginTop: '20px' }}>
+      <Form.Item label="选择高危因素" labelCol={{ xs: 3 }}>
+        <Search placeholder="Search" onChange={onSearchChange} />
+      </Form.Item>
       <Tree
         onExpand={onExpand}
         expandedKeys={expandedKeys}

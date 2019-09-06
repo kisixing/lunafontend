@@ -1,5 +1,5 @@
-import React, { Fragment, useState } from 'react';
-import { Input, Button, Checkbox, Form } from 'antd';
+import React, { useState } from 'react';
+import { Input, Button, AutoComplete, Form } from 'antd';
 import RecordsModal from './RecordsModal';
 import ManagementModal from './ManagementModal/index';
 // import styles from './index.less';
@@ -7,6 +7,8 @@ import Table from './Table';
 import { registerFormField, connect, IFieldProps } from '@uform/react';
 import context, { IValue } from './context';
 import { InfectiousDisease } from '../RemarkCheckbox';
+import { listData } from './dataSource';
+import { DataSourceItemObject } from 'antd/lib/auto-complete';
 const Search = Input.Search;
 interface fieldProps extends IFieldProps {}
 const HighRisk = (props: fieldProps) => {
@@ -14,7 +16,8 @@ const HighRisk = (props: fieldProps) => {
   const { risks, infectiousDisease } = value as IValue;
   const [managementVisible, setManagementVisible] = useState(true);
   const [recordVisible, setRecordVisible] = useState(false);
-
+  const [searchDataSource, setSearchDataSource] = useState<Array<DataSourceItemObject>>([]);
+  const [searchText, setSearchText] = useState('');
   const showRecords = bool => {
     setRecordVisible(bool);
   };
@@ -22,7 +25,32 @@ const HighRisk = (props: fieldProps) => {
   const showManagement = bool => {
     setManagementVisible(bool);
   };
-
+  const onSearch = text => {
+    setSearchText(text);
+    if (text === '' || text === ' ') {
+      setSearchDataSource([]);
+    } else {
+      const dataSource = listData
+        .filter(_ => _.title.includes(text))
+        .filter(_ => !risks.some(risk => risk.key === _.key))
+        .map(_ => ({ value: _.key, text: _.title }));
+      setSearchDataSource(dataSource);
+    }
+  };
+  const onSearchSelect = searchSelectedKey => {
+    setSearchText('');
+    if (risks.some(_ => _.key === searchSelectedKey)) return;
+    onChange({
+      ...value,
+      risks: risks.concat({
+        key: searchSelectedKey,
+        fator: '',
+        cured: false,
+        remark: '',
+      }),
+    });
+    setManagementVisible(true);
+  };
   return (
     <context.Provider value={[value, (onChange as unknown) as (value: IValue) => void]}>
       <Form.Item label="传染病" style={{ display: 'flex' }}>
@@ -32,10 +60,12 @@ const HighRisk = (props: fieldProps) => {
         />
       </Form.Item>
       <div style={{ marginBottom: '18px', display: 'flex' }}>
-        <Search
+        <AutoComplete
+          dataSource={searchDataSource}
           placeholder="请输入关键字"
-          enterButton="新增"
-          onSearch={value => console.log(value)}
+          onChange={onSearch}
+          onSelect={onSearchSelect}
+          value={searchText}
         />
         <Button
           type="primary"

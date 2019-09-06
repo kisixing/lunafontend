@@ -2,9 +2,9 @@ import React, { useContext, useState, useEffect } from 'react';
 import { Form, Modal, Select, Button } from 'antd';
 import HighRiskTree from './Tree';
 import context from '../context';
-import { RemarkCheckbox } from '@lianmed/components';
 import Table from '../Table';
 import { InfectiousDisease } from '../../RemarkCheckbox';
+import { listData } from '../dataSource';
 export enum levelMap {
   Ⅰ = 1,
   Ⅱ,
@@ -19,11 +19,23 @@ function ManagementModal(props) {
   const [state, setState] = useState(value);
   const { visible, onCancel } = props;
 
-  const { infectiousDisease } = state;
+  const { infectiousDisease, level, risks } = state;
   console.log('state', state, value);
   useEffect(() => {
     setState(value);
   }, [value, visible]);
+  useEffect(() => {
+    const _level = Object.values(infectiousDisease).some(_ => _ === true)
+      ? '5'
+      : listData
+          .filter(_ => risks.map(risk => risk.key).includes(_.key))
+          .reduce((prev_level, cur) => {
+            const cur_level = cur.key.slice(0, 1);
+            return prev_level > cur_level ? prev_level : cur_level;
+          }, '1');
+
+    setState({ ...state, level: _level });
+  }, [risks, infectiousDisease]);
   return (
     <Form labelAlign="left" labelCol={{ xs: 2 }} wrapperCol={{ xs: 20 }}>
       <context.Provider value={[state, setState]}>
@@ -44,13 +56,10 @@ function ManagementModal(props) {
           <div>
             <Form.Item label="高危等级">
               <Select
-                showSearch
                 placeholder="选择..."
                 style={{ width: '116px' }}
-                optionFilterProp="children"
-                filterOption={(input, option: any) =>
-                  option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                }
+                value={level}
+                onSelect={value => setState({ ...state, level: value })}
               >
                 {Object.keys(levelMap).map(k => {
                   if (typeof levelMap[k] === 'number') {

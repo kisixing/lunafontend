@@ -34,6 +34,7 @@ var Tree_1 = __importDefault(require('./Tree'));
 var context_1 = __importDefault(require('../context'));
 var Table_1 = __importDefault(require('../Table'));
 var RemarkCheckbox_1 = require('../../RemarkCheckbox');
+var dataSource_1 = require('../dataSource');
 var levelMap;
 (function(levelMap) {
   levelMap[(levelMap['\u2160'] = 1)] = '\u2160';
@@ -52,13 +53,37 @@ function ManagementModal(props) {
     setState = _b[1];
   var visible = props.visible,
     onCancel = props.onCancel;
-  var infectiousDisease = state.infectiousDisease;
+  var infectiousDisease = state.infectiousDisease,
+    level = state.level,
+    risks = state.risks;
   console.log('state', state, value);
   react_1.useEffect(
     function() {
       setState(value);
     },
     [value, visible]
+  );
+  react_1.useEffect(
+    function() {
+      var _level = Object.values(infectiousDisease).some(function(_) {
+        return _ === true;
+      })
+        ? '5'
+        : dataSource_1.listData
+            .filter(function(_) {
+              return risks
+                .map(function(risk) {
+                  return risk.key;
+                })
+                .includes(_.key);
+            })
+            .reduce(function(prev_level, cur) {
+              var cur_level = cur.key.slice(0, 1);
+              return prev_level > cur_level ? prev_level : cur_level;
+            }, '1');
+      setState(__assign(__assign({}, state), { level: _level }));
+    },
+    [risks, infectiousDisease]
   );
   return react_1.default.createElement(
     antd_1.Form,
@@ -92,12 +117,11 @@ function ManagementModal(props) {
             react_1.default.createElement(
               antd_1.Select,
               {
-                showSearch: true,
                 placeholder: '\u9009\u62E9...',
                 style: { width: '116px' },
-                optionFilterProp: 'children',
-                filterOption: function(input, option) {
-                  return option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+                value: level,
+                onSelect: function(value) {
+                  return setState(__assign(__assign({}, state), { level: value }));
                 },
               },
               Object.keys(levelMap).map(function(k) {

@@ -36,6 +36,7 @@ var Table_1 = __importDefault(require('./Table'));
 var react_2 = require('@uform/react');
 var context_1 = __importDefault(require('./context'));
 var RemarkCheckbox_1 = require('../RemarkCheckbox');
+var dataSource_1 = require('./dataSource');
 var Search = antd_1.Input.Search;
 var HighRisk = function(props) {
   var value = props.value,
@@ -49,11 +50,57 @@ var HighRisk = function(props) {
   var _c = react_1.useState(false),
     recordVisible = _c[0],
     setRecordVisible = _c[1];
+  var _d = react_1.useState([]),
+    searchDataSource = _d[0],
+    setSearchDataSource = _d[1];
+  var _e = react_1.useState(''),
+    searchText = _e[0],
+    setSearchText = _e[1];
   var showRecords = function(bool) {
     setRecordVisible(bool);
   };
   var showManagement = function(bool) {
     setManagementVisible(bool);
+  };
+  var onSearch = function(text) {
+    setSearchText(text);
+    if (text === '' || text === ' ') {
+      setSearchDataSource([]);
+    } else {
+      var dataSource = dataSource_1.listData
+        .filter(function(_) {
+          return _.title.includes(text);
+        })
+        .filter(function(_) {
+          return !risks.some(function(risk) {
+            return risk.key === _.key;
+          });
+        })
+        .map(function(_) {
+          return { value: _.key, text: _.title };
+        });
+      setSearchDataSource(dataSource);
+    }
+  };
+  var onSearchSelect = function(searchSelectedKey) {
+    setSearchText('');
+    if (
+      risks.some(function(_) {
+        return _.key === searchSelectedKey;
+      })
+    )
+      return;
+    onChange(
+      __assign(__assign({}, value), {
+        risks: risks.concat({
+          key: searchSelectedKey,
+          fator: '',
+          cured: false,
+          remark: '',
+        }),
+      })
+    );
+    setManagementVisible(true);
   };
   return react_1.default.createElement(
     context_1.default.Provider,
@@ -71,12 +118,12 @@ var HighRisk = function(props) {
     react_1.default.createElement(
       'div',
       { style: { marginBottom: '18px', display: 'flex' } },
-      react_1.default.createElement(Search, {
+      react_1.default.createElement(antd_1.AutoComplete, {
+        dataSource: searchDataSource,
         placeholder: '\u8BF7\u8F93\u5165\u5173\u952E\u5B57',
-        enterButton: '\u65B0\u589E',
-        onSearch: function(value) {
-          return console.log(value);
-        },
+        onChange: onSearch,
+        onSelect: onSearchSelect,
+        value: searchText,
       }),
       react_1.default.createElement(
         antd_1.Button,
