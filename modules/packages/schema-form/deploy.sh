@@ -15,6 +15,7 @@ cp -rf lib/ .deploy/lib
 cd .deploy
 
 
+git init
 git add -A
 git commit -m 'deploy'
 

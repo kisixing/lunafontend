@@ -11,7 +11,23 @@ import { listData } from './dataSource';
 import { DataSourceItemObject } from 'antd/lib/auto-complete';
 interface fieldProps extends IFieldProps {}
 const HighRisk = (props: fieldProps) => {
-  const { value, onChange } = props;
+  const {
+    value = {
+      level: '0',
+      risks: [],
+      infectiousDisease: {},
+    },
+    onChange,
+  } = props;
+  if (!value.level) {
+    value.level = '0';
+  }
+  if (!value.risks) {
+    value.risks = [];
+  }
+  if (!value.infectiousDisease) {
+    value.infectiousDisease = {};
+  }
   const { risks, infectiousDisease } = value as IValue;
   const [managementVisible, setManagementVisible] = useState(false);
   const [recordVisible, setRecordVisible] = useState(false);

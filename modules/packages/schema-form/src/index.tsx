@@ -1,18 +1,18 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-console */
-import React from 'react';
+import React, { Props, useContext } from 'react';
 import { SchemaForm, createFormActions } from '@uform/antd';
 import 'antd/dist/antd.css';
 import '@lianmed/schema-form-components';
-export default ({
-  schema,
-  initialValues,
-  collectActions = actions => {
-    return actions;
-  },
-  ...props
-}) => {
+import { Context } from '@lianmed/schema-form-manager';
+interface IP extends Props<any> {
+  schema: object;
+  initialValues?: object;
+  [x: string]: any;
+}
+const _SchemaForm = ({ schema, initialValues, ...props }: IP) => {
   const actions = createFormActions();
+  const { collectActions } = useContext(Context);
   return (
     <SchemaForm
       labelAlign="left"
@@ -41,3 +41,7 @@ export default ({
     </SchemaForm>
   );
 };
+export const componentNameKey = 'componentName';
+export const componentName = 0x1234;
+_SchemaForm[componentNameKey] = componentName;
+export default _SchemaForm;

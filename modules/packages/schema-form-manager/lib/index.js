@@ -26,6 +26,9 @@ var react_1 = __importDefault(require("react"));
 var storage_1 = __importDefault(require("./storage"));
 var antd_1 = require("antd");
 var checkDirtyCreator_1 = __importDefault(require("./checkDirtyCreator"));
+var schema_form_1 = require("@lianmed/schema-form");
+var Context_1 = __importDefault(require("./Context"));
+exports.Context = Context_1.default;
 var hasSymbol = typeof Symbol === 'function' && Symbol.for;
 var $name = hasSymbol ? Symbol.for('lian.formName') : 'lian.formName';
 function connectAdvanced(_a) {
@@ -109,8 +112,9 @@ function connectAdvanced(_a) {
         var wrappedComponentName = WrappedComponent.displayName || WrappedComponent.name || 'Component';
         var displayName = getDisplayName(wrappedComponentName);
         function ConnectFunction(props) {
-            var _props = __assign(__assign({}, props), { collectActions: collectActions, submit: submit, checkIsDirty: checkIsDirty });
-            return react_1.default.createElement(WrappedComponent, __assign({}, _props));
+            var _props = __assign(__assign({}, props), { submit: submit, checkIsDirty: checkIsDirty });
+            return (react_1.default.createElement(Context_1.default.Provider, { value: { collectActions: collectActions } },
+                react_1.default.createElement(WrappedComponent, __assign({}, _props))));
         }
         ConnectFunction.WrappedComponent = WrappedComponent;
         ConnectFunction.displayName = displayName;
@@ -126,3 +130,32 @@ function connectAdvanced(_a) {
     };
 }
 exports.default = connectAdvanced;
+function findChild(children, res) {
+    if (res === void 0) { res = []; }
+    if (typeof children === 'string') {
+        return;
+    }
+    if (children.length === undefined) {
+        if (typeof children.type !== 'string') {
+            if (children.type[schema_form_1.componentNameKey] === schema_form_1.componentName) {
+                res.push(children);
+            }
+        }
+        if (children.props && children.props.children) {
+            findChild(children.props.children, res);
+        }
+        return;
+    }
+    react_1.default.Children.forEach(children, function (child) {
+        findChild(child, res);
+    });
+    return res;
+}
+exports.Another = function (props) {
+    var targets = findChild(props.children);
+    targets.forEach(function (t) {
+        console.log(Object.getOwnPropertyDescriptors(t));
+    });
+    console.log(targets);
+    return props.children;
+};

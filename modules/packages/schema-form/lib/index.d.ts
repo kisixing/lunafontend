@@ -1,10 +1,12 @@
-/// <reference types="react" />
+import { Props } from 'react';
 import 'antd/dist/antd.css';
 import '@lianmed/schema-form-components';
-declare const _default: ({ schema, initialValues, collectActions, ...props }: {
+interface IP extends Props<any> {
+    schema: object;
+    initialValues?: object;
     [x: string]: any;
-    schema: any;
-    initialValues: any;
-    collectActions?: (actions: any) => any;
-}) => JSX.Element;
-export default _default;
+}
+declare const _SchemaForm: ({ schema, initialValues, ...props }: IP) => JSX.Element;
+export declare const componentNameKey = "componentName";
+export declare const componentName = 4660;
+export default _SchemaForm;

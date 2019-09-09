@@ -57,7 +57,6 @@ exports.default = (function (props) {
         setState(__assign(__assign({}, state), { expandedKeys: expandedKeys, searchValue: value, autoExpandParent: true }));
     };
     var onCheck = function (checkedKeys) {
-        console.log('onCheck', checkedKeys);
         checkedKeys = checkedKeys.filter(function (_) {
             var item = dataSource_1.listData.find(function (risk) { return risk.key === _; });
             return item.checkable;

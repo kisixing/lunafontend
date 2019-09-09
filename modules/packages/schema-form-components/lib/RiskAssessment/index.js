@@ -31,12 +31,25 @@ var context_1 = __importDefault(require("./context"));
 var RemarkCheckbox_1 = require("../RemarkCheckbox");
 var dataSource_1 = require("./dataSource");
 var HighRisk = function (props) {
-    var value = props.value, onChange = props.onChange;
-    var _a = value, risks = _a.risks, infectiousDisease = _a.infectiousDisease;
-    var _b = react_1.useState(false), managementVisible = _b[0], setManagementVisible = _b[1];
-    var _c = react_1.useState(false), recordVisible = _c[0], setRecordVisible = _c[1];
-    var _d = react_1.useState([]), searchDataSource = _d[0], setSearchDataSource = _d[1];
-    var _e = react_1.useState(''), searchText = _e[0], setSearchText = _e[1];
+    var _a = props.value, value = _a === void 0 ? {
+        level: '0',
+        risks: [],
+        infectiousDisease: {},
+    } : _a, onChange = props.onChange;
+    if (!value.level) {
+        value.level = '0';
+    }
+    if (!value.risks) {
+        value.risks = [];
+    }
+    if (!value.infectiousDisease) {
+        value.infectiousDisease = {};
+    }
+    var _b = value, risks = _b.risks, infectiousDisease = _b.infectiousDisease;
+    var _c = react_1.useState(false), managementVisible = _c[0], setManagementVisible = _c[1];
+    var _d = react_1.useState(false), recordVisible = _d[0], setRecordVisible = _d[1];
+    var _e = react_1.useState([]), searchDataSource = _e[0], setSearchDataSource = _e[1];
+    var _f = react_1.useState(''), searchText = _f[0], setSearchText = _f[1];
     var showRecords = function (bool) {
         setRecordVisible(bool);
     };

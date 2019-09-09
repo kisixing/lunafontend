@@ -1,13 +1,16 @@
 import hoistStatics from 'hoist-non-react-statics';
-import React from 'react';
+import React, { ComponentType } from 'react';
 import { IFormActions } from '@uform/types';
 import StorageHelp from './storage';
 import { message, Modal } from 'antd';
 import checkDirtyCreator from './checkDirtyCreator';
 import { IConfig } from './types';
+import { componentName, componentNameKey } from '@lianmed/schema-form';
+import Context from './Context';
 const hasSymbol = typeof Symbol === 'function' && Symbol.for;
 const $name: symbol | string = hasSymbol ? Symbol.for('lian.formName') : 'lian.formName';
 
+export { Context };
 export default function connectAdvanced({
   interrupted = false,
   cache = false,
@@ -105,9 +108,13 @@ export default function connectAdvanced({
     const displayName = getDisplayName(wrappedComponentName);
 
     function ConnectFunction(props) {
-      const _props = { ...props, collectActions, submit, checkIsDirty };
+      const _props = { ...props, submit, checkIsDirty };
 
-      return <WrappedComponent {..._props} />;
+      return (
+        <Context.Provider value={{ collectActions }}>
+          <WrappedComponent {..._props} />
+        </Context.Provider>
+      );
     }
 
     ConnectFunction.WrappedComponent = WrappedComponent;
@@ -126,3 +133,37 @@ export default function connectAdvanced({
     return hoistStatics(ConnectFunction, WrappedComponent);
   };
 }
+interface PP {
+  children: any;
+}
+
+function findChild(children: any, res = []): Array<any> {
+  if (typeof children === 'string') {
+    return;
+  }
+  if (children.length === undefined) {
+    if (typeof children.type !== 'string') {
+      if (children.type[componentNameKey] === componentName) {
+        res.push(children);
+      }
+    }
+    if (children.props && children.props.children) {
+      findChild(children.props.children, res);
+    }
+    return;
+  }
+
+  React.Children.forEach(children, child => {
+    findChild(child, res);
+  });
+  return res;
+}
+
+export const Another = (props: PP): ComponentType => {
+  const targets = findChild(props.children);
+  targets.forEach(t => {
+    console.log(Object.getOwnPropertyDescriptors(t));
+  });
+  console.log(targets);
+  return props.children;
+};

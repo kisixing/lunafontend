@@ -9,6 +9,7 @@
     "clean": "lerna clean",
     "build:docs": "node ./scripts/docs.js build -i docs -o docs",
     "build": "rm -rf packages/*/lib packages/*/esm && lerna run build",
+    "build:watch": "rm -rf packages/*/lib packages/*/esm && lerna run build:watch",
     "start": "node ./scripts/docs.js start -i docs",
     "deploy": "lerna run deploy",
     "link:all": "lerna run link"

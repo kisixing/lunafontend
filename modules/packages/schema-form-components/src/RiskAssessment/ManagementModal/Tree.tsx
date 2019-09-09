@@ -54,7 +54,6 @@ export default props => {
     });
   };
   const onCheck = (checkedKeys: Array<string>) => {
-    console.log('onCheck', checkedKeys);
     checkedKeys = checkedKeys.filter(_ => {
       const item = listData.find(risk => risk.key === _);
       return item.checkable;

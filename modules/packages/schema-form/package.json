@@ -33,7 +33,9 @@
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0",
     "@uform/antd": "^0.4.0",
-    "@uform/printer": "^0.4.0",
+    "@uform/printer": "^0.4.0"
+  },
+  "peerDependencies": {
     "@lianmed/schema-form-components": "^1.0.0"
   }
 }

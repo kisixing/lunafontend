@@ -20,7 +20,6 @@ function ManagementModal(props) {
   const { visible, onCancel } = props;
 
   const { infectiousDisease, level, risks } = state;
-  console.log('state', state, value);
   useEffect(() => {
     setState(value);
   }, [value, visible]);

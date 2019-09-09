@@ -42,7 +42,6 @@ function ManagementModal(props) {
     var _b = react_1.useState(value), state = _b[0], setState = _b[1];
     var visible = props.visible, onCancel = props.onCancel;
     var infectiousDisease = state.infectiousDisease, level = state.level, risks = state.risks;
-    console.log('state', state, value);
     react_1.useEffect(function () {
         setState(value);
     }, [value, visible]);
