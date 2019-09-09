@@ -33,7 +33,10 @@
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0",
     "@uform/antd": "^0.4.0",
-    "@uform/printer": "^0.4.0"
+    "@uform/printer": "^0.4.0",
+    "localforage": "^1.7.3"
   },
-  "peerDependencies": {}
+  "peerDependencies": {
+    "@lianmed/components": "^1.0.0"
+  }
 }

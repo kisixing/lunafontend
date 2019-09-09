@@ -5,7 +5,7 @@ import StorageHelp from './storage';
 import { message, Modal } from 'antd';
 import checkDirtyCreator from './checkDirtyCreator';
 import { IConfig } from './types';
-import { componentName, componentNameKey } from '@lianmed/schema-form';
+import { componentName, componentNameKey } from '../SchemaForm';
 import Context from './Context';
 const hasSymbol = typeof Symbol === 'function' && Symbol.for;
 const $name: symbol | string = hasSymbol ? Symbol.for('lian.formName') : 'lian.formName';
