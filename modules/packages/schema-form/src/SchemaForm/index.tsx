@@ -2,8 +2,7 @@
 /* eslint-disable no-console */
 import React, { Props, useContext } from 'react';
 import { SchemaForm, createFormActions } from '@uform/antd';
-import 'antd/dist/antd.css';
-import '@lianmed/schema-form-components';
+import '../components';
 import { Context } from '../manager';
 interface IP extends Props<any> {
   schema: object;
