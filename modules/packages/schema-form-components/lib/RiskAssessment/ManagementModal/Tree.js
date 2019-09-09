@@ -141,8 +141,12 @@ exports.default = function(props) {
     { style: { marginTop: '20px' } },
     react_1.default.createElement(
       antd_1.Form.Item,
-      { label: '\u9009\u62E9\u9AD8\u5371\u56E0\u7D20', labelCol: { xs: 3 } },
-      react_1.default.createElement(Search, { placeholder: 'Search', onChange: onSearchChange })
+      { label: '\u9009\u62E9\u9AD8\u5371\u56E0\u7D20', labelAlign: 'left', labelCol: { xs: 3 } },
+      react_1.default.createElement(Search, {
+        placeholder: 'Search',
+        onChange: onSearchChange,
+        style: { width: '40%' },
+      })
     ),
     react_1.default.createElement(
       antd_1.Tree,

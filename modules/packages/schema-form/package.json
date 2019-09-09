@@ -19,7 +19,9 @@
   },
   "scripts": {
     "test": "echo \"Error: run tests from root\" && exit 1",
+    "build:watch": "tsc --declaration -w",
     "build": "tsc --declaration",
+    "deploy": "sh deploy.sh",
     "link": "npm link"
   },
   "bugs": {

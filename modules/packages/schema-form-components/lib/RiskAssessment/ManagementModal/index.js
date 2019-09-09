@@ -86,8 +86,8 @@ function ManagementModal(props) {
     [risks, infectiousDisease]
   );
   return react_1.default.createElement(
-    antd_1.Form,
-    { labelAlign: 'left', labelCol: { xs: 2 }, wrapperCol: { xs: 20 } },
+    'div',
+    null,
     react_1.default.createElement(
       context_1.default.Provider,
       { value: [state, setState] },
@@ -113,7 +113,7 @@ function ManagementModal(props) {
           null,
           react_1.default.createElement(
             antd_1.Form.Item,
-            { label: '\u9AD8\u5371\u7B49\u7EA7' },
+            { label: '\u9AD8\u5371\u7B49\u7EA7', labelAlign: 'left', labelCol: { xs: 2 } },
             react_1.default.createElement(
               antd_1.Select,
               {
@@ -138,7 +138,7 @@ function ManagementModal(props) {
           ),
           react_1.default.createElement(
             antd_1.Form.Item,
-            { label: '\u4F20\u67D3\u75C5' },
+            { label: '\u4F20\u67D3\u75C5', labelAlign: 'left', labelCol: { xs: 2 } },
             react_1.default.createElement(RemarkCheckbox_1.InfectiousDisease, {
               value: infectiousDisease,
               onChange: function(infectiousDisease) {

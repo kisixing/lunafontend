@@ -97,8 +97,8 @@ export default props => {
     });
   return (
     <div style={{ marginTop: '20px' }}>
-      <Form.Item label="选择高危因素" labelCol={{ xs: 3 }}>
-        <Search placeholder="Search" onChange={onSearchChange} />
+      <Form.Item label="选择高危因素" labelAlign="left" labelCol={{ xs: 3 }}>
+        <Search placeholder="Search" onChange={onSearchChange} style={{ width: '40%' }} />
       </Form.Item>
       <Tree
         onExpand={onExpand}

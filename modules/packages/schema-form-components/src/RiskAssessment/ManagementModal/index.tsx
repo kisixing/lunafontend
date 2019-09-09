@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Form, Modal, Select, Button } from 'antd';
+import { Form, Modal, Select } from 'antd';
 import HighRiskTree from './Tree';
 import context from '../context';
 import Table from '../Table';
@@ -37,7 +37,7 @@ function ManagementModal(props) {
     setState({ ...state, level: _level });
   }, [risks, infectiousDisease]);
   return (
-    <Form labelAlign="left" labelCol={{ xs: 2 }} wrapperCol={{ xs: 20 }}>
+    <div>
       <context.Provider value={[state, setState]}>
         <Modal
           destroyOnClose
@@ -54,7 +54,7 @@ function ManagementModal(props) {
           }}
         >
           <div>
-            <Form.Item label="高危等级">
+            <Form.Item label="高危等级" labelAlign="left" labelCol={{ xs: 2 }}>
               <Select
                 placeholder="选择..."
                 style={{ width: '116px' }}
@@ -73,7 +73,7 @@ function ManagementModal(props) {
                 })}
               </Select>
             </Form.Item>
-            <Form.Item label="传染病">
+            <Form.Item label="传染病" labelAlign="left" labelCol={{ xs: 2 }}>
               <InfectiousDisease
                 value={infectiousDisease}
                 onChange={infectiousDisease => setState({ ...state, infectiousDisease })}
@@ -88,7 +88,7 @@ function ManagementModal(props) {
           </div>
         </Modal>
       </context.Provider>
-    </Form>
+    </div>
   );
 }
 

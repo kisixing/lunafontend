@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Input, Button, AutoComplete, Form } from 'antd';
+import { Button, AutoComplete, Form } from 'antd';
 import RecordsModal from './RecordsModal';
 import ManagementModal from './ManagementModal/index';
 // import styles from './index.less';
@@ -9,12 +9,11 @@ import context, { IValue } from './context';
 import { InfectiousDisease } from '../RemarkCheckbox';
 import { listData } from './dataSource';
 import { DataSourceItemObject } from 'antd/lib/auto-complete';
-const Search = Input.Search;
 interface fieldProps extends IFieldProps {}
 const HighRisk = (props: fieldProps) => {
   const { value, onChange } = props;
   const { risks, infectiousDisease } = value as IValue;
-  const [managementVisible, setManagementVisible] = useState(true);
+  const [managementVisible, setManagementVisible] = useState(false);
   const [recordVisible, setRecordVisible] = useState(false);
   const [searchDataSource, setSearchDataSource] = useState<Array<DataSourceItemObject>>([]);
   const [searchText, setSearchText] = useState('');
