@@ -6,18 +6,18 @@ interface A extends IFieldProps {
 }
 export default createVirtualBox('inspection_card', (props: A) => {
   return (
-    <div
+    <fieldset
       className="code-box-meta markdown"
       style={{
         position: 'relative',
         fontSize: '14px',
         lineHeight: '2',
         border: '1px solid #ccc',
-        margin: '16px 0',
+        margin: '10px',
         borderRadius: '2px',
       }}
     >
-      <div
+      {/* <div
         className="code-box-title"
         style={{
           position: 'absolute',
@@ -28,10 +28,13 @@ export default createVirtualBox('inspection_card', (props: A) => {
         }}
       >
         <span>{props.title}</span>
-      </div>
-      <div className="code-box-description" style={{ padding: '18px 24px' }}>
+      </div> */}
+      <legend style={{ width: 'auto', margin: '0', marginLeft: '16px', border: '0' }}>
+        {props.title}
+      </legend>
+      <div className="code-box-description" style={{ padding: '18px' }}>
         {props.children}
       </div>
-    </div>
+    </fieldset>
   );
 });
