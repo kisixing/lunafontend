@@ -27,7 +27,9 @@ export default registerFormField(
           }}
         >
           {Object.entries(TYPES).map(kv => (
-            <Option value={kv[0]}>{kv[1]}</Option>
+            <Option value={kv[0]} key={kv[0]}>
+              {kv[1]}
+            </Option>
           ))}
         </Select>
         <Input

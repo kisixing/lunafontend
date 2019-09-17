@@ -1,6 +1,8 @@
 import { IFormActions } from '@uform/types';
+import { FunctionComponent } from 'react';
 
 export interface IConfig {
+  url: string;
   interrupted?: boolean;
   cache?: boolean;
   getStorageName?: () => string;
@@ -10,4 +12,9 @@ export interface IConfig {
   onSubmit?: (formData: Array<any>, status: boolean) => Promise<any>;
   mergeFormValues?: (arr: Array<IFormActions>) => Array<any>;
   forwardRef?: boolean;
+  [x: string]: any;
 }
+
+export type manager = FunctionComponent<IConfig> & {
+  Buttons: any;
+};

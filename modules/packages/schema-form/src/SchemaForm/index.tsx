@@ -3,7 +3,7 @@
 import React, { Props, useContext } from 'react';
 import { SchemaForm, createFormActions } from '@uform/antd';
 import '../components';
-import { Context } from '../manager';
+import { Context } from '../Manager';
 interface IP extends Props<any> {
   schema: object;
   initialValues?: object;
@@ -35,6 +35,7 @@ const _SchemaForm = ({ schema, initialValues, ...props }: IP) => {
         });
       }}
       {...props}
+      style={{ overflow: 'hidden' }}
     >
       {props.children}
     </SchemaForm>

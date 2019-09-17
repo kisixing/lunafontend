@@ -1,3 +1,3 @@
-import manager from './manager';
+import Manager from './Manager';
 import SchemaForm from './SchemaForm';
-export { manager, SchemaForm };
+export { Manager, SchemaForm };
