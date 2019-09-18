@@ -2,6 +2,7 @@ import { IFormActions } from '@uform/types';
 import { FunctionComponent } from 'react';
 
 export interface IConfig {
+  schemaUrl: string;
   url: string;
   interrupted?: boolean;
   cache?: boolean;

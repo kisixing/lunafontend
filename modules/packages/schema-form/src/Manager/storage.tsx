@@ -2,7 +2,7 @@ import localforage from 'localforage';
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder('utf-8', { fatal: true });
-
+export { localforage };
 export default class StorageHelp {
   constructor(key: string) {
     this.key = key;

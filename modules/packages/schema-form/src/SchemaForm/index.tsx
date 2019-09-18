@@ -10,6 +10,7 @@ interface IP extends Props<any> {
   [x: string]: any;
 }
 const _SchemaForm = ({ schema, initialValues, ...props }: IP) => {
+  console.log('schema', schema, initialValues);
   const actions = createFormActions();
   const { collectActions } = useContext(Context);
   return (

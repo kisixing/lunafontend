@@ -19,7 +19,7 @@ const C: ComponentType<any> = ({ value, onChange, datasource }) => {
                       {d}
                     </Checkbox>
                   </Col>
-                  {value.includes(d) && (
+                  {value && value.includes(d) && (
                     <Col span={10}>
                       <Input />
                     </Col>

@@ -1,19 +1,20 @@
 import { ResponseError, RequestOptionsInit } from 'umi-request';
 
-export interface errData {
+export interface ErrData {
   status: number;
   errortext: string;
   url: string;
+  data: any;
 }
 export interface RequestOptions extends RequestOptionsInit {
   hideErr?: boolean;
   successText?: string;
-  onErr: (err: errData) => any;
 }
-export type getErrData = (err: ResponseError) => errData;
+export type getErrDataType = (err: ResponseError) => ErrData;
 
 export interface Iconfig extends RequestOptionsInit {
-  errHandler: (err: errData) => any;
-  Authorization: string;
+  //暴露给用户的全局错误处理
+  errHandler?: (err: ErrData) => any;
+  Authorization?: string;
   [x: string]: any;
 }

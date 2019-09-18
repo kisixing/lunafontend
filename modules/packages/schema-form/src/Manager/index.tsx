@@ -1,12 +1,15 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useMemo, useState, ReactElement, useEffect } from 'react';
 import { IFormActions } from '@uform/types';
-import StorageHelp from './storage';
+import StorageHelp, { localforage } from './storage';
 import { message, Modal } from 'antd';
 import checkDirtyCreator from './checkDirtyCreator';
 import { manager } from './types';
 import Context from './Context';
 import { FormButtonGroup } from './Buttons/formButtonGroup';
-import { post } from '@lianmed/request';
+import { post, get } from '@lianmed/request';
+import { mapChildren } from './utils/mapChildren';
+import { componentNameKey, componentName } from '../SchemaForm';
+import { schemasData, values } from './schemaMockData';
 const hasSymbol = typeof Symbol === 'function' && Symbol.for;
 const $name: symbol | string = hasSymbol ? Symbol.for('lian.formName') : 'lian.formName';
 
@@ -15,14 +18,16 @@ export { Context };
 const connectAdvanced: manager = props => {
   const all: Array<IFormActions> = useMemo(() => [], []);
 
+  const [schemas, setSchemas] = useState([]);
+  const [initialValues, setInitialValues] = useState([]);
   const {
-    url,
+    url = '',
     interrupted = false,
     cache = false,
     getStorageName = () => {
       return `${String(name)}_storage`;
     },
-
+    schemaUrl = 'getSchema',
     name = $name,
 
     mergeFormValues = (arr: Array<IFormActions>) => {
@@ -32,6 +37,30 @@ const connectAdvanced: manager = props => {
     },
     children,
   } = props;
+
+  useEffect(() => {
+    localforage.getItem(schemaUrl).then(
+      value => {
+        if (!!value) {
+          setSchemas(value as any);
+        } else {
+          get(schemaUrl).then(value => {
+            if (schemaUrl === 'getSchema') {
+              value = schemasData;
+            }
+            setSchemas(value);
+            localforage.setItem(schemaUrl, value);
+          });
+        }
+      },
+      reason => {
+        console.log('reason', reason);
+      }
+    );
+  }, []);
+  useEffect(() => {
+    setInitialValues(values);
+  });
   const storageName = getStorageName();
   const storageHelp = new StorageHelp(storageName);
   const FormRef = useRef(null);
@@ -53,23 +82,24 @@ const connectAdvanced: manager = props => {
         post(url, {
           data: { data: lastCommitData },
           successText: '提交成功！',
-          onErr(data) {
-            debugger;
-            cache && storageHelp.setItem(lastCommitData);
-          },
         })
           .finally(() => {
             console.log('finally');
             hide();
           })
           .then(res => {
+            console.log('success');
+
             cache && storageHelp.removeItem();
             top.removeEventListener('beforeunload', onBeforeunloadCb);
+          })
+          .catch(err => {
+            cache && storageHelp.setItem(lastCommitData);
           });
       })
       .catch(err => {
         hide();
-        console.log('表单验证失败');
+        console.log('表单验证失败', err);
       });
   };
   cache &&
@@ -95,9 +125,20 @@ const connectAdvanced: manager = props => {
         console.log(err);
       });
 
+  const newChildren = mapChildren()(
+    children as ReactElement,
+    componentNameKey,
+    componentName,
+    (_, index) => {
+      console.log(index, schemas[index]);
+      return { schema: schemas[index] || null, initialValues: initialValues[index] || null };
+      // return {};
+    }
+  );
+
   return (
     <Context.Provider value={{ collectActions, FormRef, submit }}>
-      <div ref={FormRef}>{children}</div>
+      <div ref={FormRef}>{newChildren}</div>
     </Context.Provider>
   );
 };
