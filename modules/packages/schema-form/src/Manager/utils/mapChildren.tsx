@@ -18,7 +18,8 @@ export const mapChildren = () => {
     //Children.map 会改变key
     const map = Children.map || Array.prototype.map.call.bind(Array.prototype.map);
     return map(Children.count(node) === 1 ? [node] : node, _ => {
-      const isTarget = checkTarget(node, key, value);
+      const isTarget = checkTarget(_, key, value);
+
       if (isTarget) {
         return cloneElement(_, fn(_, index++));
       } else {

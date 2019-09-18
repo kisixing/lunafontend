@@ -130,7 +130,6 @@ const connectAdvanced: manager = props => {
     componentNameKey,
     componentName,
     (_, index) => {
-      console.log(index, schemas[index]);
       return { schema: schemas[index] || null, initialValues: initialValues[index] || null };
       // return {};
     }
