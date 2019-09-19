@@ -1,4 +1,4 @@
-import React, { useRef, useMemo, useState, ReactElement, useEffect } from 'react';
+import React, { useRef, useMemo, useState, ReactElement, useEffect, useCallback } from 'react';
 import { IFormActions } from '@uform/types';
 import StorageHelp, { localforage } from './storage';
 import { message, Modal } from 'antd';
@@ -14,12 +14,7 @@ const hasSymbol = typeof Symbol === 'function' && Symbol.for;
 const $name: symbol | string = hasSymbol ? Symbol.for('lian.formName') : 'lian.formName';
 
 export { Context };
-
 const connectAdvanced: manager = props => {
-  const all: Array<IFormActions> = useMemo(() => [], []);
-
-  const [schemas, setSchemas] = useState([]);
-  const [initialValues, setInitialValues] = useState([]);
   const {
     url = '',
     interrupted = false,
@@ -29,14 +24,31 @@ const connectAdvanced: manager = props => {
     },
     schemaUrl = 'getSchema',
     name = $name,
-
-    mergeFormValues = (arr: Array<IFormActions>) => {
-      return arr.reduce((result, current) => {
-        return [...result, current.getFormState().values];
-      }, []);
-    },
     children,
   } = props;
+
+  const [schemas, setSchemas] = useState([]);
+  const [initialValues, setInitialValues] = useState([]);
+
+  const all: Array<IFormActions> = useMemo(() => [], []);
+  const storageHelp = useMemo(() => new StorageHelp(getStorageName()), []);
+
+  const setValues = useCallback((values: Array<IFormActions>) => {
+    values.forEach((_, index) => {
+      const actions = all[index];
+      actions &&
+        actions.setFormState(state => {
+          state.values = _;
+        });
+    });
+  }, []);
+  const getValues = useCallback((arr: Array<IFormActions>) => {
+    return arr.reduce((result, current) => {
+      return [...result, current.getFormState().values];
+    }, []);
+  }, []);
+
+  const FormRef = useRef(null);
 
   useEffect(() => {
     localforage.getItem(schemaUrl).then(
@@ -61,10 +73,9 @@ const connectAdvanced: manager = props => {
   useEffect(() => {
     setInitialValues(values);
   });
-  const storageName = getStorageName();
-  const storageHelp = new StorageHelp(storageName);
-  const FormRef = useRef(null);
-  let lastCommitData: Array<any> = [];
+  if (!schemas.length) {
+    return null;
+  }
 
   const collectActions = function(actions: IFormActions) {
     all.push(actions);
@@ -74,34 +85,33 @@ const connectAdvanced: manager = props => {
   interrupted && top.addEventListener('beforeunload', onBeforeunloadCb);
 
   const submit = function() {
-    const hide = message.loading('提交中..', 0);
     Promise.all(all.map(_ => _.validate()))
       .then(res => {
-        lastCommitData = mergeFormValues(all);
+        let lastCommitData = getValues(all);
 
-        post(url, {
+        return post(url, {
           data: { data: lastCommitData },
           successText: '提交成功！',
+          loading: '提交中',
+          interval: 1000,
         })
-          .finally(() => {
-            console.log('finally');
-            hide();
-          })
           .then(res => {
-            console.log('success');
+            console.log('success', res);
 
             cache && storageHelp.removeItem();
             top.removeEventListener('beforeunload', onBeforeunloadCb);
           })
           .catch(err => {
+            console.log('request err', err);
             cache && storageHelp.setItem(lastCommitData);
           });
       })
       .catch(err => {
-        hide();
+        // hide();
         console.log('表单验证失败', err);
       });
   };
+
   cache &&
     storageHelp
       .get()
@@ -110,13 +120,7 @@ const connectAdvanced: manager = props => {
           title: '加载数据',
           content: '是否加载上次提交失败的数据？',
           onOk() {
-            value.forEach((_, index) => {
-              const actions = all[index];
-              actions &&
-                actions.setFormState(state => {
-                  state.values = _;
-                });
-            });
+            setValues(value);
           },
           onCancel() {},
         });

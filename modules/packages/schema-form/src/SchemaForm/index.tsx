@@ -19,7 +19,7 @@ const _SchemaForm = ({ schema, initialValues, ...props }: IP) => {
       schema={schema}
       initialValues={initialValues}
       onChange={(a, b) => {
-        console.log(a, b);
+        // console.log(a, b);
       }}
       onSubmit={v => console.log(v)}
       actions={actions}

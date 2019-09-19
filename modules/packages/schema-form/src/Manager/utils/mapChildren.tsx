@@ -25,7 +25,6 @@ export const mapChildren = () => {
       } else {
         const { props } = _;
         if (props && props.children) {
-          // return cloneElement(_, {}, null);
           return cloneElement(_, {}, ...inner(props.children, key, value, fn));
         } else {
           return _;
