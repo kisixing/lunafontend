@@ -8,7 +8,9 @@ export interface ErrData {
 }
 export interface RequestOptions extends RequestOptionsInit {
   hideErr?: boolean;
+  loading?: string;
   successText?: string;
+  interval?: number;
 }
 export type getErrDataType = (err: ResponseError) => ErrData;
 

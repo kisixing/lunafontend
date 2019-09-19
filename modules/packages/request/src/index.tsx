@@ -1,10 +1,13 @@
-import { extend } from 'umi-request';
+import { extend, RequestMethod } from 'umi-request';
 import { Iconfig, RequestOptions } from './types';
 import { message, notification } from 'antd';
 import getErrData from './getErrData';
 
+const intervalSet: Set<string> = new Set();
+
+type RequestType = (url: string, options?: RequestOptions) => Promise<any>;
 class R {
-  private _request = null;
+  private _request: RequestMethod = null;
 
   constructor() {
     this.config();
@@ -39,7 +42,6 @@ class R {
     this._request.interceptors.response.use((response: Response, options: RequestOptions) => {
       const { successText, hideErr } = options;
       const { status } = response;
-      console.log('sta', status);
 
       // eslint-disable-next-line no-param-reassign
       if ([200, 304].includes(status)) {
@@ -63,14 +65,37 @@ class R {
 
       return response;
     });
+    this.intercept();
     return this._request;
   };
-  public post = (url: string, options: RequestOptions) => {
-    return this._request.post(url, options);
-  };
-  public get = (url: string) => {
-    return this._request.get(url);
-  };
+
+  private intercept() {
+    ['get', 'post'].forEach(_ => {
+      this[_] = ((url, options = {}) => {
+        const { loading, interval } = options;
+        if (typeof interval === 'number') {
+          const key = _ + ':' + url;
+          if (intervalSet.has(key)) {
+            return Promise.reject('interval !');
+          }
+          intervalSet.add(key);
+          setTimeout(() => {
+            intervalSet.delete(key);
+          }, interval);
+        }
+        const promise: Promise<any> = this._request[_](url, options);
+        if (loading !== undefined) {
+          const hide = message.loading(loading, 0);
+          return promise.finally(() => {
+            hide();
+          });
+        }
+        return promise;
+      }) as RequestType;
+    });
+  }
+  post: RequestType;
+  get: RequestType;
 }
 
 const r = new R();
