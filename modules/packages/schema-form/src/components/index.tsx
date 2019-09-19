@@ -8,4 +8,6 @@ import './common';
 import './BloodPressure';
 import './Abnormal';
 import './RiskAssessment';
+import './ErBao';
+
 export { InfectiousDisease } from './RemarkCheckbox';

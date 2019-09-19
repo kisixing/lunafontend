@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 import { Checkbox, Table, Form, DatePicker } from 'antd';
 import { registerFormField, connect } from '@uform/antd';
 import moment from 'moment';
-import { ColumnProps, PregnancyHistoryItem } from './PregnancyHistory_interface';
+import { ColumnProps, PregnancyHistoryItem } from './type';
 
 const columnData: Array<ColumnProps> = [
   { title: '孕次', dataIndex: '孕次', display: true },
@@ -181,7 +181,7 @@ function EditableTable(props: {
 }
 
 export default registerFormField(
-  'pregnancy_history',
+  'body_growth_check',
   connect({})((props: any) => {
     const { value, onChange, readOnly } = props;
 

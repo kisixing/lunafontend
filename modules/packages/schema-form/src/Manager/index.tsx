@@ -9,7 +9,7 @@ import { FormButtonGroup } from './Buttons/formButtonGroup';
 import { post, get } from '@lianmed/request';
 import { mapChildren } from './utils/mapChildren';
 import { componentNameKey, componentName } from '../SchemaForm';
-import { schemasData, values } from './schemaMockData';
+import { schemasData } from './schemaMockData';
 const hasSymbol = typeof Symbol === 'function' && Symbol.for;
 const $name: symbol | string = hasSymbol ? Symbol.for('lian.formName') : 'lian.formName';
 
@@ -44,8 +44,8 @@ const connectAdvanced: manager = props => {
   }, []);
   const getValues = useCallback((arr: Array<IFormActions>) => {
     return arr.reduce((result, current) => {
-      return [...result, current.getFormState().values];
-    }, []);
+      return { ...result, ...current.getFormState().values };
+    }, {});
   }, []);
 
   const FormRef = useRef(null);
@@ -69,10 +69,12 @@ const connectAdvanced: manager = props => {
         console.log('reason', reason);
       }
     );
+
+    get(url).then(value => {
+      setInitialValues(value);
+    });
   }, []);
-  useEffect(() => {
-    setInitialValues(values);
-  });
+
   if (!schemas.length) {
     return null;
   }
@@ -88,10 +90,9 @@ const connectAdvanced: manager = props => {
     Promise.all(all.map(_ => _.validate()))
       .then(res => {
         let lastCommitData = getValues(all);
-
         return post(url, {
           data: { data: lastCommitData },
-          successText: '提交成功！',
+          successText: '提交成功111！',
           loading: '提交中',
           interval: 1000,
         })
@@ -134,7 +135,7 @@ const connectAdvanced: manager = props => {
     componentNameKey,
     componentName,
     (_, index) => {
-      return { schema: schemas[index] || null, initialValues: initialValues[index] || null };
+      return { schema: schemas[index] || null, initialValues: initialValues || null };
       // return {};
     }
   );

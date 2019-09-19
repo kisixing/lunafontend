@@ -1,4 +1,4 @@
-export const schemasData = [
+export const schemasData: Array<any> = [
   {
     type: 'object',
     'x-components': 'layout',
@@ -886,4 +886,4 @@ export const values = [
       infectiousDisease: { HIV: true, HIVNote: '我问问' },
     },
   },
-];
+].reduce((res, pre) => ({ ...res, ...pre }), {});
