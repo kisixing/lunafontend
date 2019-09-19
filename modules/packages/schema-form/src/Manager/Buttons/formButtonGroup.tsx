@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { IFormButtonGroupProps } from './grid';
-import { Button } from 'antd';
 import Sticky from 'react-stikky';
 import Context from '../Context';
+import { Button } from '@lianmed/components';
 export interface IOffset {
   top: number | string;
   right: number | string;
@@ -114,7 +114,7 @@ export class FormButtonGroup extends Component<IFormButtonGroupProps> {
                   justifyContent: 'flex-end',
                 }}
               >
-                <Button onClick={submit} size="small" type="primary">
+                <Button interval={2000} onClick={submit} size="small" type="primary">
                   提交
                 </Button>
               </Sticky>
