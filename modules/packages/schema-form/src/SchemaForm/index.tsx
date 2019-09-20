@@ -12,13 +12,14 @@ interface IP extends Props<any> {
 const _SchemaForm = ({ schema, initialValues, ...props }: IP) => {
   const actions = createFormActions();
   const { collectActions } = useContext(Context);
+
   return (
     <SchemaForm
       labelAlign="left"
       schema={schema}
       initialValues={initialValues}
       onChange={(a, b) => {
-        // console.log(a, b);
+        console.log(a, b);
       }}
       onSubmit={v => console.log(v)}
       actions={actions}

@@ -1,7 +1,7 @@
 import React, { useRef, useMemo, useState, ReactElement, useEffect, useCallback } from 'react';
 import { IFormActions } from '@uform/types';
 import StorageHelp, { localforage } from './storage';
-import { message, Modal } from 'antd';
+import { Modal } from 'antd';
 import checkDirtyCreator from './checkDirtyCreator';
 import { manager } from './types';
 import Context from './Context';
@@ -25,12 +25,14 @@ const connectAdvanced: manager = props => {
     schemaUrl = 'getSchema',
     name = $name,
     children,
+    test = false,
   } = props;
 
   const [schemas, setSchemas] = useState([]);
   const [initialValues, setInitialValues] = useState([]);
 
   const all: Array<IFormActions> = useMemo(() => [], []);
+  console.log('all', all);
   const storageHelp = useMemo(() => new StorageHelp(getStorageName()), []);
 
   const setValues = useCallback((values: Array<IFormActions>) => {
@@ -53,7 +55,8 @@ const connectAdvanced: manager = props => {
   useEffect(() => {
     localforage.getItem(schemaUrl).then(
       value => {
-        if (!!value) {
+        // if (!!value) {
+        if (false) {
           setSchemas(value as any);
         } else {
           get(schemaUrl).then(value => {
@@ -130,15 +133,12 @@ const connectAdvanced: manager = props => {
         console.log(err);
       });
 
-  const newChildren = mapChildren()(
-    children as ReactElement,
-    componentNameKey,
-    componentName,
-    (_, index) => {
-      return { schema: schemas[index] || null, initialValues: initialValues || null };
-      // return {};
-    }
-  );
+  const newChildren = !test
+    ? mapChildren()(children as ReactElement, componentNameKey, componentName, (_, index) => {
+        return { schema: schemas[index] || null, initialValues: initialValues || null };
+        // return {};
+      })
+    : children;
 
   return (
     <Context.Provider value={{ collectActions, FormRef, submit }}>
