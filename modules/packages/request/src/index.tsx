@@ -1,35 +1,10 @@
-import { extend, RequestMethod } from 'umi-request';
 import { Iconfig, RequestOptions } from './types';
 import { message, notification } from 'antd';
 import getErrData from './getErrData';
+import Request from './Request';
 
-const intervalSet: Set<string> = new Set();
-
-type RequestType = (url: string, options?: RequestOptions) => Promise<any>;
-class R {
-  private _request: RequestMethod = null;
+class R extends Request {
   private hasConfiged = false;
-  constructor() {
-    this.init();
-  }
-  private init = (configs: Iconfig = {}) => {
-    const { errHandler, ...others } = configs;
-    this._request = extend({
-      timeout: 5000,
-      credentials: 'include', // 默认请求是否带上cookie
-      headers: {
-        Accept: 'application/json',
-      },
-      errorHandler: err => {
-        const errorData = getErrData(err.response);
-        errHandler && errHandler(errorData);
-
-        return Promise.reject(errorData);
-      },
-      ...others,
-    });
-    this.intercept();
-  };
   public config = (configs: Iconfig = {}) => {
     const { hasConfiged } = this;
     if (hasConfiged) {
@@ -77,34 +52,6 @@ class R {
     });
     return this._request;
   };
-
-  private intercept() {
-    ['get', 'post'].forEach(_ => {
-      this[_] = ((url, options = {}) => {
-        const { loading, interval } = options;
-        if (typeof interval === 'number') {
-          const key = _ + ':' + url;
-          if (intervalSet.has(key)) {
-            return Promise.reject('interval !');
-          }
-          intervalSet.add(key);
-          setTimeout(() => {
-            intervalSet.delete(key);
-          }, interval);
-        }
-        const promise: Promise<any> = this._request[_](url, options);
-        if (loading !== undefined) {
-          const hide = message.loading(loading, 0);
-          return promise.finally(() => {
-            hide();
-          });
-        }
-        return promise;
-      }) as RequestType;
-    });
-  }
-  post: RequestType;
-  get: RequestType;
 }
 
 const r = new R();
