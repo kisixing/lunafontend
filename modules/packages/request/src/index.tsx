@@ -8,13 +8,12 @@ const intervalSet: Set<string> = new Set();
 type RequestType = (url: string, options?: RequestOptions) => Promise<any>;
 class R {
   private _request: RequestMethod = null;
-
+  private hasConfiged = false;
   constructor() {
-    this.config();
+    this.init();
   }
-
-  public config = (configs: Iconfig = {}) => {
-    const { errHandler, Authorization = '', ...others } = configs;
+  private init = (configs: Iconfig = {}) => {
+    const { errHandler, ...others } = configs;
     this._request = extend({
       timeout: 5000,
       credentials: 'include', // 默认请求是否带上cookie
@@ -29,6 +28,17 @@ class R {
       },
       ...others,
     });
+    this.intercept();
+  };
+  public config = (configs: Iconfig = {}) => {
+    const { hasConfiged } = this;
+    if (hasConfiged) {
+      return console.warn("couldn't config twice");
+    }
+    this.hasConfiged = true;
+    const { Authorization = '' } = configs;
+
+    this.init(configs);
     // request拦截器, 改变url 或 options.
     this._request.interceptors.request.use((url, options) => {
       // eslint-disable-next-line no-param-reassign
@@ -65,7 +75,6 @@ class R {
 
       return response;
     });
-    this.intercept();
     return this._request;
   };
 
