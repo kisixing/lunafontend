@@ -7,3 +7,4 @@ interface Iconfig {
     IconScriptUrl?: string;
 }
 export declare const config: (data: Iconfig) => void;
+//# sourceMappingURL=index.d.ts.map

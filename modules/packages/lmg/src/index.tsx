@@ -1,46 +1,75 @@
-import React, { useEffect, useRef } from 'react';
-import data from './data';
-import { btnaudiopause, btnaudioplay, init, draw8, initDom, handleServiceData } from './test';
-export default () => {
-  const audio = useRef(null);
+import React, { useEffect, useRef, MutableRefObject, useState, useMemo } from 'react';
+import fakeData from './data';
+import { Suit } from './test';
+// import { Button } from 'antd';
+export default ({ data }) => {
+  data = data || fakeData;
   console.log(data);
+  const audio: MutableRefObject<any> = useRef(null);
+  const canvas1 = useRef(null);
+  const canvas2 = useRef(null);
+  const title = useRef(null);
+  const wrap = useRef(null);
+  const [playStatus, setPlayStatus] = useState(false);
+
+  const [suit, setSuit] = useState(null as Suit);
+
   useEffect(() => {
-    handleServiceData(data);
-    initDom();
-    draw8();
-    init();
+    const instance = new Suit(
+      data,
+      audio.current,
+      canvas1.current,
+      canvas2.current,
+      title.current,
+      wrap.current
+    );
+    setSuit(instance);
+    instance.onStatusChange = status => {
+      setPlayStatus(status);
+    };
   }, []);
+
   return (
-    <div>
-      <div className="tlts">
-        <h4 id="curtitle">CTG</h4>
-        <button
-          type="button"
-          id="btnpause"
-          className="btn btn-primary btn-xs"
-          onClick={btnaudiopause}
-        >
-          <i className="glyphicon glyphicon-pause"></i>
-        </button>
-        <button
-          type="button"
-          id="btnplay"
-          className="btn btn-primary btn-xs"
-          onClick={btnaudioplay}
-          style={{ left: '300px' }}
-        >
-          <i className="glyphicon glyphicon-play"></i>
-        </button>
-      </div>
-      <div id="pecharts" className="canvasbody">
-        <canvas id="canvas" width="1500" height="430" className="z2">
+    <div style={{ width: '100%', height: '100%' }}>
+      {/* <div>
+        <h4 ref={title}>CTG</h4>
+
+        <div style={{ display: 'flex' }}>
+          <Button
+            onClick={() => {
+              if (playStatus) {
+                suit.btnaudiopause();
+              } else {
+                suit.btnaudioplay();
+              }
+            }}
+            icon={playStatus ? 'pause' : 'caret-right'}
+          ></Button>
+        </div>
+      </div> */}
+      <div ref={wrap} style={{ position: 'relative', width: '100%', height: '100%' }}>
+        <canvas ref={canvas1} width="1500" height="430">
           <p>Your browserdoes not support the canvas element.</p>
         </canvas>
-        <canvas id="canvas2" width="1500" height="430" className="z3">
+        <canvas
+          style={{ position: 'absolute', left: '0', top: '0' }}
+          ref={canvas2}
+          width="1500"
+          height="430"
+          onMouseDown={e => {
+            suit && suit.p.OnMouseDown(e.nativeEvent);
+          }}
+          onMouseMove={e => {
+            suit && suit.p.OnMouseMove(e.nativeEvent);
+          }}
+          onMouseUp={e => {
+            suit && suit.p.OnMouseUp(e.nativeEvent);
+          }}
+        >
           <p>Your browserdoes not support the canvas element.</p>
         </canvas>
       </div>
-      <audio ref={audio} src="out.wav" id="audio"></audio>
+      <audio ref={audio} src="out.wav"></audio>
     </div>
   );
 };

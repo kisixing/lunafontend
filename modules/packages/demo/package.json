@@ -14,7 +14,7 @@
     "@lianmed/lmg": "^1.0.0"
   },
   "scripts": {
-    "start": "npx react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
