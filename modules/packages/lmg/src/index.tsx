@@ -15,13 +15,16 @@ export default ({ data, showBtn = false }) => {
   const [suit, setSuit] = useState(null as Suit);
 
   useEffect(() => {
+    const rect = wrap.current.getBoundingClientRect();
+    const { width, height } = rect;
     const instance = new Suit(
       data,
       audio.current,
       canvas1.current,
       canvas2.current,
       title.current,
-      wrap.current
+      width,
+      height
     );
     setSuit(instance);
     instance.onStatusChange = status => {
@@ -49,7 +52,14 @@ export default ({ data, showBtn = false }) => {
           </div>
         </div>
       )}
-      <div ref={wrap} style={{ position: 'relative', width: '100%', height: '100%' }}>
+      <div
+        ref={wrap}
+        style={{
+          position: 'relative',
+          width: '100%',
+          height: `calc(100% - ${showBtn ? 60 : 0}px)`,
+        }}
+      >
         <canvas ref={canvas1} width="1500" height="430">
           <p>Your browserdoes not support the canvas element.</p>
         </canvas>

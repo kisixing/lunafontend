@@ -70,6 +70,7 @@ export class Suit {
   context2: CanvasRenderingContext2D;
   title: HTMLElement;
   wrap: HTMLElement;
+
   p: P;
   currentx = 10;
   timeout: NodeJS.Timeout;
@@ -79,30 +80,24 @@ export class Suit {
     canvas1: HTMLCanvasElement,
     canvas2: HTMLCanvasElement,
     title: HTMLElement,
-    wrap: HTMLElement
+    width: number,
+    height: number
   ) {
-    const rect = wrap.getBoundingClientRect();
-    const { width, height } = rect;
-    this.audio = audio;
-
     canvas1.width = width;
     canvas1.height = height;
     canvas2.width = width;
     canvas2.height = height;
 
+    this.audio = audio;
     this.canvas1 = canvas1;
     this.canvas2 = canvas2;
     this.context1 = canvas1.getContext('2d');
     this.context2 = canvas2.getContext('2d');
     this.title = title;
     this.initfhrdata(data);
-
     new Drwa8(this).draw();
-    var rulercolor = 'rgb(67,205,128)';
-
     this.p = new P(20, 0, 6, 428, rulercolor, this); // 竖向选择线
     audio.currentTime = 16;
-
     this.btnaudioplay();
   }
 
