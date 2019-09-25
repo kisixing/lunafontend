@@ -1,4 +1,4 @@
-import Drwa8 from './Drwa8';
+import DrawCTG from './DrawCTG';
 var rulercolor = 'rgb(67,205,128)';
 
 export class P {
@@ -34,7 +34,6 @@ export class P {
     clearInterval();
   }
   OnMouseDown(evt) {
-    this.suit.btnaudiopause();
     var X = evt.layerX;
     var Y = evt.layerY;
     if (X < this.x + this.w && X > this.x) {
@@ -46,14 +45,11 @@ export class P {
     }
   }
   OnMouseUp(evt) {
-    this.suit.btnaudiopause();
     this.isDown = false;
     let seconds = (evt.layerX / 75) * 60;
-    if (seconds > this.suit.audio.duration) {
-    } else {
+    {
       this.suit.showcur(evt.layerX, this.suit.fhr[evt.layerX], this.suit.toco[evt.layerX]);
       this.suit.currentx = evt.layerX;
-      this.suit.audio.currentTime = seconds;
     }
   }
 }
@@ -63,11 +59,12 @@ export class Suit {
   toco = [];
   fm = [];
   fmp = [];
-  audio: HTMLAudioElement;
   canvas1: HTMLCanvasElement;
   context1: CanvasRenderingContext2D;
   canvas2: HTMLCanvasElement;
   context2: CanvasRenderingContext2D;
+  canvasline: HTMLCanvasElement;
+  contextline: CanvasRenderingContext2D;
   title: HTMLElement;
   wrap: HTMLElement;
 
@@ -76,9 +73,9 @@ export class Suit {
   timeout: NodeJS.Timeout;
   constructor(
     data: object,
-    audio: HTMLAudioElement,
     canvas1: HTMLCanvasElement,
     canvas2: HTMLCanvasElement,
+    canvasline: HTMLCanvasElement,
     title: HTMLElement,
     width: number,
     height: number
@@ -88,17 +85,16 @@ export class Suit {
     canvas2.width = width;
     canvas2.height = height;
 
-    this.audio = audio;
     this.canvas1 = canvas1;
     this.canvas2 = canvas2;
+    this.canvasline = canvasline;
     this.context1 = canvas1.getContext('2d');
     this.context2 = canvas2.getContext('2d');
+    this.contextline = canvasline.getContext('2d');
     this.title = title;
     this.initfhrdata(data);
-    new Drwa8(this).draw();
+    new DrawCTG(this).draw();
     this.p = new P(20, 0, 6, 428, rulercolor, this); // 竖向选择线
-    audio.currentTime = 16;
-    this.btnaudioplay();
   }
 
   initfhrdata(data) {
@@ -131,34 +127,8 @@ export class Suit {
   movescoll() {
     const { currentx } = this;
     this.p.draw(currentx, 0, 6, 428, rulercolor);
-
     this.currentx = currentx + 1;
     this.showcur(currentx, this.fhr[currentx], this.toco[currentx]);
-  }
-
-  btnaudioplay() {
-    const { timeout, audio, onStatusChange } = this;
-    onStatusChange(true);
-    audio;
-    if (!timeout) {
-      audio
-        .play()
-        .then(r => {})
-        .catch(e => {
-          console.error('err', e);
-        });
-      return (this.timeout = this.timerscoll(1000));
-    }
-  }
-
-  btnaudiopause() {
-    const { timeout, audio, onStatusChange } = this;
-    onStatusChange(false);
-    if (timeout) {
-      clearInterval(timeout);
-      this.timeout = null;
-      audio.pause();
-    }
   }
 
   timerscoll(dely): NodeJS.Timeout {
