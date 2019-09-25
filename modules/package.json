@@ -13,8 +13,8 @@
     "start": "node ./scripts/docs.js start -i docs",
     "deploy": "lerna run deploy",
     "link:all": "lerna run link",
-    "run:demo": "cd ./packages/demo && yarn start",
-    "start:demo": "concurrently --kill-others  \"yarn run build:watch\"  \" yarn run run:demo \""
+    "start:demo": "cd ./packages/demo && yarn start",
+    "run:demo": "concurrently --kill-others  'yarn run build:watch'  'yarn start:demo'"
   },
   "dependencies": {
     "@alifd/next": "^1.13.1",

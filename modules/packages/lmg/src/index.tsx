@@ -1,16 +1,16 @@
-import React, { useEffect, useRef, MutableRefObject, useState, useMemo } from 'react';
+import React, { useEffect, useRef, MutableRefObject, useState } from 'react';
 import fakeData from './data';
-import { Suit } from './test';
+import { Suit } from './Suit';
 // import { Button } from 'antd';
 export default ({ data }) => {
   data = data || fakeData;
-  console.log(data);
+  // console.log(data);
   const audio: MutableRefObject<any> = useRef(null);
   const canvas1 = useRef(null);
   const canvas2 = useRef(null);
   const title = useRef(null);
   const wrap = useRef(null);
-  const [playStatus, setPlayStatus] = useState(false);
+  // const [playStatus, setPlayStatus] = useState(false);
 
   const [suit, setSuit] = useState(null as Suit);
 
@@ -25,7 +25,8 @@ export default ({ data }) => {
     );
     setSuit(instance);
     instance.onStatusChange = status => {
-      setPlayStatus(status);
+      console.log(status);
+      // setPlayStatus(status);
     };
   }, []);
 

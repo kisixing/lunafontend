@@ -1,4 +1,4 @@
-import Drwa8 from './draw88';
+import Drwa8 from './Drwa8';
 var rulercolor = 'rgb(67,205,128)';
 
 export class P {
@@ -8,17 +8,8 @@ export class P {
   h: number;
   color: string;
   isDown: boolean;
-
   suit: Suit;
-  constructor(
-    x: number,
-    y: number,
-    w: number,
-    h: number,
-    color: string,
-
-    suit: Suit
-  ) {
+  constructor(x: number, y: number, w: number, h: number, color: string, suit: Suit) {
     this.suit = suit;
     this.draw(x, y, w, h, color);
   }
@@ -37,7 +28,7 @@ export class P {
     //timeout = true;
     if (this.isDown) {
       var X = evt.layerX - this.w / 2;
-      var Y = evt.layerY - this.h / 2;
+      // var Y = evt.layerY - this.h / 2;
       this.draw(X, 0, 6, 428, rulercolor);
     }
     clearInterval();
@@ -154,7 +145,6 @@ export class Suit {
     const { timeout, audio, onStatusChange } = this;
     onStatusChange(true);
     audio;
-
     if (!timeout) {
       audio
         .play()

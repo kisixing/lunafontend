@@ -1,4 +1,4 @@
-import { Suit } from './test';
+import { Suit } from './Suit';
 
 function formatDate(date: any, format) {
   if (!date) return;

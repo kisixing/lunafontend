@@ -19,9 +19,9 @@ git init
 git add -A
 git commit -m 'deploy'
 
-git remote add origin git@github.com:NenX/lmg.git
+git remote add origin git@github.com:NenX/lianmed_lmg.git
 
-git push -f -u git@github.com:NenX/lmg.git
+git push -f -u git@github.com:NenX/lianmed_lmg.git
 
 cd -
 rm -rf .deploy/
