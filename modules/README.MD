@@ -5,12 +5,8 @@
 
 ## 安装
 
-
-
-
 ```bash
-yarn
-yarn run bootstrap
+yarn bootstrap
 ```
 
 
@@ -27,6 +23,17 @@ yarn run link:all
 npm link packageName
 ```
 
+## 运行
+
+运行demo
+
+```base
+yarn build:watch
+```
+
+```base
+yarn start:demo
+```
 
 运行文档(windows平台可能跑不起来)
 
