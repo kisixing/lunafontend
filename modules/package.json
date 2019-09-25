@@ -5,11 +5,12 @@
     "packages/*"
   ],
   "scripts": {
-    "bootstrap": "lerna bootstrap",
+    "bootstrap": "yarn && lerna bootstrap",
     "clean": "lerna clean",
     "build:docs": "node ./scripts/docs.js build -i docs -o docs",
-    "build": "rm -rf packages/*/lib packages/*/esm && lerna run build",
-    "build:watch": "rm -rf packages/*/lib packages/*/esm && lerna run build:watch",
+    "clear": "shx rm -rf packages/*/lib packages/*/esm",
+    "build": "yarn clear && lerna run build",
+    "build:watch": "yarn clear && lerna run build:watch",
     "start": "node ./scripts/docs.js start -i docs",
     "deploy": "lerna run deploy",
     "link:all": "lerna run link",
@@ -33,7 +34,8 @@
   "devDependencies": {
     "concurrently": "^4.1.2",
     "cross-env": "^5.2.1",
+    "shx": "^0.3.2",
     "typescript": "^3.5.2",
-    "webpack": "^4.40.2"
+    "webpack": "4.40.2"
   }
 }

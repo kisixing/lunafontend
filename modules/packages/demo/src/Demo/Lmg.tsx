@@ -1,5 +1,5 @@
 import React from 'react';
 import L from '@lianmed/lmg';
 export default () => {
-  return <L data={null}></L>;
+  return <L data={null} showBtn={true}></L>;
 };

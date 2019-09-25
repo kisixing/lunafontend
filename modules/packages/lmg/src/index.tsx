@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, MutableRefObject, useState } from 'react';
 import fakeData from './data';
 import { Suit } from './Suit';
-// import { Button } from 'antd';
-export default ({ data }) => {
+import { Button } from 'antd';
+export default ({ data, showBtn = false }) => {
   data = data || fakeData;
   // console.log(data);
   const audio: MutableRefObject<any> = useRef(null);
@@ -10,7 +10,7 @@ export default ({ data }) => {
   const canvas2 = useRef(null);
   const title = useRef(null);
   const wrap = useRef(null);
-  // const [playStatus, setPlayStatus] = useState(false);
+  const [playStatus, setPlayStatus] = useState(false);
 
   const [suit, setSuit] = useState(null as Suit);
 
@@ -26,28 +26,29 @@ export default ({ data }) => {
     setSuit(instance);
     instance.onStatusChange = status => {
       console.log(status);
-      // setPlayStatus(status);
+      setPlayStatus(status);
     };
   }, []);
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
-      {/* <div>
-        <h4 ref={title}>CTG</h4>
-
-        <div style={{ display: 'flex' }}>
-          <Button
-            onClick={() => {
-              if (playStatus) {
-                suit.btnaudiopause();
-              } else {
-                suit.btnaudioplay();
-              }
-            }}
-            icon={playStatus ? 'pause' : 'caret-right'}
-          ></Button>
+      {showBtn && (
+        <div>
+          <h4 ref={title}>CTG</h4>
+          <div style={{ display: 'flex' }}>
+            <Button
+              onClick={() => {
+                if (playStatus) {
+                  suit.btnaudiopause();
+                } else {
+                  suit.btnaudioplay();
+                }
+              }}
+              icon={playStatus ? 'pause' : 'caret-right'}
+            ></Button>
+          </div>
         </div>
-      </div> */}
+      )}
       <div ref={wrap} style={{ position: 'relative', width: '100%', height: '100%' }}>
         <canvas ref={canvas1} width="1500" height="430">
           <p>Your browserdoes not support the canvas element.</p>
