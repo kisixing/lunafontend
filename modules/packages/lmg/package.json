@@ -26,7 +26,9 @@
     "link": "npm link"
   },
   "peerDependencies": {
-    "react": "^16.9.0"
+    "react": "^16.9.0",
+    "antd": "^3.22.2",
+    "@lianmed/schema-form": "^1.0.0"
   },
   "bugs": {
     "url": "https://github.com/kisixing/LUNA_FontEnd/issues"

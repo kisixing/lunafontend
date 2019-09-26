@@ -21,16 +21,6 @@ const last_points = [
   [25, 1100],
   [25, 1200],
 ];
-// let ecg_scope = 1;
-// let current_times = 0;
-// let max_times = 135;
-// let canvas = null;
-// let canvasline = null;
-// let ctx = null;
-// let linectx = null;
-// let width = 0;
-// let height = 0;
-// let current_time_millis = 0;
 
 const loopmill = 62;
 

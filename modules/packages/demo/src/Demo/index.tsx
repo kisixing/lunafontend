@@ -15,7 +15,7 @@ export default () => {
       style={{ padding: 50 }}
     >
       <TabPane tab="Tab 1" key="1">
-        <div style={{ width: '1000px', height: '400px', border: '1px solid red' }}>
+        <div style={{ width: '100%', height: '900px', border: '1px solid red' }}>
           <Friedman />
         </div>
       </TabPane>

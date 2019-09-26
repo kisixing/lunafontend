@@ -3,14 +3,18 @@ type Ctx = CanvasRenderingContext2D;
 interface I {
   canvas: Canvas;
   canvas2: Canvas;
+  width: number;
+  height: number;
 }
 export class DrawFriedman {
   canvas: Canvas;
   context: Ctx;
   canvas2: Canvas;
   context2: Ctx;
-
+  width: number;
+  height: number;
   maxindex = 750;
+
   lastx = 0;
   lasty = 0;
   baseleft = 50;
@@ -26,8 +30,7 @@ export class DrawFriedman {
   lastcurrx = 0;
   currentx = 10;
   constructor(args: I) {
-    const { canvas, canvas2 } = args;
-    const { width, height } = canvas;
+    const { canvas, canvas2, width, height } = args;
     Object.assign(this, {
       ...args,
       width,
@@ -35,7 +38,11 @@ export class DrawFriedman {
       context: canvas.getContext('2d'),
       context2: canvas2.getContext('2d'),
     });
-    this.drawgrid('canvas');
+    // canvas.width = width;
+    // canvas.height = height;
+    // canvas2.width = width;
+    // canvas2.height = height;
+    this.drawgrid();
     this.printline();
     this.canvas.addEventListener(
       'click',
@@ -47,7 +54,7 @@ export class DrawFriedman {
     );
   }
   showcur(x, fhr, toco) {
-    const { canvas, context } = this;
+    const { context } = this;
 
     context.font = 'bold 10px consolas';
     context.textAlign = 'left';
@@ -85,7 +92,7 @@ export class DrawFriedman {
   }
 
   drawarc(x, y) {
-    const { canvas, context } = this;
+    const { context } = this;
 
     context.beginPath();
     context.arc(x, y, 8, 0, 2 * Math.PI);
@@ -96,7 +103,7 @@ export class DrawFriedman {
   }
 
   drawcross(x, y) {
-    const { canvas, context } = this;
+    const { context } = this;
 
     context.beginPath();
     context.fillStyle = '#394a6d';
@@ -188,8 +195,8 @@ export class DrawFriedman {
     context.stroke();
   }
 
-  sethorizontal(length) {
-    const { canvas, context, baseleft, basetop } = this;
+  sethorizontal(length: number) {
+    const { canvas, context, baseleft, basetop, height } = this;
 
     if (canvas == null) return false;
     context.beginPath();
@@ -208,10 +215,7 @@ export class DrawFriedman {
     return (interval / (60 * 60)).toFixed(1);
   }
 
-  drawgrid(id) {
-    const { canvas } = this;
-
-    if (canvas == null) return false;
+  drawgrid() {
     this.sethorizontal(900);
     this.setvertical(900);
     this.setrules(40, 'right');
@@ -238,8 +242,6 @@ export class DrawFriedman {
       this.drawarc(curx, cury1);
       this.drawcross(curx - 10, cury2);
       if (lastx != 0) {
-        var canvas = document.getElementById('canvas');
-        if (canvas == null) return false;
         context2.beginPath();
         context2.lineWidth = 2.5;
         context2.strokeStyle = 'red';
@@ -260,10 +262,9 @@ export class DrawFriedman {
     }
   }
 
-  setting() {
-    // var showtype = document.getElementById('showtype').value;
-    // isshowevent = Number(showtype);
-    // printline();
+  setting(showtype) {
+    this.isshowevent = Number(showtype);
+    this.printline();
   }
   getEventPosition(ev) {
     var x, y;

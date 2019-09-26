@@ -24,7 +24,7 @@ export default (response: Response): ErrData => {
   const { status, statusText, url } = copy;
   let data = null;
   try {
-    data = copy.json();
+    data = copy.json().catch(e => {});
   } catch (e) {
     console.error('error response without data', copy.body);
   }
