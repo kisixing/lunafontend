@@ -24,12 +24,13 @@ function useScroll(
     const barEl = bar.current;
     const boxEl = box.current;
 
-    var boxRec = boxEl.getBoundingClientRect();
-    const barRex = barEl.getBoundingClientRect();
-
-    var { width: boxWidth } = boxRec;
-    var { width: barWidth } = barRex;
     const wheelCb = function(e: Event & any) {
+      var boxRec = boxEl.getBoundingClientRect();
+      const barRex = barEl.getBoundingClientRect();
+
+      var { width: boxWidth } = boxRec;
+      var { width: barWidth } = barRex;
+
       e.preventDefault();
       var delta = e.wheelDelta / 120;
       setOffset(
@@ -43,8 +44,8 @@ function useScroll(
     const mousedownCb = e => {
       var boxRec = boxEl.getBoundingClientRect();
       const barRex = barEl.getBoundingClientRect();
-      var { left: boxLeft } = boxRec;
-      var { left: barLeft } = barRex;
+      var { left: boxLeft, width: boxWidth } = boxRec;
+      var { left: barLeft, width: barWidth } = barRex;
       var { x } = getCoordInDocument(e);
 
       const span = x - barLeft;

@@ -98,10 +98,14 @@ export class Suit {
 
     const drawer = new DrawCTG(this);
     drawer.draw();
+
+
     barToll.watch(value => {
       console.log('change', value);
       barToll.setBarWidth(500);
     });
+
+    
     this.p = new P(20, 0, 6, 428, rulercolor, this); // 竖向选择线
   }
 
