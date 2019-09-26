@@ -81,10 +81,10 @@ export default ({ data, showBtn = false }) => {
           ref={bar}
           style={{
             left: barLeft,
-            background: 'skyblue',
+            background: 'rgba(33,150,243,.8)',
             width: barWidth,
-            height: 6,
-            borderRadius: 4,
+            height: 16,
+            borderRadius: 2,
             position: 'absolute',
             bottom: 0,
           }}

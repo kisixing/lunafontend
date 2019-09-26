@@ -32,7 +32,7 @@ function useScroll(
       var { width: barWidth } = barRex;
 
       e.preventDefault();
-      var delta = e.wheelDelta / 120;
+      var delta = -e.wheelDelta / 120;
       setOffset(
         setBarLeft,
         delta * 30 + parseInt(bar.current.style.left) || 0,
