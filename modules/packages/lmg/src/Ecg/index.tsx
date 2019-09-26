@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { DrawEcg } from './a';
+import { DrawEcg } from './DrawEcg';
 import ScrollBar from '../ScrollBar';
 import { IBarTool } from '../useScroll';
 import { MultiParam, Ple, Tre } from './data';

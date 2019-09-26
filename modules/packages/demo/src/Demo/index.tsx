@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs } from 'antd';
 import Lmg from '@lianmed/lmg';
-import Ecg from '@lianmed/lmg/lib/playground';
+import Ecg from '@lianmed/lmg/lib/Ecg';
 import Friedman from '@lianmed/lmg/lib/Friedman';
 
 const { TabPane } = Tabs;

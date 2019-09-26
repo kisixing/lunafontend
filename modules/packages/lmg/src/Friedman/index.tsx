@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { DrawFriedman } from './aa';
+import { DrawFriedman } from './DrawFriedman';
 import ScrollBar from '../ScrollBar';
 import { IBarTool } from '../useScroll';
 
@@ -14,9 +14,6 @@ export default () => {
       canvas: canvas1.current,
       canvas2: canvas2.current,
     });
-
-    draw.drawgrid('canvas');
-    draw.printline();
   }, []);
 
   return (

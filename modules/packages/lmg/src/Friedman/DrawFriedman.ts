@@ -8,7 +8,7 @@ export class DrawFriedman {
   canvas: Canvas;
   context: Ctx;
   canvas2: Canvas;
-  contex2: Ctx;
+  context2: Ctx;
 
   maxindex = 750;
   lastx = 0;
@@ -35,8 +35,8 @@ export class DrawFriedman {
       context: canvas.getContext('2d'),
       context2: canvas2.getContext('2d'),
     });
-
-    this.canvas = document.getElementById('canvas') as Canvas;
+    this.drawgrid('canvas');
+    this.printline();
     this.canvas.addEventListener(
       'click',
       e => {
@@ -57,8 +57,6 @@ export class DrawFriedman {
     var title = document.getElementById('curtitle');
     title.innerHTML = 'FHR1:' + fhr + '  ' + 'TOCO:' + toco;
   }
-
-  showbase() {}
 
   selectfrom(lowValue, highValue) {
     var choice = highValue - lowValue + 1;
@@ -211,7 +209,7 @@ export class DrawFriedman {
   }
 
   drawgrid(id) {
-    const { canvas, canvas2 } = this;
+    const { canvas } = this;
 
     if (canvas == null) return false;
     this.sethorizontal(900);
@@ -222,12 +220,9 @@ export class DrawFriedman {
   }
 
   printline() {
-    const { canvas2, demodata, baseleft, basetop, start, type } = this;
+    const { canvas2, context2, demodata, baseleft, basetop, start, type } = this;
 
-    if (canvas2 == null) return false;
-    let context = canvas2.getContext('2d');
-
-    context.clearRect(0, 0, canvas2.width, canvas2.height);
+    context2.clearRect(0, 0, canvas2.width, canvas2.height);
     var lastx,
       lasty1,
       lasty2 = 0;
@@ -245,18 +240,18 @@ export class DrawFriedman {
       if (lastx != 0) {
         var canvas = document.getElementById('canvas');
         if (canvas == null) return false;
-        context.beginPath();
-        context.lineWidth = 2.5;
-        context.strokeStyle = 'red';
-        context.moveTo(lastx, lasty1);
-        context.lineTo(curx, cury1);
-        context.stroke();
-        context.beginPath();
-        context.lineWidth = 2.5;
-        context.strokeStyle = '#394a6d';
-        context.moveTo(lastx, lasty2 + 5);
-        context.lineTo(curx, cury2 + 5);
-        context.stroke();
+        context2.beginPath();
+        context2.lineWidth = 2.5;
+        context2.strokeStyle = 'red';
+        context2.moveTo(lastx, lasty1);
+        context2.lineTo(curx, cury1);
+        context2.stroke();
+        context2.beginPath();
+        context2.lineWidth = 2.5;
+        context2.strokeStyle = '#394a6d';
+        context2.moveTo(lastx, lasty2 + 5);
+        context2.lineTo(curx, cury2 + 5);
+        context2.stroke();
       }
       lastx = curx;
       lasty1 = cury1;
