@@ -1,5 +1,5 @@
 import DrawCTG from './DrawCTG';
-import { ICb } from './useScroll';
+import { IBarTool } from './useScroll';
 var rulercolor = 'rgb(67,205,128)';
 
 export class P {
@@ -80,15 +80,13 @@ export class Suit {
     title: HTMLElement,
     width: number,
     height: number,
-    onBarOffsetChange: ICb
+    barToll: IBarTool
   ) {
     canvas1.width = width;
     canvas1.height = height;
     canvas2.width = width;
     canvas2.height = height;
-    onBarOffsetChange.then(value => {
-      console.log('change', value);
-    });
+
     this.canvas1 = canvas1;
     this.canvas2 = canvas2;
     this.canvasline = canvasline;
@@ -97,7 +95,13 @@ export class Suit {
     this.contextline = canvasline.getContext('2d');
     this.title = title;
     this.initfhrdata(data);
-    new DrawCTG(this).draw();
+
+    const drawer = new DrawCTG(this);
+    drawer.draw();
+    barToll.watch(value => {
+      console.log('change', value);
+      barToll.setBarWidth(500);
+    });
     this.p = new P(20, 0, 6, 428, rulercolor, this); // 竖向选择线
   }
 

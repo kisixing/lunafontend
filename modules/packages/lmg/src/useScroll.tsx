@@ -8,10 +8,14 @@ import { useRef, useEffect } from 'react';
 //   });
 // };
 type TResolve = (value: number) => void;
-export interface ICb {
-  then: (fn: TResolve) => void;
+export interface IBarTool {
+  watch: (fn: TResolve) => void;
+  setBarWidth: (width: number) => void;
 }
-function useScroll(): [React.MutableRefObject<any>, React.MutableRefObject<any>, () => ICb] {
+function useScroll(
+  setBarLeft: (width: number) => void,
+  setBarWidth: (width: number) => void
+): [React.MutableRefObject<any>, React.MutableRefObject<any>, () => IBarTool] {
   const bar = useRef<HTMLElement>(null);
   const box = useRef<HTMLElement>(null);
   let resolve: TResolve = () => {};
@@ -25,10 +29,11 @@ function useScroll(): [React.MutableRefObject<any>, React.MutableRefObject<any>,
 
     var { width: boxWidth } = boxRec;
     var { width: barWidth } = barRex;
-    const wheelCb = function(e: any) {
+    const wheelCb = function(e: Event & any) {
+      e.preventDefault();
       var delta = e.wheelDelta / 120;
       setOffset(
-        bar.current,
+        setBarLeft,
         delta * 30 + parseInt(bar.current.style.left) || 0,
         boxWidth,
         barWidth,
@@ -46,7 +51,7 @@ function useScroll(): [React.MutableRefObject<any>, React.MutableRefObject<any>,
       document.onmousemove = function(e) {
         var { x } = getCoordInDocument(e);
         let offsetLeft = x - (boxLeft + span);
-        setOffset(barEl, offsetLeft, boxWidth, barWidth, resolve);
+        setOffset(setBarLeft, offsetLeft, boxWidth, barWidth, resolve);
       };
 
       document.onmouseup = function() {
@@ -62,11 +67,12 @@ function useScroll(): [React.MutableRefObject<any>, React.MutableRefObject<any>,
       barEl.removeEventListener('mousedown', mousedownCb);
     };
   }, []);
-  const g = (): ICb => {
+  const g = (): IBarTool => {
     return {
-      then(fn) {
+      watch(fn) {
         resolve = fn;
       },
+      setBarWidth,
     };
   };
   return [bar as any, box as any, g];
@@ -78,10 +84,16 @@ function getCoordInDocument(e: MouseEvent) {
   return { x: x, y: y };
 }
 
-function setOffset(bar: HTMLElement, offset: number, boxWidth: number, barWidth: number, resolve) {
+function setOffset(
+  setBarLeft: (left: number) => void,
+  offset: number,
+  boxWidth: number,
+  barWidth: number,
+  resolve
+) {
   const distance = boxWidth - barWidth;
   const result = offset <= 0 ? 0 : offset >= distance ? distance : offset;
-  bar.style.left = result + 'px';
+  setBarLeft(result);
   resolve(result);
 }
 

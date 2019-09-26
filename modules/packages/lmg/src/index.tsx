@@ -11,9 +11,10 @@ export default ({ data, showBtn = false }) => {
   const title = useRef(null);
   const wrap = useRef(null);
   const [playStatus, setPlayStatus] = useState(false);
-
+  const [barWidth, setBarWidth] = useState(100);
+  const [barLeft, setBarLeft] = useState(0);
   const [suit, setSuit] = useState(null as Suit);
-  const [bar, box, getOffset] = useScroll();
+  const [bar, box, getBarTool] = useScroll(setBarLeft, setBarWidth);
 
   useEffect(() => {
     const rect = wrap.current.getBoundingClientRect();
@@ -26,7 +27,7 @@ export default ({ data, showBtn = false }) => {
       title.current,
       width,
       height,
-      getOffset()
+      getBarTool()
     );
     setSuit(instance);
     instance.onStatusChange = status => {
@@ -79,8 +80,9 @@ export default ({ data, showBtn = false }) => {
         <div
           ref={bar}
           style={{
+            left: barLeft,
             background: 'skyblue',
-            width: 100,
+            width: barWidth,
             height: 6,
             borderRadius: 4,
             position: 'absolute',

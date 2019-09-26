@@ -6,7 +6,6 @@ const App: React.FC = () => {
   return (
     <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
       <Demo />
-      <Demo />
     </div>
   );
 };
