@@ -1,4 +1,5 @@
 import DrawCTG from './DrawCTG';
+import { ICb } from './useScroll';
 var rulercolor = 'rgb(67,205,128)';
 
 export class P {
@@ -78,13 +79,16 @@ export class Suit {
     canvasline: HTMLCanvasElement,
     title: HTMLElement,
     width: number,
-    height: number
+    height: number,
+    onBarOffsetChange: ICb
   ) {
     canvas1.width = width;
     canvas1.height = height;
     canvas2.width = width;
     canvas2.height = height;
-
+    onBarOffsetChange.then(value => {
+      console.log('change', value);
+    });
     this.canvas1 = canvas1;
     this.canvas2 = canvas2;
     this.canvasline = canvasline;
