@@ -42,14 +42,18 @@ function useScroll(
       );
     };
     const mousedownCb = e => {
-      var boxRec = boxEl.getBoundingClientRect();
       const barRex = barEl.getBoundingClientRect();
-      var { left: boxLeft, width: boxWidth } = boxRec;
-      var { left: barLeft, width: barWidth } = barRex;
+      var { left: barLeft } = barRex;
       var { x } = getCoordInDocument(e);
 
       const span = x - barLeft;
       document.onmousemove = function(e) {
+        var boxRec = boxEl.getBoundingClientRect();
+        const barRex = barEl.getBoundingClientRect();
+        var { left: boxLeft, width: boxWidth } = boxRec;
+        var { width: barWidth } = barRex;
+        var { x } = getCoordInDocument(e);
+
         var { x } = getCoordInDocument(e);
         let offsetLeft = x - (boxLeft + span);
         setOffset(setBarLeft, offsetLeft, boxWidth, barWidth, resolve);
