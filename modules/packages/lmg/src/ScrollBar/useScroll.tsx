@@ -11,6 +11,7 @@ type TResolve = (value: number) => void;
 export interface IBarTool {
   watch: (fn: TResolve) => void;
   setBarWidth: (width: number) => void;
+  setBarColor?: (color: string) => void;
 }
 function useScroll(
   setBarLeft: (width: number) => void,
@@ -82,6 +83,9 @@ function useScroll(
         resolve = fn;
       },
       setBarWidth,
+      setBarColor(color) {
+        bar.current.style.background = color;
+      },
     };
   };
   return [bar as any, g];

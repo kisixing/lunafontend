@@ -11,11 +11,10 @@
     "react-dom": "^16.9.0",
     "react-scripts": "3.1.2",
     "typescript": "3.6.3",
-    "@lianmed/lmg": "^1.0.0",
     "antd": "^3.22.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "concurrently 'react-scripts start' 'node testWs.js'",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -25,7 +24,11 @@
   },
   "peerDependencies": {
     "classnames": "^2.2.6",
-    "styled-components": "^4.3.2"
+    "styled-components": "^4.3.2",
+    "@lianmed/lmg": "^1.0.0",
+    "@lianmed/ws": "^1.0.0",
+    "@lianmed/utils": "^1.0.0",
+    "concurrently": "^4.1.2"
   },
   "browserslist": {
     "production": [

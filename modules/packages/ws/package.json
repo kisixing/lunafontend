@@ -1,5 +1,5 @@
 {
-  "name": "@lianmed/lmg",
+  "name": "@lianmed/ws",
   "version": "1.0.0",
   "description": "> TODO: description",
   "author": "lxf <lixiaofan.dev@gmail.com>",
@@ -13,7 +13,9 @@
   "files": [
     "lib"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "websocket": "^1.0.30"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kisixing/LUNA_FontEnd.git"
@@ -24,12 +26,6 @@
     "build": "tsc --declaration",
     "deploy": "sh deploy.sh",
     "link": "npm link"
-  },
-  "peerDependencies": {
-    "react": "^16.9.0",
-    "antd": "^3.22.2",
-    "@lianmed/schema-form": "^1.0.0",
-    "@lianmed/utils": "^1.0.0"
   },
   "bugs": {
     "url": "https://github.com/kisixing/LUNA_FontEnd/issues"

@@ -1,4 +1,12 @@
-import React, { useRef, useMemo, useState, ReactElement, useEffect, useCallback } from 'react';
+import React, {
+  useRef,
+  useMemo,
+  useState,
+  ReactElement,
+  useEffect,
+  useCallback,
+  memo,
+} from 'react';
 import { IFormActions } from '@uform/types';
 import StorageHelp, { localforage } from './storage';
 import { Modal } from 'antd';
@@ -10,11 +18,12 @@ import { post, get } from '@lianmed/request';
 import { mapChildren } from './utils/mapChildren';
 import { componentNameKey, componentName } from '../SchemaForm';
 import { schemasData } from './schemaMockData';
+import { IConfig } from 'packages/schema-form/lib/Manager/types';
 const hasSymbol = typeof Symbol === 'function' && Symbol.for;
 const $name: symbol | string = hasSymbol ? Symbol.for('lian.formName') : 'lian.formName';
 
 export { Context };
-const connectAdvanced: manager = props => {
+const connectAdvanced = memo<IConfig>(props => {
   const {
     url = '',
     interrupted = false,
@@ -149,7 +158,7 @@ const connectAdvanced: manager = props => {
       <div ref={FormRef}>{newChildren}</div>
     </Context.Provider>
   );
-};
-connectAdvanced.Buttons = FormButtonGroup;
+});
+(connectAdvanced as manager).Buttons = FormButtonGroup;
 
-export default connectAdvanced;
+export default memo(connectAdvanced);

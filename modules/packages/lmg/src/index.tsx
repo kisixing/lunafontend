@@ -1,33 +1,31 @@
 import React, { useEffect, useRef, useState } from 'react';
 import fakeData from './data';
 import { Suit } from './Suit';
-import useScroll from './useScroll';
+import { IBarTool } from './ScrollBar/useScroll';
+import ScrollBar from './ScrollBar';
 export default ({ data, showBtn = false }) => {
+  let barTool: IBarTool;
+
   data = data || fakeData;
   // console.log(data);
-  const canvas1 = useRef(null);
-  const canvas2 = useRef(null);
-  const canvasline = useRef(null);
-  const title = useRef(null);
-  const wrap = useRef(null);
-  const [playStatus, setPlayStatus] = useState(false);
-  const [barWidth, setBarWidth] = useState(100);
-  const [barLeft, setBarLeft] = useState(0);
-  const [suit, setSuit] = useState(null as Suit);
-  const [bar, box, getBarTool] = useScroll(setBarLeft, setBarWidth);
+  const canvas1 = useRef<HTMLCanvasElement>(null);
+  const canvas2 = useRef<HTMLCanvasElement>(null);
+  const canvasline = useRef<HTMLCanvasElement>(null);
+  const box = useRef<HTMLDivElement>(null);
 
+  const [playStatus, setPlayStatus] = useState(false);
+  const [suit, setSuit] = useState(null as Suit);
   useEffect(() => {
-    const rect = wrap.current.getBoundingClientRect();
+    const rect = box.current.getBoundingClientRect();
     const { width, height } = rect;
     const instance = new Suit(
       data,
       canvas1.current,
       canvas2.current,
       canvasline.current,
-      title.current,
       width,
       height,
-      getBarTool()
+      barTool
     );
     setSuit(instance);
     instance.onStatusChange = status => {
@@ -35,11 +33,10 @@ export default ({ data, showBtn = false }) => {
       setPlayStatus(status);
     };
   }, []);
-
   return (
-    <div style={{ width: '100%', height: '100%', position: 'relative' }} ref={box}>
+    <div style={{ width: '100%', height: '100%' }} ref={box}>
       <div
-        ref={wrap}
+        ref={box}
         style={{
           position: 'relative',
           width: '100%',
@@ -76,20 +73,12 @@ export default ({ data, showBtn = false }) => {
         </canvas>
       </div>
 
-      <div style={{ position: 'absolute', width: '100%', bottom: 0 }}>
-        <div
-          ref={bar}
-          style={{
-            left: barLeft,
-            background: 'rgba(33,150,243,.8)',
-            width: barWidth,
-            height: 16,
-            borderRadius: 2,
-            position: 'absolute',
-            bottom: 0,
-          }}
-        ></div>
-      </div>
+      <ScrollBar
+        box={box}
+        getBarTool={tool => {
+          barTool = tool;
+        }}
+      />
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import { IFormActions } from '@uform/types';
-import { FunctionComponent } from 'react';
+import { FunctionComponent, NamedExoticComponent } from 'react';
 
 export interface IConfig {
   schemaUrl?: string;
@@ -17,6 +17,6 @@ export interface IConfig {
   [x: string]: any;
 }
 
-export type manager = FunctionComponent<IConfig> & {
+export type manager = NamedExoticComponent<IConfig> & {
   Buttons: any;
 };

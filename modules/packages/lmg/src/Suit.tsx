@@ -1,7 +1,7 @@
 import DrawCTG from './DrawCTG';
-import { IBarTool } from './useScroll';
 var rulercolor = 'rgb(67,205,128)';
-
+import { event } from '@lianmed/utils';
+import { IBarTool } from './ScrollBar/useScroll';
 export class P {
   x: number;
   y: number;
@@ -56,27 +56,34 @@ export class P {
 }
 
 export class Suit {
+  event = event;
+
   fhr = [];
   toco = [];
   fm = [];
   fmp = [];
   starttime = '2019-09-26';
   fetalcount = 1;
-  type = 0;// 0 实时数据，1 历史数据
+  type = 0; // 0 实时数据，1 历史数据
   currentx = 10;
   currentdot = 10;
-  ctgconfig = {'normalarea':'rgb(224,255,255)','rule':'rgba(0,51,102,1)','scale':'rgba(0,0,0,1)','primarygrid':'rgba(144, 159, 180,1)','secondarygrid':'rgba(221, 230, 237,1)'};
-  width:Number;
+  ctgconfig = {
+    normalarea: 'rgb(224,255,255)',
+    rule: 'rgba(0,51,102,1)',
+    scale: 'rgba(0,0,0,1)',
+    primarygrid: 'rgba(144, 159, 180,1)',
+    secondarygrid: 'rgba(221, 230, 237,1)',
+  };
+  width: Number;
   canvas1: HTMLCanvasElement;
   context1: CanvasRenderingContext2D;
   canvas2: HTMLCanvasElement;
   context2: CanvasRenderingContext2D;
   canvasline: HTMLCanvasElement;
   contextline: CanvasRenderingContext2D;
-  title: HTMLElement;
   wrap: HTMLElement;
-  drawobj:DrawCTG;
-  barToll:IBarTool;
+  drawobj: DrawCTG;
+  barToll: IBarTool;
   p: P;
   timeout: NodeJS.Timeout;
   constructor(
@@ -84,10 +91,9 @@ export class Suit {
     canvas1: HTMLCanvasElement,
     canvas2: HTMLCanvasElement,
     canvasline: HTMLCanvasElement,
-    title: HTMLElement,
     width: number,
     height: number,
-    barToll: IBarTool,
+    barToll: IBarTool
   ) {
     canvas1.width = width;
     canvas1.height = height;
@@ -101,23 +107,22 @@ export class Suit {
     this.context1 = canvas1.getContext('2d');
     this.context2 = canvas2.getContext('2d');
     this.contextline = canvasline.getContext('2d');
-    this.title = title;
     this.width = width;
     this.barToll = barToll;
-    for(var i=0;i<this.fetalcount;i++){
+    for (var i = 0; i < this.fetalcount; i++) {
       this.fhr[i] = [];
     }
-    for(var i=0;i<100;i++){
+    for (var i = 0; i < 100; i++) {
       this.initfhrdata(data);
     }
     this.drawobj = new DrawCTG(this);
     this.drawobj.drawgrid(0);
-    if(this.type>0){
+    if (this.type > 0) {
       this.drawobj.drawline(0);
-      if(this.toco.length>width*width){
+      if (this.toco.length > width * width) {
         barToll.setBarWidth(150);
       }
-    }else{
+    } else {
       barToll.setBarWidth(0);
       this.timerCtg(500);
     }
@@ -126,7 +131,10 @@ export class Suit {
       this.drawobj.drawgrid(value);
       this.drawobj.drawline(value);
     });
-
+    this.event.on('socket:dataForCanvas', data => {
+      barToll.setBarWidth(20);
+      barToll.setBarColor(data.color);
+    });
     this.p = new P(20, 0, 6, 428, rulercolor, this); // 竖向选择线
   }
 
@@ -141,11 +149,11 @@ export class Suit {
       for (var i = 0; i < push_account; i++) {
         let hexBits = oridata.substring(0, 2);
         let data_to_push = parseInt(hexBits, 16);
-        if(key=='fhr'){
-          for(var fetal=0;fetal<this.fetalcount;fetal++){            
+        if (key == 'fhr') {
+          for (var fetal = 0; fetal < this.fetalcount; fetal++) {
             this[key][fetal].push(data_to_push);
           }
-        }else{
+        } else {
           this[key].push(data_to_push);
         }
         oridata = oridata.substring(2, oridata.length);
@@ -153,15 +161,12 @@ export class Suit {
     });
   }
   showcur(x, fhr, toco) {
-    const { context1, title } = this;
+    const { context1 } = this;
     context1.font = 'bold 10px consolas';
     context1.textAlign = 'left';
     context1.textBaseline = 'top';
     context1.font = 'bold 16px arial';
     context1.fillStyle = 'blue';
-    if (title) {
-      title.innerHTML = 'FHR1:' + fhr + '  ' + 'TOCO:' + toco;
-    }
   }
   movescoll() {
     const { currentx } = this;
@@ -170,10 +175,10 @@ export class Suit {
     this.showcur(currentx, this.fhr[currentx], this.toco[currentx]);
   }
 
-  drawdot(){
+  drawdot() {
     this.drawobj.drawdot(this.currentdot);
     this.currentdot++;
-    if(this.currentdot>1500){ 
+    if (this.currentdot > 1500) {
       this.barToll.setBarWidth(150);
     }
   }
