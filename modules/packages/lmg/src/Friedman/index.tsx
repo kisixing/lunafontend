@@ -1,11 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { DrawFriedman } from './DrawFriedman';
-import ScrollBar from '../ScrollBar';
-import { IBarTool } from '../useScroll';
-import { Button, Input } from 'antd';
 import { SchemaForm, Manager } from '@lianmed/schema-form';
 export default () => {
-  let barTool: IBarTool;
   const box = useRef<HTMLDivElement>(null);
   const canvas1 = useRef<HTMLCanvasElement>(null);
   const canvas2 = useRef<HTMLCanvasElement>(null);
@@ -44,11 +40,10 @@ export default () => {
         </canvas>
       </div>
       <Manager
+        values={{}}
         schemaData={[
           {
             type: 'object',
-            'x-component': 'inspection_card',
-            'x-props': { title: '高危管理' },
             id: '10188634107774597',
             properties: {
               UFORM_NO_NAME_BLOCK0_LINE0: {
@@ -58,8 +53,8 @@ export default () => {
                 },
                 properties: {
                   riskAssessment: {
-                    title: '试试',
-                    type: 'string',
+                    title: '是否显示事件',
+                    'x-component': 'true_or_false',
                   },
                 },
               },
@@ -67,49 +62,9 @@ export default () => {
                 type: 'grid',
                 'x-props': {},
                 properties: {
-                  aaa: {
-                    'x-component': 'body_growth_check',
-                    'x-props': {
-                      title: '发育监测',
-
-                      dataset: [
-                        {
-                          title: '评估方法',
-                          key: 'method',
-                          type: 'string',
-                          dataset: [
-                            {
-                              value: '0',
-                              label: '16岁',
-                            },
-                            {
-                              value: '1',
-                              label: '17岁',
-                            },
-                          ],
-                        },
-                        {
-                          title: '评估结果',
-                          key: 'result',
-                          type: 'string',
-                          dataset: [
-                            {
-                              value: '0',
-                              label: '16岁',
-                            },
-                            {
-                              value: '1',
-                              label: '17岁',
-                            },
-                          ],
-                        },
-                        {
-                          title: '指导',
-                          key: 'instuct',
-                          type: 'string',
-                        },
-                      ],
-                    },
+                  sa: {
+                    'x-component': 'friedman_table',
+                    'x-props': {},
                   },
                 },
               },
@@ -119,14 +74,6 @@ export default () => {
       >
         <SchemaForm />
       </Manager>
-      <div>
-        <ScrollBar
-          box={box}
-          getBarTool={tool => {
-            barTool = tool;
-          }}
-        />
-      </div>
     </div>
   );
 };

@@ -1,1 +1,2 @@
 import './PregnancyHistory';
+import './FriedmanTable';

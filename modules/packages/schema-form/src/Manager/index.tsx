@@ -27,10 +27,11 @@ const connectAdvanced: manager = props => {
     name = $name,
     children,
     test = false,
+    values = [],
   } = props;
 
-  const [schemas, setSchemas] = useState([]);
-  const [initialValues, setInitialValues] = useState([]);
+  const [schemas, setSchemas] = useState(schemaData || []);
+  const [initialValues, setInitialValues] = useState(values || []);
 
   const all: Array<IFormActions> = useMemo(() => [], []);
   console.log('all', all);
@@ -74,7 +75,7 @@ const connectAdvanced: manager = props => {
           console.log('reason', reason);
         }
       );
-    schemaData && setSchemas(schemaData);
+
     url &&
       get(url).then(value => {
         setInitialValues(value);
@@ -138,7 +139,7 @@ const connectAdvanced: manager = props => {
 
   const newChildren = !test
     ? mapChildren()(children as ReactElement, componentNameKey, componentName, (_, index) => {
-        return { schema: schemas[index] || null, initialValues: initialValues || null };
+        return { schema: schemas[index], initialValues: initialValues, formIndex: index };
         // return {};
       })
     : children;

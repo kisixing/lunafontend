@@ -26,7 +26,9 @@ export default () => {
       </TabPane>
 
       <TabPane tab="Tab 3" key="3">
-        <Lmg data={null} />
+        <div style={{ width: '1000px', height: '400px', border: '1px solid red' }}>
+          <Lmg data={null} />
+        </div>
       </TabPane>
     </Tabs>
   );

@@ -4,9 +4,8 @@ import { ColumnProps } from 'antd/lib/table';
 import Button from 'antd/es/button/button';
 const { Option } = Select;
 function C(props: any) {
-  const { value, onChange, dataset } = props;
+  const { value, onChange, dataset, showIndex = true } = props;
 
-  console.log('props', props);
   const changeField = (targetKey: string, key: string, _value) => {
     const data = value.map(_ => {
       if (_.key === targetKey) {
@@ -86,16 +85,24 @@ function C(props: any) {
         );
       },
     });
-
+  if (showIndex) {
+    columns.unshift({
+      title: '序号',
+      width: 50,
+      align: 'center',
+      render: function(cured, record, index) {
+        return index;
+      },
+    });
+  }
   return (
     <Table
-      bordered
       size="small"
       rowKey="key"
       pagination={false}
       columns={columns}
       dataSource={value}
-      style={{ flex: 1 }}
+      // style={{ flex: 1 }}
     />
   );
 }

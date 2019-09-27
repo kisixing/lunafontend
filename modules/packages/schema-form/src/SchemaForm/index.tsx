@@ -7,19 +7,20 @@ import { Context } from '../Manager';
 interface IP extends Props<any> {
   schema?: object;
   initialValues?: object;
+  formIndex: number;
   [x: string]: any;
 }
-const _SchemaForm = ({ schema, initialValues, ...props }: IP) => {
+const _SchemaForm = ({ schema, initialValues, formIndex, ...props }: IP) => {
   const actions = createFormActions();
+  console.log('action', actions);
   const { collectActions } = useContext(Context);
-
   return (
     <SchemaForm
       labelAlign="left"
       schema={schema}
       initialValues={initialValues}
-      onChange={(a, b) => {
-        console.log(a, b);
+      onChange={a => {
+        console.log(a, formIndex);
       }}
       onSubmit={v => console.log(v)}
       actions={actions}

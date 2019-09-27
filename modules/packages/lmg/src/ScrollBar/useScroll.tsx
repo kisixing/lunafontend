@@ -24,16 +24,16 @@ function useScroll(
     const barEl = bar.current;
     const boxEl = box.current;
 
-    const wheelCb = function(e: Event & any) {
+    const wheelCb = function(e: Event | any) {
+      e.preventDefault();
+      e.stopPropagation();
+      var boxRec = boxEl.getBoundingClientRect();
+      const barRex = barEl.getBoundingClientRect();
+      var { width: boxWidth } = boxRec;
+      var { width: barWidth } = barRex;
+      var delta = -e.wheelDelta / 120;
+
       requestAnimationFrame(() => {
-        var boxRec = boxEl.getBoundingClientRect();
-        const barRex = barEl.getBoundingClientRect();
-
-        var { width: boxWidth } = boxRec;
-        var { width: barWidth } = barRex;
-
-        e.preventDefault();
-        var delta = -e.wheelDelta / 120;
         setOffset(
           setBarLeft,
           delta * 30 + parseInt(bar.current.style.left) || 0,
