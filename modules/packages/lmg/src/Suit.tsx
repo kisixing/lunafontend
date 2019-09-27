@@ -60,6 +60,13 @@ export class Suit {
   toco = [];
   fm = [];
   fmp = [];
+  starttime = '2019-09-26';
+  fetalcount = 1;
+  type = 0;// 0 实时数据，1 历史数据
+  currentx = 10;
+  currentdot = 10;
+  ctgconfig = {'normalarea':'rgb(224,255,255)','rule':'rgba(0,51,102,1)','scale':'rgba(0,0,0,1)','primarygrid':'rgba(144, 159, 180,1)','secondarygrid':'rgba(221, 230, 237,1)'};
+  width:Number;
   canvas1: HTMLCanvasElement;
   context1: CanvasRenderingContext2D;
   canvas2: HTMLCanvasElement;
@@ -68,9 +75,9 @@ export class Suit {
   contextline: CanvasRenderingContext2D;
   title: HTMLElement;
   wrap: HTMLElement;
-
+  drawobj:DrawCTG;
+  barToll:IBarTool;
   p: P;
-  currentx = 10;
   timeout: NodeJS.Timeout;
   constructor(
     data: object,
@@ -80,13 +87,14 @@ export class Suit {
     title: HTMLElement,
     width: number,
     height: number,
-    barToll: IBarTool
+    barToll: IBarTool,
   ) {
     canvas1.width = width;
     canvas1.height = height;
     canvas2.width = width;
     canvas2.height = height;
-
+    canvasline.width = width;
+    canvasline.height = height;
     this.canvas1 = canvas1;
     this.canvas2 = canvas2;
     this.canvasline = canvasline;
@@ -94,18 +102,31 @@ export class Suit {
     this.context2 = canvas2.getContext('2d');
     this.contextline = canvasline.getContext('2d');
     this.title = title;
-    this.initfhrdata(data);
-
-    const drawer = new DrawCTG(this);
-    drawer.draw();
-
-
+    this.width = width;
+    this.barToll = barToll;
+    for(var i=0;i<this.fetalcount;i++){
+      this.fhr[i] = [];
+    }
+    for(var i=0;i<100;i++){
+      this.initfhrdata(data);
+    }
+    this.drawobj = new DrawCTG(this);
+    this.drawobj.drawgrid(0);
+    if(this.type>0){
+      this.drawobj.drawline(0);
+      if(this.toco.length>width*width){
+        barToll.setBarWidth(150);
+      }
+    }else{
+      barToll.setBarWidth(0);
+      this.timerCtg(500);
+    }
     barToll.watch(value => {
       console.log('change', value);
-      barToll.setBarWidth(500);
+      this.drawobj.drawgrid(value);
+      this.drawobj.drawline(value);
     });
 
-    
     this.p = new P(20, 0, 6, 428, rulercolor, this); // 竖向选择线
   }
 
@@ -120,7 +141,13 @@ export class Suit {
       for (var i = 0; i < push_account; i++) {
         let hexBits = oridata.substring(0, 2);
         let data_to_push = parseInt(hexBits, 16);
-        this[key].push(data_to_push);
+        if(key=='fhr'){
+          for(var fetal=0;fetal<this.fetalcount;fetal++){            
+            this[key][fetal].push(data_to_push);
+          }
+        }else{
+          this[key].push(data_to_push);
+        }
         oridata = oridata.substring(2, oridata.length);
       }
     });
@@ -143,12 +170,30 @@ export class Suit {
     this.showcur(currentx, this.fhr[currentx], this.toco[currentx]);
   }
 
+  drawdot(){
+    this.drawobj.drawdot(this.currentdot);
+    this.currentdot++;
+    if(this.currentdot>1500){ 
+      this.barToll.setBarWidth(150);
+    }
+  }
+
   timerscoll(dely): NodeJS.Timeout {
     let id = setInterval(() => {
       if (!this) {
         clearInterval(id);
       }
       this.movescoll();
+    }, dely);
+    return id;
+  }
+
+  timerCtg(dely): NodeJS.Timeout {
+    let id = setInterval(() => {
+      if (!this) {
+        clearInterval(id);
+      }
+      this.drawdot();
     }, dely);
     return id;
   }
