@@ -12,7 +12,7 @@
     "sourceMap": false,
     "declaration": true,
     "baseUrl": ".",
-    "declarationMap": true,
+    "declarationMap": false,
     "paths": {
       "rxjs/*": ["./node_modules/rxjs/*"]
     }

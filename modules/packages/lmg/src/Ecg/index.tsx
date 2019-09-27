@@ -1,11 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import { DrawEcg } from './DrawEcg';
 import ScrollBar from '../ScrollBar';
-import { IBarTool } from '../useScroll';
 import { MultiParam, Ple, Tre } from './data';
 
 export default () => {
-  let barTool: IBarTool;
   const box = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const canvasline = useRef<HTMLCanvasElement>(null);
@@ -39,12 +37,7 @@ export default () => {
         height="300"
         style={{ marginLeft: 20, position: 'absolute', left: 0, top: 50 }}
       ></canvas>
-      <ScrollBar
-        box={box}
-        getBarTool={tool => {
-          barTool = tool;
-        }}
-      />
+      <ScrollBar box={box} />
     </div>
   );
 };

@@ -196,7 +196,7 @@ export class DrawFriedman {
   }
 
   sethorizontal(length: number) {
-    const { canvas, context, baseleft, basetop, height } = this;
+    const { canvas, context, baseleft, basetop } = this;
 
     if (canvas == null) return false;
     context.beginPath();

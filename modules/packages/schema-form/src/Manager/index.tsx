@@ -18,7 +18,7 @@ import { post, get } from '@lianmed/request';
 import { mapChildren } from './utils/mapChildren';
 import { componentNameKey, componentName } from '../SchemaForm';
 import { schemasData } from './schemaMockData';
-import { IConfig } from 'packages/schema-form/lib/Manager/types';
+import { IConfig } from '../Manager/types';
 const hasSymbol = typeof Symbol === 'function' && Symbol.for;
 const $name: symbol | string = hasSymbol ? Symbol.for('lian.formName') : 'lian.formName';
 

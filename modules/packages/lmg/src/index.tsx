@@ -13,7 +13,7 @@ export default ({ data, showBtn = false }) => {
   const canvasline = useRef<HTMLCanvasElement>(null);
   const box = useRef<HTMLDivElement>(null);
 
-  const [playStatus, setPlayStatus] = useState(false);
+  // const [playStatus, setPlayStatus] = useState(false);
   const [suit, setSuit] = useState(null as Suit);
   useEffect(() => {
     const rect = box.current.getBoundingClientRect();
@@ -30,7 +30,7 @@ export default ({ data, showBtn = false }) => {
     setSuit(instance);
     instance.onStatusChange = status => {
       console.log(status);
-      setPlayStatus(status);
+      // setPlayStatus(status);
     };
   }, []);
   return (

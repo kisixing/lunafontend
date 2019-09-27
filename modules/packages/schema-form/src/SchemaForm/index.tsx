@@ -7,7 +7,7 @@ import { Context } from '../Manager';
 interface IP extends Props<any> {
   schema?: object;
   initialValues?: object;
-  formIndex: number;
+  formIndex?: number;
   [x: string]: any;
 }
 const _SchemaForm = ({ schema, initialValues, formIndex, ...props }: IP) => {

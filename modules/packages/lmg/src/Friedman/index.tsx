@@ -8,7 +8,7 @@ export default () => {
 
   useEffect(() => {
     const { width, height } = box.current.getBoundingClientRect();
-    const draw = new DrawFriedman({
+    new DrawFriedman({
       canvas: canvas1.current,
       canvas2: canvas2.current,
       width,

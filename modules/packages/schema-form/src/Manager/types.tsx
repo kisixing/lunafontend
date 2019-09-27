@@ -1,5 +1,5 @@
 import { IFormActions } from '@uform/types';
-import { FunctionComponent, NamedExoticComponent } from 'react';
+import { NamedExoticComponent } from 'react';
 
 export interface IConfig {
   schemaUrl?: string;

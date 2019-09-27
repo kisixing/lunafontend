@@ -1,9 +1,8 @@
 import React, { useEffect, useState, MutableRefObject } from 'react';
-import useScroll from './useScroll';
-import { IBarTool } from '../useScroll';
+import useScroll, { IBarTool } from './useScroll';
 export default (props: {
   box: MutableRefObject<HTMLElement>;
-  getBarTool: (tool: IBarTool) => void;
+  getBarTool?: (tool: IBarTool) => void;
 }) => {
   const { box, getBarTool = () => {} } = props;
   // console.log(data);

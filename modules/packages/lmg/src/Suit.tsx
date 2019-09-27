@@ -47,7 +47,7 @@ export class P {
   }
   OnMouseUp(evt) {
     this.isDown = false;
-    let seconds = (evt.layerX / 75) * 60;
+    // let seconds = (evt.layerX / 75) * 60;
     {
       this.suit.showcur(evt.layerX, this.suit.fhr[evt.layerX], this.suit.toco[evt.layerX]);
       this.suit.currentx = evt.layerX;

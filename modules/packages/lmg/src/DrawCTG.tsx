@@ -130,8 +130,8 @@ export default class DrawCTG {
     linecontext.lineWidth = 0.8;
     lastx = 0;
     lasty = 0;
-    let len = fhr.length;
-    var limit = len - cur > suit.canvasline.width ? suit.canvasline.width : len - cur;
+    // let len = fhr.length;
+    // var limit = len - cur > suit.canvasline.width ? suit.canvasline.width : len - cur;
     for (var i = 0; i < cur; i++) {
       lastx = i + baseleft;
       lasty = fhr[i];

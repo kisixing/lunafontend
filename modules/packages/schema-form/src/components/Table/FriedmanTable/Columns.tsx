@@ -1,10 +1,8 @@
-import { Table, Input, Select } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import Button from 'antd/es/button/button';
 import React from 'react';
 import S from './Strategies';
 import moment from 'moment';
-const { Option } = Select;
 const items = [
   {
     title: '检查时间',
