@@ -5,7 +5,7 @@ import { SchemaForm, createFormActions } from '@uform/antd';
 import '../components';
 import { Context } from '../Manager';
 interface IP extends Props<any> {
-  schema: object;
+  schema?: object;
   initialValues?: object;
   [x: string]: any;
 }

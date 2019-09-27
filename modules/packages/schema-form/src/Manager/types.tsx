@@ -2,8 +2,9 @@ import { IFormActions } from '@uform/types';
 import { FunctionComponent } from 'react';
 
 export interface IConfig {
-  schemaUrl: string;
-  url: string;
+  schemaUrl?: string;
+  url?: string;
+  schemaData?: Array<object>;
   interrupted?: boolean;
   cache?: boolean;
   getStorageName?: () => string;

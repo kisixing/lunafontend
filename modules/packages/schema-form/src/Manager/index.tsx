@@ -22,7 +22,8 @@ const connectAdvanced: manager = props => {
     getStorageName = () => {
       return `${String(name)}_storage`;
     },
-    schemaUrl = 'getSchema',
+    schemaUrl = '',
+    schemaData = null,
     name = $name,
     children,
     test = false,
@@ -53,29 +54,31 @@ const connectAdvanced: manager = props => {
   const FormRef = useRef(null);
 
   useEffect(() => {
-    localforage.getItem(schemaUrl).then(
-      value => {
-        // if (!!value) {
-        if (false) {
-          setSchemas(value as any);
-        } else {
-          get(schemaUrl).then(value => {
-            if (schemaUrl === 'getSchema') {
-              value = schemasData;
-            }
-            setSchemas(value);
-            localforage.setItem(schemaUrl, value);
-          });
+    schemaUrl &&
+      localforage.getItem(schemaUrl).then(
+        value => {
+          // if (!!value) {
+          if (false) {
+            setSchemas(value as any);
+          } else {
+            get(schemaUrl).then(value => {
+              if (schemaUrl === 'getSchema') {
+                value = schemasData;
+              }
+              setSchemas(value);
+              localforage.setItem(schemaUrl, value);
+            });
+          }
+        },
+        reason => {
+          console.log('reason', reason);
         }
-      },
-      reason => {
-        console.log('reason', reason);
-      }
-    );
-
-    get(url).then(value => {
-      setInitialValues(value);
-    });
+      );
+    schemaData && setSchemas(schemaData);
+    url &&
+      get(url).then(value => {
+        setInitialValues(value);
+      });
   }, []);
 
   if (!schemas.length) {
