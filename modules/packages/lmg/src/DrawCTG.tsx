@@ -262,14 +262,14 @@ export default class DrawCTG {
         var fMinutes = Math.floor(offsetmin - (1.0 * (linecount - i)) / 3);
         if (offseti > linecount - i - 2) {
           var flag = Math.ceil((ioff - 1) / 6) % 2;
-          console.log(flag);
+          // console.log(flag);
           if (flag == 1) {
             var date = new Date(this.starttime);
             var timescale = formatDate(date.setMinutes(date.getMinutes() + fMinutes), 'HH:mm');
             if (startposition == 0 && i == 1) {
               context.fillText(timescale.toString(), length - offsetpx, max + 30);
             } else {
-              console.log(baseleft + (linecount - i) * 25 - 10 - offsetpx);
+              // console.log(baseleft + (linecount - i) * 25 - 10 - offsetpx);
               context.fillText(
                 timescale.toString(),
                 baseleft + 25 * i + baseleft - offsetpx - 10,

@@ -1,6 +1,5 @@
 import DrawCTG from './DrawCTG';
 var rulercolor = 'rgb(67,205,128)';
-import { event } from '@lianmed/utils';
 import { IBarTool } from './ScrollBar/useScroll';
 export class P {
   x: number;
@@ -56,7 +55,6 @@ export class P {
 }
 
 export class Suit {
-  event = event;
 
   fhr = [];
   toco = [];
@@ -74,7 +72,7 @@ export class Suit {
     primarygrid: 'rgba(144, 159, 180,1)',
     secondarygrid: 'rgba(221, 230, 237,1)',
   };
-  width: Number;
+  width: number;
   canvas1: HTMLCanvasElement;
   context1: CanvasRenderingContext2D;
   canvas2: HTMLCanvasElement;
@@ -87,7 +85,6 @@ export class Suit {
   p: P;
   timeout: NodeJS.Timeout;
   constructor(
-    data: object,
     canvas1: HTMLCanvasElement,
     canvas2: HTMLCanvasElement,
     canvasline: HTMLCanvasElement,
@@ -109,6 +106,11 @@ export class Suit {
     this.contextline = canvasline.getContext('2d');
     this.width = width;
     this.barToll = barToll;
+
+  }
+  init(data) {
+    console.log('init',data)
+    return 
     for (var i = 0; i < this.fetalcount; i++) {
       this.fhr[i] = [];
     }
@@ -119,25 +121,21 @@ export class Suit {
     this.drawobj.drawgrid(0);
     if (this.type > 0) {
       this.drawobj.drawline(0);
-      if (this.toco.length > width * width) {
-        barToll.setBarWidth(150);
+      if (this.toco.length > (this.width * this.width)) {
+        this.barToll.setBarWidth(150);
       }
     } else {
-      barToll.setBarWidth(0);
+      this.barToll.setBarWidth(0);
       this.timerCtg(500);
     }
-    barToll.watch(value => {
+    this.barToll.watch(value => {
       console.log('change', value);
       this.drawobj.drawgrid(value);
       this.drawobj.drawline(value);
     });
-    this.event.on('socket:dataForCanvas', data => {
-      barToll.setBarWidth(20);
-      barToll.setBarColor(data.color);
-    });
+
     this.p = new P(20, 0, 6, 428, rulercolor, this); // 竖向选择线
   }
-
   initfhrdata(data) {
     // const keys = ['fhr','toco','fmp','fm']
     Object.keys(data).forEach(key => {

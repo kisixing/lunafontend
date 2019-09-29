@@ -6,48 +6,26 @@ import Friedman from '@lianmed/lmg/lib/Friedman';
 import { Client } from '@lianmed/ws';
 // import { event } from '@lianmed/utils';
 import { event } from '@lianmed/utils';
+import datacache, { useData } from "./useData";
 const { TabPane } = Tabs;
+
+
+// event.on('socket:dataForCanvas', data => {
+
+// });
+
 export default () => {
+  const [device, setDevice] = useState([])
   const [mes, setMes] = useState('');
+  const [state, setState] = useState(false)
   useEffect(() => {
-    let id: NodeJS.Timeout;
-    var client: WebSocket = new Client('ws://localhost:8080/', 'echo-protocol');
 
-    client.onerror = function() {
-      setMes('Connection Error');
-    };
+    useData(setDevice)
 
-    client.onopen = function() {
-      setMes('WebSocket Client Connected');
-
-      id = setInterval(function sendNumber() {
-        if (client.readyState === client.OPEN) {
-          var number = Math.round(Math.random() * 0xffffff);
-          client.send(number.toString());
-        }
-      }, 1000);
-    };
-
-    client.onclose = function() {
-      setMes('echo-protocol Client Closed');
-    };
-
-    client.onmessage = function(e) {
-      if (typeof e.data === 'string') {
-        setMes("Client received: '" + e.data + "'");
-        //如果不能解析会出错
-        event.emit('socket:dataForCanvas', JSON.parse(e.data));
-      } else {
-        console.log(e.data);
-      }
-    };
-    return () => {
-      clearInterval(id);
-    };
   }, []);
   return (
     <div>
-      <div style={{ fontSize: 40, textAlign: 'center', color: 'red' }}> {mes}</div>
+      <div style={{ fontSize: 40, textAlign: 'center', color: 'red' }} onClick={() => { setState(!state) }}> {mes}</div>
       <Tabs
         defaultActiveKey="1"
         onChange={v => {
@@ -56,9 +34,16 @@ export default () => {
         style={{ padding: 50 }}
       >
         <TabPane tab="Tab 1" key="1">
-          <div style={{ width: '1000px', height: '400px', border: '1px solid red' }}>
-            <Lmg data={null} />
-          </div>
+          {
+            device.length > 1 && device.slice(0, 2).map(({ device_no }) => {
+              return <div  key={device_no} style={{ width: '1000px', height: '400px', border: '1px solid red' }}>
+                <Lmg data={datacache[device_no]}  />
+              </div>
+
+            })
+          }
+
+
         </TabPane>
         <TabPane tab="Tab 2" key="2">
           <div style={{ width: '1000px', height: '400px', border: '1px solid red' }}>
