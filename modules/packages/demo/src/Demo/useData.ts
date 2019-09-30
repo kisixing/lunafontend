@@ -81,6 +81,7 @@ export const useData = (setDevice:any,url = defaultUrl): Promise<Array<any>> => 
                                 datacache[id].last = i;
                             }
                         }
+                        
                     }
                 }
                 else if (received_msg.name == "get_devices") {
@@ -95,7 +96,6 @@ export const useData = (setDevice:any,url = defaultUrl): Promise<Array<any>> => 
                 }
             }
         };
-
         return [datacache]
     })
 

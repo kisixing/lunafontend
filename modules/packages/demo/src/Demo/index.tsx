@@ -43,7 +43,6 @@ export default () => {
             })
           }
 
-
         </TabPane>
         <TabPane tab="Tab 2" key="2">
           <div style={{ width: '1000px', height: '400px', border: '1px solid red' }}>
