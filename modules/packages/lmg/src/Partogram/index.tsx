@@ -1,10 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef,useState } from 'react';
+import { Switch } from "antd";
 import { DrawPartogram } from './DrawPartogram';
 export default () => {
   const box = useRef<HTMLDivElement>(null);
   const canvas1 = useRef<HTMLCanvasElement>(null);
   const canvas2 = useRef<HTMLCanvasElement>(null);
-
+const [checked, setChecked] = useState(false)
   useEffect(() => {
     const { width, height } = box.current.getBoundingClientRect();
     new DrawPartogram({
@@ -16,8 +17,8 @@ export default () => {
   }, []);
 
   return (
-    <div style={{ width: '100%', height: '100%' }} ref={box}>
-      <div style={{ position: 'relative', height: 'calc( 100% - 400px )' }}>
+    <div style={{ width: '100%', height: '100%' }} >
+      <div style={{ position: 'relative', height: 'calc( 100% - 65px )' }} ref={box}>
         <canvas
           ref={canvas1}
           id="canvas"
@@ -38,7 +39,13 @@ export default () => {
           <p>Your browserdoes not support the canvas element.</p>
         </canvas>
       </div>
-
+    <div style={{padding:20}}>
+      <span>是否显示事件：
+        <Switch checked={checked} onChange={checked=>{
+          setChecked(checked)
+        }} />
+      </span>
+    </div>
     </div>
   );
 };

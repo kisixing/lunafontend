@@ -4,18 +4,36 @@ import React from 'react';
 import S from './Strategies';
 import items from './columnData'
 
-export default ({ value, onChange, onCommit,onDel }) => {
-  const changeField = (targetKey: string, key: string, _value) => {
-    const data = value.map(_ => {
-      if (_.id === targetKey) {
-        return { ..._, [key]: _value };
-      }
-      return _;
-    });
-    onChange(data);
-  };
+interface ITool {
+  value: Array<any>
+  onChange: any;
+  onCommit: any;
+  onDel: any;
+}
 
-  const columns: Array<ColumnProps<any>> = [
+class ColumnTool {
+  result=[]
+  value: Array<any>
+  onChange: any;
+  onCommit: any;
+  onDel: any;
+  constructor(data:ITool){
+    Object.assign(this,data)
+  }
+  unshiftIndex = unshiftIndex
+  pushColumnDataMap = pushColumnDataMap
+  pushTool = pushTool
+}
+
+export default (data:ITool) => {
+  return new ColumnTool(data).unshiftIndex().pushColumnDataMap().pushTool().result.map(_ => ({ ..._, align: 'center' }))
+};
+
+
+
+
+function unshiftIndex():ColumnTool {
+  this.result = [
     {
       dataIndex: Math.random().toString(),
       title: '序号',
@@ -24,34 +42,59 @@ export default ({ value, onChange, onCommit,onDel }) => {
         return index + 1;
       },
     },
+    ...this.result
   ]
-    .concat(
-      (items as Array<any>).map(({ title, key, dataset, type, width, ...others }) => {
-        //判断
-        dataset = dataset as any;
-        return {
-          title: title,
-          dataIndex: key,
-          width: width || '140px',
-          align: 'center',
-          render: function (cured, record, rowIndex) {
-            const C = S[type];
-            return (
-              <C
-                dataset={dataset}
-                value={cured}
-                onChange={v => {
-                  changeField(record.id, key, v);
-                }}
-                {...others}
-              />
-            );
-          },
-          ...others
-        };
-      })
-    )
-    .concat({
+  return this
+
+}
+
+function pushColumnDataMap():ColumnTool {
+
+  const changeField = (targetKey: string, key: string, _value) => {
+    const data = this.value.map(_ => {
+      if (_.id === targetKey) {
+        return { ..._, [key]: _value };
+      }
+      return _;
+    });
+    this.onChange(data);
+  };
+
+  this.result =  [
+    ...this.result,
+    ...(items as Array<any>).map(({ title, key, dataset, type, width, ...others }) => {
+      //判断
+      dataset = dataset as any;
+      return {
+        title: title,
+        dataIndex: key,
+        width: width || '140px',
+        align: 'center',
+        render: function (cured, record, rowIndex) {
+          const C = S[type];
+          return (
+            <C
+              dataset={dataset}
+              value={cured}
+              onChange={v => {
+                changeField(record.id, key, v);
+              }}
+              {...others}
+            />
+          );
+        },
+        ...others
+      };
+    }),
+
+  ]
+  return this
+}
+
+function pushTool() :ColumnTool{
+  this.result =  [
+    ...this.result,
+    {
       dataIndex: Math.random().toString(),
       width: '100px',
       title: (
@@ -59,19 +102,19 @@ export default ({ value, onChange, onCommit,onDel }) => {
           size="small"
           icon="plus"
           onClick={() => {
-            onCommit()
+            this.onCommit()
           }}
         ></Button>
       ) as any,
 
-      render: function (a, b, rowIndex) {
+      render:  (a, b, rowIndex)=> {
         return (
           <span>
             <Button
               size="small"
               icon="minus"
               onClick={() => {
-                onDel(b.outerId)
+                this.onDel(b.outerId)
               }}
             ></Button>
             <Button
@@ -79,7 +122,7 @@ export default ({ value, onChange, onCommit,onDel }) => {
               icon="check"
               onClick={() => {
                 const { outerId, visitTime, pregnancy, doctor, ...other } = b
-                onCommit({
+                this.onCommit({
                   gynecologicalExam: other,
                   visitTime: visitTime._isAMomentObject ? visitTime.toJSON() : visitTime,
                   id: outerId,
@@ -91,7 +134,7 @@ export default ({ value, onChange, onCommit,onDel }) => {
           </span>
         );
       },
-    });
-
-  return columns;
-};
+    }
+  ]
+  return this
+}

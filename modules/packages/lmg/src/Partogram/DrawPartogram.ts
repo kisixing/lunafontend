@@ -38,10 +38,10 @@ export class DrawPartogram {
       context: canvas.getContext('2d'),
       context2: canvas2.getContext('2d'),
     });
-    // canvas.width = width;
-    // canvas.height = height;
-    // canvas2.width = width;
-    // canvas2.height = height;
+    canvas.width = width;
+    canvas.height = height;
+    canvas2.width = width;
+    canvas2.height = height;
     this.drawgrid();
     this.printline();
     this.canvas.addEventListener(

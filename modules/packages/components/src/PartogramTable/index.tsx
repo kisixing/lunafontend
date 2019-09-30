@@ -19,8 +19,7 @@ function EditableCell(props: any) {
   );
 }
 
-export default ((props: any) => {
-  const { value = [], onChange, readOnly, title, url } = props;
+export default (({ url,style={} }) => {
 
   const [data, setData] = useState([])
 
@@ -73,10 +72,9 @@ export default ((props: any) => {
   }
   useEffect(getData, [])
   return (
-    <EditableCell
+   <div style={style}>
+      <EditableCell
       value={data}
-      readOnly={readOnly}
-      title={title}
       onChange={data => {
         setData(data)
       }}
@@ -90,5 +88,6 @@ export default ((props: any) => {
         onDel
       }
     />
+   </div>
   );
 })
