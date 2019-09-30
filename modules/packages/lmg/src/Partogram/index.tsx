@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { DrawFriedman } from './DrawFriedman';
-import { SchemaForm, Manager } from '@lianmed/schema-form';
+import { DrawPartogram } from './DrawPartogram';
 export default () => {
   const box = useRef<HTMLDivElement>(null);
   const canvas1 = useRef<HTMLCanvasElement>(null);
@@ -8,7 +7,7 @@ export default () => {
 
   useEffect(() => {
     const { width, height } = box.current.getBoundingClientRect();
-    new DrawFriedman({
+    new DrawPartogram({
       canvas: canvas1.current,
       canvas2: canvas2.current,
       width,
@@ -39,41 +38,7 @@ export default () => {
           <p>Your browserdoes not support the canvas element.</p>
         </canvas>
       </div>
-      <Manager
-        values={{}}
-        schemaData={[
-          {
-            type: 'object',
-            id: '10188634107774597',
-            properties: {
-              UFORM_NO_NAME_BLOCK0_LINE0: {
-                type: 'grid',
-                'x-props': {
-                  cols: [8],
-                },
-                properties: {
-                  riskAssessment: {
-                    title: '是否显示事件',
-                    'x-component': 'true_or_false',
-                  },
-                },
-              },
-              UFORM_NO_NAME_BLOCK0_LINE1: {
-                type: 'grid',
-                'x-props': {},
-                properties: {
-                  sa: {
-                    'x-component': 'friedman_table',
-                    'x-props': {},
-                  },
-                },
-              },
-            },
-          },
-        ]}
-      >
-        <SchemaForm />
-      </Manager>
+
     </div>
   );
 };

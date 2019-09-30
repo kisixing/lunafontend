@@ -30,7 +30,7 @@ export default class Request {
     this.intercept();
   };
   public intercept() {
-    ['get', 'post'].forEach(_ => {
+    ['get', 'post','put','delete'].forEach(_ => {
       this[_] = ((url, options = {}) => {
         const { loading, interval } = options;
         if (typeof interval === 'number') {
@@ -56,4 +56,6 @@ export default class Request {
   }
   post: RequestType;
   get: RequestType;
+  put: RequestType;
+  delete:RequestType;
 }

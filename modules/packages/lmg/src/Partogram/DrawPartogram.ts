@@ -6,7 +6,7 @@ interface I {
   width: number;
   height: number;
 }
-export class DrawFriedman {
+export class DrawPartogram {
   canvas: Canvas;
   context: Ctx;
   canvas2: Canvas;
