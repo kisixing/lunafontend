@@ -63,8 +63,8 @@ export class Suit {
   starttime = '2019-09-26';
   fetalcount = 1;
   type = 0; // 0 实时数据，1 历史数据
+  currentdot = 10; //当前实时绘制点
   currentx = 10;
-  currentdot = 10;
   ctgconfig = {
     normalarea: 'rgb(224,255,255)',
     rule: 'rgba(0,51,102,1)',
@@ -109,14 +109,18 @@ export class Suit {
 
   }
   init(data) {
-    console.log('init',data)
-    return 
+    console.log('init',data);
+    /*return 
     for (var i = 0; i < this.fetalcount; i++) {
       this.fhr[i] = [];
     }
     for (var i = 0; i < 100; i++) {
       this.initfhrdata(data);
-    }
+    }*/
+    this.fhr[0] = data.fhr[0];
+    this.fhr[1] = data.fhr[1];
+    this.toco = data.toco; 
+    //this.currentdot = data.
     this.drawobj = new DrawCTG(this);
     this.drawobj.drawgrid(0);
     if (this.type > 0) {

@@ -51,12 +51,16 @@ export default class DrawCTG {
     const { suit, sethorizontal, setvertical, context } = this;
     const { toco } = suit;
     let len = toco.length;
+    let cwidth = suit.canvasline.width;
+    let cheight = suit.canvasline.height;
     if (len < 1500) {
+      context.clearRect(0, 0, cwidth, cheight);
+      //横向选择区域设置填充色
+      context.fillStyle = suit.ctgconfig.normalarea;
+      context.fillRect(0, 50 * 1.5, cwidth, 50 * 1.5);
       sethorizontal(1500, cur);
       setvertical(1500, cur);
     } else {
-      let cwidth = suit.canvasline.width;
-      let cheight = suit.canvasline.height;
       context.clearRect(0, 0, cwidth, cheight);
       //横向选择区域设置填充色
       context.fillStyle = suit.ctgconfig.normalarea;
