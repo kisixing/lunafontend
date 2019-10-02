@@ -10,6 +10,7 @@ import { useRef, useEffect, MutableRefObject } from 'react';
 type TResolve = (value: number) => void;
 export interface IBarTool {
   watch: (fn: TResolve) => void;
+  watchDrag: (fn: TResolve) => void;
   setBarWidth: (width: number) => void;
   setBarColor?: (color: string) => void;
 }
@@ -20,6 +21,7 @@ function useScroll(
 ): [React.MutableRefObject<any>, () => IBarTool] {
   const bar = useRef<HTMLElement>(null);
   let resolve: TResolve = () => {};
+  let resolveDrag: TResolve = () => {};
 
   useEffect(() => {
     const barEl = bar.current;
@@ -44,21 +46,37 @@ function useScroll(
         );
       });
     };
+    const boxMousedownCb = e => {
+      var { x: x1 } = getCoordInDocument(e);
+      // var { width: boxWidth } = boxRec;
+      document.onmousemove = function(e) {
+        requestAnimationFrame(() => {
+          var { x: x2 } = getCoordInDocument(e);
+          if((x2 - x1)>10){
+            resolveDrag(x2 - x1);
+          }
+        });
+      };
+
+      document.onmouseup = function() {
+        //移除鼠标移动事件
+        document.onmousemove = null;
+      };
+    };
     const mousedownCb = e => {
       const barRex = barEl.getBoundingClientRect();
       var { left: barLeft } = barRex;
       var { x } = getCoordInDocument(e);
 
+      var boxRec = boxEl.getBoundingClientRect();
+      var { left: boxLeft, width: boxWidth } = boxRec;
+
       const span = x - barLeft;
       document.onmousemove = function(e) {
         requestAnimationFrame(() => {
-          var boxRec = boxEl.getBoundingClientRect();
           const barRex = barEl.getBoundingClientRect();
-          var { left: boxLeft, width: boxWidth } = boxRec;
           var { width: barWidth } = barRex;
-          var { x } = getCoordInDocument(e);
 
-          var { x } = getCoordInDocument(e);
           let offsetLeft = x - (boxLeft + span);
           setOffset(setBarLeft, offsetLeft, boxWidth, barWidth, resolve);
         });
@@ -71,16 +89,21 @@ function useScroll(
     };
     boxEl.addEventListener('wheel', wheelCb);
     barEl.addEventListener('mousedown', mousedownCb);
+    boxEl.addEventListener('mousedown', boxMousedownCb);
 
     return () => {
       boxEl.removeEventListener('wheel', wheelCb);
       barEl.removeEventListener('mousedown', mousedownCb);
+      boxEl.removeEventListener('mousedown', boxMousedownCb);
     };
   }, []);
   const g = (): IBarTool => {
     return {
       watch(fn) {
         resolve = fn;
+      },
+      watchDrag(fn) {
+        resolveDrag = fn;
       },
       setBarWidth,
       setBarColor(color) {

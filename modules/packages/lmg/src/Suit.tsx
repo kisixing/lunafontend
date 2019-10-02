@@ -84,6 +84,8 @@ export class Suit {
   drawobj: DrawCTG;
   barToll: IBarTool;
   p: P;
+  dragtimestamp=0;
+  interval=6000;
   timeout: NodeJS.Timeout;
   constructor(
     canvas1: HTMLCanvasElement,
@@ -136,6 +138,12 @@ export class Suit {
       this.timerCtg(defaultinterval);
     }
     this.barToll.watch(value => {
+      console.log('change', value);
+      this.drawobj.drawgrid(value);
+      this.drawobj.drawline(value);
+    });
+    this.barToll.watchDrag(value => {
+      this.dragtimestamp = new Date().getTime();
       console.log('change', value);
       this.drawobj.drawgrid(value);
       this.drawobj.drawline(value);
@@ -203,7 +211,10 @@ export class Suit {
       if (!this) {
         clearInterval(id);
       }
-      this.drawdot();
+      var curstamp = new Date().getTime();
+      if(curstamp - this.dragtimestamp >this.interval){
+        this.drawdot();
+      }
     }, dely);
     return id;
   }
