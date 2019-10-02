@@ -60,6 +60,7 @@ export class Suit {
   toco = [];
   fm = [];
   fmp = [];
+  data:any;
   starttime = '2019-09-26';
   fetalcount = 1;
   type = 0; // 0 实时数据，1 历史数据
@@ -110,6 +111,7 @@ export class Suit {
   }
   init(data) {
     console.log('init',data);
+    let defaultinterval = 500;
     /*return 
     for (var i = 0; i < this.fetalcount; i++) {
       this.fhr[i] = [];
@@ -117,10 +119,11 @@ export class Suit {
     for (var i = 0; i < 100; i++) {
       this.initfhrdata(data);
     }*/
+    this.data = data;
     this.fhr[0] = data.fhr[0];
     this.fhr[1] = data.fhr[1];
     this.toco = data.toco; 
-    //this.currentdot = data.
+    this.currentdot = data.index;
     this.drawobj = new DrawCTG(this);
     this.drawobj.drawgrid(0);
     if (this.type > 0) {
@@ -130,7 +133,7 @@ export class Suit {
       }
     } else {
       this.barToll.setBarWidth(0);
-      this.timerCtg(500);
+      this.timerCtg(defaultinterval);
     }
     this.barToll.watch(value => {
       console.log('change', value);
@@ -179,7 +182,7 @@ export class Suit {
 
   drawdot() {
     this.drawobj.drawdot(this.currentdot);
-    this.currentdot++;
+    //this.currentdot++;
     if (this.currentdot > 1500) {
       this.barToll.setBarWidth(150);
     }

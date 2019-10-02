@@ -37,38 +37,36 @@ export default class DrawCTG {
   baseleft: number;
   min: number;
   max: number;
+  xspan:number;
   starttime: string;
-  constructor(suit: Suit, baseleft = 0, min = 50, max = 210) {
+  constructor(suit: Suit, xspan = 40,baseleft = 0, min = 50, max = 210) {
     this.suit = suit;
     this.context = suit.context1;
     this.linecontext = suit.contextline;
+    this.xspan = xspan;
     this.baseleft = baseleft;
     this.min = min;
     this.max = max;
     this.starttime = suit.starttime;
   }
+  resize(width,height){
+    this.suit.canvasline.width = width;
+    this.suit.canvasline.width = height;
+  }
   drawgrid(cur) {
     const { suit, sethorizontal, setvertical, context } = this;
-    const { toco } = suit;
-    let len = toco.length;
     let cwidth = suit.canvasline.width;
     let cheight = suit.canvasline.height;
-    if (len < 1500) {
-      context.clearRect(0, 0, cwidth, cheight);
-      //横向选择区域设置填充色
-      context.fillStyle = suit.ctgconfig.normalarea;
-      context.fillRect(0, 50 * 1.5, cwidth, 50 * 1.5);
-      sethorizontal(1500, cur);
-      setvertical(1500, cur);
-    } else {
-      context.clearRect(0, 0, cwidth, cheight);
-      //横向选择区域设置填充色
-      context.fillStyle = suit.ctgconfig.normalarea;
-      context.fillRect(0, 50 * 1.5, cwidth, 50 * 1.5);
-      sethorizontal(cwidth, cur);
-      setvertical(cwidth, cur);
-    }
+    context.clearRect(0, 0, cwidth, cheight);
+    //横向选择区域设置填充色
+    context.fillStyle = suit.ctgconfig.normalarea;
+    context.fillRect(0, 50 * 1.5, cwidth, 50 * 1.5);
+    sethorizontal(cwidth, cur);
+    setvertical(cwidth, cur);
   }
+  /*
+  * 绘制非实时数据
+  */
   drawline(cur) {
     const { suit, linecontext, baseleft, max } = this;
     const { fhr, toco } = suit;
@@ -108,21 +106,8 @@ export default class DrawCTG {
       linecontext.lineTo(lastx, 420 - lasty * 1.5);
     }
     linecontext.stroke();
-    /*
-    linecontext.moveTo(lastx, 240);
-    for (var i = 1; i < fmp.length; i++) {
-      lastx = i + baseleft;
-      lasty = fmp[i];
-      linecontext.lineTo(lastx, 240 - lasty * 1.5);
-    }
-    linecontext.stroke();
-    for (var i = 1; i < fm.length; i++) {
-      if (fm[i] == 1) {
-        showfm(i);
-      }
-    }
-    */
   }
+
   drawdotright(cur) {
     const { suit, linecontext, baseleft, max } = this;
     const { fhr, toco } = suit;
@@ -179,7 +164,8 @@ export default class DrawCTG {
   }
   drawdot(cur) {
     const { suit, linecontext, max } = this;
-    const { fhr, toco } = suit;
+    const { fhr, toco } = suit; 
+    cur = suit.data.index;
     this.drawgrid(cur);
     var lastx = 0;
     var lasty = 0;
@@ -189,24 +175,29 @@ export default class DrawCTG {
     linecontext.lineWidth = 0.8;
     lastx = 0;
     lasty = 0;
+    // 0.5 s 一个点,一个像素画两个点
+    var start = cur - suit.canvasline.width*2 > 0 ? cur - suit.canvasline.width*2 : 0;
     for (var fetal = 0; fetal < this.suit.fetalcount; fetal++) {
-      var start = cur - suit.canvasline.width > 0 ? cur - suit.canvasline.width : 0;
-      for (var i = start; i < cur; i++) {
+      //start 统一为画布的位置点，需根据显示采样率调整取值
+      for (let i = start; i < cur; i++) {
+        if(i%2 ==1)
+          continue;
         if (start == 0) {
-          lastx = suit.canvasline.width - cur + i;
+          lastx = Math.floor((suit.canvasline.width*2 - cur + i)/2);
         } else {
-          lastx = i - start;
+          lastx = Math.floor((i - start)/2);
         }
-        lasty = fhr[fetal][i];
+        let inneri = i ;
+        lasty = fhr[fetal][inneri];
         if (lasty == 0) {
-          if (cur + i + 1 < length) {
-            linecontext.moveTo(lastx, (max - fhr[fetal][i + 1]) * 1.5);
+          if (inneri + 1 < length) {
+            linecontext.moveTo(lastx, (max - fhr[fetal][inneri + 1]) * 1.5);
           }
         } else {
-          if (i > 1 && lasty - fhr[fetal][i - 1] > 30) {
-            linecontext.moveTo(lastx, (max - fhr[fetal][i]) * 1.5);
-          } else if (i > 1 && fhr[fetal][i - 1] - lasty > 30) {
-            linecontext.moveTo(lastx, (max - fhr[fetal][i]) * 1.5);
+          if (inneri > 1 && lasty - fhr[fetal][inneri - 1] > 30) {
+            linecontext.moveTo(lastx, (max - fhr[fetal][inneri]) * 1.5);
+          } else if (inneri > 1 && fhr[fetal][inneri - 1] - lasty > 30) {
+            linecontext.moveTo(lastx, (max - fhr[fetal][inneri]) * 1.5);
           } else {
             linecontext.lineTo(lastx, (max - lasty) * 1.5);
           }
@@ -216,10 +207,12 @@ export default class DrawCTG {
     lastx = 0;
     lasty = 0;
     for (var i = start; i < cur; i++) {
+      if(i%2 ==1)
+        continue;
       if (start == 0) {
-        lastx = suit.canvasline.width - cur + i;
+        lastx = Math.floor((suit.canvasline.width*2 - cur + i)/2);
       } else {
-        lastx = i - start;
+        lastx = Math.floor((i - start)/2);
       }
       if (lasty == 0) {
         lasty = toco[i];
@@ -230,30 +223,18 @@ export default class DrawCTG {
       linecontext.lineTo(lastx, 420 - lasty * 1.5);
     }
     linecontext.stroke();
-    /*
-    linecontext.moveTo(lastx, 240);
-    for (var i = 1; i < fmp.length; i++) {
-      lastx = i + baseleft;
-      lasty = fmp[i];
-      linecontext.lineTo(lastx, 240 - lasty * 1.5);
-    }
-    linecontext.stroke();
-    for (var i = 1; i < fm.length; i++) {
-      if (fm[i] == 1) {
-        showfm(i);
-      }
-    }
-    */
   }
   sethorizontal = (length: number, startposition: number) => {
-    const { setrules, context, baseleft, min, max } = this;
-    var offsetpx = startposition % 25;
-    var offseti = Math.floor(startposition / 25);
-    var offsetmin = startposition / 75;
-    var linecount = Math.ceil(length / 25);
+    const { setrules, context, baseleft, min, max,xspan } = this;
+    this.starttime = this.suit.data.starttime;
+    var offsetpx = Math.floor((startposition % (xspan*2))/2);
+    var offseti = Math.floor(startposition / (xspan*2));
+    //kisi 2019-10-02 开始时间点 ，因为现在间隔0.5s取点
+    var offsetmin = startposition / (xspan*2*3); 
+    var linecount = Math.floor(length / (xspan*2));
     var primaryflag = linecount % 3;
     var primaryscaleflag = linecount % 6;
-    for (var i = linecount; i > 0; i--) {
+    for (var i = linecount*2; i > 0; i--) {
       var ioff = i + offseti;
       context.beginPath();
       context.strokeStyle = this.suit.ctgconfig.secondarygrid;
@@ -266,7 +247,6 @@ export default class DrawCTG {
         var fMinutes = Math.floor(offsetmin - (1.0 * (linecount - i)) / 3);
         if (offseti > linecount - i - 2) {
           var flag = Math.ceil((ioff - 1) / 6) % 2;
-          // console.log(flag);
           if (flag == 1) {
             var date = new Date(this.starttime);
             var timescale = formatDate(date.setMinutes(date.getMinutes() + fMinutes), 'HH:mm');
@@ -276,7 +256,7 @@ export default class DrawCTG {
               // console.log(baseleft + (linecount - i) * 25 - 10 - offsetpx);
               context.fillText(
                 timescale.toString(),
-                baseleft + 25 * i + baseleft - offsetpx - 10,
+                baseleft + xspan * i - offsetpx - 10,
                 max + 30
               );
             }
@@ -287,21 +267,20 @@ export default class DrawCTG {
             } else {
               context.fillText(
                 fMinutes + '分',
-                baseleft + 25 * i + baseleft - offsetpx - 10,
+                baseleft + xspan * i + baseleft - offsetpx - 10,
                 max + 30
               );
             }
           }
         }
       }
-      context.moveTo(25 * i + baseleft - offsetpx, max + 60);
-      context.lineTo(25 * i + baseleft - offsetpx, max + 60 + 150);
-
-      context.moveTo(25 * i + baseleft - offsetpx, 0);
-      context.lineTo(25 * i + baseleft - offsetpx, ((max - min) * 15) / 10);
+      context.moveTo(xspan * i + baseleft - offsetpx, max + 60);
+      context.lineTo(xspan * i + baseleft - offsetpx, max + 60 + 150);
+      context.moveTo(xspan * i + baseleft - offsetpx, 0);
+      context.lineTo(xspan * i + baseleft - offsetpx, ((max - min) * 15) / 10);
       context.stroke();
       if (ioff % 9 == 3) {
-        setrules(25 * i + baseleft - offsetpx);
+        setrules(xspan * i + baseleft - offsetpx);
       }
     }
   };
@@ -309,7 +288,6 @@ export default class DrawCTG {
     const { context, baseleft, min, max } = this;
     let lines = (max - min) / 10 + 11;
     let vspan = this.suit.canvas2.height / lines;
-
     for (var i = 1; i < (max - min) / 10 + 1; i++) {
       context.beginPath();
       context.lineWidth = 0.8;
