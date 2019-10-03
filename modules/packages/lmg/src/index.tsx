@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Suit } from './Suit';
 import { IBarTool } from './ScrollBar/useScroll';
 import ScrollBar from './ScrollBar';
-export default ({ data,mutableSuitObject={suit:null} }:{data:object,mutableSuitObject:{suit:Suit}}) => {
+export default ({ data,mutableSuitObject={suit:null} }:{data:object,mutableSuitObject?:{suit:Suit}}) => {
   let barTool: IBarTool;
   let suit: Suit
   const canvas1 = useRef<HTMLCanvasElement>(null);
