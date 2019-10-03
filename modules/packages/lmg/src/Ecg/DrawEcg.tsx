@@ -6,6 +6,8 @@ const gride_width = 25;
 const gx = points_one_times * ((gride_width * 5) / samplingrate);
 const x_start = 25;
 const draw_lines_index = [0, 1, 2];
+const ruler = [80,80,80,80,80,80,40,40,40,40,40,40,40,40,40,40,80,80,80,80,80,80];
+const keys = ['心率', '血压', '血氧','呼吸','脉搏','体温'];
 const isstop = true;
 const last_points = [
   [25, 100],
@@ -73,7 +75,6 @@ interface I {
   canvas: Canvas;
   canvasline: Canvas;
   canvasmonitor: Canvas;
-
   ecg_scope?: number;
   current_times?: number;
   max_times?: number;
@@ -81,7 +82,8 @@ interface I {
   height?: number;
 }
 export class DrawEcg {
-  oQueue = new Queue();
+  oQueue = new Queue(); 
+  values = [100,'100/69',50,60,80,37.5];
   MultiParam: number[];
   Ple: number[];
   Tre: number[];
@@ -131,21 +133,43 @@ export class DrawEcg {
       ctx.font = 'bold 14px';
       ctx.fillText('' + A[draw_lines_index[E]] + '', 10, D);
     }
+    //kisi 2019-10-03 add ruler
+    ctx.strokeStyle = '#006003';
+    ctx.beginPath();
+    ctx.moveTo(60,ruler[0]);
+    for(let i=0;i<ruler.length;i++){
+        ctx.lineTo(i+60,ruler[i]);
+    }
+    ctx.stroke();
   }
 
   DrawDatatext() {
     const { height, datactx } = this;
-    const A = ['母胎', '血压', 'III'];
     const C = (height - 10) / 3;
-    let D = 0;
+    let D = -20;
+    // 设置颜色 字体
+    datactx.fillStyle = "#000";
+    datactx.font = "18px bold 黑体";
+    // 设置水平对齐方式
+    datactx.textAlign = 'right';
+    datactx.textAlign = "center";
+    // 设置垂直对齐方式
+    datactx.textBaseline = "middle";
     datactx.clearRect(0,0,this.canvasmonitor.width,this.canvasmonitor.height);
-    for (let E = 0; E < draw_lines_index.length; E++) {
-      D = D + C;
-      datactx.font = 'bold 20px';
-      datactx.fillText('' + A[draw_lines_index[E]] + '', 10, D);
+    for (let E = 0; E < keys.length; E++) {
+      if(E%2==0){
+        D = D + C;
+        datactx.fillText(' ' + keys[E] + '', 20, D);
+        datactx.fillText(' ' + this.values[E] + '', 60, D);
+      }else{        
+        datactx.fillText(' ' + keys[E] + '', 100, D);
+        datactx.fillText(' ' + this.values[E] + '', 150, D);
+      }
     }
   }
 
+  //kisi 2019-10-03
+  //根据ws数据压入队列
   adddata(F, C, E, J) {
     const { MultiParam, Ple, Tre } = this;
     for (let index = 0; index < 360; index++) {
