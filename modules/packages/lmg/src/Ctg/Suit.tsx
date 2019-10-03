@@ -1,6 +1,6 @@
 import DrawCTG from './DrawCTG';
 var rulercolor = 'rgb(67,205,128)';
-import { IBarTool } from './ScrollBar/useScroll';
+import { IBarTool } from '../ScrollBar/useScroll';
 export class P {
   x: number;
   y: number;
@@ -54,11 +54,11 @@ export class P {
   }
 }
 
-let sid = 0
-type Canvas = HTMLCanvasElement
-type Context = CanvasRenderingContext2D
+let sid = 0;
+type Canvas = HTMLCanvasElement;
+type Context = CanvasRenderingContext2D;
 export class Suit {
-  sid:number;
+  sid: number;
   intervalIds: NodeJS.Timeout[] = [];
   fhr = [];
   toco = [];
@@ -97,11 +97,11 @@ export class Suit {
     canvas1: Canvas,
     canvas2: Canvas,
     canvasline: Canvas,
-    wrap:HTMLElement,
-    barToll: IBarTool,
+    wrap: HTMLElement,
+    barToll: IBarTool
   ) {
-    this.sid = sid++
-    this.wrap = wrap
+    this.sid = sid++;
+    this.wrap = wrap;
     this.canvas1 = canvas1;
     this.canvas2 = canvas2;
     this.canvasline = canvasline;
@@ -111,10 +111,9 @@ export class Suit {
     this.barToll = barToll;
     this.drawobj = new DrawCTG(this);
     this.p = new P(20, 0, 6, 428, rulercolor, this); // 竖向选择线
-    this.drawobj.resize()
+    this.drawobj.resize();
   }
   init(data) {
-    console.log('init', data);
     let defaultinterval = 500;
     /*return 
     for (var i = 0; i < this.fetalcount; i++) {
@@ -131,7 +130,7 @@ export class Suit {
     this.drawobj.drawgrid(0);
     if (this.type > 0) {
       this.drawobj.drawdot(1500);
-      if (this.toco.length > (this.width * this.width)) {
+      if (this.toco.length > this.width * this.width) {
         this.barToll.setBarWidth(150);
       }
     } else {
@@ -141,16 +140,16 @@ export class Suit {
     this.barToll.watch(value => {
       console.log('scollchange', value);
       //显示静态数据
-      this.dragtimestamp = new Date().getTime();   
+      this.dragtimestamp = new Date().getTime();
       this.viewposition = Math.floor(this.scollscale * value);
       this.drawobj.drawdot(this.viewposition);
     });
     this.barToll.watchDrag(value => {
-      this.dragtimestamp = new Date().getTime();     
+      this.dragtimestamp = new Date().getTime();
       //console.log('dragchange', value);
       //console.log('viewposition', this.viewposition);
       //console.log('index', this.data.index);
-      
+
       //方向确认
       if (this.viewposition - value < this.data.index) {
         this.viewposition -= value;
@@ -159,23 +158,23 @@ export class Suit {
       }
     });
 
-    this.resize()
+    this.resize();
   }
   destroy() {
-    this.intervalIds.forEach(_ => clearInterval(_))
-    this.canvas1 = null
-    this.canvas2 = null
-    this.context1 = null
-    this.context2 = null
-    this.canvasline = null
-    this.contextline = null
-    this.p = null
-    this.wrap = null
-    this.drawobj = null
-    this.barToll = null
+    this.intervalIds.forEach(_ => clearInterval(_));
+    this.canvas1 = null;
+    this.canvas2 = null;
+    this.context1 = null;
+    this.context2 = null;
+    this.canvasline = null;
+    this.contextline = null;
+    this.p = null;
+    this.wrap = null;
+    this.drawobj = null;
+    this.barToll = null;
   }
-  resize(){
-    const {canvas1,canvas2,canvasline,wrap} = this
+  resize() {
+    const { canvas1, canvas2, canvasline, wrap } = this;
     const rect = wrap.getBoundingClientRect();
     const { width, height } = rect;
     canvas1.width = width;
@@ -187,9 +186,7 @@ export class Suit {
     this.width = width;
   }
 
-  movescoller(){
-
-  }
+  movescoller() {}
 
   initfhrdata(data) {
     // const keys = ['fhr','toco','fmp','fm']
@@ -233,8 +230,8 @@ export class Suit {
     this.viewposition = this.data.index;
     if (this.data.index > this.canvasline.width) {
       this.barToll.setBarWidth(100);
-      this.barToll.setBarLeft(this.canvasline.width,false);
-      this.scollscale = this.data.index/(this.canvasline.width-100);
+      this.barToll.setBarLeft(this.canvasline.width, false);
+      this.scollscale = this.data.index / (this.canvasline.width - 100);
     }
   }
 
@@ -245,7 +242,7 @@ export class Suit {
       }
       this.movescoll();
     }, dely);
-    this.intervalIds.push(id)
+    this.intervalIds.push(id);
   }
 
   timerCtg(dely) {
@@ -258,7 +255,7 @@ export class Suit {
         this.drawdot();
       }
     }, dely);
-    this.intervalIds.push(id)
+    this.intervalIds.push(id);
   }
   onStatusChange(status: boolean): boolean | void {
     return status;

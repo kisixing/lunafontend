@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 
 import { Suit } from './Suit';
-import { IBarTool } from './ScrollBar/useScroll';
-import ScrollBar from './ScrollBar';
+import { IBarTool } from '../ScrollBar/useScroll';
+import ScrollBar from '../ScrollBar';
 export default ({
   data,
   mutableSuitObject = { suit: null },
@@ -28,12 +28,16 @@ export default ({
     suit.onStatusChange = status => {
       console.log(status);
     };
-    suit.init(data);
+
     mutableSuitObject.suit = suit;
     return () => {
       suit.destroy();
     };
-  }, []);
+  }, [data]);
+
+  useEffect(() => {
+    data && suit.init(data);
+  }, [data]);
   return (
     <div style={{ width: '100%', height: '100%' }} ref={box}>
       <div
