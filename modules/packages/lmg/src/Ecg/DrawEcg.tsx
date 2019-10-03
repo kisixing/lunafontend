@@ -72,6 +72,7 @@ interface I {
   Tre: number[];
   canvas: Canvas;
   canvasline: Canvas;
+  canvasmonitor: Canvas;
 
   ecg_scope?: number;
   current_times?: number;
@@ -86,9 +87,10 @@ export class DrawEcg {
   Tre: number[];
   canvas: Canvas;
   canvasline: Canvas;
+  canvasmonitor: Canvas;
   ctx: Ctx;
   linectx: Ctx;
-
+  datactx:Ctx;
   ecg_scope? = 1;
   current_times? = 0;
   max_times? = 135;
@@ -97,7 +99,7 @@ export class DrawEcg {
   current_time_millis? = 0;
 
   constructor(args: I) {
-    const { canvas, canvasline } = args;
+    const { canvas, canvasline,canvasmonitor } = args;
     const { width, height } = canvas;
     Object.assign(this, {
       ...args,
@@ -105,8 +107,8 @@ export class DrawEcg {
       height,
       ctx: canvas.getContext('2d'),
       linectx: canvasline.getContext('2d'),
+      datactx :canvasmonitor.getContext('2d'),
     });
-
     this.ecg();
   }
 
@@ -131,6 +133,19 @@ export class DrawEcg {
     }
   }
 
+  DrawDatatext() {
+    const { height, datactx } = this;
+    const A = ['母胎', '血压', 'III'];
+    const C = (height - 10) / 3;
+    let D = 0;
+    datactx.clearRect(0,0,this.canvasmonitor.width,this.canvasmonitor.height);
+    for (let E = 0; E < draw_lines_index.length; E++) {
+      D = D + C;
+      datactx.font = 'bold 20px';
+      datactx.fillText('' + A[draw_lines_index[E]] + '', 10, D);
+    }
+  }
+
   adddata(F, C, E, J) {
     const { MultiParam, Ple, Tre } = this;
     for (let index = 0; index < 360; index++) {
@@ -147,13 +162,13 @@ export class DrawEcg {
     if (width < 150) {
       alert(' width is limited');
     } else {
-      this.max_times = Math.floor((width - 50) / gx);
+      this.max_times = Math.floor((width - 25) / gx);
     }
     linectx.strokeStyle = '#9d6003';
   }
   loop() {
     const y_starts = this.GetYStarts(12);
-
+    this.DrawDatatext();
     const A = new Date().getTime();
     this.current_time_millis = A;
     this.draw(
@@ -181,6 +196,8 @@ export class DrawEcg {
   draw(Q, B, P, N, G, H, A, E) {
     const { oQueue } = this;
     let areaedge = 200;
+    //2019-10-03 kisi 根据容器调整高度
+    let scale = this.height/300;
     this.current_times = this.current_times % G;
     if (oQueue.IsEmpty()) {
       return;
@@ -210,22 +227,22 @@ export class DrawEcg {
         const L = x_start + this.current_times * H * ((gride_width * 5) / N);
         if (K == 0) {
           if (this.current_times != 0) {
-            A.moveTo(last_points[J][0], last_points[J][1]);
+            A.moveTo(last_points[J][0], last_points[J][1]*scale);
             var D = parseFloat(C >= 0 ? Q[J] - M : Q[J] + M);
-            A.lineTo(last_points[J][0], D);
+            A.lineTo(last_points[J][0], D*scale);
             last_points[J][0] = last_points[J][0];
             last_points[J][1] = D;
           } else {
             var D = parseFloat(C >= 0 ? Q[J] - M : Q[J] + M);
             console.log(D);
-            A.moveTo(x_start, D);
+            A.moveTo(x_start, D*scale);
             last_points[J][0] = x_start;
             last_points[J][1] = D;
           }
         } else {
-          A.moveTo(last_points[J][0], D);
+          A.moveTo(last_points[J][0], D*scale);
           var D = parseFloat(C >= 0 ? Q[J] - M : Q[J] + M);
-          A.lineTo(L + I, D);
+          A.lineTo(L + I, D*scale);
           last_points[J][0] = L + I;
           last_points[J][1] = D;
         }
@@ -236,8 +253,8 @@ export class DrawEcg {
           //linear.addColorStop(1,"rgba(255,255,255,0)");
           A.strokeStyle = linear;
           A.beginPath();
-          A.moveTo(L + I, D);
-          A.lineTo(L + I, areaedge);
+          A.moveTo(L + I, D*scale);
+          A.lineTo(L + I, areaedge*scale);
         }
         A.stroke();
       }
