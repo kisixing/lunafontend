@@ -10,7 +10,7 @@ import { useRef, useEffect, MutableRefObject } from 'react';
 type TResolve = (value: number) => void;
 export interface IBarTool {
   watch: (fn: TResolve) => void;
-  watchDrag: (fn: TResolve) => void;
+  watchDrag: (fn: TResolve, interval?:number) => void;
   setBarWidth: (width: number) => void;
   setBarColor?: (color: string) => void;
 }
@@ -22,7 +22,7 @@ function useScroll(
   const bar = useRef<HTMLElement>(null);
   let resolve: TResolve = () => {};
   let resolveDrag: TResolve = () => {};
-
+  let dragInterval = 10;
   useEffect(() => {
     const barEl = bar.current;
     const boxEl = box.current;
@@ -48,11 +48,13 @@ function useScroll(
     };
     const boxMousedownCb = e => {
       var { x: x1 } = getCoordInDocument(e);
-      // var { width: boxWidth } = boxRec;
+      let temp = x1;
+
       document.onmousemove = function(e) {
         requestAnimationFrame(() => {
           var { x: x2 } = getCoordInDocument(e);
-          if((x2 - x1)>10){
+          if (Math.abs(x2 - temp) > dragInterval) {           
+            temp = x2;
             resolveDrag(x2 - x1);
           }
         });
@@ -102,8 +104,9 @@ function useScroll(
       watch(fn) {
         resolve = fn;
       },
-      watchDrag(fn) {
+      watchDrag(fn, interval = 10) {
         resolveDrag = fn;
+        dragInterval = interval;
       },
       setBarWidth,
       setBarColor(color) {
