@@ -7,7 +7,7 @@ import { useRef, useEffect, MutableRefObject } from 'react';
 //     obj.style.top = current + 'px';
 //   });
 // };
-type TResolve = (value: number) => void;
+type TResolve = (value: number,isfire?:boolean) => void;
 export interface IBarTool {
   watch: (fn: TResolve) => void;
   watchDrag: (fn: TResolve,interval?:number) => void;
@@ -113,7 +113,7 @@ function useScroll(
   return [bar as any, g];
 
   function setOffset(
-    offset: number,
+    offset: number,isfire=true
   ) {
     const barEl = bar.current;
     const boxEl = box.current;
@@ -124,8 +124,10 @@ function useScroll(
     const distance = boxWidth - barWidth;
     const result = offset <= 0 ? 0 : offset >= distance ? distance : offset;
     setBar('left',result);
-    resolve(result);
+    if(isfire)
+      resolve(result);
   }
+  
   function setBar(key:string,value:number){
     const barEl = bar.current;
     barEl.style[key] = value+'px'

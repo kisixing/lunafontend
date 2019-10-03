@@ -141,15 +141,15 @@ export class Suit {
     this.barToll.watch(value => {
       console.log('scollchange', value);
       //显示静态数据
+      this.dragtimestamp = new Date().getTime();   
       this.viewposition = Math.floor(this.scollscale * value);
       this.drawobj.drawdot(this.viewposition);
     });
     this.barToll.watchDrag(value => {
-      this.dragtimestamp = new Date().getTime();
-      
-      console.log('dragchange', value);
-      console.log('viewposition', this.viewposition);
-      console.log('index', this.data.index);
+      this.dragtimestamp = new Date().getTime();     
+      //console.log('dragchange', value);
+      //console.log('viewposition', this.viewposition);
+      //console.log('index', this.data.index);
       
       //方向确认
       if(this.viewposition-value < this.data.index){
@@ -160,7 +160,7 @@ export class Suit {
     });
     this.p = new P(20, 0, 6, 428, rulercolor, this); // 竖向选择线
   }
-  
+
   movescoller(){
 
   }
@@ -206,8 +206,9 @@ export class Suit {
     this.drawobj.drawdot(this.data.index);
     this.viewposition = this.data.index;
     if (this.data.index > this.canvasline.width) {
-      this.barToll.setBarWidth(150);
-      this.scollscale = this.data.index/(this.canvasline.width-150);
+      this.barToll.setBarWidth(100);
+      this.barToll.setBarLeft(this.canvasline.width,false);
+      this.scollscale = this.data.index/(this.canvasline.width-100);
     }
   }
 
