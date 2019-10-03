@@ -1,4 +1,4 @@
-import React, { useEffect, useState, MutableRefObject } from 'react';
+import React, { useEffect, MutableRefObject } from 'react';
 import useScroll, { IBarTool } from './useScroll';
 export default (props: {
   box: MutableRefObject<HTMLElement>;
@@ -15,7 +15,7 @@ export default (props: {
       <div
         ref={bar}
         style={{
-          width:'50px',
+          width: '50px',
           background: 'rgba(33,150,243,.8)',
           height: 16,
           borderRadius: 2,
