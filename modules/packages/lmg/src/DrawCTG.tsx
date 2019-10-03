@@ -165,7 +165,7 @@ export default class DrawCTG {
   drawdot(cur) {
     const { suit, linecontext, max } = this;
     const { fhr, toco } = suit; 
-    cur = suit.data.index;
+    //cur = suit.data.index;
     this.drawgrid(cur);
     var lastx = 0;
     var lasty = 0;
@@ -214,13 +214,17 @@ export default class DrawCTG {
       } else {
         lastx = Math.floor((i - start)/2);
       }
-      if (lasty == 0) {
-        lasty = toco[i];
-        linecontext.moveTo(lastx, 420 - lasty * 1.5);
-      } else {
-        lasty = toco[i];
+      if(toco[i]){
+        if (lasty == 0) {
+          lasty = toco[i];
+          linecontext.moveTo(lastx, 420 - lasty * 1.5);
+        } else {
+          lasty = toco[i];
+        }
+        linecontext.lineTo(lastx, 420 - lasty * 1.5);
+      }else{        
+        linecontext.moveTo(lastx, 420);
       }
-      linecontext.lineTo(lastx, 420 - lasty * 1.5);
     }
     linecontext.stroke();
   }
@@ -249,13 +253,14 @@ export default class DrawCTG {
           var flag = Math.ceil((ioff - 1) / 6) % 2;
           if (flag == 1) {
             var date = new Date(this.starttime);
-            var timescale = formatDate(date.setMinutes(date.getMinutes() + fMinutes), 'HH:mm');
+            let timescale = formatDate(date.setMinutes(date.getMinutes() + fMinutes), 'HH:mm');
+            //console.log(timescale);
             if (startposition == 0 && i == 1) {
-              context.fillText(timescale.toString(), length - offsetpx, max + 30);
+              context.fillText(timescale, length - offsetpx, max + 30);
             } else {
               // console.log(baseleft + (linecount - i) * 25 - 10 - offsetpx);
               context.fillText(
-                timescale.toString(),
+                timescale,
                 baseleft + xspan * i - offsetpx - 10,
                 max + 30
               );

@@ -22,7 +22,6 @@ function useScroll(
   let resolve: TResolve = () => {};
   let resolveDrag: TResolve = () => {};
   let dragInterval = 10;
-
   useEffect(() => {
     const barEl = bar.current;
     const boxEl = box.current;

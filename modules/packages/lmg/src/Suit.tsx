@@ -66,6 +66,8 @@ export class Suit {
   type = 0; // 0 实时数据，1 历史数据
   currentdot = 10; //当前实时绘制点
   currentx = 10;
+  viewposition = 0;
+  scollscale = 1;
   ctgconfig = {
     normalarea: 'rgb(224,255,255)',
     rule: 'rgba(0,51,102,1)',
@@ -128,7 +130,7 @@ export class Suit {
     this.drawobj = new DrawCTG(this);
     this.drawobj.drawgrid(0);
     if (this.type > 0) {
-      this.drawobj.drawline(0);
+      this.drawobj.drawdot(1500);
       if (this.toco.length > (this.width * this.width)) {
         this.barToll.setBarWidth(150);
       }
@@ -137,19 +139,32 @@ export class Suit {
       this.timerCtg(defaultinterval);
     }
     this.barToll.watch(value => {
-      console.log('change', value);
-      this.drawobj.drawgrid(value);
-      this.drawobj.drawline(value);
+      console.log('scollchange', value);
+      //显示静态数据
+      this.viewposition = Math.floor(this.scollscale * value);
+      this.drawobj.drawdot(this.viewposition);
     });
     this.barToll.watchDrag(value => {
       this.dragtimestamp = new Date().getTime();
-      console.log('change', value);
-      this.drawobj.drawgrid(value);
-      this.drawobj.drawline(value);
+      
+      console.log('dragchange', value);
+      console.log('viewposition', this.viewposition);
+      console.log('index', this.data.index);
+      
+      //方向确认
+      if(this.viewposition-value < this.data.index){
+        this.viewposition -= value;
+        this.movescoller();
+        this.drawobj.drawdot(this.viewposition);
+      }
     });
-
     this.p = new P(20, 0, 6, 428, rulercolor, this); // 竖向选择线
   }
+  
+  movescoller(){
+
+  }
+
   initfhrdata(data) {
     // const keys = ['fhr','toco','fmp','fm']
     Object.keys(data).forEach(key => {
@@ -188,10 +203,11 @@ export class Suit {
   }
 
   drawdot() {
-    this.drawobj.drawdot(this.currentdot);
-    //this.currentdot++;
-    if (this.currentdot > 1500) {
+    this.drawobj.drawdot(this.data.index);
+    this.viewposition = this.data.index;
+    if (this.data.index > this.canvasline.width) {
       this.barToll.setBarWidth(150);
+      this.scollscale = this.data.index/(this.canvasline.width-150);
     }
   }
 
