@@ -18,8 +18,6 @@ export default function () {
         <Route path="/Ctg">
           <Ctg />
         </Route>
-
-
         <Route path="/Ecg">
           <Ecg />
         </Route>

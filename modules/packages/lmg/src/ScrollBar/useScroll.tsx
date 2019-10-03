@@ -10,18 +10,18 @@ import { useRef, useEffect, MutableRefObject } from 'react';
 type TResolve = (value: number) => void;
 export interface IBarTool {
   watch: (fn: TResolve) => void;
-  watchDrag: (fn: TResolve) => void;
+  watchDrag: (fn: TResolve,interval?:number) => void;
   setBarWidth: (width: number) => void;
   setBarColor?: (color: string) => void;
+  setBarLeft?:TResolve
 }
 function useScroll(
-  setBarLeft: (width: number) => void,
-  setBarWidth: (width: number) => void,
   box: MutableRefObject<HTMLElement>
 ): [React.MutableRefObject<any>, () => IBarTool] {
   const bar = useRef<HTMLElement>(null);
   let resolve: TResolve = () => {};
   let resolveDrag: TResolve = () => {};
+  let dragInterval = 10;
 
   useEffect(() => {
     const barEl = bar.current;
@@ -30,55 +30,51 @@ function useScroll(
     const wheelCb = function(e: Event | any) {
       e.preventDefault();
       e.stopPropagation();
-      var boxRec = boxEl.getBoundingClientRect();
-      const barRex = barEl.getBoundingClientRect();
-      var { width: boxWidth } = boxRec;
-      var { width: barWidth } = barRex;
+
       var delta = -e.wheelDelta / 120;
 
       requestAnimationFrame(() => {
         setOffset(
-          setBarLeft,
           delta * 30 + parseInt(bar.current.style.left) || 0,
-          boxWidth,
-          barWidth,
-          resolve
+
         );
       });
     };
     const boxMousedownCb = e => {
       var { x: x1 } = getCoordInDocument(e);
-      // var { width: boxWidth } = boxRec;
-      document.onmousemove = function(e) {
+      let temp = x1;
+
+      document.onmousemove = function (e) {
         requestAnimationFrame(() => {
           var { x: x2 } = getCoordInDocument(e);
-          if((x2 - x1)>10){
+          if (Math.abs(x2 - temp) > dragInterval) {
             resolveDrag(x2 - x1);
+            temp = x2;
           }
         });
       };
 
-      document.onmouseup = function() {
+      document.onmouseup = function () {
         //移除鼠标移动事件
         document.onmousemove = null;
       };
     };
-    const mousedownCb = e => {
+    const mousedownCb = (e) => {
+      e.stopPropagation()
       const barRex = barEl.getBoundingClientRect();
       var { left: barLeft } = barRex;
       var { x } = getCoordInDocument(e);
 
       var boxRec = boxEl.getBoundingClientRect();
-      var { left: boxLeft, width: boxWidth } = boxRec;
+      var { left: boxLeft } = boxRec;
 
       const span = x - barLeft;
       document.onmousemove = function(e) {
         requestAnimationFrame(() => {
-          const barRex = barEl.getBoundingClientRect();
-          var { width: barWidth } = barRex;
+          var { x } = getCoordInDocument(e);
 
           let offsetLeft = x - (boxLeft + span);
-          setOffset(setBarLeft, offsetLeft, boxWidth, barWidth, resolve);
+          setOffset( offsetLeft);
         });
       };
 
@@ -102,16 +98,40 @@ function useScroll(
       watch(fn) {
         resolve = fn;
       },
-      watchDrag(fn) {
+      watchDrag(fn, interval = 10) {
         resolveDrag = fn;
+        dragInterval = interval;
       },
-      setBarWidth,
+      setBarWidth(width:number){
+        setBar('width',width)
+      },
       setBarColor(color) {
         bar.current.style.background = color;
       },
+      setBarLeft:setOffset
     };
   };
   return [bar as any, g];
+
+  function setOffset(
+    offset: number,
+  ) {
+    const barEl = bar.current;
+    const boxEl = box.current;
+    var boxRec = boxEl.getBoundingClientRect();
+    const barRex = barEl.getBoundingClientRect();
+    var { width: boxWidth } = boxRec;
+    var { width: barWidth } = barRex;
+    const distance = boxWidth - barWidth;
+    const result = offset <= 0 ? 0 : offset >= distance ? distance : offset;
+    setBar('left',result);
+    resolve(result);
+  }
+  function setBar(key:string,value:number){
+    const barEl = bar.current;
+    barEl.style[key] = value+'px'
+  }
+
 }
 function getCoordInDocument(e: MouseEvent) {
   e = (e as any) || window.event;
@@ -120,17 +140,6 @@ function getCoordInDocument(e: MouseEvent) {
   return { x: x, y: y };
 }
 
-function setOffset(
-  setBarLeft: (left: number) => void,
-  offset: number,
-  boxWidth: number,
-  barWidth: number,
-  resolve
-) {
-  const distance = boxWidth - barWidth;
-  const result = offset <= 0 ? 0 : offset >= distance ? distance : offset;
-  setBarLeft(result);
-  resolve(result);
-}
+
 
 export default useScroll;

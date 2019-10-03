@@ -5,10 +5,7 @@ export default (props: {
   getBarTool?: (tool: IBarTool) => void;
 }) => {
   const { box, getBarTool = () => {} } = props;
-  // console.log(data);
-  const [barWidth, setBarWidth] = useState(100);
-  const [barLeft, setBarLeft] = useState(0);
-  const [bar, _getBarTool] = useScroll(setBarLeft, setBarWidth, box);
+  const [bar, _getBarTool] = useScroll(box);
   getBarTool(_getBarTool());
   useEffect(() => {
     box.current.style.position = 'relative';
@@ -18,9 +15,8 @@ export default (props: {
       <div
         ref={bar}
         style={{
-          left: barLeft,
+          width:'50px',
           background: 'rgba(33,150,243,.8)',
-          width: barWidth,
           height: 16,
           borderRadius: 2,
           position: 'absolute',

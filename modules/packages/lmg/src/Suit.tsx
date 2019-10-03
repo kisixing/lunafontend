@@ -109,7 +109,6 @@ export class Suit {
     this.contextline = canvasline.getContext('2d');
     this.width = width;
     this.barToll = barToll;
-
   }
   init(data) {
     console.log('init',data);
