@@ -49,7 +49,9 @@ export default class DrawCTG {
     this.max = max;
     this.starttime = suit.starttime;
   }
-  resize(width,height){
+  resize(){
+    const rect = this.suit.wrap.getBoundingClientRect();
+    const { width, height } = rect;
     this.suit.canvasline.width = width;
     this.suit.canvasline.width = height;
   }

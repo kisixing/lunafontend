@@ -54,13 +54,17 @@ export class P {
   }
 }
 
+let sid = 0
+type Canvas = HTMLCanvasElement
+type Context = CanvasRenderingContext2D
 export class Suit {
-
+  sid:number;
+  intervalIds: NodeJS.Timeout[] = [];
   fhr = [];
   toco = [];
   fm = [];
   fmp = [];
-  data:any;
+  data: any;
   starttime = '2019-09-26';
   fetalcount = 1;
   type = 0; // 0 实时数据，1 历史数据
@@ -76,44 +80,41 @@ export class Suit {
     secondarygrid: 'rgba(221, 230, 237,1)',
   };
   width: number;
-  canvas1: HTMLCanvasElement;
-  context1: CanvasRenderingContext2D;
-  canvas2: HTMLCanvasElement;
-  context2: CanvasRenderingContext2D;
-  canvasline: HTMLCanvasElement;
-  contextline: CanvasRenderingContext2D;
+  canvas1: Canvas;
+  context1: Context;
+  canvas2: Canvas;
+  context2: Context;
+  canvasline: Canvas;
+  contextline: Context;
   wrap: HTMLElement;
   drawobj: DrawCTG;
   barToll: IBarTool;
   p: P;
-  dragtimestamp=0;
-  interval=6000;
+  dragtimestamp = 0;
+  interval = 6000;
   timeout: NodeJS.Timeout;
   constructor(
-    canvas1: HTMLCanvasElement,
-    canvas2: HTMLCanvasElement,
-    canvasline: HTMLCanvasElement,
-    width: number,
-    height: number,
-    barToll: IBarTool
+    canvas1: Canvas,
+    canvas2: Canvas,
+    canvasline: Canvas,
+    wrap:HTMLElement,
+    barToll: IBarTool,
   ) {
-    canvas1.width = width;
-    canvas1.height = height;
-    canvas2.width = width;
-    canvas2.height = height;
-    canvasline.width = width;
-    canvasline.height = height;
+    this.sid = sid++
+    this.wrap = wrap
     this.canvas1 = canvas1;
     this.canvas2 = canvas2;
     this.canvasline = canvasline;
     this.context1 = canvas1.getContext('2d');
     this.context2 = canvas2.getContext('2d');
     this.contextline = canvasline.getContext('2d');
-    this.width = width;
     this.barToll = barToll;
+    this.drawobj = new DrawCTG(this);
+    this.p = new P(20, 0, 6, 428, rulercolor, this); // 竖向选择线
+    this.drawobj.resize()
   }
   init(data) {
-    console.log('init',data);
+    console.log('init', data);
     let defaultinterval = 500;
     /*return 
     for (var i = 0; i < this.fetalcount; i++) {
@@ -125,9 +126,8 @@ export class Suit {
     this.data = data;
     this.fhr[0] = data.fhr[0];
     this.fhr[1] = data.fhr[1];
-    this.toco = data.toco; 
+    this.toco = data.toco;
     this.currentdot = data.index;
-    this.drawobj = new DrawCTG(this);
     this.drawobj.drawgrid(0);
     if (this.type > 0) {
       this.drawobj.drawdot(1500);
@@ -152,13 +152,39 @@ export class Suit {
       //console.log('index', this.data.index);
       
       //方向确认
-      if(this.viewposition-value < this.data.index){
+      if (this.viewposition - value < this.data.index) {
         this.viewposition -= value;
         this.movescoller();
         this.drawobj.drawdot(this.viewposition);
       }
     });
-    this.p = new P(20, 0, 6, 428, rulercolor, this); // 竖向选择线
+
+    this.resize()
+  }
+  destroy() {
+    this.intervalIds.forEach(_ => clearInterval(_))
+    this.canvas1 = null
+    this.canvas2 = null
+    this.context1 = null
+    this.context2 = null
+    this.canvasline = null
+    this.contextline = null
+    this.p = null
+    this.wrap = null
+    this.drawobj = null
+    this.barToll = null
+  }
+  resize(){
+    const {canvas1,canvas2,canvasline,wrap} = this
+    const rect = wrap.getBoundingClientRect();
+    const { width, height } = rect;
+    canvas1.width = width;
+    canvas1.height = height;
+    canvas2.width = width;
+    canvas2.height = height;
+    canvasline.width = width;
+    canvasline.height = height;
+    this.width = width;
   }
 
   movescoller(){
@@ -212,27 +238,27 @@ export class Suit {
     }
   }
 
-  timerscoll(dely): NodeJS.Timeout {
+  timerscoll(dely) {
     let id = setInterval(() => {
       if (!this) {
         clearInterval(id);
       }
       this.movescoll();
     }, dely);
-    return id;
+    this.intervalIds.push(id)
   }
 
-  timerCtg(dely): NodeJS.Timeout {
+  timerCtg(dely) {
     let id = setInterval(() => {
       if (!this) {
         clearInterval(id);
       }
       var curstamp = new Date().getTime();
-      if(curstamp - this.dragtimestamp >this.interval){
+      if (curstamp - this.dragtimestamp > this.interval) {
         this.drawdot();
       }
     }, dely);
-    return id;
+    this.intervalIds.push(id)
   }
   onStatusChange(status: boolean): boolean | void {
     return status;
