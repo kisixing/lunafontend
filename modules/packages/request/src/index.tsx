@@ -5,11 +5,11 @@ import Request from './Request';
 
 class R extends Request {
   private hasConfiged = false;
-  public config = (configs: Iconfig = {}):Request => {
+  public config = (configs: Iconfig = {}): Request => {
     const { hasConfiged } = this;
     if (hasConfiged) {
-       console.warn("couldn't config twice");
-       return this
+      console.warn("couldn't config twice");
+      return this;
     }
     this.hasConfiged = true;
     const { Authorization = '' } = configs;
@@ -30,7 +30,7 @@ class R extends Request {
       const { status } = response;
 
       // eslint-disable-next-line no-param-reassign
-      if ([200,201, 304].includes(status)) {
+      if ([200, 201, 304].includes(status)) {
         successText && message.success(successText);
       } else {
         if (status === 401) {
@@ -56,6 +56,6 @@ class R extends Request {
 }
 
 const r = new R();
-const { get, post,put, config } = r;
-export { get, post, put,config };
+const { get, post, put, config } = r;
+export { get, post, put, config };
 export default r;

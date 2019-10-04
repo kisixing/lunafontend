@@ -177,6 +177,7 @@ export class Suit {
     const { canvas1, canvas2, canvasline, wrap } = this;
     const rect = wrap.getBoundingClientRect();
     const { width, height } = rect;
+
     canvas1.width = width;
     canvas1.height = height;
     canvas2.width = width;

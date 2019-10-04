@@ -6,9 +6,11 @@ import ScrollBar from '../ScrollBar';
 export default ({
   data,
   mutableSuitObject = { suit: null },
+  itemHeight = 0,
 }: {
   data: object;
   mutableSuitObject?: { suit: Suit };
+  itemHeight?: number;
 }) => {
   let barTool: IBarTool;
   let suit: Suit;
@@ -30,47 +32,36 @@ export default ({
     };
 
     mutableSuitObject.suit = suit;
+    data && suit.init(data);
     return () => {
       suit.destroy();
     };
-  }, [data]);
+  }, [data, itemHeight]);
 
-  useEffect(() => {
-    data && suit.init(data);
-  }, [data]);
   return (
     <div style={{ width: '100%', height: '100%' }} ref={box}>
-      <div
-        ref={box}
-        style={{
-          position: 'relative',
-          width: '100%',
-          height: '100%',
-        }}
-      >
-        <canvas ref={canvas1}>
-          <p>Your browserdoes not support the canvas element.</p>
-        </canvas>
-        <canvas style={{ position: 'absolute', left: '0', top: '0' }} ref={canvasline}>
-          <p>Your browserdoes not support the canvas element.</p>
-        </canvas>
-        <canvas
-          style={{ position: 'absolute', left: '0', top: '0' }}
-          ref={canvas2}
+      <canvas ref={canvas1}>
+        <p>Your browserdoes not support the canvas element.</p>
+      </canvas>
+      <canvas style={{ position: 'absolute', left: '0', top: '0' }} ref={canvasline}>
+        <p>Your browserdoes not support the canvas element.</p>
+      </canvas>
+      <canvas
+        style={{ position: 'absolute', left: '0', top: '0' }}
+        ref={canvas2}
 
-          // onMouseDown={e => {
-          //   suit && suit.p.OnMouseDown(e.nativeEvent);
-          // }}
-          // onMouseMove={e => {
-          //   suit && suit.p.OnMouseMove(e.nativeEvent);
-          // }}
-          // onMouseUp={e => {
-          //   suit && suit.p.OnMouseUp(e.nativeEvent);
-          // }}
-        >
-          <p>Your browserdoes not support the canvas element.</p>
-        </canvas>
-      </div>
+        // onMouseDown={e => {
+        //   suit && suit.p.OnMouseDown(e.nativeEvent);
+        // }}
+        // onMouseMove={e => {
+        //   suit && suit.p.OnMouseMove(e.nativeEvent);
+        // }}
+        // onMouseUp={e => {
+        //   suit && suit.p.OnMouseUp(e.nativeEvent);
+        // }}
+      >
+        <p>Your browserdoes not support the canvas element.</p>
+      </canvas>
 
       <ScrollBar
         box={box}
