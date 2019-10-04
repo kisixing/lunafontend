@@ -8,7 +8,7 @@ export default ({
   mutableSuitObject = { suit: null },
   itemHeight = 0,
 }: {
-  data: object;
+  data: any;
   mutableSuitObject?: { suit: Suit };
   itemHeight?: number;
 }) => {

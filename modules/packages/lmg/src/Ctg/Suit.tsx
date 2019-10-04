@@ -112,6 +112,9 @@ export class Suit {
     this.drawobj = new DrawCTG(this);
     this.p = new P(20, 0, 6, 428, rulercolor, this); // 竖向选择线
     this.drawobj.resize();
+    this.barToll.watchGrab(value => {
+      console.log(value);
+    });
   }
   init(data) {
     let defaultinterval = 500;
