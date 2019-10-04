@@ -32,7 +32,7 @@ export default function() {
       })} */}
 
       <div style={{ width: '1000px', height: '400px', border: '1px solid red' }}>
-        <Ctg data={datacache.get('1-1')} />
+        <Ctg data={datacache.get('0-1')} />
       </div>
     </>
   );

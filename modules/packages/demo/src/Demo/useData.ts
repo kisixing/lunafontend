@@ -2,7 +2,7 @@ const datacache: Map<any, any> = new Map();
 const interval: number = 800;
 export default datacache;
 const defaultUrl =
-  'ws://192.168.2.227:8084/websocket/?request=e2lkOjE7cmlkOjI2O3Rva2VuOiI0MzYwNjgxMWM3MzA1Y2NjNmFiYjJiZTExNjU3OWJmZCJ9';
+  'ws://localhost:8084/websocket/?request=e2lkOjE7cmlkOjI2O3Rva2VuOiI0MzYwNjgxMWM3MzA1Y2NjNmFiYjJiZTExNjU3OWJmZCJ9';
 export const useData = (setDevice: any, url = defaultUrl): Promise<Map<any, any>> => {
   // event.emit
   var socket: WebSocket;
