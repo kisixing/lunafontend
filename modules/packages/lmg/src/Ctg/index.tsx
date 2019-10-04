@@ -33,11 +33,16 @@ export default ({
 
     mutableSuitObject.suit = suit;
     data && suit.init(data);
+  }, [data]);
+  useEffect(() => {
+    suit && suit.resize();
+  }, [itemHeight, data]);
+  useEffect(() => {
     return () => {
+      console.log('destroy2', suit.sid);
       suit.destroy();
     };
-  }, [data, itemHeight]);
-
+  }, []);
   return (
     <div style={{ width: '100%', height: '100%' }} ref={box}>
       <canvas ref={canvas1}>

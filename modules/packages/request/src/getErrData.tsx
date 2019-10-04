@@ -20,6 +20,9 @@ const codeMessage = {
   504: '网关超时。',
 };
 export default (response: Response): ErrData => {
+  if (!response) {
+    return null;
+  }
   const copy = response.clone();
   const { status, statusText, url } = copy;
   let data = null;

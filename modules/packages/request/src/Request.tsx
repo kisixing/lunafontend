@@ -2,6 +2,7 @@ import { message } from 'antd';
 import { extend, RequestMethod } from 'umi-request';
 import { Iconfig, RequestOptions } from './types';
 import getErrData from './getErrData';
+import { notification } from 'antd';
 
 type RequestType = (url: string, options?: RequestOptions) => Promise<any>;
 
@@ -21,7 +22,13 @@ export default class Request {
       },
       errorHandler: err => {
         const errorData = getErrData(err.response);
-        errHandler && errHandler(errorData);
+        if (errorData) {
+          errHandler(errorData);
+        } else {
+          notification.error({
+            message: '服务未响应',
+          });
+        }
 
         return Promise.reject(errorData);
       },
@@ -30,7 +37,7 @@ export default class Request {
     this.intercept();
   };
   public intercept() {
-    ['get', 'post','put','delete'].forEach(_ => {
+    ['get', 'post', 'put', 'delete'].forEach(_ => {
       this[_] = ((url, options = {}) => {
         const { loading, interval } = options;
         if (typeof interval === 'number') {
@@ -57,5 +64,5 @@ export default class Request {
   post: RequestType;
   get: RequestType;
   put: RequestType;
-  delete:RequestType;
+  delete: RequestType;
 }
