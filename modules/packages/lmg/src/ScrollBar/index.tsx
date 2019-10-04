@@ -9,7 +9,7 @@ export default (props: {
   getBarTool(_getBarTool());
   useEffect(() => {
     box.current.style.position = 'relative';
-    box.current.style.cursor = 'pointer';
+    // box.current.style.cursor = 'pointer';grab
   }, []);
   return (
     <div style={{ position: 'absolute', width: '100%', bottom: 0 }}>

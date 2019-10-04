@@ -124,17 +124,17 @@ export class Suit {
     if (this.type > 0) {
       //调用方式
       let json; // restful如  api/ctg-exams-data/2_2_190930222541   请求的json数据
-      this.initctgdata(json.fhr1,this.fhr[0]);
-      this.initctgdata(json.fhr2,this.fhr[1]);
-      this.initctgdata(json.fhr3,this.fhr[2]);
-      this.initctgdata(json.toco,this.toco);
+      this.initctgdata(json.fhr1, this.fhr[0]);
+      this.initctgdata(json.fhr2, this.fhr[1]);
+      this.initctgdata(json.fhr3, this.fhr[2]);
+      this.initctgdata(json.toco, this.toco);
       //initctgdata(json.fhr3,this.fhr[2]);
-      if (this.data.index > this.canvasline.width*2) {
-        this.drawobj.drawdot(this.canvasline.width*2);
+      if (this.data.index > this.canvasline.width * 2) {
+        this.drawobj.drawdot(this.canvasline.width * 2);
         this.barToll.setBarWidth(100);
         this.barToll.setBarLeft(0, false);
-        this.scollscale = this.data.index / (this.canvasline.width*2 - 100);
-      }else{
+        this.scollscale = this.data.index / (this.canvasline.width * 2 - 100);
+      } else {
         this.drawobj.drawdot(this.data.index);
       }
     } else {
@@ -148,7 +148,7 @@ export class Suit {
       this.viewposition = Math.floor(this.scollscale * value);
       this.drawobj.drawdot(this.viewposition);
     });
-    this.barToll.watchDrag(value => {
+    this.barToll.watchGrab(value => {
       this.dragtimestamp = new Date().getTime();
       //console.log('dragchange', value);
       //console.log('viewposition', this.viewposition);
@@ -193,14 +193,14 @@ export class Suit {
   movescoller() {}
 
   //胎心数据处理
-  initctgdata(oridata,arrdata){
-		if(!oridata){
-			return;
-		}
-		var push_account=oridata.length/2;
-		for(var i=0;i<push_account;i++){
-			var data_to_push=parseInt(oridata.substring(0,2),16);
-			arrdata.push(data_to_push);
+  initctgdata(oridata, arrdata) {
+    if (!oridata) {
+      return;
+    }
+    var push_account = oridata.length / 2;
+    for (var i = 0; i < push_account; i++) {
+      var data_to_push = parseInt(oridata.substring(0, 2), 16);
+      arrdata.push(data_to_push);
     }
   }
 
@@ -244,10 +244,10 @@ export class Suit {
   drawdot() {
     this.drawobj.drawdot(this.data.index);
     this.viewposition = this.data.index;
-    if (this.data.index > this.canvasline.width*2) {
+    if (this.data.index > this.canvasline.width * 2) {
       this.barToll.setBarWidth(100);
       this.barToll.setBarLeft(this.canvasline.width, false);
-      this.scollscale = this.data.index / (this.canvasline.width*2 - 100);
+      this.scollscale = this.data.index / (this.canvasline.width * 2 - 100);
     }
   }
 

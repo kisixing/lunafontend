@@ -231,8 +231,8 @@ export default class DrawCTG {
   sethorizontal = (length: number, startposition: number) => {
     const { setrules, context, baseleft, min, max, xspan } = this;
     this.starttime = this.suit.data.starttime;
-    if(this.starttime == ''){
-      this.starttime = formatDate(new Date(),'yyyy-MM-dd HH:mm:ss');
+    if (this.starttime == '') {
+      this.starttime = formatDate(new Date(), 'yyyy-MM-dd HH:mm:ss');
     }
     var offsetpx = Math.floor((startposition % (xspan * 2)) / 2);
     var offseti = Math.floor(startposition / (xspan * 2));
