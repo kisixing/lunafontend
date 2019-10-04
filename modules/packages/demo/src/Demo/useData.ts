@@ -1,4 +1,5 @@
 const datacache: Map<any,any> = new Map()
+const ecgcache: Map<any,any> = new Map()
 const interval:number = 800
 export default datacache
 const defaultUrl = "ws://localhost:8084/websocket/?request=e2lkOjE7cmlkOjI2O3Rva2VuOiI0MzYwNjgxMWM3MzA1Y2NjNmFiYjJiZTExNjU3OWJmZCJ9"
@@ -126,7 +127,8 @@ export const useData = (setDevice:any,url = defaultUrl): Promise<Map<any,any>> =
                     //console.log(ecgdata);
                     var id = received_msg.device_no;
 				    var bi = received_msg.bed_no;
-				    var cachbi = id+'-'+bi;
+                    var cachbi = id+'-'+bi;
+                    res(ecgcache);
                 }
                 else if (received_msg.name == "get_devices") {
                     console.log(received_msg.data);

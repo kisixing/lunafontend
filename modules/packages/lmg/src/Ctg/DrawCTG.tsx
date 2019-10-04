@@ -231,6 +231,9 @@ export default class DrawCTG {
   sethorizontal = (length: number, startposition: number) => {
     const { setrules, context, baseleft, min, max, xspan } = this;
     this.starttime = this.suit.data.starttime;
+    if(this.starttime == ''){
+      this.starttime = formatDate(new Date(),'yyyy-MM-dd HH:mm:ss');
+    }
     var offsetpx = Math.floor((startposition % (xspan * 2)) / 2);
     var offseti = Math.floor(startposition / (xspan * 2));
     //kisi 2019-10-02 开始时间点 ，因为现在间隔0.5s取点
