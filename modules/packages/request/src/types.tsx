@@ -11,6 +11,7 @@ export interface RequestOptions extends RequestOptionsInit {
   loading?: string;
   successText?: string;
   interval?: number;
+  cacheWhenFailed?: boolean;
 }
 export type getErrDataType = (err: ResponseError) => ErrData;
 
