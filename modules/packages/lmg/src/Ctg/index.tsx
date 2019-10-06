@@ -23,7 +23,7 @@ export default ({
 
   useEffect(() => {
 
-    const instance = (new Suit(
+    let instance = (new Suit(
       canvas1.current,
       canvas2.current,
       canvasline.current,
@@ -36,8 +36,8 @@ export default ({
     setSuit(instance)
     mutableSuitObject.suit = instance;
     return () => {
-      console.log('destroy', suit.sid);
-      suit.destroy();
+      instance.destroy();
+      instance = null
     };
   }, []);
 
@@ -47,7 +47,7 @@ export default ({
 
     suit && suit.resize();
   }, [itemHeight]);
-  data && suit && suit.init(data)
+   suit && suit.init(data)
   return (
     <div style={{ width: '100%', height: '100%' }} ref={box}>
       <canvas ref={canvas1}>
