@@ -18,7 +18,7 @@
     "antd": "^3.14.1",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0",
-    "@lianmed/request":"^1.0.0"
+    "@lianmed/request": "^1.0.0"
   },
   "dependencies": {
     "braft-editor": "^2.3.8"

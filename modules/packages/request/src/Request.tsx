@@ -3,7 +3,7 @@ import { extend, RequestMethod } from 'umi-request';
 import { Iconfig, RequestOptions } from './types';
 import getErrData from './getErrData';
 import { notification } from 'antd';
-
+import store from 'store'
 type RequestType = (url: string, options?: RequestOptions) => Promise<any>;
 
 const intervalSet: Set<string> = new Set();
@@ -39,9 +39,10 @@ export default class Request {
   public intercept() {
     ['get', 'post', 'put', 'delete'].forEach(_ => {
       this[_] = ((url, options = {}) => {
-        const { loading, interval } = options;
+        const { loading, interval,cacheWhenFailed } = options;
+        const key = _ + ':' + url;
+
         if (typeof interval === 'number') {
-          const key = _ + ':' + url;
           if (intervalSet.has(key)) {
             return Promise.reject('interval !');
           }
@@ -55,6 +56,16 @@ export default class Request {
           const hide = message.loading(loading, 0);
           return promise.finally(() => {
             hide();
+          });
+        }
+        if (cacheWhenFailed ) {
+          console.log('cacheWhenFailed')
+        
+          return promise.then(value => {
+            store.set(key,value)
+            return value
+          }).catch(err => {
+            return store.get(key)
           });
         }
         return promise;
