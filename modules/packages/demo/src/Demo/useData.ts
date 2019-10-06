@@ -42,6 +42,7 @@ export const useData = (setDevice: any, url = defaultUrl): Promise<Map<any, any>
                   timestamp: 0,
                   docid: '',
                   starttime: '',
+                  orflag :true
                 });
                 convertdocid(cachebi, devdata.beds[bi].doc_id);
                 for (var fetal = 0; fetal < 3; fetal++) {
@@ -72,7 +73,8 @@ export const useData = (setDevice: any, url = defaultUrl): Promise<Map<any, any>
               for (let i = datacache.get(cachbi).start; i > datacache.get(cachbi).past; i--) {
                 if (!tmpcache.fhr[0][i]) {
                   var curstamp = new Date().getTime();
-                  if (curstamp - tmpcache.timestamp > interval) {
+                  if (tmpcache.orflag || curstamp - tmpcache.timestamp > interval) {
+                    tmpcache.orflag = false;
                     var dis = tmpcache.start - tmpcache.past;
                     var length = dis > 800 ? 800 : dis;
                     var startpoint = tmpcache.start - length;
@@ -109,6 +111,7 @@ export const useData = (setDevice: any, url = defaultUrl): Promise<Map<any, any>
           var cachbi = id + '-' + bi;
           if (datacache.has(cachbi)) {
             var tmpcache = datacache.get(cachbi);
+            tmpcache.orflag = true; 
             for (var key in ctgdata) {
               tmpcache.fhr[0][ctgdata[key].index] = ctgdata[key].fhr;
               tmpcache.fhr[1][ctgdata[key].index] = ctgdata[key].fhr2;
@@ -129,7 +132,8 @@ export const useData = (setDevice: any, url = defaultUrl): Promise<Map<any, any>
                   eflag = il;
                   var curstamp = new Date().getTime();
                   //console.log(il +"--"+ datacache[cachbi].last);
-                  if (curstamp - tmpcache.timestamp > interval) {
+                  if (tmpcache.orflag || curstamp - tmpcache.timestamp > interval) {
+                    tmpcache.orflag = false;
                     send(
                       '{"name":"get_data_ctg","data":{"start_index":' +
                         sflag +

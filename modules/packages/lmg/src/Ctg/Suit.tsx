@@ -66,7 +66,7 @@ export class Suit {
   fmp = [];
   data: any;
   starttime = '2019-09-26';
-  fetalcount = 1;
+  fetalcount = 2;
   type = 0; // 0 实时数据，1 历史数据
   currentdot = 10; //当前实时绘制点
   currentx = 10;
@@ -113,12 +113,11 @@ export class Suit {
     this.barToll = barToll;
     this.drawobj = new DrawCTG(this);
     this.p = new P(20, 0, 6, 428, rulercolor, this); // 竖向选择线
-    this.drawobj.resize();
+    this.resize();
     this.barToll.watchGrab(value => {
     });
   }
   init(data) {
-    console.log(data);
     let defaultinterval = 500;
     this.data = data;
     this.fhr[0] = data.fhr[0];
@@ -154,9 +153,7 @@ export class Suit {
     });
     this.barToll.watchGrab(value => {
       this.dragtimestamp = new Date().getTime();
-      //console.log('dragchange', value);
-      //console.log('viewposition', this.viewposition);
-      //console.log('index', this.data.index);
+      //console.log('dragchange',value, this.viewposition, this.data.index);
       //方向确认
       if (this.viewposition - value < this.data.index) {
         this.viewposition -= value;
@@ -164,7 +161,6 @@ export class Suit {
         this.drawobj.drawdot(this.viewposition);
       }
     });
-
     this.resize();
   }
   destroy() {
@@ -181,17 +177,7 @@ export class Suit {
     this.barToll = null;
   }
   resize() {
-    const { canvas1, canvas2, canvasline, wrap } = this;
-    const rect = wrap.getBoundingClientRect();
-    const { width, height } = rect;
-
-    canvas1.width = width;
-    canvas1.height = height;
-    canvas2.width = width;
-    canvas2.height = height;
-    canvasline.width = width;
-    canvasline.height = height;
-    this.width = width;
+    this.drawobj.resize();
   }
 
   movescoller() {}

@@ -17,7 +17,7 @@ export default function () {
       el.requestFullscreen();
     }
   }
-  const fullScreenEvent = useCallback(() => { suitObject.suit.resize() }, [])
+  const fullScreenEvent = useCallback(() => {suitObject.suit.resize() }, [])
 
   useEffect(() => {
     document.addEventListener('fullscreenchange', fullScreenEvent);
