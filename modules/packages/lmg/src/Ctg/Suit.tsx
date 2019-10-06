@@ -131,6 +131,7 @@ export class Suit {
     });
   }
   init(data) {
+    console.log(data);
     let defaultinterval = 500;
     this.data = data;
     this.fhr[0] = data.fhr[0];
