@@ -166,6 +166,7 @@ export class Suit {
       this.drawobj.drawdot(this.viewposition);
     });
     this.barToll.watchGrab(value => {
+      console.log(value)
       this.dragtimestamp = new Date().getTime();
       //console.log('dragchange', value);
       //console.log('viewposition', this.viewposition);

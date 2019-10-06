@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { Suit } from './Suit';
 import { IBarTool } from '../ScrollBar/useScroll';
@@ -9,40 +9,45 @@ export default ({
   itemHeight = 0,
 }: {
   data: any;
-  mutableSuitObject?: { suit: Suit };
+  mutableSuitObject?: { suit: (Suit | any) };
   itemHeight?: number;
 }) => {
   let barTool: IBarTool;
-  let suit: Suit;
+
   const canvas1 = useRef<HTMLCanvasElement>(null);
   const canvas2 = useRef<HTMLCanvasElement>(null);
   const canvasline = useRef<HTMLCanvasElement>(null);
   const box = useRef<HTMLDivElement>(null);
+
+  const [suit, setSuit] = useState<Suit>(null)
+
   useEffect(() => {
-    const instance = new Suit(
+
+    const instance = (new Suit(
       canvas1.current,
       canvas2.current,
       canvasline.current,
       box.current,
       barTool
-    );
-    suit = instance;
-    suit.onStatusChange = status => {
+    ))
+    instance.onStatusChange = status => {
       console.log(status);
     };
-
-    mutableSuitObject.suit = suit;
-    data && suit.init(data);
-  }, [data]);
-  useEffect(() => {
-    suit && suit.resize();
-  }, [itemHeight, data]);
-  useEffect(() => {
+    setSuit(instance)
+    mutableSuitObject.suit = instance;
     return () => {
-      console.log('destroy2', suit.sid);
+      console.log('destroy', suit.sid);
       suit.destroy();
     };
   }, []);
+
+
+
+  useEffect(() => {
+
+    suit && suit.resize();
+  }, [itemHeight]);
+  data && suit && suit.init(data)
   return (
     <div style={{ width: '100%', height: '100%' }} ref={box}>
       <canvas ref={canvas1}>
@@ -55,15 +60,15 @@ export default ({
         style={{ position: 'absolute', left: '0', top: '0' }}
         ref={canvas2}
 
-        // onMouseDown={e => {
-        //   suit && suit.p.OnMouseDown(e.nativeEvent);
-        // }}
-        // onMouseMove={e => {
-        //   suit && suit.p.OnMouseMove(e.nativeEvent);
-        // }}
-        // onMouseUp={e => {
-        //   suit && suit.p.OnMouseUp(e.nativeEvent);
-        // }}
+      // onMouseDown={e => {
+      //   suit && suit.p.OnMouseDown(e.nativeEvent);
+      // }}
+      // onMouseMove={e => {
+      //   suit && suit.p.OnMouseMove(e.nativeEvent);
+      // }}
+      // onMouseUp={e => {
+      //   suit && suit.p.OnMouseUp(e.nativeEvent);
+      // }}
       >
         <p>Your browserdoes not support the canvas element.</p>
       </canvas>
