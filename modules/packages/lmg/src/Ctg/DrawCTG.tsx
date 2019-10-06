@@ -68,9 +68,11 @@ export default class DrawCTG {
     //console.log(this.suit.data,width,height,this.yspan);
     if(this.suit.data){
       this.drawdot(this.suit.viewposition);
+    }else{
+      this.drawgrid(width,false);
     }
   }
-  drawgrid(cur) {
+  drawgrid(cur,drawtimespan=true) {
     const { suit, sethorizontal, setvertical, context } = this;
     let cwidth = suit.canvasline.width;
     let cheight = suit.canvasline.height;
@@ -78,7 +80,7 @@ export default class DrawCTG {
     //横向选择区域设置填充色
     context.fillStyle = suit.ctgconfig.normalarea;
     context.fillRect(0, 50 * this.yspan, cwidth, 50 * this.yspan);
-    sethorizontal(cwidth, cur);
+    sethorizontal(cwidth, cur,drawtimespan);
     setvertical(cwidth, cur);
   }
   /*
@@ -253,9 +255,11 @@ export default class DrawCTG {
     }
     linecontext.stroke();
   }
-  sethorizontal = (length: number, startposition: number) => {
+  sethorizontal = (length: number, startposition: number,drawtimespan=true) => {
     const { setrules, context, baseleft, min, max, xspan } = this;
-    this.starttime = this.suit.data.starttime;
+    if(drawtimespan){
+      this.starttime = this.suit.data.starttime;
+    }
     if (this.starttime == '') {
       this.starttime = formatDate(new Date(), 'yyyy-MM-dd HH:mm:ss');
     }
@@ -276,30 +280,32 @@ export default class DrawCTG {
         context.strokeStyle = this.suit.ctgconfig.primarygrid;
       }
       if (ioff % 6 == primaryscaleflag) {
-        this.setscalestyle(context, this.suit.ctgconfig.scale);
-        let fMinutes = Math.floor(offsetmin - (1.0 * (linecount - i)) / 3);
-        let tmpyoffset = Math.floor((max-min)*this.yspan + this.scalespan/4);
-        if (offseti > linecount - i - 2) {
-          var flag = Math.ceil((ioff - 1) / 6) % 2;
-          if (flag == 1) {
-            var date = new Date(this.starttime);
-            let timescale = formatDate(date.setMinutes(date.getMinutes() + fMinutes), 'HH:mm');
-            //console.log(timescale);
-            if (startposition == 0 && i == 1) {
-              context.fillText(timescale, length - offsetpx, tmpyoffset);
+        if(drawtimespan){      
+          this.setscalestyle(context, this.suit.ctgconfig.scale);
+          let fMinutes = Math.floor(offsetmin - (1.0 * (linecount - i)) / 3);
+          let tmpyoffset = Math.floor((max-min)*this.yspan + this.scalespan/4);
+          if (offseti > linecount - i - 2) {
+            var flag = Math.ceil((ioff - 1) / 6) % 2;
+            if (flag == 1) {
+              var date = new Date(this.starttime);
+              let timescale = formatDate(date.setMinutes(date.getMinutes() + fMinutes), 'HH:mm');
+              //console.log(timescale);
+              if (startposition == 0 && i == 1) {
+                context.fillText(timescale, length - offsetpx, tmpyoffset);
+              } else {
+                context.fillText(timescale, baseleft + xspan * i - offsetpx - 10, tmpyoffset);
+              }
             } else {
-              context.fillText(timescale, baseleft + xspan * i - offsetpx - 10, tmpyoffset);
-            }
-          } else {
-            fMinutes = Math.floor(fMinutes);
-            if (startposition == 0 && i == 0) {
-              context.fillText(fMinutes + '分', baseleft - offsetpx,tmpyoffset);
-            } else {
-              context.fillText(
-                fMinutes + '分',
-                baseleft + xspan * i + baseleft - offsetpx - 10,
-                tmpyoffset
-              );
+              fMinutes = Math.floor(fMinutes);
+              if (startposition == 0 && i == 0) {
+                context.fillText(fMinutes + '分', baseleft - offsetpx,tmpyoffset);
+              } else {
+                context.fillText(
+                  fMinutes + '分',
+                  baseleft + xspan * i + baseleft - offsetpx - 10,
+                  tmpyoffset
+                );
+              }
             }
           }
         }
@@ -370,7 +376,9 @@ export default class DrawCTG {
     const { fhr, toco } = suit;
     let curpostion = 10;
     let curvalue = '-- --';
-    let fontsize = Math.floor(suit.canvasline.height/25);
+    let fontsize = Math.floor(suit.canvasline.height/20);
+    if(fontsize<16)
+      fontsize = 16;
     datacontext.clearRect(0,0,fontsize*10,fontsize*5);
     datacontext.textAlign = 'left';
     datacontext.textBaseline = 'top';
