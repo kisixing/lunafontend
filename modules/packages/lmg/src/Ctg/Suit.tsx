@@ -93,7 +93,7 @@ export class Suit {
   barToll: IBarTool;
   p: P;
   dragtimestamp = 0;
-  interval = 6000;
+  interval = 5000;
   timeout: NodeJS.Timeout;
   constructor(
     canvas1: Canvas,
@@ -115,19 +115,6 @@ export class Suit {
     this.p = new P(20, 0, 6, 428, rulercolor, this); // 竖向选择线
     this.drawobj.resize();
     this.barToll.watchGrab(value => {
-      console.log(value);
-      this.dragtimestamp = new Date().getTime();
-      //console.log('dragchange', value);
-      //console.log('viewposition', this.viewposition);
-      console.log('index', this.data.index);
-      /*
-      //方向确认
-      if (this.viewposition - value < this.data.index) {
-        this.viewposition -= value;
-        this.movescoller();
-        this.drawobj.drawdot(this.viewposition);
-      }
-      */
     });
   }
   init(data) {
@@ -159,14 +146,13 @@ export class Suit {
       this.timerCtg(defaultinterval);
     }
     this.barToll.watch(value => {
-      console.log('scollchange', value);
-      //显示静态数据
+      //显示历史数据
       this.dragtimestamp = new Date().getTime();
-      this.viewposition = Math.floor(this.curr * value/this.canvasline.width);
+      this.viewposition = Math.floor(this.curr * value/(this.canvasline.width-100));
+      //console.log('scollchange', this.curr ,this.canvasline.width,value,this.viewposition);
       this.drawobj.drawdot(this.viewposition);
     });
     this.barToll.watchGrab(value => {
-      console.log(value)
       this.dragtimestamp = new Date().getTime();
       //console.log('dragchange', value);
       //console.log('viewposition', this.viewposition);
@@ -265,8 +251,8 @@ export class Suit {
 	    this.drawobj.drawdot(this.curr);
       this.viewposition = this.curr;
       if (this.data.index > this.canvasline.width*2) {
-	      this.barToll.setBarWidth(100);
-	      //this.barToll.setBarLeft(this.canvasline.width, false);
+        this.barToll.setBarWidth(100);
+        this.barToll.setBarLeft(this.canvasline.width, false);
 	    }
     }
   }

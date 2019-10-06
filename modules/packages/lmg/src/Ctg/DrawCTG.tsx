@@ -54,6 +54,11 @@ export default class DrawCTG {
     const { width, height } = rect;
     this.suit.canvasline.width = width;
     this.suit.canvasline.width = height;
+    console.log(this.suit.data,width,height);
+    if(this.suit.data){
+      console.log(this.suit.data);
+      this.drawdot(this.suit.viewposition);
+    }
   }
   drawgrid(cur) {
     const { suit, sethorizontal, setvertical, context } = this;

@@ -121,8 +121,10 @@ function useScroll(
     var { width: barWidth } = barRex;
     const distance = boxWidth - barWidth;
     const result = offset <= 0 ? 0 : offset >= distance ? distance : offset;
-    setBar('left', result);
-    if (isfire) resolve(result);
+    if(barEl.style['left'] != (result+'px')){
+      setBar('left', result);
+      if (isfire) resolve(result);
+    }
   }
 
   function setBar(key: string, value: number) {
