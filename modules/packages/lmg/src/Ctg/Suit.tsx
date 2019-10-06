@@ -1,6 +1,7 @@
 import DrawCTG from './DrawCTG';
 var rulercolor = 'rgb(67,205,128)';
 import { IBarTool } from '../ScrollBar/useScroll';
+
 export class P {
   x: number;
   y: number;
@@ -58,7 +59,10 @@ let sid = 0;
 type Canvas = HTMLCanvasElement;
 type Context = CanvasRenderingContext2D;
 export class Suit {
-  sid: number;
+  initFlag = false
+  sid = sid++;
+  log = console.log.bind(console,this.sid)
+
   intervalIds: NodeJS.Timeout[] = [];
   fhr = [];
   toco = [];
@@ -102,7 +106,6 @@ export class Suit {
     wrap: HTMLElement,
     barToll: IBarTool
   ) {
-    this.sid = sid++;
     this.wrap = wrap;
     this.canvas1 = canvas1;
     this.canvas2 = canvas2;
@@ -118,6 +121,10 @@ export class Suit {
     });
   }
   init(data) {
+    if(!data || this.initFlag){
+      return 
+    }
+    this.initFlag = true
     let defaultinterval = 500;
     this.data = data;
     this.fhr[0] = data.fhr[0];
@@ -153,7 +160,6 @@ export class Suit {
     });
     this.barToll.watchGrab(value => {
       this.dragtimestamp = new Date().getTime();
-      //console.log('dragchange',value, this.viewposition, this.data.index);
       //方向确认
       if (this.viewposition - value < this.data.index) {
         this.viewposition -= value;
@@ -164,6 +170,7 @@ export class Suit {
     this.resize();
   }
   destroy() {
+    this.log('destroy',this.sid)
     this.intervalIds.forEach(_ => clearInterval(_));
     this.canvas1 = null;
     this.canvas2 = null;
