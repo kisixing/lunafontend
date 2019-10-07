@@ -243,7 +243,11 @@ export class Suit {
 
   drawdot() {
     if(this.data.starttime && this.data.starttime!='' && this.data.status == 1){
-      this.curr = Math.floor((new Date().getTime() - new Date(this.data.starttime).getTime())/500)*2-this.buffersize;
+      if(this.curr == -16){
+        this.buffersize = (this.data.index - Math.floor((new Date().getTime() - new Date(this.data.starttime).getTime())/500)*2 - 12);
+        console.log(this.buffersize);
+      }
+      this.curr = Math.floor((new Date().getTime() - new Date(this.data.starttime).getTime())/500)*2+this.buffersize;
 	    this.drawobj.drawdot(this.curr);
       this.viewposition = this.curr;
       if (this.data.index > this.canvasline.width*2) {
