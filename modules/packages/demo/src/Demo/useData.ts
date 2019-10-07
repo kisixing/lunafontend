@@ -42,12 +42,21 @@ export const useData = (setDevice: any, url = defaultUrl): Promise<Map<any, any>
                   timestamp: 0,
                   docid: '',
                   starttime: '',
-                  orflag :true
+                  orflag :true,
+                  status : 0,
+                  fetalcount :1
                 });
+                if(devdata.beds[bi].is_working){
+                    datacache.get(cachebi).status = 1;
+                  }else{
+                    datacache.get(cachebi).status = 2;
+                  }
                 convertdocid(cachebi, devdata.beds[bi].doc_id);
                 for (var fetal = 0; fetal < 3; fetal++) {
                   datacache.get(cachebi).fhr[fetal] = [];
                 }
+                datacache.get(cachebi).fetal_num = devdata.beds[bi].fetal_num;
+                console.log(datacache.get(cachebi),devdata.beds[bi].fetal_num);
               }
             }
             setDevice(devlist);

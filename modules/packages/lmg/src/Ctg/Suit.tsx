@@ -70,7 +70,7 @@ export class Suit {
   fmp = [];
   data: any;
   starttime = '2019-09-26';
-  fetalcount = 2;
+  fetalcount = 1;
   type = 0; // 0 实时数据，1 历史数据
   currentdot = 10; //当前实时绘制点
   currentx = 10;
@@ -127,8 +127,11 @@ export class Suit {
     this.initFlag = true
     let defaultinterval = 500;
     this.data = data;
-    this.fhr[0] = data.fhr[0];
-    this.fhr[1] = data.fhr[1];
+    this.fetalcount = data.fetal_num;
+    for(let i =0;i<this.fetalcount;i++){
+     this.fhr[i] = data.fhr[i];
+     console.log(data);
+    }
     this.toco = data.toco;
     this.currentdot = data.index;
     this.drawobj.drawgrid(0);
@@ -239,7 +242,7 @@ export class Suit {
   }
 
   drawdot() {
-    if(this.data.starttime && this.data.starttime!=''){
+    if(this.data.starttime && this.data.starttime!='' && this.data.status == 1){
       this.curr = Math.floor((new Date().getTime() - new Date(this.data.starttime).getTime())/500)*2-this.buffersize;
 	    this.drawobj.drawdot(this.curr);
       this.viewposition = this.curr;
