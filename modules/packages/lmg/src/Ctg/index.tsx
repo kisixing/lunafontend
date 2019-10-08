@@ -7,10 +7,12 @@ export default ({
   data,
   mutableSuitObject = { suit: null },
   itemHeight = 0,
+  type = 0
 }: {
   data: any;
   mutableSuitObject?: { suit: (Suit | any) };
   itemHeight?: number;
+  type: 0 | 1
 }) => {
   let barTool: IBarTool;
 
@@ -28,7 +30,8 @@ export default ({
       canvas2.current,
       canvasline.current,
       box.current,
-      barTool
+      barTool,
+      type
     ))
     instance.onStatusChange = status => {
       console.log(status);
