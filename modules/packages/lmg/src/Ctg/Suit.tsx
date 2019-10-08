@@ -138,13 +138,12 @@ export class Suit {
     this.currentdot = data.index;
     this.drawobj.drawgrid(0);
     if (this.type > 0) {
-      //调用方式
-      let json; // restful如  api/ctg-exams-data/2_2_190930222541   请求的json数据
-      this.initctgdata(json.fhr1, this.fhr[0]);
-      this.initctgdata(json.fhr2, this.fhr[1]);
-      this.initctgdata(json.fhr3, this.fhr[2]);
-      this.initctgdata(json.toco, this.toco);
-      //initctgdata(json.fhr3,this.fhr[2]);
+      //kisi 2019-10-08 不在曲线内处理
+      // let json; // 调用方式restful如  api/ctg-exams-data/2_2_190930222541   请求的json数据
+      // this.initctgdata(json.fhr1, this.fhr[0]);
+      // this.initctgdata(json.fhr2, this.fhr[1]);
+      // this.initctgdata(json.fhr3, this.fhr[2]);
+      // this.initctgdata(json.toco, this.toco);
       if (this.data.index > this.canvasline.width * 2) {
         this.drawobj.drawdot(this.canvasline.width * 2);
         this.barToll.setBarWidth(100);
@@ -244,10 +243,10 @@ export class Suit {
   }
 
   drawdot() {
-    if(this.data.starttime && this.data.starttime!='' && this.data.status == 1){
+    if(this.data.starttime && this.data.starttime!='' && this.data.status == 1 && this.data.index>0){
       if(this.curr == -16){
-        this.buffersize = (this.data.index - Math.floor((new Date().getTime() - new Date(this.data.starttime).getTime())/500)*2 - 12);
-        console.log(this.buffersize);
+        this.buffersize = (this.data.index - Math.floor((new Date().getTime() - new Date(this.data.starttime).getTime())/500)*2 - 20);
+        console.log(this.data.index,this.buffersize);
       }
       this.curr = Math.floor((new Date().getTime() - new Date(this.data.starttime).getTime())/500)*2+this.buffersize;
 	    this.drawobj.drawdot(this.curr);

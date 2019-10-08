@@ -1,8 +1,49 @@
 const datacache: Map<any, any> = new Map();
 const interval: number = 800;
 export default datacache;
+//export default ecgqcache;
 const defaultUrl =
-  'ws://192.168.0.208:8084/websocket/?request=e2lkOjE7cmlkOjI2O3Rva2VuOiI0MzYwNjgxMWM3MzA1Y2NjNmFiYjJiZTExNjU3OWJmZCJ9';
+  'ws://localhost:8084/websocket/?request=e2lkOjE7cmlkOjI2O3Rva2VuOiI0MzYwNjgxMWM3MzA1Y2NjNmFiYjJiZTExNjU3OWJmZCJ9';
+export class Queue {
+    B = [];
+    capacity = 512;
+    EnQueue(C:any) {
+      if (C == null) {
+        return -1;
+      }
+      if (this.B.length >= this.capacity) {
+        this.B.shift();
+      }
+      //this.B.push(C);
+    }
+    DeQueue() {
+      if (this.B.length == 0) {
+        return null;
+      } else {
+        return this.B.shift();
+      }
+    }
+    GetSize() {
+      return this.B.length;
+    }
+    GetHead() {
+      if (this.B.length == 0) {
+        return null;
+      } else {
+        return this.B[0];
+      }
+    }
+    MakeEmpty() {
+      this.B.length = 0;
+    }
+    IsEmpty() {
+      if (this.B.length == 0) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
 export const useData = (setDevice: any, url = defaultUrl): Promise<Map<any, any>> => {
   // event.emit
   var socket: WebSocket;

@@ -384,13 +384,13 @@ export default class DrawCTG {
     datacontext.font = 'bold '+fontsize+'px arial';
     datacontext.fillStyle = 'blue';
     for(let i=0;i<suit.fetalcount;i++){
-      if(fhr[i][x]){
+      if(typeof(fhr[i][x]) != "undefined"){
         curvalue = fhr[i][x];
       }
       datacontext.fillText('fhr'+(i+1) +' : ' +curvalue, 10,curpostion);
       curpostion += fontsize;
     }
-    if(toco[x]){
+    if(typeof(toco[x]) != "undefined"){
       curvalue = toco[x];
     }else{
       curvalue = '-- --';
