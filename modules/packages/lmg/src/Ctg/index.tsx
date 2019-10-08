@@ -12,7 +12,7 @@ export default ({
   data: any;
   mutableSuitObject?: { suit: (Suit | any) };
   itemHeight?: number;
-  type: 0 | 1
+  type?: 0 | 1
 }) => {
   let barTool: IBarTool;
 

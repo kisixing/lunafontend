@@ -1,12 +1,13 @@
 const datacache: Map<any, any> = new Map();
-const interval: number = 800;
+const interval: number = 30000;
 export default datacache;
 //export default ecgqcache;
 const defaultUrl =
   'ws://localhost:8084/websocket/?request=e2lkOjE7cmlkOjI2O3Rva2VuOiI0MzYwNjgxMWM3MzA1Y2NjNmFiYjJiZTExNjU3OWJmZCJ9';
 export class Queue {
-    B = [];
+    B:any = [];
     capacity = 512;
+
     EnQueue(C:any) {
       if (C == null) {
         return -1;
@@ -14,7 +15,7 @@ export class Queue {
       if (this.B.length >= this.capacity) {
         this.B.shift();
       }
-      //this.B.push(C);
+      this.B.push(C);
     }
     DeQueue() {
       if (this.B.length == 0) {
@@ -46,15 +47,17 @@ export class Queue {
   }
 export const useData = (setDevice: any, url = defaultUrl): Promise<Map<any, any>> => {
   // event.emit
-  var socket: WebSocket;
-
+    var socket: WebSocket;
+    var offrequest :number;
   socket = new WebSocket(url);
 
   return new Promise(res => {
     socket.onerror = () => {
       res(datacache);
     };
-    socket.onopen = function(event) {};
+    socket.onopen = function(event) {
+        offrequest = 0;
+    };
     socket.onclose = function(event) {
       console.log('websocket 关闭了');
     };
@@ -123,8 +126,9 @@ export const useData = (setDevice: any, url = defaultUrl): Promise<Map<any, any>
               for (let i = datacache.get(cachbi).start; i > datacache.get(cachbi).past; i--) {
                 if (!tmpcache.fhr[0][i]) {
                   var curstamp = new Date().getTime();
-                  if (tmpcache.orflag || curstamp - tmpcache.timestamp > interval) {
+                  if (offrequest <8 && (tmpcache.orflag || curstamp - tmpcache.timestamp > interval)) {
                     tmpcache.orflag = false;
+                    offrequest += 1;
                     var dis = tmpcache.start - tmpcache.past;
                     var length = dis > 800 ? 800 : dis;
                     var startpoint = tmpcache.start - length;
@@ -161,12 +165,15 @@ export const useData = (setDevice: any, url = defaultUrl): Promise<Map<any, any>
           var cachbi = id + '-' + bi;
           if (datacache.has(cachbi)) {
             var tmpcache = datacache.get(cachbi);
-            tmpcache.orflag = true; 
             for (var key in ctgdata) {
               tmpcache.fhr[0][ctgdata[key].index] = ctgdata[key].fhr;
               tmpcache.fhr[1][ctgdata[key].index] = ctgdata[key].fhr2;
               tmpcache.toco[ctgdata[key].index] = ctgdata[key].toco;
               setcur(cachbi, ctgdata[key].index);
+            }
+            tmpcache.orflag = true; 
+            if(offrequest>0){
+                offrequest -= 1;
             }
             //判断 是否有缺失
             var flag = 0;
@@ -182,8 +189,9 @@ export const useData = (setDevice: any, url = defaultUrl): Promise<Map<any, any>
                   eflag = il;
                   var curstamp = new Date().getTime();
                   //console.log(il +"--"+ datacache[cachbi].last);
-                  if (tmpcache.orflag || curstamp - tmpcache.timestamp > interval) {
+                  if (offrequest <8 && (tmpcache.orflag || curstamp - tmpcache.timestamp > interval)) {
                     tmpcache.orflag = false;
+                    offrequest += 1;
                     send(
                       '{"name":"get_data_ctg","data":{"start_index":' +
                         sflag +

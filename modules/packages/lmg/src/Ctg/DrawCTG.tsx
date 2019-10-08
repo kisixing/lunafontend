@@ -183,7 +183,7 @@ export default class DrawCTG {
   }
   drawdot(cur) {
     const { suit, linecontext, max } = this;
-    const { fhr, toco } = suit;
+    const { fhr, toco } = suit.data;
     //cur = suit.data.index;
     this.drawgrid(cur);
     this.showcur(cur);
@@ -372,7 +372,7 @@ export default class DrawCTG {
   };
   showcur = (x:number) => {
     const { suit, datacontext } = this;
-    const { fhr, toco } = suit;
+    const { fhr, toco } = suit.data;
     let curpostion = 10;
     let curvalue = '-- --';
     let fontsize = Math.floor(suit.canvasline.height/20);
