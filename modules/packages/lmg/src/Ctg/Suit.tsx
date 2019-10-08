@@ -104,7 +104,8 @@ export class Suit {
     canvas2: Canvas,
     canvasline: Canvas,
     wrap: HTMLElement,
-    barToll: IBarTool
+    barToll: IBarTool,
+    type:number
   ) {
     this.wrap = wrap;
     this.canvas1 = canvas1;
@@ -115,6 +116,7 @@ export class Suit {
     this.contextline = canvasline.getContext('2d');
     this.barToll = barToll;
     this.drawobj = new DrawCTG(this);
+    this.type = type
     this.p = new P(20, 0, 6, 428, rulercolor, this); // 竖向选择线
     this.resize();
     this.barToll.watchGrab(value => {
