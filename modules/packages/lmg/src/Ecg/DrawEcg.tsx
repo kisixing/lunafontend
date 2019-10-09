@@ -4,9 +4,9 @@ import Queue from "./Queue";
 const adu = 52;
 const samplingrate = 128;
 const points_one_times = 8;
-const gride_width = 25;
+const gride_width = 50;
 const gx = points_one_times * ((gride_width * 5) / samplingrate);
-const x_start = 10;
+const x_start = 25;
 // const draw_lines_index = [0, 1, 2];
 const ruler = [80, 80, 80, 80, 80, 80, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 80, 80, 80, 80, 80, 80];
 let isstop = true;
@@ -179,7 +179,6 @@ export class DrawEcg implements Drawer {
       datactx.fillText(' ' + keys[5] + '', size * 34, D);
       datactx.fillText(' ' + this.values[6] + '', size * 40, D);
     }
-
   }
 
   //kisi 2019-10-03
@@ -277,21 +276,21 @@ export class DrawEcg implements Drawer {
       const L = x_start + this.current_times * points_one_times * ((gride_width * 5) / N);
       if (K == 0) {
         if (this.current_times != 0) {
-          A.moveTo(last_points[0][0], last_points[0][1] * scale);
+          A.moveTo(last_points[0][0], last_points[0][1]);
           var D = parseFloat(C >= 0 ? Q[0] - M : Q[0] + M);
-          A.lineTo(last_points[0][0], D * scale);
+          A.lineTo(last_points[0][0], D);
           last_points[0][0] = last_points[0][0];
           last_points[0][1] = D;
         } else {
           var D = parseFloat(C >= 0 ? Q[0] - M : Q[0] + M);
-          A.moveTo(x_start, D * scale);
+          A.moveTo(x_start, D);
           last_points[0][0] = x_start;
           last_points[0][1] = D;
         }
       } else {
-        A.moveTo(last_points[0][0], D * scale);
+        A.moveTo(last_points[0][0], D);
         var D = parseFloat(C >= 0 ? Q[0] - M : Q[0] + M);
-        A.lineTo(L + I, D * scale);
+        A.lineTo(L + I, D);
         last_points[0][0] = L + I;
         last_points[0][1] = D;
       }

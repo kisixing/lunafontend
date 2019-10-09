@@ -38,7 +38,7 @@ export default function () {
       全屏
     </Button>
       <div style={{ width: '800px', height: '200px', border: '1px solid red',background:'#fff' }} ref={box}>
-        <Ecg data={datacache.get('13-4')} />
+        <Ecg data={datacache.get('17-4')} />
 
       </div>
     </>

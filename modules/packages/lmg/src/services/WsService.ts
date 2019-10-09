@@ -227,6 +227,7 @@ export class WsService extends EventEmitter {
                                         if (!tmpcache.fhr[0][il]) {
                                             if (flag == 0) {
                                                 sflag = il;
+                                                flag = 1;
                                             }
                                         } else {
                                             if (flag > 0) {
@@ -296,7 +297,7 @@ export class WsService extends EventEmitter {
                         var bi = received_msg.bed_no;
                         var cachbi = id + '-' + bi;
                         for(let elop = 0;elop <ecgdata[0].ecg_arr.length;elop++){
-                            datacache.get(cachbi).ecg.EnQueue(ecgdata[0].ecg_arr[elop]);
+                            datacache.get(cachbi).ecg.EnQueue(ecgdata[0].ecg_arr[elop]&0xff);
                         }
                         //console.log(datacache.get(cachbi).ecg);
                     } else if (received_msg.name == 'get_devices') {

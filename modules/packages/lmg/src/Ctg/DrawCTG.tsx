@@ -333,7 +333,7 @@ export default class DrawCTG {
     }
     for (var i = 0; i < 11; i++) {
       if (i % 2 == 0) {
-        context.fillText(String((10 - i) * 10), x, (max-min+i*10) * this.yspan+this.scalespan - 4);
+        context.fillText(String((10 - i) * 10), x, (max-min+i*10) * this.yspan+this.basetop+this.scalespan);
       }
     }
     context.stroke();
