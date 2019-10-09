@@ -40,7 +40,7 @@ export default () => {
         ref={canvasmonitor}
         id="line"
         width="200"
-        height="200"
+        height="50"
         style={{ marginLeft: 770, position: 'absolute', left: 0,}}
         ></canvas>
       </div>

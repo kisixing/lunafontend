@@ -4,10 +4,9 @@ const samplingrate = 128;
 const points_one_times = 8;
 const gride_width = 25;
 const gx = points_one_times * ((gride_width * 5) / samplingrate);
-const x_start = 25;
+const x_start = 10;
 const draw_lines_index = [0, 1, 2];
 const ruler = [80,80,80,80,80,80,40,40,40,40,40,40,40,40,40,40,80,80,80,80,80,80];
-const keys = ['心率', '血压', '血氧','呼吸','脉搏','体温'];
 const isstop = true;
 const last_points = [
   [25, 100],
@@ -24,7 +23,7 @@ const last_points = [
   [25, 1200],
 ];
 
-const loopmill = 62;
+const loopmill = 100;
 
 class Queue {
   B = [];
@@ -83,7 +82,7 @@ interface I {
 }
 export class DrawEcg {
   oQueue = new Queue(); 
-  values = [100,'100/69',50,60,80,37.5];
+  values = [100,120,37.5,38,50,80,'100/69/120'];
   MultiParam: number[];
   Ple: number[];
   Tre: number[];
@@ -121,51 +120,90 @@ export class DrawEcg {
     this.loop();
   }
   Convert16Scale() {
-    this.adddata(null, 1, 8, 128);
+    //this.adddata(null, 1, 8, 128);
+    this.adddatatest(null, 1, 8, 128);
   }
   addfilltext() {
     const { height, ctx } = this;
-    const A = ['I', 'II', 'III'];
-    const C = (height - 10) / 3;
-    let D = 0;
-    for (let E = 0; E < draw_lines_index.length; E++) {
-      D = D + C;
-      ctx.font = 'bold 14px';
-      ctx.fillText('' + A[draw_lines_index[E]] + '', 10, D);
-    }
+    // const A = ['I', 'II', 'III'];
+    // const C = (height - 10) / 3;
+    // let D = 0;
+    // for (let E = 0; E < draw_lines_index.length; E++) {
+    //   D = D + C;
+    //   ctx.font = 'bold 14px';
+    //   ctx.fillText('' + A[draw_lines_index[E]] + '', 10, D);
+    // }
     //kisi 2019-10-03 add ruler
+    let scale = this.height/100;
     ctx.strokeStyle = '#006003';
     ctx.beginPath();
-    ctx.moveTo(60,ruler[0]);
+    ctx.moveTo(x_start*2,ruler[0]*scale);
     for(let i=0;i<ruler.length;i++){
-        ctx.lineTo(i+60,ruler[i]);
+        ctx.lineTo(i+x_start*2,ruler[i]*scale);
     }
     ctx.stroke();
   }
 
   DrawDatatext() {
-    const { height, datactx } = this;
-    const C = (height - 10) / 3;
-    let D = -20;
-    // 设置颜色 字体
-    datactx.fillStyle = "#000";
-    datactx.font = "18px bold 黑体";
-    // 设置水平对齐方式
-    datactx.textAlign = 'right';
-    datactx.textAlign = "center";
-    // 设置垂直对齐方式
-    datactx.textBaseline = "middle";
-    datactx.clearRect(0,0,this.canvasmonitor.width,this.canvasmonitor.height);
-    for (let E = 0; E < keys.length; E++) {
-      if(E%2==0){
-        D = D + C;
-        datactx.fillText(' ' + keys[E] + '', 20, D);
-        datactx.fillText(' ' + this.values[E] + '', 60, D);
-      }else{        
-        datactx.fillText(' ' + keys[E] + '', 100, D);
-        datactx.fillText(' ' + this.values[E] + '', 150, D);
-      }
+    const { datactx } = this;
+    if(this.canvasmonitor.height>60){
+      const V = (this.canvasmonitor.height - 10) / 5;
+      const H = (this.canvasmonitor.width - 10) / 14;
+      let size = V>H?H:V;
+      let D = 10;
+      // 设置颜色 字体
+      datactx.fillStyle = "#000";
+      datactx.font = size+"px bold 黑体";
+      // 设置水平对齐方式
+      datactx.textAlign = 'right';
+      datactx.textAlign = "center";
+      // 设置垂直对齐方式
+      datactx.textBaseline = "middle";
+      console.log(size);
+      datactx.clearRect(0,0,this.canvasmonitor.width,this.canvasmonitor.height); 
+      const keys = ['脉率','血氧','体温','心率','呼吸','血压(S/D/M)' ];
+      datactx.fillText(' ' + keys[0] + '', size*2, D);
+      datactx.fillText(' ' + this.values[0] + '', size*4, D);
+      datactx.fillText(' ' + keys[1] + '', size*8, D);
+      datactx.fillText(' ' + this.values[1] + '', size*10, D);
+      datactx.fillText(' ' + keys[2] + '', size*2, D+V);
+      datactx.fillText(' ' + this.values[2] + '', size*4, D+V);
+      datactx.fillText(' ' + this.values[3] + '', size*8, D+V);
+      datactx.fillText(' ' + keys[3] + '', size*2, D+2*V);
+      datactx.fillText(' ' + this.values[4] + '', size*4, D+2*V);
+      datactx.fillText(' ' + keys[4] + '', size*8, D+2*V);
+      datactx.fillText(' ' + this.values[5] + '', size*10, D+2*V);
+      datactx.fillText(' ' + keys[5] + '', size*4, D+3*V);
+      datactx.fillText(' ' + this.values[6] + '', size*10, D+3*V);
+    }else{
+      let size = 16;
+      let D = 10;
+      // 设置颜色 字体
+      datactx.fillStyle = "#000";
+      datactx.font = size+"px bold 黑体";
+      // 设置水平对齐方式
+      datactx.textAlign = 'right';
+      datactx.textAlign = "center";
+      // 设置垂直对齐方式
+      datactx.textBaseline = "middle";
+      console.log(size);
+      datactx.clearRect(0,0,this.canvasmonitor.width,this.canvasmonitor.height); 
+      const keys = ['脉率','血氧','体温','心率','呼吸','血压(S/D/M)' ];
+      datactx.fillText(' ' + keys[0] + '', size*2, D);
+      datactx.fillText(' ' + this.values[0] + '', size*4, D);
+      datactx.fillText(' ' + keys[1] + '', size*8, D);
+      datactx.fillText(' ' + this.values[1] + '', size*10, D);
+      datactx.fillText(' ' + keys[2] + '', size*12, D);
+      datactx.fillText(' ' + this.values[2] + '', size*14, D);
+      datactx.fillText(' ' + this.values[3] + '', size*18, D);
+      datactx.fillText(' ' + keys[3] + '', size*32, D);
+      datactx.fillText(' ' + this.values[4] + '', size*24, D);
+      datactx.fillText(' ' + keys[4] + '', size*28, D);
+      datactx.fillText(' ' + this.values[5] + '', size*30, D);
+      datactx.fillText(' ' + keys[5] + '', size*34, D);
+      datactx.fillText(' ' + this.values[6] + '', size*40, D);
     }
+
   }
 
   //kisi 2019-10-03
@@ -178,6 +216,15 @@ export class DrawEcg {
       G[1] = Ple[index % 60];
       G[2] = Tre[index % 180];
       this.oQueue.EnQueue(G);
+    }
+    return;
+  }
+  //kisi 2019-10-03
+  //根据ws数据压入队列
+  adddatatest(F, C, E, J) {
+    const { MultiParam, Ple, Tre } = this;
+    for (let index = 0; index < 360; index++) {
+      this.oQueue.EnQueue( (MultiParam[(index * 2) % 375] + 128) * 0.1);
     }
     return;
   }
@@ -195,28 +242,82 @@ export class DrawEcg {
     this.DrawDatatext();
     const A = new Date().getTime();
     this.current_time_millis = A;
-    this.draw(
-      y_starts,
-      BASE_INEVAL,
-      adu,
-      samplingrate,
-      this.max_times,
-      points_one_times,
-      this.linectx,
-      draw_lines_index
-    );
+    // this.draw(
+    //   y_starts,
+    //   BASE_INEVAL,
+    //   adu,
+    //   samplingrate,
+    //   this.max_times,
+    //   points_one_times,
+    //   this.linectx,
+    //   draw_lines_index
+    // );
+    this.drawsingle(y_starts,adu,samplingrate,this.max_times,this.linectx);
     if (isstop) {
       setTimeout(this.loop.bind(this), loopmill);
-      const C = new Date().getTime();
-      const B = C - this.current_time_millis + 1;
-      if (B < loopmill) {
-      }
+      // const C = new Date().getTime();
+      // const B = C - this.current_time_millis + 1;
+      // if (B < loopmill) {
+      // }
     }
     if (this.oQueue.IsEmpty()) {
       this.Convert16Scale();
     }
   }
-
+  // 绘制单心电走纸
+  drawsingle(Q, P, N, G, A) {
+    const { oQueue } = this;
+    //2019-10-03 kisi 根据容器调整高度
+    let scale = this.height/100;
+    this.current_times = this.current_times % G;
+    if (oQueue.IsEmpty()) {
+      return;
+    }
+    if (oQueue.GetSize() < points_one_times) {
+      return;
+    }
+    this.clearcanvans(this.current_times, points_one_times, N, A);
+    const F = [];
+    for (let J = 0; J < points_one_times; J++) {
+      F.push(oQueue.DeQueue());
+    }
+    A.beginPath();
+    for (let K = 0; K < F.length; K++) {
+      const C = F[K];
+      const I = (K * (gride_width * 5)) / N;
+      let M;
+      A.strokeStyle = '#9d6003';
+      //A.beginPath();
+      if (this.ecg_scope != 0) {
+        M = Math.abs(C) * (P / (gride_width * 2)) * this.ecg_scope;
+      } else {
+        M = (Math.abs(C) * (P / (gride_width * 2))) / 2;
+      }
+      const L = x_start + this.current_times * points_one_times * ((gride_width * 5) / N);
+      if (K == 0) {
+        if (this.current_times != 0) {
+          A.moveTo(last_points[0][0], last_points[0][1]*scale);
+          var D = parseFloat(C >= 0 ? Q[0] - M : Q[0] + M);
+          A.lineTo(last_points[0][0], D*scale);
+          last_points[0][0] = last_points[0][0];
+          last_points[0][1] = D;
+        } else {
+          var D = parseFloat(C >= 0 ? Q[0] - M : Q[0] + M);
+          A.moveTo(x_start, D*scale);
+          last_points[0][0] = x_start;
+          last_points[0][1] = D;
+        }
+      } else {
+        A.moveTo(last_points[0][0], D*scale);
+        var D = parseFloat(C >= 0 ? Q[0] - M : Q[0] + M);
+        A.lineTo(L + I, D*scale);
+        last_points[0][0] = L + I;
+        last_points[0][1] = D;
+      }
+    }
+    A.stroke();
+    this.current_times++;
+  }
   draw(Q, B, P, N, G, H, A, E) {
     const { oQueue } = this;
     let areaedge = 200;
@@ -270,7 +371,6 @@ export class DrawEcg {
           last_points[J][0] = L + I;
           last_points[J][1] = D;
         }
-
         if (J == 1) {
           const linear = A.createLinearGradient(L + I, D, L + I, D + 50);
           linear.addColorStop(0, 'rgba(0,255,0,0.6)');

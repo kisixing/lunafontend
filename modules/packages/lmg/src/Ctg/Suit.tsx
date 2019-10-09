@@ -151,6 +151,7 @@ export class Suit {
       } else {
         this.drawobj.drawdot(this.data.index);
       }
+      this.curr = this.data.index;
     } else {
       this.barToll.setBarWidth(0);
       this.timerCtg(defaultinterval);
@@ -171,7 +172,6 @@ export class Suit {
         this.drawobj.drawdot(this.viewposition);
       }
     });
-    this.resize();
   }
   destroy() {
     this.log('destroy',this.sid)
@@ -239,7 +239,6 @@ export class Suit {
     const { currentx } = this;
     this.p.draw(currentx, 0, 6, 428, rulercolor);
     this.currentx = currentx + 1;
-    this.showcur(currentx, this.fhr[currentx], this.toco[currentx]);
   }
 
   drawdot() {
@@ -255,6 +254,8 @@ export class Suit {
         this.barToll.setBarWidth(100);
         this.barToll.setBarLeft(this.canvasline.width, false);
 	    }
+    }else{
+      this.drawobj.showcur(this.data.index+1);
     }
   }
 

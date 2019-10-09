@@ -88,7 +88,8 @@ export const useData = (setDevice: any, url = defaultUrl): Promise<Map<any, any>
                   starttime: '',
                   orflag :true,
                   status : 0,
-                  fetalcount :1
+                  fetalcount :1,
+                  ecg:new Queue()
                 });
                 if(devdata.beds[bi].is_working){
                     datacache.get(cachebi).status = 1;
@@ -215,10 +216,11 @@ export const useData = (setDevice: any, url = defaultUrl): Promise<Map<any, any>
         } else if (received_msg.name == 'push_data_ecg') {
           //TODO 解析母亲应用层数据包
           var ecgdata = received_msg.data;
-          //console.log(ecgdata);
           var id = received_msg.device_no;
           var bi = received_msg.bed_no;
           var cachbi = id + '-' + bi;
+          datacache.get(cachbi).ecg.EnQueue(ecgdata[0].ecg_arr);
+          console.log(datacache.get(cachbi).ecg);
         } else if (received_msg.name == 'get_devices') {
           console.log(received_msg.data);
           var devlist = received_msg.data;
