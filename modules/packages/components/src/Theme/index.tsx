@@ -25,9 +25,10 @@ const AntdThemeManipulator = (props: IProps) => {
     const [color, setColor] = useState(tinycolor(primaryColor).toRgb())
     const [displayColorPicker, setDisplayColorPicker] = useState(false)
     useEffect(() => {
-        const storageColor = window.localStorage.getItem(storageName);
+        const storageColor = window.localStorage.getItem(storageName) || primaryColor
         if (storageColor) {
-            applyAntdTheme(getThemeColor(storageColor));
+            const theme = getThemeColor(storageColor)
+            applyAntdTheme(theme);
             document.getElementById('change_antd_theme_color').style.backgroundColor = storageColor;
             if (themeChangeCallback) {
                 themeChangeCallback(storageColor);

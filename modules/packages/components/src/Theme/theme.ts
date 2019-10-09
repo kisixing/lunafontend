@@ -101,18 +101,18 @@ export default `
   .ant-btn.active {
     border-color: var(--theme-active-color);
   }
-  .ant-btn-theme {
+  .ant-btn-primary {
     background-color: var(--theme-color);
     border-color: var(--theme-color);
   }
-  .ant-btn-theme:hover,
-  .ant-btn-theme:focus {
+  .ant-btn-primary:hover,
+  .ant-btn-primary:focus {
     color: #fff;
     background-color: var(--theme-hover-color);
     border-color: var(--theme-hover-color);
   }
-  .ant-btn-theme:active,
-  .ant-btn-theme.active {
+  .ant-btn-primary:active,
+  .ant-btn-primary.active {
     background-color: var(--theme-active-color);
     border-color: var(--theme-active-color);
   }
@@ -121,15 +121,15 @@ export default `
     background-color: #ff7875;
     border-color: #ff7875;
   }
-  .ant-btn-group .ant-btn-theme:not(:first-child):not(:last-child) {
+  .ant-btn-group .ant-btn-primary:not(:first-child):not(:last-child) {
     border-right-color: var(--theme-hover-color);
     border-left-color: var(--theme-hover-color);
   }
-  .ant-btn-group .ant-btn-theme:first-child:not(:last-child) {
+  .ant-btn-group .ant-btn-primary:first-child:not(:last-child) {
     border-right-color: var(--theme-hover-color);
   }
-  .ant-btn-group .ant-btn-theme:last-child:not(:first-child),
-  .ant-btn-group .ant-btn-theme + .ant-btn-theme {
+  .ant-btn-group .ant-btn-primary:last-child:not(:first-child),
+  .ant-btn-group .ant-btn-primary + .ant-btn-primary {
     border-left-color: var(--theme-hover-color);
   }
   .ant-btn-ghost:hover,
@@ -165,17 +165,17 @@ export default `
     color: var(--theme-active-color);
     border-color: var(--theme-active-color);
   }
-  .ant-btn-background-ghost.ant-btn-theme {
+  .ant-btn-background-ghost.ant-btn-primary {
     color: var(--theme-color);
     border-color: var(--theme-color);
   }
-  .ant-btn-background-ghost.ant-btn-theme:hover,
-  .ant-btn-background-ghost.ant-btn-theme:focus {
+  .ant-btn-background-ghost.ant-btn-primary:hover,
+  .ant-btn-background-ghost.ant-btn-primary:focus {
     color: var(--theme-hover-color);
     border-color: var(--theme-hover-color);
   }
-  .ant-btn-background-ghost.ant-btn-theme:active,
-  .ant-btn-background-ghost.ant-btn-theme.active {
+  .ant-btn-background-ghost.ant-btn-primary:active,
+  .ant-btn-background-ghost.ant-btn-primary.active {
     color: var(--theme-active-color);
     border-color: var(--theme-active-color);
   }
