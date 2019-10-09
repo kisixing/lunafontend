@@ -5,13 +5,13 @@ export enum EWsStatus {
     Pendding, Success, Error
 }
 
-export class WsConnect extends EventEmitter {
+export class WsService extends EventEmitter {
     static wsStatus: typeof EWsStatus = EWsStatus
     isReady = false;
     interval: number = 30000;
     RECONNECT_INTERVAL: number = 10000;
 
-    static _this: WsConnect;
+    static _this: WsService;
     log = console.log.bind(console, 'websocket')
     datacache: Map<string, any> = new Map();
     settingData: {
@@ -35,10 +35,10 @@ export class WsConnect extends EventEmitter {
             alarm_on_window: "1",
             alarm_on_sound: "1"
         }
-        if (WsConnect._this) {
-            return WsConnect._this;
+        if (WsService._this) {
+            return WsService._this;
         }
-        WsConnect._this = this;
+        WsService._this = this;
         this.settingData = settingData
     }
     getDatacache(): Promise<any> {

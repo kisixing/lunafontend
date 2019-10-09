@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Switch, Route } from "react-router-dom";
 
-import { WsConnect } from '@lianmed/lmg'
+import { WsService } from '@lianmed/lmg'
 
 import Ctg from './Ctg'
 import Ecg from './Ecg'
@@ -23,7 +23,7 @@ request.config({
   Authorization:'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOIiwiZXhwIjoxNTcwNjIxMjQzfQ.HIwzGbdwyYCe47xCngUGeaaJgZNKkr0Wx9yjrUU-HiWdzlVOuTZtcc29MXoEfamoft4pLKPH3qxDBQfcPVVA5g'
 })
 export default function () {
-  const w = new WsConnect(setting)
+  const w = new WsService(setting)
   w.dispatch=()=>{}
   w.connect()
   return (

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Ctg } from '@lianmed/lmg';
 import { Button } from 'antd';
-import { WsConnect } from '@lianmed/lmg'
+import { WsService } from '@lianmed/lmg'
 export default function () {
 
   const box = useRef<HTMLDivElement>(null)
@@ -19,7 +19,7 @@ export default function () {
 
   useEffect(() => {
    
-    WsConnect._this.getDatacache().then(datacache=>{
+    WsService._this.getDatacache().then(datacache=>{
       setDatacache(datacache)
       console.log('datacache',datacache)
     })
