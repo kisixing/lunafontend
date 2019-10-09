@@ -1,6 +1,9 @@
 import BezierEasing from 'bezier-easing';
 import tinycolor from 'tinycolor2';
 import cssContent from './theme';
+import {  darken, lighten } from './colorManipulator';
+
+const tonalOffset = 0.2
 
 /* basic-easiing */
 const baseEasing = BezierEasing(0.26, 0.09, 0.37, 0.18);
@@ -51,11 +54,15 @@ function getShadowColor (color, ratio = 9) {
 }
 
 export function getThemeColor (color) {
+  const lightColor = lighten(color, tonalOffset * .1);
+  const darkColor = darken(color, tonalOffset*1.5);
   return {
     primaryColor: color,
     hoverColor: getHoverColor(color),
     activeColor: getActiveColor(color),
-    shadowColor: getShadowColor(color)
+    shadowColor: getShadowColor(color),
+    lightColor,
+    darkColor
   };
 }
 
@@ -94,28 +101,33 @@ const generateStyleHtml = (colorObj) => {
     activeColor,
     primaryColor,
     hoverColor,
-    shadowColor
+    shadowColor,
+    lightColor,
+    darkColor
   } = colorObj;
   if (!IEVersion()) {
     const cssVar = `
       :root {
-        --primary-color: ${primaryColor};
-        --primary-hover-color: ${hoverColor};
-        --primary-active-color: ${activeColor};
-        --primary-shadow-color: ${shadowColor};
+        --theme-color: ${primaryColor};
+        --theme-hover-color: ${hoverColor};
+        --theme-active-color: ${activeColor};
+        --theme-shadow-color: ${shadowColor};
+        --theme-light-color: ${lightColor};
+        --theme-dark-color: ${darkColor};
+
       }
     `;
     return `${cssVar}\n${cssContent}`;
   }
   let IECSSContent = cssContent;
-  IECSSContent = IECSSContent.replace(/var\(\-\-primary\-color\)/g, primaryColor);
-  IECSSContent = IECSSContent.replace(/var\(\-\-primary\-hover\-color\)/g, hoverColor);
-  IECSSContent = IECSSContent.replace(/var\(\-\-primary\-active\-color\)/g, activeColor);
-  IECSSContent = IECSSContent.replace(/var\(\-\-primary\-shadow\-color\)/g, shadowColor);
+  IECSSContent = IECSSContent.replace(/var\(\-\-theme\-color\)/g, primaryColor);
+  IECSSContent = IECSSContent.replace(/var\(\-\-theme\-hover\-color\)/g, hoverColor);
+  IECSSContent = IECSSContent.replace(/var\(\-\-theme\-active\-color\)/g, activeColor);
+  IECSSContent = IECSSContent.replace(/var\(\-\-theme\-shadow\-color\)/g, shadowColor);
   return IECSSContent;
 }
 
-export function changeAntdTheme (colorObj) {
+export function applyAntdTheme (colorObj) {
   let styleNode = document.getElementById('dynamic_antd_theme_custom_style');
   if (!styleNode) {
     // avoid repeat insertion

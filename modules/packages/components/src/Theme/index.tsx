@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { SketchPicker } from 'react-color';
 import tinycolor from 'tinycolor2';
-import { getThemeColor, changeAntdTheme, placementSketchPicker } from './util';
+import { getThemeColor, applyAntdTheme, placementSketchPicker } from './util';
 
 
 interface IProps {
-    primaryColor: string,
-    storageName: string,
-    style: React.CSSProperties,
-    placement: any,
-    themeChangeCallback: any
+    primaryColor?: string,
+    storageName?: string,
+    style?: React.CSSProperties,
+    placement?: any,
+    themeChangeCallback?: any
 }
 
-const DynamicAntdTheme = (props: IProps) => {
+const AntdThemeManipulator = (props: IProps) => {
 
     const {
         primaryColor = '#1890ff',
@@ -27,7 +27,7 @@ const DynamicAntdTheme = (props: IProps) => {
     useEffect(() => {
         const storageColor = window.localStorage.getItem(storageName);
         if (storageColor) {
-            changeAntdTheme(getThemeColor(storageColor));
+            applyAntdTheme(getThemeColor(storageColor));
             document.getElementById('change_antd_theme_color').style.backgroundColor = storageColor;
             if (themeChangeCallback) {
                 themeChangeCallback(storageColor);
@@ -35,12 +35,12 @@ const DynamicAntdTheme = (props: IProps) => {
         }
     }, [])
 
-    useEffect(() => {
-        changeAntdTheme(getThemeColor(color.hex));
-        window.localStorage.setItem(storageName, color.hex);
-        console.log('color',color)
-        themeChangeCallback && themeChangeCallback(color.hex);
-    }, [color])
+    // useEffect(() => {
+    //     changeAntdTheme(getThemeColor(color.hex));
+    //     window.localStorage.setItem(storageName, color.hex);
+    //     console.log('color',color)
+    //     themeChangeCallback && themeChangeCallback(color.hex);
+    // }, [color])
 
     const handleClick = () => {
         setDisplayColorPicker(!displayColorPicker);
@@ -52,8 +52,10 @@ const DynamicAntdTheme = (props: IProps) => {
     };
 
     const handleChange = color => {
-        console.log('set',color)
         setColor(color.rgb);
+        applyAntdTheme(getThemeColor(color.hex));
+        window.localStorage.setItem(storageName, color.hex);
+        themeChangeCallback && themeChangeCallback(color.hex);
     };
 
     const styles: { [x: string]: React.CSSProperties } = {
@@ -106,4 +108,4 @@ const DynamicAntdTheme = (props: IProps) => {
     );
 }
 
-export { DynamicAntdTheme , getThemeColor, changeAntdTheme }
+export { AntdThemeManipulator , getThemeColor, applyAntdTheme as changeAntdTheme }
