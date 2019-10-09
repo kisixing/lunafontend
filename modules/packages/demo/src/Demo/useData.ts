@@ -5,64 +5,64 @@ export default datacache;
 const defaultUrl =
   'ws://localhost:8084/websocket/?request=e2lkOjE7cmlkOjI2O3Rva2VuOiI0MzYwNjgxMWM3MzA1Y2NjNmFiYjJiZTExNjU3OWJmZCJ9';
 export class Queue {
-    B:any = [];
-    capacity = 512;
+  B: any = [];
+  capacity = 512;
 
-    EnQueue(C:any) {
-      if (C == null) {
-        return -1;
-      }
-      if (this.B.length >= this.capacity) {
-        this.B.shift();
-      }
-      this.B.push(C);
+  EnQueue(C: any) {
+    if (C == null) {
+      return -1;
     }
-    DeQueue() {
-      if (this.B.length == 0) {
-        return null;
-      } else {
-        return this.B.shift();
-      }
+    if (this.B.length >= this.capacity) {
+      this.B.shift();
     }
-    GetSize() {
-      return this.B.length;
-    }
-    GetHead() {
-      if (this.B.length == 0) {
-        return null;
-      } else {
-        return this.B[0];
-      }
-    }
-    MakeEmpty() {
-      this.B.length = 0;
-    }
-    IsEmpty() {
-      if (this.B.length == 0) {
-        return true;
-      } else {
-        return false;
-      }
+    this.B.push(C);
+  }
+  DeQueue() {
+    if (this.B.length == 0) {
+      return null;
+    } else {
+      return this.B.shift();
     }
   }
+  GetSize() {
+    return this.B.length;
+  }
+  GetHead() {
+    if (this.B.length == 0) {
+      return null;
+    } else {
+      return this.B[0];
+    }
+  }
+  MakeEmpty() {
+    this.B.length = 0;
+  }
+  IsEmpty() {
+    if (this.B.length == 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
 export const useData = (setDevice: any, url = defaultUrl): Promise<Map<any, any>> => {
   // event.emit
-    var socket: WebSocket;
-    var offrequest :number;
+  var socket: WebSocket;
+  var offrequest: number;
   socket = new WebSocket(url);
 
   return new Promise(res => {
     socket.onerror = () => {
       res(datacache);
     };
-    socket.onopen = function(event) {
-        offrequest = 0;
+    socket.onopen = function (event) {
+      offrequest = 0;
     };
-    socket.onclose = function(event) {
+    socket.onclose = function (event) {
       console.log('websocket 关闭了');
     };
     // 接收服务端数据时触发事件
-    socket.onmessage = function(msg) {
+    socket.onmessage = function (msg) {
       var received_msg = JSON.parse(msg.data);
       if (received_msg) {
         //showMessage(received_msg);
@@ -86,22 +86,22 @@ export const useData = (setDevice: any, url = defaultUrl): Promise<Map<any, any>
                   timestamp: 0,
                   docid: '',
                   starttime: '',
-                  orflag :true,
-                  status : 0,
-                  fetalcount :1,
-                  ecg:new Queue()
+                  orflag: true,
+                  status: 0,
+                  fetalcount: 1,
+                  ecg: new Queue()
                 });
-                if(devdata.beds[bi].is_working){
-                    datacache.get(cachebi).status = 1;
-                  }else{
-                    datacache.get(cachebi).status = 2;
-                  }
+                if (devdata.beds[bi].is_working) {
+                  datacache.get(cachebi).status = 1;
+                } else {
+                  datacache.get(cachebi).status = 2;
+                }
                 convertdocid(cachebi, devdata.beds[bi].doc_id);
                 for (var fetal = 0; fetal < 3; fetal++) {
                   datacache.get(cachebi).fhr[fetal] = [];
                 }
                 datacache.get(cachebi).fetal_num = devdata.beds[bi].fetal_num;
-                console.log(datacache.get(cachebi),devdata.beds[bi].fetal_num);
+                console.log(datacache.get(cachebi), devdata.beds[bi].fetal_num);
               }
             }
             setDevice(devlist);
@@ -127,7 +127,7 @@ export const useData = (setDevice: any, url = defaultUrl): Promise<Map<any, any>
               for (let i = datacache.get(cachbi).start; i > datacache.get(cachbi).past; i--) {
                 if (!tmpcache.fhr[0][i]) {
                   var curstamp = new Date().getTime();
-                  if (offrequest <8 && (tmpcache.orflag || curstamp - tmpcache.timestamp > interval)) {
+                  if (offrequest < 8 && (tmpcache.orflag || curstamp - tmpcache.timestamp > interval)) {
                     tmpcache.orflag = false;
                     offrequest += 1;
                     var dis = tmpcache.start - tmpcache.past;
@@ -137,14 +137,14 @@ export const useData = (setDevice: any, url = defaultUrl): Promise<Map<any, any>
                     //反向取值
                     send(
                       '{"name":"get_data_ctg","data":{"start_index":' +
-                        startpoint +
-                        ',"end_index":' +
-                        endpoint +
-                        ',"device_no":' +
-                        id +
-                        ',"bed_no":' +
-                        bi +
-                        '}}'
+                      startpoint +
+                      ',"end_index":' +
+                      endpoint +
+                      ',"device_no":' +
+                      id +
+                      ',"bed_no":' +
+                      bi +
+                      '}}'
                     );
                     tmpcache.timestamp = new Date().getTime();
                     break;
@@ -172,9 +172,9 @@ export const useData = (setDevice: any, url = defaultUrl): Promise<Map<any, any>
               tmpcache.toco[ctgdata[key].index] = ctgdata[key].toco;
               setcur(cachbi, ctgdata[key].index);
             }
-            tmpcache.orflag = true; 
-            if(offrequest>0){
-                offrequest -= 1;
+            tmpcache.orflag = true;
+            if (offrequest > 0) {
+              offrequest -= 1;
             }
             //判断 是否有缺失
             var flag = 0;
@@ -190,19 +190,19 @@ export const useData = (setDevice: any, url = defaultUrl): Promise<Map<any, any>
                   eflag = il;
                   var curstamp = new Date().getTime();
                   //console.log(il +"--"+ datacache[cachbi].last);
-                  if (offrequest <8 && (tmpcache.orflag || curstamp - tmpcache.timestamp > interval)) {
+                  if (offrequest < 8 && (tmpcache.orflag || curstamp - tmpcache.timestamp > interval)) {
                     tmpcache.orflag = false;
                     offrequest += 1;
                     send(
                       '{"name":"get_data_ctg","data":{"start_index":' +
-                        sflag +
-                        ',"end_index":' +
-                        eflag +
-                        ',"device_no":' +
-                        id +
-                        ',"bed_no":' +
-                        bi +
-                        '}}'
+                      sflag +
+                      ',"end_index":' +
+                      eflag +
+                      ',"device_no":' +
+                      id +
+                      ',"bed_no":' +
+                      bi +
+                      '}}'
                     );
                     tmpcache.timestamp = new Date().getTime();
                     break;

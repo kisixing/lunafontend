@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Table } from 'antd';
 import Columns from './Columns';
-import r from '@lianmed/request'
+import request from '@lianmed/request'
 
-const request = r.config({Authorization: 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOIiwiZXhwIjoxNTY5OTA4OTgwfQ.gQRapk8-YYe6PkH_jM5wqukKtuuKXk__et53fq6d7KRtaZeZBPzAVW8dxjBEaakyRWsZfYAYiugi2f4eBh6dCw' })
 function EditableCell(props: any) {
   const { value, onChange, ...o } = props;
-
   return (
     <Table
       size="small"

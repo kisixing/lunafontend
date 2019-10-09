@@ -14,6 +14,8 @@ export default class Request {
   }
   public init = (configs: Iconfig = {}) => {
     const { errHandler, ...others } = configs;
+    
+
     this._request = extend({
       timeout: 5000,
       credentials: 'include', // 默认请求是否带上cookie
@@ -22,8 +24,8 @@ export default class Request {
       },
       errorHandler: err => {
         const errorData = getErrData(err.response);
-        if (errorData) {
-          errHandler(errorData);
+        if (errorData ) {
+          errHandler && errHandler(errorData);
         } else {
           notification.error({
             message: '服务未响应',

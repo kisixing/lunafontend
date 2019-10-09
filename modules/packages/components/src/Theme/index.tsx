@@ -53,7 +53,6 @@ const DynamicAntdTheme = (props: IProps) => {
 
     const handleChange = color => {
         console.log('set',color)
-        debugger
         setColor(color.rgb);
     };
 

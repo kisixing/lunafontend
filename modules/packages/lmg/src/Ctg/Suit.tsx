@@ -1,7 +1,7 @@
 import DrawCTG from './DrawCTG';
 var rulercolor = 'rgb(67,205,128)';
 import { IBarTool } from '../ScrollBar/useScroll';
-
+import { Drawer } from "../interface";
 export class P {
   x: number;
   y: number;
@@ -58,7 +58,7 @@ export class P {
 let sid = 0;
 type Canvas = HTMLCanvasElement;
 type Context = CanvasRenderingContext2D;
-export class Suit {
+export class Suit implements Drawer{
   initFlag = false
   sid = sid++;
   log = console.log.bind(console, 'suit', this.sid)

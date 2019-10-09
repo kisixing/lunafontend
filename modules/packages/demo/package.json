@@ -33,6 +33,7 @@
     "@lianmed/components": "^1.0.0",
     "@lianmed/ws": "^1.0.0",
     "@lianmed/utils": "^1.0.0",
+    "@lianmed/request": "^1.0.0",
     "concurrently": "^4.1.2"
   },
   "browserslist": {
@@ -47,5 +48,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://192.168.0.183:9986/"
+  "proxy": "http://192.168.2.152:9986/"
 }

@@ -6,6 +6,8 @@ import Request from './Request';
 class R extends Request {
   private hasConfiged = false;
   public config = (configs: Iconfig = {}): Request => {
+    
+
     const { hasConfiged } = this;
     if (hasConfiged) {
       console.warn("couldn't config twice");

@@ -1,3 +1,5 @@
+import { Drawer } from "../interface";
+import Queue from "./Queue";
 // const BASE_INEVAL = 128;
 const adu = 52;
 const samplingrate = 128;
@@ -6,7 +8,7 @@ const gride_width = 25;
 const gx = points_one_times * ((gride_width * 5) / samplingrate);
 const x_start = 10;
 // const draw_lines_index = [0, 1, 2];
-const ruler = [80,80,80,80,80,80,40,40,40,40,40,40,40,40,40,40,80,80,80,80,80,80];
+const ruler = [80, 80, 80, 80, 80, 80, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 80, 80, 80, 80, 80, 80];
 const isstop = true;
 const last_points = [
   [25, 100],
@@ -25,46 +27,7 @@ const last_points = [
 
 const loopmill = 100;
 
-class Queue {
-  B = [];
-  capacity: number;
-  EnQueue(C) {
-    if (C == null) {
-      return -1;
-    }
-    if (this.B.length >= this.capacity) {
-      this.B.shift();
-    }
-    this.B.push(C);
-  }
-  DeQueue() {
-    if (this.B.length == 0) {
-      return null;
-    } else {
-      return this.B.shift();
-    }
-  }
-  GetSize() {
-    return this.B.length;
-  }
-  GetHead() {
-    if (this.B.length == 0) {
-      return null;
-    } else {
-      return this.B[0];
-    }
-  }
-  MakeEmpty() {
-    this.B.length = 0;
-  }
-  IsEmpty() {
-    if (this.B.length == 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-}
+
 type Canvas = HTMLCanvasElement;
 type Ctx = CanvasRenderingContext2D;
 interface I {
@@ -79,10 +42,12 @@ interface I {
   max_times?: number;
   width?: number;
   height?: number;
+  data: any
 }
-export class DrawEcg {
-  oQueue = new Queue(); 
-  values = [100,120,37.5,38,50,80,'100/69/120'];
+export class DrawEcg implements Drawer {
+  static Queue: typeof Queue = Queue
+  oQueue = new Queue();
+  values = [100, 120, 37.5, 38, 50, 80, '100/69/120'];
   MultiParam: number[];
   Ple: number[];
   Tre: number[];
@@ -91,16 +56,16 @@ export class DrawEcg {
   canvasmonitor: Canvas;
   ctx: Ctx;
   linectx: Ctx;
-  datactx:Ctx;
-  ecg_scope? = 1;
-  current_times? = 0;
-  max_times? = 135;
-  width? = 0;
-  height? = 0;
-  current_time_millis? = 0;
+  datactx: Ctx;
+  ecg_scope?= 1;
+  current_times?= 0;
+  max_times?= 135;
+  width?= 0;
+  height?= 0;
+  current_time_millis?= 0;
 
   constructor(args: I) {
-    const { canvas, canvasline,canvasmonitor } = args;
+    const { canvas, canvasline, canvasmonitor } = args;
     const { width, height } = canvas;
     Object.assign(this, {
       ...args,
@@ -108,11 +73,19 @@ export class DrawEcg {
       height,
       ctx: canvas.getContext('2d'),
       linectx: canvasline.getContext('2d'),
-      datactx :canvasmonitor.getContext('2d'),
+      datactx: canvasmonitor.getContext('2d'),
     });
     this.ecg();
   }
+  init(data) {
+    console.log('ecg', data)
+  }
+  resize() {
 
+  }
+  destroy() {
+
+  }
   ecg() {
     this.addfilltext();
     this.initparm();
@@ -134,74 +107,74 @@ export class DrawEcg {
     //   ctx.fillText('' + A[draw_lines_index[E]] + '', 10, D);
     // }
     //kisi 2019-10-03 add ruler
-    let scale = height/100;
+    let scale = height / 100;
     ctx.strokeStyle = '#006003';
     ctx.beginPath();
-    ctx.moveTo(x_start*2,ruler[0]*scale);
-    for(let i=0;i<ruler.length;i++){
-        ctx.lineTo(i+x_start*2,ruler[i]*scale);
+    ctx.moveTo(x_start * 2, ruler[0] * scale);
+    for (let i = 0; i < ruler.length; i++) {
+      ctx.lineTo(i + x_start * 2, ruler[i] * scale);
     }
     ctx.stroke();
   }
 
   DrawDatatext() {
     const { datactx } = this;
-    if(this.canvasmonitor.height>60){
+    if (this.canvasmonitor.height > 60) {
       const V = (this.canvasmonitor.height - 10) / 5;
       const H = (this.canvasmonitor.width - 10) / 14;
-      let size = V>H?H:V;
+      let size = V > H ? H : V;
       let D = 10;
       // 设置颜色 字体
       datactx.fillStyle = "#000";
-      datactx.font = size+"px bold 黑体";
+      datactx.font = size + "px bold 黑体";
       // 设置水平对齐方式
       datactx.textAlign = 'right';
       datactx.textAlign = "center";
       // 设置垂直对齐方式
       datactx.textBaseline = "middle";
       console.log(size);
-      datactx.clearRect(0,0,this.canvasmonitor.width,this.canvasmonitor.height); 
-      const keys = ['脉率','血氧','体温','心率','呼吸','血压(S/D/M)' ];
-      datactx.fillText(' ' + keys[0] + '', size*2, D);
-      datactx.fillText(' ' + this.values[0] + '', size*4, D);
-      datactx.fillText(' ' + keys[1] + '', size*8, D);
-      datactx.fillText(' ' + this.values[1] + '', size*10, D);
-      datactx.fillText(' ' + keys[2] + '', size*2, D+V);
-      datactx.fillText(' ' + this.values[2] + '', size*4, D+V);
-      datactx.fillText(' ' + this.values[3] + '', size*8, D+V);
-      datactx.fillText(' ' + keys[3] + '', size*2, D+2*V);
-      datactx.fillText(' ' + this.values[4] + '', size*4, D+2*V);
-      datactx.fillText(' ' + keys[4] + '', size*8, D+2*V);
-      datactx.fillText(' ' + this.values[5] + '', size*10, D+2*V);
-      datactx.fillText(' ' + keys[5] + '', size*4, D+3*V);
-      datactx.fillText(' ' + this.values[6] + '', size*10, D+3*V);
-    }else{
+      datactx.clearRect(0, 0, this.canvasmonitor.width, this.canvasmonitor.height);
+      const keys = ['脉率', '血氧', '体温', '心率', '呼吸', '血压(S/D/M)'];
+      datactx.fillText(' ' + keys[0] + '', size * 2, D);
+      datactx.fillText(' ' + this.values[0] + '', size * 4, D);
+      datactx.fillText(' ' + keys[1] + '', size * 8, D);
+      datactx.fillText(' ' + this.values[1] + '', size * 10, D);
+      datactx.fillText(' ' + keys[2] + '', size * 2, D + V);
+      datactx.fillText(' ' + this.values[2] + '', size * 4, D + V);
+      datactx.fillText(' ' + this.values[3] + '', size * 8, D + V);
+      datactx.fillText(' ' + keys[3] + '', size * 2, D + 2 * V);
+      datactx.fillText(' ' + this.values[4] + '', size * 4, D + 2 * V);
+      datactx.fillText(' ' + keys[4] + '', size * 8, D + 2 * V);
+      datactx.fillText(' ' + this.values[5] + '', size * 10, D + 2 * V);
+      datactx.fillText(' ' + keys[5] + '', size * 4, D + 3 * V);
+      datactx.fillText(' ' + this.values[6] + '', size * 10, D + 3 * V);
+    } else {
       let size = 16;
       let D = 10;
       // 设置颜色 字体
       datactx.fillStyle = "#000";
-      datactx.font = size+"px bold 黑体";
+      datactx.font = size + "px bold 黑体";
       // 设置水平对齐方式
       datactx.textAlign = 'right';
       datactx.textAlign = "center";
       // 设置垂直对齐方式
       datactx.textBaseline = "middle";
       console.log(size);
-      datactx.clearRect(0,0,this.canvasmonitor.width,this.canvasmonitor.height); 
-      const keys = ['脉率','血氧','体温','心率','呼吸','血压(S/D/M)' ];
-      datactx.fillText(' ' + keys[0] + '', size*2, D);
-      datactx.fillText(' ' + this.values[0] + '', size*4, D);
-      datactx.fillText(' ' + keys[1] + '', size*8, D);
-      datactx.fillText(' ' + this.values[1] + '', size*10, D);
-      datactx.fillText(' ' + keys[2] + '', size*12, D);
-      datactx.fillText(' ' + this.values[2] + '', size*14, D);
-      datactx.fillText(' ' + this.values[3] + '', size*18, D);
-      datactx.fillText(' ' + keys[3] + '', size*32, D);
-      datactx.fillText(' ' + this.values[4] + '', size*24, D);
-      datactx.fillText(' ' + keys[4] + '', size*28, D);
-      datactx.fillText(' ' + this.values[5] + '', size*30, D);
-      datactx.fillText(' ' + keys[5] + '', size*34, D);
-      datactx.fillText(' ' + this.values[6] + '', size*40, D);
+      datactx.clearRect(0, 0, this.canvasmonitor.width, this.canvasmonitor.height);
+      const keys = ['脉率', '血氧', '体温', '心率', '呼吸', '血压(S/D/M)'];
+      datactx.fillText(' ' + keys[0] + '', size * 2, D);
+      datactx.fillText(' ' + this.values[0] + '', size * 4, D);
+      datactx.fillText(' ' + keys[1] + '', size * 8, D);
+      datactx.fillText(' ' + this.values[1] + '', size * 10, D);
+      datactx.fillText(' ' + keys[2] + '', size * 12, D);
+      datactx.fillText(' ' + this.values[2] + '', size * 14, D);
+      datactx.fillText(' ' + this.values[3] + '', size * 18, D);
+      datactx.fillText(' ' + keys[3] + '', size * 32, D);
+      datactx.fillText(' ' + this.values[4] + '', size * 24, D);
+      datactx.fillText(' ' + keys[4] + '', size * 28, D);
+      datactx.fillText(' ' + this.values[5] + '', size * 30, D);
+      datactx.fillText(' ' + keys[5] + '', size * 34, D);
+      datactx.fillText(' ' + this.values[6] + '', size * 40, D);
     }
 
   }
@@ -224,7 +197,7 @@ export class DrawEcg {
   adddatatest(F, C, E, J) {
     const { MultiParam } = this;
     for (let index = 0; index < 360; index++) {
-      this.oQueue.EnQueue( (MultiParam[(index * 2) % 375] + 128) * 0.1);
+      this.oQueue.EnQueue((MultiParam[(index * 2) % 375] + 128) * 0.1);
     }
     return;
   }
@@ -252,7 +225,7 @@ export class DrawEcg {
     //   this.linectx,
     //   draw_lines_index
     // );
-    this.drawsingle(y_starts,adu,samplingrate,this.max_times,this.linectx);
+    this.drawsingle(y_starts, adu, samplingrate, this.max_times, this.linectx);
     if (isstop) {
       setTimeout(this.loop.bind(this), loopmill);
       // const C = new Date().getTime();
@@ -268,7 +241,7 @@ export class DrawEcg {
   drawsingle(Q, P, N, G, A) {
     const { oQueue } = this;
     //2019-10-03 kisi 根据容器调整高度
-    let scale = this.height/100;
+    let scale = this.height / 100;
     this.current_times = this.current_times % G;
     if (oQueue.IsEmpty()) {
       return;
@@ -296,21 +269,21 @@ export class DrawEcg {
       const L = x_start + this.current_times * points_one_times * ((gride_width * 5) / N);
       if (K == 0) {
         if (this.current_times != 0) {
-          A.moveTo(last_points[0][0], last_points[0][1]*scale);
+          A.moveTo(last_points[0][0], last_points[0][1] * scale);
           var D = parseFloat(C >= 0 ? Q[0] - M : Q[0] + M);
-          A.lineTo(last_points[0][0], D*scale);
+          A.lineTo(last_points[0][0], D * scale);
           last_points[0][0] = last_points[0][0];
           last_points[0][1] = D;
         } else {
           var D = parseFloat(C >= 0 ? Q[0] - M : Q[0] + M);
-          A.moveTo(x_start, D*scale);
+          A.moveTo(x_start, D * scale);
           last_points[0][0] = x_start;
           last_points[0][1] = D;
         }
       } else {
-        A.moveTo(last_points[0][0], D*scale);
+        A.moveTo(last_points[0][0], D * scale);
         var D = parseFloat(C >= 0 ? Q[0] - M : Q[0] + M);
-        A.lineTo(L + I, D*scale);
+        A.lineTo(L + I, D * scale);
         last_points[0][0] = L + I;
         last_points[0][1] = D;
       }
@@ -322,7 +295,7 @@ export class DrawEcg {
     const { oQueue } = this;
     let areaedge = 200;
     //2019-10-03 kisi 根据容器调整高度
-    let scale = this.height/300;
+    let scale = this.height / 300;
     this.current_times = this.current_times % G;
     if (oQueue.IsEmpty()) {
       return;
@@ -352,22 +325,22 @@ export class DrawEcg {
         const L = x_start + this.current_times * H * ((gride_width * 5) / N);
         if (K == 0) {
           if (this.current_times != 0) {
-            A.moveTo(last_points[J][0], last_points[J][1]*scale);
+            A.moveTo(last_points[J][0], last_points[J][1] * scale);
             var D = parseFloat(C >= 0 ? Q[J] - M : Q[J] + M);
-            A.lineTo(last_points[J][0], D*scale);
+            A.lineTo(last_points[J][0], D * scale);
             last_points[J][0] = last_points[J][0];
             last_points[J][1] = D;
           } else {
             var D = parseFloat(C >= 0 ? Q[J] - M : Q[J] + M);
             console.log(D);
-            A.moveTo(x_start, D*scale);
+            A.moveTo(x_start, D * scale);
             last_points[J][0] = x_start;
             last_points[J][1] = D;
           }
         } else {
-          A.moveTo(last_points[J][0], D*scale);
+          A.moveTo(last_points[J][0], D * scale);
           var D = parseFloat(C >= 0 ? Q[J] - M : Q[J] + M);
-          A.lineTo(L + I, D*scale);
+          A.lineTo(L + I, D * scale);
           last_points[J][0] = L + I;
           last_points[J][1] = D;
         }
@@ -377,8 +350,8 @@ export class DrawEcg {
           //linear.addColorStop(1,"rgba(255,255,255,0)");
           A.strokeStyle = linear;
           A.beginPath();
-          A.moveTo(L + I, D*scale);
-          A.lineTo(L + I, areaedge*scale);
+          A.moveTo(L + I, D * scale);
+          A.lineTo(L + I, areaedge * scale);
         }
         A.stroke();
       }

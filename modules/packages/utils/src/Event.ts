@@ -1,6 +1,6 @@
 export class EventEmitter {
   events: { [x: string]: Array<(...args: any[]) => void> } = {};
-  constructor() {}
+  constructor() { }
 
   addListener(event: string, listener: (...args: any[]) => void): this {
     let existing = this.events[event];
@@ -34,6 +34,11 @@ export class EventEmitter {
   }
 
   once(event: string, listener: (...args: any[]) => void): this {
+    const fn = (...a) => {
+      listener(...a)
+      this.off(event, fn)
+    }
+    this.on(event, fn)
     return this;
   }
   prependListener(event: string, listener: (...args: any[]) => void): this {
