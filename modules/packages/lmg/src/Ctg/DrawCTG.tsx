@@ -283,7 +283,7 @@ export default class DrawCTG {
       context.lineTo(xspan * i + baseleft - offsetpx, (max - min) * this.yspan+this.basetop);
       //console.log((max - min) * this.yspan);
       context.stroke();
-      if (ioff % 9 == 3) {
+      if (ioff % 6 == primaryscaleflag+3) {
         setrules(xspan * i + baseleft - offsetpx);
       }
     }

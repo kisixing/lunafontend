@@ -247,11 +247,9 @@ export class Suit implements Drawer{
 
   drawdot() {
     if (this.data.starttime && this.data.starttime != '' && this.data.status == 1 && this.data.index > 0) {
-      if (this.curr == -16) {
-        this.buffersize = this.data.index - (Math.floor(new Date().getTime() / 1000) - Math.floor(new Date(this.data.starttime).getTime() / 1000)) * 4 - 20;
-        console.log(this.data.index, this.buffersize);
-      }
-      this.curr = (Math.floor(new Date().getTime() / 1000) - Math.floor(new Date(this.data.starttime).getTime() / 1000)) * 4 + this.buffersize;
+      if(isNaN(this.data.csspan))
+        return;
+      this.curr = (Math.floor(new Date().getTime() / 1000) - Math.floor(new Date(this.data.starttime).getTime() / 1000)) * 4 + this.data.csspan;
       this.drawobj.drawdot(this.curr);
       this.viewposition = this.curr;
       if (this.data.index > this.canvasline.width * 2) {

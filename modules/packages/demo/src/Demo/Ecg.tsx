@@ -37,8 +37,8 @@ export default function () {
     <Button onClick={fullScreen}>
       全屏
     </Button>
-      <div style={{ width: '1000px', height: '400px', border: '1px solid red',background:'#fff' }} ref={box}>
-        <Ecg data={datacache.get('6-6')} />
+      <div style={{ width: '800px', height: '200px', border: '1px solid red',background:'#fff' }} ref={box}>
+        <Ecg data={datacache.get('13-4')} />
 
       </div>
     </>
