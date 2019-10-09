@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Suit } from './Suit';
 import { IBarTool } from '../ScrollBar/useScroll';
 import ScrollBar from '../ScrollBar';
+const ResizeObserver = (window as any).ResizeObserver
 export default ({
   data,
   mutableSuitObject = { suit: null },
@@ -38,20 +39,26 @@ export default ({
     };
     setSuit(instance)
     mutableSuitObject.suit = instance;
+
+
+    let resizeObserver = new ResizeObserver(entries => {
+      instance.resize()
+    });
+    resizeObserver.observe(box.current);
+
+
     return () => {
       instance.destroy();
       instance = null
+      resizeObserver.disconnect()
+      resizeObserver = null
     };
   }, []);
 
 
-
   useEffect(() => {
-    console.log('resize',suit)
-
-    suit && suit.resize();
-  }, [data,itemHeight]);
-   suit && suit.init(data)
+    suit && suit.init(data)
+  }, [data, suit])
   return (
     <div style={{ width: '100%', height: '100%' }} ref={box}>
       <canvas ref={canvas1}>

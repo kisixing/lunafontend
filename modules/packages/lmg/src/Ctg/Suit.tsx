@@ -61,7 +61,7 @@ type Context = CanvasRenderingContext2D;
 export class Suit {
   initFlag = false
   sid = sid++;
-  log = console.log.bind(console,this.sid)
+  log = console.log.bind(console, 'suit', this.sid)
 
   intervalIds: NodeJS.Timeout[] = [];
   fhr = [];
@@ -105,8 +105,10 @@ export class Suit {
     canvasline: Canvas,
     wrap: HTMLElement,
     barToll: IBarTool,
-    type:number
+    type: number
   ) {
+    this.log('constructor')
+
     this.wrap = wrap;
     this.canvas1 = canvas1;
     this.canvas2 = canvas2;
@@ -118,21 +120,22 @@ export class Suit {
     this.drawobj = new DrawCTG(this);
     this.type = type
     this.p = new P(20, 0, 6, 428, rulercolor, this); // 竖向选择线
-    this.resize();
+    // this.resize();
     this.barToll.watchGrab(value => {
     });
   }
   init(data) {
-    if(!data || this.initFlag){
-      return 
+    this.log('init')
+    if (!data || this.initFlag) {
+      return
     }
     this.initFlag = true
     let defaultinterval = 500;
     this.data = data;
     this.fetalcount = data.fetal_num;
-    for(let i =0;i<this.fetalcount;i++){
-     this.fhr[i] = data.fhr[i];
-     console.log(data);
+    for (let i = 0; i < this.fetalcount; i++) {
+      this.fhr[i] = data.fhr[i];
+      console.log(data);
     }
     this.toco = data.toco;
     this.currentdot = data.index;
@@ -159,7 +162,7 @@ export class Suit {
     this.barToll.watch(value => {
       //显示历史数据
       this.dragtimestamp = new Date().getTime();
-      this.viewposition = Math.floor(this.curr * value/(this.canvasline.width-100));
+      this.viewposition = Math.floor(this.curr * value / (this.canvasline.width - 100));
       //console.log('scollchange', this.curr ,this.canvasline.width,value,this.viewposition);
       this.drawobj.drawdot(this.viewposition);
     });
@@ -174,7 +177,7 @@ export class Suit {
     });
   }
   destroy() {
-    this.log('destroy',this.sid)
+    this.log('destroy')
     this.intervalIds.forEach(_ => clearInterval(_));
     this.canvas1 = null;
     this.canvas2 = null;
@@ -188,10 +191,11 @@ export class Suit {
     this.barToll = null;
   }
   resize() {
+    this.log('resize')
     this.drawobj.resize();
   }
 
-  movescoller() {}
+  movescoller() { }
 
   //胎心数据处理
   initctgdata(oridata, arrdata) {
@@ -242,20 +246,20 @@ export class Suit {
   }
 
   drawdot() {
-    if(this.data.starttime && this.data.starttime!='' && this.data.status == 1 && this.data.index>0){
-      if(this.curr == -16){
-        this.buffersize = this.data.index - (Math.floor(new Date().getTime()/1000) - Math.floor(new Date(this.data.starttime).getTime()/1000))*4 - 20;
-        console.log(this.data.index,this.buffersize);
+    if (this.data.starttime && this.data.starttime != '' && this.data.status == 1 && this.data.index > 0) {
+      if (this.curr == -16) {
+        this.buffersize = this.data.index - (Math.floor(new Date().getTime() / 1000) - Math.floor(new Date(this.data.starttime).getTime() / 1000)) * 4 - 20;
+        console.log(this.data.index, this.buffersize);
       }
-      this.curr = (Math.floor(new Date().getTime()/1000) - Math.floor(new Date(this.data.starttime).getTime()/1000))*4+this.buffersize;
-	    this.drawobj.drawdot(this.curr);
+      this.curr = (Math.floor(new Date().getTime() / 1000) - Math.floor(new Date(this.data.starttime).getTime() / 1000)) * 4 + this.buffersize;
+      this.drawobj.drawdot(this.curr);
       this.viewposition = this.curr;
-      if (this.data.index > this.canvasline.width*2) {
+      if (this.data.index > this.canvasline.width * 2) {
         this.barToll.setBarWidth(100);
         this.barToll.setBarLeft(this.canvasline.width, false);
-	    }
-    }else{
-      this.drawobj.showcur(this.data.index+1);
+      }
+    } else {
+      this.drawobj.showcur(this.data.index + 1);
     }
   }
 
