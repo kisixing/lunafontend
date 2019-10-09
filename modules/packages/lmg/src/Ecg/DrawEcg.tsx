@@ -9,7 +9,7 @@ const gx = points_one_times * ((gride_width * 5) / samplingrate);
 const x_start = 10;
 // const draw_lines_index = [0, 1, 2];
 const ruler = [80, 80, 80, 80, 80, 80, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 80, 80, 80, 80, 80, 80];
-const isstop = true;
+let isstop = true;
 const last_points = [
   [25, 100],
   [25, 200],
@@ -63,6 +63,7 @@ export class DrawEcg implements Drawer {
   width?= 0;
   height?= 0;
   current_time_millis?= 0;
+  start?=NaN;
 
   constructor(args: I) {
     const { canvas, canvasline, canvasmonitor } = args;
@@ -79,18 +80,22 @@ export class DrawEcg implements Drawer {
   }
   init(data) {
     console.log('ecg', data)
+    if(data){
+      this.oQueue = data.ecg;
+      this.current_time_millis = 0;
+      isstop=true;
+      this.loop();
+    }
   }
   resize() {
 
   }
   destroy() {
-
+    isstop = false;
   }
   ecg() {
     this.addfilltext();
     this.initparm();
-    this.Convert16Scale();
-    this.loop();
   }
   Convert16Scale() {
     //this.adddata(null, 1, 8, 128);
@@ -132,7 +137,6 @@ export class DrawEcg implements Drawer {
       datactx.textAlign = "center";
       // 设置垂直对齐方式
       datactx.textBaseline = "middle";
-      console.log(size);
       datactx.clearRect(0, 0, this.canvasmonitor.width, this.canvasmonitor.height);
       const keys = ['脉率', '血氧', '体温', '心率', '呼吸', '血压(S/D/M)'];
       datactx.fillText(' ' + keys[0] + '', size * 2, D);
@@ -159,7 +163,6 @@ export class DrawEcg implements Drawer {
       datactx.textAlign = "center";
       // 设置垂直对齐方式
       datactx.textBaseline = "middle";
-      console.log(size);
       datactx.clearRect(0, 0, this.canvasmonitor.width, this.canvasmonitor.height);
       const keys = ['脉率', '血氧', '体温', '心率', '呼吸', '血压(S/D/M)'];
       datactx.fillText(' ' + keys[0] + '', size * 2, D);
@@ -195,11 +198,11 @@ export class DrawEcg implements Drawer {
   //kisi 2019-10-03
   //根据ws数据压入队列
   adddatatest(F, C, E, J) {
-    const { MultiParam } = this;
-    for (let index = 0; index < 360; index++) {
-      this.oQueue.EnQueue((MultiParam[(index * 2) % 375] + 128) * 0.1);
-    }
-    return;
+    // const { MultiParam } = this;
+    // for (let index = 0; index < 360; index++) {
+    //   this.oQueue.EnQueue((MultiParam[(index * 2) % 375] + 128) * 0.1);
+    // }
+    // return;
   }
   initparm() {
     const { width, linectx } = this;
@@ -225,7 +228,10 @@ export class DrawEcg implements Drawer {
     //   this.linectx,
     //   draw_lines_index
     // );
-    this.drawsingle(y_starts, adu, samplingrate, this.max_times, this.linectx);
+    if(!isNaN(this.start) || this.oQueue.GetSize() > points_one_times*5){
+      this.start = 1;
+      this.drawsingle(y_starts, adu, samplingrate, this.max_times, this.linectx);
+    }
     if (isstop) {
       setTimeout(this.loop.bind(this), loopmill);
       // const C = new Date().getTime();
@@ -234,7 +240,7 @@ export class DrawEcg implements Drawer {
       // }
     }
     if (this.oQueue.IsEmpty()) {
-      this.Convert16Scale();
+      //this.Convert16Scale();
     }
   }
   // 绘制单心电走纸
@@ -244,9 +250,11 @@ export class DrawEcg implements Drawer {
     let scale = this.height / 100;
     this.current_times = this.current_times % G;
     if (oQueue.IsEmpty()) {
+      this.start = NaN;
       return;
     }
     if (oQueue.GetSize() < points_one_times) {
+      this.start = NaN;
       return;
     }
     this.clearcanvans(this.current_times, points_one_times, N, A);

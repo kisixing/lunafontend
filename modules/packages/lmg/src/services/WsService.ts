@@ -8,14 +8,15 @@ export enum EWsStatus {
 export class WsService extends EventEmitter {
     static wsStatus: typeof EWsStatus = EWsStatus
     isReady = false;
-    interval: number = 30000;
+    interval: number = 10000;
     RECONNECT_INTERVAL: number = 10000;
+    span:number = NaN;
 
     static _this: WsService;
     log = console.log.bind(console, 'websocket')
     datacache: Map<string, any> = new Map();
     settingData: {
-        ws_url: "192.168.2.227:8084",
+        ws_url: "192.168.0.227:8084",
         xhr_url: "192.168.2.152:9986",
         alarm_high: "160",
         alarm_low: "110",
@@ -28,7 +29,7 @@ export class WsService extends EventEmitter {
     constructor(settingData?) {
         super()
         settingData = settingData || {
-            ws_url: "192.168.2.227:8084",
+            ws_url: "192.168.0.227:8084",
             xhr_url: "192.168.2.152:9986",
             alarm_high: "160",
             alarm_low: "110",
@@ -95,7 +96,11 @@ export class WsService extends EventEmitter {
             };
             socket.onopen = (event) => {
                 this.offrequest = 0;
-                this.log('打开');
+                this.send(
+                    '{"name":"heard","data":{"time":' +
+                    191001180000 +
+                    ',"index":0}}',
+                );
             };
             socket.onclose = (event) => {
                 this.tip('关闭', EWsStatus.Error)
@@ -131,6 +136,7 @@ export class WsService extends EventEmitter {
                                         orflag: true,
                                         starttime: '',
                                         fetal_num: 1,
+                                        csspan :NaN,
                                         ecg: new Queue()
                                     });
                                     convertdocid(cachebi, devdata.beds[bi].doc_id);
@@ -160,6 +166,9 @@ export class WsService extends EventEmitter {
                         var cachbi = id + '-' + bi;
                         if (datacache.has(cachbi)) {
                             var tmpcache = datacache.get(cachbi);
+                            if(isNaN(tmpcache.csspan)){
+                                tmpcache.csspan = this.span;
+                            }
                             for (let key in ctgdata) {
                                 for (let fetal = 0; fetal < tmpcache.fetal_num; fetal++) {
                                     if (fetal == 0) {
@@ -176,6 +185,7 @@ export class WsService extends EventEmitter {
                                         this.log(datacache.get(cachbi).docid, tmpcache.past);
                                         getoffline(datacache.get(cachbi).docid, tmpcache.past);
                                     }
+                                    tmpcache.last = tmpcache.start;
                                 }
                                 setcur(cachbi, ctgdata[key].index);
                                 for (let i = datacache.get(cachbi).start; i > datacache.get(cachbi).past; i--) {
@@ -204,10 +214,46 @@ export class WsService extends EventEmitter {
                                             break;
                                         }
                                     }
-                                }
+                                }                               
                                 // 更新last index
-                                if (ctgdata[key].index - tmpcache.last < 2) {
+                                if (ctgdata[key].index - tmpcache.last < 3) {
                                     tmpcache.last = ctgdata[key].index;
+                                }else{
+                                    //判断 是否有缺失
+                                    var flag = 0;
+                                    var sflag = 0;
+                                    var eflag = 0;
+                                    for (let il = tmpcache.last; il < tmpcache.index; il++) {
+                                        if (!tmpcache.fhr[0][il]) {
+                                            if (flag == 0) {
+                                                sflag = il;
+                                            }
+                                        } else {
+                                            if (flag > 0) {
+                                                eflag = il;
+                                                var curstamp = new Date().getTime();
+                                                if (this.offrequest < 8 && (tmpcache.orflag || curstamp - tmpcache.timestamp > this.interval)) {
+                                                    tmpcache.orflag = false;
+                                                    this.offrequest += 1;
+                                                    this.send(
+                                                        '{"name":"get_data_ctg","data":{"start_index":' +
+                                                        sflag +
+                                                        ',"end_index":' +
+                                                        eflag +
+                                                        ',"device_no":' +
+                                                        id +
+                                                        ',"bed_no":' +
+                                                        bi +
+                                                        '}}',
+                                                    );
+                                                    tmpcache.timestamp = new Date().getTime();
+                                                }
+                                                break;
+                                            } else {
+                                                tmpcache.last = il;
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -234,41 +280,6 @@ export class WsService extends EventEmitter {
                             if (this.offrequest > 0) {
                                 this.offrequest -= 1;
                             }
-                            //判断 是否有缺失
-                            var flag = 0;
-                            var sflag = 0;
-                            var eflag = 0;
-                            for (let il = tmpcache.last; il < tmpcache.index; il++) {
-                                if (!tmpcache.fhr[0][il]) {
-                                    if (flag == 0) {
-                                        sflag = il;
-                                    }
-                                } else {
-                                    if (flag > 0) {
-                                        eflag = il;
-                                        var curstamp = new Date().getTime();
-                                        if (this.offrequest < 8 && (tmpcache.orflag || curstamp - tmpcache.timestamp > this.interval)) {
-                                            tmpcache.orflag = false;
-                                            this.offrequest += 1;
-                                            this.send(
-                                                '{"name":"get_data_ctg","data":{"start_index":' +
-                                                sflag +
-                                                ',"end_index":' +
-                                                eflag +
-                                                ',"device_no":' +
-                                                id +
-                                                ',"bed_no":' +
-                                                bi +
-                                                '}}',
-                                            );
-                                            tmpcache.timestamp = new Date().getTime();
-                                            break;
-                                        }
-                                    } else {
-                                        tmpcache.last = il;
-                                    }
-                                }
-                            }
                         }
                     } else if (received_msg.name == 'get_devices') {
                         this.log('get_devices', received_msg.data);
@@ -284,8 +295,10 @@ export class WsService extends EventEmitter {
                         var id = received_msg.device_no;
                         var bi = received_msg.bed_no;
                         var cachbi = id + '-' + bi;
-                        datacache.get(cachbi).ecg.EnQueue(ecgdata[0].ecg_arr);
-                        console.log(datacache.get(cachbi).ecg);
+                        for(let elop = 0;elop <ecgdata[0].ecg_arr.length;elop++){
+                            datacache.get(cachbi).ecg.EnQueue(ecgdata[0].ecg_arr[elop]);
+                        }
+                        //console.log(datacache.get(cachbi).ecg);
                     } else if (received_msg.name == 'get_devices') {
                         console.log(received_msg.data);
                         var devlist = received_msg.data;
@@ -313,6 +326,7 @@ export class WsService extends EventEmitter {
                         datacache.get(curid).docid = '';
                         datacache.get(curid).status = 0;
                         datacache.get(curid).starttime = '';
+                        datacache.get(curid).ecg = new Queue();
                         convertdocid(curid, devdata.doc_id);
                         if (devdata.is_working) {
                             datacache.get(curid).status = 1;
@@ -353,6 +367,14 @@ export class WsService extends EventEmitter {
                             type: 'ws/setState', payload: { data: new Map(datacache) }
                         })
                     }
+                    //heard
+                    else if (received_msg.name == 'heard') {
+                        let devdata = received_msg.data;
+                        console.log(devdata);
+                        let servertime = convertstarttime(devdata.time);
+                        this.span = Math.floor(new Date(servertime).getTime()/1000 -new Date().getTime()/1000)*4 - 12;
+                        console.log(this.span);
+                    }
                 }
             };
             return [datacache];
@@ -363,22 +385,26 @@ export class WsService extends EventEmitter {
             if (doc_id != '') {
                 let vt = doc_id.split('_');
                 if (vt.length > 2) {
-                    datacache.get(id).starttime =
-                        '20' +
-                        vt[2].substring(0, 2) +
-                        '-' +
-                        vt[2].substring(2, 4) +
-                        '-' +
-                        vt[2].substring(4, 6) +
-                        ' ' +
-                        vt[2].substring(6, 8) +
-                        ':' +
-                        vt[2].substring(8, 10) +
-                        ':' +
-                        vt[2].substring(10, 12);
+                    datacache.get(id).starttime = convertstarttime(vt[2]);
                 }
             }
         }
+
+        function convertstarttime(pureid:string){
+            return '20' +
+            pureid.substring(0, 2) +
+            '-' +
+            pureid.substring(2, 4) +
+            '-' +
+            pureid.substring(4, 6) +
+            ' ' +
+            pureid.substring(6, 8) +
+            ':' +
+            pureid.substring(8, 10) +
+            ':' +
+            pureid.substring(10, 12);
+          }
+        
         function setcur(id: any, value: number) {
             /*
                 if(!datacache.get(id).index){
@@ -394,6 +420,7 @@ export class WsService extends EventEmitter {
 
 
         function getoffline(doc_id: string, offlineend: number) {
+            return;
             request.get(`/ctg-exams-data/${doc_id}`).then(responseData => {
                 let vt = doc_id.split('_');
                 let dbid = vt[0] + '-' + vt[1];
