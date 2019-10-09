@@ -47,9 +47,10 @@ export default ({
 
 
   useEffect(() => {
+    console.log('resize',suit)
 
     suit && suit.resize();
-  }, [itemHeight]);
+  }, [data,itemHeight]);
    suit && suit.init(data)
   return (
     <div style={{ width: '100%', height: '100%' }} ref={box}>

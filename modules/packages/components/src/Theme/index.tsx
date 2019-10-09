@@ -38,6 +38,7 @@ const DynamicAntdTheme = (props: IProps) => {
     useEffect(() => {
         changeAntdTheme(getThemeColor(color.hex));
         window.localStorage.setItem(storageName, color.hex);
+        console.log('color',color)
         themeChangeCallback && themeChangeCallback(color.hex);
     }, [color])
 
@@ -51,6 +52,8 @@ const DynamicAntdTheme = (props: IProps) => {
     };
 
     const handleChange = color => {
+        console.log('set',color)
+        debugger
         setColor(color.rgb);
     };
 

@@ -1,11 +1,11 @@
-const BASE_INEVAL = 128;
+// const BASE_INEVAL = 128;
 const adu = 52;
 const samplingrate = 128;
 const points_one_times = 8;
 const gride_width = 25;
 const gx = points_one_times * ((gride_width * 5) / samplingrate);
 const x_start = 10;
-const draw_lines_index = [0, 1, 2];
+// const draw_lines_index = [0, 1, 2];
 const ruler = [80,80,80,80,80,80,40,40,40,40,40,40,40,40,40,40,80,80,80,80,80,80];
 const isstop = true;
 const last_points = [
@@ -134,7 +134,7 @@ export class DrawEcg {
     //   ctx.fillText('' + A[draw_lines_index[E]] + '', 10, D);
     // }
     //kisi 2019-10-03 add ruler
-    let scale = this.height/100;
+    let scale = height/100;
     ctx.strokeStyle = '#006003';
     ctx.beginPath();
     ctx.moveTo(x_start*2,ruler[0]*scale);
@@ -222,7 +222,7 @@ export class DrawEcg {
   //kisi 2019-10-03
   //根据ws数据压入队列
   adddatatest(F, C, E, J) {
-    const { MultiParam, Ple, Tre } = this;
+    const { MultiParam } = this;
     for (let index = 0; index < 360; index++) {
       this.oQueue.EnQueue( (MultiParam[(index * 2) % 375] + 128) * 0.1);
     }
