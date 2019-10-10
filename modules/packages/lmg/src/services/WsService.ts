@@ -438,7 +438,9 @@ export class WsService extends EventEmitter {
                 let vt = doc_id.split('_');
                 let dbid = vt[0] + '-' + vt[1];
                 console.log(doc_id, offlineend, responseData, datacache.get(dbid).past);
-                initfhrdata(responseData, datacache.get(dbid), offlineend,queue,offstart);
+                if(responseData){
+                    initfhrdata(responseData, datacache.get(dbid), offlineend,queue,offstart);
+                }
                 // datacache.get(dbid).start = 0;
             })
         }
