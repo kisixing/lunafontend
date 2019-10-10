@@ -138,7 +138,7 @@ export class WsService extends EventEmitter {
                                         orflag: true,
                                         starttime: '',
                                         fetal_num: 1,
-                                        csspan :NaN,
+                                        csspan : NaN,
                                         ecg: new Queue()
                                     });
                                     convertdocid(cachebi, devdata.beds[bi].doc_id);
@@ -189,7 +189,7 @@ export class WsService extends EventEmitter {
                                         this.offQueue.EnQueue({"docid":datacache.get(cachbi).docid,"length":tmpcache.past})
                                         //getoffline(datacache.get(cachbi).docid, tmpcache.past);
                                         if(!this.offstart){
-                                            starttask();
+                                            starttask(this.offQueue,this.offstart);
                                         }
                                     }
                                     tmpcache.last = tmpcache.start;
@@ -422,23 +422,28 @@ export class WsService extends EventEmitter {
             }
         }
 
-        function starttask(){
-            this.offstart = true;
-            let obj = this.offQueue.DeQueue();
-            getoffline(obj.docid, obj.length);
+        function starttask(queue,offstart){          
+            if(!queue.IsEmpty()){      
+                offstart = true;
+                let obj = queue.DeQueue();
+                getoffline(queue,obj.docid, obj.length,offstart);
+            }
+            else{
+                offstart = false;
+            }
         }
 
-        function getoffline(doc_id: string, offlineend: number) {
+        function getoffline(queue:Queue,doc_id: string, offlineend: number, offstart: boolean) {
             request.get(`/ctg-exams-data/${doc_id}`).then(responseData => {
                 let vt = doc_id.split('_');
                 let dbid = vt[0] + '-' + vt[1];
                 console.log(doc_id, offlineend, responseData, datacache.get(dbid).past);
-                initfhrdata(responseData, datacache.get(dbid), offlineend);
+                initfhrdata(responseData, datacache.get(dbid), offlineend,queue,offstart);
                 // datacache.get(dbid).start = 0;
             })
         }
 
-        function initfhrdata(data, datacache, offindex) {
+        function initfhrdata(data, datacache, offindex,queue,offstart) {
             Object.keys(data).forEach(key => {
                 let oridata = data[key] as string;
                 if (!oridata) {
@@ -463,11 +468,7 @@ export class WsService extends EventEmitter {
                     oridata = oridata.substring(2, oridata.length);
                 }
             });
-            if(!this.offQueue.IsEmpty()){
-                starttask();
-            }else{
-                this.offstart = false;
-            }
+            starttask(queue,offstart);
         }
 
     };

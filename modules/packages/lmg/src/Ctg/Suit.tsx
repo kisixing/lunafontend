@@ -107,8 +107,6 @@ export class Suit implements Drawer{
     barToll: IBarTool,
     type: number
   ) {
-    this.log('constructor')
-
     this.wrap = wrap;
     this.canvas1 = canvas1;
     this.canvas2 = canvas2;
@@ -135,7 +133,6 @@ export class Suit implements Drawer{
     this.fetalcount = data.fetal_num;
     for (let i = 0; i < this.fetalcount; i++) {
       this.fhr[i] = data.fhr[i];
-      console.log(data);
     }
     this.toco = data.toco;
     this.currentdot = data.index;
@@ -166,11 +163,20 @@ export class Suit implements Drawer{
       //显示历史数据
       this.dragtimestamp = new Date().getTime();
       this.viewposition = Math.floor(this.curr * value / (this.canvasline.width - 100));
+      if(this.viewposition < this.canvasline.width*2){
+        this.drawobj.drawdot(this.canvasline.width*2);
+        return;
+      }
       //console.log('scollchange', this.curr ,this.canvasline.width,value,this.viewposition);
       this.drawobj.drawdot(this.viewposition);
     });
     this.barToll.watchGrab(value => {
       this.dragtimestamp = new Date().getTime();
+      //判断开始点
+      if(this.viewposition - value < this.canvasline.width*2){
+        this.drawobj.drawdot(this.canvasline.width*2);
+        return;
+      }
       //方向确认
       if (this.viewposition - value < this.data.index) {
         this.viewposition -= value;
