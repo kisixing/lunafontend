@@ -29,7 +29,8 @@ class R extends Request {
 
     this._request.interceptors.response.use((response: Response, options: RequestOptions) => {
       const { successText, hideErr } = options;
-      const { status } = response;
+      const errorData = getErrData(response);
+      const { status, errortext, url } = errorData;
 
       // eslint-disable-next-line no-param-reassign
       if ([200, 201, 304].includes(status)) {
@@ -40,14 +41,14 @@ class R extends Request {
             message: '未登录或登录已过期，请重新登录。',
           });
         }
-
+    
         if (!hideErr) {
-          const errorData = getErrData(response);
-          const { status, errortext, url } = errorData;
           notification.error({
             message: `请求错误 ${status}: ${url}`,
             description: errortext,
           });
+        }else{
+          console.error('Network Error',`请求错误 ${status}: ${url}: ${errortext}`)
         }
       }
 
