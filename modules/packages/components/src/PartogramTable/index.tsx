@@ -18,7 +18,7 @@ function EditableCell(props: any) {
 }
 
 export default (({ url,style={} }) => {
-
+  console.log('partogram table render')
   const [data, setData] = useState([])
 
   function getData() {
