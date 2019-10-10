@@ -1,7 +1,7 @@
 import BezierEasing from 'bezier-easing';
 import tinycolor from 'tinycolor2';
 import cssContent from './theme';
-import {  darken, lighten } from './colorManipulator';
+import { darken, lighten } from './colorManipulator';
 
 const tonalOffset = 0.2
 
@@ -12,7 +12,7 @@ const primaryEasing = baseEasing(0.6);
 const currentEasing = index => baseEasing(index * 0.1);
 
 /* tinycolor-mix */
-tinycolor.mix = function(color1, color2, amount) {
+tinycolor.mix = function (color1, color2, amount) {
   amount = (amount === 0) ? 0 : (amount || 50);
 
   var rgb1 = tinycolor(color1).toRgb();
@@ -29,7 +29,7 @@ tinycolor.mix = function(color1, color2, amount) {
   return tinycolor(rgba);
 };
 
-function getHoverColor (color, ratio = 5) {
+function getHoverColor(color, ratio = 5) {
   return tinycolor.mix(
     '#ffffff',
     color,
@@ -37,7 +37,7 @@ function getHoverColor (color, ratio = 5) {
   ).toHexString();
 }
 
-function getActiveColor (color, ratio = 7) {
+function getActiveColor(color, ratio = 7) {
   return tinycolor.mix(
     '#333333',
     color,
@@ -45,7 +45,7 @@ function getActiveColor (color, ratio = 7) {
   ).toHexString();
 }
 
-function getShadowColor (color, ratio = 9) {
+function getShadowColor(color, ratio = 9) {
   return tinycolor.mix(
     '#888888',
     color,
@@ -53,9 +53,9 @@ function getShadowColor (color, ratio = 9) {
   ).setAlpha(.2).toRgbString();
 }
 
-export function getThemeColor (color) {
-  const lightColor = lighten(color, tonalOffset );
-  const darkColor = darken(color, tonalOffset*1.5);
+export function getThemeColor(color) {
+  const lightColor = lighten(color, tonalOffset * 4);
+  const darkColor = darken(color, tonalOffset * 1.5);
   return {
     primaryColor: color,
     hoverColor: getHoverColor(color),
@@ -86,7 +86,7 @@ function IEVersion() {
       return 10;
     } else {
       return 6; // IE版本 <= 7
-    }   
+    }
   } else if (isEdge) {
     return 'edge'; // edge
   } else if (isIE11) {
@@ -127,7 +127,7 @@ const generateStyleHtml = (colorObj) => {
   return IECSSContent;
 }
 
-export function applyAntdTheme (colorObj) {
+export function applyAntdTheme(colorObj) {
   let styleNode = document.getElementById('dynamic_antd_theme_custom_style');
   if (!styleNode) {
     // avoid repeat insertion
