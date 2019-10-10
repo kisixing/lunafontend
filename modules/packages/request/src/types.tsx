@@ -20,4 +20,5 @@ export interface Iconfig extends RequestOptionsInit {
   errHandler?: (err: ErrData) => any;
   Authorization?: string;
   [x: string]: any;
+  hideErr?:boolean;
 }

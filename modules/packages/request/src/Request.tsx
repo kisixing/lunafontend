@@ -14,7 +14,7 @@ export default class Request {
   }
   public init = (configs: Iconfig = {}) => {
     const { errHandler, ...others } = configs;
-    
+
 
     this._request = extend({
       timeout: 5000,
@@ -22,17 +22,21 @@ export default class Request {
       headers: {
         Accept: 'application/json',
       },
-      errorHandler: err => {
-        const errorData = getErrData(err.response);
-        if (errorData ) {
+      errorHandler: ({ response, request }) => {
+
+        if (response) {
+          const errorData = getErrData(response);
           errHandler && errHandler(errorData);
-        } else {
+          Promise.reject(errorData);
+        } else if (request) {
+          let url = request.url
+          url = url.slice(url.indexOf('://') + 3)
+          url = url.slice(0, url.indexOf('/'))
           notification.error({
-            message: '服务未响应',
+            message: `${url} 未响应`,
           });
         }
-
-        return Promise.reject(errorData);
+        Promise.reject('no response');
       },
       ...others,
     });
@@ -41,7 +45,7 @@ export default class Request {
   public intercept() {
     ['get', 'post', 'put', 'delete'].forEach(_ => {
       this[_] = ((url, options = {}) => {
-        const { loading, interval,cacheWhenFailed } = options;
+        const { loading, interval, cacheWhenFailed } = options;
         const key = _ + ':' + url;
 
         if (typeof interval === 'number') {
@@ -60,11 +64,11 @@ export default class Request {
             hide();
           });
         }
-        if (cacheWhenFailed ) {
+        if (cacheWhenFailed) {
           console.log('cacheWhenFailed')
-        
+
           return promise.then(value => {
-            store.set(key,value)
+            store.set(key, value)
             return value
           }).catch(err => {
             return store.get(key)
