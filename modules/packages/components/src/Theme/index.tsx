@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { SketchPicker } from 'react-color';
+import { GithubPicker } from 'react-color';
 import tinycolor from 'tinycolor2';
-import { getThemeColor, changeAntdTheme, placementSketchPicker } from './util';
+import { getThemeColor, applyAntdTheme, placementSketchPicker } from './util';
 
+const colors = ['#bf360c', '#e65100', '#ff6f00', '#546e7a', '#827717', '#33691e', '#1b5e20', '#004d40',
+    '#006064', '#01579b', '#5e35b1', '#1a237e', '#311b92', '#4a148c', '#880e4f', '#b71c1c']
 
 interface IProps {
-    primaryColor: string,
-    storageName: string,
-    style: React.CSSProperties,
-    placement: any,
-    themeChangeCallback: any
+    primaryColor?: string,
+    storageName?: string,
+    style?: React.CSSProperties,
+    placement?: any,
+    themeChangeCallback?: any
 }
 
-const DynamicAntdTheme = (props: IProps) => {
+const AntdThemeManipulator = (props: IProps) => {
 
     const {
         primaryColor = '#1890ff',
@@ -25,9 +27,10 @@ const DynamicAntdTheme = (props: IProps) => {
     const [color, setColor] = useState(tinycolor(primaryColor).toRgb())
     const [displayColorPicker, setDisplayColorPicker] = useState(false)
     useEffect(() => {
-        const storageColor = window.localStorage.getItem(storageName);
+        const storageColor = window.localStorage.getItem(storageName) || primaryColor
         if (storageColor) {
-            changeAntdTheme(getThemeColor(storageColor));
+            const theme = getThemeColor(storageColor)
+            applyAntdTheme(theme);
             document.getElementById('change_antd_theme_color').style.backgroundColor = storageColor;
             if (themeChangeCallback) {
                 themeChangeCallback(storageColor);
@@ -35,12 +38,12 @@ const DynamicAntdTheme = (props: IProps) => {
         }
     }, [])
 
-    useEffect(() => {
-        changeAntdTheme(getThemeColor(color.hex));
-        window.localStorage.setItem(storageName, color.hex);
-        console.log('color',color)
-        themeChangeCallback && themeChangeCallback(color.hex);
-    }, [color])
+    // useEffect(() => {
+    //     changeAntdTheme(getThemeColor(color.hex));
+    //     window.localStorage.setItem(storageName, color.hex);
+    //     console.log('color',color)
+    //     themeChangeCallback && themeChangeCallback(color.hex);
+    // }, [color])
 
     const handleClick = () => {
         setDisplayColorPicker(!displayColorPicker);
@@ -52,8 +55,10 @@ const DynamicAntdTheme = (props: IProps) => {
     };
 
     const handleChange = color => {
-        console.log('set',color)
         setColor(color.rgb);
+        applyAntdTheme(getThemeColor(color.hex));
+        window.localStorage.setItem(storageName, color.hex);
+        themeChangeCallback && themeChangeCallback(color.hex);
     };
 
     const styles: { [x: string]: React.CSSProperties } = {
@@ -96,14 +101,17 @@ const DynamicAntdTheme = (props: IProps) => {
                 displayColorPicker
                     ? <div style={styles.popover}>
                         <div style={styles.cover} onClick={handleClose} />
-                        <SketchPicker
+                        <GithubPicker
+                            styles={{ default: { card: { boxSizing: 'content-box' } } }}
+                            triangle='hide'
                             color={color}
                             onChange={handleChange}
+                            colors={colors}
                         />
                     </div> : null
             }
         </div>
     );
 }
-
-export { DynamicAntdTheme , getThemeColor, changeAntdTheme }
+AntdThemeManipulator.colors = colors
+export { AntdThemeManipulator, getThemeColor, applyAntdTheme as changeAntdTheme }

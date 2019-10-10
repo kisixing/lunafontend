@@ -1,6 +1,9 @@
 import BezierEasing from 'bezier-easing';
 import tinycolor from 'tinycolor2';
 import cssContent from './theme';
+import { darken, lighten } from './colorManipulator';
+
+const tonalOffset = 0.2
 
 /* basic-easiing */
 const baseEasing = BezierEasing(0.26, 0.09, 0.37, 0.18);
@@ -9,7 +12,7 @@ const primaryEasing = baseEasing(0.6);
 const currentEasing = index => baseEasing(index * 0.1);
 
 /* tinycolor-mix */
-tinycolor.mix = function(color1, color2, amount) {
+tinycolor.mix = function (color1, color2, amount) {
   amount = (amount === 0) ? 0 : (amount || 50);
 
   var rgb1 = tinycolor(color1).toRgb();
@@ -26,7 +29,7 @@ tinycolor.mix = function(color1, color2, amount) {
   return tinycolor(rgba);
 };
 
-function getHoverColor (color, ratio = 5) {
+function getHoverColor(color, ratio = 5) {
   return tinycolor.mix(
     '#ffffff',
     color,
@@ -34,7 +37,7 @@ function getHoverColor (color, ratio = 5) {
   ).toHexString();
 }
 
-function getActiveColor (color, ratio = 7) {
+function getActiveColor(color, ratio = 7) {
   return tinycolor.mix(
     '#333333',
     color,
@@ -42,7 +45,7 @@ function getActiveColor (color, ratio = 7) {
   ).toHexString();
 }
 
-function getShadowColor (color, ratio = 9) {
+function getShadowColor(color, ratio = 9) {
   return tinycolor.mix(
     '#888888',
     color,
@@ -50,12 +53,16 @@ function getShadowColor (color, ratio = 9) {
   ).setAlpha(.2).toRgbString();
 }
 
-export function getThemeColor (color) {
+export function getThemeColor(color) {
+  const lightColor = lighten(color, tonalOffset * 4);
+  const darkColor = darken(color, tonalOffset * 1.5);
   return {
     primaryColor: color,
     hoverColor: getHoverColor(color),
     activeColor: getActiveColor(color),
-    shadowColor: getShadowColor(color)
+    shadowColor: getShadowColor(color),
+    lightColor,
+    darkColor
   };
 }
 
@@ -79,7 +86,7 @@ function IEVersion() {
       return 10;
     } else {
       return 6; // IE版本 <= 7
-    }   
+    }
   } else if (isEdge) {
     return 'edge'; // edge
   } else if (isIE11) {
@@ -94,28 +101,33 @@ const generateStyleHtml = (colorObj) => {
     activeColor,
     primaryColor,
     hoverColor,
-    shadowColor
+    shadowColor,
+    lightColor,
+    darkColor
   } = colorObj;
   if (!IEVersion()) {
     const cssVar = `
       :root {
-        --primary-color: ${primaryColor};
-        --primary-hover-color: ${hoverColor};
-        --primary-active-color: ${activeColor};
-        --primary-shadow-color: ${shadowColor};
+        --theme-color: ${primaryColor};
+        --theme-hover-color: ${hoverColor};
+        --theme-active-color: ${activeColor};
+        --theme-shadow-color: ${shadowColor};
+        --theme-light-color: ${lightColor};
+        --theme-dark-color: ${darkColor};
+
       }
     `;
     return `${cssVar}\n${cssContent}`;
   }
   let IECSSContent = cssContent;
-  IECSSContent = IECSSContent.replace(/var\(\-\-primary\-color\)/g, primaryColor);
-  IECSSContent = IECSSContent.replace(/var\(\-\-primary\-hover\-color\)/g, hoverColor);
-  IECSSContent = IECSSContent.replace(/var\(\-\-primary\-active\-color\)/g, activeColor);
-  IECSSContent = IECSSContent.replace(/var\(\-\-primary\-shadow\-color\)/g, shadowColor);
+  IECSSContent = IECSSContent.replace(/var\(\-\-theme\-color\)/g, primaryColor);
+  IECSSContent = IECSSContent.replace(/var\(\-\-theme\-hover\-color\)/g, hoverColor);
+  IECSSContent = IECSSContent.replace(/var\(\-\-theme\-active\-color\)/g, activeColor);
+  IECSSContent = IECSSContent.replace(/var\(\-\-theme\-shadow\-color\)/g, shadowColor);
   return IECSSContent;
 }
 
-export function changeAntdTheme (colorObj) {
+export function applyAntdTheme(colorObj) {
   let styleNode = document.getElementById('dynamic_antd_theme_custom_style');
   if (!styleNode) {
     // avoid repeat insertion
@@ -153,19 +165,19 @@ export function placementSketchPicker(placement) {
     }
     case 'topRight': {
       return {
-        marginTop: '-342px'
+        marginTop: '-100px'
       }
     }
     case 'top': {
       return {
         marginLeft: '-87px',
-        marginTop: '-342px'
+        marginTop: '-100px'
       }
     }
     case 'topLeft': {
       return {
         marginLeft: '-174px',
-        marginTop: '-342px'
+        marginTop: '-100px'
       }
     }
     case 'left': {

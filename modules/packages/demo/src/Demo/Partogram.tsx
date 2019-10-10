@@ -9,7 +9,7 @@ export default function () {
     return (
         <div style={{ width: '100%', height: '500px', border: '1px solid red' }}>
         <Partogram />
-        <PartogramTable url="api/prenatal-visits" style={{padding:'20px'}} />
+        <PartogramTable url="api/prenatal-visits" style={{padding:'20px'}} id="1"/>
       </div>
     );
 }

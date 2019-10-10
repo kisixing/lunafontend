@@ -126,7 +126,7 @@ export class Suit implements Drawer{
   }
   init(data) {
     this.log('init')
-    if (!data || this.initFlag) {
+    if (!data) {
       return
     }
     this.initFlag = true

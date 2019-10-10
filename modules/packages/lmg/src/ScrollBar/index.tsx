@@ -17,7 +17,8 @@ export default (props: {
         ref={bar}
         style={{
           width: '50px',
-          background: '#5c6bc0',
+          background: '#ddd',
+          border:'1px solid #aaa',
           height: 10,
           borderRadius: 1,
           position: 'absolute',
