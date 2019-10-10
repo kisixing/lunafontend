@@ -149,12 +149,14 @@ export class Suit implements Drawer{
       // this.initctgdata(json.toco, this.toco);
       if (this.data.index > this.canvasline.width * 2) {
         this.drawobj.drawdot(this.canvasline.width * 2);
+        this.curr = this.canvasline.width * 2;
+        console.log(this.canvasline.width * 2);
         this.barToll.setBarWidth(100);
         this.barToll.setBarLeft(0, false);
       } else {
         this.drawobj.drawdot(this.data.index);
+        this.curr = this.data.index;
       }
-      this.curr = this.data.index;
     } else {
       this.barToll.setBarWidth(0);
       this.timerCtg(defaultinterval);

@@ -144,7 +144,7 @@ export default class DrawCTG {
   }
   drawdot(cur) {
     const { suit, linecontext, max } = this;
-    const { fhr, toco } = suit.data;
+    const { fhr, toco,fm } = suit.data;
     //cur = suit.data.index;
     this.drawgrid(cur);
     this.showcur(cur);
@@ -222,6 +222,19 @@ export default class DrawCTG {
       }
     }
     linecontext.stroke();
+    //kisi 2019-10-10 fm 128 判断
+    for (var i = start; i < cur; i++) {
+      if (i % 2 == 1) continue;
+        if (start == 0) {
+          lastx = Math.floor((suit.canvasline.width * 2 - cur + i) / 2);
+        } else {
+          lastx = Math.floor((i - start) / 2);
+        }
+      if (fm[i] == 128) {
+        i = i +2;
+        this.showfm(lastx);
+      }
+    }
   }
   sethorizontal = (length: number, startposition: number,drawtimespan=true) => {
     const { setrules, context, baseleft, min, max, xspan } = this;
@@ -366,12 +379,13 @@ export default class DrawCTG {
     datacontext.fillText('TOCO: ' +curvalue, 10,curpostion);
   };
   showfm = postion => {
-    const { context, max } = this;
+    const { context, max,min } = this;
+    let yposition = this.yspan * (max-min) + this.basetop + 18;
     context.beginPath();
     context.strokeStyle = 'rgb(153,254,153)';
-    context.lineWidth = 4;
-    context.moveTo(postion, max + 44);
-    context.lineTo(postion, max + 52);
+    context.lineWidth = 6;
+    context.moveTo(postion, yposition);
+    context.lineTo(postion, yposition+6);
     context.stroke();
   };
 }

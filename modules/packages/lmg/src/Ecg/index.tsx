@@ -65,7 +65,7 @@ export default (props: IProps) => {
         <canvas
           id="background"
           width="750"
-          height="200"
+          height="500"
           style={{ marginLeft: 20 }}
           ref={canvas}
         ></canvas>
@@ -73,7 +73,7 @@ export default (props: IProps) => {
           ref={canvasline}
           id="line"
           width="750"
-          height="200"
+          height="500"
           style={{ marginLeft: 20, position: 'absolute', left: 0, }}
         ></canvas>
         <canvas

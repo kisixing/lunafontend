@@ -178,12 +178,13 @@ export class WsService extends EventEmitter {
                                     }
                                 }
                                 tmpcache.toco[ctgdata[key].index] = ctgdata[key].toco;
+                                tmpcache.fm[ctgdata[key].index] = ctgdata[key].fm;
                                 if (tmpcache.start == -1) {
                                     tmpcache.start = ctgdata[key].index;
                                     tmpcache.past = ctgdata[key].index - 4800 > 0 ? ctgdata[key].index - 4800 : 0;
                                     if (tmpcache.past > 0) {
                                         this.log(datacache.get(cachbi).docid, tmpcache.past);
-                                        getoffline(datacache.get(cachbi).docid, tmpcache.past);
+                                        //getoffline(datacache.get(cachbi).docid, tmpcache.past);
                                     }
                                     tmpcache.last = tmpcache.start;
                                 }
@@ -275,6 +276,7 @@ export class WsService extends EventEmitter {
                                     }
                                 }
                                 tmpcache.toco[ctgdata[key].index] = ctgdata[key].toco;
+                                tmpcache.fm[ctgdata[key].index] = ctgdata[key].fm;
                                 setcur(cachbi, ctgdata[key].index);
                             }
                             tmpcache.orflag = true;
@@ -421,7 +423,7 @@ export class WsService extends EventEmitter {
 
 
         function getoffline(doc_id: string, offlineend: number) {
-            return;
+            //return;
             request.get(`/ctg-exams-data/${doc_id}`).then(responseData => {
                 let vt = doc_id.split('_');
                 let dbid = vt[0] + '-' + vt[1];
@@ -443,13 +445,15 @@ export class WsService extends EventEmitter {
                     if (key === 'fhr1') {
                         datacache.fhr[0][i] = data_to_push;
                     } else if (key === 'fhr2') {
-                        datacache.fhr[1][i] = data_to_push;
+                        if(datacache.fhr[1])
+                            datacache.fhr[1][i] = data_to_push;
                     } else if (key === 'fhr3') {
-                        // datacache.fhr[2][i] = data_to_push;
+                        if(datacache.fhr[2])
+                            datacache.fhr[2][i] = data_to_push;
                     } else if (key === 'toco') {
                         datacache.toco[i] = data_to_push;
                     } else if (key === "fm") {
-                        // datacache.fm[i] = data_to_push;
+                        datacache.fm[i] = data_to_push;
                     }
                     oridata = oridata.substring(2, oridata.length);
                 }
