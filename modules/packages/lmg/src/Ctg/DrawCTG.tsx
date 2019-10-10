@@ -382,7 +382,7 @@ export default class DrawCTG {
     const { context, max,min } = this;
     let yposition = this.yspan * (max-min) + this.basetop + 18;
     context.beginPath();
-    context.strokeStyle = 'rgb(153,254,153)';
+    context.strokeStyle = 'rgb(0,0,0)';
     context.lineWidth = 6;
     context.moveTo(postion, yposition);
     context.lineTo(postion, yposition+6);
