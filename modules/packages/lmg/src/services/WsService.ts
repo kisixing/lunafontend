@@ -11,6 +11,8 @@ export class WsService extends EventEmitter {
     interval: number = 10000;
     RECONNECT_INTERVAL: number = 10000;
     span:number = NaN;
+    offQueue:Queue = new Queue();
+    offstart:boolean = false;
 
     static _this: WsService;
     log = console.log.bind(console, 'websocket')
@@ -184,7 +186,11 @@ export class WsService extends EventEmitter {
                                     tmpcache.past = ctgdata[key].index - 4800 > 0 ? ctgdata[key].index - 4800 : 0;
                                     if (tmpcache.past > 0) {
                                         this.log(datacache.get(cachbi).docid, tmpcache.past);
+                                        this.offQueue.EnQueue({"docid":datacache.get(cachbi).docid,"length":tmpcache.past})
                                         //getoffline(datacache.get(cachbi).docid, tmpcache.past);
+                                        if(!this.offstart){
+                                            starttask();
+                                        }
                                     }
                                     tmpcache.last = tmpcache.start;
                                 }
@@ -406,13 +412,9 @@ export class WsService extends EventEmitter {
             pureid.substring(8, 10) +
             ':' +
             pureid.substring(10, 12);
-          }
+        }
         
         function setcur(id: any, value: number) {
-            /*
-                if(!datacache.get(id).index){
-              datacache.get(id).index = value;
-            }*/
             if (value < datacache.get(id).start) {
                 datacache.get(id).start = value;
             } else if (value >= datacache.get(id).index) {
@@ -420,10 +422,13 @@ export class WsService extends EventEmitter {
             }
         }
 
-
+        function starttask(){
+            this.offstart = true;
+            let obj = this.offQueue.DeQueue();
+            getoffline(obj.docid, obj.length);
+        }
 
         function getoffline(doc_id: string, offlineend: number) {
-            //return;
             request.get(`/ctg-exams-data/${doc_id}`).then(responseData => {
                 let vt = doc_id.split('_');
                 let dbid = vt[0] + '-' + vt[1];
@@ -458,6 +463,11 @@ export class WsService extends EventEmitter {
                     oridata = oridata.substring(2, oridata.length);
                 }
             });
+            if(!this.offQueue.IsEmpty()){
+                starttask();
+            }else{
+                this.offstart = false;
+            }
         }
 
     };

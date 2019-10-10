@@ -44,7 +44,7 @@ export default class DrawCTG {
   scalespan:number;
   starttime: string;
   fhroffset : number;
-  constructor(suit: Suit, xspan = 40,yspan = 1,scalespan=30, fhroffset =20 ,baseleft = 0,basetop = 10, min = 50, max = 210) {
+  constructor(suit: Suit, xspan = 40,yspan = 1,scalespan=30, fhroffset = -20 ,baseleft = 0,basetop = 10, min = 50, max = 210) {
     this.suit = suit;
     this.context = suit.context1;
     this.linecontext = suit.contextline;
@@ -230,7 +230,7 @@ export default class DrawCTG {
         } else {
           lastx = Math.floor((i - start) / 2);
         }
-      if (fm[i] == 128) {
+      if (fm[i] == 128 || fm[i] == 1) {
         i = i +2;
         this.showfm(lastx);
       }
@@ -296,8 +296,8 @@ export default class DrawCTG {
       context.lineTo(xspan * i + baseleft - offsetpx, (max - min) * this.yspan+this.basetop);
       //console.log((max - min) * this.yspan);
       context.stroke();
-      if (ioff % 6 == primaryscaleflag+3) {
-        setrules(xspan * i + baseleft - offsetpx);
+      if (ioff % 6 == primaryscaleflag) {
+        setrules(xspan * (i+3) + baseleft - offsetpx);
       }
     }
   };

@@ -4,7 +4,7 @@ const BASE_INEVAL = 128;
 const adu = 52;
 const samplingrate = 128;
 const points_one_times = 8;
-const gride_width = 25;
+const gride_width = 50;
 const gx = points_one_times * ((gride_width * 5) / samplingrate);
 const x_start = 25;
 // const draw_lines_index = [0, 1, 2];
@@ -519,7 +519,7 @@ export class DrawEcg implements Drawer {
   init(data) {
     console.log('ecg', data)
     if(data){
-      //this.oQueue = data.ecg;
+      this.oQueue = data.ecg;
       this.current_time_millis = 0;
       isstop=true;
       this.loop();
@@ -677,7 +677,7 @@ export class DrawEcg implements Drawer {
       // }
     }
     if (this.oQueue.IsEmpty()) {
-      this.Convert16Scale();
+      //this.Convert16Scale();
     }
   }
   // 绘制单心电走纸
