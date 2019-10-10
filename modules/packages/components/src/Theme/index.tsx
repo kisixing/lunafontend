@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SketchPicker } from 'react-color';
+import { GithubPicker } from 'react-color';
 import tinycolor from 'tinycolor2';
 import { getThemeColor, applyAntdTheme, placementSketchPicker } from './util';
 
@@ -99,9 +99,15 @@ const AntdThemeManipulator = (props: IProps) => {
                 displayColorPicker
                     ? <div style={styles.popover}>
                         <div style={styles.cover} onClick={handleClose} />
-                        <SketchPicker
+                        <GithubPicker
+                            styles={{ default: { card: { boxSizing: 'content-box' } } }}
+                            triangle='hide'
                             color={color}
                             onChange={handleChange}
+                            colors={
+                                ['#bf360c', '#e65100', '#ff6f00', '#546e7a', '#827717', '#33691e', '#1b5e20', '#004d40',
+                                    '#006064', '#01579b', '#5e35b1', '#1a237e', '#311b92', '#4a148c', '#880e4f', '#b71c1c']
+                            }
                         />
                     </div> : null
             }
@@ -109,4 +115,4 @@ const AntdThemeManipulator = (props: IProps) => {
     );
 }
 
-export { AntdThemeManipulator , getThemeColor, applyAntdTheme as changeAntdTheme }
+export { AntdThemeManipulator, getThemeColor, applyAntdTheme as changeAntdTheme }

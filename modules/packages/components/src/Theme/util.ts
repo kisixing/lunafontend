@@ -165,19 +165,19 @@ export function placementSketchPicker(placement) {
     }
     case 'topRight': {
       return {
-        marginTop: '-342px'
+        marginTop: '-100px'
       }
     }
     case 'top': {
       return {
         marginLeft: '-87px',
-        marginTop: '-342px'
+        marginTop: '-100px'
       }
     }
     case 'topLeft': {
       return {
         marginLeft: '-174px',
-        marginTop: '-342px'
+        marginTop: '-100px'
       }
     }
     case 'left': {
