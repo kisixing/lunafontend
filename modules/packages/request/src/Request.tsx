@@ -27,16 +27,18 @@ export default class Request {
         if (response) {
           const errorData = getErrData(response);
           errHandler && errHandler(errorData);
-          Promise.reject(errorData);
+          return Promise.reject(errorData);
         } else if (request) {
-          let url = request.url
-          url = url.slice(url.indexOf('://') + 3)
-          url = url.slice(0, url.indexOf('/'))
-          notification.error({
-            message: `${url} 未响应`,
-          });
+          const { options, url } = request
+          if (options && !(options as any).hideErr) {
+            let host = url.slice(url.indexOf('://') + 3)
+            host = host.slice(0, url.indexOf('/'))
+            notification.error({
+              message: `${host} 未响应`,
+            });
+          }
+          Promise.reject(`${url} no response`);
         }
-        Promise.reject('no response');
       },
       ...others,
     });

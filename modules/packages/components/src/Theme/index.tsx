@@ -3,8 +3,8 @@ import { GithubPicker } from 'react-color';
 import tinycolor from 'tinycolor2';
 import { getThemeColor, applyAntdTheme, placementSketchPicker } from './util';
 
-const colors = ['#bf360c', '#e65100', '#ff6f00', '#546e7a', '#827717', '#33691e', '#00838f', '#004d40',
-    '#006064', '#01579b', '#5e35b1', '#1a237e', '#311b92', '#4a148c', '#880e4f', '#b71c1c']
+const colors = ['#01579b', '#e65100', '#ff6f00', '#546e7a', '#827717', '#33691e', '#00838f', '#004d40',
+    '#006064', '#bf360c', '#5e35b1', '#1a237e', '#311b92', '#4a148c', '#880e4f', '#b71c1c']
 
 interface IProps {
     primaryColor?: string,
