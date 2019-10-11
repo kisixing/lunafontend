@@ -16,7 +16,7 @@ export default ({
   mutableSuitObject?: { suit: (Suit | any) };
   itemHeight?: number;
   type?: 0 | 1,
-  showEcg: false
+  showEcg: boolean
 }) => {
   let barTool: IBarTool;
 
