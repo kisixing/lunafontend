@@ -11,7 +11,7 @@ interface IProps {
     storageName?: string,
     style?: React.CSSProperties,
     placement?: any,
-    themeChangeCallback?: any
+    onChange?: (color: string) => void
 }
 
 const AntdThemeManipulator = (props: IProps) => {
@@ -21,29 +21,23 @@ const AntdThemeManipulator = (props: IProps) => {
         storageName = 'custom-antd-primary-color',
         style = { display: 'inline-block' },
         placement = null,
-        themeChangeCallback = null
+        onChange = null
     } = props
 
     const [color, setColor] = useState(tinycolor(primaryColor).toRgb())
     const [displayColorPicker, setDisplayColorPicker] = useState(false)
     useEffect(() => {
-        const storageColor = window.localStorage.getItem(storageName) || primaryColor
+        const storageColor = primaryColor || window.localStorage.getItem(storageName)
         if (storageColor) {
             const theme = getThemeColor(storageColor)
             applyAntdTheme(theme);
             document.getElementById('change_antd_theme_color').style.backgroundColor = storageColor;
-            if (themeChangeCallback) {
-                themeChangeCallback(storageColor);
+            if (onChange) {
+                onChange(storageColor);
             }
         }
     }, [])
 
-    // useEffect(() => {
-    //     changeAntdTheme(getThemeColor(color.hex));
-    //     window.localStorage.setItem(storageName, color.hex);
-    //     console.log('color',color)
-    //     themeChangeCallback && themeChangeCallback(color.hex);
-    // }, [color])
 
     const handleClick = () => {
         setDisplayColorPicker(!displayColorPicker);
@@ -58,7 +52,7 @@ const AntdThemeManipulator = (props: IProps) => {
         setColor(color.rgb);
         applyAntdTheme(getThemeColor(color.hex));
         window.localStorage.setItem(storageName, color.hex);
-        themeChangeCallback && themeChangeCallback(color.hex);
+        onChange && onChange(color.hex);
     };
 
     const styles: { [x: string]: React.CSSProperties } = {
