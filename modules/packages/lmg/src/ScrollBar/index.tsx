@@ -16,15 +16,19 @@ export default (props: {
       <div
         ref={bar}
         style={{
-          width: '50px',
-          background: '#ddd',
-          border:'1px solid #aaa',
-          height: 10,
+          width: '5px',
+          background: '#4169E1',
+          border:'1px solid #4169E1',
+          height: 398,
           borderRadius: 1,
           position: 'absolute',
           bottom: 0,
         }}
-      ></div>
+      >
+        
+      <div style={{ marginLeft:'-11px',marginTop:'-1px', float: 'left',width: 0,height: 0,border:'12px solid',borderColor:'#4169E1 transparent transparent transparent'}}></div>
+      <div style={{ marginLeft:'-11px',marginTop:'370px', float: 'left',width: 100,height: 0}}>开始</div>
+      </div>
     </div>
   );
 };

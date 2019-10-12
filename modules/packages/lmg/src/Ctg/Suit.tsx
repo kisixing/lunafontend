@@ -16,7 +16,7 @@ export class P {
   }
   draw(x: number, y: number, w: number, h: number, color: string) {
     const { context2 } = this.suit;
-    context2.clearRect(this.x - 1, this.y - 1, this.w + 2, this.h + 2);
+    //context2.clearRect(this.x - 1, this.y - 1, this.w + 2, this.h + 2);
     this.x = x;
     this.y = y;
     this.w = w;
@@ -24,6 +24,7 @@ export class P {
     this.color = color;
     context2.strokeStyle = this.color;
     context2.strokeRect(this.x, this.y, this.w, this.h);
+    console.log(this.x, this.y, this.w, this.h);
   }
   OnMouseMove(evt) {
     //timeout = true;

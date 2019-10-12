@@ -70,16 +70,6 @@ export default ({
       <canvas
         style={{ position: 'absolute', left: '0', top: '0' }}
         ref={canvas2}
-
-      // onMouseDown={e => {
-      //   suit && suit.p.OnMouseDown(e.nativeEvent);
-      // }}
-      // onMouseMove={e => {
-      //   suit && suit.p.OnMouseMove(e.nativeEvent);
-      // }}
-      // onMouseUp={e => {
-      //   suit && suit.p.OnMouseUp(e.nativeEvent);
-      // }}
       >
         <p>Your browserdoes not support the canvas element.</p>
       </canvas>
