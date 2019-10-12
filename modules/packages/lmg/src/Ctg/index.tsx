@@ -16,7 +16,7 @@ export default ({
   mutableSuitObject?: { suit: (Suit | any) };
   itemHeight?: number;
   type?: 0 | 1,
-  showEcg: boolean
+  showEcg?: boolean
 }) => {
   let barTool: IBarTool;
 
@@ -63,28 +63,17 @@ export default ({
   }, [data, suit])
   return (
     <div style={{ width: '100%', height: '100%' }} ref={box}>
-      <canvas ref={canvas1}>
-        <p>Your browserdoes not support the canvas element.</p>
-      </canvas>
-      <canvas style={{ position: 'absolute', left: '0', top: '0' }} ref={canvasline}>
-        <p>Your browserdoes not support the canvas element.</p>
-      </canvas>
-      <canvas
-        style={{ position: 'absolute', left: '0', top: '0' }}
-        ref={canvas2}
-      >
-        <p>Your browserdoes not support the canvas element.</p>
-      </canvas>
+      <div style={{ height: `${showEcg ? 70 : 100}%`,minHeight:`calc(100% - 200px)` }} ref={ctgBox}>
+        <canvas ref={canvas1}>
+          <p>Your browserdoes not support the canvas element.</p>
+        </canvas>
+        <canvas style={{ position: 'absolute', left: '0', top: '0' }} ref={canvasline}>
+          <p>Your browserdoes not support the canvas element.</p>
+        </canvas>
+        <canvas
+          style={{ position: 'absolute', left: '0', top: '0' }}
+          ref={canvas2}
 
-        // onMouseDown={e => {
-        //   suit && suit.p.OnMouseDown(e.nativeEvent);
-        // }}
-        // onMouseMove={e => {
-        //   suit && suit.p.OnMouseMove(e.nativeEvent);
-        // }}
-        // onMouseUp={e => {
-        //   suit && suit.p.OnMouseUp(e.nativeEvent);
-        // }}
         >
           <p>Your browserdoes not support the canvas element.</p>
         </canvas>

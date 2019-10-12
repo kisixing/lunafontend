@@ -59,7 +59,7 @@ export class P {
 let sid = 0;
 type Canvas = HTMLCanvasElement;
 type Context = CanvasRenderingContext2D;
-export class Suit implements Drawer{
+export class Suit implements Drawer {
   initFlag = false
   sid = sid++;
   log = console.log.bind(console, 'suit', this.sid)
@@ -124,6 +124,13 @@ export class Suit implements Drawer{
     });
   }
   init(data) {
+    const bar1 = this.barToll.createRod('开始')
+    const bar2 = this.barToll.createRod('结束')
+    const bar3 = this.barToll.createRod('测试').setOffset(200)
+    bar1.setOffset(20)
+    bar2.setOffset(100)
+    bar1.on('change', value => console.log('开始', value))
+    bar2.on('change', value => console.log('结束', value))
     this.log('init')
     if (!data) {
       return
@@ -148,7 +155,7 @@ export class Suit implements Drawer{
       if (this.data.index > this.canvasline.width * 2) {
         this.drawobj.drawdot(this.canvasline.width * 2);
         this.curr = this.data.index;
-        console.log(this.canvasline.width * 2,this.data.index);
+        console.log(this.canvasline.width * 2, this.data.index);
         this.barToll.setBarWidth(100);
         this.barToll.setBarLeft(0, false);
       } else {
@@ -164,8 +171,8 @@ export class Suit implements Drawer{
       //显示历史数据
       this.dragtimestamp = new Date().getTime();
       this.viewposition = Math.floor(this.curr * value / (this.canvasline.width - 100));
-      if(this.viewposition < this.canvasline.width*2){
-        this.drawobj.drawdot(this.canvasline.width*2);
+      if (this.viewposition < this.canvasline.width * 2) {
+        this.drawobj.drawdot(this.canvasline.width * 2);
         return;
       }
       //console.log('scollchange', this.curr ,this.canvasline.width,value,this.viewposition);
@@ -174,8 +181,8 @@ export class Suit implements Drawer{
     this.barToll.watchGrab(value => {
       this.dragtimestamp = new Date().getTime();
       //判断开始点
-      if(this.viewposition - value < this.canvasline.width*2){
-        this.drawobj.drawdot(this.canvasline.width*2);
+      if (this.viewposition - value < this.canvasline.width * 2) {
+        this.drawobj.drawdot(this.canvasline.width * 2);
         return;
       }
       //方向确认
@@ -257,7 +264,7 @@ export class Suit implements Drawer{
 
   drawdot() {
     if (this.data.starttime && this.data.starttime != '' && this.data.status == 1 && this.data.index > 0) {
-      if(isNaN(this.data.csspan))
+      if (isNaN(this.data.csspan))
         return;
       this.curr = (Math.floor(new Date().getTime() / 1000) - Math.floor(new Date(this.data.starttime).getTime() / 1000)) * 4 + this.data.csspan;
       this.drawobj.drawdot(this.curr);
