@@ -243,7 +243,7 @@ export class DrawEcg implements Drawer {
   drawsingle(Q, P, N, G, A) {
     const { oQueue } = this;
     //2019-10-03 kisi 根据容器调整高度
-    let scale = this.height / 100;
+    // let scale = this.height / 100;
     this.current_times = this.current_times % G;
     if (oQueue.IsEmpty()) {
       this.start = NaN;

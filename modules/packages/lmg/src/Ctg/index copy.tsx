@@ -3,20 +3,17 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Suit } from './Suit';
 import { IBarTool } from '../ScrollBar/useScroll';
 import ScrollBar from '../ScrollBar';
-import Ecg from "../Ecg";
 const ResizeObserver = (window as any).ResizeObserver
 export default ({
   data,
   mutableSuitObject = { suit: null },
   itemHeight = 0,
-  type = 0,
-  showEcg = false
+  type = 0
 }: {
   data: any;
   mutableSuitObject?: { suit: (Suit | any) };
   itemHeight?: number;
-  type?: 0 | 1,
-  showEcg: boolean
+  type?: 0 | 1
 }) => {
   let barTool: IBarTool;
 
@@ -24,7 +21,6 @@ export default ({
   const canvas2 = useRef<HTMLCanvasElement>(null);
   const canvasline = useRef<HTMLCanvasElement>(null);
   const box = useRef<HTMLDivElement>(null);
-  const ctgBox = useRef<HTMLDivElement>(null);
 
   const [suit, setSuit] = useState<Suit>(null)
 
@@ -34,7 +30,7 @@ export default ({
       canvas1.current,
       canvas2.current,
       canvasline.current,
-      ctgBox.current,
+      box.current,
       barTool,
       type
     ))
@@ -47,7 +43,7 @@ export default ({
       instance.resize()
     });
     resizeObserver.observe(box.current);
-
+    
     return () => {
       instance.destroy();
       instance = null
@@ -72,28 +68,20 @@ export default ({
       <canvas
         style={{ position: 'absolute', left: '0', top: '0' }}
         ref={canvas2}
+
+      // onMouseDown={e => {
+      //   suit && suit.p.OnMouseDown(e.nativeEvent);
+      // }}
+      // onMouseMove={e => {
+      //   suit && suit.p.OnMouseMove(e.nativeEvent);
+      // }}
+      // onMouseUp={e => {
+      //   suit && suit.p.OnMouseUp(e.nativeEvent);
+      // }}
       >
         <p>Your browserdoes not support the canvas element.</p>
       </canvas>
 
-        // onMouseDown={e => {
-        //   suit && suit.p.OnMouseDown(e.nativeEvent);
-        // }}
-        // onMouseMove={e => {
-        //   suit && suit.p.OnMouseMove(e.nativeEvent);
-        // }}
-        // onMouseUp={e => {
-        //   suit && suit.p.OnMouseUp(e.nativeEvent);
-        // }}
-        >
-          <p>Your browserdoes not support the canvas element.</p>
-        </canvas>
-      </div>
-      {
-        showEcg && <div style={{ height: '30%',overflow:'hidden',maxHeight:200 }} >
-          <Ecg data={data} />
-        </div>
-      }
       <ScrollBar
         box={box}
         getBarTool={tool => {
