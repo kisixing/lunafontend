@@ -9,10 +9,20 @@ export default class ScrollEl extends EventEmitter {
         el.addEventListener('mousedown', this.moveCb)
         wrapper.append(el)
         el.setAttribute('style', `background:red;position:absolute;user`)
- 
+
     }
-    setStyle(key: string, value: string|number) {
+    setStyle(key: string, value: string | number) {
         this.el.style[key] = String(value) + (['width', 'height', 'left', 'right', 'top', 'bottom', 'margin'].includes(key) ? 'px' : '')
+        return this
+    }
+    setStyles(styles: { [x: string]: string | number }) {
+        Object.keys(styles).forEach(key => {
+            this.setStyle(key, styles[key])
+        })
+        return this
+    }
+    addEventListener<k extends keyof HTMLElementEventMap>(key: k, cb: (e: HTMLElementEventMap[k]) => void) {
+        this.el.addEventListener(key, cb)
         return this
     }
     maxHeight() {
@@ -47,17 +57,18 @@ export default class ScrollEl extends EventEmitter {
         };
     }
     setOffset(offset: number, isfire = true) {
-        const { el,wrapper } = this
+        const { el, wrapper } = this
         var boxRec = wrapper.getBoundingClientRect();
         const barRex = el.getBoundingClientRect();
         var { width: boxWidth } = boxRec;
         var { width: barWidth } = barRex;
         const distance = boxWidth - barWidth;
-        
+
         const result = offset <= 0 ? 0 : offset >= distance ? distance : offset;
         if (el.style['left'] != (result + 'px')) {
             this.setStyle('left', result.toFixed());
             if (isfire) this.emit('change', result);
+         
         }
     }
 

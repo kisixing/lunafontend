@@ -19,7 +19,7 @@ const AntdThemeManipulator = (props: IProps) => {
     const {
         primaryColor = '#1890ff',
         storageName = 'custom-antd-primary-color',
-        style = { display: 'inline-block' },
+        style = {},
         placement = null,
         onChange = null
     } = props
@@ -87,10 +87,8 @@ const AntdThemeManipulator = (props: IProps) => {
     };
 
     return (
-        <div style={style}>
-            <div id='change_antd_theme_button' style={styles.swatch} onClick={handleClick}>
-                <div id='change_antd_theme_color' style={styles.color} />
-            </div>
+        <div id='change_antd_theme_button' style={{ ...styles.swatch, ...style }} onClick={handleClick}>
+            <div id='change_antd_theme_color' style={styles.color} />
             {
                 displayColorPicker
                     ? <div style={styles.popover}>

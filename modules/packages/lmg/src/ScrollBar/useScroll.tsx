@@ -1,65 +1,37 @@
-import { useRef, useEffect, MutableRefObject } from 'react';
+import { useEffect, MutableRefObject } from 'react';
 import ScrollEl from './ScrollEl'
-// window.onload = function() {
-//   mouseScroll(function(delta) {
-//     var obj = $('scroll'),
-//       current = parseInt(obj.offsetTop) + delta * 10;
-//     obj.style.top = current + 'px';
-//   });
-// };
+
 type TResolve = (value: number, isfire?: boolean) => void;
 
 export interface IBarTool {
   watch: (fn: TResolve) => void;
   watchGrab: (fn: TResolve, interval?: number) => void;
   setBarWidth: (width: number) => void;
-  setBarColor?: (color: string) => void;
   setBarLeft?: TResolve;
   createRod?: (name: string) => ScrollEl
 }
 
 function useScroll(
-  box: MutableRefObject<HTMLElement>
-): [React.MutableRefObject<any>, () => IBarTool] {
+  box: MutableRefObject<HTMLElement>,
+  wrapper: MutableRefObject<HTMLElement>
+): [() => IBarTool] {
 
 
 
-  const bar = useRef<HTMLElement>(null);
-  let resolve: TResolve = () => { };
+  let bar: ScrollEl
   let resolveGrab: TResolve = () => { };
   let dragInterval = 10;
 
 
-  const moveCbFactory = (el: HTMLElement) => {
-    return e => {
-      e.stopPropagation();
-      const elRex = el.getBoundingClientRect();
-      var { left: elLeft } = elRex;
-      var { x } = getCoordInDocument(e);
-
-      var boxRec = box.current.getBoundingClientRect();
-      var { left: boxLeft } = boxRec;
-
-      const span = x - elLeft;
-      document.onmousemove = function (e) {
-        requestAnimationFrame(() => {
-          var { x } = getCoordInDocument(e);
-
-          let offsetLeft = x - (boxLeft + span);
-          setOffset.call(el, offsetLeft);
-        });
-      };
-
-      document.onmouseup = function () {
-        document.onmousemove = null;
-      };
-    }
-  }
 
   useEffect(() => {
-    const barEl = bar.current;
     const boxEl = box.current;
 
+    bar = new ScrollEl(wrapper.current).setStyles({
+      background: '#4169E1',
+      border: '1px solid #4169E1',
+      width: 30, height: 6, bottom: 0
+    })
     const wheelCb = function (e: Event | any) {
       e.preventDefault();
       e.stopPropagation();
@@ -67,7 +39,7 @@ function useScroll(
       var delta = -e.wheelDelta / 120;
 
       requestAnimationFrame(() => {
-        setOffset.call(barEl, delta * 30 + parseInt(bar.current.style.left) || 0);
+        bar.setOffset(delta * 30 + parseInt(bar.el.style.left) || 0)
       });
     };
     const boxGrabCb = e => {
@@ -90,36 +62,33 @@ function useScroll(
         boxEl.style.cursor = 'auto';
       };
     };
-    const barMoveCb = moveCbFactory(barEl)
     boxEl.addEventListener('wheel', wheelCb);
-    barEl.addEventListener('mousedown', barMoveCb);
     boxEl.addEventListener('mousedown', boxGrabCb);
 
     return () => {
       boxEl.removeEventListener('wheel', wheelCb);
-      barEl.removeEventListener('mousedown', barMoveCb);
       boxEl.removeEventListener('mousedown', boxGrabCb);
     };
   }, []);
   const g = (): IBarTool => {
     return {
       watch(fn) {
-        resolve = fn;
+        bar.on('change', value => {
+          fn(value)
+        })
       },
       watchGrab(fn, interval = 10) {
         resolveGrab = fn;
         dragInterval = interval;
       },
       setBarWidth(width: number) {
-        setStyle(bar.current, 'width', width);
+        bar.setStyles({ width })
       },
-      setBarColor(color) {
-        bar.current.style.background = color;
-      },
-      setBarLeft: setOffset.bind(bar.current),
+
+      setBarLeft: bar.setOffset.bind(bar),
       createRod(name) {
-        const ins = new ScrollEl(bar.current.parentElement).maxHeight().setStyle('width', 6).setStyle('background','#4169E1')
-          ins.el.innerHTML = `
+        const ins = new ScrollEl(wrapper.current).maxHeight().setStyle('width', 6).setStyle('background', '#4169E1')
+        ins.el.innerHTML = `
               <span style="user-select:none;position:absolute;bottom:-24px;width:100px;line-height:24px;left:-50px;text-align:center">
               ${name}
               </span>
@@ -129,25 +98,11 @@ function useScroll(
       }
     };
   };
-  return [bar as any, g];
+  return [g];
 
-  function setOffset(offset: number, isfire = true) {
-    const boxEl = box.current;
-    var boxRec = boxEl.getBoundingClientRect();
-    const barRex = this.getBoundingClientRect();
-    var { width: boxWidth } = boxRec;
-    var { width: barWidth } = barRex;
-    const distance = boxWidth - barWidth;
-    const result = offset <= 0 ? 0 : offset >= distance ? distance : offset;
-    if (this.style['left'] != (result + 'px')) {
-      setStyle(this, 'left', result);
-      if (isfire) resolve(result);
-    }
-  }
 
-  function setStyle(el: HTMLElement, key: string, value: number) {
-    el.style[key] = value + 'px';
-  }
+
+
 }
 function getCoordInDocument(e: MouseEvent) {
   e = (e as any) || window.event;
