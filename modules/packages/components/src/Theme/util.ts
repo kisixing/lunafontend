@@ -54,7 +54,7 @@ function getShadowColor(color, ratio = 9) {
 }
 
 export function getThemeColor(color) {
-  const lightColor = lighten(color, tonalOffset * 3);
+  const lightColor = lighten(color, tonalOffset * 4);
   const darkColor = darken(color, tonalOffset * 1.5);
   return {
     primaryColor: color,
