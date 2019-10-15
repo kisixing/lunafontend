@@ -22,7 +22,8 @@ export default class Request {
       headers: {
         Accept: 'application/json',
       },
-      errorHandler: ({ response, request }) => {
+      errorHandler: (arg) => {
+        const { response, request } = arg
 
         if (response) {
           const errorData = getErrData(response);
@@ -37,8 +38,10 @@ export default class Request {
               message: `${host} 未响应`,
             });
           }
-          Promise.reject(`${url} no response`);
+          return Promise.reject(`${url} no response`);
         }
+        return Promise.reject(arg);
+
       },
       ...others,
     });
@@ -67,12 +70,12 @@ export default class Request {
           });
         }
         if (cacheWhenFailed) {
-          console.log('cacheWhenFailed')
 
           return promise.then(value => {
             store.set(key, value)
             return value
           }).catch(err => {
+            console.log('cacheWhenFailed')
             return store.get(key)
           });
         }

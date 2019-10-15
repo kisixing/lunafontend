@@ -8,11 +8,12 @@ export default class ScrollEl extends EventEmitter {
         this.wrapper = wrapper;
         el.addEventListener('mousedown', this.moveCb)
         wrapper.append(el)
-        el.setAttribute('style', `background:red;position:absolute;user`)
+        el.setAttribute('style', `background:red;position:absolute;user-select:none`)
 
     }
     setStyle(key: string, value: string | number) {
-        this.el.style[key] = String(value) + (['width', 'height', 'left', 'right', 'top', 'bottom', 'margin'].includes(key) ? 'px' : '')
+        const keys = ['width', 'height', 'left', 'right', 'top', 'bottom', 'margin']
+        this.el.style[key] = String(value) + ((keys.includes(key) && typeof value === 'number') ? 'px' : '')
         return this
     }
     setStyles(styles: { [x: string]: string | number }) {
@@ -25,13 +26,13 @@ export default class ScrollEl extends EventEmitter {
         this.el.addEventListener(key, cb)
         return this
     }
-    maxHeight() {
-        const rect = this.wrapper.getBoundingClientRect();
-        var { height } = rect;
-        this.setStyle('height', height.toFixed())
-        this.setStyle('margin-bottom', height.toFixed())
-        return this
-    }
+    // maxHeight() {
+    //     const rect = this.wrapper.getBoundingClientRect();
+    //     var { height } = rect;
+    //     this.setStyle('height', height)
+    //     this.setStyle('margin-bottom', height)
+    //     return this
+    // }
     moveCb = (e) => {
         e.stopPropagation();
         const { el, wrapper } = this
@@ -66,9 +67,9 @@ export default class ScrollEl extends EventEmitter {
 
         const result = offset <= 0 ? 0 : offset >= distance ? distance : offset;
         if (el.style['left'] != (result + 'px')) {
-            this.setStyle('left', result.toFixed());
+            this.setStyle('left', result);
             if (isfire) this.emit('change', result);
-         
+
         }
     }
 

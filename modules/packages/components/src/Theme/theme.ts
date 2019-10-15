@@ -951,4 +951,10 @@ export default `
   .ant-upload.ant-upload-drag p.ant-upload-drag-icon .anticon {
     color: var(--theme-hover-color);
   }
-`;
+`.concat(
+  `
+  .ant-layout {
+    background: var(--theme-light-color);
+  }
+  `
+);
