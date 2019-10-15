@@ -3,8 +3,10 @@ import { GithubPicker } from 'react-color';
 import tinycolor from 'tinycolor2';
 import { getThemeColor, applyAntdTheme, placementSketchPicker } from './util';
 
-const colors = ['#0d47a1', '#e65100', '#ff6f00', '#546e7a', '#827717', '#33691e', '#00838f', '#004d40',
-    '#006064', '#bf360c', '#5e35b1', '#1a237e', '#311b92', '#4a148c', '#880e4f', '#b71c1c']
+const colors = [
+    '#b71c1c', '#e65100', '#ff6f00', '#bf360c', '#880e4f', '#33691e', '#006064', '#004d40',
+    '#00838f', '#546e7a', '#5e35b1', '#1a237e', '#311b92', '#4a148c', '#827717', '#0d47a1'
+]
 
 interface IProps {
     primaryColor?: string,
@@ -82,7 +84,8 @@ const AntdThemeManipulator = (props: IProps) => {
             top: '0px',
             right: '0px',
             bottom: '0px',
-            left: '0px'
+            left: '0px',
+            cursor: 'auto'
         }
     };
 
