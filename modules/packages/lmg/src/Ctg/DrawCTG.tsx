@@ -35,6 +35,7 @@ export default class DrawCTG {
   context: CanvasRenderingContext2D;
   linecontext: CanvasRenderingContext2D;
   datacontext: CanvasRenderingContext2D;
+  alarmcontext: CanvasRenderingContext2D;
   baseleft: number;
   basetop: number;
   min: number;
@@ -49,6 +50,7 @@ export default class DrawCTG {
     this.context = suit.context1;
     this.linecontext = suit.contextline;
     this.datacontext = suit.context2;
+    this.alarmcontext = suit.contextalarm;
     this.xspan = xspan;
     this.yspan = yspan;
     this.scalespan = scalespan;
@@ -64,6 +66,8 @@ export default class DrawCTG {
     const { width, height } = rect;
     this.suit.canvasline.width = width;
     this.suit.canvasline.height = height;
+    this.suit.canvasalarm.width = width;
+    this.suit.canvasalarm.height = height;
     this.suit.canvas1.width = width;
     this.suit.canvas1.height = height;
     this.suit.canvas2.width = width;
@@ -160,6 +164,7 @@ export default class DrawCTG {
       //start 统一为画布的位置点，需根据显示采样率调整取值
       //TODO : kisi 增加多胎偏移处理
       //TODO : kisi 2019-10-08 待增加曲线颜色设置
+      let alarmstate = 0;
       let fetaldraw = 0;
       let curfhroffset = 0;
       if(fetal == 1){
@@ -175,7 +180,9 @@ export default class DrawCTG {
           lastx = Math.floor((i - start) / 2);
         }
         let inneri = i;
-        
+        if(i==start){       
+          linecontext.moveTo(lastx, (max - fhr[fetal][start]-curfhroffset) * this.yspan+this.basetop);
+        }
         if(fhr[fetal][inneri]){
           lasty = fhr[fetal][inneri];
         }else{
@@ -186,19 +193,31 @@ export default class DrawCTG {
             linecontext.moveTo(lastx, (max - fhr[fetal][inneri + 1]-curfhroffset) * this.yspan+this.basetop);
           }
         } else {
-          if (inneri > 1 && lasty - fhr[fetal][inneri - 1] > 30) {
-            linecontext.moveTo(lastx, (max - lasty - curfhroffset) * this.yspan+this.basetop);
-          } else if (inneri > 1 && fhr[fetal][inneri + 1] - lasty > 30) {
-            linecontext.moveTo(lastx, (max - lasty - curfhroffset) * this.yspan+this.basetop);
-          } else {
-            if(fetaldraw<fetal){
-              linecontext.moveTo(lastx, (max - lasty - curfhroffset) * this.yspan+this.basetop);
-              fetaldraw = fetal;
+          // 增加 报警颜色处理
+          if(lasty>160||lasty<110){
+            let type = 1;
+            if(alarmstate!=type){
+              this.linecontext.lineTo(lastx, (max - lasty - curfhroffset) * this.yspan+this.basetop);
+              this.linecontext.stroke();
+              this.linecontext.beginPath();             
+              this.linecontext.strokeStyle = 'rgb(255, 1, 1)';
+              alarmstate = 1;
             }
-            linecontext.lineTo(lastx, (max - lasty - curfhroffset) * this.yspan+this.basetop);
+            this.linecontext.lineTo(lastx, (max - lasty - curfhroffset) * this.yspan+this.basetop);
+          }else{
+            let type = 0; 
+            if(alarmstate!=type){
+              this.linecontext.lineTo(lastx, (max - lasty - curfhroffset) * this.yspan+this.basetop);
+              this.linecontext.stroke();
+              this.linecontext.beginPath();             
+              this.linecontext.strokeStyle = 'rgb(0,0,0)';
+              alarmstate = 0;
+            }
+            this.linecontext.lineTo(lastx, (max - lasty - curfhroffset) * this.yspan+this.basetop);
           }
         }
-      }
+      }     
+      this.linecontext.stroke();
     }
     lastx = 0;
     lasty = 0;
@@ -223,13 +242,28 @@ export default class DrawCTG {
     }
     linecontext.stroke();
     //kisi 2019-10-10 fm 128 判断
+    this.alarmcontext.clearRect(0, 0, suit.canvasalarm.width, suit.canvasalarm.height);
     for (var i = start; i < cur; i++) {
+
       if (i % 2 == 1) continue;
         if (start == 0) {
           lastx = Math.floor((suit.canvasline.width * 2 - cur + i) / 2);
         } else {
           lastx = Math.floor((i - start) / 2);
         }
+    //     for (var fetal = 0; fetal < this.suit.fetalcount; fetal++) {
+    //       //start 统一为画布的位置点，需根据显示采样率调整取值
+    //       let fetaldraw = 0;
+    //       let lasty = fhr[fetal][i];
+    //       let curfhroffset = 0;
+    //       if(fetal == 1){
+    //         curfhroffset = this.fhroffset;
+    //       }else if(fetal == 2){
+    //         curfhroffset = -this.fhroffset;
+    //       }
+          
+            
+    //     }
       if (fm[i] == 128 || fm[i] == 1) {
         i = i +2;
         this.showfm(lastx);
@@ -244,12 +278,13 @@ export default class DrawCTG {
     if (this.starttime == '') {
       this.starttime = formatDate(new Date(), 'yyyy-MM-dd HH:mm:ss');
     }
-    var offsetpx = Math.floor((startposition % (xspan * 2)) / 2);
+    var offsetpx = Math.floor(((length-startposition) % (xspan * 2)) / 2);
     var offseti = Math.floor(startposition / (xspan * 2));
     //kisi 2019-10-02 开始时间点 ，因为现在间隔0.5s取点
     var offsetmin = startposition / (xspan * 2 * 3);
     //kisi 2019-10-06 修改为ceil方法使得网格走纸不延时
-    var linecount = Math.ceil(length / (xspan * 2));
+    let linecount = Math.ceil(length / (xspan * 2));
+    let lineoff = length % (xspan * 2);
     var primaryflag = linecount % 3;
     var primaryscaleflag = linecount % 6;
     for (var i = linecount * 2; i > 0; i--) {
@@ -290,10 +325,11 @@ export default class DrawCTG {
           }
         }
       }
-      context.moveTo(xspan * i + baseleft - offsetpx, (max-min)*this.yspan + this.scalespan+this.basetop);
-      context.lineTo(xspan * i + baseleft - offsetpx, (max-min+100)*this.yspan + this.scalespan+this.basetop);
-      context.moveTo(xspan * i + baseleft - offsetpx, 0+this.basetop);
-      context.lineTo(xspan * i + baseleft - offsetpx, (max - min) * this.yspan+this.basetop);
+      context.moveTo(xspan * i + baseleft -lineoff + offsetpx, (max-min)*this.yspan + this.scalespan+this.basetop);
+      console.log(xspan * i + baseleft -lineoff + offsetpx,lineoff,i);
+      context.lineTo(xspan * i + baseleft -lineoff + offsetpx, (max-min+100)*this.yspan + this.scalespan+this.basetop);
+      context.moveTo(xspan * i + baseleft -lineoff + offsetpx, 0+this.basetop);
+      context.lineTo(xspan * i + baseleft  -lineoff + offsetpx, (max - min) * this.yspan+this.basetop);
       //console.log((max - min) * this.yspan);
       context.stroke();
       if (ioff % 6 == primaryscaleflag) {
@@ -362,15 +398,19 @@ export default class DrawCTG {
     datacontext.clearRect(0,0,fontsize*10,fontsize*5);
     datacontext.textAlign = 'left';
     datacontext.textBaseline = 'top';
-    datacontext.font = 'bold '+fontsize+'px arial';
+    datacontext.font = 'bold '+fontsize+'px arial';  
     datacontext.fillStyle = 'blue';
     for(let i=0;i<suit.fetalcount;i++){
       if(typeof(fhr[i][x]) != "undefined"){
         curvalue = fhr[i][x];
       }
+      if(fhr[i][x]>160||fhr[i][x]<110){
+        datacontext.fillStyle = 'red';
+      }
       datacontext.fillText('FHR'+(i+1) +' : ' +curvalue, 10,curpostion);
       curpostion += fontsize;
     }
+    datacontext.fillStyle = 'blue';
     if(typeof(toco[x]) != "undefined"){
       curvalue = toco[x];
     }else{

@@ -184,14 +184,14 @@ export class WsService extends EventEmitter {
                                 if (tmpcache.start == -1) {
                                     tmpcache.start = ctgdata[key].index;
                                     tmpcache.past = ctgdata[key].index - 4800 > 0 ? ctgdata[key].index - 4800 : 0;
-                                    if (tmpcache.past > 0) {
-                                        this.log(datacache.get(cachbi).docid, tmpcache.past);
-                                        this.offQueue.EnQueue({"docid":datacache.get(cachbi).docid,"length":tmpcache.past})
-                                        //getoffline(datacache.get(cachbi).docid, tmpcache.past);
-                                        if(!this.offstart){
-                                            starttask(this.offQueue,this.offstart);
-                                        }
-                                    }
+                                    // if (tmpcache.past > 0) {
+                                    //     this.log(datacache.get(cachbi).docid, tmpcache.past);
+                                    //     this.offQueue.EnQueue({"docid":datacache.get(cachbi).docid,"length":tmpcache.past})
+                                    //     //getoffline(datacache.get(cachbi).docid, tmpcache.past);
+                                    //     if(!this.offstart){
+                                    //         starttask(this.offQueue,this.offstart);
+                                    //     }
+                                    // }
                                     tmpcache.last = tmpcache.start;
                                 }
                                 setcur(cachbi, ctgdata[key].index);

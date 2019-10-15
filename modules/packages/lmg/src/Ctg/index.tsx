@@ -23,6 +23,7 @@ export default ({
   const canvas1 = useRef<HTMLCanvasElement>(null);
   const canvas2 = useRef<HTMLCanvasElement>(null);
   const canvasline = useRef<HTMLCanvasElement>(null);
+  const canvasalarm = useRef<HTMLCanvasElement>(null);
   const box = useRef<HTMLDivElement>(null);
   const ctgBox = useRef<HTMLDivElement>(null);
 
@@ -34,6 +35,7 @@ export default ({
       canvas1.current,
       canvas2.current,
       canvasline.current,
+      canvasalarm.current,
       ctgBox.current,
       barTool,
       type
@@ -70,11 +72,10 @@ export default ({
         <canvas style={{ position: 'absolute', left: '0', top: '0' }} ref={canvasline}>
           <p>Your browserdoes not support the canvas element.</p>
         </canvas>
-        <canvas
-          style={{ position: 'absolute', left: '0', top: '0' }}
-          ref={canvas2}
-
-        >
+        <canvas style={{ position: 'absolute', left: '0', top: '0' }} ref={canvas2}>
+          <p>Your browserdoes not support the canvas element.</p>
+        </canvas>
+        <canvas style={{ position: 'absolute', left: '0', top: '0' }} ref={canvasalarm}>
           <p>Your browserdoes not support the canvas element.</p>
         </canvas>
       </div>

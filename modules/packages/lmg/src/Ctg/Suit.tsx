@@ -93,6 +93,8 @@ export class Suit implements Drawer {
   context2: Context;
   canvasline: Canvas;
   contextline: Context;
+  canvasalarm: Canvas;
+  contextalarm: Context;
   wrap: HTMLElement;
   drawobj: DrawCTG;
   barToll: IBarTool;
@@ -104,6 +106,7 @@ export class Suit implements Drawer {
     canvas1: Canvas,
     canvas2: Canvas,
     canvasline: Canvas,
+    canvasalarm: Canvas,
     wrap: HTMLElement,
     barToll: IBarTool,
     type: number
@@ -112,9 +115,11 @@ export class Suit implements Drawer {
     this.canvas1 = canvas1;
     this.canvas2 = canvas2;
     this.canvasline = canvasline;
+    this.canvasalarm = canvasalarm;
     this.context1 = canvas1.getContext('2d');
     this.context2 = canvas2.getContext('2d');
     this.contextline = canvasline.getContext('2d');
+    this.contextalarm = canvasalarm.getContext('2d');
     this.barToll = barToll;
     this.drawobj = new DrawCTG(this);
     this.type = type
@@ -155,7 +160,7 @@ export class Suit implements Drawer {
       if (this.data.index > this.canvasline.width * 2) {
         this.drawobj.drawdot(this.canvasline.width * 2);
         this.curr = this.data.index;
-        console.log(this.canvasline.width * 2, this.data.index);
+       // console.log(this.canvasline.width * 2, this.data.index);
         this.barToll.setBarWidth(100);
         this.barToll.setBarLeft(0, false);
       } else {
@@ -170,15 +175,22 @@ export class Suit implements Drawer {
     this.barToll.watch(value => {
       //显示历史数据
       this.dragtimestamp = new Date().getTime();
-      this.viewposition = Math.floor(this.curr * value / (this.canvasline.width - 100));
+      if(this.curr>this.canvasline.width*4){      
+        this.viewposition = this.canvasline.width*2+ Math.floor((this.curr-this.canvasline.width*2)  * value / (this.canvasline.width - 100));
+      }else{
+        this.viewposition = value+this.curr;
+      }
+      console.log('scollchange', value,this.curr ,this.canvasline.width,value,this.viewposition);
       if (this.viewposition < this.canvasline.width * 2) {
         this.drawobj.drawdot(this.canvasline.width * 2);
         return;
       }
-      //console.log('scollchange', this.curr ,this.canvasline.width,value,this.viewposition);
       this.drawobj.drawdot(this.viewposition);
     });
     this.barToll.watchGrab(value => {
+      if(this.data.index <this.canvasline.width*2){
+        return;
+      }
       this.dragtimestamp = new Date().getTime();
       //判断开始点
       if (this.viewposition - value < this.canvasline.width * 2) {
@@ -269,8 +281,14 @@ export class Suit implements Drawer {
       this.curr = (Math.floor(new Date().getTime() / 1000) - Math.floor(new Date(this.data.starttime).getTime() / 1000)) * 4 + this.data.csspan;
       this.drawobj.drawdot(this.curr);
       this.viewposition = this.curr;
+      //console.log(this.curr,this.data.index);
       if (this.data.index > this.canvasline.width * 2) {
-        this.barToll.setBarWidth(100);
+        if(this.data.index<this.canvasline.width*4){
+          let len = Math.floor((this.canvasline.width*4 - this.data.index)/2);
+          this.barToll.setBarWidth(len);
+        }else{         
+          this.barToll.setBarWidth(100);
+        }
         this.barToll.setBarLeft(this.canvasline.width, false);
       }
     } else {
