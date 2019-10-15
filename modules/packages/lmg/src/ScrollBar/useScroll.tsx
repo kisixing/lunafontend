@@ -78,7 +78,12 @@ function useScroll(
 
       setBarLeft: bar.setOffset.bind(bar),
       createRod(name) {
-        const ins = new ScrollEl(wrapper.current).maxHeight().setStyle('width', 6).setStyle('background', '#4169E1')
+        const ins = new ScrollEl(wrapper.current).setStyles({
+          width: 6,
+          background: '#4169E1',
+          height: '100%',
+          'margin-bottom': '100%'
+        })
         ins.el.innerHTML = `
               <span style="user-select:none;position:absolute;bottom:-24px;width:100px;line-height:24px;left:-50px;text-align:center">
               ${name}
