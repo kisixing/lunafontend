@@ -32,16 +32,7 @@ function useScroll(
       border: '1px solid #4169E1',
       width: 30, height: 6, bottom: 0
     })
-    const wheelCb = function (e: Event | any) {
-      e.preventDefault();
-      e.stopPropagation();
 
-      var delta = -e.wheelDelta / 120;
-
-      requestAnimationFrame(() => {
-        bar.setOffset(delta * 30 + parseInt(bar.el.style.left) || 0)
-      });
-    };
     const boxGrabCb = e => {
       var { x: x1 } = getCoordInDocument(e);
       let temp = x1;
@@ -62,11 +53,11 @@ function useScroll(
         boxEl.style.cursor = 'auto';
       };
     };
-    boxEl.addEventListener('wheel', wheelCb);
+
     boxEl.addEventListener('mousedown', boxGrabCb);
 
     return () => {
-      boxEl.removeEventListener('wheel', wheelCb);
+
       boxEl.removeEventListener('mousedown', boxGrabCb);
     };
   }, []);
