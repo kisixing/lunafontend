@@ -82,7 +82,7 @@ function useScroll(
           width: 6,
           background: '#4169E1',
           height: '100%',
-          'margin-bottom': '100%'
+          // 'margin-bottom': '100%'
         })
         ins.el.innerHTML = `
               <span style="user-select:none;position:absolute;bottom:-24px;width:100px;line-height:24px;left:-50px;text-align:center">
