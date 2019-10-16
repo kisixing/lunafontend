@@ -359,7 +359,7 @@ export class WsService extends EventEmitter {
                         }
 
                         this.dispatch({
-                            type: 'ws/setState', payload: { data: new Map(datacache) }
+                            type: 'ws/updateData', payload: { data: new Map(datacache) }
                         })
                     }
                     //结束监护页
@@ -375,7 +375,7 @@ export class WsService extends EventEmitter {
 
                         this.log('end_work', devdata.is_working, datacache.get(curid).status);
                         this.dispatch({
-                            type: 'ws/setState', payload: { data: new Map(datacache) }
+                            type: 'ws/updateData', payload: { data: new Map(datacache) }
                         })
                     }
                     //heard
