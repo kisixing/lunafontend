@@ -31,7 +31,7 @@ export default function () {
     <Button onClick={fullScreen}>
       全屏
     </Button>
-      <div style={{ width: '900px', height: '400px', border: '1px solid red',background:'#fff' }} ref={box}>
+      <div style={{ width: '812px', height: '400px', border: '1px solid',background:'#fff' }} ref={box}>
         <Ctg data={datacache.get('1-1')} />
       </div>
     </>
