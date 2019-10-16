@@ -221,6 +221,9 @@ export class Suit extends EventEmitter implements Drawer {
 
     startingBar.setOffset(20)
     endingBar.setOffset(100)
+
+    endingBar.toggleVisibility()
+    
     startingBar.on('change', value => {
       this.emitSomething(value)
     })
