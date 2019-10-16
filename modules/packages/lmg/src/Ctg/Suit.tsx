@@ -2,6 +2,8 @@ import DrawCTG from './DrawCTG';
 var rulercolor = 'rgb(67,205,128)';
 import { IBarTool } from '../ScrollBar/useScroll';
 import { Drawer } from "../interface";
+import ScrollEl from '../ScrollBar/ScrollEl';
+import { EventEmitter } from '@lianmed/utils'
 export class P {
   x: number;
   y: number;
@@ -59,11 +61,12 @@ export class P {
 let sid = 0;
 type Canvas = HTMLCanvasElement;
 type Context = CanvasRenderingContext2D;
-export class Suit implements Drawer {
+export class Suit extends EventEmitter implements Drawer {
   initFlag = false
   sid = sid++;
   log = console.log.bind(console, 'suit', this.sid)
-
+  startingBar: ScrollEl;
+  endingBar: ScrollEl;
   intervalIds: NodeJS.Timeout[] = [];
   fhr = [];
   toco = [];
@@ -97,7 +100,7 @@ export class Suit implements Drawer {
   contextalarm: Context;
   wrap: HTMLElement;
   drawobj: DrawCTG;
-  barToll: IBarTool;
+  barTool: IBarTool;
   p: P;
   dragtimestamp = 0;
   interval = 5000;
@@ -108,9 +111,10 @@ export class Suit implements Drawer {
     canvasline: Canvas,
     canvasalarm: Canvas,
     wrap: HTMLElement,
-    barToll: IBarTool,
+    barTool: IBarTool,
     type: number
   ) {
+    super()
     this.wrap = wrap;
     this.canvas1 = canvas1;
     this.canvas2 = canvas2;
@@ -120,22 +124,23 @@ export class Suit implements Drawer {
     this.context2 = canvas2.getContext('2d');
     this.contextline = canvasline.getContext('2d');
     this.contextalarm = canvasalarm.getContext('2d');
-    this.barToll = barToll;
+    this.barTool = barTool;
     this.drawobj = new DrawCTG(this);
     this.type = type
     this.p = new P(20, 0, 6, 428, rulercolor, this); // 竖向选择线
     // this.resize();
-    this.barToll.watchGrab(value => {
+    this.barTool.watchGrab(value => {
     });
+    this.on('suit:receive', value => {
+      this.log(value)
+    })
+  }
+  emitSomething(value) {
+    this.emit('suit:startTime', value)
   }
   init(data) {
-    const bar1 = this.barToll.createRod('开始')
-    const bar2 = this.barToll.createRod('结束')
-    const bar3 = this.barToll.createRod('测试').setOffset(200)
-    bar1.setOffset(20)
-    bar2.setOffset(100)
-    bar1.on('change', value => console.log('开始', value))
-    bar2.on('change', value => console.log('结束', value))
+    this.createBar()
+
     this.log('init')
     if (!data) {
       return
@@ -160,35 +165,35 @@ export class Suit implements Drawer {
       if (this.data.index > this.canvasline.width * 2) {
         this.drawobj.drawdot(this.canvasline.width * 2);
         this.curr = this.data.index;
-       // console.log(this.canvasline.width * 2, this.data.index);
-        this.barToll.setBarWidth(100);
-        this.barToll.setBarLeft(0, false);
+        // console.log(this.canvasline.width * 2, this.data.index);
+        this.barTool.setBarWidth(100);
+        this.barTool.setBarLeft(0, false);
       } else {
         this.drawobj.drawdot(this.data.index);
         this.curr = this.data.index;
       }
       this.viewposition = this.curr;
     } else {
-      this.barToll.setBarWidth(0);
+      this.barTool.setBarWidth(0);
       this.timerCtg(defaultinterval);
     }
-    this.barToll.watch(value => {
+    this.barTool.watch(value => {
       //显示历史数据
       this.dragtimestamp = new Date().getTime();
-      if(this.curr>this.canvasline.width*4){      
-        this.viewposition = this.canvasline.width*2+ Math.floor((this.curr-this.canvasline.width*2)  * value / (this.canvasline.width - 100));
-      }else{
-        this.viewposition = value+this.curr;
+      if (this.curr > this.canvasline.width * 4) {
+        this.viewposition = this.canvasline.width * 2 + Math.floor((this.curr - this.canvasline.width * 2) * value / (this.canvasline.width - 100));
+      } else {
+        this.viewposition = value + this.curr;
       }
-      console.log('scollchange', value,this.curr ,this.canvasline.width,value,this.viewposition);
+      console.log('scollchange', value, this.curr, this.canvasline.width, value, this.viewposition);
       if (this.viewposition < this.canvasline.width * 2) {
         this.drawobj.drawdot(this.canvasline.width * 2);
         return;
       }
       this.drawobj.drawdot(this.viewposition);
     });
-    this.barToll.watchGrab(value => {
-      if(this.data.index <this.canvasline.width*2){
+    this.barTool.watchGrab(value => {
+      if (this.data.index < this.canvasline.width * 2) {
         return;
       }
       this.dragtimestamp = new Date().getTime();
@@ -205,6 +210,23 @@ export class Suit implements Drawer {
       }
     });
   }
+  createBar() {
+    console.log('createBar')
+    const { barTool } = this
+    const startingBar = this.startingBar = barTool.createRod('开始')
+    const endingBar = this.endingBar = barTool.createRod('结束')
+
+
+    startingBar.setOffset(20)
+    endingBar.setOffset(100)
+    startingBar.on('change', value => {
+      this.emitSomething(value)
+    })
+    endingBar.on('change', value => console.log('结束', value))
+  }
+  lockStartingBar(status: boolean) {
+    console.log('lockStartingBar', status)
+  }
   destroy() {
     this.log('destroy')
     this.intervalIds.forEach(_ => clearInterval(_));
@@ -217,7 +239,7 @@ export class Suit implements Drawer {
     this.p = null;
     this.wrap = null;
     this.drawobj = null;
-    this.barToll = null;
+    this.barTool = null;
   }
   resize() {
     this.log('resize')
@@ -285,13 +307,13 @@ export class Suit implements Drawer {
       this.viewposition = this.curr;
       //console.log(this.curr,this.data.index);
       if (this.data.index > this.canvasline.width * 2) {
-        if(this.data.index<this.canvasline.width*4){
-          let len = Math.floor((this.canvasline.width*4 - this.data.index)/2);
-          this.barToll.setBarWidth(len);
-        }else{         
-          this.barToll.setBarWidth(100);
+        if (this.data.index < this.canvasline.width * 4) {
+          let len = Math.floor((this.canvasline.width * 4 - this.data.index) / 2);
+          this.barTool.setBarWidth(len);
+        } else {
+          this.barTool.setBarWidth(100);
         }
-        this.barToll.setBarLeft(this.canvasline.width, false);
+        this.barTool.setBarLeft(this.canvasline.width, false);
       }
     } else {
       this.drawobj.showcur(this.data.index + 1);

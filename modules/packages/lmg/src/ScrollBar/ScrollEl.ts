@@ -9,7 +9,6 @@ export default class ScrollEl extends EventEmitter {
         el.addEventListener('mousedown', this.moveCb)
         wrapper.append(el)
         el.setAttribute('style', `background:red;position:absolute;user-select:none`)
-
     }
     setStyle(key: string, value: string | number) {
         const keys = ['width', 'height', 'left', 'right', 'top', 'bottom', 'margin']
@@ -21,6 +20,10 @@ export default class ScrollEl extends EventEmitter {
             this.setStyle(key, styles[key])
         })
         return this
+    }
+    toggleVisibility() {
+        const isHidden = this.el.style.visibility === 'hidden'
+        this.setStyle('visibility', isHidden ? 'visible' : 'hidden')
     }
     addEventListener<k extends keyof HTMLElementEventMap>(key: k, cb: (e: HTMLElementEventMap[k]) => void) {
         this.el.addEventListener(key, cb)
