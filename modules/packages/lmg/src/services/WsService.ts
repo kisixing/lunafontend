@@ -5,6 +5,12 @@ export enum EWsStatus {
     Pendding, Success, Error
 }
 
+export enum BedStatus {
+    Working = 1,
+    Stopped,
+    Offline,
+}
+const { Working, Stopped, Offline } = BedStatus
 export class WsService extends EventEmitter {
     static wsStatus: typeof EWsStatus = EWsStatus
     isReady = false;
@@ -63,11 +69,11 @@ export class WsService extends EventEmitter {
             log('The socket is not open.');
         }
     }
-    startwork(device_no, bed_no) {
+    startwork(device_no:number, bed_no:number) {
         const message = `{"name":"start_work","data":{"device_no":${device_no},"bed_no":${bed_no}}}`;
         this.send(message);
     }
-    endwork(device_no, bed_no) {
+    endwork(device_no:number, bed_no:number) {
         const message = `{"name":"end_work","data":{"device_no":${device_no},"bed_no":${bed_no}}}`;
         this.send(message);
     }
@@ -120,12 +126,12 @@ export class WsService extends EventEmitter {
                 if (received_msg) {
                     //showMessage(received_msg);
                     if (received_msg.name == 'push_devices') {
-                        var devlist = received_msg.data;
+                        var devlist: IDevice[] = received_msg.data;
                         for (var i in devlist) {
                             var devdata = devlist[i];
                             if (!devdata) continue;
                             for (let bi in devdata.beds) {
-                                var cachebi = Number(devdata['device_no']) + '-' + Number(devdata.beds[bi].bed_no);
+                                var cachebi = devdata['device_no'] + '-' + devdata.beds[bi].bed_no;
                                 if (!datacache.has(cachebi)) {
                                     datacache.set(cachebi, {
                                         fhr: [],
@@ -138,7 +144,7 @@ export class WsService extends EventEmitter {
                                         past: 0,
                                         timestamp: 0,
                                         docid: '',
-                                        status: '',
+                                        status: Offline,
                                         orflag: true,
                                         starttime: '',
                                         fetal_num: 1,
@@ -147,9 +153,9 @@ export class WsService extends EventEmitter {
                                     });
                                     convertdocid(cachebi, devdata.beds[bi].doc_id);
                                     if (devdata.beds[bi].is_working) {
-                                        datacache.get(cachebi).status = '1';
+                                        datacache.get(cachebi).status = Working;
                                     } else {
-                                        datacache.get(cachebi).status = '2';
+                                        datacache.get(cachebi).status = Stopped;
                                     }
                                     datacache.get(cachebi).fetal_num = devdata.beds[bi].fetal_num;
                                     for (let fetal = 0; fetal < devdata.beds[bi].fetal_num; fetal++) {
@@ -160,7 +166,6 @@ export class WsService extends EventEmitter {
                         }
                         this.tip('成功', EWsStatus.Success)
                         res(datacache)
-                        console.log('aaaa, emit')
                         this.emit('read', datacache)
                         this.isReady = true
                     } else if (received_msg.name == 'push_data_ctg') {
@@ -295,12 +300,12 @@ export class WsService extends EventEmitter {
                             }
                         }
                     } else if (received_msg.name == 'get_devices') {
-                        this.log('get_devices', received_msg.data);
-                        var devlist = received_msg.data;
-                        for (var i in devlist) {
-                            var devdata = devlist[i];
-                            if (!devdata) continue;
-                        }
+                        // this.log('get_devices', received_msg.data);
+                        // var devlist = received_msg.data;
+                        // for (var i in devlist) {
+                        //     var devdata = devlist[i];
+                        //     if (!devdata) continue;
+                        // }
                     }
                     else if (received_msg.name == 'push_data_ecg') {
                         //TODO 解析母亲应用层数据包
@@ -312,13 +317,6 @@ export class WsService extends EventEmitter {
                             datacache.get(cachbi).ecg.EnQueue(ecgdata[0].ecg_arr[elop] & 0x7f);
                         }
                         //console.log(datacache.get(cachbi).ecg);
-                    } else if (received_msg.name == 'get_devices') {
-                        console.log(received_msg.data);
-                        var devlist = received_msg.data;
-                        for (var i in devlist) {
-                            var devdata = devlist[i];
-                            if (!devdata) continue;
-                        }
                     }
                     //开启监护页
                     else if (received_msg.name == 'start_work') {
@@ -337,14 +335,14 @@ export class WsService extends EventEmitter {
                         datacache.get(curid).past = 0;
                         datacache.get(curid).timestamp = 0;
                         datacache.get(curid).docid = '';
-                        datacache.get(curid).status = '0';
+                        datacache.get(curid).status = Offline;
                         datacache.get(curid).starttime = '';
                         datacache.get(curid).ecg = new Queue();
                         convertdocid(curid, devdata.doc_id);
                         if (devdata.is_working) {
-                            datacache.get(curid).status = '1';
+                            datacache.get(curid).status = Working;
                         } else {
-                            datacache.get(curid).status = '2';
+                            datacache.get(curid).status = Stopped;
                         }
                         datacache.get(curid).fetal_num = count;
                         for (let fetal = 0; fetal < count; fetal++) {
@@ -355,9 +353,9 @@ export class WsService extends EventEmitter {
                         this.log('start_work', devdata.is_working);
                         const target = datacache.get(curid)
                         if (devdata.is_working) {
-                            target.status = '1'
+                            target.status = Working
                         } else {
-                            target.status = '2'
+                            target.status = Stopped
                         }
 
                         this.dispatch({
@@ -370,9 +368,9 @@ export class WsService extends EventEmitter {
                         let curid = Number(devdata['device_no']) + '-' + Number(devdata['bed_no']);
 
                         if (devdata.is_working) {
-                            datacache.get(curid).status = '1';
+                            datacache.get(curid).status = Working;
                         } else {
-                            datacache.get(curid).status = '2';
+                            datacache.get(curid).status = Stopped;
                         }
 
                         this.log('end_work', devdata.is_working, datacache.get(curid).status);
@@ -491,7 +489,7 @@ export interface ICacheItem {
     past: number;
     timestamp: number;
     docid: string;
-    status: string;
+    status: BedStatus;
     orflag: boolean;
     starttime: string;
     fetal_num: number;
@@ -499,3 +497,20 @@ export interface ICacheItem {
     ecg: Queue;
 }
 export type ICache = Map<string, ICacheItem>
+export interface IDevice {
+    ERP: string;
+    bed_num: number;
+    beds: IBed[];
+    device_no: number;
+    device_type: string;
+    ecg_sampling_rate: number;
+    is_handshake_finish: boolean;
+    wifi_conn_state: boolean;
+}
+export interface IBed {
+    bed_no: number;
+    doc_id: string;
+    fetal_num: number;
+    is_include_mother: boolean;
+    is_working: boolean;
+}
