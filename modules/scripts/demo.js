@@ -7,11 +7,11 @@
 
 // // const b = cp.exec('ls');
 
-// const a = cp.exec('yarn build:watch', (err) => {
+// const a = cp.exec('dir', (err) => {
 //     if (!err) {
 //         console.log('aaaaaaaaaaaaaaaaaaaaaaa')
 //     }else{
-//         console.log('zzzzzzzzzzzzzzzzz')
+//         console.log(err,'zzzzzzzzzzzzzzzzz')
 //     }
 // })
 // a.stdout.on('end', () => {
@@ -25,13 +25,13 @@
 // a.stderr.on('error', err => console.log('error1', err))
 // a.stdin.on('close', () => console.log('close1'))
 // a.stdin.on('finish', a => console.log('finish1', a))
+// a.stdout.push('wwwwweeeee')
+// // const b = cp.exec('yarn start', { cwd: path.resolve('./packages/demo') })
 
-// const b = cp.exec('yarn start', { cwd: path.resolve('./packages/demo') })
-
-// b.on('message', (message) => { console.log('b', message) })
-// b.on('error', e => console.log('eeee', e))
-// b.on('exit', () => console.log('exti'))
-// b.stdout.on('data', data => console.log('data', data))
-// b.stderr.on('error', err => console.log('err', err))
-// b.stdin.on('close', () => console.log('close'))
-// b.stdin.on('finish', a => console.log(a))
+// // b.on('message', (message) => { console.log('b', message) })
+// // b.on('error', e => console.log('eeee', e))
+// // b.on('exit', () => console.log('exti'))
+// // b.stdout.on('data', data => console.log('data', data))
+// // b.stderr.on('error', err => console.log('err', err))
+// // b.stdin.on('close', () => console.log('close'))
+// // b.stdin.on('finish', a => console.log(a))

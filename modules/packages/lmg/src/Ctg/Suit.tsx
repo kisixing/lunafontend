@@ -139,12 +139,12 @@ export class Suit extends EventEmitter implements Drawer {
     this.emit('suit:startTime', value)
   }
   init(data) {
-    this.createBar()
 
-    this.log('init')
     if (!data) {
       return
     }
+    this.log('init')
+    this.createBar()
     this.initFlag = true
     let defaultinterval = 500;
     this.data = data;
@@ -211,7 +211,9 @@ export class Suit extends EventEmitter implements Drawer {
     });
   }
   createBar() {
-    console.log('createBar')
+    if (this.startingBar && this.endingBar) {
+      return
+    }
     const { barTool } = this
     const startingBar = this.startingBar = barTool.createRod('开始')
     const endingBar = this.endingBar = barTool.createRod('结束')
