@@ -3,9 +3,13 @@ import { GithubPicker } from 'react-color';
 import tinycolor from 'tinycolor2';
 import { getThemeColor, applyAntdTheme, placementSketchPicker } from './util';
 
+// const colors = [
+//     '#b71c1c', '#e65100', '#ff6f00', '#bf360c', '#880e4f', '#33691e', '#006064', '#004d40',
+//     '#00838f', '#546e7a', '#5e35b1', '#1a237e', '#311b92', '#4a148c', '#827717', '#0d47a1'
+// ]
 const colors = [
-    '#b71c1c', '#e65100', '#ff6f00', '#bf360c', '#880e4f', '#33691e', '#006064', '#004d40',
-    '#00838f', '#546e7a', '#5e35b1', '#1a237e', '#311b92', '#4a148c', '#827717', '#0d47a1'
+    '#33691e', '#006064', '#004d40','#00838f', '#1a237e', 
+    '#4a148c', '#827717', '#0d47a1'
 ]
 
 interface IProps {
