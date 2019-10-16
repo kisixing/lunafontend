@@ -303,6 +303,8 @@ export class Suit extends EventEmitter implements Drawer {
       if (isNaN(this.data.csspan))
         return;
       this.curr = (Math.floor(new Date().getTime() / 1000) - Math.floor(new Date(this.data.starttime).getTime() / 1000)) * 4 + this.data.csspan;
+      if(this.curr <0)
+        return;
       this.drawobj.drawdot(this.curr);
       this.viewposition = this.curr;
       //console.log(this.curr,this.data.index);
