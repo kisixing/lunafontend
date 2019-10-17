@@ -155,15 +155,16 @@ export default class DrawCTG {
     var lastx = 0;
     var lasty = 0;
     linecontext.clearRect(0, 0, suit.canvasline.width, suit.canvasline.height);
-    linecontext.beginPath();
-    linecontext.strokeStyle = 'rgb(0,0,0)';
-    linecontext.lineWidth = 0.8;
     // 0.5 s 一个点,一个像素画两个点
     var start = cur - suit.canvasline.width * 2 > 0 ? cur - suit.canvasline.width * 2 : 0;
     for (var fetal = 0; fetal < this.suit.fetalcount; fetal++) {
       //start 统一为画布的位置点，需根据显示采样率调整取值
       //TODO : kisi 增加多胎偏移处理
       //TODO : kisi 2019-10-08 待增加曲线颜色设置
+      //TODO : KISI 2019-10-17 待测试
+      linecontext.beginPath();
+      linecontext.strokeStyle = 'rgb(0,0,0)';
+      linecontext.lineWidth = 0.8;
       let alarmstate = 0;
       let curfhroffset = 0;
       if (fetal == 1) {
@@ -189,7 +190,7 @@ export default class DrawCTG {
         }
         if (lasty == 0) {
           if (inneri + 1 < length) {
-            linecontext.moveTo(lastx, (max - fhr[fetal][inneri + 1] - curfhroffset) * this.yspan + this.basetop);
+            linecontext.moveTo(lastx, (max - fhr[fetal][inneri] - curfhroffset) * this.yspan + this.basetop);
           }
         } else {
           // 增加 报警颜色处理

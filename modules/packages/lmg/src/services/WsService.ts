@@ -195,7 +195,11 @@ export class WsService extends EventEmitter {
                         if (datacache.has(cachbi)) {
                             var tmpcache = datacache.get(cachbi);
                             //kisi 2019-10-17 根据实时数据更新工作状态
+                            //kisi 2019-10-17 
                             if (tmpcache.status != Working) {
+                                if(tmpcache.status == Stopped){
+                                    cleardata(cachbi);
+                                }
                                 tmpcache.status = Working;
                             }
                             if (isNaN(tmpcache.csspan)) {
@@ -356,20 +360,7 @@ export class WsService extends EventEmitter {
                         let curid = `${device_no}-${bed_no}`;
                         let count = datacache.get(curid).fetal_num;
                         //TODO : 更新设备状态
-                        datacache.get(curid).fhr = [];
-                        datacache.get(curid).toco = [];
-                        datacache.get(curid).fm = [];
-                        datacache.get(curid).index = 0;
-                        datacache.get(curid).length = 0;
-                        datacache.get(curid).start = -1;
-                        datacache.get(curid).last = 0;
-                        datacache.get(curid).past = 0;
-                        datacache.get(curid).timestamp = 0;
-                        datacache.get(curid).docid = '';
-                        datacache.get(curid).status = Offline;
-                        datacache.get(curid).starttime = '';
-                        datacache.get(curid).pregnancy = '';
-                        datacache.get(curid).ecg = new Queue();
+                        cleardata(curid);
                         convertdocid(curid, devdata.doc_id);
                         if (devdata.is_working) {
                             datacache.get(curid).status = Working;
@@ -398,7 +389,6 @@ export class WsService extends EventEmitter {
                     else if (received_msg.name == 'end_work') {
                         let devdata = received_msg.data;
                         let curid = Number(devdata['device_no']) + '-' + Number(devdata['bed_no']);
-
                         if (devdata.is_working) {
                             datacache.get(curid).status = Working;
                         } else {
@@ -421,6 +411,22 @@ export class WsService extends EventEmitter {
             return [datacache];
         });
 
+        function cleardata(curid){
+            datacache.get(curid).fhr = [];
+            datacache.get(curid).toco = [];
+            datacache.get(curid).fm = [];
+            datacache.get(curid).index = 0;
+            datacache.get(curid).length = 0;
+            datacache.get(curid).start = -1;
+            datacache.get(curid).last = 0;
+            datacache.get(curid).past = 0;
+            datacache.get(curid).timestamp = 0;
+            datacache.get(curid).docid = '';
+            datacache.get(curid).status = Offline;
+            datacache.get(curid).starttime = '';
+            datacache.get(curid).pregnancy = '';
+            datacache.get(curid).ecg = new Queue();
+        }
         function convertdocid(id: string, doc_id: string) {
             datacache.get(id).docid = doc_id;
             if (doc_id != '') {
