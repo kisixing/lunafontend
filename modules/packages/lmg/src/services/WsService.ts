@@ -11,6 +11,26 @@ export enum BedStatus {
     Offline,
 }
 const { Working, Stopped, Offline } = BedStatus
+
+const blankCacheItem: ICacheItem = {
+    fhr: [],
+    toco: [],
+    fm: [],
+    index: 0,
+    length: 0,
+    start: -1,
+    last: 0,
+    past: 0,
+    timestamp: 0,
+    docid: '',
+    status: Offline,
+    orflag: true,
+    starttime: '',
+    pregnancy: '',
+    fetal_num: 1,
+    csspan: NaN,
+    ecg: new Queue()
+}
 export class WsService extends EventEmitter {
     static wsStatus: typeof EWsStatus = EWsStatus
     isReady = false;
@@ -35,7 +55,12 @@ export class WsService extends EventEmitter {
     offrequest: number;
     // store = (window as any).g_app._store
     constructor(settingData?) {
-        super()
+        super();
+        const { datacache } = this
+        datacache.clean = function (key: string) {
+            const target = datacache.get(key)
+            datacache.set(key, Object.assign(target, blankCacheItem))
+        }
         settingData = settingData || {
             ws_url: "192.168.0.227:8084",
             xhr_url: "192.168.2.152:9986",
@@ -50,6 +75,7 @@ export class WsService extends EventEmitter {
         WsService._this = this;
         this.settingData = settingData
     }
+
     getDatacache(): Promise<ICache> {
         if (this.isReady) {
             return Promise.resolve(this.datacache)
@@ -139,25 +165,7 @@ export class WsService extends EventEmitter {
                             for (let bi in devdata.beds) {
                                 var cachebi = devdata['device_no'] + '-' + devdata.beds[bi].bed_no;
                                 if (!datacache.has(cachebi)) {
-                                    datacache.set(cachebi, {
-                                        fhr: [],
-                                        toco: [],
-                                        fm: [],
-                                        index: 0,
-                                        length: 0,
-                                        start: -1,
-                                        last: 0,
-                                        past: 0,
-                                        timestamp: 0,
-                                        docid: '',
-                                        status: Offline,
-                                        orflag: true,
-                                        starttime: '',
-                                        pregnancy: '',
-                                        fetal_num: 1,
-                                        csspan: NaN,
-                                        ecg: new Queue()
-                                    });
+                                    datacache.set(cachebi, blankCacheItem);
                                     convertdocid(cachebi, devdata.beds[bi].doc_id);
                                     if (devdata.beds[bi].is_working) {
                                         datacache.get(cachebi).status = Working;
@@ -519,7 +527,7 @@ export interface ICacheItem {
     csspan: number;
     ecg: Queue;
 }
-export type ICache = Map<string, ICacheItem>
+export type ICache = Map<string, ICacheItem> & { clean?: (key: string) => void }
 export interface IDevice {
     ERP: string;
     bed_num: number;
