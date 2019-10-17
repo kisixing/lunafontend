@@ -97,7 +97,7 @@ export class WsService extends EventEmitter {
         this.tip('连接中', EWsStatus.Pendding)
 
         this.socket = new WebSocket(
-            
+
             `ws://${ws_url}/?clientType=ctg-suit&token=eyJ1c2VybmFtZSI6ICJhZG1pbiIsInBhc3N3b3JkIjogImFkbWluIn0=`,
         );
         const socket = this.socket;
@@ -123,7 +123,12 @@ export class WsService extends EventEmitter {
             };
             // 接收服务端数据时触发事件
             socket.onmessage = (msg) => {
-                var received_msg = JSON.parse(msg.data);
+                let received_msg
+                try {
+                    received_msg = JSON.parse(msg.data);
+                } catch (error) {
+                    console.log('json parse error', error)
+                }
                 if (received_msg) {
                     //showMessage(received_msg);
                     if (received_msg.name == 'push_devices') {
