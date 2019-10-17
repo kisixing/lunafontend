@@ -136,25 +136,7 @@ export class Suit extends EventEmitter implements Drawer {
     // this.resize();
     this.barTool.watchGrab(value => {
     });
-    this.on('locking', value => {
-      //更新状态 this.log(value);
-      this.selectflag = value;
-      if (this.selectflag) {
-        this.startingBar.toggleVisibility();
-        //this.endingBar.toggleVisibility();
-        console.log(this.selectstart, this.curr);
-        this.drawobj.showselect(this.selectrpstart, this.curr);
-      } else {
-        this.startingBar.toggleVisibility();
-        //this.endingBar.toggleVisibility();
-        console.log(this.selectstart, this.curr);
-        this.drawobj.showselect(0, 0);
-      }
-    })
 
-    this.on('customizing', value => {
-      this.log('customizing', value);
-    })
   }
 
   init(data) {
@@ -256,6 +238,26 @@ export class Suit extends EventEmitter implements Drawer {
       this.emit('suit:startTime', this.selectstart)
     })
     endingBar.on('change', value => console.log('结束', value))
+
+    this.on('locking', value => {
+      //更新状态 this.log(value);
+      this.selectflag = value;
+      if (this.selectflag) {
+        this.startingBar.toggleVisibility();
+        //this.endingBar.toggleVisibility();
+        console.log(this.selectstart, this.curr);
+        this.drawobj.showselect(this.selectrpstart, this.curr);
+      } else {
+        this.startingBar.toggleVisibility();
+        //this.endingBar.toggleVisibility();
+        console.log(this.selectstart, this.curr);
+        this.drawobj.showselect(0, 0);
+      }
+    })
+
+    this.on('customizing', value => {
+      this.log('customizing', value);
+    })
   }
   lockStartingBar(status: boolean) {
     console.log('lockStartingBar', status)

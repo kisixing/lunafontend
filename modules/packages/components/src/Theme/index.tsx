@@ -8,7 +8,7 @@ import { getThemeColor, applyAntdTheme, placementSketchPicker } from './util';
 //     '#00838f', '#546e7a', '#5e35b1', '#1a237e', '#311b92', '#4a148c', '#827717', '#0d47a1'
 // ]
 const colors = [
-    '#33691e', '#006064', '#004d40','#00838f', '#1a237e', 
+    '#33691e', '#006064', '#d81b60','#bc5100', '#1a237e', 
     '#4a148c', '#827717', '#0d47a1'
 ]
 
@@ -74,7 +74,7 @@ const AntdThemeManipulator = (props: IProps) => {
             padding: '5px',
             background: '#fff',
             borderRadius: '1px',
-            boxShadow: '0 0 0 1px rgba(0,0,0,.1)',
+            // boxShadow: '0 0 0 1px rgba(0,0,0,.1)',
             display: 'inline-block',
             cursor: 'pointer'
         },
