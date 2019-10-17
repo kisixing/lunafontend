@@ -174,7 +174,10 @@ export class WsService extends EventEmitter {
                                     } else {
                                         datacache.get(cachebi).status = Stopped;
                                     }
-                                    datacache.get(cachbi).pregnancy = devdata.beds[bi].pregnancy;
+                                    console.log(devdata.beds[bi]);
+                                    if(devdata.beds[bi].pregnancy){
+                                        datacache.get(cachbi).pregnancy = devdata.beds[bi].pregnancy;
+                                    }
                                     datacache.get(cachebi).fetal_num = devdata.beds[bi].fetal_num;
                                     for (let fetal = 0; fetal < devdata.beds[bi].fetal_num; fetal++) {
                                         datacache.get(cachebi).fhr[fetal] = [];
@@ -361,7 +364,6 @@ export class WsService extends EventEmitter {
                         let devdata = received_msg.data;
                         const { bed_no, device_no } = devdata;
                         let curid = `${device_no}-${bed_no}`;
-                        let count = datacache.get(curid).fetal_num;
                         //TODO : 更新设备状态
                         cleardata(curid);
                         convertdocid(curid, devdata.doc_id);
@@ -369,10 +371,6 @@ export class WsService extends EventEmitter {
                             datacache.get(curid).status = Working;
                         } else {
                             datacache.get(curid).status = Stopped;
-                        }
-                        datacache.get(curid).fetal_num = count;
-                        for (let fetal = 0; fetal < count; fetal++) {
-                            datacache.get(curid).fhr[fetal] = [];
                         }
                         //TODO : 更新设备状态
                         convertdocid(curid, devdata.doc_id);
@@ -427,7 +425,12 @@ export class WsService extends EventEmitter {
             datacache.get(curid).status = Offline;
             datacache.get(curid).starttime = '';
             datacache.get(curid).pregnancy = '';
-            datacache.get(curid).ecg = new Queue();
+            datacache.get(curid).ecg = new Queue();    
+            let count = datacache.get(curid).fetal_num; 
+            datacache.get(curid).fetal_num = count;
+            for (let fetal = 0; fetal < count; fetal++) {
+                datacache.get(curid).fhr[fetal] = [];
+            }
         }
         function convertdocid(id: string, doc_id: string) {
             datacache.get(id).docid = doc_id;
