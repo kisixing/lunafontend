@@ -97,7 +97,8 @@ export class WsService extends EventEmitter {
         this.tip('连接中', EWsStatus.Pendding)
 
         this.socket = new WebSocket(
-            `ws://${ws_url}/websocket/?request=e2lkOjE7cmlkOjI2O3Rva2VuOiI0MzYwNjgxMWM3MzA1Y2NjNmFiYjJiZTExNjU3OWJmZCJ9&clientType=ctg-suit`,
+            
+            `ws://${ws_url}/?clientType=ctg-suit&token=eyJ1c2VybmFtZSI6ICJhZG1pbiIsInBhc3N3b3JkIjogImFkbWluIn0=`,
         );
         const socket = this.socket;
 

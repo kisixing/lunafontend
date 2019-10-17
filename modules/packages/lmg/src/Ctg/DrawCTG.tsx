@@ -165,7 +165,6 @@ export default class DrawCTG {
       //TODO : kisi 增加多胎偏移处理
       //TODO : kisi 2019-10-08 待增加曲线颜色设置
       let alarmstate = 0;
-      let fetaldraw = 0;
       let curfhroffset = 0;
       if (fetal == 1) {
         curfhroffset = this.fhroffset;
