@@ -77,7 +77,11 @@ export class WsService extends EventEmitter {
         WsService._this = this;
         this.settingData = settingData
     }
-
+    refresh() {
+        this.dispatch({
+            type: 'ws/updateData', payload: { data: new Map(this.datacache) }
+        })
+    }
     getDatacache(): Promise<ICache> {
         if (this.isReady) {
             return Promise.resolve(this.datacache)
@@ -175,7 +179,7 @@ export class WsService extends EventEmitter {
                                         datacache.get(cachebi).status = Stopped;
                                     }
                                     //debugger
-                                    if(devdata.beds[bi].pregnancy){
+                                    if (devdata.beds[bi].pregnancy) {
                                         datacache.get(cachebi).pregnancy = devdata.beds[bi].pregnancy;
                                     }
                                     datacache.get(cachebi).fetal_num = devdata.beds[bi].fetal_num;
@@ -205,6 +209,7 @@ export class WsService extends EventEmitter {
                                     cleardata(cachbi);
                                 }
                                 tmpcache.status = Working;
+                                this.refresh()
                             }
                             if (isNaN(tmpcache.csspan)) {
                                 tmpcache.csspan = this.span;
@@ -346,9 +351,7 @@ export class WsService extends EventEmitter {
                             datacache.get(cachbi).status = Offline;
                         }
                         datacache.get(cachbi).pregnancy = statusdata.pregnancy;
-                        this.dispatch({
-                            type: 'ws/updateData', payload: { data: new Map(datacache) }
-                        })
+                        this.refresh()
                     } else if (received_msg.name == 'push_data_ecg') {
                         //TODO 解析母亲应用层数据包
                         var ecgdata = received_msg.data;
@@ -382,9 +385,7 @@ export class WsService extends EventEmitter {
                             target.status = Stopped
                         }
 
-                        this.dispatch({
-                            type: 'ws/updateData', payload: { data: new Map(datacache) }
-                        })
+                        this.refresh()
                     } else if (received_msg.name == 'end_work') {
                         //结束监护页
 
@@ -395,9 +396,7 @@ export class WsService extends EventEmitter {
                         } else {
                             datacache.get(curid).status = Stopped;
                         }
-                        this.dispatch({
-                            type: 'ws/updateData', payload: { data: new Map(datacache) }
-                        })
+                        this.refresh()
                     } else if (received_msg.name == 'heard') {
                         //heard
                         let devdata = received_msg.data;
@@ -425,8 +424,8 @@ export class WsService extends EventEmitter {
             datacache.get(curid).status = Offline;
             datacache.get(curid).starttime = '';
             datacache.get(curid).pregnancy = '';
-            datacache.get(curid).ecg = new Queue();    
-            let count = datacache.get(curid).fetal_num; 
+            datacache.get(curid).ecg = new Queue();
+            let count = datacache.get(curid).fetal_num;
             datacache.get(curid).fetal_num = count;
             for (let fetal = 0; fetal < count; fetal++) {
                 datacache.get(curid).fhr[fetal] = [];
@@ -555,5 +554,5 @@ export interface IBed {
     fetal_num: number;
     is_include_mother: boolean;
     is_working: boolean;
-    pregnancy:string;
+    pregnancy: string;
 }
