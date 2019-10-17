@@ -174,9 +174,9 @@ export class WsService extends EventEmitter {
                                     } else {
                                         datacache.get(cachebi).status = Stopped;
                                     }
-                                    console.log(devdata.beds[bi]);
+                                    //debugger
                                     if(devdata.beds[bi].pregnancy){
-                                        datacache.get(cachbi).pregnancy = devdata.beds[bi].pregnancy;
+                                        datacache.get(cachebi).pregnancy = devdata.beds[bi].pregnancy;
                                     }
                                     datacache.get(cachebi).fetal_num = devdata.beds[bi].fetal_num;
                                     for (let fetal = 0; fetal < devdata.beds[bi].fetal_num; fetal++) {
