@@ -147,6 +147,7 @@ export class WsService extends EventEmitter {
                                         status: Offline,
                                         orflag: true,
                                         starttime: '',
+                                        pregnancy: '',
                                         fetal_num: 1,
                                         csspan: NaN,
                                         ecg: new Queue()
@@ -177,6 +178,10 @@ export class WsService extends EventEmitter {
                         var cachbi = id + '-' + bi;
                         if (datacache.has(cachbi)) {
                             var tmpcache = datacache.get(cachbi);
+                            //kisi 2019-10-17 根据实时数据更新工作状态
+                            if(tmpcache.status != Working){
+                                tmpcache.status = Working;
+                            }
                             if (isNaN(tmpcache.csspan)) {
                                 tmpcache.csspan = this.span;
                             }
@@ -299,15 +304,24 @@ export class WsService extends EventEmitter {
                                 this.offrequest -= 1;
                             }
                         }
-                    } else if (received_msg.name == 'get_devices') {
+                    }else if (received_msg.name == 'get_devices') {
                         // this.log('get_devices', received_msg.data);
                         // var devlist = received_msg.data;
                         // for (var i in devlist) {
                         //     var devdata = devlist[i];
                         //     if (!devdata) continue;
                         // }
-                    }
-                    else if (received_msg.name == 'push_data_ecg') {
+                    }else if (received_msg.name == 'update_status') {
+                        // 状态机处理
+                        var statusdata = received_msg.data;
+                        var id = statusdata.device_no;
+                        var bi = statusdata.bed_no;
+                        var cachbi = id + '-' + bi;
+                        if(statusdata.status == 1){
+                            datacache.get(cachbi).status = Offline;
+                        }
+                        datacache.get(cachbi).pregnancy = statusdata.pregnancy;
+                    }else if (received_msg.name == 'push_data_ecg') {
                         //TODO 解析母亲应用层数据包
                         var ecgdata = received_msg.data;
                         var id = received_msg.device_no;
@@ -337,6 +351,7 @@ export class WsService extends EventEmitter {
                         datacache.get(curid).docid = '';
                         datacache.get(curid).status = Offline;
                         datacache.get(curid).starttime = '';
+                        datacache.get(curid).pregnancy = '';
                         datacache.get(curid).ecg = new Queue();
                         convertdocid(curid, devdata.doc_id);
                         if (devdata.is_working) {
@@ -489,6 +504,7 @@ export interface ICacheItem {
     past: number;
     timestamp: number;
     docid: string;
+    pregnancy: string;
     status: BedStatus;
     orflag: boolean;
     starttime: string;

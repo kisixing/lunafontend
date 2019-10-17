@@ -242,7 +242,6 @@ export default class DrawCTG {
     }
     linecontext.stroke();
     //kisi 2019-10-10 fm 128 判断
-    this.alarmcontext.clearRect(0, 0, suit.canvasalarm.width, suit.canvasalarm.height);
     for (var i = start; i < cur; i++) {
 
       if (i % 2 == 1) continue;
@@ -497,5 +496,18 @@ export default class DrawCTG {
     context.moveTo(postion, yposition);
     context.lineTo(postion, yposition+6);
     context.stroke();
+  };
+  showselect= (start:number,end:number) => {
+    const { suit, alarmcontext } = this;
+    alarmcontext.clearRect(0, 0, this.suit.canvasalarm.width, this.suit.canvasalarm.height);
+    //横向选择区域设置填充色
+    alarmcontext.fillStyle = suit.ctgconfig.selectarea;
+    alarmcontext.fillRect(start,this.basetop,end, this.suit.canvasalarm.height-this.basetop);
+    alarmcontext.beginPath();
+    alarmcontext.strokeStyle = 'rgb(10, 10, 20)';
+    alarmcontext.lineWidth = 6;
+    alarmcontext.moveTo(start, this.basetop);
+    alarmcontext.lineTo(start, this.suit.canvasalarm.height);
+    alarmcontext.stroke();
   };
 }
