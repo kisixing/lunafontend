@@ -174,6 +174,7 @@ export class WsService extends EventEmitter {
                                     } else {
                                         datacache.get(cachebi).status = Stopped;
                                     }
+                                    datacache.get(cachbi).pregnancy = devdata.beds[bi].pregnancy;
                                     datacache.get(cachebi).fetal_num = devdata.beds[bi].fetal_num;
                                     for (let fetal = 0; fetal < devdata.beds[bi].fetal_num; fetal++) {
                                         datacache.get(cachebi).fhr[fetal] = [];
@@ -550,4 +551,5 @@ export interface IBed {
     fetal_num: number;
     is_include_mother: boolean;
     is_working: boolean;
+    pregnancy:string;
 }
