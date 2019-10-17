@@ -198,7 +198,7 @@ export class WsService extends EventEmitter {
                             //kisi 2019-10-17 根据实时数据更新工作状态
                             //kisi 2019-10-17 
                             if (tmpcache.status != Working) {
-                                if(tmpcache.status == Stopped){
+                                if (tmpcache.status == Stopped) {
                                     cleardata(cachbi);
                                 }
                                 tmpcache.status = Working;
@@ -343,6 +343,9 @@ export class WsService extends EventEmitter {
                             datacache.get(cachbi).status = Offline;
                         }
                         datacache.get(cachbi).pregnancy = statusdata.pregnancy;
+                        this.dispatch({
+                            type: 'ws/updateData', payload: { data: new Map(datacache) }
+                        })
                     } else if (received_msg.name == 'push_data_ecg') {
                         //TODO 解析母亲应用层数据包
                         var ecgdata = received_msg.data;
@@ -353,9 +356,8 @@ export class WsService extends EventEmitter {
                             datacache.get(cachbi).ecg.EnQueue(ecgdata[0].ecg_arr[elop] & 0x7f);
                         }
                         //console.log(datacache.get(cachbi).ecg);
-                    }
-                    //开启监护页
-                    else if (received_msg.name == 'start_work') {
+                    } else if (received_msg.name == 'start_work') {
+                        //开启监护页
                         let devdata = received_msg.data;
                         const { bed_no, device_no } = devdata;
                         let curid = `${device_no}-${bed_no}`;
@@ -385,9 +387,9 @@ export class WsService extends EventEmitter {
                         this.dispatch({
                             type: 'ws/updateData', payload: { data: new Map(datacache) }
                         })
-                    }
-                    //结束监护页
-                    else if (received_msg.name == 'end_work') {
+                    } else if (received_msg.name == 'end_work') {
+                        //结束监护页
+
                         let devdata = received_msg.data;
                         let curid = Number(devdata['device_no']) + '-' + Number(devdata['bed_no']);
                         if (devdata.is_working) {
@@ -398,9 +400,8 @@ export class WsService extends EventEmitter {
                         this.dispatch({
                             type: 'ws/updateData', payload: { data: new Map(datacache) }
                         })
-                    }
-                    //heard
-                    else if (received_msg.name == 'heard') {
+                    } else if (received_msg.name == 'heard') {
+                        //heard
                         let devdata = received_msg.data;
                         console.log(devdata);
                         let servertime = convertstarttime(devdata.time);
@@ -412,7 +413,7 @@ export class WsService extends EventEmitter {
             return [datacache];
         });
 
-        function cleardata(curid){
+        function cleardata(curid) {
             datacache.get(curid).fhr = [];
             datacache.get(curid).toco = [];
             datacache.get(curid).fm = [];
