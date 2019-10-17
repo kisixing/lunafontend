@@ -92,6 +92,7 @@ export class Suit extends EventEmitter implements Drawer {
   };
   selectstart = 0;// 选择开始点
   selectrpstart = 0;// 相对开始位置
+  selectflag = false;
   width: number;
   canvas1: Canvas;
   context1: Context;
@@ -136,10 +137,18 @@ export class Suit extends EventEmitter implements Drawer {
     });
     this.on('suit:receive', value => {
       //更新状态 this.log(value);
-      this.startingBar.toggleVisibility();
-      this.endingBar.toggleVisibility();
-      console.log(this.selectstart,this.curr);
-      this.drawobj.showselect(this.selectrpstart,this.curr);
+      this.selectflag = value;
+      if(this.selectflag){
+        this.startingBar.toggleVisibility();
+        //this.endingBar.toggleVisibility();
+        console.log(this.selectstart,this.curr);
+        this.drawobj.showselect(this.selectrpstart,this.curr);
+      }else{
+        this.startingBar.toggleVisibility();
+        //this.endingBar.toggleVisibility();
+        console.log(this.selectstart,this.curr);
+        this.drawobj.showselect(0,0);
+      }
     })
   }
   emitSomething(value) {
@@ -184,6 +193,9 @@ export class Suit extends EventEmitter implements Drawer {
       this.timerCtg(defaultinterval);
     }
     this.barTool.watch(value => {
+      if(this.selectflag){
+        this.drawobj.showselect(this.selectrpstart,this.selectrpstart+2400);
+      }
       //显示历史数据
       this.dragtimestamp = new Date().getTime();
       if (this.curr > this.canvasline.width * 4) {
@@ -199,6 +211,9 @@ export class Suit extends EventEmitter implements Drawer {
       this.drawobj.drawdot(this.viewposition);
     });
     this.barTool.watchGrab(value => {
+      if(this.selectflag){
+        this.drawobj.showselect(this.selectrpstart,this.selectrpstart+2400);
+      }
       if (this.data.index < this.canvasline.width * 2) {
         return;
       }
