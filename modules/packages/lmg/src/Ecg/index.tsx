@@ -9,10 +9,9 @@ import { MultiParam, Ple, Tre } from './data';
 
 const ResizeObserver = (window as any).ResizeObserver
 
-interface IProps {
+interface IProps extends React.HTMLProps<HTMLElement> {
   data: any;
   mutableSuitObject?: { suit: (DrawEcg | any) };
-
 }
 export default (props: IProps) => {
   const { data, mutableSuitObject = { suit: null } } = props

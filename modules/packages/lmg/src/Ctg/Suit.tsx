@@ -134,12 +134,16 @@ export class Suit extends EventEmitter implements Drawer {
     // this.resize();
     this.barTool.watchGrab(value => {
     });
-    this.on('suit:receive', value => {
+    this.on('locking', value => {
       //更新状态 this.log(value);
       this.startingBar.toggleVisibility();
       this.endingBar.toggleVisibility();
-      console.log(this.selectstart,this.curr);
-      this.drawobj.showselect(this.selectrpstart,this.curr);
+      console.log(this.selectstart, this.curr);
+      this.drawobj.showselect(this.selectrpstart, this.curr);
+    })
+    this.on('customizing', value => {
+      this.log('customizing', value);
+
     })
   }
   emitSomething(value) {
@@ -229,10 +233,10 @@ export class Suit extends EventEmitter implements Drawer {
     endingBar.toggleVisibility()
     startingBar.on('change', value => {
       this.selectrpstart = value;
-      console.log('开始', value,this.viewposition,this.canvasline.width);
-      if(this.viewposition>this.canvasline.width*2){
-        this.selectstart = value + this.viewposition - 2*this.canvasline.width;
-      }else{
+      console.log('开始', value, this.viewposition, this.canvasline.width);
+      if (this.viewposition > this.canvasline.width * 2) {
+        this.selectstart = value + this.viewposition - 2 * this.canvasline.width;
+      } else {
         this.selectstart = value;
       }
       this.emitSomething(this.selectstart)
@@ -316,7 +320,7 @@ export class Suit extends EventEmitter implements Drawer {
       if (isNaN(this.data.csspan))
         return;
       this.curr = (Math.floor(new Date().getTime() / 1000) - Math.floor(new Date(this.data.starttime).getTime() / 1000)) * 4 + this.data.csspan;
-      if(this.curr <0)
+      if (this.curr < 0)
         return;
       this.drawobj.drawdot(this.curr);
       this.viewposition = this.curr;

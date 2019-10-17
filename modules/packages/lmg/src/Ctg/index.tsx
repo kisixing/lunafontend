@@ -4,20 +4,25 @@ import { Suit } from './Suit';
 import { IBarTool } from '../ScrollBar/useScroll';
 import ScrollBar from '../ScrollBar';
 import Ecg from "../Ecg";
-const ResizeObserver = (window as any).ResizeObserver
-export default ({
-  data,
-  mutableSuitObject = { suit: null },
-  itemHeight = 0,
-  type = 0,
-  showEcg = false
-}: {
+
+interface Iprops extends React.HTMLProps<HTMLDivElement> {
   data: any;
   mutableSuitObject?: { suit: (Suit | any) };
   itemHeight?: number;
-  type?: 0 | 1,
+  suitType?: 0 | 1,
   showEcg?: boolean
-}) => {
+}
+
+const ResizeObserver = (window as any).ResizeObserver
+export default (props: Iprops) => {
+  const {
+    data,
+    mutableSuitObject = { suit: null },
+    itemHeight = 0,
+    suitType = 0,
+    showEcg = false,
+    ...others
+  } = props
   let barTool: IBarTool;
 
   const canvas1 = useRef<HTMLCanvasElement>(null);
@@ -38,7 +43,7 @@ export default ({
       canvasalarm.current,
       ctgBox.current,
       barTool,
-      type
+      suitType
     ))
     instance.onStatusChange = status => {
       console.log(status);
@@ -64,8 +69,8 @@ export default ({
     suit && suit.init(data)
   }, [data, suit])
   return (
-    <div style={{ width: '100%', height: '100%' }} ref={box}>
-      <div style={{ height: `${showEcg ? 70 : 100}%`,minHeight:`calc(100% - 200px)` }} ref={ctgBox}>
+    <div style={{ width: '100%', height: '100%' }} ref={box} {...others}>
+      <div style={{ height: `${showEcg ? 70 : 100}%`, minHeight: `calc(100% - 200px)` }} ref={ctgBox}>
         <canvas ref={canvas1}>
           <p>Your browserdoes not support the canvas element.</p>
         </canvas>
@@ -80,7 +85,7 @@ export default ({
         </canvas>
       </div>
       {
-        showEcg && <div style={{ height: '30%',overflow:'hidden',maxHeight:200 }} >
+        showEcg && <div style={{ height: '30%', overflow: 'hidden', maxHeight: 200 }} >
           <Ecg data={data} />
         </div>
       }

@@ -69,11 +69,11 @@ export class WsService extends EventEmitter {
             log('The socket is not open.');
         }
     }
-    startwork(device_no:number, bed_no:number) {
+    startwork(device_no: number, bed_no: number) {
         const message = `{"name":"start_work","data":{"device_no":${device_no},"bed_no":${bed_no}}}`;
         this.send(message);
     }
-    endwork(device_no:number, bed_no:number) {
+    endwork(device_no: number, bed_no: number) {
         const message = `{"name":"end_work","data":{"device_no":${device_no},"bed_no":${bed_no}}}`;
         this.send(message);
     }
@@ -97,7 +97,7 @@ export class WsService extends EventEmitter {
         this.tip('连接中', EWsStatus.Pendding)
 
         this.socket = new WebSocket(
-            `ws://${ws_url}/websocket/?request=e2lkOjE7cmlkOjI2O3Rva2VuOiI0MzYwNjgxMWM3MzA1Y2NjNmFiYjJiZTExNjU3OWJmZCJ9`,
+            `ws://${ws_url}/websocket/?request=e2lkOjE7cmlkOjI2O3Rva2VuOiI0MzYwNjgxMWM3MzA1Y2NjNmFiYjJiZTExNjU3OWJmZCJ9&clientType=ctg-suit`,
         );
         const socket = this.socket;
 
@@ -179,7 +179,7 @@ export class WsService extends EventEmitter {
                         if (datacache.has(cachbi)) {
                             var tmpcache = datacache.get(cachbi);
                             //kisi 2019-10-17 根据实时数据更新工作状态
-                            if(tmpcache.status != Working){
+                            if (tmpcache.status != Working) {
                                 tmpcache.status = Working;
                             }
                             if (isNaN(tmpcache.csspan)) {
@@ -304,24 +304,25 @@ export class WsService extends EventEmitter {
                                 this.offrequest -= 1;
                             }
                         }
-                    }else if (received_msg.name == 'get_devices') {
+                    } else if (received_msg.name == 'get_devices') {
                         // this.log('get_devices', received_msg.data);
                         // var devlist = received_msg.data;
                         // for (var i in devlist) {
                         //     var devdata = devlist[i];
                         //     if (!devdata) continue;
                         // }
-                    }else if (received_msg.name == 'update_status') {
+                    } else if (received_msg.name == 'update_status') {
+                        console.log('update_status')
                         // 状态机处理
                         var statusdata = received_msg.data;
                         var id = statusdata.device_no;
                         var bi = statusdata.bed_no;
                         var cachbi = id + '-' + bi;
-                        if(statusdata.status == 1){
+                        if (statusdata.status == 1) {
                             datacache.get(cachbi).status = Offline;
                         }
                         datacache.get(cachbi).pregnancy = statusdata.pregnancy;
-                    }else if (received_msg.name == 'push_data_ecg') {
+                    } else if (received_msg.name == 'push_data_ecg') {
                         //TODO 解析母亲应用层数据包
                         var ecgdata = received_msg.data;
                         var id = received_msg.device_no;
