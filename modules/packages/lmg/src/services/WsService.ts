@@ -12,24 +12,26 @@ export enum BedStatus {
 }
 const { Working, Stopped, Offline } = BedStatus
 
-const blankCacheItem: ICacheItem = {
-    fhr: [],
-    toco: [],
-    fm: [],
-    index: 0,
-    length: 0,
-    start: -1,
-    last: 0,
-    past: 0,
-    timestamp: 0,
-    docid: '',
-    status: Offline,
-    orflag: true,
-    starttime: '',
-    pregnancy: '',
-    fetal_num: 1,
-    csspan: NaN,
-    ecg: new Queue()
+const getBlankCacheItem = () => {
+    return {
+        fhr: [],
+        toco: [],
+        fm: [],
+        index: 0,
+        length: 0,
+        start: -1,
+        last: 0,
+        past: 0,
+        timestamp: 0,
+        docid: '',
+        status: Offline,
+        orflag: true,
+        starttime: '',
+        pregnancy: '',
+        fetal_num: 1,
+        csspan: NaN,
+        ecg: new Queue()
+    }
 }
 export class WsService extends EventEmitter {
     static wsStatus: typeof EWsStatus = EWsStatus
@@ -59,7 +61,7 @@ export class WsService extends EventEmitter {
         const { datacache } = this
         datacache.clean = function (key: string) {
             const target = datacache.get(key)
-            datacache.set(key, Object.assign(target, blankCacheItem))
+            datacache.set(key, Object.assign(target, getBlankCacheItem()))
         }
         settingData = settingData || {
             ws_url: "192.168.0.227:8084",
@@ -165,7 +167,7 @@ export class WsService extends EventEmitter {
                             for (let bi in devdata.beds) {
                                 var cachebi = devdata['device_no'] + '-' + devdata.beds[bi].bed_no;
                                 if (!datacache.has(cachebi)) {
-                                    datacache.set(cachebi, blankCacheItem);
+                                    datacache.set(cachebi, getBlankCacheItem());
                                     convertdocid(cachebi, devdata.beds[bi].doc_id);
                                     if (devdata.beds[bi].is_working) {
                                         datacache.get(cachebi).status = Working;
@@ -402,8 +404,6 @@ export class WsService extends EventEmitter {
                         } else {
                             datacache.get(curid).status = Stopped;
                         }
-
-                        this.log('end_work', devdata.is_working, datacache.get(curid).status);
                         this.dispatch({
                             type: 'ws/updateData', payload: { data: new Map(datacache) }
                         })
