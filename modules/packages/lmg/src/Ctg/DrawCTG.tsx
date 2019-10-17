@@ -498,9 +498,18 @@ export default class DrawCTG {
     context.stroke();
   };
   showselect = (start: number, end: number) => {
+    console.log('in', start, end);
     const { suit, alarmcontext } = this;
-    alarmcontext.clearRect(0, 0, this.suit.canvasalarm.width, this.suit.canvasalarm.height);
+    let drawwidth = suit.canvasalarm.width;
+    alarmcontext.clearRect(0, 0, drawwidth, suit.canvasalarm.height);
+    if (end == 0) {
+      return;
+    }
     //横向选择区域设置填充色
+    let curstart = (suit.viewposition - drawwidth * 2);
+    end = (suit.viewposition - end) > 0 ? drawwidth - Math.floor((suit.viewposition - end) / 2) : drawwidth;
+    start = start - curstart > 0 ? start - curstart : 0;
+    console.log('ts', start, end);
     alarmcontext.fillStyle = suit.ctgconfig.selectarea;
     alarmcontext.fillRect(start, this.basetop, end, this.suit.canvasalarm.height - this.basetop);
     alarmcontext.beginPath();
@@ -508,6 +517,8 @@ export default class DrawCTG {
     alarmcontext.lineWidth = 6;
     alarmcontext.moveTo(start, this.basetop);
     alarmcontext.lineTo(start, this.suit.canvasalarm.height);
+    alarmcontext.moveTo(end, this.basetop);
+    alarmcontext.lineTo(end, this.suit.canvasalarm.height);
     alarmcontext.stroke();
   };
 }
