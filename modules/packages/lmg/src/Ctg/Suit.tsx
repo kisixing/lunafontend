@@ -84,11 +84,14 @@ export class Suit extends EventEmitter implements Drawer {
   curr = -16;
   ctgconfig = {
     normalarea: 'rgb(224,255,255)',
+    selectarea: 'rgba(192,192,192,0.5)',
     rule: 'rgba(0,51,102,1)',
     scale: 'rgba(0,0,0,1)',
     primarygrid: 'rgba(144, 159, 180,1)',
     secondarygrid: 'rgba(221, 230, 237,1)',
   };
+  selectstart = 0;// 选择开始点
+  selectrpstart = 0;// 相对开始位置
   width: number;
   canvas1: Canvas;
   context1: Context;
@@ -132,19 +135,21 @@ export class Suit extends EventEmitter implements Drawer {
     this.barTool.watchGrab(value => {
     });
     this.on('suit:receive', value => {
-      this.log(value)
+      //更新状态 this.log(value);
+      this.startingBar.toggleVisibility();
+      this.endingBar.toggleVisibility();
+      console.log(this.selectstart,this.curr);
+      this.drawobj.showselect(this.selectrpstart,this.curr);
     })
   }
   emitSomething(value) {
     this.emit('suit:startTime', value)
   }
   init(data) {
-
     if (!data) {
       return
     }
     this.log('init')
-    this.createBar()
     this.initFlag = true
     let defaultinterval = 500;
     this.data = data;
@@ -164,8 +169,8 @@ export class Suit extends EventEmitter implements Drawer {
       // this.initctgdata(json.toco, this.toco);
       if (this.data.index > this.canvasline.width * 2) {
         this.drawobj.drawdot(this.canvasline.width * 2);
-        this.curr = this.data.index;
-        // console.log(this.canvasline.width * 2, this.data.index);
+        this.curr = this.canvasline.width * 2;
+        //console.log(this.canvasline.width * 2, this.data.index);
         this.barTool.setBarWidth(100);
         this.barTool.setBarLeft(0, false);
       } else {
@@ -173,6 +178,7 @@ export class Suit extends EventEmitter implements Drawer {
         this.curr = this.data.index;
       }
       this.viewposition = this.curr;
+      this.createBar();
     } else {
       this.barTool.setBarWidth(0);
       this.timerCtg(defaultinterval);
@@ -218,11 +224,18 @@ export class Suit extends EventEmitter implements Drawer {
     const startingBar = this.startingBar = barTool.createRod('开始')
     const endingBar = this.endingBar = barTool.createRod('结束')
 
-
     startingBar.setOffset(20)
     endingBar.setOffset(100)
+    endingBar.toggleVisibility()
     startingBar.on('change', value => {
-      this.emitSomething(value)
+      this.selectrpstart = value;
+      console.log('开始', value,this.viewposition,this.canvasline.width);
+      if(this.viewposition>this.canvasline.width*2){
+        this.selectstart = value + this.viewposition - 2*this.canvasline.width;
+      }else{
+        this.selectstart = value;
+      }
+      this.emitSomething(this.selectstart)
     })
     endingBar.on('change', value => console.log('结束', value))
   }
