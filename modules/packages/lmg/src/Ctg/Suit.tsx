@@ -62,6 +62,7 @@ let sid = 0;
 type Canvas = HTMLCanvasElement;
 type Context = CanvasRenderingContext2D;
 export class Suit extends EventEmitter implements Drawer {
+  static option: object = {}
   initFlag = false
   sid = sid++;
   log = console.log.bind(console, 'suit', this.sid)
