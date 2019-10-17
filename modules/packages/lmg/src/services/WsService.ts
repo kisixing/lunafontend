@@ -1,22 +1,28 @@
-import { EventEmitter } from "@lianmed/utils";
+import { EventEmitter, event } from "@lianmed/utils";
 import request from "@lianmed/request"
 import Queue from "../Ecg/Queue";
 export enum EWsStatus {
     Pendding, Success, Error
 }
 
+export enum BedStatus {
+    Working = 1,
+    Stopped,
+    Offline,
+}
+const { Working, Stopped, Offline } = BedStatus
 export class WsService extends EventEmitter {
     static wsStatus: typeof EWsStatus = EWsStatus
     isReady = false;
     interval: number = 10000;
     RECONNECT_INTERVAL: number = 10000;
-    span:number = NaN;
-    offQueue:Queue = new Queue();
-    offstart:boolean = false;
+    span: number = NaN;
+    offQueue: Queue = new Queue();
+    offstart: boolean = false;
 
     static _this: WsService;
     log = console.log.bind(console, 'websocket')
-    datacache: Map<string, any> = new Map();
+    datacache: ICache = new Map();
     settingData: {
         ws_url: "192.168.0.227:8084",
         xhr_url: "192.168.2.152:9986",
@@ -44,7 +50,7 @@ export class WsService extends EventEmitter {
         WsService._this = this;
         this.settingData = settingData
     }
-    getDatacache(): Promise<any> {
+    getDatacache(): Promise<ICache> {
         if (this.isReady) {
             return Promise.resolve(this.datacache)
         } else {
@@ -63,17 +69,21 @@ export class WsService extends EventEmitter {
             log('The socket is not open.');
         }
     }
-    startwork(device_no, bed_no) {
+    startwork(device_no:number, bed_no:number) {
         const message = `{"name":"start_work","data":{"device_no":${device_no},"bed_no":${bed_no}}}`;
         this.send(message);
     }
-    endwork(device_no, bed_no) {
+    endwork(device_no:number, bed_no:number) {
         const message = `{"name":"end_work","data":{"device_no":${device_no},"bed_no":${bed_no}}}`;
         this.send(message);
     }
     dispatch(action: any) {
         (window as any).g_app._store.dispatch(action);
     }
+    _emit(name: string, ...value: any[]) {
+        event.emit(`WsService:${name}`, ...value)
+    }
+
     tip = (text: string, status: EWsStatus) => {
         this.log(text);
         this.dispatch({
@@ -81,7 +91,7 @@ export class WsService extends EventEmitter {
             payload: { status }
         })
     }
-    connect = (): Promise<Map<any, any>> => {
+    connect = (): Promise<ICache> => {
         const { datacache, settingData } = this
         const { ws_url } = settingData
         this.tip('连接中', EWsStatus.Pendding)
@@ -116,12 +126,12 @@ export class WsService extends EventEmitter {
                 if (received_msg) {
                     //showMessage(received_msg);
                     if (received_msg.name == 'push_devices') {
-                        var devlist = received_msg.data;
+                        var devlist: IDevice[] = received_msg.data;
                         for (var i in devlist) {
                             var devdata = devlist[i];
                             if (!devdata) continue;
                             for (let bi in devdata.beds) {
-                                var cachebi = Number(devdata['device_no']) + '-' + Number(devdata.beds[bi].bed_no);
+                                var cachebi = devdata['device_no'] + '-' + devdata.beds[bi].bed_no;
                                 if (!datacache.has(cachebi)) {
                                     datacache.set(cachebi, {
                                         fhr: [],
@@ -134,18 +144,18 @@ export class WsService extends EventEmitter {
                                         past: 0,
                                         timestamp: 0,
                                         docid: '',
-                                        status: '',
+                                        status: Offline,
                                         orflag: true,
                                         starttime: '',
                                         fetal_num: 1,
-                                        csspan : NaN,
+                                        csspan: NaN,
                                         ecg: new Queue()
                                     });
                                     convertdocid(cachebi, devdata.beds[bi].doc_id);
                                     if (devdata.beds[bi].is_working) {
-                                        datacache.get(cachebi).status = 1;
+                                        datacache.get(cachebi).status = Working;
                                     } else {
-                                        datacache.get(cachebi).status = 2;
+                                        datacache.get(cachebi).status = Stopped;
                                     }
                                     datacache.get(cachebi).fetal_num = devdata.beds[bi].fetal_num;
                                     for (let fetal = 0; fetal < devdata.beds[bi].fetal_num; fetal++) {
@@ -156,7 +166,6 @@ export class WsService extends EventEmitter {
                         }
                         this.tip('成功', EWsStatus.Success)
                         res(datacache)
-                        console.log('aaaa, emit')
                         this.emit('read', datacache)
                         this.isReady = true
                     } else if (received_msg.name == 'push_data_ctg') {
@@ -168,7 +177,7 @@ export class WsService extends EventEmitter {
                         var cachbi = id + '-' + bi;
                         if (datacache.has(cachbi)) {
                             var tmpcache = datacache.get(cachbi);
-                            if(isNaN(tmpcache.csspan)){
+                            if (isNaN(tmpcache.csspan)) {
                                 tmpcache.csspan = this.span;
                             }
                             for (let key in ctgdata) {
@@ -221,11 +230,11 @@ export class WsService extends EventEmitter {
                                             break;
                                         }
                                     }
-                                }                               
+                                }
                                 // 更新last index
                                 if (ctgdata[key].index - tmpcache.last < 3) {
                                     tmpcache.last = ctgdata[key].index;
-                                }else{
+                                } else {
                                     //判断 是否有缺失
                                     var flag = 0;
                                     var sflag = 0;
@@ -291,12 +300,12 @@ export class WsService extends EventEmitter {
                             }
                         }
                     } else if (received_msg.name == 'get_devices') {
-                        this.log('get_devices', received_msg.data);
-                        var devlist = received_msg.data;
-                        for (var i in devlist) {
-                            var devdata = devlist[i];
-                            if (!devdata) continue;
-                        }
+                        // this.log('get_devices', received_msg.data);
+                        // var devlist = received_msg.data;
+                        // for (var i in devlist) {
+                        //     var devdata = devlist[i];
+                        //     if (!devdata) continue;
+                        // }
                     }
                     else if (received_msg.name == 'push_data_ecg') {
                         //TODO 解析母亲应用层数据包
@@ -304,17 +313,10 @@ export class WsService extends EventEmitter {
                         var id = received_msg.device_no;
                         var bi = received_msg.bed_no;
                         var cachbi = id + '-' + bi;
-                        for(let elop = 0;elop <ecgdata[0].ecg_arr.length;elop++){
-                            datacache.get(cachbi).ecg.EnQueue(ecgdata[0].ecg_arr[elop]&0x7f);
+                        for (let elop = 0; elop < ecgdata[0].ecg_arr.length; elop++) {
+                            datacache.get(cachbi).ecg.EnQueue(ecgdata[0].ecg_arr[elop] & 0x7f);
                         }
                         //console.log(datacache.get(cachbi).ecg);
-                    } else if (received_msg.name == 'get_devices') {
-                        console.log(received_msg.data);
-                        var devlist = received_msg.data;
-                        for (var i in devlist) {
-                            var devdata = devlist[i];
-                            if (!devdata) continue;
-                        }
                     }
                     //开启监护页
                     else if (received_msg.name == 'start_work') {
@@ -333,14 +335,14 @@ export class WsService extends EventEmitter {
                         datacache.get(curid).past = 0;
                         datacache.get(curid).timestamp = 0;
                         datacache.get(curid).docid = '';
-                        datacache.get(curid).status = 0;
+                        datacache.get(curid).status = Offline;
                         datacache.get(curid).starttime = '';
                         datacache.get(curid).ecg = new Queue();
                         convertdocid(curid, devdata.doc_id);
                         if (devdata.is_working) {
-                            datacache.get(curid).status = 1;
+                            datacache.get(curid).status = Working;
                         } else {
-                            datacache.get(curid).status = 2;
+                            datacache.get(curid).status = Stopped;
                         }
                         datacache.get(curid).fetal_num = count;
                         for (let fetal = 0; fetal < count; fetal++) {
@@ -351,13 +353,13 @@ export class WsService extends EventEmitter {
                         this.log('start_work', devdata.is_working);
                         const target = datacache.get(curid)
                         if (devdata.is_working) {
-                            target.status = 1
+                            target.status = Working
                         } else {
-                            target.status = 2
+                            target.status = Stopped
                         }
 
                         this.dispatch({
-                            type: 'ws/setState', payload: { data: new Map(datacache) }
+                            type: 'ws/updateData', payload: { data: new Map(datacache) }
                         })
                     }
                     //结束监护页
@@ -366,14 +368,14 @@ export class WsService extends EventEmitter {
                         let curid = Number(devdata['device_no']) + '-' + Number(devdata['bed_no']);
 
                         if (devdata.is_working) {
-                            datacache.get(curid).status = 1;
+                            datacache.get(curid).status = Working;
                         } else {
-                            datacache.get(curid).status = 2;
+                            datacache.get(curid).status = Stopped;
                         }
 
                         this.log('end_work', devdata.is_working, datacache.get(curid).status);
                         this.dispatch({
-                            type: 'ws/setState', payload: { data: new Map(datacache) }
+                            type: 'ws/updateData', payload: { data: new Map(datacache) }
                         })
                     }
                     //heard
@@ -381,7 +383,7 @@ export class WsService extends EventEmitter {
                         let devdata = received_msg.data;
                         console.log(devdata);
                         let servertime = convertstarttime(devdata.time);
-                        this.span = Math.floor(new Date(servertime).getTime()/1000 -new Date().getTime()/1000)*4 - 12;
+                        this.span = Math.floor(new Date(servertime).getTime() / 1000 - new Date().getTime() / 1000) * 4 - 12;
                         console.log(this.span);
                     }
                 }
@@ -389,7 +391,7 @@ export class WsService extends EventEmitter {
             return [datacache];
         });
 
-        function convertdocid(id: any, doc_id: string) {
+        function convertdocid(id: string, doc_id: string) {
             datacache.get(id).docid = doc_id;
             if (doc_id != '') {
                 let vt = doc_id.split('_');
@@ -399,22 +401,22 @@ export class WsService extends EventEmitter {
             }
         }
 
-        function convertstarttime(pureid:string){
+        function convertstarttime(pureid: string) {
             return '20' +
-            pureid.substring(0, 2) +
-            '-' +
-            pureid.substring(2, 4) +
-            '-' +
-            pureid.substring(4, 6) +
-            ' ' +
-            pureid.substring(6, 8) +
-            ':' +
-            pureid.substring(8, 10) +
-            ':' +
-            pureid.substring(10, 12);
+                pureid.substring(0, 2) +
+                '-' +
+                pureid.substring(2, 4) +
+                '-' +
+                pureid.substring(4, 6) +
+                ' ' +
+                pureid.substring(6, 8) +
+                ':' +
+                pureid.substring(8, 10) +
+                ':' +
+                pureid.substring(10, 12);
         }
-        
-        function setcur(id: any, value: number) {
+
+        function setcur(id: string, value: number) {
             if (value < datacache.get(id).start) {
                 datacache.get(id).start = value;
             } else if (value >= datacache.get(id).index) {
@@ -422,30 +424,30 @@ export class WsService extends EventEmitter {
             }
         }
 
-        function starttask(queue,offstart){          
-            if(!queue.IsEmpty()){      
+        function starttask(queue, offstart) {
+            if (!queue.IsEmpty()) {
                 offstart = true;
                 let obj = queue.DeQueue();
-                getoffline(queue,obj.docid, obj.length,offstart);
+                getoffline(queue, obj.docid, obj.length, offstart);
             }
-            else{
+            else {
                 offstart = false;
             }
         }
 
-        function getoffline(queue:Queue,doc_id: string, offlineend: number, offstart: boolean) {
+        function getoffline(queue: Queue, doc_id: string, offlineend: number, offstart: boolean) {
             request.get(`/ctg-exams-data/${doc_id}`).then(responseData => {
                 let vt = doc_id.split('_');
                 let dbid = vt[0] + '-' + vt[1];
                 console.log(doc_id, offlineend, responseData, datacache.get(dbid).past);
-                if(responseData){
-                    initfhrdata(responseData, datacache.get(dbid), offlineend,queue,offstart);
+                if (responseData) {
+                    initfhrdata(responseData, datacache.get(dbid), offlineend, queue, offstart);
                 }
                 // datacache.get(dbid).start = 0;
             })
         }
 
-        function initfhrdata(data, datacache, offindex,queue,offstart) {
+        function initfhrdata(data, datacache, offindex, queue, offstart) {
             Object.keys(data).forEach(key => {
                 let oridata = data[key] as string;
                 if (!oridata) {
@@ -457,10 +459,10 @@ export class WsService extends EventEmitter {
                     if (key === 'fhr1') {
                         datacache.fhr[0][i] = data_to_push;
                     } else if (key === 'fhr2') {
-                        if(datacache.fhr[1])
+                        if (datacache.fhr[1])
                             datacache.fhr[1][i] = data_to_push;
                     } else if (key === 'fhr3') {
-                        if(datacache.fhr[2])
+                        if (datacache.fhr[2])
                             datacache.fhr[2][i] = data_to_push;
                     } else if (key === 'toco') {
                         datacache.toco[i] = data_to_push;
@@ -470,9 +472,45 @@ export class WsService extends EventEmitter {
                     oridata = oridata.substring(2, oridata.length);
                 }
             });
-            starttask(queue,offstart);
+            starttask(queue, offstart);
         }
 
     };
 }
 
+export interface ICacheItem {
+    fhr: number[][];
+    toco: number[];
+    fm: number[];
+    index: number;
+    length: number;
+    start: number;
+    last: number;
+    past: number;
+    timestamp: number;
+    docid: string;
+    status: BedStatus;
+    orflag: boolean;
+    starttime: string;
+    fetal_num: number;
+    csspan: number;
+    ecg: Queue;
+}
+export type ICache = Map<string, ICacheItem>
+export interface IDevice {
+    ERP: string;
+    bed_num: number;
+    beds: IBed[];
+    device_no: number;
+    device_type: string;
+    ecg_sampling_rate: number;
+    is_handshake_finish: boolean;
+    wifi_conn_state: boolean;
+}
+export interface IBed {
+    bed_no: number;
+    doc_id: string;
+    fetal_num: number;
+    is_include_mother: boolean;
+    is_working: boolean;
+}
