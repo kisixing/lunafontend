@@ -29,6 +29,7 @@ export default class ScrollEl extends EventEmitter {
         this.el.addEventListener(key, cb)
         return this
     }
+
     // maxHeight() {
     //     const rect = this.wrapper.getBoundingClientRect();
     //     var { height } = rect;
@@ -37,6 +38,8 @@ export default class ScrollEl extends EventEmitter {
     //     return this
     // }
     moveCb = (e) => {
+        this.emit('mousedown')
+
         e.stopPropagation();
         const { el, wrapper } = this
         var { x } = this.getCoordInDocument(e);
@@ -56,7 +59,8 @@ export default class ScrollEl extends EventEmitter {
             });
         };
 
-        document.onmouseup = function () {
+        document.onmouseup = () => {
+            this.emit('mouseup')
             document.onmousemove = null;
         };
     }
