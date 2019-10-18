@@ -215,13 +215,13 @@ export class WsService extends EventEmitter {
                             var tmpcache = datacache.get(cachbi);
                             //kisi 2019-10-17 根据实时数据更新工作状态
                             //kisi 2019-10-17 
-                            if (tmpcache.status != Working) {
-                                if (tmpcache.status == Stopped) {
-                                    cleardata(cachbi);
-                                }
-                                tmpcache.status = Working;
-                                this.refresh('push_data_ctg')
-                            }
+                            // if (tmpcache.status != Working) {
+                            //     if (tmpcache.status == Stopped) {
+                            //         cleardata(cachbi);
+                            //     }
+                            //     tmpcache.status = Working;
+                            //     this.refresh('push_data_ctg)
+                            // }
                             if (isNaN(tmpcache.csspan)) {
                                 tmpcache.csspan = this.span;
                             }
@@ -352,7 +352,7 @@ export class WsService extends EventEmitter {
                         //     if (!devdata) continue;
                         // }
                     } else if (received_msg.name == 'update_status') {
-                        console.log('update_status')
+                        console.log('update_status',received_msg.data)
                         // 状态机处理
                         var statusdata = received_msg.data;
                         var id = statusdata.device_no;
@@ -380,7 +380,6 @@ export class WsService extends EventEmitter {
                         let curid = `${device_no}-${bed_no}`;
                         //TODO : 更新设备状态
                         cleardata(curid);
-                        convertdocid(curid, devdata.doc_id);
                         if (devdata.is_working) {
                             datacache.get(curid).status = Working;
                         } else {
@@ -388,18 +387,16 @@ export class WsService extends EventEmitter {
                         }
                         //TODO : 更新设备状态
                         convertdocid(curid, devdata.doc_id);
-                        this.log('start_work', devdata.is_working);
+                        this.log('start_work', devdata,devdata.is_working);
                         const target = datacache.get(curid)
                         if (devdata.is_working) {
                             target.status = Working
                         } else {
                             target.status = Stopped
                         }
-
                         this.refresh('start_work')
                     } else if (received_msg.name == 'end_work') {
                         //结束监护页
-
                         let devdata = received_msg.data;
                         let curid = Number(devdata['device_no']) + '-' + Number(devdata['bed_no']);
                         if (devdata.is_working) {
