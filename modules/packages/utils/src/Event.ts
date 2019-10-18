@@ -12,6 +12,7 @@ export class EventEmitter {
     return this;
   }
   on(event: string, listener: (...args: any[]) => void): this {
+    this.off(event, listener)
     return this.addListener(event, listener);
   }
   emit(event: string, ...args: any[]): boolean {
