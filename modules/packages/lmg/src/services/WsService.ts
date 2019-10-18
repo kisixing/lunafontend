@@ -77,10 +77,21 @@ export class WsService extends EventEmitter {
         WsService._this = this;
         this.settingData = settingData
     }
-    refresh() {
-        this.dispatch({
-            type: 'ws/updateData', payload: { data: new Map(this.datacache) }
-        })
+    refreshInterval = 2000
+    refreshTimeout = null
+    refresh(name) {
+
+        if (this.refreshTimeout) {
+            this.log(name, 'refresh','discarded')
+            return
+        }
+        this.refreshTimeout = setTimeout(() => {
+            this.log(name, 'refresh')
+            this.dispatch({
+                type: 'ws/updateData', payload: { data: new Map(this.datacache) }
+            })
+            this.refreshTimeout = null
+        }, this.refreshInterval);
     }
     getDatacache(): Promise<ICache> {
         if (this.isReady) {
@@ -209,7 +220,7 @@ export class WsService extends EventEmitter {
                             //         cleardata(cachbi);
                             //     }
                             //     tmpcache.status = Working;
-                            //     this.refresh()
+                            //     this.refresh('push_data_ctg)
                             // }
                             if (isNaN(tmpcache.csspan)) {
                                 tmpcache.csspan = this.span;
@@ -353,7 +364,7 @@ export class WsService extends EventEmitter {
                             datacache.get(cachbi).status = Working;
                         }
                         datacache.get(cachbi).pregnancy = statusdata.pregnancy;
-                        this.refresh()
+                        this.refresh('update_status')
                     } else if (received_msg.name == 'push_data_ecg') {
                         //TODO 解析母亲应用层数据包
                         var ecgdata = received_msg.data;
@@ -385,7 +396,7 @@ export class WsService extends EventEmitter {
                         } else {
                             target.status = Stopped
                         }
-                        this.refresh()
+                        this.refresh('start_work')
                     } else if (received_msg.name == 'end_work') {
                         //结束监护页
                         let devdata = received_msg.data;
@@ -395,7 +406,7 @@ export class WsService extends EventEmitter {
                         } else {
                             datacache.get(curid).status = Stopped;
                         }
-                        this.refresh()
+                        this.refresh('end_work')
                     } else if (received_msg.name == 'heard') {
                         //heard
                         let devdata = received_msg.data;

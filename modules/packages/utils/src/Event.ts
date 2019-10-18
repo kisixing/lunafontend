@@ -12,6 +12,7 @@ export class EventEmitter {
     return this;
   }
   on(event: string, listener: (...args: any[]) => void): this {
+    this.off(event, listener)
     return this.addListener(event, listener);
   }
   emit(event: string, ...args: any[]): boolean {
@@ -30,6 +31,15 @@ export class EventEmitter {
   }
 
   off(event: string, listener: (...args: any[]) => void): this {
+    let existing = this.events[event];
+    if (!existing) {
+      return this;
+    }
+    const index = existing.findIndex(_ => _ === listener)
+    if (index < 0) {
+      return this
+    }
+    existing.splice(index, 1)
     return this;
   }
 
