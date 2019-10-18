@@ -30,6 +30,15 @@ export class EventEmitter {
   }
 
   off(event: string, listener: (...args: any[]) => void): this {
+    let existing = this.events[event];
+    if (!existing) {
+      return this;
+    }
+    const index = existing.findIndex(_ => _ === listener)
+    if (index < 0) {
+      return this
+    }
+    existing.splice(index, 1)
     return this;
   }
 
