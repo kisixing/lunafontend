@@ -498,8 +498,8 @@ export default class DrawCTG {
     context.stroke();
   };
   showselect = (start: number, end: number) => {
-    console.log('in', start, end);
     const { suit, alarmcontext } = this;
+    console.log('printin', suit.viewposition,start, end);
     let drawwidth = suit.canvasalarm.width;
     alarmcontext.clearRect(0, 0, drawwidth, suit.canvasalarm.height);
     if (end == 0) {
@@ -509,16 +509,18 @@ export default class DrawCTG {
     let curstart = (suit.viewposition - drawwidth * 2);
     end = (suit.viewposition - end) > 0 ? drawwidth - Math.floor((suit.viewposition - end) / 2) : drawwidth;
     start = start - curstart > 0 ? start - curstart : 0;
-    console.log('ts', start, end);
+    console.log('printts',curstart, start, end);
     alarmcontext.fillStyle = suit.ctgconfig.selectarea;
-    alarmcontext.fillRect(start, this.basetop, end, this.suit.canvasalarm.height - this.basetop);
+    alarmcontext.fillRect(start/2, this.basetop, end-start/2, suit.canvasalarm.height - this.basetop);
     alarmcontext.beginPath();
     alarmcontext.strokeStyle = 'rgb(10, 10, 20)';
     alarmcontext.lineWidth = 6;
-    alarmcontext.moveTo(start, this.basetop);
-    alarmcontext.lineTo(start, this.suit.canvasalarm.height);
-    alarmcontext.moveTo(end, this.basetop);
-    alarmcontext.lineTo(end, this.suit.canvasalarm.height);
+    alarmcontext.moveTo(start/2, this.basetop);
+    alarmcontext.lineTo(start/2, this.suit.canvasalarm.height);
+    if(suit.selectend == 0){
+      alarmcontext.moveTo(end, this.basetop);
+      alarmcontext.lineTo(end, this.suit.canvasalarm.height);
+    }
     alarmcontext.stroke();
   };
 }

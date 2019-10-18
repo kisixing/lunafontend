@@ -93,6 +93,8 @@ export class Suit extends EventEmitter implements Drawer {
   };
   selectstart = 0;// 选择开始点
   selectrpstart = 0;// 相对开始位置
+  selectend = 0;// 选择结束点
+  selectrpend = 0;// 相对结束位置
   selectflag = false;
   width: number;
   canvas1: Canvas;
@@ -153,6 +155,10 @@ export class Suit extends EventEmitter implements Drawer {
     }
     this.toco = data.toco;
     this.currentdot = data.index;
+    if(!data.last){
+      this.type = 1;
+      console.log('print_test',data);
+    }
     this.drawobj.drawgrid(0);
     if (this.type > 0) {
       //kisi 2019-10-08 不在曲线内处理
@@ -179,7 +185,7 @@ export class Suit extends EventEmitter implements Drawer {
     }
     this.barTool.watch(value => {
       if (this.selectflag) {
-        this.drawobj.showselect(this.selectrpstart, this.selectrpstart + 2400);
+        this.drawobj.showselect(this.selectrpstart, this.selectrpend);
       }
       //显示历史数据
       this.dragtimestamp = new Date().getTime();
@@ -196,9 +202,7 @@ export class Suit extends EventEmitter implements Drawer {
       this.drawobj.drawdot(this.viewposition);
     });
     this.barTool.watchGrab(value => {
-      if (this.selectflag) {
-        this.drawobj.showselect(this.selectrpstart, this.selectrpstart + 2400);
-      }
+      console.log('print',this.selectrpstart,this.selectrpend);
       if (this.data.index < this.canvasline.width * 2) {
         return;
       }
@@ -214,6 +218,15 @@ export class Suit extends EventEmitter implements Drawer {
         this.movescoller();
         this.drawobj.drawdot(this.viewposition);
       }
+      if (this.selectflag) {
+        if(this.selectend == 1 && this.viewposition - this.selectrpend > 0){
+          this.endingBar.setVisibility(true);
+          this.endingBar.setOffset(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
+        }else{
+          this.endingBar.setVisibility(false);
+        }
+        this.drawobj.showselect(this.selectrpstart, this.selectrpend);
+      }
     });
   }
   createBar() {
@@ -223,40 +236,57 @@ export class Suit extends EventEmitter implements Drawer {
     const { barTool } = this
     const startingBar = this.startingBar = barTool.createRod('开始')
     const endingBar = this.endingBar = barTool.createRod('结束')
-
-    startingBar.setOffset(20)
-    endingBar.setOffset(100)
+    startingBar.setOffset(0)
+    //endingBar.setOffset(100)
     endingBar.toggleVisibility()
     startingBar.on('change', value => {
-      this.selectrpstart = value;
-      console.log('开始', value, this.viewposition, this.canvasline.width);
+      this.selectrpstart = value*2;
+      console.log('print_开始', value, this.viewposition, this.canvasline.width);
       if (this.viewposition > this.canvasline.width * 2) {
-        this.selectstart = value + this.viewposition - 2 * this.canvasline.width;
+        this.selectstart = value*2 + this.viewposition - 2 * this.canvasline.width;
       } else {
-        this.selectstart = value;
+        this.selectstart = value*2;
       }
       this.emit('suit:startTime', this.selectstart)
     })
-    endingBar.on('change', value => console.log('结束', value))
+    endingBar.on('change', value => {
+      this.selectrpend = this.viewposition - (this.canvasline.width - value)*2;
+      console.log('print_结束', value,this.selectrpstart,this.selectrpend)
+      this.drawobj.showselect(this.selectrpstart, this.selectrpend);
+      this.emit('suit:endTime', this.selectrpend)
+    })
 
     this.on('locking', value => {
-      //更新状态 this.log(value);
+      //更新状态
+      console.log('print_locking',value);
       this.selectflag = value;
       if (this.selectflag) {
         this.startingBar.toggleVisibility();
+        this.selectend = 0;
         //this.endingBar.toggleVisibility();
-        console.log(this.selectstart, this.curr);
-        this.drawobj.showselect(this.selectrpstart, this.curr);
+        console.log(this.selectstart, this.data.index);
+        this.selectrpend = this.data.index  < this.selectrpstart + 4800?this.data.index :this.selectrpstart + 4800
+        this.drawobj.showselect(this.selectrpstart, this.selectrpend);
       } else {
         this.startingBar.toggleVisibility();
         //this.endingBar.toggleVisibility();
-        console.log(this.selectstart, this.curr);
+        console.log(this.selectstart, this.data.index);
         this.drawobj.showselect(0, 0);
       }
     })
 
     this.on('customizing', value => {
       this.log('customizing', value);
+      if (value && this.selectflag) {
+        this.selectend = 1;
+        if(this.viewposition - this.selectrpend > 0){
+          this.endingBar.setVisibility(true);
+          this.endingBar.setOffset(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
+        }
+      }else{
+        this.selectend = 0;
+        this.endingBar.setVisibility(false);
+      }
     })
   }
   lockStartingBar(status: boolean) {

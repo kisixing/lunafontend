@@ -25,6 +25,9 @@ export default class ScrollEl extends EventEmitter {
         const isHidden = this.el.style.visibility === 'hidden'
         this.setStyle('visibility', isHidden ? 'visible' : 'hidden')
     }
+    setVisibility(isHidden) {
+        this.setStyle('visibility', isHidden ? 'visible' : 'hidden')
+    }
     addEventListener<k extends keyof HTMLElementEventMap>(key: k, cb: (e: HTMLElementEventMap[k]) => void) {
         this.el.addEventListener(key, cb)
         return this

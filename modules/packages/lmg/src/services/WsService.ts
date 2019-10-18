@@ -349,6 +349,8 @@ export class WsService extends EventEmitter {
                         var cachbi = id + '-' + bi;
                         if (statusdata.status == 1) {
                             datacache.get(cachbi).status = Offline;
+                        }else{
+                            datacache.get(cachbi).status = Working;
                         }
                         datacache.get(cachbi).pregnancy = statusdata.pregnancy;
                         this.refresh()
