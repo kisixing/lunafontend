@@ -74,10 +74,17 @@ export default class DrawCTG {
     this.suit.canvas2.height = height;
     this.yspan = (height - this.scalespan - this.basetop) / (this.max + 100 - this.min);
     //console.log(this.suit.data,width,height,this.yspan);
+    this.suit.viewposition = width*2;
+    if(this.suit.data && this.suit.data.index>width*2){
+      this.suit.barTool.setBarWidth(100);
+      this.suit.barTool.setBarLeft(0, false);
+    }else{
+      this.suit.barTool.setBarWidth(0);
+    }
     if (this.suit.data) {
       this.drawdot(this.suit.viewposition);
     } else {
-      this.drawgrid(width, false);
+      this.drawgrid(width*2, false);
     }
   }
   drawgrid(cur, drawtimespan = true) {
@@ -149,7 +156,6 @@ export default class DrawCTG {
   drawdot(cur) {
     const { suit, linecontext, max } = this;
     const { fhr, toco, fm } = suit.data;
-    //cur = suit.data.index;
     this.drawgrid(cur);
     this.showcur(cur);
     var lastx = 0;
