@@ -4,12 +4,13 @@ import { IBarTool } from '../ScrollBar/useScroll';
 import { Drawer } from "../interface";
 import ScrollEl from '../ScrollBar/ScrollEl';
 import { EventEmitter, event } from '@lianmed/utils'
+import request from "@lianmed/request"
 
 let sid = 0;
 type Canvas = HTMLCanvasElement;
 type Context = CanvasRenderingContext2D;
 export class Suit extends EventEmitter implements Drawer {
-  static option: object = {}
+  static option: {[x:string]:string} = {}
   option = Suit.option
   initFlag = false
   sid = sid++;
@@ -46,6 +47,7 @@ export class Suit extends EventEmitter implements Drawer {
   selectend = 0;// 选择结束点
   selectrpend = 0;// 相对结束位置
   selectflag = false;
+  requestflag = false;
   width: number;
   canvas1: Canvas;
   context1: Context;
@@ -87,6 +89,10 @@ export class Suit extends EventEmitter implements Drawer {
     this.barTool.watchGrab(value => {
     });
     this.log('option', this.option)
+    this.ctgconfig.tococolor = this.option.tococolor;
+    this.ctgconfig.fhrcolor[0] = this.option.fhrcolor1;
+    this.ctgconfig.fhrcolor[1] = this.option.fhrcolor2;
+    this.ctgconfig.fhrcolor[2] = this.option.fhrcolor3;
   }
 
   init(data) {
@@ -149,7 +155,13 @@ export class Suit extends EventEmitter implements Drawer {
       this.drawobj.drawdot(this.viewposition);
     });
     this.barTool.watchGrab(value => {
-      console.log('print', this.selectrpstart, this.selectrpend);
+      if(this.type == 0 && this.data.past >0){
+        //console.log('print', this.data,this.selectrpstart, this.selectrpend);
+        if(!this.requestflag){
+          this.requestflag = true;
+          this.getoffline(this.data.docid,this.data.past);
+        }
+      }
       if (this.data.index < this.canvasline.width * 2) {
         return;
       }
@@ -323,39 +335,6 @@ export class Suit extends EventEmitter implements Drawer {
     });
     return CTGDATA;
   }
-  initctgdata(oridata, arrdata) {
-    if (!oridata) {
-      return;
-    }
-    var push_account = oridata.length / 2;
-    for (var i = 0; i < push_account; i++) {
-      var data_to_push = parseInt(oridata.substring(0, 2), 16);
-      arrdata.push(data_to_push);
-    }
-  }
-
-  initfhrdata(data) {
-    // const keys = ['fhr','toco','fmp','fm']
-    Object.keys(data).forEach(key => {
-      let oridata = data[key] as string;
-      if (!oridata) {
-        return;
-      }
-      var push_account = oridata.length / 2;
-      for (var i = 0; i < push_account; i++) {
-        let hexBits = oridata.substring(0, 2);
-        let data_to_push = parseInt(hexBits, 16);
-        if (key == 'fhr') {
-          for (var fetal = 0; fetal < this.fetalcount; fetal++) {
-            this[key][fetal].push(data_to_push);
-          }
-        } else {
-          this[key].push(data_to_push);
-        }
-        oridata = oridata.substring(2, oridata.length);
-      }
-    });
-  }
 
   drawdot() {
     if (this.data.starttime && this.data.starttime != '' && this.data.status == 1 && this.data.index > 0) {
@@ -395,5 +374,43 @@ export class Suit extends EventEmitter implements Drawer {
   }
   onStatusChange(status: boolean): boolean | void {
     return status;
+  }
+
+ getoffline(doc_id: string, offlineend: number) {
+    request.get(`/ctg-exams-data/${doc_id}`).then(responseData => {
+        console.log(doc_id, offlineend, responseData, this.data.past);
+        if (responseData) {
+            this.initfhrdata(responseData, this.data, offlineend);
+            this.data.past = 0;
+            this.requestflag = false;
+        }
+  })
+}
+
+  initfhrdata(data, datacache, offindex) {
+    Object.keys(data).forEach(key => {
+        let oridata = data[key] as string;
+        if (!oridata) {
+            return;
+        }
+        for (let i = 0; i < offindex; i++) {
+            let hexBits = oridata.substring(0, 2);
+            let data_to_push = parseInt(hexBits, 16);
+            if (key === 'fhr1') {
+                datacache.fhr[0][i] = data_to_push;
+            } else if (key === 'fhr2') {
+                if (datacache.fhr[1])
+                    datacache.fhr[1][i] = data_to_push;
+            } else if (key === 'fhr3') {
+                if (datacache.fhr[2])
+                    datacache.fhr[2][i] = data_to_push;
+            } else if (key === 'toco') {
+                datacache.toco[i] = data_to_push;
+            } else if (key === "fm") {
+                datacache.fm[i] = data_to_push;
+            }
+            oridata = oridata.substring(2, oridata.length);
+        }
+    });
   }
 }

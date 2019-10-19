@@ -11,7 +11,7 @@ import request from "@lianmed/request";
 
 const setting = {
   ws_url: "192.168.0.227:8084",
-  xhr_url: "192.168.0.227:9986",
+  xhr_url: "192.168.0.227:9987",
   alarm_high: "160",
   alarm_low: "110",
   alarm_on_window: "1",
