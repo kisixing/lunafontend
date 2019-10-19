@@ -90,6 +90,12 @@ export class Suit extends EventEmitter implements Drawer {
     scale: 'rgba(0,0,0,1)',
     primarygrid: 'rgba(144, 159, 180,1)',
     secondarygrid: 'rgba(221, 230, 237,1)',
+    fhrcolor:['green','blue','rgb(0,0,0)'],
+    tococolor:'rgb(0,0,0)',
+    alarmcolor:'rgb(255, 1, 1)',
+    alarm_enable:true,
+    alarm_high:160,
+    alarm_low:110,
   };
   selectstart = 0;// 选择开始点
   selectrpstart = 0;// 相对开始位置
@@ -155,9 +161,9 @@ export class Suit extends EventEmitter implements Drawer {
     }
     this.toco = data.toco;
     this.currentdot = data.index;
-    if(!data.last){
+    if(!data.status){
       this.type = 1;
-      console.log('print_test',data);
+      console.log('type_check',data);
     }
     this.drawobj.drawgrid(0);
     if (this.type > 0) {
