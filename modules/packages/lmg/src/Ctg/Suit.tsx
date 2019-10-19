@@ -3,7 +3,7 @@ var rulercolor = 'rgb(67,205,128)';
 import { IBarTool } from '../ScrollBar/useScroll';
 import { Drawer } from "../interface";
 import ScrollEl from '../ScrollBar/ScrollEl';
-import { EventEmitter } from '@lianmed/utils'
+import { EventEmitter, event } from '@lianmed/utils'
 export class P {
   x: number;
   y: number;
@@ -63,6 +63,7 @@ type Canvas = HTMLCanvasElement;
 type Context = CanvasRenderingContext2D;
 export class Suit extends EventEmitter implements Drawer {
   static option: object = {}
+  option = Suit.option
   initFlag = false
   sid = sid++;
   log = console.log.bind(console, 'suit', this.sid)
@@ -90,12 +91,12 @@ export class Suit extends EventEmitter implements Drawer {
     scale: 'rgba(0,0,0,1)',
     primarygrid: 'rgba(144, 159, 180,1)',
     secondarygrid: 'rgba(221, 230, 237,1)',
-    fhrcolor:['green','blue','rgb(0,0,0)'],
-    tococolor:'rgb(0,0,0)',
-    alarmcolor:'rgb(255, 1, 1)',
-    alarm_enable:true,
-    alarm_high:160,
-    alarm_low:110,
+    fhrcolor: ['green', 'blue', 'rgb(0,0,0)'],
+    tococolor: 'rgb(0,0,0)',
+    alarmcolor: 'rgb(255, 1, 1)',
+    alarm_enable: true,
+    alarm_high: 160,
+    alarm_low: 110,
   };
   selectstart = 0;// 选择开始点
   selectrpstart = 0;// 相对开始位置
@@ -144,7 +145,7 @@ export class Suit extends EventEmitter implements Drawer {
     // this.resize();
     this.barTool.watchGrab(value => {
     });
-
+    this.log('option', this.option)
   }
 
   init(data) {
@@ -161,9 +162,9 @@ export class Suit extends EventEmitter implements Drawer {
     }
     this.toco = data.toco;
     this.currentdot = data.index;
-    if(!data.status){
+    if (!data.status) {
       this.type = 1;
-      console.log('type_check',data);
+      console.log('type_check', data);
     }
     this.drawobj.drawgrid(0);
     if (this.type > 0) {
@@ -208,7 +209,7 @@ export class Suit extends EventEmitter implements Drawer {
       this.drawobj.drawdot(this.viewposition);
     });
     this.barTool.watchGrab(value => {
-      console.log('print',this.selectrpstart,this.selectrpend);
+      console.log('print', this.selectrpstart, this.selectrpend);
       if (this.data.index < this.canvasline.width * 2) {
         return;
       }
@@ -225,15 +226,24 @@ export class Suit extends EventEmitter implements Drawer {
         this.drawobj.drawdot(this.viewposition);
       }
       if (this.selectflag) {
-        if(this.selectend == 1 && this.viewposition - this.selectrpend > 0){
+        if (this.selectend == 1 && this.viewposition - this.selectrpend > 0) {
           this.endingBar.setVisibility(true);
           this.endingBar.setOffset(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
-        }else{
+        } else {
           this.endingBar.setVisibility(false);
         }
         this.drawobj.showselect(this.selectrpstart, this.selectrpend);
       }
     });
+  }
+  // 报警
+  alarmOn(alarmType = '') {
+    event.emit('suit:alarmOn', alarmType)
+    console.log('suit:alarmOn emit')
+  }
+  alarmOff(alarmType) {
+    event.emit('suit:alarmOff', alarmType)
+    console.log('suit:alarmOff emit')
   }
   createBar() {
     if (this.startingBar && this.endingBar) {
@@ -246,32 +256,32 @@ export class Suit extends EventEmitter implements Drawer {
     //endingBar.setOffset(100)
     endingBar.toggleVisibility()
     startingBar.on('change', value => {
-      this.selectrpstart = value*2;
+      this.selectrpstart = value * 2;
       console.log('print_开始', value, this.viewposition, this.canvasline.width);
       if (this.viewposition > this.canvasline.width * 2) {
-        this.selectstart = value*2 + this.viewposition - 2 * this.canvasline.width;
+        this.selectstart = value * 2 + this.viewposition - 2 * this.canvasline.width;
       } else {
-        this.selectstart = value*2;
+        this.selectstart = value * 2;
       }
       this.emit('suit:startTime', this.selectstart)
     })
     endingBar.on('change', value => {
-      this.selectrpend = this.viewposition - (this.canvasline.width - value)*2;
-      console.log('print_结束', value,this.selectrpstart,this.selectrpend)
+      this.selectrpend = this.viewposition - (this.canvasline.width - value) * 2;
+      console.log('print_结束', value, this.selectrpstart, this.selectrpend)
       this.drawobj.showselect(this.selectrpstart, this.selectrpend);
       this.emit('suit:endTime', this.selectrpend)
     })
 
     this.on('locking', value => {
       //更新状态
-      console.log('print_locking',value);
+      console.log('print_locking', value);
       this.selectflag = value;
       if (this.selectflag) {
         this.startingBar.toggleVisibility();
         this.selectend = 0;
         //this.endingBar.toggleVisibility();
         console.log(this.selectstart, this.data.index);
-        this.selectrpend = this.data.index  < this.selectrpstart + 4800?this.data.index :this.selectrpstart + 4800
+        this.selectrpend = this.data.index < this.selectrpstart + 4800 ? this.data.index : this.selectrpstart + 4800
         this.drawobj.showselect(this.selectrpstart, this.selectrpend);
       } else {
         this.startingBar.toggleVisibility();
@@ -280,19 +290,26 @@ export class Suit extends EventEmitter implements Drawer {
         this.drawobj.showselect(0, 0);
       }
     })
-
-    this.on('customizing', value => {
+    .on('customizing', value => {
       this.log('customizing', value);
       if (value && this.selectflag) {
         this.selectend = 1;
-        if(this.viewposition - this.selectrpend > 0){
+        if (this.viewposition - this.selectrpend > 0) {
           this.endingBar.setVisibility(true);
           this.endingBar.setOffset(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
         }
-      }else{
+      } else {
         this.selectend = 0;
         this.endingBar.setVisibility(false);
       }
+    })
+    .on('setStartingTime', value => {
+      this.log('setStartingTime', value);
+      
+    })
+    .on('setEndingTime', value => {
+      this.log('setEndingTime', value);
+      
     })
   }
   lockStartingBar(status: boolean) {

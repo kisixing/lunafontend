@@ -29,8 +29,7 @@ function useScroll(
 
     bar = new ScrollEl(wrapper.current).setStyles({
       background: '#4169E1',
-      border: '1px solid #4169E1',
-      width: 30, height: 6, bottom: 0
+      width: 10, height: 6, bottom: 0
     })
 
     const boxGrabCb = e => {
