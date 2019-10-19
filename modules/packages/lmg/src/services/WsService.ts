@@ -175,6 +175,7 @@ export class WsService extends EventEmitter {
                 if (received_msg) {
                     //showMessage(received_msg);
                     if (received_msg.name == 'push_devices') {
+                        console.log('dev', received_msg.data)
                         var devlist: IDevice[] = received_msg.data;
                         for (var i in devlist) {
                             var devdata = devlist[i];
@@ -184,10 +185,12 @@ export class WsService extends EventEmitter {
                                 if (!datacache.has(cachebi)) {
                                     datacache.set(cachebi, getBlankCacheItem());
                                     convertdocid(cachebi, devdata.beds[bi].doc_id);
-                                    if (devdata.beds[bi].is_working) {
+                                    if (devdata.beds[bi].is_working == 0) {
                                         datacache.get(cachebi).status = Working;
-                                    } else {
+                                    }else if (devdata.beds[bi].is_working == 1){
                                         datacache.get(cachebi).status = Stopped;
+                                    }else{
+                                        datacache.get(cachebi).status = Offline;
                                     }
                                     //debugger
                                     if (devdata.beds[bi].pregnancy) {
@@ -359,11 +362,17 @@ export class WsService extends EventEmitter {
                         var id = statusdata.device_no;
                         var bi = statusdata.bed_no;
                         var cachbi = id + '-' + bi;
-                        if (statusdata.status == 1) {
-                            datacache.get(cachbi).status = Offline;
-                        }else{
-                            datacache.get(cachbi).status = Working;
+                        if(!datacache.has(cachbi)){
+                            datacache.set(cachbi, getBlankCacheItem());
                         }
+                        if (statusdata.status == 0){
+                            datacache.get(cachbi).status = Working;
+                        }else if (statusdata.status == 1){
+                            datacache.get(cachbi).status = Stopped;
+                        }else{
+                            datacache.get(cachbi).status = Offline;
+                        }                   
+                        console.log('update_status',datacache.get(cachbi))
                         datacache.get(cachbi).pregnancy = statusdata.pregnancy;
                         this.refresh('update_status')
                     } else if (received_msg.name == 'push_data_ecg') {
@@ -382,17 +391,11 @@ export class WsService extends EventEmitter {
                         const { bed_no, device_no } = devdata;
                         let curid = `${device_no}-${bed_no}`;
                         //TODO : 更新设备状态
-                        cleardata(curid);
-                        if (devdata.is_working) {
-                            datacache.get(curid).status = Working;
-                        } else {
-                            datacache.get(curid).status = Stopped;
-                        }
-                        //TODO : 更新设备状态
+                        cleardata(curid,devdata.fetal_num);
                         convertdocid(curid, devdata.doc_id);
                         this.log('start_work', devdata,devdata.is_working);
                         const target = datacache.get(curid)
-                        if (devdata.is_working) {
+                        if (devdata.is_working == 0) {
                             target.status = Working
                         } else {
                             target.status = Stopped
@@ -402,7 +405,7 @@ export class WsService extends EventEmitter {
                         //结束监护页
                         let devdata = received_msg.data;
                         let curid = Number(devdata['device_no']) + '-' + Number(devdata['bed_no']);
-                        if (devdata.is_working) {
+                        if (devdata.is_working == 0) {
                             datacache.get(curid).status = Working;
                         } else {
                             datacache.get(curid).status = Stopped;
@@ -421,27 +424,31 @@ export class WsService extends EventEmitter {
             return [datacache];
         });
 
-        function cleardata(curid) {
-            datacache.get(curid).fhr = [];
-            datacache.get(curid).toco = [];
-            datacache.get(curid).fm = [];
-            datacache.get(curid).index = 0;
-            datacache.get(curid).length = 0;
-            datacache.get(curid).start = -1;
-            datacache.get(curid).last = 0;
-            datacache.get(curid).past = 0;
-            datacache.get(curid).timestamp = 0;
-            datacache.get(curid).docid = '';
-            datacache.get(curid).status = Offline;
-            datacache.get(curid).starttime = '';
-            datacache.get(curid).pregnancy = '';
-            datacache.get(curid).ecg = new Queue();
-            let count = datacache.get(curid).fetal_num;
-            datacache.get(curid).fetal_num = count;
-            for (let fetal = 0; fetal < count; fetal++) {
+        function cleardata(curid,fetal_num) {
+            if(datacache.has(curid)){
+                datacache.get(curid).fhr = [];
+                datacache.get(curid).toco = [];
+                datacache.get(curid).fm = [];
+                datacache.get(curid).index = 0;
+                datacache.get(curid).length = 0;
+                datacache.get(curid).start = -1;
+                datacache.get(curid).last = 0;
+                datacache.get(curid).past = 0;
+                datacache.get(curid).timestamp = 0;
+                datacache.get(curid).docid = '';
+                datacache.get(curid).status = Offline;
+                datacache.get(curid).starttime = '';
+                datacache.get(curid).pregnancy = '';
+                datacache.get(curid).ecg = new Queue();
+            }else{
+                datacache.set(curid, getBlankCacheItem());
+            }
+            datacache.get(curid).fetal_num = fetal_num;
+            for (var fetal = 0; fetal < fetal_num; fetal++) {
                 datacache.get(curid).fhr[fetal] = [];
             }
         }
+
         function convertdocid(id: string, doc_id: string) {
             datacache.get(id).docid = doc_id;
             if (doc_id != '') {
@@ -564,6 +571,6 @@ export interface IBed {
     doc_id: string;
     fetal_num: number;
     is_include_mother: boolean;
-    is_working: boolean;
+    is_working: number;
     pregnancy: string;
 }

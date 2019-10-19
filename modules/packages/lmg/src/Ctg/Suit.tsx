@@ -1,5 +1,5 @@
 import DrawCTG from './DrawCTG';
-var rulercolor = 'rgb(67,205,128)';
+//var rulercolor = 'rgb(67,205,128)';
 import { IBarTool } from '../ScrollBar/useScroll';
 import { Drawer } from "../interface";
 import ScrollEl from '../ScrollBar/ScrollEl';

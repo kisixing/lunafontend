@@ -141,12 +141,16 @@ export default class DrawCTG {
   }
   drawdot(cur) {
     const { suit, linecontext, max } = this;
-    const { fhr, toco, fm } = suit.data;
+    const { fhr, toco, fm } = suit.data;  
+    if(typeof(fhr[0]) == "undefined"){
+      this.drawgrid(cur,false);
+      return;
+    }
     this.drawgrid(cur);
     this.showcur(cur);
     var lastx = 0;
     var lasty = 0;
-    linecontext.clearRect(0, 0, suit.canvasline.width, suit.canvasline.height);
+    linecontext.clearRect(0, 0, suit.canvasline.width, suit.canvasline.height); 
     // 0.5 s 一个点,一个像素画两个点
     var start = cur - suit.canvasline.width * 2 > 0 ? cur - suit.canvasline.width * 2 : 0;
     //Draw FHR multiply 
@@ -477,12 +481,25 @@ export default class DrawCTG {
     datacontext.textBaseline = 'top';
     datacontext.font = 'bold ' + fontsize + 'px arial';
     for (let i = 0; i < suit.fetalcount; i++) {
-      if (typeof (fhr[i][x]) != "undefined") {
+      if(typeof(fhr[i]) == "undefined"){
+        return;
+      }
+      if (typeof(fhr[i][x]) != "undefined") {
         curvalue = fhr[i][x];
-        if (suit.ctgconfig.alarm_enable && (fhr[i][x] > suit.ctgconfig.alarm_high || fhr[i][x] < suit.ctgconfig.alarm_low)) {
-          datacontext.fillStyle = suit.ctgconfig.alarmcolor;
-        }else{
+        if(curvalue == "0"){
+          curvalue = '-- --';
           datacontext.fillStyle = suit.ctgconfig.fhrcolor[i];
+        }else{
+          datacontext.fillStyle = suit.ctgconfig.alarmcolor;
+          if (suit.ctgconfig.alarm_enable && fhr[i][x] > suit.ctgconfig.alarm_high) {
+            this.suit.alarmOn('心率过高');
+          }else if(suit.ctgconfig.alarm_enable &&fhr[i][x] < suit.ctgconfig.alarm_low){
+            this.suit.alarmOn('心率过低');
+          }
+          else{
+            datacontext.fillStyle = suit.ctgconfig.fhrcolor[i];
+            this.suit.alarmOff('');
+          }
         }
       }
       datacontext.fillText('FHR' + (i + 1) + ' : ' + curvalue, 10, curpostion);
