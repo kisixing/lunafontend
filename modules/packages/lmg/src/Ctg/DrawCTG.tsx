@@ -100,58 +100,44 @@ export default class DrawCTG {
   }
 
   drawdotright(cur) {
-    const { suit, linecontext, baseleft, max } = this;
-    const { fhr, toco } = suit;
-    var lastx = 0;
-    var lasty = 0;
-    linecontext.clearRect(0, 0, suit.canvasline.width, suit.canvasline.height);
-    linecontext.beginPath();
-    linecontext.strokeStyle = 'rgb(0,0,0)';
-    linecontext.lineWidth = 0.8;
-    lastx = 0;
-    lasty = 0;
-    // let len = fhr.length;
-    // var limit = len - cur > suit.canvasline.width ? suit.canvasline.width : len - cur;
-    for (var i = 0; i < cur; i++) {
-      lastx = i + baseleft;
-      lasty = fhr[i];
-      if (lasty == 0) {
-        if (cur + i + 1 < length) {
-          linecontext.moveTo(lastx, (max - fhr[i + 1]) * this.yspan);
-        }
-      } else {
-        if (i > 1 && lasty - fhr[i - 1] > 30) {
-          linecontext.moveTo(lastx, (max - fhr[i]) * this.yspan);
-        } else if (i > 1 && fhr[i - 1] - lasty > 30) {
-          linecontext.moveTo(lastx, (max - fhr[i]) * this.yspan);
-        } else {
-          linecontext.lineTo(lastx, (max - lasty) * this.yspan);
-        }
-      }
-    }
-    lastx = 0;
-    lasty = 0;
-    linecontext.moveTo(lastx, this.suit.canvasline.height);
-    for (var i = 0; i < cur; i++) {
-      lastx = i + baseleft;
-      lasty = toco[i];
-      linecontext.lineTo(lastx, this.suit.canvasline.height - lasty * this.yspan);
-    }
-    linecontext.stroke();
-    /*
-    linecontext.moveTo(lastx, 240);
-    for (var i = 1; i < fmp.length; i++) {
-      lastx = i + baseleft;
-      lasty = fmp[i];
-      linecontext.lineTo(lastx, 240 - lasty * this.yspan);
-    }
-    linecontext.stroke();
-    for (var i = 1; i < fm.length; i++) {
-      if (fm[i] == 1) {
-        showfm(i);
-      }
-    }
-    */
+    // const { suit, linecontext, baseleft, max } = this;
+    // const { fhr, toco } = suit;
+    // var lastx = 0;
+    // var lasty = 0;
+    // linecontext.clearRect(0, 0, suit.canvasline.width, suit.canvasline.height);
+    // linecontext.beginPath();
+    // linecontext.strokeStyle = 'rgb(0,0,0)';
+    // linecontext.lineWidth = 0.8;
+    // lastx = 0;
+    // lasty = 0;
+    // // let len = fhr.length;
+    // // var limit = len - cur > suit.canvasline.width ? suit.canvasline.width : len - cur;
+    // for (var i = 0; i < cur; i++) {
+    //   lastx = i + baseleft;
+    //   lasty = fhr[i];
+    //   if (lasty == 0) {
+    //     if (cur + i + 1 < length) {
+    //       linecontext.moveTo(lastx, (max - fhr[i + 1]) * this.yspan);
+    //     }
+    //   } else {
+    //     if (i > 1 && lasty - fhr[i - 1] > 30) {
+    //       linecontext.moveTo(lastx, (max - fhr[i]) * this.yspan);
+    //     } else if (i > 1 && fhr[i - 1] - lasty > 30) {
+    //       linecontext.moveTo(lastx, (max - fhr[i]) * this.yspan);
+    //     } else {
+    //       linecontext.lineTo(lastx, (max - lasty) * this.yspan);
+    //     }
+    //   }
+    // }
+    // lastx = 0;
+    // lasty = 0;
+    // linecontext.moveTo(lastx, this.suit.canvasline.height);
+    // for (var i = 0; i < cur; i++) {
+    //   lastx = i + baseleft;
+    //   lasty = toco[i];
+    //   linecontext.lineTo(lastx, this.suit.canvasline.height - lasty * this.yspan);
+    // }
+    // linecontext.stroke();
   }
   drawdot(cur) {
     const { suit, linecontext, max } = this;

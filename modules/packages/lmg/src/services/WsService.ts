@@ -281,6 +281,7 @@ export class WsService extends EventEmitter {
                                     tmpcache.last = ctgdata[key].index;
                                 } else {
                                     //判断 是否有缺失
+                                    //kisi 2019-10-19 不再请求离线
                                     var flag = 0;
                                     var sflag = 0;
                                     var eflag = 0;

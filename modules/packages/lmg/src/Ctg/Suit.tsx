@@ -339,12 +339,6 @@ export class Suit extends EventEmitter implements Drawer {
     });
   }
 
-  movescoll() {
-    const { currentx } = this;
-    this.p.draw(currentx, 0, 6, 428, rulercolor);
-    this.currentx = currentx + 1;
-  }
-
   drawdot() {
     if (this.data.starttime && this.data.starttime != '' && this.data.status == 1 && this.data.index > 0) {
       if (isNaN(this.data.csspan))
@@ -367,16 +361,6 @@ export class Suit extends EventEmitter implements Drawer {
     } else {
       this.drawobj.showcur(this.data.index + 1);
     }
-  }
-
-  timerscoll(dely) {
-    let id = setInterval(() => {
-      if (!this) {
-        clearInterval(id);
-      }
-      this.movescoll();
-    }, dely);
-    this.intervalIds.push(id);
   }
 
   timerCtg(dely) {
