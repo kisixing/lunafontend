@@ -32,7 +32,7 @@ export default function () {
       全屏
     </Button>
       <div style={{ width: '812px', height: '400px', border: '1px solid',background:'#fff' }} ref={box}>
-        <Ctg data={datacache.get('1-1')} />
+        <Ctg data={datacache.get('31-31')} />
       </div>
     </>
   );

@@ -4,59 +4,6 @@ import { IBarTool } from '../ScrollBar/useScroll';
 import { Drawer } from "../interface";
 import ScrollEl from '../ScrollBar/ScrollEl';
 import { EventEmitter, event } from '@lianmed/utils'
-export class P {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-  color: string;
-  isDown: boolean;
-  suit: Suit;
-  constructor(x: number, y: number, w: number, h: number, color: string, suit: Suit) {
-    this.suit = suit;
-    this.draw(x, y, w, h, color);
-  }
-  draw(x: number, y: number, w: number, h: number, color: string) {
-    const { context2 } = this.suit;
-    //context2.clearRect(this.x - 1, this.y - 1, this.w + 2, this.h + 2);
-    this.x = x;
-    this.y = y;
-    this.w = w;
-    this.h = h;
-    this.color = color;
-    context2.strokeStyle = this.color;
-    context2.strokeRect(this.x, this.y, this.w, this.h);
-    console.log(this.x, this.y, this.w, this.h);
-  }
-  OnMouseMove(evt) {
-    //timeout = true;
-    if (this.isDown) {
-      var X = evt.layerX - this.w / 2;
-      // var Y = evt.layerY - this.h / 2;
-      this.draw(X, 0, 6, 428, rulercolor);
-    }
-    clearInterval();
-  }
-  OnMouseDown(evt) {
-    var X = evt.layerX;
-    var Y = evt.layerY;
-    if (X < this.x + this.w && X > this.x) {
-      if (Y < this.y + this.h && Y > this.y) {
-        this.isDown = true;
-      }
-    } else {
-      this.isDown = true;
-    }
-  }
-  OnMouseUp(evt) {
-    this.isDown = false;
-    // let seconds = (evt.layerX / 75) * 60;
-    {
-      this.suit.showcur(evt.layerX, this.suit.fhr[evt.layerX], this.suit.toco[evt.layerX]);
-      this.suit.currentx = evt.layerX;
-    }
-  }
-}
 
 let sid = 0;
 type Canvas = HTMLCanvasElement;
@@ -70,10 +17,6 @@ export class Suit extends EventEmitter implements Drawer {
   startingBar: ScrollEl;
   endingBar: ScrollEl;
   intervalIds: NodeJS.Timeout[] = [];
-  fhr = [];
-  toco = [];
-  fm = [];
-  fmp = [];
   data: any;
   starttime = '2019-09-26';
   fetalcount = 1;
@@ -115,7 +58,6 @@ export class Suit extends EventEmitter implements Drawer {
   wrap: HTMLElement;
   drawobj: DrawCTG;
   barTool: IBarTool;
-  p: P;
   dragtimestamp = 0;
   interval = 5000;
   timeout: NodeJS.Timeout;
@@ -140,8 +82,7 @@ export class Suit extends EventEmitter implements Drawer {
     this.contextalarm = canvasalarm.getContext('2d');
     this.barTool = barTool;
     this.drawobj = new DrawCTG(this);
-    this.type = type
-    this.p = new P(20, 0, 6, 428, rulercolor, this); // 竖向选择线
+    this.type = type;
     // this.resize();
     this.barTool.watchGrab(value => {
     });
@@ -157,16 +98,15 @@ export class Suit extends EventEmitter implements Drawer {
     let defaultinterval = 500;
     this.data = data;
     this.fetalcount = data.fetal_num;
-    for (let i = 0; i < this.fetalcount; i++) {
-      this.fhr[i] = data.fhr[i];
-    }
-    this.toco = data.toco;
     this.currentdot = data.index;
     if (!data.status) {
       this.type = 1;
-      console.log('type_check', data);
+      if (!data.index) {
+        this.data = this.InitFileData(data);
+        this.fetalcount = this.data.fetal_num;
+      }
+      console.log('type_check', this.data, this.fetalcount);
     }
-    this.drawobj.drawgrid(0);
     if (this.type > 0) {
       //kisi 2019-10-08 不在曲线内处理
       // let json; // 调用方式restful如  api/ctg-exams-data/2_2_190930222541   请求的json数据
@@ -175,18 +115,18 @@ export class Suit extends EventEmitter implements Drawer {
       // this.initctgdata(json.fhr3, this.fhr[2]);
       // this.initctgdata(json.toco, this.toco);
       if (this.data.index > this.canvasline.width * 2) {
-        this.drawobj.drawdot(this.canvasline.width * 2);
         this.curr = this.canvasline.width * 2;
-        //console.log(this.canvasline.width * 2, this.data.index);
+        console.log('type_check', this.canvasline.width, this.canvasline.width * 2, this.data.index);
         this.barTool.setBarWidth(100);
         this.barTool.setBarLeft(0, false);
       } else {
-        this.drawobj.drawdot(this.data.index);
         this.curr = this.data.index;
       }
+      this.drawobj.drawdot(this.canvasline.width * 2);
       this.viewposition = this.curr;
       this.createBar();
     } else {
+      this.drawobj.drawgrid(0);
       this.barTool.setBarWidth(0);
       this.timerCtg(defaultinterval);
     }
@@ -250,7 +190,7 @@ export class Suit extends EventEmitter implements Drawer {
       return
     }
     const { barTool } = this
-    const startingBar = this.startingBar = barTool.createRod('开始')
+    const startingBar = this.startingBar = barTool.createRod('')
     const endingBar = this.endingBar = barTool.createRod('结束')
     startingBar.setOffset(0)
     //endingBar.setOffset(100)
@@ -290,27 +230,27 @@ export class Suit extends EventEmitter implements Drawer {
         this.drawobj.showselect(0, 0);
       }
     })
-    .on('customizing', value => {
-      this.log('customizing', value);
-      if (value && this.selectflag) {
-        this.selectend = 1;
-        if (this.viewposition - this.selectrpend > 0) {
-          this.endingBar.setVisibility(true);
-          this.endingBar.setOffset(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
+      .on('customizing', value => {
+        this.log('customizing', value);
+        if (value && this.selectflag) {
+          this.selectend = 1;
+          if (this.viewposition - this.selectrpend > 0) {
+            this.endingBar.setVisibility(true);
+            this.endingBar.setOffset(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
+          }
+        } else {
+          this.selectend = 0;
+          this.endingBar.setVisibility(false);
         }
-      } else {
-        this.selectend = 0;
-        this.endingBar.setVisibility(false);
-      }
-    })
-    .on('setStartingTime', value => {
-      this.log('setStartingTime', value);
-      
-    })
-    .on('setEndingTime', value => {
-      this.log('setEndingTime', value);
-      
-    })
+      })
+      .on('setStartingTime', value => {
+        this.log('setStartingTime', value);
+
+      })
+      .on('setEndingTime', value => {
+        this.log('setEndingTime', value);
+
+      })
   }
   lockStartingBar(status: boolean) {
     console.log('lockStartingBar', status)
@@ -324,7 +264,7 @@ export class Suit extends EventEmitter implements Drawer {
     this.context2 = null;
     this.canvasline = null;
     this.contextline = null;
-    this.p = null;
+    // this.p = null;
     this.wrap = null;
     this.drawobj = null;
     this.barTool = null;
@@ -337,6 +277,52 @@ export class Suit extends EventEmitter implements Drawer {
   movescoller() { }
 
   //胎心数据处理
+  InitFileData(oriobj) {
+    let pureidarr = oriobj.docid.split('_');
+    let CTGDATA = { fhr: [[], [], []], toco: [], fm: [], fetal_num: 2, index: 0, starttime: '' };
+    if (pureidarr.length > 2) {
+      let pureid = pureidarr[2];
+      CTGDATA.starttime =
+        '20' +
+        pureid.substring(0, 2) +
+        '-' +
+        pureid.substring(2, 4) +
+        '-' +
+        pureid.substring(4, 6) +
+        ' ' +
+        pureid.substring(6, 8) +
+        ':' +
+        pureid.substring(8, 10) +
+        ':' +
+        pureid.substring(10, 12);
+    }
+    Object.keys(oriobj).forEach(key => {
+      let oridata = oriobj[key];
+      if (!oridata) {
+        return;
+      }
+      if (key === 'fhr1') {
+        CTGDATA.index = oridata.length / 2;
+      }
+      for (let i = 0; i < CTGDATA.index; i++) {
+        let hexBits = oridata.substring(0, 2);
+        let data_to_push = parseInt(hexBits, 16);
+        if (key === 'fhr1') {
+          CTGDATA.fhr[0][i] = data_to_push;
+        } else if (key === 'fhr2') {
+          CTGDATA.fhr[1][i] = data_to_push;
+        } else if (key === 'fhr3') {
+          CTGDATA.fhr[2][i] = data_to_push;
+        } else if (key === 'toco') {
+          CTGDATA.toco[i] = data_to_push;
+        } else if (key === 'fm') {
+          CTGDATA.fm[i] = data_to_push;
+        }
+        oridata = oridata.substring(2, oridata.length);
+      }
+    });
+    return CTGDATA;
+  }
   initctgdata(oridata, arrdata) {
     if (!oridata) {
       return;
@@ -370,19 +356,6 @@ export class Suit extends EventEmitter implements Drawer {
       }
     });
   }
-  showcur(x, fhr, toco) {
-    const { context1 } = this;
-    context1.font = 'bold 10px consolas';
-    context1.textAlign = 'left';
-    context1.textBaseline = 'top';
-    context1.font = 'bold 16px arial';
-    context1.fillStyle = 'blue';
-  }
-  movescoll() {
-    const { currentx } = this;
-    this.p.draw(currentx, 0, 6, 428, rulercolor);
-    this.currentx = currentx + 1;
-  }
 
   drawdot() {
     if (this.data.starttime && this.data.starttime != '' && this.data.status == 1 && this.data.index > 0) {
@@ -406,16 +379,6 @@ export class Suit extends EventEmitter implements Drawer {
     } else {
       this.drawobj.showcur(this.data.index + 1);
     }
-  }
-
-  timerscoll(dely) {
-    let id = setInterval(() => {
-      if (!this) {
-        clearInterval(id);
-      }
-      this.movescoll();
-    }, dely);
-    this.intervalIds.push(id);
   }
 
   timerCtg(dely) {
