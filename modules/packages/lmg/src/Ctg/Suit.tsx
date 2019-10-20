@@ -42,6 +42,7 @@ export class Suit extends EventEmitter implements Drawer {
     alarm_high: 160,
     alarm_low: 110,
   };
+  printlen = 4800;
   selectstart = 0;// 选择开始点
   selectrpstart = 0;// 相对开始位置
   selectend = 0;// 选择结束点
@@ -137,9 +138,6 @@ export class Suit extends EventEmitter implements Drawer {
       this.timerCtg(defaultinterval);
     }
     this.barTool.watch(value => {
-      if (this.selectflag) {
-        this.drawobj.showselect(this.selectrpstart, this.selectrpend);
-      }
       //显示历史数据
       this.dragtimestamp = new Date().getTime();
       if (this.curr > this.canvasline.width * 4) {
@@ -147,7 +145,6 @@ export class Suit extends EventEmitter implements Drawer {
       } else {
         this.viewposition = value + this.curr;
       }
-      console.log('scollchange', value, this.curr, this.canvasline.width, value, this.viewposition);
       if (this.viewposition < this.canvasline.width * 2) {
         this.drawobj.drawdot(this.canvasline.width * 2);
         return;
@@ -168,13 +165,15 @@ export class Suit extends EventEmitter implements Drawer {
       this.dragtimestamp = new Date().getTime();
       //判断开始点
       if (this.viewposition - value < this.canvasline.width * 2) {
-        this.drawobj.drawdot(this.canvasline.width * 2);
+        this.viewposition = this.canvasline.width * 2;
+        this.drawobj.drawdot(this.viewposition);
+        this.drawobj.showselect(this.selectrpstart, this.selectrpend);
         return;
       }
       //方向确认
       if (this.viewposition - value < this.data.index) {
         this.viewposition -= value;
-        this.movescoller();
+        //this.movescoller();
         this.drawobj.drawdot(this.viewposition);
       }
       if (this.selectflag) {
@@ -209,16 +208,24 @@ export class Suit extends EventEmitter implements Drawer {
     endingBar.toggleVisibility()
     startingBar.on('change', value => {
       this.selectrpstart = value * 2;
-      console.log('print_开始', value, this.viewposition, this.canvasline.width);
+      //console.log('print_开始', value, this.viewposition, this.canvasline.width);
       if (this.viewposition > this.canvasline.width * 2) {
         this.selectstart = value * 2 + this.viewposition - 2 * this.canvasline.width;
       } else {
         this.selectstart = value * 2;
       }
+      this.selectrpstart = this.selectstart;
       this.emit('suit:startTime', this.selectstart)
     })
     endingBar.on('change', value => {
-      this.selectrpend = this.viewposition - (this.canvasline.width - value) * 2;
+      if(this.data.index < this.canvasline.width*2){
+        this.selectrpend = value*2;
+      }else{
+        this.selectrpend = this.viewposition - (this.canvasline.width - value) * 2;
+      }
+      if(this.selectend<this.selectrpstart){
+        return;
+      }
       console.log('print_结束', value, this.selectrpstart, this.selectrpend)
       this.drawobj.showselect(this.selectrpstart, this.selectrpend);
       this.emit('suit:endTime', this.selectrpend)
@@ -230,10 +237,11 @@ export class Suit extends EventEmitter implements Drawer {
       this.selectflag = value;
       if (this.selectflag) {
         this.startingBar.toggleVisibility();
+        this.barTool.setBarWidth(0);
         this.selectend = 0;
         //this.endingBar.toggleVisibility();
-        console.log(this.selectstart, this.data.index);
-        this.selectrpend = this.data.index < this.selectrpstart + 4800 ? this.data.index : this.selectrpstart + 4800
+        console.log('print_lock',this.selectstart, this.data.index);
+        this.selectrpend = this.data.index < this.selectrpstart + this.printlen? this.data.index : this.selectrpstart + this.printlen
         this.drawobj.showselect(this.selectrpstart, this.selectrpend);
       } else {
         this.startingBar.toggleVisibility();
@@ -246,7 +254,11 @@ export class Suit extends EventEmitter implements Drawer {
         this.log('customizing', value);
         if (value && this.selectflag) {
           this.selectend = 1;
-          if (this.viewposition - this.selectrpend > 0) {
+          if(this.data.index <this.canvasline.width*2){
+            this.endingBar.setVisibility(true);
+            this.endingBar.setOffset(Math.floor(this.viewposition / 2));
+          }
+          else if (this.viewposition - this.selectrpend > 0) {
             this.endingBar.setVisibility(true);
             this.endingBar.setOffset(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
           }
@@ -356,7 +368,8 @@ export class Suit extends EventEmitter implements Drawer {
         this.barTool.setBarLeft(this.canvasline.width, false);
       }
     } else {
-      this.drawobj.showcur(this.data.index + 1);
+      this.drawobj.showcur(this.data.index + 2);
+      this.drawobj.drawdot(this.data.index + 2);
     }
   }
 

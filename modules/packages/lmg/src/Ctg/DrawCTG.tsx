@@ -179,17 +179,19 @@ export default class DrawCTG {
         let inneri = i;
         if (i == start) {
           linecontext.moveTo(lastx, (max - fhr[fetal][start] - curfhroffset) * this.yspan + this.basetop);
-        }
-        if (fhr[fetal][inneri]) {
-          lasty = fhr[fetal][inneri];
-        } else {
           continue;
         }
-        if (lasty == 0) {
-          if (inneri + 1 < length) {
-            linecontext.moveTo(lastx, (max - fhr[fetal][inneri] - curfhroffset) * this.yspan + this.basetop);
-          }
+        if (typeof(fhr[fetal][inneri])!="undefined" && fhr[fetal][inneri] && fhr[fetal][inneri] != 0) {
+          lasty = fhr[fetal][inneri];
         } else {
+          linecontext.moveTo(lastx, (max - 0 - curfhroffset) * this.yspan + this.basetop);
+          continue;
+        } 
+        if(i > 1 && (typeof(fhr[fetal][inneri-2])=="undefined" || fhr[fetal][inneri-2] == 0 || (lasty - fhr[fetal][inneri-2]) > 30 || (fhr[fetal][inneri-2] - lasty) > 30)){           
+          //kisi 2019-10-20 add 划线规则
+          linecontext.moveTo(lastx, (max - fhr[fetal][inneri] - curfhroffset) * this.yspan + this.basetop);
+        }
+        else {
           // 增加 报警颜色处理
           if (suit.ctgconfig.alarm_enable && (lasty > suit.ctgconfig.alarm_high || lasty < suit.ctgconfig.alarm_low)) {
             let type = 1;
@@ -231,14 +233,8 @@ export default class DrawCTG {
       } else {
         lastx = Math.floor((i - start) / 2);
       }
-      if (toco[i]) {
-        if (lasty == 0) {
-          lasty = toco[i];
-          linecontext.moveTo(lastx, suit.canvasline.height - lasty * this.yspan);
-        } else {
-          lasty = toco[i];
-        }
-        linecontext.lineTo(lastx, suit.canvasline.height - lasty * this.yspan);
+      if (i>2 && typeof(toco[i]) !="undefined" && typeof(toco[i-2])!="undefined"){
+        linecontext.lineTo(lastx, suit.canvasline.height - toco[i] * this.yspan);
       } else {
         linecontext.moveTo(lastx, suit.canvasline.height);
       }
@@ -532,8 +528,12 @@ export default class DrawCTG {
       return;
     }
     //横向选择区域设置填充色
-    let curstart = (suit.viewposition - drawwidth * 2);
-    end = (suit.viewposition - end) > 0 ? drawwidth - Math.floor((suit.viewposition - end) / 2) : drawwidth;
+    let curstart = suit.viewposition<drawwidth * 2?0:(suit.viewposition - drawwidth * 2);
+    if(end >= drawwidth * 2){
+      end = (suit.viewposition - end) > 0 ? drawwidth - Math.floor((suit.viewposition - end) / 2) : drawwidth;
+    }else{
+      end = end/2;
+    }
     start = start - curstart > 0 ? start - curstart : 0;
     console.log('printts',curstart, start, end);
     alarmcontext.fillStyle = suit.ctgconfig.selectarea;

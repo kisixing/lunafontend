@@ -230,6 +230,9 @@ export class WsService extends EventEmitter {
                             }
                             for (let key in ctgdata) {
                                 for (let fetal = 0; fetal < tmpcache.fetal_num; fetal++) {
+                                    if(ctgdata[key].fhr == 0){
+                                        continue;
+                                    }
                                     if (fetal == 0) {
                                         tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr;
                                     } else {
@@ -280,46 +283,46 @@ export class WsService extends EventEmitter {
                                     }
                                 }
                                 // 更新last index
-                                if (ctgdata[key].index - tmpcache.last < 3) {
+                                if (ctgdata[key].index - tmpcache.last < 2) {
                                     tmpcache.last = ctgdata[key].index;
                                 } else {
                                     //判断 是否有缺失
                                     //kisi 2019-10-19 不再请求离线
-                                    var flag = 0;
-                                    var sflag = 0;
-                                    var eflag = 0;
-                                    for (let il = tmpcache.last; il < tmpcache.index; il++) {
-                                        if (!tmpcache.fhr[0][il]) {
-                                            if (flag == 0) {
-                                                sflag = il;
-                                                flag = 1;
-                                            }
-                                        } else {
-                                            if (flag > 0) {
-                                                eflag = il;
-                                                var curstamp = new Date().getTime();
-                                                if (this.offrequest < 8 && (tmpcache.orflag || curstamp - tmpcache.timestamp > this.interval)) {
-                                                    tmpcache.orflag = false;
-                                                    this.offrequest += 1;
-                                                    this.send(
-                                                        '{"name":"get_data_ctg","data":{"start_index":' +
-                                                        sflag +
-                                                        ',"end_index":' +
-                                                        eflag +
-                                                        ',"device_no":' +
-                                                        id +
-                                                        ',"bed_no":' +
-                                                        bi +
-                                                        '}}',
-                                                    );
-                                                    tmpcache.timestamp = new Date().getTime();
-                                                }
-                                                break;
-                                            } else {
-                                                tmpcache.last = il;
-                                            }
-                                        }
-                                    }
+                                    // var flag = 0;
+                                    // var sflag = 0;
+                                    // var eflag = 0;
+                                    // for (let il = tmpcache.last; il < tmpcache.index; il++) {
+                                    //     if (!tmpcache.fhr[0][il]) {
+                                    //         if (flag == 0) {
+                                    //             sflag = il;
+                                    //             flag = 1;
+                                    //         }
+                                    //     } else {
+                                    //         if (flag > 0) {
+                                    //             eflag = il;
+                                    //             var curstamp = new Date().getTime();
+                                    //             if (this.offrequest < 8 && (tmpcache.orflag || curstamp - tmpcache.timestamp > this.interval)) {
+                                    //                 tmpcache.orflag = false;
+                                    //                 this.offrequest += 1;
+                                    //                 this.send(
+                                    //                     '{"name":"get_data_ctg","data":{"start_index":' +
+                                    //                     sflag +
+                                    //                     ',"end_index":' +
+                                    //                     eflag +
+                                    //                     ',"device_no":' +
+                                    //                     id +
+                                    //                     ',"bed_no":' +
+                                    //                     bi +
+                                    //                     '}}',
+                                    //                 );
+                                    //                 tmpcache.timestamp = new Date().getTime();
+                                    //             }
+                                    //             break;
+                                    //         } else {
+                                    //             tmpcache.last = il;
+                                    //         }
+                                    //     }
+                                    //}
                                 }
                             }
                         }
@@ -405,6 +408,11 @@ export class WsService extends EventEmitter {
                         //结束监护页
                         let devdata = received_msg.data;
                         let curid = Number(devdata['device_no']) + '-' + Number(devdata['bed_no']);
+                        if(datacache.get(curid).pregnancy == ''){
+                            console.log('end_work',datacache.get(curid));
+                            cleardata(curid,datacache.get(curid).fetal_num);
+                            console.log('end_work',datacache.get(curid));
+                        }
                         if (devdata.is_working == 0) {
                             datacache.get(curid).status = Working;
                         } else {
