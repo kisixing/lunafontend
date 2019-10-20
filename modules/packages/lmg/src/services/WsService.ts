@@ -82,7 +82,7 @@ export class WsService extends EventEmitter {
     refresh(name) {
 
         if (this.refreshTimeout) {
-            this.log(name, 'refresh','discarded')
+            this.log(name, 'refresh', 'discarded')
             return
         }
         this.refreshTimeout = setTimeout(() => {
@@ -187,9 +187,9 @@ export class WsService extends EventEmitter {
                                     convertdocid(cachebi, devdata.beds[bi].doc_id);
                                     if (devdata.beds[bi].is_working == 0) {
                                         datacache.get(cachebi).status = Working;
-                                    }else if (devdata.beds[bi].is_working == 1){
+                                    } else if (devdata.beds[bi].is_working == 1) {
                                         datacache.get(cachebi).status = Stopped;
-                                    }else{
+                                    } else {
                                         datacache.get(cachebi).status = Offline;
                                     }
                                     //debugger
@@ -230,7 +230,7 @@ export class WsService extends EventEmitter {
                             }
                             for (let key in ctgdata) {
                                 for (let fetal = 0; fetal < tmpcache.fetal_num; fetal++) {
-                                    if(ctgdata[key].fhr == 0){
+                                    if (ctgdata[key].fhr == 0) {
                                         continue;
                                     }
                                     if (fetal == 0) {
@@ -359,23 +359,23 @@ export class WsService extends EventEmitter {
                         //     if (!devdata) continue;
                         // }
                     } else if (received_msg.name == 'update_status') {
-                        console.log('update_status',received_msg.data)
+                        console.log('update_status', received_msg.data)
                         // 状态机处理
                         var statusdata = received_msg.data;
                         var id = statusdata.device_no;
                         var bi = statusdata.bed_no;
                         var cachbi = id + '-' + bi;
-                        if(!datacache.has(cachbi)){
+                        if (!datacache.has(cachbi)) {
                             datacache.set(cachbi, getBlankCacheItem());
                         }
-                        if (statusdata.status == 0){
+                        if (statusdata.status == 0) {
                             datacache.get(cachbi).status = Working;
-                        }else if (statusdata.status == 1){
+                        } else if (statusdata.status == 1) {
                             datacache.get(cachbi).status = Stopped;
-                        }else{
+                        } else {
                             datacache.get(cachbi).status = Offline;
-                        }                   
-                        console.log('update_status',datacache.get(cachbi))
+                        }
+                        console.log('update_status', datacache.get(cachbi))
                         datacache.get(cachbi).pregnancy = statusdata.pregnancy;
                         this.refresh('update_status')
                     } else if (received_msg.name == 'push_data_ecg') {
@@ -394,9 +394,9 @@ export class WsService extends EventEmitter {
                         const { bed_no, device_no } = devdata;
                         let curid = `${device_no}-${bed_no}`;
                         //TODO : 更新设备状态
-                        cleardata(curid,devdata.fetal_num);
+                        cleardata(curid, devdata.fetal_num);
                         convertdocid(curid, devdata.doc_id);
-                        this.log('start_work', devdata,devdata.is_working);
+                        this.log('start_work', devdata, devdata.is_working);
                         const target = datacache.get(curid)
                         if (devdata.is_working == 0) {
                             target.status = Working
@@ -408,10 +408,10 @@ export class WsService extends EventEmitter {
                         //结束监护页
                         let devdata = received_msg.data;
                         let curid = Number(devdata['device_no']) + '-' + Number(devdata['bed_no']);
-                        if(datacache.get(curid).pregnancy == ''){
-                            console.log('end_work',datacache.get(curid));
-                            cleardata(curid,datacache.get(curid).fetal_num);
-                            console.log('end_work',datacache.get(curid));
+                        if (datacache.get(curid).pregnancy == '') {
+                            console.log('end_work', datacache.get(curid));
+                            cleardata(curid, datacache.get(curid).fetal_num);
+                            console.log('end_work', datacache.get(curid));
                         }
                         if (devdata.is_working == 0) {
                             datacache.get(curid).status = Working;
@@ -432,8 +432,8 @@ export class WsService extends EventEmitter {
             return [datacache];
         });
 
-        function cleardata(curid,fetal_num) {
-            if(datacache.has(curid)){
+        function cleardata(curid, fetal_num) {
+            if (datacache.has(curid)) {
                 datacache.get(curid).fhr = [];
                 datacache.get(curid).toco = [];
                 datacache.get(curid).fm = [];
@@ -448,7 +448,7 @@ export class WsService extends EventEmitter {
                 datacache.get(curid).starttime = '';
                 datacache.get(curid).pregnancy = '';
                 datacache.get(curid).ecg = new Queue();
-            }else{
+            } else {
                 datacache.set(curid, getBlankCacheItem());
             }
             datacache.get(curid).fetal_num = fetal_num;
@@ -487,6 +487,12 @@ export class WsService extends EventEmitter {
                 datacache.get(id).start = value;
             } else if (value >= datacache.get(id).index) {
                 datacache.get(id).index = value;
+                const arr = id.split('-')
+                let text = id
+                arr[0] && arr[1] && arr[0] === arr[1] && (text = arr[0])
+                if (value / 240 > 20) {
+                    event.emit('bed:announcer', `${text}号子机监护时间到`)
+                }
             }
         }
 
