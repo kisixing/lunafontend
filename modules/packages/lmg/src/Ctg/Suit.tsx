@@ -167,18 +167,28 @@ export class Suit extends EventEmitter implements Drawer {
       if (this.viewposition - value < this.canvasline.width * 2) {
         this.viewposition = this.canvasline.width * 2;
         this.drawobj.drawdot(this.viewposition);
-        this.drawobj.showselect(this.selectrpstart, this.selectrpend);
+        if (this.selectflag) {
+          this.endingBar.setOffset(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
+          this.drawobj.showselect(this.selectrpstart, this.selectrpend);
+        }
         return;
       }
       //方向确认
+      console.log('print_drag1',value,this.viewposition , this.selectrpend);
       if (this.viewposition - value < this.data.index) {
         this.viewposition -= value;
         //this.movescoller();
         this.drawobj.drawdot(this.viewposition);
+      }else{
+        this.viewposition = this.data.index;
+        this.drawobj.drawdot(this.viewposition);
+        console.log('print_drag--',this.viewposition);
       }
       if (this.selectflag) {
-        if (this.selectend == 1 && this.viewposition - this.selectrpend > 0) {
+        console.log('print_drag2',value,this.viewposition , this.selectrpend,Math.floor((this.viewposition - this.selectrpend)) / 2);
+        if (this.selectend == 1 && this.viewposition - this.selectrpend > -2) {
           this.endingBar.setVisibility(true);
+          //this.endingBar.setOffset(this.selectrpend / 2);
           this.endingBar.setOffset(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
         } else {
           this.endingBar.setVisibility(false);
@@ -242,23 +252,26 @@ export class Suit extends EventEmitter implements Drawer {
         //this.endingBar.toggleVisibility();
         console.log('print_lock',this.selectstart, this.data.index);
         this.selectrpend = this.data.index < this.selectrpstart + this.printlen? this.data.index : this.selectrpstart + this.printlen
-        this.drawobj.showselect(this.selectrpstart, this.selectrpend);
+        this.drawobj.showselect(this.selectrpstart, this.selectrpend);  
+        this.endingBar.setVisibility(false);
+        this.emit('suit:endTime', this.selectrpend);
       } else {
         this.startingBar.toggleVisibility();
         //this.endingBar.toggleVisibility();
+        this.endingBar.setVisibility(false);
         console.log(this.selectstart, this.data.index);
         this.drawobj.showselect(0, 0);
       }
     })
       .on('customizing', value => {
-        this.log('customizing', value);
+        this.log('customizing', value,this.selectrpend,this.viewposition);
         if (value && this.selectflag) {
           this.selectend = 1;
           if(this.data.index <this.canvasline.width*2){
             this.endingBar.setVisibility(true);
             this.endingBar.setOffset(Math.floor(this.viewposition / 2));
           }
-          else if (this.viewposition - this.selectrpend > 0) {
+          else if (this.viewposition - this.selectrpend >= 0) {
             this.endingBar.setVisibility(true);
             this.endingBar.setOffset(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
           }

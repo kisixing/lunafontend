@@ -536,14 +536,22 @@ export default class DrawCTG {
     }
     //横向选择区域设置填充色
     let curstart = suit.viewposition<drawwidth * 2?0:(suit.viewposition - drawwidth * 2);
-    end = (suit.viewposition - end) > 0 ? drawwidth - Math.floor((suit.viewposition - end) / 2) : drawwidth;
-    // if(end >= drawwidth * 2){
+    if(suit.data.index<=drawwidth*2){
+      end = end/2;
+    }else{
+      end = (suit.viewposition - end) > 0 ? drawwidth - Math.floor((suit.viewposition - end) / 2) : drawwidth;
+    }
+    // if(end>drawwidth*2){     
     //   end = (suit.viewposition - end) > 0 ? drawwidth - Math.floor((suit.viewposition - end) / 2) : drawwidth;
     // }else{
     //   end = Math.floor(end/2);
     // }
+    // if(end >= drawwidth * 2){
+    // }else{
+    //   end = Math.floor(end/2);
+    // }
     start = start - curstart > 0 ? start - curstart : 0;
-    console.log('printts',curstart, start, end);
+    console.log('printts1',curstart, start/2, end);
     alarmcontext.fillStyle = suit.ctgconfig.selectarea;
     alarmcontext.fillRect(start/2, this.basetop, end-start/2, suit.canvasalarm.height - this.basetop);
     alarmcontext.beginPath();
@@ -555,6 +563,7 @@ export default class DrawCTG {
       alarmcontext.moveTo(end, this.basetop);
       alarmcontext.lineTo(end, this.suit.canvasalarm.height);
     }
+    console.log('printts2',curstart, start/2, end);
     alarmcontext.stroke();
   };
 }
