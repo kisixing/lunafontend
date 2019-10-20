@@ -226,7 +226,7 @@ export default class DrawCTG {
     linecontext.beginPath();
     linecontext.strokeStyle = suit.ctgconfig.tococolor;
     linecontext.lineWidth = 1;
-    for (var i = start; i < cur; i++) {
+    for (var i = start; i < cur-2; i++) {
       if (i % 2 == 1) continue;
       if (start == 0) {
         lastx = Math.floor((suit.canvasline.width * 2 - cur + i) / 2);
@@ -236,7 +236,14 @@ export default class DrawCTG {
       if (i>2 && typeof(toco[i]) !="undefined" && typeof(toco[i-2])!="undefined"){
         linecontext.lineTo(lastx, suit.canvasline.height - toco[i] * this.yspan);
       } else {
-        linecontext.moveTo(lastx, suit.canvasline.height);
+          if(typeof(toco[i])!="undefined"){
+            linecontext.moveTo(lastx,  suit.canvasline.height - toco[i] * this.yspan);
+          }else if(typeof(toco[i-2])!="undefined"){
+            linecontext.moveTo(lastx,  suit.canvasline.height - toco[i-2] * this.yspan);
+          }
+          else{
+            linecontext.moveTo(lastx, suit.canvasline.height);
+          }
       }
     }
     linecontext.stroke();
@@ -529,11 +536,12 @@ export default class DrawCTG {
     }
     //横向选择区域设置填充色
     let curstart = suit.viewposition<drawwidth * 2?0:(suit.viewposition - drawwidth * 2);
-    if(end >= drawwidth * 2){
-      end = (suit.viewposition - end) > 0 ? drawwidth - Math.floor((suit.viewposition - end) / 2) : drawwidth;
-    }else{
-      end = end/2;
-    }
+    end = (suit.viewposition - end) > 0 ? drawwidth - Math.floor((suit.viewposition - end) / 2) : drawwidth;
+    // if(end >= drawwidth * 2){
+    //   end = (suit.viewposition - end) > 0 ? drawwidth - Math.floor((suit.viewposition - end) / 2) : drawwidth;
+    // }else{
+    //   end = Math.floor(end/2);
+    // }
     start = start - curstart > 0 ? start - curstart : 0;
     console.log('printts',curstart, start, end);
     alarmcontext.fillStyle = suit.ctgconfig.selectarea;

@@ -218,12 +218,12 @@ export class Suit extends EventEmitter implements Drawer {
       this.emit('suit:startTime', this.selectstart)
     })
     endingBar.on('change', value => {
-      if(this.data.index < this.canvasline.width*2){
-        this.selectrpend = value*2;
-      }else{
+       if(this.data.index < this.canvasline.width*2){
+         this.selectrpend = value*2;
+       }else{
         this.selectrpend = this.viewposition - (this.canvasline.width - value) * 2;
-      }
-      if(this.selectend<this.selectrpstart){
+       }
+      if(this.selectrpstart > this.selectrpend){
         return;
       }
       console.log('print_结束', value, this.selectrpstart, this.selectrpend)
