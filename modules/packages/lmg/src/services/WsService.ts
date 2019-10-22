@@ -161,7 +161,8 @@ export class WsService extends EventEmitter {
             socket.onclose = (event) => {
                 this.tip('关闭', EWsStatus.Error)
                 setTimeout(() => {
-                    this.connect()
+                    // this.connect()
+                    location.reload()
                 }, this.RECONNECT_INTERVAL);
             };
             // 接收服务端数据时触发事件
