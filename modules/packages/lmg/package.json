@@ -13,7 +13,12 @@
   "files": [
     "lib"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "lodash":"^4.17.15"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.108"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kisixing/LUNA_FontEnd.git"

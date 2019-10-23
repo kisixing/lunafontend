@@ -3,14 +3,17 @@ import DrawCTG from './DrawCTG';
 import { IBarTool } from '../ScrollBar/useScroll';
 import { Drawer } from "../interface";
 import ScrollEl from '../ScrollBar/ScrollEl';
-import { EventEmitter, event } from '@lianmed/utils'
+import { EventEmitter } from '@lianmed/utils'
 import request from "@lianmed/request"
 
+import { throttle } from "lodash";
+import { ICacheItem } from '../services/WsService';
 let sid = 0;
 type Canvas = HTMLCanvasElement;
 type Context = CanvasRenderingContext2D;
 export class Suit extends EventEmitter implements Drawer {
-  static option: {[x:string]:string} = {}
+  emitInterval: number
+  static option: { [x: string]: string } = {}
   option = Suit.option
   initFlag = false
   sid = sid++;
@@ -96,7 +99,7 @@ export class Suit extends EventEmitter implements Drawer {
     this.ctgconfig.fhrcolor[2] = this.option.fhrcolor3;
   }
 
-  init(data) {
+  init(data: ICacheItem) {
     if (!data) {
       return
     }
@@ -152,11 +155,11 @@ export class Suit extends EventEmitter implements Drawer {
       this.drawobj.drawdot(this.viewposition);
     });
     this.barTool.watchGrab(value => {
-      if(this.type == 0 && this.data.past >0){
+      if (this.type == 0 && this.data.past > 0) {
         //console.log('print', this.data,this.selectrpstart, this.selectrpend);
-        if(!this.requestflag){
+        if (!this.requestflag) {
           this.requestflag = true;
-          this.getoffline(this.data.docid,this.data.past);
+          this.getoffline(this.data.docid, this.data.past);
         }
       }
       if (this.data.index < this.canvasline.width * 2) {
@@ -174,18 +177,18 @@ export class Suit extends EventEmitter implements Drawer {
         return;
       }
       //方向确认
-      console.log('print_drag1',value,this.viewposition , this.selectrpend);
+      console.log('print_drag1', value, this.viewposition, this.selectrpend);
       if (this.viewposition - value < this.data.index) {
         this.viewposition -= value;
         //this.movescoller();
         this.drawobj.drawdot(this.viewposition);
-      }else{
+      } else {
         this.viewposition = this.data.index;
         this.drawobj.drawdot(this.viewposition);
-        console.log('print_drag--',this.viewposition);
+        console.log('print_drag--', this.viewposition);
       }
       if (this.selectflag) {
-        console.log('print_drag2',value,this.viewposition , this.selectrpend,Math.floor((this.viewposition - this.selectrpend)) / 2);
+        console.log('print_drag2', value, this.viewposition, this.selectrpend, Math.floor((this.viewposition - this.selectrpend)) / 2);
         if (this.selectend == 1 && this.viewposition - this.selectrpend > -2) {
           this.endingBar.setVisibility(true);
           //this.endingBar.setOffset(this.selectrpend / 2);
@@ -197,14 +200,17 @@ export class Suit extends EventEmitter implements Drawer {
       }
     });
   }
+  lazyEmit = throttle((type: string, ...args: any[]) => {
+    console.log(`Suit:${type}`)
+    this.emit(type, ...args)
+    return true
+  }, this.emitInterval || 2000)
   // 报警
-  alarmOn(alarmType = '') {
-    event.emit('suit:alarmOn', alarmType)
-    console.log('suit:alarmOn emit')
+  alarmOn(alarmType: string = '') {
+    this.lazyEmit('alarmOn', alarmType)
   }
-  alarmOff(alarmType) {
-    event.emit('suit:alarmOff', alarmType)
-    console.log('suit:alarmOff emit')
+  alarmOff(alarmType: string) {
+    this.lazyEmit('alarmOff', alarmType)
   }
   createBar() {
     if (this.startingBar && this.endingBar) {
@@ -228,12 +234,12 @@ export class Suit extends EventEmitter implements Drawer {
       this.emit('suit:startTime', this.selectstart)
     })
     endingBar.on('change', value => {
-       if(this.data.index < this.canvasline.width*2){
-         this.selectrpend = value*2;
-       }else{
+      if (this.data.index < this.canvasline.width * 2) {
+        this.selectrpend = value * 2;
+      } else {
         this.selectrpend = this.viewposition - (this.canvasline.width - value) * 2;
-       }
-      if(this.selectrpstart > this.selectrpend){
+      }
+      if (this.selectrpstart > this.selectrpend) {
         return;
       }
       console.log('print_结束', value, this.selectrpstart, this.selectrpend)
@@ -250,9 +256,9 @@ export class Suit extends EventEmitter implements Drawer {
         this.barTool.setBarWidth(0);
         this.selectend = 0;
         //this.endingBar.toggleVisibility();
-        console.log('print_lock',this.selectstart, this.data.index);
-        this.selectrpend = this.data.index < this.selectrpstart + this.printlen? this.data.index : this.selectrpstart + this.printlen
-        this.drawobj.showselect(this.selectrpstart, this.selectrpend);  
+        console.log('print_lock', this.selectstart, this.data.index);
+        this.selectrpend = this.data.index < this.selectrpstart + this.printlen ? this.data.index : this.selectrpstart + this.printlen
+        this.drawobj.showselect(this.selectrpstart, this.selectrpend);
         this.endingBar.setVisibility(false);
         this.emit('suit:endTime', this.selectrpend);
       } else {
@@ -264,10 +270,10 @@ export class Suit extends EventEmitter implements Drawer {
       }
     })
       .on('customizing', value => {
-        this.log('customizing', value,this.selectrpend,this.viewposition);
+        this.log('customizing', value, this.selectrpend, this.viewposition);
         if (value && this.selectflag) {
           this.selectend = 1;
-          if(this.data.index <this.canvasline.width*2){
+          if (this.data.index < this.canvasline.width * 2) {
             this.endingBar.setVisibility(true);
             this.endingBar.setOffset(Math.floor(this.viewposition / 2));
           }
@@ -402,41 +408,41 @@ export class Suit extends EventEmitter implements Drawer {
     return status;
   }
 
- getoffline(doc_id: string, offlineend: number) {
+  getoffline(doc_id: string, offlineend: number) {
     request.get(`/ctg-exams-data/${doc_id}`).then(responseData => {
-        console.log(doc_id, offlineend, responseData, this.data.past);
-        if (responseData) {
-            this.initfhrdata(responseData, this.data, offlineend);
-            this.data.past = 0;
-            this.requestflag = false;
-        }
-  })
-}
+      console.log(doc_id, offlineend, responseData, this.data.past);
+      if (responseData) {
+        this.initfhrdata(responseData, this.data, offlineend);
+        this.data.past = 0;
+        this.requestflag = false;
+      }
+    })
+  }
 
   initfhrdata(data, datacache, offindex) {
     Object.keys(data).forEach(key => {
-        let oridata = data[key] as string;
-        if (!oridata) {
-            return;
+      let oridata = data[key] as string;
+      if (!oridata) {
+        return;
+      }
+      for (let i = 0; i < offindex; i++) {
+        let hexBits = oridata.substring(0, 2);
+        let data_to_push = parseInt(hexBits, 16);
+        if (key === 'fhr1') {
+          datacache.fhr[0][i] = data_to_push;
+        } else if (key === 'fhr2') {
+          if (datacache.fhr[1])
+            datacache.fhr[1][i] = data_to_push;
+        } else if (key === 'fhr3') {
+          if (datacache.fhr[2])
+            datacache.fhr[2][i] = data_to_push;
+        } else if (key === 'toco') {
+          datacache.toco[i] = data_to_push;
+        } else if (key === "fm") {
+          datacache.fm[i] = data_to_push;
         }
-        for (let i = 0; i < offindex; i++) {
-            let hexBits = oridata.substring(0, 2);
-            let data_to_push = parseInt(hexBits, 16);
-            if (key === 'fhr1') {
-                datacache.fhr[0][i] = data_to_push;
-            } else if (key === 'fhr2') {
-                if (datacache.fhr[1])
-                    datacache.fhr[1][i] = data_to_push;
-            } else if (key === 'fhr3') {
-                if (datacache.fhr[2])
-                    datacache.fhr[2][i] = data_to_push;
-            } else if (key === 'toco') {
-                datacache.toco[i] = data_to_push;
-            } else if (key === "fm") {
-                datacache.fm[i] = data_to_push;
-            }
-            oridata = oridata.substring(2, oridata.length);
-        }
+        oridata = oridata.substring(2, oridata.length);
+      }
     });
   }
 }
