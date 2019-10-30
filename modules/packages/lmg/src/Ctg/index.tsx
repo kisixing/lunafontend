@@ -9,7 +9,7 @@ interface Iprops extends React.HTMLProps<HTMLDivElement> {
   data: any;
   mutableSuitObject?: { suit: (Suit | any) };
   itemHeight?: number;
-  suitType?: 0 | 1,
+  suitType?: 0 | 1 | 2,
   showEcg?: boolean
 }
 

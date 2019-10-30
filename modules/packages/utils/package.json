@@ -13,6 +13,9 @@
   "files": [
     "lib"
   ],
+  "peerDependencies": {
+    "@lianmed/request": "^1.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kisixing/LUNA_FontEnd.git"
