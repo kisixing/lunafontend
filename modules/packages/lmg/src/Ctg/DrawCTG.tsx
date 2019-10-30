@@ -32,10 +32,11 @@ function formatDate(date: any, format) {
 
 export default class DrawCTG {
   suit: Suit;
-  context: CanvasRenderingContext2D;
+  gridcontext: CanvasRenderingContext2D;
   linecontext: CanvasRenderingContext2D;
   datacontext: CanvasRenderingContext2D;
-  alarmcontext: CanvasRenderingContext2D;
+  selectcontext: CanvasRenderingContext2D;
+  analysecontext: CanvasRenderingContext2D;
   baseleft: number;
   basetop: number;
   min: number;
@@ -47,10 +48,11 @@ export default class DrawCTG {
   fhroffset: number;
   constructor(suit: Suit, xspan = 40, yspan = 1, scalespan = 30, fhroffset = -20, baseleft = 0, basetop = 10, min = 50, max = 210) {
     this.suit = suit;
-    this.context = suit.context1;
+    this.gridcontext = suit.contextgrid;
     this.linecontext = suit.contextline;
-    this.datacontext = suit.context2;
-    this.alarmcontext = suit.contextalarm;
+    this.datacontext = suit.contextdata;
+    this.selectcontext = suit.contextselect;
+    this.analysecontext = suit.contextanalyse;
     this.xspan = xspan;
     this.yspan = yspan;
     this.scalespan = scalespan;
@@ -66,12 +68,14 @@ export default class DrawCTG {
     const { width, height } = rect;
     this.suit.canvasline.width = width;
     this.suit.canvasline.height = height;
-    this.suit.canvasalarm.width = width;
-    this.suit.canvasalarm.height = height;
-    this.suit.canvas1.width = width;
-    this.suit.canvas1.height = height;
-    this.suit.canvas2.width = width;
-    this.suit.canvas2.height = height;
+    this.suit.canvasselect.width = width;
+    this.suit.canvasselect.height = height;
+    this.suit.canvasgrid.width = width;
+    this.suit.canvasgrid.height = height;
+    this.suit.canvasdata.width = width;
+    this.suit.canvasdata.height = height;
+    this.suit.canvasanalyse.width = width;
+    this.suit.canvasanalyse.height = height;
     this.yspan = (height - this.scalespan - this.basetop) / (this.max + 100 - this.min);
     //console.log(this.suit.data,width,height,this.yspan);
     this.suit.viewposition = width*2;
@@ -88,13 +92,13 @@ export default class DrawCTG {
     }
   }
   drawgrid(cur, drawtimespan = true) {
-    const { suit, sethorizontal, setvertical, context } = this;
+    const { suit, sethorizontal, setvertical, gridcontext } = this;
     let cwidth = suit.canvasline.width;
     let cheight = suit.canvasline.height;
-    context.clearRect(0, 0, cwidth, cheight);
+    gridcontext.clearRect(0, 0, cwidth, cheight);
     //横向选择区域设置填充色
-    context.fillStyle = suit.ctgconfig.normalarea;
-    context.fillRect(0, 50 * this.yspan + this.basetop, cwidth, 50 * this.yspan);
+    gridcontext.fillStyle = suit.ctgconfig.normalarea;
+    gridcontext.fillRect(0, 50 * this.yspan + this.basetop, cwidth, 50 * this.yspan);
     sethorizontal(cwidth, cur, drawtimespan);
     setvertical(cwidth, cur);
   }
@@ -140,7 +144,7 @@ export default class DrawCTG {
     // linecontext.stroke();
   }
   drawdot(cur) {
-    const { suit, linecontext, max } = this;
+    const { suit, linecontext, max ,analysecontext } = this;
     const { fhr, toco, fm } = suit.data;  
     if(typeof(fhr[0]) == "undefined"){
       this.drawgrid(cur,false);
@@ -151,6 +155,8 @@ export default class DrawCTG {
     var lastx = 0;
     var lasty = 0;
     linecontext.clearRect(0, 0, suit.canvasline.width, suit.canvasline.height); 
+    //清空分析画布
+    analysecontext.clearRect(0,0,suit.canvasanalyse.width,suit.canvasanalyse.height)
     // 0.5 s 一个点,一个像素画两个点
     var start = cur - suit.canvasline.width * 2 > 0 ? cur - suit.canvasline.width * 2 : 0;
     //Draw FHR multiply 
@@ -216,6 +222,9 @@ export default class DrawCTG {
             }
             this.linecontext.lineTo(lastx, (max - lasty - curfhroffset) * this.yspan + this.basetop);
           }
+          //kisi 2019-10-29
+          //绘制加减速标记
+          this.drawflag(lastx,(max - lasty - curfhroffset) * this.yspan,i);
         }
       }
       this.linecontext.stroke();
@@ -249,7 +258,6 @@ export default class DrawCTG {
     linecontext.stroke();
     //kisi 2019-10-10 fm 128 判断
     for (var i = start; i < cur; i++) {
-
       if (i % 2 == 1) continue;
       if (start == 0) {
         lastx = Math.floor((suit.canvasline.width * 2 - cur + i) / 2);
@@ -261,9 +269,69 @@ export default class DrawCTG {
         this.showfm(lastx);
       }
     }
+    //kisi 2019-10-29 baseline
+    //TODO
+    // if(typeof(suit.data.analyse) != 'undefined'){
+    //   let curfhroffset = 0;
+    //   analysecontext.beginPath();
+    //   analysecontext.strokeStyle = suit.ctgconfig.fhrcolor[2];//基线颜色
+    //   analysecontext.lineWidth = 1;
+    //   if(start <= suit.data.analyse.start && cur>suit.data.analyse.start){
+    //     let baselineoff = Math.ceil((suit.data.analyse.start - start)/(this.xspan*6));
+    //     let firstindex = baselineoff-2 >0 ? baselineoff-2 : 0;
+    //     console.log(firstindex);
+    //     analysecontext.moveTo(baselineoff*this.xspan*3,(max - curfhroffset - suit.data.analyse.baseline[firstindex]) * this.yspan+ this.basetop);
+    //     for (var i = baselineoff*this.xspan*3+1; i < cur; i++) {
+    //       baselineoff = Math.ceil((i-start)/(this.xspan*6));
+    //       if(baselineoff>=suit.data.analyse.baseline.length-1){
+    //         break;
+    //       }
+    //       if((i)%(this.xspan*6)== 0){
+    //         lastx = Math.floor((i - start) / 2);
+    //         analysecontext.lineTo(lastx, (max - curfhroffset - suit.data.analyse.baseline[baselineoff]) * this.yspan+ this.basetop);
+    //       }
+    //     }
+    //     analysecontext.stroke();
+    //   }else if(start < suit.data.analyse.end){
+    //     let baselineoff = Math.ceil((start-suit.data.analyse.start)/(this.xspan*6));
+    //     let firstindex = baselineoff-1 >0 ? baselineoff-1 : 0;
+    //     analysecontext.moveTo(0, (max - curfhroffset - suit.data.analyse.baseline[firstindex]) * this.yspan+ this.basetop);
+    //     for (var i = start+1; i < cur; i++) {
+    //       baselineoff = Math.ceil((i-suit.data.analyse.start)/(this.xspan*6));
+    //       if(baselineoff>=suit.data.analyse.baseline.length-1){
+    //         break;
+    //       }
+    //       if((i)%(this.xspan*6)== 0){
+    //         lastx = Math.floor((i - start) / 2);
+    //         analysecontext.lineTo(lastx,(max - curfhroffset - suit.data.analyse.baseline[baselineoff]) * this.yspan+ this.basetop);
+    //       }
+    //     }
+    //     analysecontext.stroke();
+    //   }
+    // }
   }
+  
+  //kisi 2019-10-28 绘制 acc dec
+  drawflag = (x,y,index) =>{
+    const {analysecontext,suit} = this;
+    analysecontext.textAlign = 'left';
+    analysecontext.textBaseline = 'top';
+    let txt = '';
+    if(typeof(suit.data.analyse)!="undefined" && suit.data.analyse.acc.indexOf(index)>-1){
+      txt = '+';
+      analysecontext.font = '25px arial';
+      analysecontext.fillStyle = 'black';
+      analysecontext.fillText(txt, x + 1, y + 5);
+    }else if(typeof(suit.data.analyse)!="undefined" && suit.data.analyse.dec.indexOf(index)>-1){
+      txt = '—';
+      analysecontext.font = 'bold 15px arial';
+      analysecontext.fillStyle = 'red';
+      analysecontext.fillText(txt, x + 1, y + 5);
+    }
+  }
+
   sethorizontal = (length: number, startposition: number, drawtimespan = true) => {
-    const { setrules, context, baseleft, min, max, xspan } = this;
+    const { setrules, gridcontext, baseleft, min, max, xspan } = this;
     if (drawtimespan) {
       this.starttime = this.suit.data.starttime;
     }
@@ -283,21 +351,21 @@ export default class DrawCTG {
     //console.log(offsetpx,offseti, offsetlpx,offsetmin,linecount,primaryflag,primaryscaleflag,minflag);
     for (var i = linecount; i > 0; i--) {
       var ioff = i + offseti;
-      context.beginPath();
-      context.strokeStyle = this.suit.ctgconfig.secondarygrid;
-      context.lineWidth = 0.8;
+      gridcontext.beginPath();
+      gridcontext.strokeStyle = this.suit.ctgconfig.secondarygrid;
+      gridcontext.lineWidth = 0.8;
       if (ioff % 3 == primaryflag) {
-        context.strokeStyle = this.suit.ctgconfig.primarygrid;
+        gridcontext.strokeStyle = this.suit.ctgconfig.primarygrid;
       }
       if(startposition==0){
         console.log('drawctg',startposition);
         if (ioff % 6 == primaryscaleflag) {
           if (drawtimespan) {
-            this.setscalestyle(context, this.suit.ctgconfig.scale);
+            this.setscalestyle(gridcontext, this.suit.ctgconfig.scale);
             let fMinutes = Math.floor(offsetmin - (1.0 * (linecount - i)) / 3);
             if(fMinutes>=0){
               let tmpyoffset = Math.floor((max - min) * this.yspan + this.scalespan / 4) + this.basetop;           
-              context.fillText(
+              gridcontext.fillText(
                 fMinutes + '分',
                 baseleft + xspan * i + baseleft - offsetpx - offsetlpx - 20,
                 tmpyoffset
@@ -310,7 +378,7 @@ export default class DrawCTG {
         if (ioff % 6 == primaryscaleflag) {
           if (drawtimespan) {
             let firstoffset = 0;
-            this.setscalestyle(context, this.suit.ctgconfig.scale);
+            this.setscalestyle(gridcontext, this.suit.ctgconfig.scale);
             let fMinutes = Math.floor(offsetmin - (1.0 * (linecount - i)) / 3);
             let tmpyoffset = Math.floor((max - min) * this.yspan + this.scalespan / 4) + this.basetop;
             //console.log(startposition,primaryscaleflag, ioff % 6,ioff,offsetmin,fMinutes);
@@ -323,16 +391,16 @@ export default class DrawCTG {
                 var date = new Date(this.starttime);
                 let timescale = formatDate(date.setMinutes(date.getMinutes() + fMinutes), 'HH:mm');
                 if (startposition == 0 && i == 1) {
-                  context.fillText(timescale, length - offsetpx, tmpyoffset);
+                  gridcontext.fillText(timescale, length - offsetpx, tmpyoffset);
                 } else {
-                  context.fillText(timescale, baseleft + xspan * i - offsetpx - offsetlpx - 10+firstoffset, tmpyoffset);
+                  gridcontext.fillText(timescale, baseleft + xspan * i - offsetpx - offsetlpx - 10+firstoffset, tmpyoffset);
                 }
               } else {
                 fMinutes = Math.ceil(fMinutes);
                 if (startposition == 0 && i == 0) {
-                  context.fillText(fMinutes + '分', baseleft - offsetpx, tmpyoffset);
+                  gridcontext.fillText(fMinutes + '分', baseleft - offsetpx, tmpyoffset);
                 } else {
-                  context.fillText(
+                  gridcontext.fillText(
                     fMinutes + '分',
                     baseleft + xspan * i + baseleft - offsetpx - offsetlpx - 10 +firstoffset,
                     tmpyoffset
@@ -343,19 +411,19 @@ export default class DrawCTG {
           }
         }
       }
-      context.moveTo(xspan * i - offsetlpx + baseleft - offsetpx, (max - min) * this.yspan + this.scalespan + this.basetop);
-      context.lineTo(xspan * i - offsetlpx + baseleft - offsetpx, (max - min + 100) * this.yspan + this.scalespan + this.basetop);
-      context.moveTo(xspan * i - offsetlpx + baseleft - offsetpx, 0 + this.basetop);
-      context.lineTo(xspan * i - offsetlpx + baseleft - offsetpx, (max - min) * this.yspan + this.basetop);
+      gridcontext.moveTo(xspan * i - offsetlpx + baseleft - offsetpx, (max - min) * this.yspan + this.scalespan + this.basetop);
+      gridcontext.lineTo(xspan * i - offsetlpx + baseleft - offsetpx, (max - min + 100) * this.yspan + this.scalespan + this.basetop);
+      gridcontext.moveTo(xspan * i - offsetlpx + baseleft - offsetpx, 0 + this.basetop);
+      gridcontext.lineTo(xspan * i - offsetlpx + baseleft - offsetpx, (max - min) * this.yspan + this.basetop);
       //console.log(length,offsetlpx,xspan * i - offsetlpx+ baseleft - offsetpx,offsetpx);
-      context.stroke();
+      gridcontext.stroke();
       if (ioff % 6 == primaryscaleflag) {
         setrules(xspan * (i + 3) + baseleft - offsetlpx - offsetpx);
       }
     }
   };
   sethorizontalright = (length: number, startposition: number, drawtimespan = true) => {
-    const { setrules, context, baseleft, min, max, xspan } = this;
+    const { setrules, gridcontext, baseleft, min, max, xspan } = this;
     if (drawtimespan) {
       this.starttime = this.suit.data.starttime;
     }
@@ -373,15 +441,15 @@ export default class DrawCTG {
     var primaryscaleflag = linecount % 6;
     for (var i = linecount * 2; i > 0; i--) {
       var ioff = i + offseti;
-      context.beginPath();
-      context.strokeStyle = this.suit.ctgconfig.secondarygrid;
-      context.lineWidth = 0.8;
+      gridcontext.beginPath();
+      gridcontext.strokeStyle = this.suit.ctgconfig.secondarygrid;
+      gridcontext.lineWidth = 0.8;
       if (ioff % 3 == primaryflag) {
-        context.strokeStyle = this.suit.ctgconfig.primarygrid;
+        gridcontext.strokeStyle = this.suit.ctgconfig.primarygrid;
       }
       if (ioff % 6 == primaryscaleflag) {
         if (drawtimespan) {
-          this.setscalestyle(context, this.suit.ctgconfig.scale);
+          this.setscalestyle(gridcontext, this.suit.ctgconfig.scale);
           let fMinutes = Math.ceil(offsetmin - (1.0 * (linecount * 2 - i)) / 3);
           let tmpyoffset = Math.floor((max - min) * this.yspan + this.scalespan / 4) + this.basetop;
           if (offseti > linecount * 2 - i - 2) {
@@ -390,16 +458,16 @@ export default class DrawCTG {
               var date = new Date(this.starttime);
               let timescale = formatDate(date.setMinutes(date.getMinutes() + fMinutes), 'HH:mm');
               if (startposition == 0 && i == 1) {
-                context.fillText(timescale, length - offsetpx, tmpyoffset);
+                gridcontext.fillText(timescale, length - offsetpx, tmpyoffset);
               } else {
-                context.fillText(timescale, baseleft + xspan * i - offsetpx - 10, tmpyoffset);
+                gridcontext.fillText(timescale, baseleft + xspan * i - offsetpx - 10, tmpyoffset);
               }
             } else {
               fMinutes = Math.ceil(fMinutes);
               if (startposition == 0 && i == 0) {
-                context.fillText(fMinutes + '分', baseleft - offsetpx, tmpyoffset);
+                gridcontext.fillText(fMinutes + '分', baseleft - offsetpx, tmpyoffset);
               } else {
-                context.fillText(
+                gridcontext.fillText(
                   fMinutes + '分',
                   baseleft + xspan * i + baseleft - offsetpx - 10,
                   tmpyoffset
@@ -409,42 +477,42 @@ export default class DrawCTG {
           }
         }
       }
-      context.moveTo(xspan * i + baseleft - 40 + lineoff + offsetpx, (max - min) * this.yspan + this.scalespan + this.basetop);
+      gridcontext.moveTo(xspan * i + baseleft - 40 + lineoff + offsetpx, (max - min) * this.yspan + this.scalespan + this.basetop);
       console.log(xspan * i + baseleft - 40 + lineoff + offsetpx, lineoff, i);
-      context.lineTo(xspan * i + baseleft - 40 + lineoff + offsetpx, (max - min + 100) * this.yspan + this.scalespan + this.basetop);
-      context.moveTo(xspan * i + baseleft - 40 + lineoff + offsetpx, 0 + this.basetop);
-      context.lineTo(xspan * i + baseleft - 40 + lineoff + offsetpx, (max - min) * this.yspan + this.basetop);
+      gridcontext.lineTo(xspan * i + baseleft - 40 + lineoff + offsetpx, (max - min + 100) * this.yspan + this.scalespan + this.basetop);
+      gridcontext.moveTo(xspan * i + baseleft - 40 + lineoff + offsetpx, 0 + this.basetop);
+      gridcontext.lineTo(xspan * i + baseleft - 40 + lineoff + offsetpx, (max - min) * this.yspan + this.basetop);
       //console.log((max - min) * this.yspan);
-      context.stroke();
+      gridcontext.stroke();
       if (ioff % 6 == primaryscaleflag) {
         setrules(xspan * (i + 3) + baseleft - offsetpx);
       }
     }
   };
   setvertical = (_maxline: number, startposition: number) => {
-    const { context, baseleft, min, max } = this;
+    const { gridcontext, baseleft, min, max } = this;
     for (var i = 0; i < (max - min) / 10 + 1; i++) {
-      context.beginPath();
-      context.lineWidth = 0.8;
+      gridcontext.beginPath();
+      gridcontext.lineWidth = 0.8;
       if (i % 3 == 0) {
-        context.strokeStyle = this.suit.ctgconfig.primarygrid;
+        gridcontext.strokeStyle = this.suit.ctgconfig.primarygrid;
       } else {
-        context.strokeStyle = this.suit.ctgconfig.secondarygrid; // 横轴浅线
+        gridcontext.strokeStyle = this.suit.ctgconfig.secondarygrid; // 横轴浅线
       }
-      context.moveTo(baseleft, this.yspan * i * 10 + this.basetop);
-      context.lineTo(_maxline, this.yspan * i * 10 + this.basetop);
-      context.stroke();
+      gridcontext.moveTo(baseleft, this.yspan * i * 10 + this.basetop);
+      gridcontext.lineTo(_maxline, this.yspan * i * 10 + this.basetop);
+      gridcontext.stroke();
     }
     for (var i = 0; i < 12; i++) {
-      context.beginPath();
-      context.lineWidth = 0.8;
-      context.strokeStyle = this.suit.ctgconfig.primarygrid;
+      gridcontext.beginPath();
+      gridcontext.lineWidth = 0.8;
+      gridcontext.strokeStyle = this.suit.ctgconfig.primarygrid;
       if (i % 2 == 1) {
-        context.strokeStyle = this.suit.ctgconfig.secondarygrid;
+        gridcontext.strokeStyle = this.suit.ctgconfig.secondarygrid;
       }
-      context.moveTo(baseleft, (max - min + i * 10) * this.yspan + this.scalespan + this.basetop);
-      context.lineTo(_maxline, (max - min + i * 10) * this.yspan + this.scalespan + this.basetop);
-      context.stroke();
+      gridcontext.moveTo(baseleft, (max - min + i * 10) * this.yspan + this.scalespan + this.basetop);
+      gridcontext.lineTo(_maxline, (max - min + i * 10) * this.yspan + this.scalespan + this.basetop);
+      gridcontext.stroke();
     }
   };
   setscalestyle(context, color) {
@@ -456,20 +524,20 @@ export default class DrawCTG {
   }
   //设置坐标轴的显示min~max 0~100
   setrules = (x: number) => {
-    const { min, max, context } = this;
-    context.beginPath();
-    this.setscalestyle(context, this.suit.ctgconfig.rule); // 轴坐标值
+    const { min, max, gridcontext } = this;
+    gridcontext.beginPath();
+    this.setscalestyle(gridcontext, this.suit.ctgconfig.rule); // 轴坐标值
     for (var i = 1; i < (max - min) / 10 + 1; i++) {
       if (i % 3 == 1) {
-        context.fillText(String(max - (i - 1) * 10), x, (i - 1) * 10 * this.yspan + 2);
+        gridcontext.fillText(String(max - (i - 1) * 10), x, (i - 1) * 10 * this.yspan + 2);
       }
     }
     for (var i = 0; i < 11; i++) {
       if (i % 2 == 0) {
-        context.fillText(String((10 - i) * 10), x, (max - min + i * 10) * this.yspan + this.basetop + this.scalespan);
+        gridcontext.fillText(String((10 - i) * 10), x, (max - min + i * 10) * this.yspan + this.basetop + this.scalespan);
       }
     }
-    context.stroke();
+    gridcontext.stroke();
   };
   showcur = (x: number) => {
     const { suit, datacontext } = this;
@@ -517,20 +585,20 @@ export default class DrawCTG {
     datacontext.fillText('TOCO: ' + curvalue, 10, curpostion);
   };
   showfm = postion => {
-    const { context, max, min } = this;
+    const { gridcontext, max, min } = this;
     let yposition = this.yspan * (max - min) + this.basetop + 18;
-    context.beginPath();
-    context.strokeStyle = 'rgb(0,0,0)';
-    context.lineWidth = 6;
-    context.moveTo(postion, yposition);
-    context.lineTo(postion, yposition + 6);
-    context.stroke();
+    gridcontext.beginPath();
+    gridcontext.strokeStyle = 'rgb(0,0,0)';
+    gridcontext.lineWidth = 6;
+    gridcontext.moveTo(postion, yposition);
+    gridcontext.lineTo(postion, yposition + 6);
+    gridcontext.stroke();
   };
   showselect = (start: number, end: number) => {
-    const { suit, alarmcontext } = this;
+    const { suit, selectcontext } = this;
     console.log('printin', suit.viewposition,start, end);
-    let drawwidth = suit.canvasalarm.width;
-    alarmcontext.clearRect(0, 0, drawwidth, suit.canvasalarm.height);
+    let drawwidth = suit.canvasselect.width;
+    selectcontext.clearRect(0, 0, drawwidth, suit.canvasselect.height);
     if (end == 0) {
       return;
     }
@@ -552,18 +620,18 @@ export default class DrawCTG {
     // }
     start = start - curstart > 0 ? start - curstart : 0;
     console.log('printts1',curstart, start/2, end);
-    alarmcontext.fillStyle = suit.ctgconfig.selectarea;
-    alarmcontext.fillRect(start/2, this.basetop, end-start/2, suit.canvasalarm.height - this.basetop);
-    alarmcontext.beginPath();
-    alarmcontext.strokeStyle = 'rgb(10, 10, 20)';
-    alarmcontext.lineWidth = 6;
-    alarmcontext.moveTo(start/2, this.basetop);
-    alarmcontext.lineTo(start/2, this.suit.canvasalarm.height);
+    selectcontext.fillStyle = suit.ctgconfig.selectarea;
+    selectcontext.fillRect(start/2, this.basetop, end-start/2, suit.canvasselect.height - this.basetop);
+    selectcontext.beginPath();
+    selectcontext.strokeStyle = 'rgb(10, 10, 20)';
+    selectcontext.lineWidth = 6;
+    selectcontext.moveTo(start/2, this.basetop);
+    selectcontext.lineTo(start/2, this.suit.canvasselect.height);
     if(suit.selectend == 0){
-      alarmcontext.moveTo(end, this.basetop);
-      alarmcontext.lineTo(end, this.suit.canvasalarm.height);
+      selectcontext.moveTo(end, this.basetop);
+      selectcontext.lineTo(end, this.suit.canvasselect.height);
     }
     console.log('printts2',curstart, start/2, end);
-    alarmcontext.stroke();
+    selectcontext.stroke();
   };
 }

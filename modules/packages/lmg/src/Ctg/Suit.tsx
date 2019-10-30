@@ -53,14 +53,16 @@ export class Suit extends EventEmitter implements Drawer {
   selectflag = false;
   requestflag = false;
   width: number;
-  canvas1: Canvas;
-  context1: Context;
-  canvas2: Canvas;
-  context2: Context;
+  canvasgrid: Canvas;
+  contextgrid: Context;
+  canvasdata: Canvas;
+  contextdata: Context;
   canvasline: Canvas;
   contextline: Context;
-  canvasalarm: Canvas;
-  contextalarm: Context;
+  canvasselect: Canvas;
+  contextselect: Context;
+  canvasanalyse: Canvas;
+  contextanalyse: Context;
   wrap: HTMLElement;
   drawobj: DrawCTG;
   barTool: IBarTool;
@@ -68,24 +70,27 @@ export class Suit extends EventEmitter implements Drawer {
   interval = 5000;
   timeout: NodeJS.Timeout;
   constructor(
-    canvas1: Canvas,
-    canvas2: Canvas,
+    canvasgrid: Canvas,
+    canvasdata: Canvas,
     canvasline: Canvas,
-    canvasalarm: Canvas,
+    canvasselect: Canvas,
+    canvasanalyse: Canvas,
     wrap: HTMLElement,
     barTool: IBarTool,
     type: number
   ) {
     super()
     this.wrap = wrap;
-    this.canvas1 = canvas1;
-    this.canvas2 = canvas2;
+    this.canvasgrid = canvasgrid;
+    this.canvasdata = canvasdata;
     this.canvasline = canvasline;
-    this.canvasalarm = canvasalarm;
-    this.context1 = canvas1.getContext('2d');
-    this.context2 = canvas2.getContext('2d');
+    this.canvasselect = canvasselect;
+    this.canvasanalyse = canvasanalyse;
+    this.contextgrid = canvasgrid.getContext('2d');
+    this.contextdata = canvasdata.getContext('2d');
     this.contextline = canvasline.getContext('2d');
-    this.contextalarm = canvasalarm.getContext('2d');
+    this.contextselect = canvasselect.getContext('2d');
+    this.contextanalyse = canvasanalyse.getContext('2d');
     this.barTool = barTool;
     this.drawobj = new DrawCTG(this);
     this.type = type;
@@ -103,7 +108,7 @@ export class Suit extends EventEmitter implements Drawer {
     if (!data) {
       return
     }
-    this.log('init')
+    this.log('init',data)
     this.initFlag = true
     let defaultinterval = 500;
     this.data = data;
@@ -111,19 +116,15 @@ export class Suit extends EventEmitter implements Drawer {
     this.currentdot = data.index;
     if (!data.status) {
       this.type = 1;
-      if (!data.index) {
+      if (typeof(data.index)=='undefined') {
         this.data = this.InitFileData(data);
         this.fetalcount = this.data.fetal_num;
       }
-      console.log('type_check', this.data, this.fetalcount);
     }
     if (this.type > 0) {
-      //kisi 2019-10-08 不在曲线内处理
-      // let json; // 调用方式restful如  api/ctg-exams-data/2_2_190930222541   请求的json数据
-      // this.initctgdata(json.fhr1, this.fhr[0]);
-      // this.initctgdata(json.fhr2, this.fhr[1]);
-      // this.initctgdata(json.fhr3, this.fhr[2]);
-      // this.initctgdata(json.toco, this.toco);
+      //kisi 2019-10-29 测试增加analyse属性
+      this.data.analyse = {acc:[300,800,1200],dec:[450,1000,1400],baseline:[100,110,120,105,110,120,100],start:360,end:1800};
+      console.log(this.data);
       if (this.data.index > this.canvasline.width * 2) {
         this.curr = this.canvasline.width * 2;
         console.log('type_check', this.canvasline.width, this.canvasline.width * 2, this.data.index);
@@ -301,12 +302,16 @@ export class Suit extends EventEmitter implements Drawer {
   destroy() {
     this.log('destroy')
     this.intervalIds.forEach(_ => clearInterval(_));
-    this.canvas1 = null;
-    this.canvas2 = null;
-    this.context1 = null;
-    this.context2 = null;
+    this.canvasgrid = null;
+    this.canvasdata = null;
+    this.contextgrid = null;
+    this.contextdata = null;
     this.canvasline = null;
     this.contextline = null;
+    this.canvasselect = null;
+    this.contextselect = null;
+    this.canvasanalyse = null;
+    this.contextanalyse = null;
     // this.p = null;
     this.wrap = null;
     this.drawobj = null;

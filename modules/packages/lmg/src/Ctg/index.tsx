@@ -25,10 +25,11 @@ export default (props: Iprops) => {
   } = props
   let barTool: IBarTool;
 
-  const canvas1 = useRef<HTMLCanvasElement>(null);
-  const canvas2 = useRef<HTMLCanvasElement>(null);
+  const canvasgrid = useRef<HTMLCanvasElement>(null);
+  const canvasdata = useRef<HTMLCanvasElement>(null);
   const canvasline = useRef<HTMLCanvasElement>(null);
-  const canvasalarm = useRef<HTMLCanvasElement>(null);
+  const canvasselect = useRef<HTMLCanvasElement>(null);
+  const canvasanalyse = useRef<HTMLCanvasElement>(null);
   const box = useRef<HTMLDivElement>(null);
   const ctgBox = useRef<HTMLDivElement>(null);
 
@@ -37,10 +38,11 @@ export default (props: Iprops) => {
   useEffect(() => {
 
     let instance = (new Suit(
-      canvas1.current,
-      canvas2.current,
+      canvasgrid.current,
+      canvasdata.current,
       canvasline.current,
-      canvasalarm.current,
+      canvasselect.current,
+      canvasanalyse.current,
       ctgBox.current,
       barTool,
       suitType
@@ -71,16 +73,19 @@ export default (props: Iprops) => {
   return (
     <div style={{ width: '100%', height: '100%' }} ref={box} {...others}>
       <div style={{ height: `${showEcg ? 70 : 100}%`, minHeight: `calc(100% - 200px)` }} ref={ctgBox}>
-        <canvas ref={canvas1}>
+        <canvas ref={canvasgrid}>
           <p>Your browserdoes not support the canvas element.</p>
         </canvas>
         <canvas style={{ position: 'absolute', left: '0', top: '0' }} ref={canvasline}>
           <p>Your browserdoes not support the canvas element.</p>
         </canvas>
-        <canvas style={{ position: 'absolute', left: '0', top: '0' }} ref={canvas2}>
+        <canvas style={{ position: 'absolute', left: '0', top: '0' }} ref={canvasdata}>
           <p>Your browserdoes not support the canvas element.</p>
         </canvas>
-        <canvas style={{ position: 'absolute', left: '0', top: '0' }} ref={canvasalarm}>
+        <canvas style={{ position: 'absolute', left: '0', top: '0' }} ref={canvasselect}>
+          <p>Your browserdoes not support the canvas element.</p>
+        </canvas>
+        <canvas style={{ position: 'absolute', left: '0', top: '0' }} ref={canvasanalyse}>
           <p>Your browserdoes not support the canvas element.</p>
         </canvas>
       </div>
