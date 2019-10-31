@@ -97,7 +97,6 @@ export class Suit extends EventEmitter implements Drawer {
     // this.resize();
     this.barTool.watchGrab(value => {
     });
-    this.log('option', this.option)
     this.ctgconfig.tococolor = this.option.tococolor;
     this.ctgconfig.fhrcolor[0] = this.option.fhrcolor1;
     this.ctgconfig.fhrcolor[1] = this.option.fhrcolor2;
@@ -108,6 +107,8 @@ export class Suit extends EventEmitter implements Drawer {
     if (!data) {
       return
     }
+    
+    console.log('this test', this);
     this.log('init',data)
     this.initFlag = true
     let defaultinterval = 500;
@@ -123,7 +124,6 @@ export class Suit extends EventEmitter implements Drawer {
     }
     if (this.type > 0) {
       //kisi 2019-10-29 测试增加analyse属性
-      this.data.analyse = {acc:[300,800,1200],dec:[450,1000,1400],baseline:[100,110,120,105,110,120,100],start:360,end:1800};
       console.log(this.data);
       if (this.data.index > this.canvasline.width * 2) {
         this.curr = this.canvasline.width * 2;
@@ -202,7 +202,7 @@ export class Suit extends EventEmitter implements Drawer {
     });
   }
   lazyEmit = throttle((type: string, ...args: any[]) => {
-    console.log(`Suit:${type}`)
+    //console.log(`Suit:${type}`)
     this.emit(type, ...args)
     return true
   }, this.emitInterval || 2000)
@@ -327,7 +327,7 @@ export class Suit extends EventEmitter implements Drawer {
   //胎心数据处理
   InitFileData(oriobj) {
     let pureidarr = oriobj.docid.split('_');
-    let CTGDATA = { fhr: [[], [], []], toco: [], fm: [], fetal_num: 2, index: 0, starttime: '' };
+    let CTGDATA = { fhr: [[], [], []], toco: [], fm: [], fetal_num: 2, index: 0, starttime: '',analyse:{acc:[],dec:[],baseline:[],start:0,end:0} };
     if (pureidarr.length > 2) {
       let pureid = pureidarr[2];
       CTGDATA.starttime =
@@ -347,7 +347,19 @@ export class Suit extends EventEmitter implements Drawer {
     Object.keys(oriobj).forEach(key => {
       let oridata = oriobj[key];
       if (!oridata) {
-        return;
+        return false;
+      }
+      if(key === 'docid'){
+        return false;
+      }
+      if(key === 'analyse'){
+        //TODO: 转成 Number类型  
+        //需支持多胎的分析      
+        if(oridata.acc != ''){
+          CTGDATA.analyse.acc = oridata.acc.split(',');
+        }
+        //dec、baseline
+        return true;
       }
       if (key === 'fhr1') {
         CTGDATA.index = oridata.length / 2;

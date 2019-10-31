@@ -77,17 +77,17 @@ export default class DrawCTG {
     this.suit.canvasanalyse.width = width;
     this.suit.canvasanalyse.height = height;
     this.yspan = (height - this.scalespan - this.basetop) / (this.max + 100 - this.min);
-    //console.log(this.suit.data,width,height,this.yspan);
-    this.suit.viewposition = width*2;
-    if(this.suit.data && this.suit.data.index>width*2){
-      this.suit.barTool.setBarWidth(100);
-      this.suit.barTool.setBarLeft(0, false);
-    }else{
-      this.suit.barTool.setBarWidth(0);
-    }
-    if (this.suit.data) {
+    this.suit.barTool.setBarWidth(0);
+    if(typeof(this.suit.data) != 'undefined'){
+      if(this.suit.data.index>width*2){
+        this.suit.viewposition = Math.floor(width*2);
+        this.suit.barTool.setBarWidth(100);
+        this.suit.barTool.setBarLeft(0, false);
+      }else{
+        this.suit.viewposition = this.suit.data.index;
+      }
       this.drawdot(this.suit.viewposition);
-    } else {
+    }else{
       this.drawgrid(width*2, false);
     }
   }
