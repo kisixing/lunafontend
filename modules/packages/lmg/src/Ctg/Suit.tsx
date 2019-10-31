@@ -326,23 +326,14 @@ export class Suit extends EventEmitter implements Drawer {
 
   //胎心数据处理
   InitFileData(oriobj) {
-    let pureidarr = oriobj.docid.split('_');
+    let pureidarr: string[] = oriobj.docid.split('_');
     let CTGDATA = { fhr: [[], [], []], toco: [], fm: [], fetal_num: 2, index: 0, starttime: '' };
     if (pureidarr.length > 2) {
-      let pureid = pureidarr[2];
-      CTGDATA.starttime =
-        '20' +
-        pureid.substring(0, 2) +
-        '-' +
-        pureid.substring(2, 4) +
-        '-' +
-        pureid.substring(4, 6) +
-        ' ' +
-        pureid.substring(6, 8) +
-        ':' +
-        pureid.substring(8, 10) +
-        ':' +
-        pureid.substring(10, 12);
+      let pureid = pureidarr[2].split('');
+      const t = ["-", "-", " ", ":", ":", ""]
+      CTGDATA.starttime = '20' + pureid.reduce((a, b, i) => {
+        return `${a}${b}${i & 1 ? t[~~(i / 2)] : ''}`
+      }, '');
     }
     Object.keys(oriobj).forEach(key => {
       let oridata = oriobj[key];
