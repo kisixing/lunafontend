@@ -107,9 +107,9 @@ export class Suit extends EventEmitter implements Drawer {
     if (!data) {
       return
     }
-    
+
     console.log('this test', this);
-    this.log('init',data)
+    this.log('init', data)
     this.initFlag = true
     let defaultinterval = 500;
     this.data = data;
@@ -117,7 +117,7 @@ export class Suit extends EventEmitter implements Drawer {
     this.currentdot = data.index;
     if (!data.status) {
       this.type = 1;
-      if (typeof(data.index)=='undefined') {
+      if (typeof (data.index) == 'undefined') {
         this.data = this.InitFileData(data);
         this.fetalcount = this.data.fetal_num;
       }
@@ -326,8 +326,8 @@ export class Suit extends EventEmitter implements Drawer {
 
   //胎心数据处理
   InitFileData(oriobj) {
-    let pureidarr = oriobj.docid.split('_');
-    let CTGDATA = { fhr: [[], [], []], toco: [], fm: [], fetal_num: 2, index: 0, starttime: '',analyse:{acc:[],dec:[],baseline:[],start:0,end:0} };
+    let pureidarr: string[] = oriobj.docid.split('_');
+    let CTGDATA = { fhr: [[], [], []], toco: [], fm: [], fetal_num: 2, index: 0, starttime: '', analyse: { acc: [], dec: [], baseline: [], start: 0, end: 0 } };
     if (pureidarr.length > 2) {
       let pureid = pureidarr[2].split('');
       const t = ["-", "-", " ", ":", ":", ""]
@@ -340,17 +340,11 @@ export class Suit extends EventEmitter implements Drawer {
       if (!oridata) {
         return false;
       }
-      if(key === 'docid'){
+      if (key === 'docid') {
         return false;
       }
-      if(key === 'analyse'){
-        //TODO: 转成 Number类型  
-        //需支持多胎的分析      
-        if(oridata.acc != ''){
-          CTGDATA.analyse.acc = oridata.acc.split(',');
-        }
-        //dec、baseline
-        return true;
+      if (key === 'analyse') {
+        Object.assign(CTGDATA.analyse, formatAnalyseData(oridata))
       }
       if (key === 'fhr1') {
         CTGDATA.index = oridata.length / 2;
@@ -452,5 +446,21 @@ export class Suit extends EventEmitter implements Drawer {
         oridata = oridata.substring(2, oridata.length);
       }
     });
+  }
+}
+
+function formatAnalyseData(obj: { [x: string]: string }) {
+  const keys = ['acc', 'baseline', 'dec', 'meanbaseline']
+  const arr: [string, number[]][] = Object.entries(obj)
+    .filter(([k, v]) => keys.includes(k))
+    .map(([k, v]) => {
+      v = typeof v === 'string' ? v : ''
+      return [k, v.split(',').map(_ => parseInt(_)).filter(_ => !isNaN(_))]
+    })
+  return {
+    ...obj,
+    ...arr.reduce((a, [k, v]) => {
+      return Object.assign(a, { [k]: v })
+    }, {})
   }
 }
