@@ -345,6 +345,7 @@ export class Suit extends EventEmitter implements Drawer {
       }
       if (key === 'analyse') {
         Object.assign(CTGDATA.analyse, formatAnalyseData(oridata))
+        return
       }
       if (key === 'fhr1') {
         CTGDATA.index = oridata.length / 2;
