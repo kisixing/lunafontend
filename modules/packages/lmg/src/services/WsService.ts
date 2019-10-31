@@ -36,6 +36,7 @@ const getBlankCacheItem = () => {
 export class WsService extends EventEmitter {
     static wsStatus: typeof EWsStatus = EWsStatus
     isReady = false;
+    dirty = false;
     interval: number = 10000;
     RECONNECT_INTERVAL: number = 10000;
     span: number = NaN;
@@ -152,6 +153,7 @@ export class WsService extends EventEmitter {
             };
             socket.onopen = (event) => {
                 this.offrequest = 0;
+                this.dirty && location.reload()
                 this.send(
                     '{"name":"heard","data":{"time":' +
                     191001180000 +
@@ -161,8 +163,8 @@ export class WsService extends EventEmitter {
             socket.onclose = (event) => {
                 this.tip('关闭', EWsStatus.Error)
                 setTimeout(() => {
-                    // this.connect()
-                    location.reload()
+                    this.dirty = true
+                    this.connect()
                 }, this.RECONNECT_INTERVAL);
             };
             // 接收服务端数据时触发事件
