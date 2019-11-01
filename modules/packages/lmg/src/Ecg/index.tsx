@@ -3,19 +3,22 @@ import React, { useRef } from 'react';
 import { DrawEcg } from './DrawEcg';
 import { MultiParam, Ple, Tre } from './data';
 import useDraw from "../useDraw";
+import { IProps, Canvas, Div, Drawer } from "../interface";
 
 
 
-interface IProps extends React.HTMLProps<HTMLElement> {
-  data: any;
-  mutableSuitObject?: { suit: (DrawEcg | any) };
-}
+
 export default (props: IProps) => {
-  const { data, mutableSuitObject = { suit: null } } = props
-  const box = useRef<HTMLDivElement>(null);
-  const canvas = useRef<HTMLCanvasElement>(null);
-  const canvasline = useRef<HTMLCanvasElement>(null);
-  const canvasmonitor = useRef<HTMLCanvasElement>(null);
+  const {
+    data,
+    mutableSuitObject = { suit: null },
+    onReady = (s: Drawer) => { },
+  } = props
+
+  const box = useRef<Div>(null);
+  const canvas = useRef<Canvas>(null);
+  const canvasline = useRef<Canvas>(null);
+  const canvasmonitor = useRef<Canvas>(null);
 
   useDraw(() => {
     let instance = new DrawEcg({
@@ -28,6 +31,7 @@ export default (props: IProps) => {
       data
     });
     mutableSuitObject.suit = instance;
+    onReady(instance)
     return instance
   }, data, box)
 

@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {  useRef } from 'react';
 
 import { Suit } from './Suit';
 import { IBarTool } from '../ScrollBar/useScroll';
 import ScrollBar from '../ScrollBar';
 import Ecg from "../Ecg";
-import { IProps } from "./types";
+import { IProps, Canvas, Div, Drawer } from "../interface";
 import useDraw from "../useDraw";
 
 export default (props: IProps) => {
@@ -14,22 +14,21 @@ export default (props: IProps) => {
     itemHeight = 0,
     suitType = 0,
     showEcg = false,
-    onReady = (s: Suit) => { },
+    onReady = (s: Drawer) => { },
     ...others
   } = props
   let barTool: IBarTool;
-  const canvasgrid = useRef<HTMLCanvasElement>(null);
-  const canvasdata = useRef<HTMLCanvasElement>(null);
-  const canvasline = useRef<HTMLCanvasElement>(null);
-  const canvasselect = useRef<HTMLCanvasElement>(null);
-  const canvasanalyse = useRef<HTMLCanvasElement>(null);
-  const box = useRef<HTMLDivElement>(null);
-  const ctgBox = useRef<HTMLDivElement>(null);
+  const canvasgrid = useRef<Canvas>(null);
+  const canvasdata = useRef<Canvas>(null);
+  const canvasline = useRef<Canvas>(null);
+  const canvasselect = useRef<Canvas>(null);
+  const canvasanalyse = useRef<Canvas>(null);
+  const box = useRef<Div>(null);
+  const ctgBox = useRef<Div>(null);
 
-  const suit = useRef<Suit>(null)
 
   useDraw(() => {
-    let instance = suit.current = new Suit(
+    let instance = new Suit(
       canvasgrid.current,
       canvasdata.current,
       canvasline.current,
