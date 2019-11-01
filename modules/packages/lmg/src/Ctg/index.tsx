@@ -4,23 +4,18 @@ import { Suit } from './Suit';
 import { IBarTool } from '../ScrollBar/useScroll';
 import ScrollBar from '../ScrollBar';
 import Ecg from "../Ecg";
+import { IProps } from "./types";
 
-interface Iprops extends React.HTMLProps<HTMLDivElement> {
-  data: any;
-  mutableSuitObject?: { suit: (Suit | any) };
-  itemHeight?: number;
-  suitType?: 0 | 1 | 2,
-  showEcg?: boolean
-}
 
 const ResizeObserver = (window as any).ResizeObserver
-export default (props: Iprops) => {
+export default (props: IProps) => {
   const {
     data,
     mutableSuitObject = { suit: null },
     itemHeight = 0,
     suitType = 0,
     showEcg = false,
+    onReady = (s: Suit) => { },
     ...others
   } = props
   let barTool: IBarTool;
@@ -33,11 +28,11 @@ export default (props: Iprops) => {
   const box = useRef<HTMLDivElement>(null);
   const ctgBox = useRef<HTMLDivElement>(null);
 
-  const [suit, setSuit] = useState<Suit>(null)
+  const suit = useRef(null)
 
   useEffect(() => {
 
-    let instance = (new Suit(
+    let instance = suit.current = new Suit(
       canvasgrid.current,
       canvasdata.current,
       canvasline.current,
@@ -46,30 +41,29 @@ export default (props: Iprops) => {
       ctgBox.current,
       barTool,
       suitType
-    ))
+    )
     instance.onStatusChange = status => {
       console.log(status);
     };
-    setSuit(instance)
     mutableSuitObject.suit = instance;
-    let resizeObserver = new ResizeObserver(entries => {
+
+    let resizeObserver = new ResizeObserver(() => {
       instance.resize()
     });
     resizeObserver.observe(box.current);
-
+    onReady(instance)
     return () => {
       instance.destroy();
-      instance = null
       resizeObserver.disconnect()
-      resizeObserver = null
     };
 
   }, []);
 
 
   useEffect(() => {
-    suit && suit.init(data)
-  }, [data, suit])
+    const current = suit.current
+    current && current.init(data)
+  }, [data])
   return (
     <div style={{ width: '100%', height: '100%' }} ref={box} {...others}>
       <div style={{ height: `${showEcg ? 70 : 100}%`, minHeight: `calc(100% - 200px)` }} ref={ctgBox}>

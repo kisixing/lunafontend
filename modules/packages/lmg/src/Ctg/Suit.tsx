@@ -107,8 +107,6 @@ export class Suit extends EventEmitter implements Drawer {
     if (!data) {
       return
     }
-
-    console.log('this test', this);
     this.log('init', data)
     this.initFlag = true
     let defaultinterval = 500;
