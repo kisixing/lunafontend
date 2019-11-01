@@ -1,13 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 
 import { DrawEcg } from './DrawEcg';
 import { MultiParam, Ple, Tre } from './data';
-
-// import { IBarTool } from '../ScrollBar/useScroll';
-// import ScrollBar from '../ScrollBar';
+import useDraw from "../useDraw";
 
 
-const ResizeObserver = (window as any).ResizeObserver
 
 interface IProps extends React.HTMLProps<HTMLElement> {
   data: any;
@@ -19,9 +16,8 @@ export default (props: IProps) => {
   const canvas = useRef<HTMLCanvasElement>(null);
   const canvasline = useRef<HTMLCanvasElement>(null);
   const canvasmonitor = useRef<HTMLCanvasElement>(null);
-  const [suit, setSuit] = useState<DrawEcg>(null)
-  // let barTool: IBarTool;
-  useEffect(() => {
+
+  useDraw(() => {
     let instance = new DrawEcg({
       canvas: canvas.current,
       canvasline: canvasline.current,
@@ -31,31 +27,9 @@ export default (props: IProps) => {
       Tre,
       data
     });
-    console.log('ecg', instance)
-
-    setSuit(instance)
     mutableSuitObject.suit = instance;
-
-
-    let resizeObserver = new ResizeObserver(entries => {
-      instance.resize()
-    });
-    resizeObserver.observe(box.current);
-
-
-    return () => {
-      instance.destroy();
-      instance = null
-      resizeObserver.disconnect()
-      resizeObserver = null
-    };
-  }, []);
-
-
-
-  useEffect(() => {
-    suit && suit.init(data)
-  }, [data, suit])
+    return instance
+  }, data, box)
 
 
   return (

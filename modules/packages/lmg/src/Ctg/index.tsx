@@ -5,9 +5,8 @@ import { IBarTool } from '../ScrollBar/useScroll';
 import ScrollBar from '../ScrollBar';
 import Ecg from "../Ecg";
 import { IProps } from "./types";
+import useDraw from "../useDraw";
 
-
-const ResizeObserver = (window as any).ResizeObserver
 export default (props: IProps) => {
   const {
     data,
@@ -19,7 +18,6 @@ export default (props: IProps) => {
     ...others
   } = props
   let barTool: IBarTool;
-
   const canvasgrid = useRef<HTMLCanvasElement>(null);
   const canvasdata = useRef<HTMLCanvasElement>(null);
   const canvasline = useRef<HTMLCanvasElement>(null);
@@ -28,10 +26,9 @@ export default (props: IProps) => {
   const box = useRef<HTMLDivElement>(null);
   const ctgBox = useRef<HTMLDivElement>(null);
 
-  const suit = useRef(null)
+  const suit = useRef<Suit>(null)
 
-  useEffect(() => {
-
+  useDraw(() => {
     let instance = suit.current = new Suit(
       canvasgrid.current,
       canvasdata.current,
@@ -42,28 +39,13 @@ export default (props: IProps) => {
       barTool,
       suitType
     )
-    instance.onStatusChange = status => {
-      console.log(status);
-    };
-    mutableSuitObject.suit = instance;
-
-    let resizeObserver = new ResizeObserver(() => {
-      instance.resize()
-    });
-    resizeObserver.observe(box.current);
     onReady(instance)
-    return () => {
-      instance.destroy();
-      resizeObserver.disconnect()
-    };
-
-  }, []);
+    mutableSuitObject.suit = instance;
+    return instance
+  }, data, box)
 
 
-  useEffect(() => {
-    const current = suit.current
-    current && current.init(data)
-  }, [data])
+
   return (
     <div style={{ width: '100%', height: '100%' }} ref={box} {...others}>
       <div style={{ height: `${showEcg ? 70 : 100}%`, minHeight: `calc(100% - 200px)` }} ref={ctgBox}>
