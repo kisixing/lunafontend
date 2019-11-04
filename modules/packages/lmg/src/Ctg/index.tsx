@@ -55,7 +55,7 @@ export default (props: IProps) => {
 
   return (
     <div style={{ width: '100%', height: '100%' }} ref={box} {...others}>
-      <div style={{ height: showEcg ? `calc(100% - ${ecgHeight}px)` : `100%` }} ref={ctgBox}>
+      <div style={{ height: showEcg ? `calc(100% - ${ecgHeight}px)` : `100%`, position: 'relative' }} ref={ctgBox}>
         <canvas ref={canvasgrid}>
           <p>Your browserdoes not support the canvas element.</p>
         </canvas>
