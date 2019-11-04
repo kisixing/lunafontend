@@ -1,6 +1,8 @@
 import { EventEmitter, event } from "@lianmed/utils";
 import request from "@lianmed/request"
 import Queue from "../Ecg/Queue";
+import { throttle } from "lodash";
+const ANNOUNCE_INTERVAL = 5000
 export enum EWsStatus {
     Pendding, Success, Error
 }
@@ -494,7 +496,8 @@ export class WsService extends EventEmitter {
                 let text = id
                 arr[0] && arr[1] && arr[0] === arr[1] && (text = arr[0])
                 if (value / 240 > 20) {
-                    event.emit('bed:announcer', `${text}号子机监护时间到`)
+                    announce(text)
+                    // event.emit('bed:announcer', `${text}号子机监护时间到`)
                 }
             }
         }
@@ -552,6 +555,9 @@ export class WsService extends EventEmitter {
 
     };
 }
+const announce = throttle((text) => {
+    event.emit('bed:announcer', `${text}号子机监护时间到`)
+}, ANNOUNCE_INTERVAL)
 
 export interface ICacheItem {
     fhr: number[][];
