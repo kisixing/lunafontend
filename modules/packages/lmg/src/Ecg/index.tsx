@@ -20,8 +20,9 @@ export default (props: IProps) => {
   const canvasline = useRef<Canvas>(null);
   const canvasmonitor = useRef<Canvas>(null);
 
-  useDraw(() => {
+  useDraw(data, box, () => {
     let instance = new DrawEcg({
+      wrap: box.current,
       canvas: canvas.current,
       canvasline: canvasline.current,
       canvasmonitor: canvasmonitor.current,
@@ -33,7 +34,7 @@ export default (props: IProps) => {
     mutableSuitObject.suit = instance;
     onReady(instance)
     return instance
-  }, data, box)
+  })
 
 
   return (
@@ -57,7 +58,7 @@ export default (props: IProps) => {
         id="monitor"
         width="500"
         height="200"
-        style={{ marginLeft: 770, position: 'absolute', left: 0, top: '0'}}
+        style={{ marginLeft: 770, position: 'absolute', left: 0, top: '0' }}
       ></canvas>
     </div>
   );

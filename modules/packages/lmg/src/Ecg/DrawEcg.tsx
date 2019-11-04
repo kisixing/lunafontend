@@ -28,6 +28,7 @@ const loopmill = 100;
 type Canvas = HTMLCanvasElement;
 type Ctx = CanvasRenderingContext2D;
 interface I {
+  wrap: HTMLDivElement;
   MultiParam: number[];
   Ple: number[];
   Tre: number[];
@@ -43,6 +44,7 @@ interface I {
 }
 export class DrawEcg implements Drawer {
   static Queue: typeof Queue = Queue
+  wrap: HTMLDivElement;
   oQueue = new Queue();
   values = [100, 120, 37.5, 38, 50, 80, '100/69/120'];
   MultiParam: number[];
@@ -60,7 +62,7 @@ export class DrawEcg implements Drawer {
   width?= 0;
   height?= 0;
   current_time_millis?= 0;
-  start?=NaN;
+  start?= NaN;
 
   constructor(args: I) {
     const { canvas, canvasline, canvasmonitor } = args;
@@ -76,16 +78,18 @@ export class DrawEcg implements Drawer {
     this.ecg();
   }
   init(data) {
-    if(data){
+    if (data) {
       this.oQueue = data.ecg;
       this.values = data.ecgdata;
       this.current_time_millis = 0;
-      isstop=true;
+      isstop = true;
       this.loop();
     }
   }
   resize() {
-
+    const rect = this.wrap.getBoundingClientRect();
+    const { width, height } = rect;
+    console.log('resize', width, height)
   }
   destroy() {
     isstop = false;
@@ -125,7 +129,7 @@ export class DrawEcg implements Drawer {
       const V = (this.canvasmonitor.height - 10) / 10;
       const H = (this.canvasmonitor.width - 10) / 20;
       let size = V > H ? H : V;
-      console.log('ecg',V,H,size);
+      console.log('ecg', V, H, size);
       let D = 10;
       // 设置颜色 字体
       datactx.fillStyle = "#000";
@@ -206,7 +210,7 @@ export class DrawEcg implements Drawer {
     this.DrawDatatext();
     const A = new Date().getTime();
     this.current_time_millis = A;
-    if(!isNaN(this.start) || this.oQueue.GetSize() > points_one_times*5){
+    if (!isNaN(this.start) || this.oQueue.GetSize() > points_one_times * 5) {
       this.start = 1;
       this.drawsingle(y_starts, adu, samplingrate, this.max_times, this.linectx);
     }
@@ -242,7 +246,7 @@ export class DrawEcg implements Drawer {
     }
     A.beginPath();
     for (let K = 0; K < F.length; K++) {
-      const C = F[K]- BASE_INEVAL;
+      const C = F[K] - BASE_INEVAL;
       const I = K * (gride_width * 5 / N);
       let M;
       A.strokeStyle = '#9d6003';
@@ -289,13 +293,13 @@ export class DrawEcg implements Drawer {
   GetYStarts(C) {
     const { height } = this;
     const B = [];
-      for (let A = 0; A < C; A++) {
-        if (height < 480) {
-          B[A] = -BASE_INEVAL/2 + A * 100;
-        } else {
-          B[A] = -BASE_INEVAL/2 + A * 100;
-        }
+    for (let A = 0; A < C; A++) {
+      if (height < 480) {
+        B[A] = -BASE_INEVAL / 2 + A * 100;
+      } else {
+        B[A] = -BASE_INEVAL / 2 + A * 100;
       }
+    }
     return B;
   }
 }

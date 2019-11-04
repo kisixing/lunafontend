@@ -5,7 +5,7 @@ import { Drawer } from "./interface";
 
 const ResizeObserver = (window as any).ResizeObserver
 
-export default (onReady: () => Drawer, data: any, box: any) => {
+export default (data: any, box: any, onReady: () => Drawer, onResize?: () => void) => {
 
 
     const suit = useRef<Drawer>(null)
@@ -13,6 +13,7 @@ export default (onReady: () => Drawer, data: any, box: any) => {
     useEffect(() => {
         let instance = suit.current = onReady()
         let resizeObserver = new ResizeObserver(() => {
+            onResize && onResize()
             instance.resize()
         });
         resizeObserver.observe(box.current);

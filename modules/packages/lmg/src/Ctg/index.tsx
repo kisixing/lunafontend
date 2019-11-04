@@ -1,4 +1,4 @@
-import React, {  useRef } from 'react';
+import React, { useRef, useLayoutEffect, useState } from 'react';
 
 import { Suit } from './Suit';
 import { IBarTool } from '../ScrollBar/useScroll';
@@ -25,10 +25,12 @@ export default (props: IProps) => {
   const canvasanalyse = useRef<Canvas>(null);
   const box = useRef<Div>(null);
   const ctgBox = useRef<Div>(null);
+  const suit = useRef<Drawer>(null)
+  const [ecgHeight, setEcgHeight] = useState(50)
 
 
-  useDraw(() => {
-    let instance = new Suit(
+  useDraw(data, box, () => {
+    const instance = suit.current = new Suit(
       canvasgrid.current,
       canvasdata.current,
       canvasline.current,
@@ -41,13 +43,19 @@ export default (props: IProps) => {
     onReady(instance)
     mutableSuitObject.suit = instance;
     return instance
-  }, data, box)
+  },
+    () => {
+      const { height } = box.current.getBoundingClientRect()
+      height > 500 ? setEcgHeight(200) : setEcgHeight(50)
+    })
 
-
+  useLayoutEffect(() => {
+    suit.current && suit.current.resize()
+  }, [ecgHeight])
 
   return (
     <div style={{ width: '100%', height: '100%' }} ref={box} {...others}>
-      <div style={{ height: `${showEcg ? 70 : 100}%`, minHeight: `calc(100% - 200px)` }} ref={ctgBox}>
+      <div style={{ height: showEcg ? `calc(100% - ${ecgHeight}px)` : `100%` }} ref={ctgBox}>
         <canvas ref={canvasgrid}>
           <p>Your browserdoes not support the canvas element.</p>
         </canvas>
@@ -65,7 +73,7 @@ export default (props: IProps) => {
         </canvas>
       </div>
       {
-        showEcg && <div style={{ height: '30%', overflow: 'hidden', maxHeight: 200 }} >
+        showEcg && <div style={{ height: ecgHeight, overflow: 'hidden', maxHeight: 200 }} >
           <Ecg data={data} />
         </div>
       }

@@ -6,6 +6,7 @@ export interface IProps {
 }
 
 export interface Drawer {
+    wrap: HTMLElement;
     resize: () => void;
     init: (data?: any) => void;
     destroy: () => void;
