@@ -78,14 +78,13 @@ export default class DrawCTG {
     this.suit.canvasanalyse.height = height;
     this.yspan = (height - this.scalespan - this.basetop) / (this.max + 100 - this.min);
     this.suit.barTool.setBarWidth(0);
+    console.log('resize',this.suit.data,this.suit.viewposition);
     if(typeof(this.suit.data) != 'undefined'){
       if(this.suit.data.index>width*2){
-        this.suit.viewposition = Math.floor(width*2);
         this.suit.barTool.setBarWidth(100);
         this.suit.barTool.setBarLeft(0, false);
-      }else{
-        this.suit.viewposition = this.suit.data.index;
       }
+      this.suit.viewposition = Math.floor(width*2);
       this.drawdot(this.suit.viewposition);
     }else{
       this.drawgrid(width*2, false);

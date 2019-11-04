@@ -32,7 +32,8 @@ const getBlankCacheItem = () => {
         pregnancy: '',
         fetal_num: 1,
         csspan: NaN,
-        ecg: new Queue()
+        ecg: new Queue(),
+        ecgdata:[],
     }
 }
 export class WsService extends EventEmitter {
@@ -389,10 +390,13 @@ export class WsService extends EventEmitter {
                         var id = received_msg.device_no;
                         var bi = received_msg.bed_no;
                         var cachbi = id + '-' + bi;
-                        for (let elop = 0; elop < ecgdata[0].ecg_arr.length; elop++) {
-                            datacache.get(cachbi).ecg.EnQueue(ecgdata[0].ecg_arr[elop] & 0x7f);
+                        for(let eindex=0;eindex<ecgdata.length;eindex++){
+                            for (let elop = 0; elop < ecgdata[eindex].ecg_arr.length; elop++) {
+                                datacache.get(cachbi).ecg.EnQueue(ecgdata[eindex].ecg_arr[elop] & 0x7f);
+                            }
+                            datacache.get(cachbi).ecgdata = [ecgdata[eindex].pulse_rate,ecgdata[eindex].blood_oxygen,ecgdata[eindex].temperature,ecgdata[eindex].temperature1,ecgdata[eindex].pulse_rate,ecgdata[eindex].resp_rate,ecgdata[eindex].sys_bp+'/'+ecgdata[eindex].dia_bp+'/'+ecgdata[eindex].mean_bp];
                         }
-                        //console.log(datacache.get(cachbi).ecg);
+                        console.log(datacache.get(cachbi).ecg);
                     } else if (received_msg.name == 'start_work') {
                         //开启监护页
                         let devdata = received_msg.data;
@@ -453,6 +457,7 @@ export class WsService extends EventEmitter {
                 datacache.get(curid).starttime = '';
                 datacache.get(curid).pregnancy = '';
                 datacache.get(curid).ecg = new Queue();
+                datacache.get(curid).ecgdata = [];
             } else {
                 datacache.set(curid, getBlankCacheItem());
             }
@@ -577,6 +582,7 @@ export interface ICacheItem {
     fetal_num: number;
     csspan: number;
     ecg: Queue;
+    ecgdata: number[];
 }
 export type ICache = Map<string, ICacheItem> & { clean?: (key: string) => void }
 export interface IDevice {

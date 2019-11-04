@@ -10,7 +10,7 @@ import Partogram from './Partogram'
 import request from "@lianmed/request";
 
 const setting = {
-  ws_url: "localhost:8084",
+  ws_url: "192.168.31.223:8084",
   xhr_url: "192.168.0.227:9987",
   alarm_high: "160",
   alarm_low: "110",

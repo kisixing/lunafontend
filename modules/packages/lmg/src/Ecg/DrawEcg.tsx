@@ -8,7 +8,7 @@ const gride_width = 25;
 const gx = points_one_times * ((gride_width * 5) / samplingrate);
 const x_start = 25;
 // const draw_lines_index = [0, 1, 2];
-const ruler = [80, 80, 80, 80, 80, 80, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 80, 80, 80, 80, 80, 80];
+const ruler = [64, 64, 64, 64, 64, 64, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 64, 64, 64, 64, 64, 64];
 let isstop = true;
 const last_points = [
   [25, 100],
@@ -76,9 +76,9 @@ export class DrawEcg implements Drawer {
     this.ecg();
   }
   init(data) {
-    console.log('ecg', data)
     if(data){
       this.oQueue = data.ecg;
+      this.values = data.ecgdata;
       this.current_time_millis = 0;
       isstop=true;
       this.loop();
@@ -109,7 +109,7 @@ export class DrawEcg implements Drawer {
     //   ctx.fillText('' + A[draw_lines_index[E]] + '', 10, D);
     // }
     //kisi 2019-10-03 add ruler
-    let scale = height / 100;
+    let scale = 1;
     ctx.strokeStyle = '#006003';
     ctx.beginPath();
     ctx.moveTo(x_start * 2, ruler[0] * scale);
@@ -122,9 +122,10 @@ export class DrawEcg implements Drawer {
   DrawDatatext() {
     const { datactx } = this;
     if (this.canvasmonitor.height > 60) {
-      const V = (this.canvasmonitor.height - 10) / 5;
-      const H = (this.canvasmonitor.width - 10) / 14;
+      const V = (this.canvasmonitor.height - 10) / 10;
+      const H = (this.canvasmonitor.width - 10) / 20;
       let size = V > H ? H : V;
+      console.log('ecg',V,H,size);
       let D = 10;
       // 设置颜色 字体
       datactx.fillStyle = "#000";
@@ -191,15 +192,6 @@ export class DrawEcg implements Drawer {
     }
     return;
   }
-  //kisi 2019-10-03
-  //根据ws数据压入队列
-  adddatatest(F, C, E, J) {
-    // const { MultiParam } = this;
-     for (let index = 0; index < 360; index++) {
-       //this.oQueue.EnQueue((MultiParam[(index * 2) % 375] + 128) * 0.1);
-     }
-    // return;
-  }
   initparm() {
     const { width, linectx } = this;
     if (width < 150) {
@@ -214,16 +206,6 @@ export class DrawEcg implements Drawer {
     this.DrawDatatext();
     const A = new Date().getTime();
     this.current_time_millis = A;
-    // this.draw(
-    //   y_starts,
-    //   BASE_INEVAL,
-    //   adu,
-    //   samplingrate,
-    //   this.max_times,
-    //   points_one_times,
-    //   this.linectx,
-    //   draw_lines_index
-    // );
     if(!isNaN(this.start) || this.oQueue.GetSize() > points_one_times*5){
       this.start = 1;
       this.drawsingle(y_starts, adu, samplingrate, this.max_times, this.linectx);
@@ -236,7 +218,7 @@ export class DrawEcg implements Drawer {
       // }
     }
     if (this.oQueue.IsEmpty()) {
-      //this.Convert16Scale();
+      this.Convert16Scale();
     }
   }
   // 绘制单心电走纸
@@ -261,10 +243,9 @@ export class DrawEcg implements Drawer {
     A.beginPath();
     for (let K = 0; K < F.length; K++) {
       const C = F[K]- BASE_INEVAL;
-      const I = (K * (gride_width * 5)) / N;
+      const I = K * (gride_width * 5 / N);
       let M;
       A.strokeStyle = '#9d6003';
-      //A.beginPath();
       if (this.ecg_scope != 0) {
         M = Math.abs(C) * (P / (gride_width * 2)) * this.ecg_scope;
       } else {
@@ -295,74 +276,7 @@ export class DrawEcg implements Drawer {
     A.stroke();
     this.current_times++;
   }
-  draw(Q, B, P, N, G, H, A, E) {
-    const { oQueue } = this;
-    let areaedge = 200;
-    //2019-10-03 kisi 根据容器调整高度
-    let scale = this.height / 300;
-    this.current_times = this.current_times % G;
-    if (oQueue.IsEmpty()) {
-      return;
-    }
-    if (oQueue.GetSize() < H) {
-      return;
-    }
-    this.clearcanvans(this.current_times, H, N, A);
-    const F = [];
-    for (let J = 0; J < H; J++) {
-      F.push(oQueue.DeQueue());
-    }
-    A.beginPath();
-    for (let J = 0; J < 3; J++) {
-      for (let K = 0; K < F.length; K++) {
-        const O = F[K];
-        const C = O[E[J]];
-        const I = (K * (gride_width * 5)) / N;
-        let M;
-        A.strokeStyle = '#9d6003';
-        A.beginPath();
-        if (this.ecg_scope != 0) {
-          M = Math.abs(C) * (P / (gride_width * 2)) * this.ecg_scope;
-        } else {
-          M = (Math.abs(C) * (P / (gride_width * 2))) / 2;
-        }
-        const L = x_start + this.current_times * H * ((gride_width * 5) / N);
-        if (K == 0) {
-          if (this.current_times != 0) {
-            A.moveTo(last_points[J][0], last_points[J][1] * scale);
-            var D = parseFloat(C >= 0 ? Q[J] - M : Q[J] + M);
-            A.lineTo(last_points[J][0], D * scale);
-            last_points[J][0] = last_points[J][0];
-            last_points[J][1] = D;
-          } else {
-            var D = parseFloat(C >= 0 ? Q[J] - M : Q[J] + M);
-            console.log(D);
-            A.moveTo(x_start, D * scale);
-            last_points[J][0] = x_start;
-            last_points[J][1] = D;
-          }
-        } else {
-          A.moveTo(last_points[J][0], D * scale);
-          var D = parseFloat(C >= 0 ? Q[J] - M : Q[J] + M);
-          A.lineTo(L + I, D * scale);
-          last_points[J][0] = L + I;
-          last_points[J][1] = D;
-        }
-        if (J == 1) {
-          const linear = A.createLinearGradient(L + I, D, L + I, D + 50);
-          linear.addColorStop(0, 'rgba(0,255,0,0.6)');
-          //linear.addColorStop(1,"rgba(255,255,255,0)");
-          A.strokeStyle = linear;
-          A.beginPath();
-          A.moveTo(L + I, D * scale);
-          A.lineTo(L + I, areaedge * scale);
-        }
-        A.stroke();
-      }
-    }
-    A.stroke();
-    this.current_times++;
-  }
+
   clearcanvans(B, F, C, D) {
     const A = F * ((gride_width * 5) / C);
     const E = x_start + B * A;
@@ -375,31 +289,13 @@ export class DrawEcg implements Drawer {
   GetYStarts(C) {
     const { height } = this;
     const B = [];
-    if (C >= 3) {
       for (let A = 0; A < C; A++) {
         if (height < 480) {
-          B[A] = 100 + A * 100;
+          B[A] = -BASE_INEVAL/2 + A * 100;
         } else {
-          B[A] = 100 + A * 100;
+          B[A] = -BASE_INEVAL/2 + A * 100;
         }
       }
-    } else {
-      if (C == 2) {
-        if (height < 480) {
-          B[0] = 130;
-          B[1] = 300;
-        } else {
-          B[0] = 130;
-          B[1] = 370;
-        }
-      } else {
-        if (C == 1) {
-          B[0] = 200;
-        } else {
-          return null;
-        }
-      }
-    }
     return B;
   }
 }
