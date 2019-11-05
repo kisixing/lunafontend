@@ -1,5 +1,4 @@
 import React, { useRef, useLayoutEffect, useState } from 'react';
-
 import { Suit } from './Suit';
 import { IBarTool } from '../ScrollBar/useScroll';
 import ScrollBar from '../ScrollBar';
@@ -52,23 +51,23 @@ export default (props: IProps) => {
   useLayoutEffect(() => {
     suit.current && suit.current.resize()
   }, [ecgHeight])
-
+  const canvasStyles: React.CSSProperties = { position: 'absolute', left: 0, top: 0, bottom: 0, right: 0, margin: 'auto' }
   return (
     <div style={{ width: '100%', height: '100%' }} ref={box} {...others}>
       <div style={{ height: showEcg ? `calc(100% - ${ecgHeight}px)` : `100%`, position: 'relative' }} ref={ctgBox}>
-        <canvas ref={canvasgrid}>
+        <canvas style={canvasStyles} ref={canvasgrid} >
           <p>Your browserdoes not support the canvas element.</p>
         </canvas>
-        <canvas style={{ position: 'absolute', left: '0', top: '0' }} ref={canvasline}>
+        <canvas style={canvasStyles} ref={canvasline}>
           <p>Your browserdoes not support the canvas element.</p>
         </canvas>
-        <canvas style={{ position: 'absolute', left: '0', top: '0' }} ref={canvasdata}>
+        <canvas style={canvasStyles} ref={canvasdata}>
           <p>Your browserdoes not support the canvas element.</p>
         </canvas>
-        <canvas style={{ position: 'absolute', left: '0', top: '0' }} ref={canvasselect}>
+        <canvas style={canvasStyles} ref={canvasselect}>
           <p>Your browserdoes not support the canvas element.</p>
         </canvas>
-        <canvas style={{ position: 'absolute', left: '0', top: '0' }} ref={canvasanalyse}>
+        <canvas style={canvasStyles} ref={canvasanalyse}>
           <p>Your browserdoes not support the canvas element.</p>
         </canvas>
       </div>

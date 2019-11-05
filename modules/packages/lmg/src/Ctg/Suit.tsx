@@ -1,17 +1,16 @@
 import DrawCTG from './DrawCTG';
 //var rulercolor = 'rgb(67,205,128)';
 import { IBarTool } from '../ScrollBar/useScroll';
-import { Drawer } from "../interface";
 import ScrollEl from '../ScrollBar/ScrollEl';
-import { EventEmitter } from '@lianmed/utils'
 import request from "@lianmed/request"
 
 import { throttle } from "lodash";
 import { ICacheItem } from '../services/WsService';
+import Draw from '../Draw';
 let sid = 0;
 type Canvas = HTMLCanvasElement;
 type Context = CanvasRenderingContext2D;
-export class Suit extends EventEmitter implements Drawer {
+export class Suit extends Draw {
   emitInterval: number
   static option: { [x: string]: string } = {}
   option = Suit.option
@@ -52,7 +51,6 @@ export class Suit extends EventEmitter implements Drawer {
   selectrpend = 0;// 相对结束位置
   selectflag = false;
   requestflag = false;
-  width: number;
   canvasgrid: Canvas;
   contextgrid: Context;
   canvasdata: Canvas;
@@ -63,7 +61,6 @@ export class Suit extends EventEmitter implements Drawer {
   contextselect: Context;
   canvasanalyse: Canvas;
   contextanalyse: Context;
-  wrap: HTMLElement;
   drawobj: DrawCTG;
   barTool: IBarTool;
   dragtimestamp = 0;

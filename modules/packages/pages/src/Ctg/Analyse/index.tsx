@@ -26,16 +26,16 @@ function Analysis({ docid = '' }) {
   return (
     <Context.Provider value={v}>
       <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-        <div style={{ height: 300, padding: 24, marginBottom: 24, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px' }}>
+        <div style={{ flex: 1, padding: 24, marginBottom: 24, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px' }}>
           <CTGChart docid={docid} />
         </div>
-        <div style={{ flex: 1 }}>
+        <div style={{ height: 400 }}>
           <Row gutter={24} style={{ height: '100%' }}>
             <Col span={12} style={{ height: '100%' }} >
-              <ScoringMethod docid={docid} v={v} style={{ ...border, height: '100%' }} />
+              <ScoringMethod docid={docid} v={v} style={{ ...border, height: '100%', background: '#fff' }} />
             </Col>
             <Col span={12} style={{ height: '100%' }} >
-              <Setting style={{ ...border, height: '100%' }} />
+              <Setting style={{ ...border, height: '100%', background: '#fff' }} />
               <Button style={{ position: 'absolute', right: 24, bottom: 16 }} type="primary" onClick={submit}>保存</Button>
             </Col>
           </Row>
