@@ -103,7 +103,7 @@ export class DrawEcg implements Drawer {
     //this.adddatatest(null, 1, 8, 128);
   }
   addfilltext() {
-    const { height, ctx } = this;
+    const {  ctx } = this;
     // const A = ['I', 'II', 'III'];
     // const C = (height - 10) / 3;
     // let D = 0;
