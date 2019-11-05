@@ -4,11 +4,10 @@ import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
 import useAnalyse, { IResult } from './useAnalyse'
 import { event } from '@lianmed/utils';
-const styles = require('./ScoringMethod.less');
 const { TabPane } = Tabs;
 
 const ScoringMethod = (props: IProps) => {
-  const { form, docid, v } = props;
+  const { form, docid, v, ...others } = props;
 
   const [disabled, setDisabled] = useState(true)
   const { responseData, activeItem, setMark, mark, MARKS, analyse } = useAnalyse(v, docid, (_result) => {
@@ -39,9 +38,9 @@ const ScoringMethod = (props: IProps) => {
     };
   }, [responseData])
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.tabs}>
-        <div className={styles.radioBar}>
+    <div  {...others}>
+      <div >
+        <div style={{ padding: '12px 24px', background: '#ddd' }}>
           <Radio.Group onChange={onChange} value={mark}>
             {
               MARKS.map(_ => (
@@ -51,12 +50,12 @@ const ScoringMethod = (props: IProps) => {
           </Radio.Group>
         </div>
         <Tabs size="small" defaultActiveKey="1" onChange={callback}>
-          <TabPane tab={`${mark}分析法`} key="1" className={styles.tabContent}>
-            <div className={styles.content}>
-              <Form {...formItemLayout} className={styles.form}>
+          <TabPane tab={`${mark}分析法`} key="1" >
+            <div style={{ display: 'flex', padding: '0 24px' }}>
+              <Form {...formItemLayout} style={{ width: '100%' }}>
                 {
                   activeItem.map(({ label, key, required, message }) => (
-                    <Form.Item label={label} key={key}>
+                    <Form.Item label={label} key={key} style={{ marginBottom: 0 }}>
                       {form.getFieldDecorator(key, {
                         rules: [{ required, message }],
                       })(<InputNumber disabled={disabled} style={{ width: '150px' }} />)}
@@ -65,22 +64,21 @@ const ScoringMethod = (props: IProps) => {
                 }
 
               </Form>
-              <div className={styles.buttonView}>
-                <Button type="primary" onClick={analyse}>分析</Button>
-                <Button onClick={() => {
+              <div style={{ width: 68 }}>
+                <Button style={{ marginBottom: 10 }} type="primary" onClick={analyse}>分析</Button>
+                <Button style={{ marginBottom: 10 }} onClick={() => {
                   const opposite = !disabled
                   setDisabled(opposite)
                 }}>{disabled ? '修改' : '确认'}</Button>
-                <Button>打印</Button>
-                <Button>退出</Button>
+                <Button style={{ marginBottom: 10 }}>打印</Button>
               </div>
             </div>
-            <div className={styles.result}>
+            <div style={{padding:'0 24px'}}>
               <div>
                 电脑评分：
             <span>CTG = {Object.values(form.getFieldsValue()).reduce((a, b) => ~~a + ~~b, 0)}</span>
               </div>
-              <div className={styles.tip}>
+              <div style={{ textAlign: 'center', marginBottom: 10 }}>
                 <Tag >注意：电脑自动分析数据和结果仅供参考</Tag>
               </div>
             </div>

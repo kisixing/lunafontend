@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Form, Radio } from 'antd';
-const styles = require('./Setting.less')
 
 class Setting extends Component<{ form: any }> {
   constructor(props) {
@@ -9,18 +8,15 @@ class Setting extends Component<{ form: any }> {
   }
 
   render() {
-    const { form } = this.props;
+    const { form, ...others } = this.props;
     const { getFieldDecorator } = form;
     return (
-      <div className={styles.wrapper}>
-
-
-
-        <div className={styles.form}>
-          <div>
+      <div {...others}>
+        <div >
+          <div style={{ padding: '12px 24px', background: '#ddd' }}>
             &nbsp;
           </div>
-          <Form>
+          <Form style={{ padding: '12px 24px' }}>
             <Form.Item label="NST">
               {getFieldDecorator('variation', {
                 rules: [{ required: true, message: 'Please input your phone number!' }],
@@ -65,4 +61,4 @@ class Setting extends Component<{ form: any }> {
   }
 }
 
-export default Form.create()(Setting);
+export default Form.create<{ form: any;[x: string]: any }>()(Setting);
