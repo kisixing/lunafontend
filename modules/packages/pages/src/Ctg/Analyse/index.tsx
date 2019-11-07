@@ -7,10 +7,12 @@ import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import { event } from '@lianmed/utils';
 import request from "@lianmed/request";
 
-
+// const docid = '1_1112_160415144057'
 export const Context = React.createContext({});
 const border = { border: '1px solid #ddd' }
-function Analysis({ docid = '' }) {
+function Analysis({ 
+  docid = ''
+ }) {
   const v = useMemo<{ suit: Suit }>(() => {
     return {} as any;
   }, []);
@@ -29,7 +31,7 @@ function Analysis({ docid = '' }) {
         <div style={{ flex: 1, padding: 24, marginBottom: 24, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px' }}>
           <CTGChart docid={docid} />
         </div>
-        <div style={{ height: 400 }}>
+        <div style={{ height: 420 }}>
           <Row gutter={24} style={{ height: '100%' }}>
             <Col span={12} style={{ height: '100%' }} >
               <ScoringMethod docid={docid} v={v} style={{ ...border, height: '100%', background: '#fff' }} />

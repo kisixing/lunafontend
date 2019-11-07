@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Tabs, Radio, Form, Button, InputNumber, Tag } from 'antd';
+import { Tabs, Radio, Form, Button, InputNumber, Tag, Input } from 'antd';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
 import useAnalyse, { IResult } from './useAnalyse'
@@ -26,17 +26,23 @@ const ScoringMethod = (props: IProps) => {
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
   };
+  const { diagnosis, ...formScores } = form.getFieldsValue()
+
   useEffect(() => {
-    const cb = fn => fn({
-      result: JSON.stringify({
-        ...responseData, result: JSON.stringify(form.getFieldsValue())
+    const cb = fn => {
+      fn({
+        diagnosis,
+        result: JSON.stringify({
+          ...responseData, result: JSON.stringify(formScores),
+        })
+        // result: JSON.stringify(formScores)
       })
-    })
+    }
     event.on('analysis:result', cb)
     return () => {
       event.off('analysis:result', cb)
     };
-  }, [responseData])
+  }, [responseData, diagnosis, formScores])
   return (
     <div  {...others}>
       <div >
@@ -62,7 +68,11 @@ const ScoringMethod = (props: IProps) => {
                     </Form.Item>
                   ))
                 }
+                <Form.Item label='诊断' style={{ marginBottom: 0 }} >
+                  {form.getFieldDecorator('diagnosis', {
+                  })(<Input.TextArea />)}
 
+                </Form.Item>
               </Form>
               <div style={{ width: 68 }}>
                 <Button style={{ marginBottom: 10 }} type="primary" onClick={analyse}>分析</Button>
@@ -73,10 +83,10 @@ const ScoringMethod = (props: IProps) => {
                 <Button style={{ marginBottom: 10 }}>打印</Button>
               </div>
             </div>
-            <div style={{padding:'0 24px'}}>
+
+            <div style={{ padding: '0 24px' }}>
               <div>
-                电脑评分：
-            <span>CTG = {Object.values(form.getFieldsValue()).reduce((a, b) => ~~a + ~~b, 0)}</span>
+                电脑评分：<span>CTG = {Object.values(formScores).reduce((a, b) => ~~a + ~~b, 0)}</span>
               </div>
               <div style={{ textAlign: 'center', marginBottom: 10 }}>
                 <Tag >注意：电脑自动分析数据和结果仅供参考</Tag>
