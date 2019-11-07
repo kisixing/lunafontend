@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Tabs, Radio, Form, Button, InputNumber, Tag, Input } from 'antd';
+import { Tabs, Radio, Form, Button, InputNumber, Tag } from 'antd';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
 import useAnalyse, { IResult } from './useAnalyse'
@@ -26,23 +26,21 @@ const ScoringMethod = (props: IProps) => {
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
   };
-  const { diagnosis, ...formScores } = form.getFieldsValue()
+  const formScores = form.getFieldsValue()
 
   useEffect(() => {
     const cb = fn => {
-      fn({
-        diagnosis,
-        result: JSON.stringify({
+      fn(
+        JSON.stringify({
           ...responseData, result: JSON.stringify(formScores),
         })
-        // result: JSON.stringify(formScores)
-      })
+      )
     }
     event.on('analysis:result', cb)
     return () => {
       event.off('analysis:result', cb)
     };
-  }, [responseData, diagnosis, formScores])
+  }, [responseData, formScores])
   return (
     <div  {...others}>
       <div >
@@ -68,11 +66,6 @@ const ScoringMethod = (props: IProps) => {
                     </Form.Item>
                   ))
                 }
-                <Form.Item label='诊断' style={{ marginBottom: 0 }} >
-                  {form.getFieldDecorator('diagnosis', {
-                  })(<Input.TextArea />)}
-
-                </Form.Item>
               </Form>
               <div style={{ width: 68 }}>
                 <Button style={{ marginBottom: 10 }} type="primary" onClick={analyse}>分析</Button>

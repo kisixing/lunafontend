@@ -7,12 +7,13 @@ import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import { event } from '@lianmed/utils';
 import request from "@lianmed/request";
 
-// const docid = '1_1112_160415144057'
 export const Context = React.createContext({});
 const border = { border: '1px solid #ddd' }
-function Analysis({ 
+function Analysis({
   docid = ''
- }) {
+}) {
+  docid = '1_1112_160415144057'
+
   const v = useMemo<{ suit: Suit }>(() => {
     return {} as any;
   }, []);
@@ -20,7 +21,10 @@ function Analysis({
   const submit = () => {
     const data = { note: docid }
     event.emit('analysis:result', result => {
-      Object.assign(data, result)
+      Object.assign(data, { result })
+    })
+    event.emit('analysis:diagnosis', diagnosis => {
+      Object.assign(data, { diagnosis })
     })
     console.log(data)
     request.put(`/ctg-exams-note`, { data })
