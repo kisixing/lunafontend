@@ -198,26 +198,52 @@ export default class DrawCTG {
         }
         else {
           // 增加 报警颜色处理
+          //kisi 2019-11-08 
+          //修复连线间变化
           if (suit.ctgconfig.alarm_enable && (lasty > suit.ctgconfig.alarm_high || lasty < suit.ctgconfig.alarm_low)) {
             let type = 1;
+            let minoff = 0;
+            let curstand = lasty;
             if (alarmstate != type) {
-              this.linecontext.lineTo(lastx, (max - lasty - curfhroffset) * this.yspan + this.basetop);
+              if(lasty>suit.ctgconfig.alarm_high){
+                minoff = (lasty - suit.ctgconfig.alarm_high) / (lasty- fhr[fetal][inneri-2]);
+                curstand = suit.ctgconfig.alarm_high;
+              }else if(lasty<suit.ctgconfig.alarm_low){
+                minoff = (lasty - suit.ctgconfig.alarm_low) / (lasty- fhr[fetal][inneri-2]);
+                curstand = suit.ctgconfig.alarm_low;
+              }
+              console.log('alarm',inneri,fhr[fetal][inneri-2],lasty,minoff,curstand);
+              this.linecontext.lineTo(lastx-1+minoff, (max - curstand - curfhroffset) * this.yspan + this.basetop);
               this.linecontext.stroke();
               this.linecontext.beginPath();
               linecontext.lineWidth = 1;
               this.linecontext.strokeStyle = suit.ctgconfig.alarmcolor;
               alarmstate = 1;
+              this.linecontext.moveTo(lastx-1+minoff, (max - curstand - curfhroffset) * this.yspan + this.basetop);
+              this.linecontext.lineTo(lastx, (max - lasty - curfhroffset) * this.yspan + this.basetop);
             }
             this.linecontext.lineTo(lastx, (max - lasty - curfhroffset) * this.yspan + this.basetop);
           } else {
             let type = 0;
+            let minoff = 0;
+            let curstand = lasty;
             if (alarmstate != type) {
-              this.linecontext.lineTo(lastx, (max - lasty - curfhroffset) * this.yspan + this.basetop);
+              if(fhr[fetal][inneri-2]>suit.ctgconfig.alarm_high){
+                minoff = (lasty - suit.ctgconfig.alarm_high) / (lasty- fhr[fetal][inneri-2]);
+                curstand = suit.ctgconfig.alarm_high;
+              }else if(fhr[fetal][inneri-2]<suit.ctgconfig.alarm_low){
+                minoff = (lasty - suit.ctgconfig.alarm_low) / (lasty- fhr[fetal][inneri-2]);
+                curstand = suit.ctgconfig.alarm_low;
+              }
+              console.log('recover',inneri,fhr[fetal][inneri-2],lasty,minoff,curstand);
+              this.linecontext.lineTo(lastx-1+minoff, (max - curstand - curfhroffset) * this.yspan + this.basetop);
               this.linecontext.stroke();
               this.linecontext.beginPath();
               linecontext.lineWidth = 1;
               this.linecontext.strokeStyle = suit.ctgconfig.fhrcolor[fetal];
               alarmstate = 0;
+              this.linecontext.moveTo(lastx-1+minoff, (max - curstand - curfhroffset) * this.yspan + this.basetop);
+              this.linecontext.lineTo(lastx, (max - lasty - curfhroffset) * this.yspan + this.basetop);
             }
             this.linecontext.lineTo(lastx, (max - lasty - curfhroffset) * this.yspan + this.basetop);
           }
