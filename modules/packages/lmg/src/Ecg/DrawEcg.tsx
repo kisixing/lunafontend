@@ -3,7 +3,7 @@ import Queue from "./Queue";
 const BASE_INEVAL = 128;
 const adu = 52;
 const samplingrate = 128;
-const points_one_times = 8;
+const points_one_times = 9;
 const gride_width = 25;
 const gx = points_one_times * ((gride_width * 5) / samplingrate);
 const x_start = 25;

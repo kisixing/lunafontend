@@ -136,6 +136,7 @@ export class Suit extends Draw {
       } else {
         this.curr = this.data.index;
       }
+      this.barTool.setBarWidth(0);
       this.drawobj.drawdot(this.canvasline.width * 2);
       this.viewposition = this.curr;
       this.createBar();
@@ -175,7 +176,9 @@ export class Suit extends Draw {
         this.viewposition = this.canvasline.width * 2;
         this.drawobj.drawdot(this.viewposition);
         if (this.selectflag) {
-          this.endingBar.setOffset(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
+          if(this.selectend == 1){
+            this.endingBar.setOffset(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
+          }
           this.drawobj.showselect(this.selectrpstart, this.selectrpend);
         }
         return;
@@ -228,12 +231,13 @@ export class Suit extends Draw {
     endingBar.toggleVisibility()
     startingBar.on('change', value => {
       this.selectrpstart = value * 2;
-      //console.log('print_开始', value, this.viewposition, this.canvasline.width);
+      console.log('print_开始', value, this.viewposition, this.canvasline.width);
       if (this.viewposition > this.canvasline.width * 2) {
         this.selectstart = value * 2 + this.viewposition - 2 * this.canvasline.width;
       } else {
         this.selectstart = value * 2;
       }
+      this.drawobj.showcur(this.selectstart);
       this.selectrpstart = this.selectstart;
       this.emit('suit:startTime', this.selectstart)
     })

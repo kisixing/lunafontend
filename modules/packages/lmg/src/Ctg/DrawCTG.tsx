@@ -150,7 +150,9 @@ export default class DrawCTG {
       return;
     }
     this.drawgrid(cur);
-    this.showcur(cur);
+    if(suit.type==0){
+      this.showcur(cur);
+    }
     var lastx = 0;
     var lasty = 0;
     linecontext.clearRect(0, 0, suit.canvasline.width, suit.canvasline.height); 
