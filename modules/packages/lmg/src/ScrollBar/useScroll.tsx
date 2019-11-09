@@ -78,7 +78,7 @@ function useScroll(
       setBarLeft: bar.setOffset.bind(bar),
       createRod(name,bg='#aaa') {
         const ins = new ScrollEl(wrapper.current).setStyles({
-          width: 6,
+          width: 4,
           background: bg,
           height: '100%',
           cursor: 'e-resize'
@@ -92,7 +92,7 @@ function useScroll(
               <span style="user-select:none;position:absolute;bottom:-24px;width:100px;line-height:24px;left:-50px;text-align:center">
               ${name}
               </span>
-              <div style="margin-left:-7px; margin-top:-1px;width: 0; height: 0; border: 10px solid; border-color: ${bg} transparent transparent transparent"></div>
+              <div style="margin-left:-8px; margin-top:-1px;width: 0; height: 0; border: 10px solid; border-color: ${bg} transparent transparent transparent"></div>
           `
         return ins
       }
