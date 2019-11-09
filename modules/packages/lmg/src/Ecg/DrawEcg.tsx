@@ -109,8 +109,8 @@ export class DrawEcg extends Draw {
     //this.adddatatest(null, 1, 8, 128);
   }
   addfilltext() {
-    const { ctx,canvas } = this;
-    ctx.clearRect(0,0,canvas.width,canvas.height);
+    const { ctx, canvas } = this;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.font = 'bold 14px';
     ctx.fillText('' + 'I' + '', 10, 10);
     let scale = 1;
@@ -126,11 +126,10 @@ export class DrawEcg extends Draw {
   DrawDatatext() {
     const { datactx, values, height, width } = this;
     const keys = ['脉率', '血氧', '体温', '心率', '呼吸', '血压(S/D/M)'];
-    if (!values.length) return
 
-    const v = [...values.map(_ => _)]
+    const v = Object.assign(Array(7).fill('--'), values)
 
-    v.length && (v[3] = `${v[3]}~${v[4]}`)
+    v[3] = `${v[3]} ~ ${v[4]}`
     v.splice(4, 1)
     const entries = _R.zip(keys, v)
     datactx.clearRect(0, 0, width, height);
@@ -189,9 +188,9 @@ export class DrawEcg extends Draw {
     if (canvasline.width < 150) {
       alert(' width is limited');
     } else {
-      this.max_times = Math.floor((canvasline.width - 25)*0.6 / gx);
+      this.max_times = Math.floor((canvasline.width - 25) * 0.6 / gx);
     }
-    console.log('ecg-width',canvasline.width);
+    console.log('ecg-width', canvasline.width);
     linectx.strokeStyle = '#9d6003';
   }
 
@@ -314,9 +313,9 @@ export class DrawEcg extends Draw {
     const B = [];
     for (let A = 0; A < C; A++) {
       if (height < 480) {
-        B[A] = -BASE_INEVAL / 2 + A * 100 - 20+0.3*height;
+        B[A] = -BASE_INEVAL / 2 + A * 100 - 20 + 0.3 * height;
       } else {
-        B[A] = -BASE_INEVAL / 2 + A * 100- 20+0.3*height;
+        B[A] = -BASE_INEVAL / 2 + A * 100 - 20 + 0.3 * height;
       }
     }
     return B;
