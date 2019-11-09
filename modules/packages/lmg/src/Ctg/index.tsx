@@ -5,7 +5,7 @@ import ScrollBar from '../ScrollBar';
 import Ecg from "../Ecg";
 import { IProps, Canvas, Div, Drawer } from "../interface";
 import useDraw from "../useDraw";
-
+import Loading from './Loading'
 export default (props: IProps) => {
   const {
     data,
@@ -13,6 +13,7 @@ export default (props: IProps) => {
     itemHeight = 0,
     suitType = 0,
     showEcg = false,
+    loading = true,
     onReady = (s: Drawer) => { },
     ...others
   } = props
@@ -51,25 +52,22 @@ export default (props: IProps) => {
   useLayoutEffect(() => {
     suit.current && suit.current.resize()
   }, [ecgHeight])
-  const canvasStyles: React.CSSProperties = { position: 'absolute', left: 0, top: 0, bottom: 0, right: 0, margin: 'auto' }
+  const canvasStyles: React.CSSProperties = { position: 'absolute' }
   return (
     <div style={{ width: '100%', height: '100%' }} ref={box} {...others}>
+      {
+        (!data && loading) && (
+          <div style={{ position: 'absolute', width: '100%', height: '100%', background: '#fff', zIndex: 1, opacity: .8 }}>
+            <Loading style={{ margin: 'auto', position: 'absolute', left: 0, right: 0, bottom: 0, top: 0 }} />
+          </div>
+        )
+      }
       <div style={{ height: showEcg ? `calc(100% - ${ecgHeight}px)` : `100%`, position: 'relative' }} ref={ctgBox}>
-        <canvas style={canvasStyles} ref={canvasgrid} >
-          <p>Your browserdoes not support the canvas element.</p>
-        </canvas>
-        <canvas style={canvasStyles} ref={canvasline}>
-          <p>Your browserdoes not support the canvas element.</p>
-        </canvas>
-        <canvas style={canvasStyles} ref={canvasdata}>
-          <p>Your browserdoes not support the canvas element.</p>
-        </canvas>
-        <canvas style={canvasStyles} ref={canvasselect}>
-          <p>Your browserdoes not support the canvas element.</p>
-        </canvas>
-        <canvas style={canvasStyles} ref={canvasanalyse}>
-          <p>Your browserdoes not support the canvas element.</p>
-        </canvas>
+        <canvas style={canvasStyles} ref={canvasgrid} />
+        <canvas style={canvasStyles} ref={canvasline} />
+        <canvas style={canvasStyles} ref={canvasdata} />
+        <canvas style={canvasStyles} ref={canvasselect} />
+        <canvas style={canvasStyles} ref={canvasanalyse} />
       </div>
       {
         showEcg && <div style={{ height: ecgHeight, overflow: 'hidden' }} >

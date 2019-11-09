@@ -36,28 +36,13 @@ export default (props: IProps) => {
     return instance
   })
 
-  const canvasStyles: React.CSSProperties = { position: 'absolute', width:'100%',height:'100%' }
+  const canvasStyles: React.CSSProperties = { position: 'absolute', width: '100%', height: '100%' }
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }} ref={box}>
-      <canvas
-        id="background"
- 
-        style={canvasStyles}
-        ref={canvas}
-      ></canvas>
-      <canvas
-        ref={canvasline}
-        id="line"
-     
-        style={canvasStyles}
-      ></canvas>
-      <canvas
-        ref={canvasmonitor}
-        id="monitor"
-  
-        style={canvasStyles}
-      ></canvas>
+      <canvas id="background" style={canvasStyles} ref={canvas} />
+      <canvas ref={canvasline} id="line" style={canvasStyles} />
+      <canvas ref={canvasmonitor} id="monitor" style={canvasStyles} />
     </div>
   );
 };
