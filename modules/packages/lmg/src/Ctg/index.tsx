@@ -72,7 +72,7 @@ export default (props: IProps) => {
         </canvas>
       </div>
       {
-        showEcg && <div style={{ height: ecgHeight, overflow: 'hidden', maxHeight: 200 }} >
+        showEcg && <div style={{ height: ecgHeight, overflow: 'hidden' }} >
           <Ecg data={data} />
         </div>
       }

@@ -12,7 +12,7 @@ const border = { border: '1px solid #ddd' }
 function Analysis({
   docid = ''
 }) {
-  docid = '1_1112_160415144057'
+  // docid = '1_1112_160415144057'
 
   const v = useMemo<{ suit: Suit }>(() => {
     return {} as any;

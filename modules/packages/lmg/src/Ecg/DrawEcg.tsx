@@ -1,5 +1,6 @@
-import { Drawer } from "../interface";
+import Draw from "../Draw";
 import Queue from "./Queue";
+import { _R } from "@lianmed/utils";
 const BASE_INEVAL = 128;
 const adu = 52;
 const samplingrate = 128;
@@ -28,7 +29,13 @@ interface I {
   height?: number;
   data: any
 }
-export class DrawEcg implements Drawer {
+enum displayMode {
+  canvas,
+  text
+}
+
+export class DrawEcg extends Draw {
+  mode: displayMode = displayMode.canvas
   static Queue: typeof Queue = Queue
   wrap: HTMLDivElement;
   oQueue = new Queue();
@@ -45,13 +52,12 @@ export class DrawEcg implements Drawer {
   ecg_scope?= 1;
   current_times?= 0;
   max_times?= 135;
-  width?= 0;
-  height?= 0;
   current_time_millis?= 0;
   start?= NaN;
   intervalIds: NodeJS.Timeout[] = [];
-  last_points : number[];
+  last_points: number[];
   constructor(args: I) {
+    super()
     const { canvas, canvasline, canvasmonitor } = args;
     const { width, height } = canvas;
     Object.assign(this, {
@@ -77,13 +83,18 @@ export class DrawEcg implements Drawer {
       this.timerEcg(loopmill);
     }
   }
-  resize() {
-    const rect = this.wrap.getBoundingClientRect();
-    const { width, height } = rect;
-    console.log('resize', width, height)
+  _resize() {
+    const { height, width } = this
+
+    this.mode = height <= 50 ? displayMode.text : displayMode.canvas
+
+    Object.assign(this.canvas, { width, height })
+    Object.assign(this.canvasline, { width, height })
+    Object.assign(this.canvasmonitor, { width, height })
+
   }
   destroy() {
-    isstop = false;   
+    isstop = false;
     this.intervalIds.forEach(_ => clearInterval(_));
     this.canvas = null;
     this.canvasline = null;
@@ -98,7 +109,7 @@ export class DrawEcg implements Drawer {
     //this.adddatatest(null, 1, 8, 128);
   }
   addfilltext() {
-    const {  ctx } = this;
+    const { ctx } = this;
     // const A = ['I', 'II', 'III'];
     // const C = (height - 10) / 3;
     // let D = 0;
@@ -119,65 +130,52 @@ export class DrawEcg implements Drawer {
   }
 
   DrawDatatext() {
-    const { datactx } = this;
-    if (this.canvasmonitor.height > 60) {
-      const V = (this.canvasmonitor.height - 10) / 10;
-      const H = (this.canvasmonitor.width - 10) / 20;
-      let size = V > H ? H : V;
-      if(this.values.length<1){
-        return;
-      }
-      //console.log('ecg', V, H, size);
+    const { datactx, values, height, width } = this;
+    const keys = ['脉率', '血氧', '体温', '心率', '呼吸', '血压(S/D/M)'];
+    if (!values.length) return
+
+    const v = [...values.map(_ => _)]
+
+    v.length && (v[3] = `${v[3]}~${v[4]}`)
+    v.splice(4, 1)
+    const entries = _R.zip(keys, v)
+    datactx.clearRect(0, 0, width, height);
+
+    if (height > 60) {
+      const V = (height) / 6;
+      let size = V / 2;
       let D = 10;
-      // 设置颜色 字体
       datactx.fillStyle = "#000";
       datactx.font = size + "px bold 黑体";
-      // 设置水平对齐方式
       datactx.textAlign = 'right';
       datactx.textAlign = "center";
-      // 设置垂直对齐方式
       datactx.textBaseline = "middle";
-      datactx.clearRect(0, 0, this.canvasmonitor.width, this.canvasmonitor.height);
-      const keys = ['脉率', '血氧', '体温', '心率', '呼吸', '血压(S/D/M)'];
-      datactx.fillText(' ' + keys[0] + '', size * 2, D);
-      datactx.fillText(' ' + this.values[0] + '', size * 4, D);
-      datactx.fillText(' ' + keys[1] + '', size * 8, D);
-      datactx.fillText(' ' + this.values[1] + '', size * 10, D);
-      datactx.fillText(' ' + keys[2] + '', size * 2, D + V);
-      datactx.fillText(' ' + this.values[2] + '', size * 4, D + V);
-      datactx.fillText(' ' + this.values[3] + '', size * 8, D + V);
-      datactx.fillText(' ' + keys[3] + '', size * 2, D + 2 * V);
-      datactx.fillText(' ' + this.values[4] + '', size * 4, D + 2 * V);
-      datactx.fillText(' ' + keys[4] + '', size * 8, D + 2 * V);
-      datactx.fillText(' ' + this.values[5] + '', size * 10, D + 2 * V);
-      datactx.fillText(' ' + keys[5] + '', size * 4, D + 3 * V);
-      datactx.fillText(' ' + this.values[6] + '', size * 10, D + 3 * V);
+
+      entries.forEach(([k, v], i) => {
+        datactx.fillText(` ${k}`, width - size * 14, 10 + D + i * V);
+        datactx.fillText(` ${v}`, width - size * 8, 10 + D + i * V);
+      })
+
     } else {
+      const d = width / 6
       let size = 16;
-      let D = 10;
-      // 设置颜色 字体
-      datactx.fillStyle = "#000";
+      let D = 14;
+      datactx.fillStyle = "#eee";
+      datactx.fillRect(0, 0, width, height)
+      datactx.fillStyle = "#666";
       datactx.font = size + "px bold 黑体";
-      // 设置水平对齐方式
-      datactx.textAlign = 'right';
       datactx.textAlign = "center";
-      // 设置垂直对齐方式
       datactx.textBaseline = "middle";
-      datactx.clearRect(0, 0, this.canvasmonitor.width, this.canvasmonitor.height);
-      const keys = ['脉率', '血氧', '体温', '心率', '呼吸', '血压(S/D/M)'];
-      datactx.fillText(' ' + keys[0] + '', size * 2, D);
-      datactx.fillText(' ' + this.values[0] + '', size * 4, D);
-      datactx.fillText(' ' + keys[1] + '', size * 8, D);
-      datactx.fillText(' ' + this.values[1] + '', size * 10, D);
-      datactx.fillText(' ' + keys[2] + '', size * 12, D);
-      datactx.fillText(' ' + this.values[2] + '', size * 14, D);
-      datactx.fillText(' ' + this.values[3] + '', size * 18, D);
-      datactx.fillText(' ' + keys[3] + '', size * 32, D);
-      datactx.fillText(' ' + this.values[4] + '', size * 24, D);
-      datactx.fillText(' ' + keys[4] + '', size * 28, D);
-      datactx.fillText(' ' + this.values[5] + '', size * 30, D);
-      datactx.fillText(' ' + keys[5] + '', size * 34, D);
-      datactx.fillText(' ' + this.values[6] + '', size * 40, D);
+
+      entries.forEach(([k, v], i) => {
+        const x = 20 + d * i
+        datactx.fillText(` ${k}`, x, D);
+        datactx.fillText(` ${v || ''}`, x, 2.5 * D);
+
+      })
+
+
+
     }
   }
 
@@ -209,13 +207,12 @@ export class DrawEcg implements Drawer {
       if (!this) {
         clearInterval(id);
       }
-      const y_starts = this.GetYStarts(12);
       this.DrawDatatext();
       const A = new Date().getTime();
       this.current_time_millis = A;
       if (!isNaN(this.start) || this.oQueue.GetSize() > points_one_times * 5) {
         this.start = 1;
-        this.drawsingle(y_starts, adu, samplingrate, this.max_times, this.linectx);
+        this.drawsingle();
       }
     }, dely);
     this.intervalIds.push(id);
@@ -242,15 +239,17 @@ export class DrawEcg implements Drawer {
   //   }
   // }
   // 绘制单心电走纸
-  drawsingle(Q, P, N, G, A) {
-    const { oQueue,last_points } = this;
+  drawsingle() {
+    const { oQueue, last_points, max_times, linectx } = this;
+    const y_starts = this.GetYStarts(12);
+
     //2019-10-03 kisi 根据容器调整高度
     // let scale = this.height / 100;
-    if(isstop){
+    if (isstop) {
       return;
     }
     isstop = true;
-    this.current_times = this.current_times % G;
+    this.current_times = this.current_times % max_times;
     if (oQueue.IsEmpty()) {
       this.start = NaN;
       isstop = false;
@@ -261,49 +260,49 @@ export class DrawEcg implements Drawer {
       isstop = false;
       return;
     }
-    this.clearcanvans(this.current_times, points_one_times, N, A);
+    this.clearcanvans(this.current_times, points_one_times, samplingrate, linectx);
     let F = [];
     for (let J = 0; J < points_one_times; J++) {
       F.push(oQueue.DeQueue());
     }
-    let L = x_start + this.current_times * points_one_times * ((gride_width * 5) / N);
-    A.beginPath();
-    for (let K = 0; K < F.length; K++) {  
+    let L = x_start + this.current_times * points_one_times * ((gride_width * 5) / samplingrate);
+    linectx.beginPath();
+    for (let K = 0; K < F.length; K++) {
       const C = F[K] - BASE_INEVAL;
-      let I = K * (gride_width * 5 / N);
+      let I = K * (gride_width * 5 / samplingrate);
       let M;
-      A.strokeStyle = '#9d6003';
+      linectx.strokeStyle = '#9d6003';
       if (this.ecg_scope != 0) {
-        M = Math.abs(C) * (P / (gride_width * 2)) * this.ecg_scope;
+        M = Math.abs(C) * (adu / (gride_width * 2)) * this.ecg_scope;
       } else {
-        M = (Math.abs(C) * (P / (gride_width * 2))) / 2;
+        M = (Math.abs(C) * (adu / (gride_width * 2))) / 2;
       }
       if (K == 0) {
         if (this.current_times != 0) {
-          A.moveTo(last_points[0], last_points[1]);
-          var D = parseFloat(C >= 0 ? Q[0] - M : Q[0] + M);
-          A.lineTo(last_points[0], D);
+          linectx.moveTo(last_points[0], last_points[1]);
+          var D = parseFloat(C >= 0 ? y_starts[0] - M : y_starts[0] + M);
+          linectx.lineTo(last_points[0], D);
           last_points[0] = last_points[0];
           last_points[1] = D;
         } else {
-          var D = parseFloat(C >= 0 ? Q[0] - M : Q[0] + M);
-          A.moveTo(x_start, D);
+          var D = parseFloat(C >= 0 ? y_starts[0] - M : y_starts[0] + M);
+          linectx.moveTo(x_start, D);
           last_points[0] = x_start;
           last_points[1] = D;
         }
       } else {
-        A.moveTo(last_points[0], last_points[1]);
-        var D = parseFloat(C >= 0 ? Q[0] - M : Q[0] + M);
-        A.lineTo(L + I, D);
-        if(L + I<last_points[0]){
-          console.log('error data',this.current_times,L,I,K,last_points);
+        linectx.moveTo(last_points[0], last_points[1]);
+        var D = parseFloat(C >= 0 ? y_starts[0] - M : y_starts[0] + M);
+        linectx.lineTo(L + I, D);
+        if (L + I < last_points[0]) {
+          console.log('error data', this.current_times, L, I, K, last_points);
         }
         last_points[0] = L + I;
         last_points[1] = D;
       }
     }
-    A.stroke();
-    this.current_times++;   
+    linectx.stroke();
+    this.current_times++;
     isstop = false;
   }
 
@@ -322,7 +321,7 @@ export class DrawEcg implements Drawer {
     const B = [];
     for (let A = 0; A < C; A++) {
       if (height < 480) {
-        B[A] = -BASE_INEVAL / 2 + A * 100 -20;
+        B[A] = -BASE_INEVAL / 2 + A * 100 - 20;
       } else {
         B[A] = -BASE_INEVAL / 2 + A * 100;
       }
