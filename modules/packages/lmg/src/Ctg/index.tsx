@@ -56,7 +56,7 @@ export default (props: IProps) => {
   return (
     <div style={{ width: '100%', height: '100%' }} ref={box} {...others}>
       {
-        loading && (
+        !data && (
           <div style={{ position: 'absolute', width: '100%', height: '100%', background: '#fff', zIndex: 1, opacity: .8 }}>
             <Loading style={{ margin: 'auto', position: 'absolute', left: 0, right: 0, bottom: 0, top: 0 }} />
           </div>
