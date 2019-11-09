@@ -2,6 +2,7 @@ export interface IProps {
     data: any;
     mutableSuitObject?: { suit: (Drawer | any) };
     onReady?: (suit: Drawer) => void;
+    loading?: boolean;
     [x: string]: any
 }
 
