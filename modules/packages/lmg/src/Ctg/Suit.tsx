@@ -98,6 +98,14 @@ export class Suit extends Draw {
     this.ctgconfig.fhrcolor[0] = this.option.fhrcolor1;
     this.ctgconfig.fhrcolor[1] = this.option.fhrcolor2;
     this.ctgconfig.fhrcolor[2] = this.option.fhrcolor3;
+    if(this.option.alarm_enable == "0"){
+      this.ctgconfig.alarm_enable = false;
+    }else{
+      this.ctgconfig.alarm_enable = true;
+    }
+    this.ctgconfig.alarm_enable = true;
+    this.ctgconfig.alarm_high = Number(this.option.alarm_high);
+    this.ctgconfig.alarm_low = Number(this.option.alarm_low);
   }
 
   init(data: ICacheItem) {

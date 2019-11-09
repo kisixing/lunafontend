@@ -396,7 +396,7 @@ export class WsService extends EventEmitter {
                             }
                             datacache.get(cachbi).ecgdata = [ecgdata[eindex].pulse_rate,ecgdata[eindex].blood_oxygen,ecgdata[eindex].temperature,ecgdata[eindex].temperature1,ecgdata[eindex].pulse_rate,ecgdata[eindex].resp_rate,ecgdata[eindex].sys_bp+'/'+ecgdata[eindex].dia_bp+'/'+ecgdata[eindex].mean_bp];
                         }
-                        console.log(datacache.get(cachbi).ecg);
+                        //console.log(datacache.get(cachbi).ecg);
                     } else if (received_msg.name == 'start_work') {
                         //开启监护页
                         let devdata = received_msg.data;

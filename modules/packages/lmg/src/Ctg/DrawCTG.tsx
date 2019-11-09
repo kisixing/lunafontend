@@ -159,6 +159,7 @@ export default class DrawCTG {
     // 0.5 s 一个点,一个像素画两个点
     var start = cur - suit.canvasline.width * 2 > 0 ? cur - suit.canvasline.width * 2 : 0;
     //Draw FHR multiply 
+    let alarmstate = 0;
     for (var fetal = 0; fetal < suit.fetalcount; fetal++) {
       //start 统一为画布的位置点，需根据显示采样率调整取值
       //TODO : kisi 增加多胎偏移处理
@@ -167,7 +168,6 @@ export default class DrawCTG {
       linecontext.beginPath();
       linecontext.strokeStyle = suit.ctgconfig.fhrcolor[fetal];
       linecontext.lineWidth = 1;
-      let alarmstate = 0;
       let curfhroffset = 0;
       if (fetal == 1) {
         curfhroffset = this.fhroffset;
@@ -205,14 +205,18 @@ export default class DrawCTG {
             let minoff = 0;
             let curstand = lasty;
             if (alarmstate != type) {
-              if(lasty>suit.ctgconfig.alarm_high){
+              if(lasty>suit.ctgconfig.alarm_high && fhr[fetal][inneri-2]<suit.ctgconfig.alarm_high){
                 minoff = (lasty - suit.ctgconfig.alarm_high) / (lasty- fhr[fetal][inneri-2]);
                 curstand = suit.ctgconfig.alarm_high;
-              }else if(lasty<suit.ctgconfig.alarm_low){
+              }else if(lasty<suit.ctgconfig.alarm_low && fhr[fetal][inneri-2]>suit.ctgconfig.alarm_low){
                 minoff = (lasty - suit.ctgconfig.alarm_low) / (lasty- fhr[fetal][inneri-2]);
                 curstand = suit.ctgconfig.alarm_low;
               }
-              console.log('alarm',inneri,fhr[fetal][inneri-2],lasty,minoff,curstand);
+              else{
+                minoff = 0;
+                curstand = lasty;
+              }
+              //console.log('alarm',type,start,inneri,fhr[fetal][inneri-2],lasty,minoff,curstand);
               this.linecontext.lineTo(lastx-1+minoff, (max - curstand - curfhroffset) * this.yspan + this.basetop);
               this.linecontext.stroke();
               this.linecontext.beginPath();
@@ -235,7 +239,7 @@ export default class DrawCTG {
                 minoff = (lasty - suit.ctgconfig.alarm_low) / (lasty- fhr[fetal][inneri-2]);
                 curstand = suit.ctgconfig.alarm_low;
               }
-              console.log('recover',inneri,fhr[fetal][inneri-2],lasty,minoff,curstand);
+              //console.log('recover',type,start,inneri,fhr[fetal][inneri-2],lasty,minoff,curstand);
               this.linecontext.lineTo(lastx-1+minoff, (max - curstand - curfhroffset) * this.yspan + this.basetop);
               this.linecontext.stroke();
               this.linecontext.beginPath();

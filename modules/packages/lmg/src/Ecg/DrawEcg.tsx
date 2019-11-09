@@ -10,20 +10,6 @@ const x_start = 25;
 // const draw_lines_index = [0, 1, 2];
 const ruler = [64, 64, 64, 64, 64, 64, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 64, 64, 64, 64, 64, 64];
 let isstop = true;
-const last_points = [
-  [25, 100],
-  [25, 200],
-  [25, 300],
-  [25, 400],
-  [25, 500],
-  [25, 600],
-  [25, 700],
-  [25, 800],
-  [25, 900],
-  [25, 1000],
-  [25, 1100],
-  [25, 1200],
-];
 const loopmill = 100;
 type Canvas = HTMLCanvasElement;
 type Ctx = CanvasRenderingContext2D;
@@ -63,7 +49,8 @@ export class DrawEcg implements Drawer {
   height?= 0;
   current_time_millis?= 0;
   start?= NaN;
-
+  intervalIds: NodeJS.Timeout[] = [];
+  last_points : number[];
   constructor(args: I) {
     const { canvas, canvasline, canvasmonitor } = args;
     const { width, height } = canvas;
@@ -82,8 +69,12 @@ export class DrawEcg implements Drawer {
       this.oQueue = data.ecg;
       this.values = data.ecgdata;
       this.current_time_millis = 0;
-      isstop = true;
-      this.loop();
+      this.current_times = 0;
+      isstop = false;
+      //this.loop();
+      console.log("loop");
+      this.last_points = [];
+      this.timerEcg(loopmill);
     }
   }
   resize() {
@@ -92,7 +83,11 @@ export class DrawEcg implements Drawer {
     console.log('resize', width, height)
   }
   destroy() {
-    isstop = false;
+    isstop = false;   
+    this.intervalIds.forEach(_ => clearInterval(_));
+    this.canvas = null;
+    this.canvasline = null;
+    this.canvasmonitor = null;
   }
   ecg() {
     this.addfilltext();
@@ -129,7 +124,10 @@ export class DrawEcg implements Drawer {
       const V = (this.canvasmonitor.height - 10) / 10;
       const H = (this.canvasmonitor.width - 10) / 20;
       let size = V > H ? H : V;
-      console.log('ecg', V, H, size);
+      if(this.values.length<1){
+        return;
+      }
+      //console.log('ecg', V, H, size);
       let D = 10;
       // 设置颜色 字体
       datactx.fillStyle = "#000";
@@ -205,49 +203,74 @@ export class DrawEcg implements Drawer {
     }
     linectx.strokeStyle = '#9d6003';
   }
-  loop() {
-    const y_starts = this.GetYStarts(12);
-    this.DrawDatatext();
-    const A = new Date().getTime();
-    this.current_time_millis = A;
-    if (!isNaN(this.start) || this.oQueue.GetSize() > points_one_times * 5) {
-      this.start = 1;
-      this.drawsingle(y_starts, adu, samplingrate, this.max_times, this.linectx);
-    }
-    if (isstop) {
-      setTimeout(this.loop.bind(this), loopmill);
-      // const C = new Date().getTime();
-      // const B = C - this.current_time_millis + 1;
-      // if (B < loopmill) {
-      // }
-    }
-    if (this.oQueue.IsEmpty()) {
-      this.Convert16Scale();
-    }
+
+  timerEcg(dely) {
+    let id = setInterval(() => {
+      if (!this) {
+        clearInterval(id);
+      }
+      const y_starts = this.GetYStarts(12);
+      this.DrawDatatext();
+      const A = new Date().getTime();
+      this.current_time_millis = A;
+      if (!isNaN(this.start) || this.oQueue.GetSize() > points_one_times * 5) {
+        this.start = 1;
+        this.drawsingle(y_starts, adu, samplingrate, this.max_times, this.linectx);
+      }
+    }, dely);
+    this.intervalIds.push(id);
   }
+
+  // loop() {
+  //   const y_starts = this.GetYStarts(12);
+  //   this.DrawDatatext();
+  //   const A = new Date().getTime();
+  //   this.current_time_millis = A;
+  //   if (!isNaN(this.start) || this.oQueue.GetSize() > points_one_times * 5) {
+  //     this.start = 1;
+  //     this.drawsingle(y_starts, adu, samplingrate, this.max_times, this.linectx);
+  //   }
+  //   if (isstop) {
+  //     setTimeout(this.loop.bind(this), loopmill);
+  //     // const C = new Date().getTime();
+  //     // const B = C - this.current_time_millis + 1;
+  //     // if (B < loopmill) {
+  //     // }
+  //   }
+  //   if (this.oQueue.IsEmpty()) {
+  //     this.Convert16Scale();
+  //   }
+  // }
   // 绘制单心电走纸
   drawsingle(Q, P, N, G, A) {
-    const { oQueue } = this;
+    const { oQueue,last_points } = this;
     //2019-10-03 kisi 根据容器调整高度
     // let scale = this.height / 100;
+    if(isstop){
+      return;
+    }
+    isstop = true;
     this.current_times = this.current_times % G;
     if (oQueue.IsEmpty()) {
       this.start = NaN;
+      isstop = false;
       return;
     }
     if (oQueue.GetSize() < points_one_times) {
       this.start = NaN;
+      isstop = false;
       return;
     }
     this.clearcanvans(this.current_times, points_one_times, N, A);
-    const F = [];
+    let F = [];
     for (let J = 0; J < points_one_times; J++) {
       F.push(oQueue.DeQueue());
     }
+    let L = x_start + this.current_times * points_one_times * ((gride_width * 5) / N);
     A.beginPath();
-    for (let K = 0; K < F.length; K++) {
+    for (let K = 0; K < F.length; K++) {  
       const C = F[K] - BASE_INEVAL;
-      const I = K * (gride_width * 5 / N);
+      let I = K * (gride_width * 5 / N);
       let M;
       A.strokeStyle = '#9d6003';
       if (this.ecg_scope != 0) {
@@ -255,30 +278,33 @@ export class DrawEcg implements Drawer {
       } else {
         M = (Math.abs(C) * (P / (gride_width * 2))) / 2;
       }
-      const L = x_start + this.current_times * points_one_times * ((gride_width * 5) / N);
       if (K == 0) {
         if (this.current_times != 0) {
-          A.moveTo(last_points[0][0], last_points[0][1]);
+          A.moveTo(last_points[0], last_points[1]);
           var D = parseFloat(C >= 0 ? Q[0] - M : Q[0] + M);
-          A.lineTo(last_points[0][0], D);
-          last_points[0][0] = last_points[0][0];
-          last_points[0][1] = D;
+          A.lineTo(last_points[0], D);
+          last_points[0] = last_points[0];
+          last_points[1] = D;
         } else {
           var D = parseFloat(C >= 0 ? Q[0] - M : Q[0] + M);
           A.moveTo(x_start, D);
-          last_points[0][0] = x_start;
-          last_points[0][1] = D;
+          last_points[0] = x_start;
+          last_points[1] = D;
         }
       } else {
-        A.moveTo(last_points[0][0], D);
+        A.moveTo(last_points[0], last_points[1]);
         var D = parseFloat(C >= 0 ? Q[0] - M : Q[0] + M);
         A.lineTo(L + I, D);
-        last_points[0][0] = L + I;
-        last_points[0][1] = D;
+        if(L + I<last_points[0]){
+          console.log('error data',this.current_times,L,I,K,last_points);
+        }
+        last_points[0] = L + I;
+        last_points[1] = D;
       }
     }
     A.stroke();
-    this.current_times++;
+    this.current_times++;   
+    isstop = false;
   }
 
   clearcanvans(B, F, C, D) {
@@ -290,12 +316,13 @@ export class DrawEcg implements Drawer {
       D.clearRect(E - 10, 0, E + 20, this.height);
     }
   }
+
   GetYStarts(C) {
     const { height } = this;
     const B = [];
     for (let A = 0; A < C; A++) {
       if (height < 480) {
-        B[A] = -BASE_INEVAL / 2 + A * 100;
+        B[A] = -BASE_INEVAL / 2 + A * 100 -20;
       } else {
         B[A] = -BASE_INEVAL / 2 + A * 100;
       }
