@@ -208,7 +208,7 @@ export class Suit extends Draw {
     });
   }
   lazyEmit = throttle((type: string, ...args: any[]) => {
-    //console.log(`Suit:${type}`)
+    console.log(`Suit:${type}`)
     this.emit(type, ...args)
     return true
   }, this.emitInterval || 2000)

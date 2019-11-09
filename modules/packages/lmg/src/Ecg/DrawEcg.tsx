@@ -85,12 +85,12 @@ export class DrawEcg extends Draw {
   }
   _resize() {
     const { height, width } = this
-
     this.mode = height <= 50 ? displayMode.text : displayMode.canvas
-
     Object.assign(this.canvas, { width, height })
     Object.assign(this.canvasline, { width, height })
     Object.assign(this.canvasmonitor, { width, height })
+    this.addfilltext();
+    this.initparm();
 
   }
   destroy() {
@@ -109,16 +109,10 @@ export class DrawEcg extends Draw {
     //this.adddatatest(null, 1, 8, 128);
   }
   addfilltext() {
-    const { ctx } = this;
-    // const A = ['I', 'II', 'III'];
-    // const C = (height - 10) / 3;
-    // let D = 0;
-    // for (let E = 0; E < draw_lines_index.length; E++) {
-    //   D = D + C;
-    //   ctx.font = 'bold 14px';
-    //   ctx.fillText('' + A[draw_lines_index[E]] + '', 10, D);
-    // }
-    //kisi 2019-10-03 add ruler
+    const { ctx,canvas } = this;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.font = 'bold 14px';
+    ctx.fillText('' + 'I' + '', 10, 10);
     let scale = 1;
     ctx.strokeStyle = '#006003';
     ctx.beginPath();
@@ -171,10 +165,7 @@ export class DrawEcg extends Draw {
         const x = 20 + d * i
         datactx.fillText(` ${k}`, x, D);
         datactx.fillText(` ${v || ''}`, x, 2.5 * D);
-
       })
-
-
 
     }
   }
@@ -192,13 +183,15 @@ export class DrawEcg extends Draw {
     }
     return;
   }
+
   initparm() {
-    const { width, linectx } = this;
-    if (width < 150) {
+    const { canvasline, linectx } = this;
+    if (canvasline.width < 150) {
       alert(' width is limited');
     } else {
-      this.max_times = Math.floor((width - 25) / gx);
+      this.max_times = Math.floor((canvasline.width - 25)*0.6 / gx);
     }
+    console.log('ecg-width',canvasline.width);
     linectx.strokeStyle = '#9d6003';
   }
 
@@ -321,9 +314,9 @@ export class DrawEcg extends Draw {
     const B = [];
     for (let A = 0; A < C; A++) {
       if (height < 480) {
-        B[A] = -BASE_INEVAL / 2 + A * 100 - 20;
+        B[A] = -BASE_INEVAL / 2 + A * 100 - 20+0.3*height;
       } else {
-        B[A] = -BASE_INEVAL / 2 + A * 100;
+        B[A] = -BASE_INEVAL / 2 + A * 100- 20+0.3*height;
       }
     }
     return B;

@@ -582,6 +582,7 @@ export default class DrawCTG {
     datacontext.textAlign = 'left';
     datacontext.textBaseline = 'top';
     datacontext.font = 'bold ' + fontsize + 'px arial';
+    let alarm = 0;
     for (let i = 0; i < suit.fetalcount; i++) {
       if(typeof(fhr[i]) == "undefined"){
         return;
@@ -595,14 +596,18 @@ export default class DrawCTG {
           datacontext.fillStyle = suit.ctgconfig.alarmcolor;
           if (suit.ctgconfig.alarm_enable && fhr[i][x] > suit.ctgconfig.alarm_high) {
             this.suit.alarmOn('心率过高');
+            alarm = 1;
           }else if(suit.ctgconfig.alarm_enable &&fhr[i][x] < suit.ctgconfig.alarm_low){
             this.suit.alarmOn('心率过低');
+            alarm = 1;
           }
           else{
             datacontext.fillStyle = suit.ctgconfig.fhrcolor[i];
-            this.suit.alarmOff('');
           }
         }
+      }
+      if(alarm==0 && suit.ctgconfig.alarm_enable && fhr[i][x-2] && (fhr[i][x-2] > suit.ctgconfig.alarm_high || fhr[i][x-2] < suit.ctgconfig.alarm_low)){
+        this.suit.alarmOff('');
       }
       datacontext.fillText('FHR' + (i + 1) + ' : ' + curvalue, 10, curpostion);
       curpostion += fontsize;
