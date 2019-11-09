@@ -16,6 +16,12 @@
   "peerDependencies": {
     "@lianmed/request": "^1.0.0"
   },
+  "dependencies": {
+    "ramda":"^0.26.1"
+  },
+  "devDependencies": {
+    "@types/ramda":"^0.26.33"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kisixing/LUNA_FontEnd.git"
