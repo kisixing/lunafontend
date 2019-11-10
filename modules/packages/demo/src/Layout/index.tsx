@@ -62,6 +62,12 @@ export default class SiderDemo extends React.Component {
                   Partogram
                 </Link>
               </Menu.Item>
+              <Menu.Item key="4">
+                <Link to="/Pages">
+                  <Icon type="upload" />
+                  Pages
+                </Link>
+              </Menu.Item>
             </SubMenu>
           </Menu>
         </Sider>

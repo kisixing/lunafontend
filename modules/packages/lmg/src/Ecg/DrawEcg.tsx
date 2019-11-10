@@ -144,8 +144,11 @@ export class DrawEcg extends Draw {
       datactx.textBaseline = "middle";
 
       entries.forEach(([k, v], i) => {
-        datactx.fillText(` ${k}`, width - size * 14, 10 + D + i * V);
-        datactx.fillText(` ${v}`, width - size * 8, 10 + D + i * V);
+        const isRight = i > 2
+        const x = (isRight ? 10 : 20)
+        const y = D + (i % 3) * V + 4 * size
+        datactx.fillText(` ${k}`, width - size * x, y);
+        datactx.fillText(` ${v}`, width - size * (x - 5), y);
       })
 
     } else {

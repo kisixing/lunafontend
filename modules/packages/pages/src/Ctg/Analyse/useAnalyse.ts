@@ -2,23 +2,50 @@
 import { useState, useEffect, useMemo } from 'react';
 import request from "@lianmed/request";
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
-import { event } from "@lianmed/utils";
+import { event, _R } from "@lianmed/utils";
+import { WrappedFormUtils } from 'antd/lib/form/Form';
 
-export default (v: { suit: Suit }, docid, cb: (result: IResult) => void) => {
-    const [mark, setMark] = useState(null)
+export default (v: { suit: Suit }, docid, fetal: any, form: WrappedFormUtils, cb: (result: IResult) => void) => {
+    const resultData = useMemo<{ [x: string]: IResponseData }>(() => { return {} }, [])
+
+    const [mark, setMark] = useState(MARKS[0])
     const [activeItem, setActiveItem] = useState<IItem[]>([])
-    const responseData = useMemo(() => { return {} }, [])
+    const [interval, setInterval] = useState(20)
+    const [startTime, setStartTime] = useState(0)
+
+
+    const fetalKey = `fhr${fetal}`
+
+    useEffect(() => {
+        const s = (time) => {
+            setStartTime(time)
+        }
+        v.suit && v.suit
+            .on('startTime', s)
+        return () => {
+            v.suit && v.suit
+                .off('startTime', s)
+
+        };
+    }, [interval, v])
+
 
     useEffect(() => { setMarkAndItems(MARKS[0]) }, [])
     useEffect(() => { analyse() }, [mark])
+    useEffect(() => {
+        const value = resultData[fetalKey] = resultData[fetalKey] || { result: JSON.stringify(_R.zipObj(activeItem.map(_ => _.key), activeItem.map(() => 0))) }
+        form.setFieldsValue(JSON.parse(value.result))
+        setMark(value.mark|| MARKS[0])
+    }, [fetal, fetalKey])
 
     const analyse = () => {
         v.suit && v.suit.data && request.post(`/ctg-exams-analyse`, {
-            data: { docid, mark, start: 0, end: v.suit.data.index }
+            data: { docid, mark, start: startTime, end: startTime + interval * 240, fetal }
         }).then((r: IResponseData) => {
 
-            Object.assign(responseData, r)
-            event.emit('analysis:setCtgData', { analyse: responseData })
+            Object.assign(resultData[fetalKey], r)
+
+            event.emit('analysis:setCtgData', { analyse: resultData[fetalKey] })
 
             let _result: IResult = null
             try {
@@ -37,9 +64,16 @@ export default (v: { suit: Suit }, docid, cb: (result: IResult) => void) => {
         const keys: string[] = mapItemsToMarks[mark]
         setActiveItem(allItems.filter(_ => keys.includes(_.key)))
     }
+    const modifyData = () => {
+        resultData[fetalKey] = { ...resultData[fetalKey], result: JSON.stringify(form.getFieldsValue()) }
+    }
 
-    return { setMark: setMarkAndItems, mark, activeItem, responseData, MARKS, analyse }
+    return { setMark: setMarkAndItems, mark, activeItem, responseData: resultData, MARKS, analyse, startTime, setStartTime, interval, setInterval, modifyData }
 }
+
+
+
+
 
 
 
@@ -84,13 +118,13 @@ const allItems: IItem[] = [
 ].map(_ => ({ ..._, required: true, message: '请输入分数' }))
 
 interface IResponseData {
-    "acc": string,
-    "dec": string,
-    "baseline": any,
-    "meanbaseline": string,
-    "mark": string,
-    "result": string,
-    "diagnosis": any
+    acc?: string,
+    dec?: string,
+    baseline?: any,
+    meanbaseline?: string,
+    mark?: string,
+    result: string,
+    diagnosis?: any
 }
 interface IItem {
     key: string;

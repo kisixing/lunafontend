@@ -98,9 +98,9 @@ export class Suit extends Draw {
     this.ctgconfig.fhrcolor[0] = this.option.fhrcolor1;
     this.ctgconfig.fhrcolor[1] = this.option.fhrcolor2;
     this.ctgconfig.fhrcolor[2] = this.option.fhrcolor3;
-    if(this.option.alarm_enable == "0"){
+    if (this.option.alarm_enable == "0") {
       this.ctgconfig.alarm_enable = false;
-    }else{
+    } else {
       this.ctgconfig.alarm_enable = true;
     }
     this.ctgconfig.alarm_enable = true;
@@ -176,7 +176,7 @@ export class Suit extends Draw {
         this.viewposition = this.canvasline.width * 2;
         this.drawobj.drawdot(this.viewposition);
         if (this.selectflag) {
-          if(this.selectend == 1){
+          if (this.selectend == 1) {
             this.endingBar.setOffset(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
           }
           this.drawobj.showselect(this.selectrpstart, this.selectrpend);
@@ -239,7 +239,7 @@ export class Suit extends Draw {
       }
       this.drawobj.showcur(this.selectstart);
       this.selectrpstart = this.selectstart;
-      this.emit('suit:startTime', this.selectstart)
+      this.emit('startTime', this.selectstart)
     })
     endingBar.on('change', value => {
       if (this.data.index < this.canvasline.width * 2) {
@@ -252,7 +252,7 @@ export class Suit extends Draw {
       }
       console.log('print_结束', value, this.selectrpstart, this.selectrpend)
       this.drawobj.showselect(this.selectrpstart, this.selectrpend);
-      this.emit('suit:endTime', this.selectrpend)
+      this.emit('endTime', this.selectrpend)
     })
 
     this.on('locking', value => {
@@ -268,7 +268,7 @@ export class Suit extends Draw {
         this.selectrpend = this.data.index < this.selectrpstart + this.printlen ? this.data.index : this.selectrpstart + this.printlen
         this.drawobj.showselect(this.selectrpstart, this.selectrpend);
         this.endingBar.setVisibility(false);
-        this.emit('suit:endTime', this.selectrpend);
+        this.emit('endTime', this.selectrpend);
       } else {
         this.startingBar.toggleVisibility();
         //this.endingBar.toggleVisibility();
