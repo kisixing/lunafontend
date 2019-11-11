@@ -31,12 +31,19 @@ export default (v: { suit: Suit }, docid, fetal: any, form: WrappedFormUtils, cb
 
 
     useEffect(() => { setMarkAndItems(MARKS[0]) }, [])
-    useEffect(() => { analyse() }, [mark])
     useEffect(() => {
-        const value = resultData[fetalKey] = resultData[fetalKey] || { result: JSON.stringify(_R.zipObj(activeItem.map(_ => _.key), activeItem.map(() => 0))) }
-        form.setFieldsValue(JSON.parse(value.result))
-        setMark(value.mark|| MARKS[0])
-    }, [fetal, fetalKey])
+        const keys: string[] = mapItemsToMarks[mark]
+        setActiveItem(allItems.filter(_ => keys.includes(_.key)))
+    }, [mark])
+    useEffect(() => {
+        const defaultMark = MARKS[0]
+        const keys = mapItemsToMarks[defaultMark]
+        const value = resultData[fetalKey] = resultData[fetalKey] || { result: JSON.stringify(_R.zipObj(keys, keys.map(() => null))), mark: defaultMark }
+        setMark(value.mark)
+        setTimeout(() => {
+            form.setFieldsValue(JSON.parse(value.result))
+        }, 400)
+    }, [fetalKey])
 
     const analyse = () => {
         v.suit && v.suit.data && request.post(`/ctg-exams-analyse`, {
@@ -61,8 +68,7 @@ export default (v: { suit: Suit }, docid, fetal: any, form: WrappedFormUtils, cb
 
     const setMarkAndItems = (mark: string) => {
         setMark(mark)
-        const keys: string[] = mapItemsToMarks[mark]
-        setActiveItem(allItems.filter(_ => keys.includes(_.key)))
+
     }
     const modifyData = () => {
         resultData[fetalKey] = { ...resultData[fetalKey], result: JSON.stringify(form.getFieldsValue()) }

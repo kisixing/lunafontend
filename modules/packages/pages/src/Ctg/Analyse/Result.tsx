@@ -69,11 +69,11 @@ const ScoringMethod = (props: IProps) => {
   }
   const FetalSelect = () => {
     return (
-      <span style={{ marginRight: 10 }}> 胎次：
+      <span style={{ marginRight: 10 }}> 胎心率：
             <Select onChange={setFetal} value={fetal}>
           {
             Array(+ctgData.fetalnum).fill(0).map((_, i) => (
-              <Select.Option value={i + 1} key={i + 1}>{i + 1 + '胎'}</Select.Option>
+              <Select.Option value={i + 1} key={i + 1}>{`FHR${i + 1}`}</Select.Option>
             ))
           }
         </Select>
