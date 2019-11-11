@@ -45,8 +45,11 @@ export default (props: IProps) => {
     return instance
   },
     () => {
-      const { height } = box.current.getBoundingClientRect()
-      height > 500 ? setEcgHeight(200) : setEcgHeight(50)
+      const { height } = box.current.getBoundingClientRect();
+      const h = height / 5;
+      let t = 0;
+      h > 50 && (t = h > 200 ? 200 : 50);
+      setEcgHeight(t)
     })
 
   useLayoutEffect(() => {

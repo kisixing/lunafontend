@@ -2,7 +2,7 @@ import { EventEmitter, event } from "@lianmed/utils";
 import request from "@lianmed/request"
 import Queue from "../Ecg/Queue";
 import { throttle } from "lodash";
-const ANNOUNCE_INTERVAL = 5000
+const ANNOUNCE_INTERVAL = 500
 export enum EWsStatus {
     Pendding, Success, Error
 }
@@ -33,7 +33,7 @@ const getBlankCacheItem = () => {
         fetal_num: 1,
         csspan: NaN,
         ecg: new Queue(),
-        ecgdata:[],
+        ecgdata: [],
     }
 }
 export class WsService extends EventEmitter {
@@ -391,14 +391,14 @@ export class WsService extends EventEmitter {
                         var bi = received_msg.bed_no;
                         var cachbi = id + '-' + bi;
                         if (datacache.has(cachbi)) {
-                            for(let eindex=0;eindex<ecgdata.length;eindex++){
+                            for (let eindex = 0; eindex < ecgdata.length; eindex++) {
                                 for (let elop = 0; elop < ecgdata[eindex].ecg_arr.length; elop++) {
                                     datacache.get(cachbi).ecg.EnQueue(ecgdata[eindex].ecg_arr[elop] & 0x7f);
                                 }
-                                datacache.get(cachbi).ecgdata = [ecgdata[eindex].pulse_rate,ecgdata[eindex].blood_oxygen,ecgdata[eindex].temperature,ecgdata[eindex].temperature1,ecgdata[eindex].pulse_rate,ecgdata[eindex].resp_rate,ecgdata[eindex].sys_bp+'/'+ecgdata[eindex].dia_bp+'/'+ecgdata[eindex].mean_bp];
+                                datacache.get(cachbi).ecgdata = [ecgdata[eindex].pulse_rate, ecgdata[eindex].blood_oxygen, ecgdata[eindex].temperature, ecgdata[eindex].temperature1, ecgdata[eindex].pulse_rate, ecgdata[eindex].resp_rate, ecgdata[eindex].sys_bp + '/' + ecgdata[eindex].dia_bp + '/' + ecgdata[eindex].mean_bp];
                             }
-                        }else{
-                            console.log('cache error',datacache);
+                        } else {
+                            console.log('cache error', datacache);
                         }
                     } else if (received_msg.name == 'start_work') {
                         //开启监护页
@@ -499,11 +499,15 @@ export class WsService extends EventEmitter {
             if (value < datacache.get(id).start) {
                 datacache.get(id).start = value;
             } else if (value >= datacache.get(id).index) {
+
                 datacache.get(id).index = value;
                 const arr = id.split('-')
                 let text = id
                 arr[0] && arr[1] && arr[0] === arr[1] && (text = arr[0])
-                if (value / 240 > 20) {
+          
+
+                if (value > 20 * 240) {
+
                     announce(text)
                     // event.emit('bed:announcer', `${text}号子机监护时间到`)
                 }
@@ -564,8 +568,22 @@ export class WsService extends EventEmitter {
     };
 }
 const announce = throttle((text) => {
-    event.emit('bed:announcer', `${text}号子机监护时间到`)
+    sp(text) && event.emit('bed:announcer', `${text}号子机监护时间到`)
 }, ANNOUNCE_INTERVAL)
+
+let timeoutKey = null
+let spObj = {}
+function sp(key: string) {
+    if (!timeoutKey) {
+        timeoutKey = setTimeout(() => {
+            spObj = {}
+            timeoutKey = null
+        }, 1000 * 60 * 20);
+    }
+    const old = spObj[key]
+    console.log('zz',key,old)
+    return old ? false : (spObj[key] = true)
+}
 
 export interface ICacheItem {
     fhr: number[][];
