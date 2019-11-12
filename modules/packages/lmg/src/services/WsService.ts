@@ -581,7 +581,6 @@ function sp(key: string) {
         }, 1000 * 60 * 20);
     }
     const old = spObj[key]
-    console.log('zz',key,old)
     return old ? false : (spObj[key] = true)
 }
 

@@ -1,4 +1,4 @@
-import React, { useRef, useLayoutEffect, useState } from 'react';
+import React, { useRef, useState, useLayoutEffect } from 'react';
 import { Suit } from './Suit';
 import { IBarTool } from '../ScrollBar/useScroll';
 import ScrollBar from '../ScrollBar';
@@ -51,7 +51,6 @@ export default (props: IProps) => {
       h > 50 && (t = h > 200 ? 200 : 50);
       setEcgHeight(t)
     })
-
   useLayoutEffect(() => {
     suit.current && suit.current.resize()
   }, [ecgHeight])
@@ -73,16 +72,13 @@ export default (props: IProps) => {
         <canvas style={canvasStyles} ref={canvasanalyse} />
       </div>
       {
-        showEcg && <div style={{ height: ecgHeight, overflow: 'hidden' }} >
-          <Ecg data={data} />
-        </div>
+        showEcg && (
+          <div style={{ height: ecgHeight, overflow: 'hidden' }} >
+            <Ecg data={data} />
+          </div>
+        )
       }
-      <ScrollBar
-        box={box}
-        getBarTool={tool => {
-          barTool = tool;
-        }}
-      />
+      <ScrollBar box={box} getBarTool={tool => { barTool = tool }} />
     </div>
   );
 };
