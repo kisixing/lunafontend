@@ -142,7 +142,7 @@ export class WsService extends EventEmitter {
         const { datacache, settingData } = this
         const { ws_url } = settingData
         this.tip('连接中', EWsStatus.Pendding)
-        if(!!ws_url) return Promise.reject('错误的ws_url')
+        if(!ws_url) return Promise.reject('错误的ws_url')
         this.socket = new WebSocket(
 
             `ws://${ws_url}/?clientType=ctg-suit&token=eyJ1c2VybmFtZSI6ICJhZG1pbiIsInBhc3N3b3JkIjogImFkbWluIn0=`,
