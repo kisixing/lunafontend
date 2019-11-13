@@ -344,7 +344,7 @@ export class Suit extends Draw {
     }
     Object.keys(oriobj).forEach(key => {
       let oridata = oriobj[key];
-      if (!oridata || oridata.length === '') {
+      if (!oridata || oridata === '') {
         return false;
       }
       if (key === 'docid') {
