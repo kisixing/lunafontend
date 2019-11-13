@@ -14,7 +14,7 @@ export enum BedStatus {
 }
 const { Working, Stopped, Offline } = BedStatus
 
-const getBlankCacheItem = () => {
+const getEmptyCacheItem = () => {
     return {
         fhr: [],
         toco: [],
@@ -49,14 +49,7 @@ export class WsService extends EventEmitter {
     static _this: WsService;
     log = console.log.bind(console, 'websocket')
     datacache: ICache = new Map();
-    settingData: {
-        ws_url: "192.168.0.227:8084",
-        xhr_url: "192.168.2.152:9986",
-        alarm_high: "160",
-        alarm_low: "110",
-        alarm_on_window: "1",
-        alarm_on_sound: "1"
-    };
+    settingData: { [x: string]: string };
     socket: WebSocket;
     offrequest: number;
     // store = (window as any).g_app._store
@@ -65,7 +58,7 @@ export class WsService extends EventEmitter {
         const { datacache } = this
         datacache.clean = function (key: string) {
             const target = datacache.get(key)
-            datacache.set(key, Object.assign(target, getBlankCacheItem()))
+            datacache.set(key, Object.assign(target, getEmptyCacheItem()))
         }
         settingData = settingData || {
             ws_url: "192.168.0.227:8084",
@@ -142,7 +135,7 @@ export class WsService extends EventEmitter {
         const { datacache, settingData } = this
         const { ws_url } = settingData
         this.tip('连接中', EWsStatus.Pendding)
-        if(!ws_url) return Promise.reject('错误的ws_url')
+        if (!ws_url) return Promise.reject('错误的ws_url')
         this.socket = new WebSocket(
 
             `ws://${ws_url}/?clientType=ctg-suit&token=eyJ1c2VybmFtZSI6ICJhZG1pbiIsInBhc3N3b3JkIjogImFkbWluIn0=`,
@@ -162,6 +155,10 @@ export class WsService extends EventEmitter {
                     191001180000 +
                     ',"index":0}}',
                 );
+                this.settingData.area_devices && this.send(JSON.stringify({
+                    name: "area_devices",
+                    data: this.settingData.area_devices
+                }))
             };
             socket.onclose = (event) => {
                 this.tip('关闭', EWsStatus.Error)
@@ -189,7 +186,7 @@ export class WsService extends EventEmitter {
                             for (let bi in devdata.beds) {
                                 var cachebi = devdata['device_no'] + '-' + devdata.beds[bi].bed_no;
                                 if (!datacache.has(cachebi)) {
-                                    datacache.set(cachebi, getBlankCacheItem());
+                                    datacache.set(cachebi, getEmptyCacheItem());
                                     convertdocid(cachebi, devdata.beds[bi].doc_id);
                                     if (devdata.beds[bi].is_working == 0) {
                                         datacache.get(cachebi).status = Working;
@@ -372,7 +369,7 @@ export class WsService extends EventEmitter {
                         var bi = statusdata.bed_no;
                         var cachbi = id + '-' + bi;
                         if (!datacache.has(cachbi)) {
-                            datacache.set(cachbi, getBlankCacheItem());
+                            datacache.set(cachbi, getEmptyCacheItem());
                         }
                         if (statusdata.status == 0) {
                             datacache.get(cachbi).status = Working;
@@ -462,7 +459,7 @@ export class WsService extends EventEmitter {
                 datacache.get(curid).ecg = new Queue();
                 datacache.get(curid).ecgdata = [];
             } else {
-                datacache.set(curid, getBlankCacheItem());
+                datacache.set(curid, getEmptyCacheItem());
             }
             datacache.get(curid).fetal_num = fetal_num;
             for (var fetal = 0; fetal < fetal_num; fetal++) {
@@ -504,7 +501,7 @@ export class WsService extends EventEmitter {
                 const arr = id.split('-')
                 let text = id
                 arr[0] && arr[1] && arr[0] === arr[1] && (text = arr[0])
-          
+
 
                 if (value > 20 * 240) {
 
