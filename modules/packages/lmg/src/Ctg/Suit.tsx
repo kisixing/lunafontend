@@ -358,7 +358,7 @@ export class Suit extends Draw {
         CTGDATA.index = oridata.length / 2;
       }
       for (let i = 0; i < CTGDATA.index; i++) {
-        if(oridata.length<2){
+        if(typeof(oridata) != "string" || oridata.length<2){
           return;
         }
         let hexBits = oridata.substring(0, 2);
