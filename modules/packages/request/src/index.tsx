@@ -5,8 +5,10 @@ import Request from './Request';
 
 class R extends Request {
   private hasConfiged = false;
+  configure: { [x: string]: any } = {}
+
   public config = (configs: Iconfig = {}): Request => {
-    
+
 
     const { hasConfiged } = this;
     if (hasConfiged) {
@@ -14,6 +16,7 @@ class R extends Request {
       return this;
     }
     this.hasConfiged = true;
+    Object.assign(this.configure, configs)
     const { Authorization = '' } = configs;
 
     this.init(configs);
@@ -41,14 +44,14 @@ class R extends Request {
             message: '未登录或登录已过期，请重新登录。',
           });
         }
-    
+
         if (!hideErr) {
           notification.error({
             message: `请求错误 ${status}: ${url}`,
             description: errortext,
           });
-        }else{
-          console.error('Network Error',`请求错误 ${status}: ${url}: ${errortext}`)
+        } else {
+          console.error('Network Error', `请求错误 ${status}: ${url}: ${errortext}`)
         }
       }
 
