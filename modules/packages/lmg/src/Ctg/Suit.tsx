@@ -44,6 +44,11 @@ export class Suit extends Draw {
     alarm_high: 160,
     alarm_low: 110,
   };
+  fetalposition = {
+    fhr1:'',
+    fhr2:'',
+    fhr3:''
+  };
   printlen = 4800;
   selectstart = 0;// 选择开始点
   selectrpstart = 0;// 相对开始位置
@@ -328,7 +333,12 @@ export class Suit extends Draw {
     this.log('resize')
     this.drawobj.resize();
   }
-
+  //kisi 2019-11-14 update fhr position
+  setfetalposition(fhr1,fhr2,fhr3){
+    this.fetalposition.fhr1 = fhr1;
+    this.fetalposition.fhr2 = fhr2;
+    this.fetalposition.fhr3 = fhr3;
+  }
   movescoller() { }
 
   //胎心数据处理

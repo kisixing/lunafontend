@@ -581,9 +581,16 @@ export default class DrawCTG {
     datacontext.clearRect(0, 0, fontsize * 10, fontsize * 5);
     datacontext.textAlign = 'left';
     datacontext.textBaseline = 'top';
-    datacontext.font = 'bold ' + fontsize + 'px arial';
+    //datacontext.font = 'bold ' + fontsize + 'px arial';
     let alarm = 0;
+    let label = '';
+    let span = '';
+    let offsetfhr = '';
     for (let i = 0; i < suit.fetalcount; i++) {
+      label = '';
+      offsetfhr = '';
+      span = '';
+      datacontext.font = 'bold ' + fontsize + 'px arial';
       if(typeof(fhr[i]) == "undefined"){
         return;
       }
@@ -609,7 +616,27 @@ export default class DrawCTG {
       if(alarm==0 && suit.ctgconfig.alarm_enable && fhr[i][x-2] && (fhr[i][x-2] > suit.ctgconfig.alarm_high || fhr[i][x-2] < suit.ctgconfig.alarm_low)){
         this.suit.alarmOff('');
       }
-      datacontext.fillText('FHR' + (i + 1) + ' : ' + curvalue, 10, curpostion);
+      //kisi todo 2019-11-14 增加3胎的备注
+      if(i == 0){
+        label = suit.fetalposition.fhr1;
+      }else if(i == 1){
+        label = suit.fetalposition.fhr2;
+        offsetfhr = ' ' + this.fhroffset;
+      }else if(i ==2){
+        label = suit.fetalposition.fhr3; 
+        offsetfhr = ' ' + -this.fhroffset;
+      }else{
+        label = '';
+      }
+      if(label.length>0 || i>0){
+        span = '    ';
+      }
+      datacontext.fillText('FHR' + (i + 1) + span +' : ' + curvalue, 10, curpostion);
+      if(label.length>0 || i>0){      
+        datacontext.font = 'bold ' + fontsize/2 + 'px arial';
+        datacontext.fillText(label, 10+fontsize*2.8, curpostion);
+        datacontext.fillText(offsetfhr, 10+fontsize*2.8, curpostion+fontsize/2);
+      }
       curpostion += fontsize;
     }
     datacontext.fillStyle = suit.ctgconfig.tococolor;
@@ -618,6 +645,7 @@ export default class DrawCTG {
     } else {
       curvalue = '-- --';
     }
+    datacontext.font = 'bold ' + fontsize + 'px arial';
     datacontext.fillText('TOCO: ' + curvalue, 10, curpostion);
   };
   showfm = postion => {
