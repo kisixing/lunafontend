@@ -45,7 +45,8 @@ const PrintPreview = (props: IProps) => {
                     flex: 1,
                     padding: 24,
                     marginTop: 12,
-                    border: '1px solid #eee'
+                    border: '1px solid #eee',
+                    background: '#fff'
                 }}>
                     <Ctg docid={docid} />
                 </div>

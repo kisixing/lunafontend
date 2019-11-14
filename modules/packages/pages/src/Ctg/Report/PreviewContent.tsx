@@ -1,10 +1,16 @@
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useLayoutEffect, useRef } from 'react';
 import { Document, Page } from 'react-pdf';
 import { Pagination, Spin, Icon, Button, Empty } from 'antd';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
+
+// import workerSrc from './pdf.worker.min'
 // import './react-pdf.css';
 
+// const pdf_worker_url = process.env.NODE_ENV === 'development'
+//     ? 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.1.266/pdf.worker.min.js'
+//     : workerSrc.default;
+// pdfjs.GlobalWorkerOptions.workerSrc = pdf_worker_url;
 
 const PreviewContent = props => {
     const { pdfBase64 } = props;
@@ -15,7 +21,6 @@ const PreviewContent = props => {
     const [pageNumber, setPageNumber] = useState(1)
     const onDocumentLoad = useCallback(({ numPages }) => { setNumPages(numPages) }, [])
     const onChangePage = useCallback(page => { setPageNumber(page) }, [])
-
     const largen = () => {
         const { h, w } = props.wh;
         setFullpage(true)
@@ -27,6 +32,20 @@ const PreviewContent = props => {
         setHeight(200);
         setWidth('100%')
     }
+    const ref1 = useRef(null)
+    const ref2 = useRef(null)
+
+    useLayoutEffect(() => {
+        if (document.querySelector('style')) {
+            document.querySelector('style').innerHTML = `${document.querySelector('style').innerHTML} 
+            .react-pdf__Page {
+                display: inline-block;
+              }
+            `
+        }
+
+    }, [])
+
     const content = pdfBase64 ? (
         <div style={{
             width: width,
@@ -39,6 +58,7 @@ const PreviewContent = props => {
         }
         }>
             <Document
+                ref={ref1}
                 loading={<Spin style={{ margin: '120px 0' }} />}
                 onLoadSuccess={onDocumentLoad}
                 file={pdfBase64}
@@ -50,7 +70,8 @@ const PreviewContent = props => {
             >
                 <Page pageNumber={pageNumber} scale={1} height={height} />
             </Document>
-            <Pagination
+            <Pagination ref={ref2}
+
                 total={numPages}
                 showTotal={total => `共 ${total} 页`}
                 current={pageNumber}

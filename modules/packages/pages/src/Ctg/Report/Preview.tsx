@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { Button, Input, Modal } from 'antd';
 
 import { Context } from './index'
@@ -65,7 +65,7 @@ const Preview = (props: IProps) => {
           return (
             <div style={{ display: 'flex', height: '100%' }}>
               <PreviewContent pdfBase64={pdfBase64} wh={wh} />
-              <div style={{ border: '1px solid #eee', width: 400, marginRight: 10, display: 'flex', flexDirection: 'column' }}>
+              <div style={{ border: '1px solid #eee', background: '#fff', width: 400, marginRight: 10, display: 'flex', flexDirection: 'column' }}>
                 <label>NST报告结果</label>
                 <Input.TextArea value={diagnosis} style={{ height: '100%', border: 0 }} onChange={e => setDiagnosis(e.target.value)}>
 
