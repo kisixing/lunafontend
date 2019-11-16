@@ -603,7 +603,7 @@ export interface ICacheItem {
     fetal_num: number;
     csspan: number;
     ecg: Queue;
-    ecgdata: number[];
+    ecgdata: any[];
     ismulti :boolean;
 }
 export type ICache = Map<string, ICacheItem> & { clean?: (key: string) => void }

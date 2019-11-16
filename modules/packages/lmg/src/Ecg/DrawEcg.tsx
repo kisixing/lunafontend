@@ -75,6 +75,7 @@ export class DrawEcg extends Draw {
     if (data) {
       this.oQueue = data.ecg;
       this.values = data.ecgdata;
+      console.log('ecgvalue',data,this.values);
       this.current_time_millis = 0;
       this.current_times = 0;
       isstop = false;
@@ -125,10 +126,10 @@ export class DrawEcg extends Draw {
 
   DrawDatatext() {
     const { datactx, values, height, width } = this;
-    const keys = ['脉率', '血氧', '体温', '心率', '呼吸', '血压(S/D/M)'];
+    const keys = ['脉率', '血氧', '体温°C', '心率', '呼吸', '血压(S/D/M)mmHg'];
     const v = Object.assign(Array(7).fill('--'), values)
-    v[3] = `${v[3]} ~ ${v[4]}`
-    v.splice(4, 1)
+    v[2] = `${v[2]} ~ ${v[3]}`
+    v.splice(3, 1)
     const entries = _R.zip(keys, v)
     datactx.clearRect(0, 0, width, height);
 
