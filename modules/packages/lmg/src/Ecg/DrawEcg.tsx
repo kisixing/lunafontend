@@ -3,11 +3,12 @@ import Queue from "./Queue";
 import { _R } from "@lianmed/utils";
 const BASE_INEVAL = 128;
 const adu = 52;
-const samplingrate = 128;
-const points_one_times = 9;
-const gride_width = 25;
+const samplingrate = 90;
+const points_one_times = 8;
+const gride_width = 40;
 const gx = points_one_times * ((gride_width * 5) / samplingrate);
 const x_start = 25;
+const law_index = 1;
 // const draw_lines_index = [0, 1, 2];
 const ruler = [64, 64, 64, 64, 64, 64, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 64, 64, 64, 64, 64, 64];
 let isstop = true;
@@ -49,7 +50,7 @@ export class DrawEcg extends Draw {
   ctx: Ctx;
   linectx: Ctx;
   datactx: Ctx;
-  ecg_scope?= 1;
+  ecg_scope?= 2;
   current_times?= 0;
   max_times?= 135;
   current_time_millis?= 0;
@@ -90,8 +91,7 @@ export class DrawEcg extends Draw {
     Object.assign(this.canvasline, { width, height })
     Object.assign(this.canvasmonitor, { width, height })
     this.addfilltext();
-    this.initparm();
-
+    this.initparm();    
   }
   destroy() {
     isstop = false;
@@ -193,6 +193,7 @@ export class DrawEcg extends Draw {
     }
     console.log('ecg-width', canvasline.width);
     linectx.strokeStyle = '#9d6003';
+    this.current_times = 0;
   }
 
   timerEcg(dely) {
@@ -256,7 +257,13 @@ export class DrawEcg extends Draw {
     this.clearcanvans(this.current_times, points_one_times, samplingrate, linectx);
     let F = [];
     for (let J = 0; J < points_one_times; J++) {
-      F.push(oQueue.DeQueue());
+      let ecgdot = oQueue.DeQueue();
+      if(ecgdot>BASE_INEVAL){
+        ecgdot = ecgdot-BASE_INEVAL;
+      }else if(ecgdot>0){
+        ecgdot =-ecgdot;
+      }
+      F.push(ecgdot* this.ecg_scope);
     }
     let L = x_start + this.current_times * points_one_times * ((gride_width * 5) / samplingrate);
     linectx.beginPath();
@@ -266,7 +273,7 @@ export class DrawEcg extends Draw {
       let M;
       linectx.strokeStyle = '#9d6003';
       if (this.ecg_scope != 0) {
-        M = Math.abs(C) * (adu / (gride_width * 2)) * this.ecg_scope;
+        M = Math.abs(C);
       } else {
         M = (Math.abs(C) * (adu / (gride_width * 2))) / 2;
       }

@@ -32,6 +32,7 @@ const getEmptyCacheItem = () => {
         pregnancy: '',
         fetal_num: 1,
         csspan: NaN,
+        ismulti:false,
         ecg: new Queue(),
         ecgdata: [],
     }
@@ -203,6 +204,8 @@ export class WsService extends EventEmitter {
                                     for (let fetal = 0; fetal < devdata.beds[bi].fetal_num; fetal++) {
                                         datacache.get(cachebi).fhr[fetal] = [];
                                     }
+                                    if(devdata.beds[bi].is_include_mother)
+                                        datacache.get(cachebi).ismulti = true;
                                 }
                             }
                         }
@@ -390,7 +393,7 @@ export class WsService extends EventEmitter {
                         if (datacache.has(cachbi)) {
                             for (let eindex = 0; eindex < ecgdata.length; eindex++) {
                                 for (let elop = 0; elop < ecgdata[eindex].ecg_arr.length; elop++) {
-                                    datacache.get(cachbi).ecg.EnQueue(ecgdata[eindex].ecg_arr[elop] & 0x7f);
+                                    datacache.get(cachbi).ecg.EnQueue(ecgdata[eindex].ecg_arr[elop] & 0xff);
                                 }
                                 datacache.get(cachbi).ecgdata = [ecgdata[eindex].pulse_rate, ecgdata[eindex].blood_oxygen, ecgdata[eindex].temperature, ecgdata[eindex].temperature1, ecgdata[eindex].pulse_rate, ecgdata[eindex].resp_rate, ecgdata[eindex].sys_bp + '/' + ecgdata[eindex].dia_bp + '/' + ecgdata[eindex].mean_bp];
                             }
@@ -458,6 +461,7 @@ export class WsService extends EventEmitter {
                 datacache.get(curid).pregnancy = '';
                 datacache.get(curid).ecg = new Queue();
                 datacache.get(curid).ecgdata = [];
+                datacache.get(curid).ismulti = false;
             } else {
                 datacache.set(curid, getEmptyCacheItem());
             }
@@ -600,6 +604,7 @@ export interface ICacheItem {
     csspan: number;
     ecg: Queue;
     ecgdata: number[];
+    ismulti :boolean;
 }
 export type ICache = Map<string, ICacheItem> & { clean?: (key: string) => void }
 export interface IDevice {
