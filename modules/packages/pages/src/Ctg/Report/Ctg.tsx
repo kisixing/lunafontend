@@ -15,7 +15,6 @@ const Setting = (props: IProps) => {
   return (
     <Context.Consumer>
       {(value: any) => (
-
         <L suitType={2} loading={(ctgData as any).fhr1 === undefined} data={ctgData} mutableSuitObject={value}></L>
       )}
     </Context.Consumer>

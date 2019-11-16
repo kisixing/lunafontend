@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "braft-editor": "^2.3.8",
+    "braft-utils": "^3.0.12",
     "tinycolor2": "^1.4.1",
     "react-color": "^2.17.3",
     "bezier-easing": "^2.1.0"

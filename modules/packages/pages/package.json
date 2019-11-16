@@ -13,10 +13,13 @@
   "files": [
     "lib"
   ],
+  "peerDependencies": {
+    "@lianmed/components": "^1.0.1"
+  },
   "dependencies": {
     "umi-request": "^1.2.5",
     "store": "^2.0.12",
-    "react-pdf":"^4.1.0"
+    "react-pdf": "^4.1.0"
   },
   "repository": {
     "type": "git",

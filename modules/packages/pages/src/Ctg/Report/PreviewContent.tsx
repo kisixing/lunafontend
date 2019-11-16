@@ -106,7 +106,7 @@ const PreviewContent = props => {
             background: '#fff',
             marginRight: 12,
             zIndex: 99,
-            border: '1px solid #eee',
+            border: '1px solid #d9d9d9',
         }
         } >
             {content}

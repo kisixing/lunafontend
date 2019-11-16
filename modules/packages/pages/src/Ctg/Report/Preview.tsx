@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { Button, Input, Modal } from 'antd';
-
+import { Button, Modal } from 'antd';
 import { Context } from './index'
 import request from "@lianmed/request";
 import usePrintConfig from "./usePrintConfig";
 import useSign from "./useSign";
 import PreviewContent from './PreviewContent'
+import useDiagnosis from "./useDiagnosis";
+import Diagnosis from './Diagnosis'
 const COEFFICIENT = 240
 
 interface IProps {
@@ -25,9 +26,9 @@ interface IProps {
 const Preview = (props: IProps) => {
   const { onDownload, docid, name, age, gestationalWeek, inpatientNO, startdate, fetalcount, print_interval, wh } = props;
   const [value, setValue] = useState<{ suit: any }>({ suit: null })
-  const [diagnosis, setDiagnosis] = useState('观察      分钟，胎心基线     bpm，胎动    次，胎动时胎心    bpm,持续时间     s，胎心振幅范围            bpm  NST   反应。 ')
   const [pdfBase64, setPdfBase64] = useState('')
   const [pdfBase64Loading, setPdfBase64Loading] = useState(false)
+
   const {
     startingTime,
     endingTime,
@@ -55,7 +56,8 @@ const Preview = (props: IProps) => {
       setPdfBase64(pdfData)
     })
   }
-
+  const totalTime = ((endingTime - startingTime) / COEFFICIENT).toFixed(1) || '0'
+  const { diagnosis, setDiagnosis } = useDiagnosis(totalTime)
 
   return (
     <Context.Consumer>
@@ -65,14 +67,9 @@ const Preview = (props: IProps) => {
           return (
             <div style={{ display: 'flex', height: '100%' }}>
               <PreviewContent pdfBase64={pdfBase64} wh={wh} />
-              <div style={{ border: '1px solid #eee', background: '#fff', width: 400, marginRight: 10, display: 'flex', flexDirection: 'column' }}>
-                <label>NST报告结果</label>
-                <Input.TextArea value={diagnosis} style={{ height: '100%', border: 0 }} onChange={e => setDiagnosis(e.target.value)}>
+              <Diagnosis value={diagnosis} onChange={setDiagnosis} />
 
-                </Input.TextArea>
-              </div>
-
-              <div style={{ width: 300, padding: 24, background: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-around', border: '1px solid #eee' }}>
+              <div style={{ width: 300, padding: 24, background: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-around', border: '1px solid #d9d9d9' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span>开始时间：
                     {/* <Input size="small" style={{ width: 80 }} value={(startingTime/ COEFFICIENT).toFixed(1)} onChange={e => {
@@ -109,7 +106,7 @@ const Preview = (props: IProps) => {
                   }
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span>时长：{((endingTime - startingTime) / COEFFICIENT).toFixed(1) || 0}分</span>
+                  <span>时长：{totalTime}分</span>
                 </div>
                 <div style={{ display: 'flex' }}>
                   <Button block disabled={!locking} type="primary" loading={pdfBase64Loading} onClick={handlePreview} style={{ marginRight: 10 }}>
