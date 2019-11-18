@@ -2,6 +2,7 @@ import { EventEmitter, event } from "@lianmed/utils";
 import request from "@lianmed/request"
 import Queue from "../Ecg/Queue";
 import { throttle } from "lodash";
+import { notification } from "antd";
 const ANNOUNCE_INTERVAL = 500
 export enum EWsStatus {
     Pendding, Success, Error
@@ -32,7 +33,7 @@ const getEmptyCacheItem = () => {
         pregnancy: '',
         fetal_num: 1,
         csspan: NaN,
-        ismulti:false,
+        ismulti: false,
         ecg: new Queue(),
         ecgdata: [],
     }
@@ -204,7 +205,7 @@ export class WsService extends EventEmitter {
                                     for (let fetal = 0; fetal < devdata.beds[bi].fetal_num; fetal++) {
                                         datacache.get(cachebi).fhr[fetal] = [];
                                     }
-                                    if(devdata.beds[bi].is_include_mother)
+                                    if (devdata.beds[bi].is_include_mother)
                                         datacache.get(cachebi).ismulti = true;
                                 }
                             }
@@ -569,7 +570,10 @@ export class WsService extends EventEmitter {
     };
 }
 const announce = throttle((text) => {
-    sp(text) && event.emit('bed:announcer', `${text}号子机监护时间到`)
+    if (sp(text)) {
+        event.emit('bed:announcer', `${text}号子机监护时间到`)
+        notification.info({ message: `${text}号子机监护时间到`, duration: 20 })
+    }
 }, ANNOUNCE_INTERVAL)
 
 let timeoutKey = null
@@ -604,7 +608,7 @@ export interface ICacheItem {
     csspan: number;
     ecg: Queue;
     ecgdata: any[];
-    ismulti :boolean;
+    ismulti: boolean;
 }
 export type ICache = Map<string, ICacheItem> & { clean?: (key: string) => void }
 export interface IDevice {

@@ -1,9 +1,8 @@
 import { useEffect, useRef } from 'react';
-
+import { ResizeObserver } from "@lianmed/utils";
 
 import { Drawer } from "./interface";
 
-const ResizeObserver = (window as any).ResizeObserver
 
 export default (data: any, box: any, onReady: () => Drawer, onResize?: () => void) => {
 

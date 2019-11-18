@@ -25,12 +25,13 @@ export default (props: IProps) => {
   const canvasanalyse = useRef<Canvas>(null);
   const box = useRef<Div>(null);
   const ctgBox = useRef<Div>(null);
-  const suit = useRef<Drawer>(null)
+  const ctg = useRef<Drawer>(null)
+  const ecg = useRef<Drawer>(null)
   const [ecgHeight, setEcgHeight] = useState(50)
 
 
   useDraw(data, box, () => {
-    const instance = suit.current = new Suit(
+    const instance = ctg.current = new Suit(
       canvasgrid.current,
       canvasdata.current,
       canvasline.current,
@@ -52,7 +53,8 @@ export default (props: IProps) => {
       setEcgHeight(t)
     })
   useLayoutEffect(() => {
-    suit.current && suit.current.resize()
+    ctg.current && ctg.current.resize()
+    ecg.current && ecg.current.resize()
   }, [ecgHeight])
   const canvasStyles: React.CSSProperties = { position: 'absolute' }
   return (
@@ -74,7 +76,7 @@ export default (props: IProps) => {
       {
         showEcg && (
           <div style={{ height: ecgHeight, overflow: 'hidden' }} >
-            <Ecg data={data} />
+            <Ecg data={data} onReady={e => ecg.current = e} />
           </div>
         )
       }

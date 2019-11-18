@@ -145,10 +145,10 @@ export class DrawEcg extends Draw {
 
       entries.forEach(([k, v], i) => {
         const isRight = i > 2
-        const x = (isRight ? 10 : 20)
-        const y = D + (i % 3) * V + 4 * size
+        const x = (isRight ? 10 : 30)
+        const y = D + (i % 3) * V + 3 * size
         datactx.fillText(` ${k}`, width - size * x, y);
-        datactx.fillText(` ${v}`, width - size * (x - 5), y);
+        datactx.fillText(` ${v}`, width - size * (x - 6), y);
       })
 
     } else {
