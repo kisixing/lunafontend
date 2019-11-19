@@ -75,7 +75,7 @@ export class DrawEcg extends Draw {
     if (data) {
       this.oQueue = data.ecg;
       this.values = data.ecgdata;
-      console.log('ecgvalue',data,this.values);
+      console.log('ecgvalue', data, this.values);
       this.current_time_millis = 0;
       this.current_times = 0;
       isstop = false;
@@ -92,7 +92,7 @@ export class DrawEcg extends Draw {
     Object.assign(this.canvasline, { width, height })
     Object.assign(this.canvasmonitor, { width, height })
     this.addfilltext();
-    this.initparm();    
+    this.initparm();
   }
   destroy() {
     isstop = false;
@@ -138,17 +138,17 @@ export class DrawEcg extends Draw {
       let size = V / 2;
       let D = 10;
       datactx.fillStyle = "#000";
-      datactx.font = size + "px bold 黑体";
+      datactx.font = size - 2 + "px bold 黑体";
       datactx.textAlign = 'right';
       datactx.textAlign = "center";
       datactx.textBaseline = "middle";
 
       entries.forEach(([k, v], i) => {
         const isRight = i > 2
-        const x = (isRight ? 10 : 30)
+        const x = (isRight ? 10 : 26)
         const y = D + (i % 3) * V + 3 * size
-        datactx.fillText(` ${k}`, width - size * x, y);
-        datactx.fillText(` ${v}`, width - size * (x - 6), y);
+        datactx.fillText(`${k}`, width - size * x, y);
+        datactx.fillText(`${v}`, width - size * (x - 8), y);
       })
 
     } else {
@@ -164,8 +164,8 @@ export class DrawEcg extends Draw {
 
       entries.forEach(([k, v], i) => {
         const x = 20 + d * i
-        datactx.fillText(` ${k}`, x, D);
-        datactx.fillText(` ${v || ''}`, x, 2.5 * D);
+        datactx.fillText(`${k}`, x, D);
+        datactx.fillText(`${v || ''}`, x, 2.5 * D);
       })
 
     }
@@ -259,12 +259,12 @@ export class DrawEcg extends Draw {
     let F = [];
     for (let J = 0; J < points_one_times; J++) {
       let ecgdot = oQueue.DeQueue();
-      if(ecgdot>BASE_INEVAL){
-        ecgdot = ecgdot-BASE_INEVAL;
-      }else if(ecgdot>0){
-        ecgdot =-ecgdot;
+      if (ecgdot > BASE_INEVAL) {
+        ecgdot = ecgdot - BASE_INEVAL;
+      } else if (ecgdot > 0) {
+        ecgdot = -ecgdot;
       }
-      F.push(ecgdot* this.ecg_scope);
+      F.push(ecgdot * this.ecg_scope);
     }
     let L = x_start + this.current_times * points_one_times * ((gride_width * 5) / samplingrate);
     linectx.beginPath();
