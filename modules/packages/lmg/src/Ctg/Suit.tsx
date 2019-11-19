@@ -136,7 +136,12 @@ export class Suit extends Draw {
       if (this.data.index > this.canvasline.width * 2) {
         this.curr = this.canvasline.width * 2;
         console.log('type_check', this.canvasline.width, this.canvasline.width * 2, this.data.index);
-        this.barTool.setBarWidth(100);
+        if (this.data.index < this.canvasline.width * 4) {
+          let len = Math.floor((this.canvasline.width * 4 - this.data.index) / 2);
+          this.barTool.setBarWidth(len);
+        } else {
+          this.barTool.setBarWidth(100);
+        }
         this.barTool.setBarLeft(0, false);
       } else {
         this.curr = this.data.index;
