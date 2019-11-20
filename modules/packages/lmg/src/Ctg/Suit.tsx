@@ -146,13 +146,12 @@ export class Suit extends Draw {
       } else {
         this.curr = this.data.index;
       }
-      this.barTool.setBarWidth(0);
+      //this.barTool.setBarWidth(0);
       this.drawobj.drawdot(this.canvasline.width * 2);
       this.viewposition = this.curr;
       this.createBar();
     } else {
-      this.drawobj.drawgrid(0);
-      this.barTool.setBarWidth(0);
+      //this.barTool.setBarWidth(0);
       this.timerCtg(defaultinterval);
     }
     this.barTool.watch(value => {
@@ -220,8 +219,9 @@ export class Suit extends Draw {
   lazyEmit = throttle((type: string, ...args: any[]) => {
     console.log(`Suit:${type}`)
     this.emit(type, ...args)
+    // console.log('alarmtype in',type,this)  
     return true
-  }, this.emitInterval || 2000)
+  }, this.emitInterval || 0)
   // 报警
   alarmOn(alarmType: string = '') {
     this.lazyEmit('alarmOn', alarmType)
@@ -413,8 +413,12 @@ export class Suit extends Draw {
           this.barTool.setBarWidth(100);
         }
         this.barTool.setBarLeft(this.canvasline.width, false);
+      }else{
+        this.barTool.setBarWidth(0);
       }
     } else {
+      console.log('status',this.data.status);
+      this.alarmOff('');
       this.drawobj.showcur(this.data.index + 2);
       this.drawobj.drawdot(this.data.index + 2);
     }

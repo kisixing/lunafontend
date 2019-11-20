@@ -78,13 +78,17 @@ export default class DrawCTG {
     this.suit.canvasanalyse.height = height;
     this.yspan = (height - this.scalespan - this.basetop) / (this.max + 100 - this.min);
     this.suit.barTool.setBarWidth(0);
-    console.log('resize',this.suit.data,this.suit.viewposition);
-    if(typeof(this.suit.data) != 'undefined'){
+    console.log('resize',this.suit.data,this.suit.viewposition,width);
+    if(typeof(this.suit.data) != 'undefined' && this.suit.type != 0){
       if(this.suit.data.index>width*2){
         this.suit.barTool.setBarWidth(100);
         this.suit.barTool.setBarLeft(0, false);
       }
-      this.suit.viewposition = Math.floor(width*2);
+      if(this.suit.data.index>Math.floor(width*2)){
+        this.suit.viewposition = Math.floor(width*2);
+      }else{
+        this.suit.viewposition = this.suit.data.index;
+      }
       this.drawdot(this.suit.viewposition);
     }else{
       this.drawgrid(width*2, false);
@@ -606,6 +610,7 @@ export default class DrawCTG {
             alarm = 1;
           }else if(suit.ctgconfig.alarm_enable &&fhr[i][x] < suit.ctgconfig.alarm_low){
             this.suit.alarmOn('心率过低');
+
             alarm = 1;
           }
           else{
