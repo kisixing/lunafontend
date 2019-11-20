@@ -572,7 +572,7 @@ export class WsService extends EventEmitter {
 const announce = throttle((text) => {
     if (sp(text)) {
         event.emit('bed:announcer', `${text}号子机监护时间到`)
-        notification.info({ message: `${text}号子机监护时间到`, duration: 20 })
+        notification.info({ message: `${text}号子机监护时间到`, duration: 10 })
     }
 }, ANNOUNCE_INTERVAL)
 
