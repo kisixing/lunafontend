@@ -3,18 +3,19 @@ import request from "@lianmed/request"
 import Queue from "../Ecg/Queue";
 import { throttle } from "lodash";
 import { notification } from "antd";
-import { EWsStatus, BedStatus, ICache, IDevice } from './types'
+import { EWsStatus, BedStatus, ICache, IDevice, EWsEvents } from './types'
 import { getEmptyCacheItem, cleardata } from "./utils";
 export * from './types'
-
+// import pingpong from "./pingpong";
 
 const ANNOUNCE_INTERVAL = 500
 
 const { Working, Stopped, Offline } = BedStatus
 
-
 export class WsService extends EventEmitter {
     static wsStatus: typeof EWsStatus = EWsStatus
+    static _this: WsService;
+    eventNamespace = "ws"
     isReady = false;
     dirty = false;
     interval: number = 10000;
@@ -22,8 +23,7 @@ export class WsService extends EventEmitter {
     span: number = NaN;
     offQueue: Queue = new Queue();
     offstart: boolean = false;
-
-    static _this: WsService;
+    pongTimeoutId: NodeJS.Timeout = null
     log = console.log.bind(console, 'websocket')
     datacache: ICache = new Map();
     settingData: { [x: string]: string };
@@ -50,6 +50,35 @@ export class WsService extends EventEmitter {
         }
         WsService._this = this;
         this.settingData = settingData
+    }
+    pong() {
+        const MS = 2500
+        let index = 0
+        if (this.pongTimeoutId) {
+            clearInterval(this.pongTimeoutId)
+        } else {
+            this.send(JSON.stringify({
+                data: {
+                    index,
+                    time: +new Date()
+                },
+                name: "heard"
+            }))
+        }
+        this.emit(EWsEvents.pong, true)
+        this.pongTimeoutId = setInterval(() => {
+            if (index > 1) {
+                this.emit(EWsEvents.pong, false)
+            }
+            this.send(JSON.stringify({
+                data: {
+                    index,
+                    time: +new Date()
+                },
+                name: "heard"
+            }))
+            index++
+        }, MS)
     }
     refreshInterval = 2000
     refreshTimeout = null
@@ -124,14 +153,12 @@ export class WsService extends EventEmitter {
             socket.onerror = () => {
                 this.log('错误')
             };
+
             socket.onopen = (event) => {
                 this.offrequest = 0;
-                this.dirty && location.reload()
-                this.send(
-                    '{"name":"heard","data":{"time":' +
-                    191001180000 +
-                    ',"index":0}}',
-                );
+                // this.dirty && location.reload()
+                this.pong()
+
                 this.settingData.area_devices && this.send(JSON.stringify({
                     name: "area_devices",
                     data: this.settingData.area_devices
@@ -139,13 +166,14 @@ export class WsService extends EventEmitter {
             };
             socket.onclose = (event) => {
                 this.tip('关闭', EWsStatus.Error)
-                setTimeout(() => {
-                    this.dirty = true
-                    this.connect()
-                }, this.RECONNECT_INTERVAL);
+                // setTimeout(() => {
+                //     this.dirty = true
+                //     this.connect()
+                // }, this.RECONNECT_INTERVAL);
             };
             // 接收服务端数据时触发事件
             socket.onmessage = (msg) => {
+                this.pong()
                 let received_msg
                 try {
                     received_msg = JSON.parse(msg.data);
