@@ -84,11 +84,7 @@ export default class DrawCTG {
         this.suit.barTool.setBarWidth(100);
         this.suit.barTool.setBarLeft(0, false);
       }
-      if(this.suit.data.index>Math.floor(width*2)){
-        this.suit.viewposition = Math.floor(width*2);
-      }else{
-        this.suit.viewposition = this.suit.data.index;
-      }
+      this.suit.viewposition = Math.floor(width*2);
       this.drawdot(this.suit.viewposition);
     }else{
       this.drawgrid(width*2, false);

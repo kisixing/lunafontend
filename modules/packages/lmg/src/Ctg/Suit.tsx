@@ -51,6 +51,7 @@ export class Suit extends Draw {
   };
   printlen = 4800;
   selectstart = 0;// 选择开始点
+  selectstartposition = 0;// 选择开始相对位置与数据长度无关
   selectrpstart = 0;// 相对开始位置
   selectend = 0;// 选择结束点
   selectrpend = 0;// 相对结束位置
@@ -144,19 +145,20 @@ export class Suit extends Draw {
         }
         this.barTool.setBarLeft(0, false);
       } else {
+        this.barTool.setBarWidth(0);
+        this.barTool.setBarLeft(0, false);
         this.curr = this.data.index;
       }
-      //this.barTool.setBarWidth(0);
       this.drawobj.drawdot(this.canvasline.width * 2);
       this.viewposition = this.curr;
       this.createBar();
     } else {
-      //this.barTool.setBarWidth(0);
       this.timerCtg(defaultinterval);
     }
     this.barTool.watch(value => {
       //显示历史数据
-      console.log(this.curr,this.viewposition,value,this.canvasline.width ,this.data.index);
+      //kisi 优化拖动赋值
+      //console.log(this.curr,this.viewposition,value,this.canvasline.width ,this.data.index);
       this.dragtimestamp = new Date().getTime();
       let len = 100;
       if (this.data.index < this.canvasline.width * 4) {
@@ -164,9 +166,9 @@ export class Suit extends Draw {
       }
       this.viewposition = this.canvasline.width * 2 + Math.floor((this.data.index-this.canvasline.width * 2) * value / (this.canvasline.width - len));
       if (this.viewposition < this.canvasline.width * 2) {
-        this.drawobj.drawdot(this.canvasline.width * 2);
-        return;
+        this.viewposition = this.canvasline.width * 2;
       }
+      this.updateSelectCur();
       this.drawobj.drawdot(this.viewposition);
     });
     this.barTool.watchGrab(value => {
@@ -191,6 +193,7 @@ export class Suit extends Draw {
           }
           this.drawobj.showselect(this.selectrpstart, this.selectrpend);
         }
+        this.updateBarTool();
         return;
       }
       //方向确认
@@ -204,6 +207,7 @@ export class Suit extends Draw {
         this.drawobj.drawdot(this.viewposition);
         console.log('print_drag--', this.viewposition);
       }
+      this.updateBarTool();
       if (this.selectflag) {
         console.log('print_drag2', value, this.viewposition, this.selectrpend, Math.floor((this.viewposition - this.selectrpend)) / 2);
         if (this.selectend == 1 && this.viewposition - this.selectrpend > -2) {
@@ -242,6 +246,7 @@ export class Suit extends Draw {
     endingBar.toggleVisibility()
     startingBar.on('change', value => {
       this.selectrpstart = value * 2;
+      this.selectstartposition = value;
       console.log('print_开始', value, this.viewposition, this.canvasline.width);
       if (this.viewposition > this.canvasline.width * 2) {
         this.selectstart = value * 2 + this.viewposition - 2 * this.canvasline.width;
@@ -336,7 +341,7 @@ export class Suit extends Draw {
     this.barTool = null;
   }
   resize() {
-    this.log('resize')
+    this.log('resize');
     this.drawobj.resize();
   }
   //kisi 2019-11-14 update fhr position
@@ -344,6 +349,27 @@ export class Suit extends Draw {
     this.fetalposition.fhr1 = fhr1;
     this.fetalposition.fhr2 = fhr2;
     this.fetalposition.fhr3 = fhr3;
+  }
+  
+  //kisi 2019-11-21 同步移动barTool
+  updateBarTool(){
+    this.updateSelectCur();
+    let len = 100;
+    if (this.data.index < this.canvasline.width * 4) {
+      len = Math.floor((this.canvasline.width * 4 - this.data.index) / 2);
+    }
+    this.barTool.setBarLeft(Math.floor((this.canvasline.width-len)*(this.viewposition-this.canvasline.width*2)/(this.data.index-this.canvasline.width*2)),false);
+  }
+
+  updateSelectCur(){
+    if(!this.selectflag){
+      if (this.viewposition > this.canvasline.width * 2) {
+        this.selectstart = this.selectstartposition*2 + this.viewposition - 2 * this.canvasline.width;
+      } else {
+        this.selectstart = this.selectstartposition * 2;
+      }
+      this.drawobj.showcur(this.selectstart);
+    }
   }
   movescoller() { }
 
