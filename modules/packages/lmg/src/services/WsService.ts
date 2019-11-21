@@ -56,6 +56,14 @@ export class WsService extends EventEmitter {
         let index = 0
         if (this.pongTimeoutId) {
             clearInterval(this.pongTimeoutId)
+        } else {
+            this.send(JSON.stringify({
+                data: {
+                    index,
+                    time: +new Date()
+                },
+                name: "heard"
+            }))
         }
         this.emit(EWsEvents.pong, true)
         this.pongTimeoutId = setInterval(() => {
