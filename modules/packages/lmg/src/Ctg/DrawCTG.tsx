@@ -273,12 +273,12 @@ export default class DrawCTG {
       } else {
         lastx = Math.floor((i - start) / 2);
       }
-      if (i>2 && typeof(toco[i]) !="undefined" && typeof(toco[i-2])!="undefined"){
+      if (i>2 && typeof(toco[i]) !="undefined" && typeof(toco[i-2])!="undefined" && toco[i]!=255){
         linecontext.lineTo(lastx, suit.canvasline.height - toco[i] * this.yspan);
       } else {
-          if(typeof(toco[i])!="undefined"){
+          if(typeof(toco[i])!="undefined" && toco[i]!=255){
             linecontext.moveTo(lastx,  suit.canvasline.height - toco[i] * this.yspan);
-          }else if(typeof(toco[i-2])!="undefined"){
+          }else if(typeof(toco[i-2])!="undefined" && toco[i]!=255){
             linecontext.moveTo(lastx,  suit.canvasline.height - toco[i-2] * this.yspan);
           }
           else{
