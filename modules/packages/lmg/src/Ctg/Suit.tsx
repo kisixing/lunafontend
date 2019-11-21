@@ -136,28 +136,33 @@ export class Suit extends Draw {
       if (this.data.index > this.canvasline.width * 2) {
         this.curr = this.canvasline.width * 2;
         console.log('type_check', this.canvasline.width, this.canvasline.width * 2, this.data.index);
-        this.barTool.setBarWidth(100);
+        if (this.data.index < this.canvasline.width * 4) {
+          let len = Math.floor((this.canvasline.width * 4 - this.data.index) / 2);
+          this.barTool.setBarWidth(len);
+        } else {
+          this.barTool.setBarWidth(100);
+        }
         this.barTool.setBarLeft(0, false);
       } else {
         this.curr = this.data.index;
       }
-      this.barTool.setBarWidth(0);
+      //this.barTool.setBarWidth(0);
       this.drawobj.drawdot(this.canvasline.width * 2);
       this.viewposition = this.curr;
       this.createBar();
     } else {
-      this.drawobj.drawgrid(0);
-      this.barTool.setBarWidth(0);
+      //this.barTool.setBarWidth(0);
       this.timerCtg(defaultinterval);
     }
     this.barTool.watch(value => {
       //显示历史数据
+      console.log(this.curr,this.viewposition,value,this.canvasline.width ,this.data.index);
       this.dragtimestamp = new Date().getTime();
-      if (this.curr > this.canvasline.width * 4) {
-        this.viewposition = this.canvasline.width * 2 + Math.floor((this.curr - this.canvasline.width * 2) * value / (this.canvasline.width - 100));
-      } else {
-        this.viewposition = value + this.curr;
+      let len = 100;
+      if (this.data.index < this.canvasline.width * 4) {
+        len = Math.floor((this.canvasline.width * 4 - this.data.index) / 2);
       }
+      this.viewposition = this.canvasline.width * 2 + Math.floor((this.data.index-this.canvasline.width * 2) * value / (this.canvasline.width - len));
       if (this.viewposition < this.canvasline.width * 2) {
         this.drawobj.drawdot(this.canvasline.width * 2);
         return;
@@ -215,8 +220,9 @@ export class Suit extends Draw {
   lazyEmit = throttle((type: string, ...args: any[]) => {
     console.log(`Suit:${type}`)
     this.emit(type, ...args)
+    // console.log('alarmtype in',type,this)  
     return true
-  }, this.emitInterval || 2000)
+  }, this.emitInterval || 0)
   // 报警
   alarmOn(alarmType: string = '') {
     this.lazyEmit('alarmOn', alarmType)
@@ -408,8 +414,12 @@ export class Suit extends Draw {
           this.barTool.setBarWidth(100);
         }
         this.barTool.setBarLeft(this.canvasline.width, false);
+      }else{
+        this.barTool.setBarWidth(0);
       }
     } else {
+      console.log('status',this.data.status);
+      this.alarmOff('');
       this.drawobj.showcur(this.data.index + 2);
       this.drawobj.drawdot(this.data.index + 2);
     }
