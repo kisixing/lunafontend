@@ -9,6 +9,9 @@ export enum BedStatus {
     Stopped,
     Offline,
 }
+export enum EWsEvents {
+    pong = "pong"
+}
 export interface ICacheItem {
     fhr: number[][];
     toco: number[];
