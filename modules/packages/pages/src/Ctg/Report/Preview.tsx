@@ -99,7 +99,7 @@ const Preview = (props: IProps) => {
                     locking && (
                       <Button type={customizable ? 'danger' : 'primary'} onClick={toggleCustomiz} size="small">
                         {
-                          customizable ? '取消' : '选择'
+                          customizable ? '确定' : '选择'
                         }
                       </Button>
                     )
