@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState } from 'react';
 import { Button, Modal } from 'antd';
 import { Context } from './index'
 import request from "@lianmed/request";
