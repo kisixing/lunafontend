@@ -368,6 +368,7 @@ export class Suit extends Draw {
       } else {
         this.selectstart = this.selectstartposition * 2;
       }
+      this.emit('startTime', this.selectstart)
       this.drawobj.showcur(this.selectstart);
     }
   }
