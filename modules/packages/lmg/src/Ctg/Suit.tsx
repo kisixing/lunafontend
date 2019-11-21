@@ -156,12 +156,13 @@ export class Suit extends Draw {
     }
     this.barTool.watch(value => {
       //显示历史数据
+      console.log(this.curr,this.viewposition,value,this.canvasline.width ,this.data.index);
       this.dragtimestamp = new Date().getTime();
-      if (this.curr > this.canvasline.width * 4) {
-        this.viewposition = this.canvasline.width * 2 + Math.floor((this.curr - this.canvasline.width * 2) * value / (this.canvasline.width - 100));
-      } else {
-        this.viewposition = value + this.curr;
+      let len = 100;
+      if (this.data.index < this.canvasline.width * 4) {
+        len = Math.floor((this.canvasline.width * 4 - this.data.index) / 2);
       }
+      this.viewposition = this.canvasline.width * 2 + Math.floor((this.data.index-this.canvasline.width * 2) * value / (this.canvasline.width - len));
       if (this.viewposition < this.canvasline.width * 2) {
         this.drawobj.drawdot(this.canvasline.width * 2);
         return;

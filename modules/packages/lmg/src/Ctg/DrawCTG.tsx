@@ -633,6 +633,9 @@ export default class DrawCTG {
       }else{
         label = '';
       }
+      if(typeof(label)=='undefined'){
+        label = '';
+      }
       if(label.length>0 || i>0){
         span = '    ';
       }
