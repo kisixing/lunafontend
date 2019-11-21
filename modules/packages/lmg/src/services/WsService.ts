@@ -3,41 +3,16 @@ import request from "@lianmed/request"
 import Queue from "../Ecg/Queue";
 import { throttle } from "lodash";
 import { notification } from "antd";
-const ANNOUNCE_INTERVAL = 500
-export enum EWsStatus {
-    Pendding, Success, Error
-}
+import { EWsStatus, BedStatus, ICache, IDevice } from './types'
+import { getEmptyCacheItem, cleardata } from "./utils";
+export * from './types'
 
-export enum BedStatus {
-    Working = 1,
-    Stopped,
-    Offline,
-}
+
+const ANNOUNCE_INTERVAL = 500
+
 const { Working, Stopped, Offline } = BedStatus
 
-const getEmptyCacheItem = () => {
-    return {
-        fhr: [],
-        toco: [],
-        fm: [],
-        index: 0,
-        length: 0,
-        start: -1,
-        last: 0,
-        past: 0,
-        timestamp: 0,
-        docid: '',
-        status: Offline,
-        orflag: true,
-        starttime: '',
-        pregnancy: '',
-        fetal_num: 1,
-        csspan: NaN,
-        ismulti: false,
-        ecg: new Queue(),
-        ecgdata: [],
-    }
-}
+
 export class WsService extends EventEmitter {
     static wsStatus: typeof EWsStatus = EWsStatus
     isReady = false;
@@ -199,7 +174,7 @@ export class WsService extends EventEmitter {
                                     }
                                     //debugger
                                     if (devdata.beds[bi].pregnancy) {
-                                        datacache.get(cachebi).pregnancy = devdata.beds[bi].pregnancy;
+                                        datacache.get(cachebi).pregnancy = JSON.parse(devdata.beds[bi].pregnancy);
                                     }
                                     datacache.get(cachebi).fetal_num = devdata.beds[bi].fetal_num;
                                     for (let fetal = 0; fetal < devdata.beds[bi].fetal_num; fetal++) {
@@ -407,7 +382,7 @@ export class WsService extends EventEmitter {
                         const { bed_no, device_no } = devdata;
                         let curid = `${device_no}-${bed_no}`;
                         //TODO : 更新设备状态
-                        cleardata(curid, devdata.fetal_num);
+                        cleardata(datacache, curid, devdata.fetal_num);
                         convertdocid(curid, devdata.doc_id);
                         this.log('start_work', devdata, devdata.is_working);
                         const target = datacache.get(curid)
@@ -421,9 +396,9 @@ export class WsService extends EventEmitter {
                         //结束监护页
                         let devdata = received_msg.data;
                         let curid = Number(devdata['device_no']) + '-' + Number(devdata['bed_no']);
-                        if (datacache.get(curid).pregnancy == '') {
+                        if (datacache.get(curid).pregnancy == null) {
                             console.log('end_work', datacache.get(curid));
-                            cleardata(curid, datacache.get(curid).fetal_num);
+                            cleardata(datacache, curid, datacache.get(curid).fetal_num);
                             console.log('end_work', datacache.get(curid));
                         }
                         if (devdata.is_working == 0) {
@@ -445,32 +420,7 @@ export class WsService extends EventEmitter {
             return [datacache];
         });
 
-        function cleardata(curid, fetal_num) {
-            if (datacache.has(curid)) {
-                datacache.get(curid).fhr = [];
-                datacache.get(curid).toco = [];
-                datacache.get(curid).fm = [];
-                datacache.get(curid).index = 0;
-                datacache.get(curid).length = 0;
-                datacache.get(curid).start = -1;
-                datacache.get(curid).last = 0;
-                datacache.get(curid).past = 0;
-                datacache.get(curid).timestamp = 0;
-                datacache.get(curid).docid = '';
-                datacache.get(curid).status = Offline;
-                datacache.get(curid).starttime = '';
-                datacache.get(curid).pregnancy = '';
-                datacache.get(curid).ecg = new Queue();
-                datacache.get(curid).ecgdata = [];
-                datacache.get(curid).ismulti = false;
-            } else {
-                datacache.set(curid, getEmptyCacheItem());
-            }
-            datacache.get(curid).fetal_num = fetal_num;
-            for (var fetal = 0; fetal < fetal_num; fetal++) {
-                datacache.get(curid).fhr[fetal] = [];
-            }
-        }
+
 
         function convertdocid(id: string, doc_id: string) {
             datacache.get(id).docid = doc_id;
@@ -589,43 +539,3 @@ function sp(key: string) {
     return old ? false : (spObj[key] = true)
 }
 
-export interface ICacheItem {
-    fhr: number[][];
-    toco: number[];
-    fm: number[];
-    index: number;
-    length: number;
-    start: number;
-    last: number;
-    past: number;
-    timestamp: number;
-    docid: string;
-    pregnancy: string;
-    status: BedStatus;
-    orflag: boolean;
-    starttime: string;
-    fetal_num: number;
-    csspan: number;
-    ecg: Queue;
-    ecgdata: any[];
-    ismulti: boolean;
-}
-export type ICache = Map<string, ICacheItem> & { clean?: (key: string) => void }
-export interface IDevice {
-    ERP: string;
-    bed_num: number;
-    beds: IBed[];
-    device_no: number;
-    device_type: string;
-    ecg_sampling_rate: number;
-    is_handshake_finish: boolean;
-    wifi_conn_state: boolean;
-}
-export interface IBed {
-    bed_no: number;
-    doc_id: string;
-    fetal_num: number;
-    is_include_mother: boolean;
-    is_working: number;
-    pregnancy: string;
-}
