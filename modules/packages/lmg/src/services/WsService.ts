@@ -386,7 +386,7 @@ export class WsService extends EventEmitter {
                             datacache.get(cachbi).status = Offline;
                         }
                         console.log('update_status', datacache.get(cachbi))
-                        datacache.get(cachbi).pregnancy = JSON.parse(statusdata.pregnancy);
+                        datacache.get(cachbi).pregnancy = statusdata.pregnancy ? JSON.parse(statusdata.pregnancy) : null;
                         this.refresh('update_status')
                     } else if (received_msg.name == 'push_data_ecg') {
                         //TODO 解析母亲应用层数据包
