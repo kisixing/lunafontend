@@ -257,14 +257,23 @@ export class DrawEcg extends Draw {
     }
     this.clearcanvans(this.current_times, points_one_times, samplingrate, linectx);
     let F = [];
+    let invalid = 0;
     for (let J = 0; J < points_one_times; J++) {
       let ecgdot = oQueue.DeQueue();
+      if(ecgdot == 1){
+        invalid ++;
+      }else{
+        invalid =0;
+      }
       if (ecgdot > BASE_INEVAL) {
         ecgdot = ecgdot - BASE_INEVAL;
       } else if (ecgdot > 0) {
         ecgdot = -ecgdot;
       }
       F.push(ecgdot * this.ecg_scope);
+    }
+    if(invalid>7){
+      return;
     }
     let L = x_start + this.current_times * points_one_times * ((gride_width * 5) / samplingrate);
     linectx.beginPath();

@@ -399,7 +399,23 @@ export class WsService extends EventEmitter {
                                 for (let elop = 0; elop < ecgdata[eindex].ecg_arr.length; elop++) {
                                     datacache.get(cachbi).ecg.EnQueue(ecgdata[eindex].ecg_arr[elop] & 0xff);
                                 }
-                                datacache.get(cachbi).ecgdata = [ecgdata[eindex].pulse_rate, ecgdata[eindex].blood_oxygen, ecgdata[eindex].temperature, ecgdata[eindex].temperature1, ecgdata[eindex].pulse_rate, ecgdata[eindex].resp_rate, ecgdata[eindex].sys_bp + '/' + ecgdata[eindex].dia_bp + '/' + ecgdata[eindex].mean_bp];
+                                let pulse_rate = ecgdata[eindex].pulse_rate;
+                                if(pulse_rate == 0){
+                                    pulse_rate = '--';
+                                }
+                                let sys_bp = ecgdata[eindex].sys_bp;
+                                if(sys_bp == 1){
+                                    sys_bp = '--';
+                                }
+                                let dia_bp = ecgdata[eindex].dia_bp;
+                                if(dia_bp == 1){
+                                    dia_bp = '--';
+                                }
+                                let mean_bp = ecgdata[eindex].mean_bp;
+                                if(mean_bp == 1){
+                                    mean_bp = '--';
+                                }
+                                datacache.get(cachbi).ecgdata = [pulse_rate, ecgdata[eindex].blood_oxygen, ecgdata[eindex].temperature, ecgdata[eindex].temperature1, pulse_rate, ecgdata[eindex].resp_rate, sys_bp + '/' + dia_bp + '/' + mean_bp];
                             }
                         } else {
                             console.log('cache error', datacache);
