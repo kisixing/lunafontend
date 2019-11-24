@@ -1,4 +1,4 @@
-import React, { useRef, useState, useLayoutEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import { Suit } from './Suit';
 import { IBarTool } from '../ScrollBar/useScroll';
 import ScrollBar from '../ScrollBar';
@@ -30,7 +30,7 @@ export default (props: IProps) => {
   const [ecgHeight, setEcgHeight] = useState(50)
 
 
-  useDraw(data, box, () => {
+  useDraw(data, ctgBox, () => {
     const instance = ctg.current = new Suit(
       canvasgrid.current,
       canvasdata.current,
@@ -52,10 +52,10 @@ export default (props: IProps) => {
       h > 50 && (t = h > 200 ? 200 : 50);
       setEcgHeight(t)
     })
-  useLayoutEffect(() => {
-    ctg.current && ctg.current.resize()
-    ecg.current && ecg.current.resize()
-  }, [ecgHeight])
+  // useLayoutEffect(() => {
+  //   ctg.current && ctg.current.resize()
+  //   ecg.current && ecg.current.resize()
+  // }, [ecgHeight])
   const canvasStyles: React.CSSProperties = { position: 'absolute' }
   return (
     <div style={{ width: '100%', height: '100%' }} ref={box} {...others}>
