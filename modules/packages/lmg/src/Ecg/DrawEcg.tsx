@@ -75,12 +75,12 @@ export class DrawEcg extends Draw {
     if (data) {
       this.oQueue = data.ecg;
       this.values = data.ecgdata;
-      console.log('ecgvalue', data, this.values);
+      // console.log('ecgvalue', data, this.values);
       this.current_time_millis = 0;
       this.current_times = 0;
       isstop = false;
       //this.loop();
-      console.log("loop");
+      // console.log("loop");
       this.last_points = [];
       this.timerEcg(loopmill);
     }
@@ -192,7 +192,7 @@ export class DrawEcg extends Draw {
     } else {
       this.max_times = Math.floor((canvasline.width - 25) * 0.6 / gx);
     }
-    console.log('ecg-width', canvasline.width);
+    // console.log('ecg-width', canvasline.width);
     linectx.strokeStyle = '#9d6003';
     this.current_times = 0;
   }
@@ -305,7 +305,7 @@ export class DrawEcg extends Draw {
         var D = parseFloat(C >= 0 ? y_starts[0] - M : y_starts[0] + M);
         linectx.lineTo(L + I, D);
         if (L + I < last_points[0]) {
-          console.log('error data', this.current_times, L, I, K, last_points);
+          // console.log('error data', this.current_times, L, I, K, last_points);
         }
         last_points[0] = L + I;
         last_points[1] = D;

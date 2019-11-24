@@ -78,7 +78,7 @@ export default class DrawCTG {
     this.suit.canvasanalyse.height = height;
     this.yspan = (height - this.scalespan - this.basetop) / (this.max + 100 - this.min);
     this.suit.barTool.setBarWidth(0);
-    console.log('resize',this.suit.data,this.suit.viewposition,width);
+    // console.log('resize',this.suit.data,this.suit.viewposition,width);
     if(typeof(this.suit.data) != 'undefined' && this.suit.type != 0){
       if(this.suit.data.index>width*2){
         this.suit.barTool.setBarWidth(100);
@@ -389,7 +389,7 @@ export default class DrawCTG {
         gridcontext.strokeStyle = this.suit.ctgconfig.primarygrid;
       }
       if(startposition==0){
-        console.log('drawctg',startposition);
+        // console.log('drawctg',startposition);
         if (ioff % 6 == primaryscaleflag) {
           if (drawtimespan) {
             this.setscalestyle(gridcontext, this.suit.ctgconfig.scale);
@@ -509,7 +509,7 @@ export default class DrawCTG {
         }
       }
       gridcontext.moveTo(xspan * i + baseleft - 40 + lineoff + offsetpx, (max - min) * this.yspan + this.scalespan + this.basetop);
-      console.log(xspan * i + baseleft - 40 + lineoff + offsetpx, lineoff, i);
+      // console.log(xspan * i + baseleft - 40 + lineoff + offsetpx, lineoff, i);
       gridcontext.lineTo(xspan * i + baseleft - 40 + lineoff + offsetpx, (max - min + 100) * this.yspan + this.scalespan + this.basetop);
       gridcontext.moveTo(xspan * i + baseleft - 40 + lineoff + offsetpx, 0 + this.basetop);
       gridcontext.lineTo(xspan * i + baseleft - 40 + lineoff + offsetpx, (max - min) * this.yspan + this.basetop);
@@ -664,7 +664,7 @@ export default class DrawCTG {
   };
   showselect = (start: number, end: number) => {
     const { suit, selectcontext } = this;
-    console.log('printin', suit.viewposition,start, end);
+    // console.log('printin', suit.viewposition,start, end);
     let drawwidth = suit.canvasselect.width;
     selectcontext.clearRect(0, 0, drawwidth, suit.canvasselect.height);
     if (end == 0) {
@@ -687,7 +687,7 @@ export default class DrawCTG {
     //   end = Math.floor(end/2);
     // }
     start = start - curstart > 0 ? start - curstart : 0;
-    console.log('printts1',curstart, start/2, end);
+    // console.log('printts1',curstart, start/2, end);
     selectcontext.fillStyle = suit.ctgconfig.selectarea;
     selectcontext.fillRect(start/2, this.basetop, end-start/2, suit.canvasselect.height - this.basetop);
     selectcontext.beginPath();
@@ -699,7 +699,7 @@ export default class DrawCTG {
       selectcontext.moveTo(end, this.basetop);
       selectcontext.lineTo(end, this.suit.canvasselect.height);
     }
-    console.log('printts2',curstart, start/2, end);
+    // console.log('printts2',curstart, start/2, end);
     selectcontext.stroke();
   };
 }

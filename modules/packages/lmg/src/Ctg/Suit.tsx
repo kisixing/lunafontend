@@ -118,7 +118,7 @@ export class Suit extends Draw {
     if (!data) {
       return
     }
-    this.log('init', data)
+    // this.log('init', data)
     this.initFlag = true
     let defaultinterval = 500;
     this.data = data;
@@ -133,10 +133,10 @@ export class Suit extends Draw {
     }
     if (this.type > 0) {
       //kisi 2019-10-29 测试增加analyse属性
-      console.log(this.data);
+      // console.log(this.data);
       if (this.data.index > this.canvasline.width * 2) {
         this.curr = this.canvasline.width * 2;
-        console.log('type_check', this.canvasline.width, this.canvasline.width * 2, this.data.index);
+        // console.log('type_check', this.canvasline.width, this.canvasline.width * 2, this.data.index);
         if (this.data.index < this.canvasline.width * 4) {
           let len = Math.floor((this.canvasline.width * 4 - this.data.index) / 2);
           this.barTool.setBarWidth(len);
@@ -197,7 +197,7 @@ export class Suit extends Draw {
         return;
       }
       //方向确认
-      console.log('print_drag1', value, this.viewposition, this.selectrpend);
+      // console.log('print_drag1', value, this.viewposition, this.selectrpend);
       if (this.viewposition - value < this.data.index) {
         this.viewposition -= value;
         //this.movescoller();
@@ -205,11 +205,11 @@ export class Suit extends Draw {
       } else {
         this.viewposition = this.data.index;
         this.drawobj.drawdot(this.viewposition);
-        console.log('print_drag--', this.viewposition);
+        // console.log('print_drag--', this.viewposition);
       }
       this.updateBarTool();
       if (this.selectflag) {
-        console.log('print_drag2', value, this.viewposition, this.selectrpend, Math.floor((this.viewposition - this.selectrpend)) / 2);
+        // console.log('print_drag2', value, this.viewposition, this.selectrpend, Math.floor((this.viewposition - this.selectrpend)) / 2);
         if (this.selectend == 1 && this.viewposition - this.selectrpend > -2) {
           this.endingBar.setVisibility(true);
           //this.endingBar.setOffset(this.selectrpend / 2);
@@ -222,7 +222,7 @@ export class Suit extends Draw {
     });
   }
   lazyEmit = throttle((type: string, ...args: any[]) => {
-    console.log(`Suit:${type}`)
+    // console.log(`Suit:${type}`)
     this.emit(type, ...args)
     // console.log('alarmtype in',type,this)  
     return true
@@ -247,7 +247,7 @@ export class Suit extends Draw {
     startingBar.on('change', value => {
       this.selectrpstart = value * 2;
       this.selectstartposition = value;
-      console.log('print_开始', value, this.viewposition, this.canvasline.width);
+      // console.log('print_开始', value, this.viewposition, this.canvasline.width);
       if (this.viewposition > this.canvasline.width * 2) {
         this.selectstart = value * 2 + this.viewposition - 2 * this.canvasline.width;
       } else {
@@ -266,21 +266,21 @@ export class Suit extends Draw {
       if (this.selectrpstart > this.selectrpend) {
         return;
       }
-      console.log('print_结束', value, this.selectrpstart, this.selectrpend)
+      // console.log('print_结束', value, this.selectrpstart, this.selectrpend)
       this.drawobj.showselect(this.selectrpstart, this.selectrpend);
       this.emit('endTime', this.selectrpend)
     })
 
     this.on('locking', value => {
       //更新状态
-      console.log('print_locking', value);
+      // console.log('print_locking', value);
       this.selectflag = value;
       if (this.selectflag) {
         this.startingBar.toggleVisibility();
         this.barTool.setBarWidth(0);
         this.selectend = 0;
         //this.endingBar.toggleVisibility();
-        console.log('print_lock', this.selectstart, this.data.index);
+        // console.log('print_lock', this.selectstart, this.data.index);
         this.selectrpend = this.data.index < this.selectrpstart + this.printlen ? this.data.index : this.selectrpstart + this.printlen
         this.drawobj.showselect(this.selectrpstart, this.selectrpend);
         this.endingBar.setVisibility(false);
@@ -289,12 +289,12 @@ export class Suit extends Draw {
         this.startingBar.toggleVisibility();
         //this.endingBar.toggleVisibility();
         this.endingBar.setVisibility(false);
-        console.log(this.selectstart, this.data.index);
+        // console.log(this.selectstart, this.data.index);
         this.drawobj.showselect(0, 0);
       }
     })
       .on('customizing', value => {
-        this.log('customizing', value, this.selectrpend, this.viewposition);
+        // this.log('customizing', value, this.selectrpend, this.viewposition);
         if (value && this.selectflag) {
           this.selectend = 1;
           if (this.data.index < this.canvasline.width * 2) {
@@ -311,19 +311,19 @@ export class Suit extends Draw {
         }
       })
       .on('setStartingTime', value => {
-        this.log('setStartingTime', value);
+        // this.log('setStartingTime', value);
 
       })
       .on('setEndingTime', value => {
-        this.log('setEndingTime', value);
+        // this.log('setEndingTime', value);
 
       })
   }
   lockStartingBar(status: boolean) {
-    console.log('lockStartingBar', status)
+    // console.log('lockStartingBar', status)
   }
   destroy() {
-    this.log('destroy')
+    // this.log('destroy')
     this.intervalIds.forEach(_ => clearInterval(_));
     this.canvasgrid = null;
     this.canvasdata = null;
@@ -341,7 +341,7 @@ export class Suit extends Draw {
     this.barTool = null;
   }
   resize() {
-    this.log('resize');
+    // this.log('resize');
     this.drawobj.resize();
   }
   //kisi 2019-11-14 update fhr position
@@ -445,7 +445,7 @@ export class Suit extends Draw {
         this.barTool.setBarWidth(0);
       }
     } else {
-      console.log('status',this.data.status);
+      // console.log('status',this.data.status);
       this.alarmOff('');
       this.drawobj.showcur(this.data.index + 2);
       this.drawobj.drawdot(this.data.index + 2);
@@ -470,7 +470,7 @@ export class Suit extends Draw {
 
   getoffline(doc_id: string, offlineend: number) {
     request.get(`/ctg-exams-data/${doc_id}`).then(responseData => {
-      console.log(doc_id, offlineend, responseData, this.data.past);
+      // console.log(doc_id, offlineend, responseData, this.data.past);
       if (responseData) {
         this.initfhrdata(responseData, this.data, offlineend);
         this.data.past = 0;

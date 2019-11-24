@@ -400,19 +400,19 @@ export class WsService extends EventEmitter {
                                     datacache.get(cachbi).ecg.EnQueue(ecgdata[eindex].ecg_arr[elop] & 0xff);
                                 }
                                 let pulse_rate = ecgdata[eindex].pulse_rate;
-                                if(pulse_rate == 0){
+                                if (pulse_rate == 0) {
                                     pulse_rate = '--';
                                 }
                                 let sys_bp = ecgdata[eindex].sys_bp;
-                                if(sys_bp == 1){
+                                if (sys_bp == 1) {
                                     sys_bp = '--';
                                 }
                                 let dia_bp = ecgdata[eindex].dia_bp;
-                                if(dia_bp == 1){
+                                if (dia_bp == 1) {
                                     dia_bp = '--';
                                 }
                                 let mean_bp = ecgdata[eindex].mean_bp;
-                                if(mean_bp == 1){
+                                if (mean_bp == 1) {
                                     mean_bp = '--';
                                 }
                                 datacache.get(cachbi).ecgdata = [pulse_rate, ecgdata[eindex].blood_oxygen, ecgdata[eindex].temperature, ecgdata[eindex].temperature1, pulse_rate, ecgdata[eindex].resp_rate, sys_bp + '/' + dia_bp + '/' + mean_bp];
@@ -457,7 +457,7 @@ export class WsService extends EventEmitter {
                         console.log(devdata);
                         let servertime = convertstarttime(devdata.time);
                         this.span = Math.floor(new Date(servertime).getTime() / 1000 - new Date().getTime() / 1000) * 4 - 12;
-                        console.log(this.span);
+                        console.log(2222, this.span, servertime);
                     }
                 }
             };
