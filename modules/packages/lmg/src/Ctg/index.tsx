@@ -50,7 +50,7 @@ export default (props: IProps) => {
       const h = height / 5;
       let t = 0;
       h > 50 && (t = h > 200 ? 200 : 50);
-      setEcgHeight(t)
+      setTimeout(() => setEcgHeight(t), 100)
     })
   // useLayoutEffect(() => {
   //   ctg.current && ctg.current.resize()
