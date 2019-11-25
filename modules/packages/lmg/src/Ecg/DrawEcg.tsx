@@ -1,6 +1,7 @@
 import Draw from "../Draw";
 import Queue from "./Queue";
 import { _R } from "@lianmed/utils";
+import { ICacheItem } from "../services/types";
 const BASE_INEVAL = 128;
 const adu = 52;
 const samplingrate = 90;
@@ -36,11 +37,11 @@ enum displayMode {
 }
 
 export class DrawEcg extends Draw {
+  data: ICacheItem
   mode: displayMode = displayMode.canvas
   static Queue: typeof Queue = Queue
   wrap: HTMLDivElement;
   oQueue = new Queue();
-  values = [100, 120, 37.5, 38, 50, 80, '100/69/120'];
   MultiParam: number[];
   Ple: number[];
   Tre: number[];
@@ -73,9 +74,8 @@ export class DrawEcg extends Draw {
   }
   init(data) {
     if (data) {
+      this.data = data
       this.oQueue = data.ecg;
-      this.values = data.ecgdata;
-      // console.log('ecgvalue', data, this.values);
       this.current_time_millis = 0;
       this.current_times = 0;
       isstop = false;
@@ -125,9 +125,9 @@ export class DrawEcg extends Draw {
   }
 
   DrawDatatext() {
-    const { datactx, values, height, width } = this;
+    const { datactx, data, height, width } = this;
     const keys = ['脉率', '血氧%', '体温°C', '心率bpm', '呼吸', '血压(S/D/M)mmHg'];
-    const v = Object.assign(Array(7).fill('--'), values)
+    const v = Object.assign(Array(7).fill('--'), data.ecgdata)
     v[2] = `${v[2]} ~ ${v[3]}`
     v.splice(3, 1)
     const entries = _R.zip(keys, v)
@@ -260,10 +260,10 @@ export class DrawEcg extends Draw {
     let invalid = 0;
     for (let J = 0; J < points_one_times; J++) {
       let ecgdot = oQueue.DeQueue();
-      if(ecgdot == 1){
-        invalid ++;
-      }else{
-        invalid =0;
+      if (ecgdot == 1) {
+        invalid++;
+      } else {
+        invalid = 0;
       }
       if (ecgdot > BASE_INEVAL) {
         ecgdot = ecgdot - BASE_INEVAL;
@@ -272,7 +272,7 @@ export class DrawEcg extends Draw {
       }
       F.push(ecgdot * this.ecg_scope);
     }
-    if(invalid>7){
+    if (invalid > 7) {
       return;
     }
     let L = x_start + this.current_times * points_one_times * ((gride_width * 5) / samplingrate);
