@@ -4,7 +4,7 @@ import Queue from "../Ecg/Queue";
 import { throttle } from "lodash";
 import { notification } from "antd";
 import { EWsStatus, BedStatus, ICache, IDevice, EWsEvents } from './types'
-import { getEmptyCacheItem, cleardata } from "./utils";
+import { getEmptyCacheItem, cleardata, convertstarttime } from "./utils";
 export * from './types'
 // import pingpong from "./pingpong";
 
@@ -457,7 +457,7 @@ export class WsService extends EventEmitter {
                         console.log(devdata);
                         let servertime = convertstarttime(devdata.time);
                         this.span = Math.floor(new Date(servertime).getTime() / 1000 - new Date().getTime() / 1000) * 4 - 12;
-                        console.log(2222, this.span, servertime);
+                        // console.log(2222, new Date(servertime.replace(/-/g,'/')), +new Date());
                     }
                 }
             };
@@ -476,20 +476,7 @@ export class WsService extends EventEmitter {
             }
         }
 
-        function convertstarttime(pureid: string) {
-            return '20' +
-                pureid.substring(0, 2) +
-                '-' +
-                pureid.substring(2, 4) +
-                '-' +
-                pureid.substring(4, 6) +
-                ' ' +
-                pureid.substring(6, 8) +
-                ':' +
-                pureid.substring(8, 10) +
-                ':' +
-                pureid.substring(10, 12);
-        }
+
 
         function setcur(id: string, value: number) {
             if (value < datacache.get(id).start) {

@@ -3,7 +3,7 @@ import DrawCTG from './DrawCTG';
 import { IBarTool } from '../ScrollBar/useScroll';
 import ScrollEl from '../ScrollBar/ScrollEl';
 import request from "@lianmed/request"
-
+import { convertstarttime } from "../services/utils";
 import { throttle } from "lodash";
 import { ICacheItem } from '../services/WsService';
 import Draw from '../Draw';
@@ -45,9 +45,9 @@ export class Suit extends Draw {
     alarm_low: 110,
   };
   fetalposition = {
-    fhr1:'',
-    fhr2:'',
-    fhr3:''
+    fhr1: '',
+    fhr2: '',
+    fhr3: ''
   };
   printlen = 4800;
   selectstart = 0;// 选择开始点
@@ -164,7 +164,7 @@ export class Suit extends Draw {
       if (this.data.index < this.canvasline.width * 4) {
         len = Math.floor((this.canvasline.width * 4 - this.data.index) / 2);
       }
-      this.viewposition = this.canvasline.width * 2 + Math.floor((this.data.index-this.canvasline.width * 2) * value / (this.canvasline.width - len));
+      this.viewposition = this.canvasline.width * 2 + Math.floor((this.data.index - this.canvasline.width * 2) * value / (this.canvasline.width - len));
       if (this.viewposition < this.canvasline.width * 2) {
         this.viewposition = this.canvasline.width * 2;
       }
@@ -345,26 +345,26 @@ export class Suit extends Draw {
     this.drawobj.resize();
   }
   //kisi 2019-11-14 update fhr position
-  setfetalposition(fhr1,fhr2,fhr3){
+  setfetalposition(fhr1, fhr2, fhr3) {
     this.fetalposition.fhr1 = fhr1;
     this.fetalposition.fhr2 = fhr2;
     this.fetalposition.fhr3 = fhr3;
   }
-  
+
   //kisi 2019-11-21 同步移动barTool
-  updateBarTool(){
+  updateBarTool() {
     this.updateSelectCur();
     let len = 100;
     if (this.data.index < this.canvasline.width * 4) {
       len = Math.floor((this.canvasline.width * 4 - this.data.index) / 2);
     }
-    this.barTool.setBarLeft(Math.floor((this.canvasline.width-len)*(this.viewposition-this.canvasline.width*2)/(this.data.index-this.canvasline.width*2)),false);
+    this.barTool.setBarLeft(Math.floor((this.canvasline.width - len) * (this.viewposition - this.canvasline.width * 2) / (this.data.index - this.canvasline.width * 2)), false);
   }
 
-  updateSelectCur(){
-    if(!this.selectflag){
+  updateSelectCur() {
+    if (!this.selectflag) {
       if (this.viewposition > this.canvasline.width * 2) {
-        this.selectstart = this.selectstartposition*2 + this.viewposition - 2 * this.canvasline.width;
+        this.selectstart = this.selectstartposition * 2 + this.viewposition - 2 * this.canvasline.width;
       } else {
         this.selectstart = this.selectstartposition * 2;
       }
@@ -379,11 +379,8 @@ export class Suit extends Draw {
     let pureidarr: string[] = oriobj.docid.split('_');
     let CTGDATA = { fhr: [[], [], []], toco: [], fm: [], fetal_num: 2, index: 0, starttime: '', analyse: { acc: [], dec: [], baseline: [], start: 0, end: 0 } };
     if (pureidarr.length > 2) {
-      let pureid = pureidarr[2].split('');
-      const t = ["-", "-", " ", ":", ":", ""]
-      CTGDATA.starttime = '20' + pureid.reduce((a, b, i) => {
-        return `${a}${b}${i & 1 ? t[~~(i / 2)] : ''}`
-      }, '');
+      let pureid = pureidarr[2]
+      CTGDATA.starttime = convertstarttime(pureid)
     }
     Object.keys(oriobj).forEach(key => {
       let oridata = oriobj[key];
@@ -401,7 +398,7 @@ export class Suit extends Draw {
         CTGDATA.index = oridata.length / 2;
       }
       for (let i = 0; i < CTGDATA.index; i++) {
-        if(typeof(oridata) != "string" || oridata.length<2){
+        if (typeof (oridata) != "string" || oridata.length < 2) {
           return;
         }
         let hexBits = oridata.substring(0, 2);
@@ -441,7 +438,7 @@ export class Suit extends Draw {
           this.barTool.setBarWidth(100);
         }
         this.barTool.setBarLeft(this.canvasline.width, false);
-      }else{
+      } else {
         this.barTool.setBarWidth(0);
       }
     } else {

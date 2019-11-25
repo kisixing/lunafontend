@@ -34,3 +34,11 @@ export function cleardata(datacache: ICache, curid: string, fetal_num: number) {
         datacache.set(curid, empty);
     }
 }
+
+
+export function convertstarttime(pureid: string) {
+    const t = ["/", "/", " ", ":", ":", ""]
+    return '20' + pureid.split('').reduce((a, b, i) => {
+        return `${a}${b}${i & 1 ? t[~~(i / 2)] : ''}`
+    }, '');
+}
