@@ -10,7 +10,6 @@ export default (props: IProps) => {
   const {
     data,
     mutableSuitObject = { suit: null },
-    itemHeight = 0,
     suitType = 0,
     showEcg = false,
     loading = false,
