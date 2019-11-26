@@ -89,6 +89,9 @@ export default class DrawCTG {
     } else {
       this.drawgrid(width * 2, false);
     }
+    if(this.suit.selectstartposition>width){
+      this.suit.startingBar.setOffset(width);
+    }
   }
   drawgrid(cur, drawtimespan = true) {
     const { suit, sethorizontal, setvertical, gridcontext } = this;
@@ -590,7 +593,9 @@ export default class DrawCTG {
       label = '';
       offsetfhr = '';
       span = '';
+      curvalue = '-- --';
       datacontext.font = 'bold ' + fontsize + 'px arial';
+      datacontext.fillStyle = suit.ctgconfig.fhrcolor[i];
       if (typeof (fhr[i]) == "undefined") {
         return;
       }
@@ -598,20 +603,21 @@ export default class DrawCTG {
         curvalue = fhr[i][x];
         if (curvalue == "0") {
           curvalue = '-- --';
-          datacontext.fillStyle = suit.ctgconfig.fhrcolor[i];
-        } else {
+        }else if(suit.data.status == 1){
           datacontext.fillStyle = suit.ctgconfig.alarmcolor;
           if (suit.ctgconfig.alarm_enable && fhr[i][x] > suit.ctgconfig.alarm_high) {
             this.suit.alarmOn('心率过高');
             alarm = 1;
           } else if (suit.ctgconfig.alarm_enable && fhr[i][x] < suit.ctgconfig.alarm_low) {
             this.suit.alarmOn('心率过低');
-
             alarm = 1;
           }
           else {
             datacontext.fillStyle = suit.ctgconfig.fhrcolor[i];
           }
+        }
+        else {
+          datacontext.fillStyle = suit.ctgconfig.fhrcolor[i];
         }
       }
       if (alarm == 0 && suit.ctgconfig.alarm_enable && fhr[i][x - 2] && (fhr[i][x - 2] > suit.ctgconfig.alarm_high || fhr[i][x - 2] < suit.ctgconfig.alarm_low)) {

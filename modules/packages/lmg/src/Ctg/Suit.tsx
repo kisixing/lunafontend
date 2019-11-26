@@ -131,6 +131,7 @@ export class Suit extends Draw {
         this.fetalcount = this.data.fetal_num;
       }
     }
+    this.createBar();
     if (this.type > 0) {
       //kisi 2019-10-29 测试增加analyse属性
       // console.log(this.data);
@@ -151,7 +152,6 @@ export class Suit extends Draw {
       }
       this.drawobj.drawdot(this.canvasline.width * 2);
       this.viewposition = this.curr;
-      this.createBar();
     } else {
       this.timerCtg(defaultinterval);
     }
@@ -248,6 +248,9 @@ export class Suit extends Draw {
       this.selectrpstart = value * 2;
       this.selectstartposition = value;
       // console.log('print_开始', value, this.viewposition, this.canvasline.width);
+      if(value!=0){
+        this.dragtimestamp = new Date().getTime();
+      }
       if (this.viewposition > this.canvasline.width * 2) {
         this.selectstart = value * 2 + this.viewposition - 2 * this.canvasline.width;
       } else {
@@ -429,7 +432,6 @@ export class Suit extends Draw {
         return;
       this.drawobj.drawdot(this.curr);
       this.viewposition = this.curr;
-      //console.log(this.curr,this.data.index);
       if (this.data.index > this.canvasline.width * 2) {
         if (this.data.index < this.canvasline.width * 4) {
           let len = Math.floor((this.canvasline.width * 4 - this.data.index) / 2);
@@ -455,12 +457,16 @@ export class Suit extends Draw {
         clearInterval(id);
       }
       var curstamp = new Date().getTime();
-      if (curstamp - this.dragtimestamp > this.interval) {
+      if (curstamp - this.dragtimestamp > this.interval) {   
+        if(this.selectstartposition!=0){
+          this.startingBar.setOffset(0);
+        }
         this.drawdot();
       }
     }, dely);
     this.intervalIds.push(id);
   }
+
   onStatusChange(status: boolean): boolean | void {
     return status;
   }

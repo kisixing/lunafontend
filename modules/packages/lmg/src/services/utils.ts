@@ -28,6 +28,9 @@ export function getEmptyCacheItem(base = null): ICacheItem {
 export function cleardata(datacache: ICache, curid: string, fetal_num: number) {
     const target = datacache.get(curid)
     const empty = getEmptyCacheItem({ fetal_num, fhr: Array(fetal_num).fill([]) })
+    for (let fetal = 0; fetal < fetal_num; fetal++) {
+        empty.fhr[fetal] = [];
+    }
     if (target) {
         Object.assign(target, empty)
     } else {

@@ -240,15 +240,24 @@ export class WsService extends EventEmitter {
                             }
                             for (let key in ctgdata) {
                                 for (let fetal = 0; fetal < tmpcache.fetal_num; fetal++) {
-                                    if (ctgdata[key].fhr == 0) {
-                                        continue;
-                                    }
                                     if (fetal == 0) {
+                                        if (ctgdata[key].fhr == 0) {
+                                            continue;
+                                        }
                                         tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr;
-                                    } else {
+                                    } else if(fetal == 1) {
+                                        if (ctgdata[key].fhr2 == 0) {
+                                            continue;
+                                        }
                                         tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr2;
+                                    } else if(fetal == 2) {
+                                        if (ctgdata[key].fhr3 == 0) {
+                                            continue;
+                                        }
+                                        tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr3;
                                     }
                                 }
+                                console.log(tmpcache.fetal_num,ctgdata[key].index,ctgdata[key].fhr,ctgdata[key].fhr2,tmpcache.fhr[0][ctgdata[key].index]);
                                 tmpcache.toco[ctgdata[key].index] = ctgdata[key].toco;
                                 tmpcache.fm[ctgdata[key].index] = ctgdata[key].fm;
                                 if (tmpcache.start == -1) {
