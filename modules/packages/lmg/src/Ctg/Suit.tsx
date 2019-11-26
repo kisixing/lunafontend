@@ -248,13 +248,17 @@ export class Suit extends Draw {
       this.selectrpstart = value * 2;
       this.selectstartposition = value;
       // console.log('print_开始', value, this.viewposition, this.canvasline.width);
-      if(value!=0){
+      if(value!=0 && this.type < 1){
         this.dragtimestamp = new Date().getTime();
       }
       if (this.viewposition > this.canvasline.width * 2) {
         this.selectstart = value * 2 + this.viewposition - 2 * this.canvasline.width;
       } else {
-        this.selectstart = value * 2;
+        if(this.type < 1){
+          this.selectstart = value * 2 + this.viewposition - 2 * this.canvasline.width;
+        }else{
+          this.selectstart = value * 2;
+        }
       }
       this.drawobj.showcur(this.selectstart);
       this.selectrpstart = this.selectstart;
