@@ -115,11 +115,11 @@ export class WsService extends EventEmitter {
             log('The socket is not open.');
         }
     }
-    startwork(device_no: number, bed_no: number) {
+    startwork(device_no: string, bed_no: string) {
         const message = `{"name":"start_work","data":{"device_no":${device_no},"bed_no":${bed_no}}}`;
         this.send(message);
     }
-    endwork(device_no: number, bed_no: number) {
+    endwork(device_no: string, bed_no: string) {
         const message = `{"name":"end_work","data":{"device_no":${device_no},"bed_no":${bed_no}}}`;
         this.send(message);
     }
