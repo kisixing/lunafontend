@@ -53,7 +53,7 @@ export interface IDevice {
     is_handshake_finish: boolean;
     wifi_conn_state: boolean;
 }
-export interface IBed {
+interface IBed {
     bed_no: number;
     doc_id: string;
     fetal_num: number;
