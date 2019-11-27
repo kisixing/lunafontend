@@ -52,6 +52,7 @@ export class Suit extends Draw {
   printlen = 4800;
   selectstart = 0;// 选择开始点
   selectstartposition = 0;// 选择开始相对位置与数据长度无关
+  toolbarposition = 0; //滚动条位置，事件更新
   selectrpstart = 0;// 相对开始位置
   selectend = 0;// 选择结束点
   selectrpend = 0;// 相对结束位置
@@ -150,7 +151,7 @@ export class Suit extends Draw {
         this.barTool.setBarLeft(0, false);
         this.curr = this.data.index;
       }
-      this.drawobj.drawdot(this.canvasline.width * 2);
+      this.drawobj.drawdot(this.canvasline.width * 2,false);
       this.viewposition = this.curr;
     } else {
       this.timerCtg(defaultinterval);
@@ -158,6 +159,7 @@ export class Suit extends Draw {
     this.barTool.watch(value => {
       //显示历史数据
       //kisi 优化拖动赋值
+      this.toolbarposition = value;
       //console.log(this.curr,this.viewposition,value,this.canvasline.width ,this.data.index);
       this.dragtimestamp = new Date().getTime();
       let len = 100;
@@ -169,7 +171,7 @@ export class Suit extends Draw {
         this.viewposition = this.canvasline.width * 2;
       }
       this.updateSelectCur();
-      this.drawobj.drawdot(this.viewposition);
+      this.drawobj.drawdot(this.viewposition,false);
     });
     this.barTool.watchGrab(value => {
       if (this.type == 0 && this.data.past > 0) {
@@ -186,7 +188,7 @@ export class Suit extends Draw {
       //判断开始点
       if (this.viewposition - value < this.canvasline.width * 2) {
         this.viewposition = this.canvasline.width * 2;
-        this.drawobj.drawdot(this.viewposition);
+        this.drawobj.drawdot(this.viewposition,false);
         if (this.selectflag) {
           if (this.selectend == 1) {
             this.endingBar.setOffset(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
@@ -201,10 +203,10 @@ export class Suit extends Draw {
       if (this.viewposition - value < this.data.index) {
         this.viewposition -= value;
         //this.movescoller();
-        this.drawobj.drawdot(this.viewposition);
+        this.drawobj.drawdot(this.viewposition,false);
       } else {
         this.viewposition = this.data.index;
-        this.drawobj.drawdot(this.viewposition);
+        this.drawobj.drawdot(this.viewposition,false);
         // console.log('print_drag--', this.viewposition);
       }
       this.updateBarTool();
@@ -260,7 +262,7 @@ export class Suit extends Draw {
           this.selectstart = value * 2;
         }
       }
-      this.drawobj.showcur(this.selectstart);
+      this.drawobj.showcur(this.selectstart,false);
       this.selectrpstart = this.selectstart;
       this.emit('startTime', this.selectstart)
     })
@@ -365,7 +367,8 @@ export class Suit extends Draw {
     if (this.data.index < this.canvasline.width * 4) {
       len = Math.floor((this.canvasline.width * 4 - this.data.index) / 2);
     }
-    this.barTool.setBarLeft(Math.floor((this.canvasline.width - len) * (this.viewposition - this.canvasline.width * 2) / (this.data.index - this.canvasline.width * 2)), false);
+    this.toolbarposition = Math.floor((this.canvasline.width - len) * (this.viewposition - this.canvasline.width * 2) / (this.data.index - this.canvasline.width * 2));
+    this.barTool.setBarLeft(this.toolbarposition, false);
   }
 
   updateSelectCur() {
@@ -376,7 +379,7 @@ export class Suit extends Draw {
         this.selectstart = this.selectstartposition * 2;
       }
       this.emit('startTime', this.selectstart)
-      this.drawobj.showcur(this.selectstart);
+      this.drawobj.showcur(this.selectstart,false);
     }
   }
   movescoller() { }
@@ -434,7 +437,7 @@ export class Suit extends Draw {
       this.curr = (Math.floor(new Date().getTime() / 1000) - Math.floor(new Date(this.data.starttime).getTime() / 1000)) * 4 + this.data.csspan;
       if (this.curr < 0)
         return;
-      this.drawobj.drawdot(this.curr);
+      this.drawobj.drawdot(this.curr,true);
       this.viewposition = this.curr;
       if (this.data.index > this.canvasline.width * 2) {
         if (this.data.index < this.canvasline.width * 4) {
@@ -450,8 +453,8 @@ export class Suit extends Draw {
     } else {
       // console.log('status',this.data.status);
       this.alarmOff('');
-      this.drawobj.showcur(this.data.index + 2);
-      this.drawobj.drawdot(this.data.index + 2);
+      this.drawobj.showcur(this.data.index + 2,false);
+      this.drawobj.drawdot(this.data.index + 2,false);
     }
   }
 

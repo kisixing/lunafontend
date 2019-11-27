@@ -257,7 +257,7 @@ export class WsService extends EventEmitter {
                                         tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr3;
                                     }
                                 }
-                                console.log(tmpcache.fetal_num,ctgdata[key].index,ctgdata[key].fhr,ctgdata[key].fhr2,tmpcache.fhr[0][ctgdata[key].index]);
+                                //console.log(tmpcache.fetal_num,ctgdata[key].index,ctgdata[key].fhr,ctgdata[key].fhr2,tmpcache.fhr[0][ctgdata[key].index]);
                                 tmpcache.toco[ctgdata[key].index] = ctgdata[key].toco;
                                 tmpcache.fm[ctgdata[key].index] = ctgdata[key].fm;
                                 if (tmpcache.start == -1) {
@@ -438,7 +438,11 @@ export class WsService extends EventEmitter {
                         cleardata(datacache, curid, devdata.fetal_num);
                         convertdocid(curid, devdata.doc_id);
                         this.log('start_work', devdata, devdata.is_working);
-                        const target = datacache.get(curid)
+                        const target = datacache.get(curid);
+                        if(typeof(devdata.ismulti)!='undefined'){
+                            target.ismulti = devdata.ismulti;
+                            this.log('start_work_ismulit', devdata, devdata.ismulti);
+                        }
                         if (devdata.is_working == 0) {
                             target.status = Working
                         } else {
