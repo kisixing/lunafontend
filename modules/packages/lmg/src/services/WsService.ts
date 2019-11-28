@@ -51,15 +51,15 @@ export class WsService extends EventEmitter {
         WsService._this = this;
         this.settingData = settingData
     }
+    pongIndex = 0
     pong() {
         const MS = 2500
-        let index = 0
         if (this.pongTimeoutId) {
             clearInterval(this.pongTimeoutId)
         } else {
             this.send(JSON.stringify({
                 data: {
-                    index,
+                    index: this.pongIndex,
                     time: +new Date()
                 },
                 name: "heard"
@@ -67,17 +67,17 @@ export class WsService extends EventEmitter {
         }
         this.emit(EWsEvents.pong, true)
         this.pongTimeoutId = setInterval(() => {
-            if (index > 1) {
+            if (this.pongIndex > 1) {
                 this.emit(EWsEvents.pong, false)
             }
             this.send(JSON.stringify({
                 data: {
-                    index,
+                    index: this.pongIndex,
                     time: +new Date()
                 },
                 name: "heard"
             }))
-            index++
+            this.pongIndex++
         }, MS)
     }
     refreshInterval = 2000
@@ -245,12 +245,12 @@ export class WsService extends EventEmitter {
                                             continue;
                                         }
                                         tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr;
-                                    } else if(fetal == 1) {
+                                    } else if (fetal == 1) {
                                         if (ctgdata[key].fhr2 == 0) {
                                             continue;
                                         }
                                         tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr2;
-                                    } else if(fetal == 2) {
+                                    } else if (fetal == 2) {
                                         if (ctgdata[key].fhr3 == 0) {
                                             continue;
                                         }
@@ -439,7 +439,7 @@ export class WsService extends EventEmitter {
                         convertdocid(curid, devdata.doc_id);
                         this.log('start_work', devdata, devdata.is_working);
                         const target = datacache.get(curid);
-                        if(typeof(devdata.ismulti)!='undefined'){
+                        if (typeof (devdata.ismulti) != 'undefined') {
                             target.ismulti = devdata.ismulti;
                             this.log('start_work_ismulit', devdata, devdata.ismulti);
                         }
