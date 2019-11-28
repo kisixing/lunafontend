@@ -1,6 +1,6 @@
 export default class Queue {
   B: number[] = [];
-  capacity = 2048;
+  capacity = 512;
 
   EnQueue(C: any) {
     if (C == null) {

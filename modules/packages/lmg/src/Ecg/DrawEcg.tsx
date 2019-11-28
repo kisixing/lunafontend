@@ -13,7 +13,7 @@ const x_start = 25;
 // const draw_lines_index = [0, 1, 2];
 const ruler = [64, 64, 64, 64, 64, 64, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 64, 64, 64, 64, 64, 64];
 let isstop = true;
-const loopmill = 100;
+let loopmill = 90;
 type Canvas = HTMLCanvasElement;
 type Ctx = CanvasRenderingContext2D;
 interface I {
@@ -237,9 +237,9 @@ export class DrawEcg extends Draw {
   drawsingle() {
     const { oQueue, last_points, max_times, linectx } = this;
     const y_starts = this.GetYStarts(12);
-
     //2019-10-03 kisi 根据容器调整高度
     // let scale = this.height / 100;
+    console.log('ecg_loop',loopmill);
     if (isstop) {
       return;
     }
@@ -250,7 +250,7 @@ export class DrawEcg extends Draw {
       isstop = false;
       return;
     }
-    if (oQueue.GetSize() < points_one_times) {
+    if (oQueue.GetSize() < points_one_times*5) {
       this.start = NaN;
       isstop = false;
       return;
