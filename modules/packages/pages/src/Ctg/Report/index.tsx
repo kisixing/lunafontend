@@ -7,15 +7,12 @@ export const Context = React.createContext({})
 interface IProps {
     age: number
     docid: string
-    end: number
     fetalcount: number
     inpatientNO: string
     name: string
-    start: number
     startdate: string
     print_interval: number
     onDownload: () => void
-    wh: { w: number, h: number }
 }
 
 const PrintPreview = (props: IProps) => {

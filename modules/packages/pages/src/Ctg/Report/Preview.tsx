@@ -12,11 +12,9 @@ const COEFFICIENT = 240
 interface IProps {
   age: number
   docid: string
-  end: number
   fetalcount: number
   inpatientNO: string
   name: string
-  start: number
   startdate: string
   print_interval: number
   onDownload: () => void
