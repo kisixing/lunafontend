@@ -239,7 +239,6 @@ export class DrawEcg extends Draw {
     const y_starts = this.GetYStarts(12);
     //2019-10-03 kisi 根据容器调整高度
     // let scale = this.height / 100;
-    console.log('ecg_loop',loopmill);
     if (isstop) {
       return;
     }
