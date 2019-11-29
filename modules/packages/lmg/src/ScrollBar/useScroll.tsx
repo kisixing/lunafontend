@@ -52,12 +52,35 @@ function useScroll(
         boxEl.style.cursor = 'auto';
       };
     };
+    // const boxTouchCb = e => {
+    //   var { x: x1 } = getCoordInDocument(e);
+    //   let temp = x1;
+    //   boxEl.style.cursor = 'grab';
+    //   document.ontouchmove = function (e) {
+    //     requestAnimationFrame(() => {
+    //       var { x: x2 } = getCoordInDocument(e as any);
+    //       if (Math.abs(x2 - temp) > dragInterval) {
+    //         resolveGrab(x2 - x1);
+    //         temp = x2;
+    //       }
+    //     });
+    //   };
+
+    //   document.onmouseup = function () {
+    //     //移除鼠标移动事件
+    //     document.onmousemove = null;
+    //     boxEl.style.cursor = 'auto';
+    //   };
+    // };
 
     boxEl.addEventListener('mousedown', boxGrabCb);
+    // boxEl.addEventListener('touchstart', boxTouchCb);
 
     return () => {
 
       boxEl.removeEventListener('mousedown', boxGrabCb);
+      // boxEl.removeEventListener('touchstart', boxTouchCb);
+
     };
   }, []);
   const g = (): IBarTool => {
@@ -76,7 +99,7 @@ function useScroll(
       },
 
       setBarLeft: bar.setOffset.bind(bar),
-      createRod(name,bg='#aaa') {
+      createRod(name, bg = '#aaa') {
         const ins = new ScrollEl(wrapper.current).setStyles({
           width: 4,
           background: bg,
