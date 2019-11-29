@@ -1,6 +1,20 @@
 import { BedStatus, ICacheItem, ICache } from './types'
 import Queue from "../Ecg/Queue";
 
+export const mapStatusToColor = {
+    [BedStatus.Offline]: '#f4511e',
+    [BedStatus.Stopped]: '#bdbdbd ',
+    [BedStatus.Working]: '#43a047',
+
+};
+export const mapStatusToText = {
+    [BedStatus.Offline]: '离线',
+    [BedStatus.Stopped]: '停止',
+    [BedStatus.Working]: '监护中',
+};
+
+
+
 export function getEmptyCacheItem(base = null): ICacheItem {
     return Object.assign({
         fhr: [],

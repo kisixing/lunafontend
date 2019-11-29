@@ -6,14 +6,13 @@ import Request from './Request';
 class R extends Request {
   private hasConfiged = false;
   configure: { [x: string]: any } = {}
-
   public config = (configs: Iconfig = {}): Request => {
 
 
     const { hasConfiged } = this;
     if (hasConfiged) {
       console.warn("couldn't config twice");
-      return this;
+      // return this;
     }
     this.hasConfiged = true;
     Object.assign(this.configure, configs)
@@ -23,10 +22,8 @@ class R extends Request {
     // request拦截器, 改变url 或 options.
     this._request.interceptors.request.use((url, options) => {
       // eslint-disable-next-line no-param-reassign
-      options.headers = {
-        ...options.headers,
-        Authorization,
-      };
+
+      Authorization && ((options.headers as any).Authorization = Authorization.indexOf('Bearer') < 0 ? `Bearer ${Authorization}` : Authorization)
       return { url, options };
     });
 

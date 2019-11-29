@@ -6,6 +6,7 @@ import { notification } from "antd";
 import { EWsStatus, BedStatus, ICache, IDevice, EWsEvents } from './types'
 import { getEmptyCacheItem, cleardata, convertstarttime } from "./utils";
 export * from './types'
+export * from './utils'
 // import pingpong from "./pingpong";
 
 const ANNOUNCE_INTERVAL = 500
@@ -52,32 +53,22 @@ export class WsService extends EventEmitter {
         this.settingData = settingData
     }
     pongIndex = 0
+    sendHeard() {
+        this.send(JSON.stringify({
+            data: { index: this.pongIndex, time: +new Date() },
+            name: "heard"
+        }))
+        this.pongIndex++
+    }
     pong() {
+        let count = 0
         const MS = 2500
-        if (this.pongTimeoutId) {
-            clearInterval(this.pongTimeoutId)
-        } else {
-            this.send(JSON.stringify({
-                data: {
-                    index: this.pongIndex,
-                    time: +new Date()
-                },
-                name: "heard"
-            }))
-        }
+        this.pongTimeoutId ? clearInterval(this.pongTimeoutId) : this.sendHeard()
         this.emit(EWsEvents.pong, true)
         this.pongTimeoutId = setInterval(() => {
-            if (this.pongIndex > 1) {
-                this.emit(EWsEvents.pong, false)
-            }
-            this.send(JSON.stringify({
-                data: {
-                    index: this.pongIndex,
-                    time: +new Date()
-                },
-                name: "heard"
-            }))
-            this.pongIndex++
+            (count > 1) && this.emit(EWsEvents.pong, false)
+            this.sendHeard()
+            count++
         }, MS)
     }
     refreshInterval = 2000
