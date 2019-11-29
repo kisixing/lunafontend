@@ -12,7 +12,7 @@ type Canvas = HTMLCanvasElement;
 type Context = CanvasRenderingContext2D;
 export class Suit extends Draw {
   emitInterval: number
-  static option: { [x: string]: string } = {}
+  static option: { [x: string]: string }
   option = Suit.option
   initFlag = false
   sid = sid++;
@@ -81,7 +81,7 @@ export class Suit extends Draw {
     canvasanalyse: Canvas,
     wrap: HTMLElement,
     barTool: IBarTool,
-    type: number
+    type: number,
   ) {
     super()
     this.wrap = wrap;
@@ -101,18 +101,21 @@ export class Suit extends Draw {
     // this.resize();
     this.barTool.watchGrab(value => {
     });
-    this.ctgconfig.tococolor = this.option.tococolor;
-    this.ctgconfig.fhrcolor[0] = this.option.fhrcolor1;
-    this.ctgconfig.fhrcolor[1] = this.option.fhrcolor2;
-    this.ctgconfig.fhrcolor[2] = this.option.fhrcolor3;
-    if (this.option.alarm_enable == "0") {
-      this.ctgconfig.alarm_enable = false;
-    } else {
+    if (this.option) {
+      this.ctgconfig.tococolor = this.option.tococolor;
+      this.ctgconfig.fhrcolor[0] = this.option.fhrcolor1;
+      this.ctgconfig.fhrcolor[1] = this.option.fhrcolor2;
+      this.ctgconfig.fhrcolor[2] = this.option.fhrcolor3;
+      if (this.option.alarm_enable == "0") {
+        this.ctgconfig.alarm_enable = false;
+      } else {
+        this.ctgconfig.alarm_enable = true;
+      }
       this.ctgconfig.alarm_enable = true;
+      this.ctgconfig.alarm_high = Number(this.option.alarm_high);
+      this.ctgconfig.alarm_low = Number(this.option.alarm_low);
     }
-    this.ctgconfig.alarm_enable = true;
-    this.ctgconfig.alarm_high = Number(this.option.alarm_high);
-    this.ctgconfig.alarm_low = Number(this.option.alarm_low);
+
   }
 
   init(data: ICacheItem) {

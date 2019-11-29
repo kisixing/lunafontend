@@ -32,14 +32,13 @@ interface IItemTitle {
 
 const Item = (props: IProps) => {
     const { data, bedname, onClose, onDoubleClick, loading, onSuitRead, themeColor = 'rgb(74, 20, 140)' } = props;
-    console.log(3333, props)
-    const { ismulti, status } = data
+    const status = data && data.status
+    const ismulti = data && data.ismulti
     let { bedNO, GP, name, age, startTime, } = props
 
     const [cache, setCache] = useState<IItemTitle>({})
     const [suit, setSuit] = useState(null)
     const [alarmStatus] = useItemAlarm(suit)
-
     if (status === BedStatus.Stopped) {
         bedNO = cache.bedNO
         GP = cache.GP
