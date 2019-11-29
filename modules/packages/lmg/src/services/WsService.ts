@@ -40,11 +40,7 @@ export class WsService extends EventEmitter {
         }
         settingData = settingData || {
             ws_url: "192.168.0.227:8084",
-            xhr_url: "192.168.2.152:9986",
-            alarm_high: "160",
-            alarm_low: "110",
-            alarm_on_window: "1",
-            alarm_on_sound: "1"
+            area_devices: ''
         }
         if (WsService._this) {
             return WsService._this;

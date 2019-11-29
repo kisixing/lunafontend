@@ -8,19 +8,17 @@ import { Drawer } from '@lianmed/lmg/lib/interface';
 
 interface IProps {
     data: ICacheItem
-    bedname: string
 
-    ismulti: boolean
+    bedname: string
     name: string
     age: number
     bedNO: string
-    status: BedStatus
     startTime: string
     GP: string
     onDoubleClick?: (e: React.MouseEvent) => void
     onClose?: (e: React.MouseEvent) => void
-    loading: boolean
-    onSuitRead: (s: Drawer) => void
+    loading?: boolean
+    onSuitRead?: (s: Drawer) => void
 }
 interface IItemTitle {
     bedNO?: string
@@ -31,7 +29,8 @@ interface IItemTitle {
 }
 
 const Item = (props: IProps) => {
-    const { data, bedname, onClose, ismulti, status, onDoubleClick, loading, onSuitRead } = props;
+    const { data, bedname, onClose, onDoubleClick, loading, onSuitRead } = props;
+    const { ismulti, status } = data
     let { bedNO, GP, name, age, startTime, } = props
 
     const [cache, setCache] = useState<IItemTitle>({})
