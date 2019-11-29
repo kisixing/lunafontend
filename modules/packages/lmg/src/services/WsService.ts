@@ -332,7 +332,30 @@ export class WsService extends EventEmitter {
                                 }
                             }
                         }
-                    } else if (received_msg.name == 'get_data_ctg') {
+                    } else if (received_msg.name == 'push_offline_data_ctg') {
+                        //TODO 解析应用层数据包
+                        var ctgdata = received_msg.data;
+                        var id = received_msg.device_no;
+                        var bi = received_msg.bed_no;
+                        var cachbi = id + '-' + bi;
+                        console.log('push_offline_data_ctg',ctgdata);
+                        if (datacache.has(cachbi)) {
+                            var tmpcache = datacache.get(cachbi);
+                            for (let key in ctgdata) {
+                                for (let fetal = 0; fetal < tmpcache.fetal_num; fetal++) {
+                                    if (fetal == 0) {
+                                        tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr;
+                                    } else {
+                                        tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr2;
+                                    }
+                                }
+                                tmpcache.toco[ctgdata[key].index] = ctgdata[key].toco;
+                                tmpcache.fm[ctgdata[key].index] = ctgdata[key].fm;
+                                setcur(cachbi, ctgdata[key].index);
+                            }
+                        }
+                    }
+                    else if (received_msg.name == 'get_data_ctg') {
                         //TODO 解析应用层数据包
                         var ctgdata = received_msg.data;
                         var id = received_msg.device_no;
@@ -464,8 +487,6 @@ export class WsService extends EventEmitter {
             return [datacache];
         });
 
-
-
         function convertdocid(id: string, doc_id: string) {
             datacache.get(id).docid = doc_id;
             if (doc_id != '') {
@@ -475,8 +496,6 @@ export class WsService extends EventEmitter {
                 }
             }
         }
-
-
 
         function setcur(id: string, value: number) {
             if (value < datacache.get(id).start) {
