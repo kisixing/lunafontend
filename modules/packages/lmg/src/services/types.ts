@@ -3,7 +3,7 @@ import Queue from "../Ecg/Queue";
 
 
 
-  
+
 export enum EWsStatus {
     Pendding, Success, Error
 }
@@ -14,7 +14,8 @@ export enum BedStatus {
     Offline,
 }
 export enum EWsEvents {
-    pong = "pong"
+    pong = "pong",
+    explode = "explode"
 }
 export interface ICacheItem {
     fhr: number[][];

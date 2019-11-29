@@ -54,6 +54,7 @@ export function cleardata(datacache: ICache, curid: string, fetal_num: number) {
 
 
 export function convertstarttime(pureid: string) {
+    if (!pureid) return new Date().toLocaleDateString()
     const t = ["/", "/", " ", ":", ":", ""]
     return '20' + pureid.split('').reduce((a, b, i) => {
         return `${a}${b}${i & 1 ? t[~~(i / 2)] : ''}`

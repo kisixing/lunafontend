@@ -5,7 +5,8 @@ import { Ctg as L } from '@lianmed/lmg';
 import useItemAlarm from "./useItemAlarm";
 import { BedStatus, ICacheItem, mapStatusToColor, mapStatusToText } from "@lianmed/lmg/lib/services/WsService";
 import { Drawer } from '@lianmed/lmg/lib/interface';
-
+import "antd/lib/card/style/index.css"
+import "antd/lib/tag/style/index.css"
 interface IProps {
     data: ICacheItem
 
@@ -19,6 +20,7 @@ interface IProps {
     onClose?: (e: React.MouseEvent) => void
     loading?: boolean
     onSuitRead?: (s: Drawer) => void
+    themeColor?: string
 }
 interface IItemTitle {
     bedNO?: string
@@ -29,7 +31,8 @@ interface IItemTitle {
 }
 
 const Item = (props: IProps) => {
-    const { data, bedname, onClose, onDoubleClick, loading, onSuitRead } = props;
+    const { data, bedname, onClose, onDoubleClick, loading, onSuitRead, themeColor = 'rgb(74, 20, 140)' } = props;
+    console.log(3333, props)
     const { ismulti, status } = data
     let { bedNO, GP, name, age, startTime, } = props
 
@@ -103,12 +106,12 @@ const Item = (props: IProps) => {
                 userSelect: 'none'
             }}
             extra={renderExtra(bedname, status)}
-            headStyle={{ background: 'var(--theme-color)', color: '#fff' }}
+            headStyle={{ background: themeColor, color: '#fff' }}
             bodyStyle={{ padding: 0, height: 'calc(100% - 38px)' }}
         >
             <L
                 data={data}
-                onReady={suit => { setSuit(suit); onSuitRead(suit) }}
+                onReady={suit => { setSuit(suit); onSuitRead && onSuitRead(suit) }}
                 onDoubleClick={onDoubleClick}
                 loading={loading}
                 showEcg={ismulti}

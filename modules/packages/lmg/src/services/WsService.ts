@@ -72,14 +72,12 @@ export class WsService extends EventEmitter {
     refresh(name) {
 
         if (this.refreshTimeout) {
-            this.log(name, 'refresh', 'discarded')
+            this.log(name, 'explode', 'discarded')
             return
         }
         this.refreshTimeout = setTimeout(() => {
-            this.log(name, 'refresh')
-            this.dispatch({
-                type: 'ws/updateData', payload: { data: new Map(this.datacache) }
-            })
+            this.log(name, 'explode')
+            this.emit('explode', new Map(this.datacache))
             this.refreshTimeout = null
         }, this.refreshInterval);
     }
@@ -110,19 +108,13 @@ export class WsService extends EventEmitter {
         const message = `{"name":"end_work","data":{"device_no":${device_no},"bed_no":${bed_no}}}`;
         this.send(message);
     }
-    dispatch(action: any) {
-        (window as any).g_app._store.dispatch(action);
-    }
     _emit(name: string, ...value: any[]) {
         event.emit(`WsService:${name}`, ...value)
     }
 
     tip = (text: string, status: EWsStatus) => {
-        this.log(text);
-        this.dispatch({
-            type: 'ws/setState',
-            payload: { status }
-        })
+        this.log(text, status);
+
     }
     connect = (): Promise<ICache> => {
         const { datacache, settingData } = this
@@ -338,7 +330,7 @@ export class WsService extends EventEmitter {
                         var id = received_msg.device_no;
                         var bi = received_msg.bed_no;
                         var cachbi = id + '-' + bi;
-                        console.log('push_offline_data_ctg',ctgdata);
+                        console.log('push_offline_data_ctg', ctgdata);
                         if (datacache.has(cachbi)) {
                             var tmpcache = datacache.get(cachbi);
                             for (let key in ctgdata) {

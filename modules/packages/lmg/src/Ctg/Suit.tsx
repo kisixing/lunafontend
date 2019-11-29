@@ -151,7 +151,7 @@ export class Suit extends Draw {
         this.barTool.setBarLeft(0, false);
         this.curr = this.data.index;
       }
-      this.drawobj.drawdot(this.canvasline.width * 2,false);
+      this.drawobj.drawdot(this.canvasline.width * 2, false);
       this.viewposition = this.curr;
     } else {
       this.timerCtg(defaultinterval);
@@ -171,7 +171,7 @@ export class Suit extends Draw {
         this.viewposition = this.canvasline.width * 2;
       }
       this.updateSelectCur();
-      this.drawobj.drawdot(this.viewposition,false);
+      this.drawobj.drawdot(this.viewposition, false);
     });
     this.barTool.watchGrab(value => {
       if (this.type == 0 && this.data.past > 0) {
@@ -188,7 +188,7 @@ export class Suit extends Draw {
       //判断开始点
       if (this.viewposition - value < this.canvasline.width * 2) {
         this.viewposition = this.canvasline.width * 2;
-        this.drawobj.drawdot(this.viewposition,false);
+        this.drawobj.drawdot(this.viewposition, false);
         if (this.selectflag) {
           if (this.selectend == 1) {
             this.endingBar.setOffset(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
@@ -203,10 +203,10 @@ export class Suit extends Draw {
       if (this.viewposition - value < this.data.index) {
         this.viewposition -= value;
         //this.movescoller();
-        this.drawobj.drawdot(this.viewposition,false);
+        this.drawobj.drawdot(this.viewposition, false);
       } else {
         this.viewposition = this.data.index;
-        this.drawobj.drawdot(this.viewposition,false);
+        this.drawobj.drawdot(this.viewposition, false);
         // console.log('print_drag--', this.viewposition);
       }
       this.updateBarTool();
@@ -250,19 +250,19 @@ export class Suit extends Draw {
       this.selectrpstart = value * 2;
       this.selectstartposition = value;
       // console.log('print_开始', value, this.viewposition, this.canvasline.width);
-      if(value!=0 && this.type < 1){
+      if (value != 0 && this.type < 1) {
         this.dragtimestamp = new Date().getTime();
       }
       if (this.viewposition > this.canvasline.width * 2) {
         this.selectstart = value * 2 + this.viewposition - 2 * this.canvasline.width;
       } else {
-        if(this.type < 1){
+        if (this.type < 1) {
           this.selectstart = value * 2 + this.viewposition - 2 * this.canvasline.width;
-        }else{
+        } else {
           this.selectstart = value * 2;
         }
       }
-      this.drawobj.showcur(this.selectstart,false);
+      this.drawobj.showcur(this.selectstart, false);
       this.selectrpstart = this.selectstart;
       this.emit('startTime', this.selectstart)
     })
@@ -379,16 +379,16 @@ export class Suit extends Draw {
         this.selectstart = this.selectstartposition * 2;
       }
       this.emit('startTime', this.selectstart)
-      this.drawobj.showcur(this.selectstart,false);
+      this.drawobj.showcur(this.selectstart, false);
     }
   }
   movescoller() { }
 
   //胎心数据处理
   InitFileData(oriobj) {
-    let pureidarr: string[] = oriobj.docid.split('_');
     let CTGDATA = { fhr: [[], [], []], toco: [], fm: [], fetal_num: 2, index: 0, starttime: '', analyse: { acc: [], dec: [], baseline: [], start: 0, end: 0 } };
-    if (pureidarr.length > 2) {
+    if (oriobj.docid) {
+      let pureidarr: string[] = oriobj.docid.split('_');
       let pureid = pureidarr[2]
       CTGDATA.starttime = convertstarttime(pureid)
     }
@@ -437,7 +437,7 @@ export class Suit extends Draw {
       this.curr = (Math.floor(new Date().getTime() / 1000) - Math.floor(new Date(this.data.starttime).getTime() / 1000)) * 4 + this.data.csspan;
       if (this.curr < 0)
         return;
-      this.drawobj.drawdot(this.curr,true);
+      this.drawobj.drawdot(this.curr, true);
       this.viewposition = this.curr;
       if (this.data.index > this.canvasline.width * 2) {
         if (this.data.index < this.canvasline.width * 4) {
@@ -453,8 +453,8 @@ export class Suit extends Draw {
     } else {
       // console.log('status',this.data.status);
       this.alarmOff('');
-      this.drawobj.showcur(this.data.index + 2,false);
-      this.drawobj.drawdot(this.data.index + 2,false);
+      this.drawobj.showcur(this.data.index + 2, false);
+      this.drawobj.drawdot(this.data.index + 2, false);
     }
   }
 
@@ -464,8 +464,8 @@ export class Suit extends Draw {
         clearInterval(id);
       }
       var curstamp = new Date().getTime();
-      if (curstamp - this.dragtimestamp > this.interval) {   
-        if(this.selectstartposition!=0){
+      if (curstamp - this.dragtimestamp > this.interval) {
+        if (this.selectstartposition != 0) {
           this.startingBar.setOffset(0);
         }
         this.drawdot();
