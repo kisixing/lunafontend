@@ -125,7 +125,9 @@ export class Suit extends Draw {
     this.data = data;
     this.fetalcount = data.fetal_num;
     this.currentdot = data.index;
-    if (!data.status) {
+    if (data.status) {
+      this.type = 0
+    } else {
       this.type = 1;
       if (typeof (data.index) == 'undefined') {
         this.data = this.InitFileData(data);
@@ -133,6 +135,7 @@ export class Suit extends Draw {
       }
     }
     this.createBar();
+
     if (this.type > 0) {
       //kisi 2019-10-29 测试增加analyse属性
       // console.log(this.data);
