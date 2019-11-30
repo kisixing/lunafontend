@@ -41,7 +41,6 @@ export class DrawEcg extends Draw {
   mode: displayMode = displayMode.canvas
   static Queue: typeof Queue = Queue
   wrap: HTMLDivElement;
-  oQueue = new Queue();
   MultiParam: number[];
   Ple: number[];
   Tre: number[];
@@ -75,7 +74,6 @@ export class DrawEcg extends Draw {
   init(data) {
     if (data) {
       this.data = data
-      this.oQueue = data.ecg;
       this.current_time_millis = 0;
       this.current_times = 0;
       isstop = false;
@@ -83,6 +81,7 @@ export class DrawEcg extends Draw {
       // console.log("loop");
       this.last_points = [];
       this.timerEcg(loopmill);
+      console.log(this);
     }
   }
   _resize() {
@@ -173,17 +172,17 @@ export class DrawEcg extends Draw {
 
   //kisi 2019-10-03
   //根据ws数据压入队列
-  adddata(F, C, E, J) {
-    const { MultiParam, Ple, Tre } = this;
-    for (let index = 0; index < 360; index++) {
-      const G = new Array(3);
-      G[0] = (MultiParam[(index * 2) % 375] + 128) * 0.1;
-      G[1] = Ple[index % 60];
-      G[2] = Tre[index % 180];
-      this.oQueue.EnQueue(G);
-    }
-    return;
-  }
+  // adddata(F, C, E, J) {
+  //   const { MultiParam, Ple, Tre } = this;
+  //   for (let index = 0; index < 360; index++) {
+  //     const G = new Array(3);
+  //     G[0] = (MultiParam[(index * 2) % 375] + 128) * 0.1;
+  //     G[1] = Ple[index % 60];
+  //     G[2] = Tre[index % 180];
+  //     this.oQueue.EnQueue(G);
+  //   }
+  //   return;
+  // }
 
   initparm() {
     const { canvasline, linectx } = this;
@@ -200,12 +199,14 @@ export class DrawEcg extends Draw {
   timerEcg(dely) {
     let id = setInterval(() => {
       if (!this) {
+        console.log('ecg','clear interval');
         clearInterval(id);
       }
       this.DrawDatatext();
       const A = new Date().getTime();
       this.current_time_millis = A;
-      if (!isNaN(this.start) || this.oQueue.GetSize() > points_one_times * 5) {
+      console.log('ecg','interval',);
+      if (!isNaN(this.start) || this.data.ecg.GetSize() > points_one_times * 5) {
         this.start = 1;
         this.drawsingle();
       }
@@ -235,7 +236,7 @@ export class DrawEcg extends Draw {
   // }
   // 绘制单心电走纸
   drawsingle() {
-    const { oQueue, last_points, max_times, linectx } = this;
+    const { last_points, max_times, linectx } = this;
     const y_starts = this.GetYStarts(12);
     //2019-10-03 kisi 根据容器调整高度
     // let scale = this.height / 100;
@@ -244,12 +245,12 @@ export class DrawEcg extends Draw {
     }
     isstop = true;
     this.current_times = this.current_times % max_times;
-    if (oQueue.IsEmpty()) {
+    if (this.data.ecg.IsEmpty()) {
       this.start = NaN;
       isstop = false;
       return;
     }
-    if (oQueue.GetSize() < points_one_times*5) {
+    if (this.data.ecg.GetSize() < points_one_times*5) {
       this.start = NaN;
       isstop = false;
       return;
@@ -258,7 +259,7 @@ export class DrawEcg extends Draw {
     let F = [];
     let invalid = 0;
     for (let J = 0; J < points_one_times; J++) {
-      let ecgdot = oQueue.DeQueue();
+      let ecgdot = this.data.ecg.DeQueue();
       if (ecgdot == 1) {
         invalid++;
       } else {
