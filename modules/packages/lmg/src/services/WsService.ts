@@ -2,14 +2,13 @@ import { EventEmitter, event } from "@lianmed/utils";
 import request from "@lianmed/request"
 import Queue from "../Ecg/Queue";
 import { throttle } from "lodash";
-import { notification } from "antd";
 import { EWsStatus, BedStatus, ICache, IDevice, EWsEvents } from './types'
 import { getEmptyCacheItem, cleardata, convertstarttime } from "./utils";
 export * from './types'
 export * from './utils'
 // import pingpong from "./pingpong";
 
-const ANNOUNCE_INTERVAL = 500
+const ANNOUNCE_INTERVAL = 100
 
 const { Working, Stopped, Offline } = BedStatus
 
@@ -563,8 +562,7 @@ export class WsService extends EventEmitter {
 }
 const announce = throttle((text) => {
     if (sp(text)) {
-        event.emit('bed:announcer', `${text}号子机监护时间到`)
-        notification.info({ message: `${text}号子机监护时间到`, duration: 10 })
+        event.emit('bed:announcer', `${text}`)
     }
 }, ANNOUNCE_INTERVAL)
 
