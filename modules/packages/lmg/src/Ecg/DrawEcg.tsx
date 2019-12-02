@@ -205,7 +205,6 @@ export class DrawEcg extends Draw {
       this.DrawDatatext();
       const A = new Date().getTime();
       this.current_time_millis = A;
-      console.log('ecg','interval',);
       if (!isNaN(this.start) || this.data.ecg.GetSize() > points_one_times * 5) {
         this.start = 1;
         this.drawsingle();

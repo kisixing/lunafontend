@@ -19,7 +19,7 @@ export class WsService extends EventEmitter {
     isReady = false;
     dirty = false;
     interval: number = 10000;
-    RECONNECT_INTERVAL: number = 1000;
+    RECONNECT_INTERVAL: number = 3000;
     span: number = NaN;
     offQueue: Queue = new Queue();
     offstart: boolean = false;
@@ -326,6 +326,9 @@ export class WsService extends EventEmitter {
                                                 tmpcache.last = il;
                                             }
                                         }
+                                    }
+                                    if(ctgdata[key].index - tmpcache.last < 5){
+                                        tmpcache.last = ctgdata[key].index;
                                     }
                                 }
                             }
