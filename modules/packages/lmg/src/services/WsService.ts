@@ -19,7 +19,7 @@ export class WsService extends EventEmitter {
     isReady = false;
     dirty = false;
     interval: number = 10000;
-    RECONNECT_INTERVAL: number = 10000;
+    RECONNECT_INTERVAL: number = 1000;
     span: number = NaN;
     offQueue: Queue = new Queue();
     offstart: boolean = false;
@@ -57,14 +57,18 @@ export class WsService extends EventEmitter {
     }
     pong() {
         let count = 0
-        const MS = 2500
+        const MS = 3000
         this.pongTimeoutId ? clearInterval(this.pongTimeoutId) : this.sendHeard()
         this.emit(EWsEvents.pong, true)
         this.pongTimeoutId = setInterval(() => {
-            (count > 1) && this.emit(EWsEvents.pong, false)
+            (count > 2) && this.pongFailed()
             this.sendHeard()
             count++
         }, MS)
+    }
+    pongFailed() {
+        this.emit(EWsEvents.pong, false)
+        this.socket.close()
     }
     refreshInterval = 2000
     refreshTimeout = null
@@ -143,11 +147,11 @@ export class WsService extends EventEmitter {
                 }))
             };
             socket.onclose = (event) => {
-                this.tip('关闭', EWsStatus.Error)
-                // setTimeout(() => {
-                //     this.dirty = true
-                //     this.connect()
-                // }, this.RECONNECT_INTERVAL);
+                // this.tip('关闭', EWsStatus.Error)
+                setTimeout(() => {
+                    this.dirty = true
+                    this.connect()
+                }, this.RECONNECT_INTERVAL);
             };
             // 接收服务端数据时触发事件
             socket.onmessage = (msg) => {
@@ -286,7 +290,7 @@ export class WsService extends EventEmitter {
                                     //判断 是否有缺失
                                     //kisi 2019-10-19 不再请求离线
                                     //kisi 2019-12-02 静默重连后数据恢复处理启用                                   
-                                    console.log('reconnect request last:',tmpcache.last,ctgdata[key].index);
+                                    console.log('reconnect request last:', tmpcache.last, ctgdata[key].index);
                                     var flag = 0;
                                     var sflag = 0;
                                     var eflag = 0;
@@ -314,7 +318,7 @@ export class WsService extends EventEmitter {
                                                         bi +
                                                         '}}',
                                                     );
-                                                    console.log('reconnect request',sflag,eflag);
+                                                    console.log('reconnect request', sflag, eflag);
                                                     tmpcache.timestamp = new Date().getTime();
                                                 }
                                                 break;
