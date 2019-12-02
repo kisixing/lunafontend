@@ -465,16 +465,10 @@ export class WsService extends EventEmitter {
                         let devdata = received_msg.data;
                         let curid = Number(devdata['device_no']) + '-' + Number(devdata['bed_no']);
                         if (datacache.get(curid).pregnancy == null) {
-                            console.log('end_work', datacache.get(curid));
-                            cleardata(datacache, curid, datacache.get(curid).fetal_num);
-                            console.log('end_work', datacache.get(curid));
+                            console.log('end_work', datacache.get(curid),devdata['doc_id']);
+                            //cleardata(datacache, curid, datacache.get(curid).fetal_num);
+                            clearbyrest(datacache.get(curid).docid,devdata.is_working);
                         }
-                        if (devdata.is_working == 0) {
-                            datacache.get(curid).status = Working;
-                        } else {
-                            datacache.get(curid).status = Stopped;
-                        }
-                        this.refresh('end_work')
                     } else if (received_msg.name == 'heard') {
                         //heard
                         let devdata = received_msg.data;
@@ -526,6 +520,26 @@ export class WsService extends EventEmitter {
             else {
                 offstart = false;
             }
+        }
+
+        function clearbyrest(doc_id: string,is_working : number) {
+            request.get(`/bedinfos?documentno.equals=${doc_id}`).then(responseData => {
+                let vt = doc_id.split('_');
+                let curid = vt[0] + '-' + vt[1];
+                console.log(doc_id, curid, responseData);
+                if (responseData) {
+                    if(responseData['pregnancy'] == null){
+                        cleardata(datacache, curid, datacache.get(curid).fetal_num);
+                    }
+                    if (is_working == 0) {
+                        datacache.get(curid).status = Working;
+                    } else {
+                        datacache.get(curid).status = Stopped;
+                    }                   
+                    //this.refresh('end_work');
+                }
+            })
+            
         }
 
         function getoffline(queue: Queue, doc_id: string, offlineend: number, offstart: boolean) {
