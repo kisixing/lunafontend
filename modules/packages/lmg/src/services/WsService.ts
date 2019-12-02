@@ -285,41 +285,44 @@ export class WsService extends EventEmitter {
                                 } else {
                                     //判断 是否有缺失
                                     //kisi 2019-10-19 不再请求离线
-                                    // var flag = 0;
-                                    // var sflag = 0;
-                                    // var eflag = 0;
-                                    // for (let il = tmpcache.last; il < tmpcache.index; il++) {
-                                    //     if (!tmpcache.fhr[0][il]) {
-                                    //         if (flag == 0) {
-                                    //             sflag = il;
-                                    //             flag = 1;
-                                    //         }
-                                    //     } else {
-                                    //         if (flag > 0) {
-                                    //             eflag = il;
-                                    //             var curstamp = new Date().getTime();
-                                    //             if (this.offrequest < 8 && (tmpcache.orflag || curstamp - tmpcache.timestamp > this.interval)) {
-                                    //                 tmpcache.orflag = false;
-                                    //                 this.offrequest += 1;
-                                    //                 this.send(
-                                    //                     '{"name":"get_data_ctg","data":{"start_index":' +
-                                    //                     sflag +
-                                    //                     ',"end_index":' +
-                                    //                     eflag +
-                                    //                     ',"device_no":' +
-                                    //                     id +
-                                    //                     ',"bed_no":' +
-                                    //                     bi +
-                                    //                     '}}',
-                                    //                 );
-                                    //                 tmpcache.timestamp = new Date().getTime();
-                                    //             }
-                                    //             break;
-                                    //         } else {
-                                    //             tmpcache.last = il;
-                                    //         }
-                                    //     }
-                                    //}
+                                    //kisi 2019-12-02 静默重连后数据恢复处理启用                                   
+                                    console.log('reconnect request last:',tmpcache.last,ctgdata[key].index);
+                                    var flag = 0;
+                                    var sflag = 0;
+                                    var eflag = 0;
+                                    for (let il = tmpcache.last; il < tmpcache.index; il++) {
+                                        if (!tmpcache.fhr[0][il]) {
+                                            if (flag == 0) {
+                                                sflag = il;
+                                                flag = 1;
+                                            }
+                                        } else {
+                                            if (flag > 0) {
+                                                eflag = il;
+                                                var curstamp = new Date().getTime();
+                                                if (this.offrequest < 8 && (tmpcache.orflag || curstamp - tmpcache.timestamp > this.interval)) {
+                                                    tmpcache.orflag = false;
+                                                    this.offrequest += 1;
+                                                    this.send(
+                                                        '{"name":"get_data_ctg","data":{"start_index":' +
+                                                        sflag +
+                                                        ',"end_index":' +
+                                                        eflag +
+                                                        ',"device_no":' +
+                                                        id +
+                                                        ',"bed_no":' +
+                                                        bi +
+                                                        '}}',
+                                                    );
+                                                    console.log('reconnect request',sflag,eflag);
+                                                    tmpcache.timestamp = new Date().getTime();
+                                                }
+                                                break;
+                                            } else {
+                                                tmpcache.last = il;
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
