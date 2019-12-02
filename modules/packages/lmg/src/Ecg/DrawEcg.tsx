@@ -162,7 +162,7 @@ export class DrawEcg extends Draw {
       datactx.textBaseline = "middle";
 
       entries.forEach(([k, v], i) => {
-        const x = 20 + d * i
+        const x = 44 + d * i
         datactx.fillText(`${k}`, x, D);
         datactx.fillText(`${v || ''}`, x, 2.5 * D);
       })
