@@ -187,7 +187,7 @@ export class DrawEcg extends Draw {
   initparm() {
     const { canvasline, linectx } = this;
     if (canvasline.width < 150) {
-      alert(' width is limited');
+      // alert(' width is limited');
     } else {
       this.max_times = Math.floor((canvasline.width - 25) * 0.6 / gx);
     }

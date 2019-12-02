@@ -287,7 +287,7 @@ export const useData = (setDevice: any, url = defaultUrl): Promise<Map<any, any>
     if (socket.readyState == WebSocket.OPEN) {
       socket.send(message);
     } else {
-      alert('The socket is not open.');
+      // alert('The socket is not open.');
     }
   }
 };
