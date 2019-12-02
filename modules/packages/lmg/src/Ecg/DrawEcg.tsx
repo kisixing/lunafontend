@@ -125,7 +125,7 @@ export class DrawEcg extends Draw {
 
   DrawDatatext() {
     const { datactx, data, height, width } = this;
-    const keys = ['脉率', '血氧%', '体温°C', '心率bpm', '呼吸', '血压(S/D/M)mmHg'];
+    const keys = ['脉率bpm', '血氧%', '体温°C', '心率bpm', '呼吸（次/分）', '血压(S/D/M)mmHg'];
     const v = Object.assign(Array(7).fill('--'), data.ecgdata)
     v[2] = `${v[2]} ~ ${v[3]}`
     v.splice(3, 1)

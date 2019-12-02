@@ -9,7 +9,6 @@ import "antd/lib/card/style/index.css"
 import "antd/lib/tag/style/index.css"
 interface IProps {
     data: ICacheItem
-
     bedname: string
     name: string
     age: number
