@@ -18,7 +18,8 @@
   },
   "dependencies": {
     "ramda": "^0.26.1",
-    "resize-observer-polyfill":"^1.5.1"
+    "resize-observer-polyfill":"^1.5.1",
+    "qrcode":"^1.4.4"
   },
   "devDependencies": {
     "@types/ramda": "^0.26.33"

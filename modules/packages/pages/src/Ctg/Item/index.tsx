@@ -54,7 +54,7 @@ const Item = (props: IProps) => {
             <div >
                 <span style={{ marginRight: '8px', color: '#fff' }}>{bedname}号</span>
                 {
-                    mapStatusToColor[status] && <Tag color={alarmStatus ? '#f5222d' : mapStatusToColor[status]}>
+                    mapStatusToColor[status] && <Tag style={{border:'2px solid #fff'}} color={alarmStatus ? '#f5222d' : mapStatusToColor[status]}>
                         {alarmStatus ? alarmStatus : mapStatusToText[status]}
                     </Tag>
                 }
