@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 // import { Editor } from "@lianmed/components";
 
 // const { createEditorState, toggleSelectionColor } = Editor
-const blank = '_'.repeat(6)
+const blank = '_'.repeat(4)
 const getText = (...args) => {
     const g = n => args[n] ? `_${args[n]}_` : blank;
     return `观察${g(0)}分钟，胎心基线${g(1)}bpm，胎动${g(2)}次，胎动时胎心${g(3)}bpm, 持续时间${g(4)}s，胎心振幅范围${g(5)}bpm${g(6)}NST${g(7)}反应。`
