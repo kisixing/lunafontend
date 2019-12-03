@@ -82,6 +82,7 @@ export default class DrawCTG {
     console.log('resize',this.suit.data,this.suit.viewposition,this.suit.toolbarposition,oldwidth,width);
     if (typeof (this.suit.data) != 'undefined') {
       if (this.suit.data.index > width * 2) {
+        this.suit.viewposition = Math.floor(2*width);
         if (this.suit.data.index < width * 4) {
           let len = Math.floor((width * 4 - this.suit.data.index) / 2);
           this.suit.barTool.setBarWidth(len);

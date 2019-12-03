@@ -290,19 +290,19 @@ export class WsService extends EventEmitter {
                                     //判断 是否有缺失
                                     //kisi 2019-10-19 不再请求离线
                                     //kisi 2019-12-02 静默重连后数据恢复处理启用                                   
-                                    console.log('reconnect request last:', tmpcache.last, ctgdata[key].index);
+                                    console.log('reconnect request last:', tmpcache.last,tmpcache.index, ctgdata[key].index);
                                     var flag = 0;
                                     var sflag = 0;
                                     var eflag = 0;
                                     for (let il = tmpcache.last; il < tmpcache.index; il++) {
-                                        if (!tmpcache.fhr[0][il]) {
+                                        if (!tmpcache.fhr[0][il]&&flag == 0) {
                                             if (flag == 0) {
                                                 sflag = il;
                                                 flag = 1;
                                             }
                                         } else {
                                             if (flag > 0) {
-                                                eflag = il;
+                                                eflag = tmpcache.index;
                                                 var curstamp = new Date().getTime();
                                                 if (this.offrequest < 8 && (tmpcache.orflag || curstamp - tmpcache.timestamp > this.interval)) {
                                                     tmpcache.orflag = false;
@@ -327,9 +327,7 @@ export class WsService extends EventEmitter {
                                             }
                                         }
                                     }
-                                    if(ctgdata[key].index - tmpcache.last < 5){
-                                        tmpcache.last = ctgdata[key].index;
-                                    }
+                                    tmpcache.last = ctgdata[key].index;
                                 }
                             }
                         }
@@ -501,13 +499,14 @@ export class WsService extends EventEmitter {
                 const arr = id.split('-')
                 let text = id
                 arr[0] && arr[1] && arr[0] === arr[1] && (text = arr[0])
-
-
                 if (value > 20 * 240) {
 
                     announce(text)
                     // event.emit('bed:announcer', `${text}号子机监护时间到`)
                 }
+            }
+            if (value > datacache.get(id).last) {
+                //datacache.get(id).last = value;
             }
         }
 
