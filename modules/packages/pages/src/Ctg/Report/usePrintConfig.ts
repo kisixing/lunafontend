@@ -38,9 +38,7 @@ export default (value, print_interval: number): {
         const cbe = endingTime => {
             console.log('cb')
 
-            setEndingTime(
-                endingTime
-            )
+            setEndingTime(endingTime)
         }
         value.suit && value.suit.on('startTime', cb).on('endTime', cbe)
         return () => {
