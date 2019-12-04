@@ -10,7 +10,7 @@ export * from './utils'
 
 const ANNOUNCE_INTERVAL = 100
 
-const { Working, Stopped, Offline } = BedStatus
+const { Working, Stopped, Offline, OfflineStopped } = BedStatus
 
 export class WsService extends EventEmitter {
     static wsStatus: typeof EWsStatus = EWsStatus
@@ -179,8 +179,11 @@ export class WsService extends EventEmitter {
                                         datacache.get(cachebi).status = Working;
                                     } else if (devdata.beds[bi].is_working == 1) {
                                         datacache.get(cachebi).status = Stopped;
-                                    } else {
+                                    } else if (devdata.beds[bi].is_working == 1) {
                                         datacache.get(cachebi).status = Offline;
+                                    } else {
+                                        datacache.get(cachebi).status = OfflineStopped;
+
                                     }
                                     //debugger
                                     if (devdata.beds[bi].pregnancy) {
@@ -290,12 +293,12 @@ export class WsService extends EventEmitter {
                                     //判断 是否有缺失
                                     //kisi 2019-10-19 不再请求离线
                                     //kisi 2019-12-02 静默重连后数据恢复处理启用                                   
-                                    console.log('reconnect request last:', tmpcache.last,tmpcache.index, ctgdata[key].index);
+                                    console.log('reconnect request last:', tmpcache.last, tmpcache.index, ctgdata[key].index);
                                     var flag = 0;
                                     var sflag = 0;
                                     var eflag = 0;
                                     for (let il = tmpcache.last; il < tmpcache.index; il++) {
-                                        if (!tmpcache.fhr[0][il]&&flag == 0) {
+                                        if (!tmpcache.fhr[0][il] && flag == 0) {
                                             if (flag == 0) {
                                                 sflag = il;
                                                 flag = 1;
@@ -387,7 +390,7 @@ export class WsService extends EventEmitter {
                         //     if (!devdata) continue;
                         // }
                     } else if (received_msg.name == 'update_status') {
-                        console.log('update_status', received_msg.data)
+                        console.log('update_status 11111', received_msg.data)
                         // 状态机处理
                         var statusdata = received_msg.data;
                         var id = statusdata.device_no;
@@ -400,8 +403,10 @@ export class WsService extends EventEmitter {
                             datacache.get(cachbi).status = Working;
                         } else if (statusdata.status == 1) {
                             datacache.get(cachbi).status = Stopped;
-                        } else {
+                        } else if (statusdata.status == 2) {
                             datacache.get(cachbi).status = Offline;
+                        } else {
+                            datacache.get(cachbi).status = OfflineStopped;
                         }
                         console.log('update_status', datacache.get(cachbi))
                         datacache.get(cachbi).pregnancy = statusdata.pregnancy ? JSON.parse(statusdata.pregnancy) : null;
@@ -461,11 +466,12 @@ export class WsService extends EventEmitter {
                     } else if (received_msg.name == 'end_work') {
                         //结束监护页
                         let devdata = received_msg.data;
+                        debugger
                         let curid = Number(devdata['device_no']) + '-' + Number(devdata['bed_no']);
                         if (datacache.get(curid).pregnancy == null) {
-                            console.log('end_work', datacache.get(curid),devdata['doc_id']);
+                            console.log('end_work', datacache.get(curid), devdata['doc_id']);
                             //cleardata(datacache, curid, datacache.get(curid).fetal_num);
-                            clearbyrest(datacache.get(curid).docid,devdata.is_working);
+                            clearbyrest(datacache.get(curid).docid, devdata.is_working);
                         }
                     } else if (received_msg.name == 'heard') {
                         //heard
@@ -521,24 +527,28 @@ export class WsService extends EventEmitter {
             }
         }
 
-        function clearbyrest(doc_id: string,is_working : number) {
+        function clearbyrest(doc_id: string, is_working: number) {
             request.get(`/bedinfos?documentno.equals=${doc_id}`).then(responseData => {
                 let vt = doc_id.split('_');
                 let curid = vt[0] + '-' + vt[1];
                 console.log(doc_id, curid, responseData);
                 if (responseData) {
-                    if(responseData['pregnancy'] == null){
+                    if (responseData['pregnancy'] == null) {
                         cleardata(datacache, curid, datacache.get(curid).fetal_num);
                     }
                     if (is_working == 0) {
                         datacache.get(curid).status = Working;
+                    } else if (is_working === 3) {
+                        datacache.get(curid).status = OfflineStopped;
+
                     } else {
                         datacache.get(curid).status = Stopped;
-                    }                   
+
+                    }
                     //this.refresh('end_work');
                 }
             })
-            
+
         }
 
         function getoffline(queue: Queue, doc_id: string, offlineend: number, offstart: boolean) {

@@ -52,7 +52,7 @@ const Item = (props: IProps) => {
     const renderExtra = (bedname: string, status: BedStatus) => {
         return (
             <div >
-                <span style={{ marginRight: '8px', color: '#fff' }}>{bedname}号</span>
+                <span style={{ marginRight: '8px', color: '#fff' }}>{bedname}</span>
                 {
                     mapStatusToColor[status] && <Tag style={{border:'2px solid #fff'}} color={alarmStatus ? '#f5222d' : mapStatusToColor[status]}>
                         {alarmStatus ? alarmStatus : mapStatusToText[status]}

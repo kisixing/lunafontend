@@ -12,6 +12,7 @@ export enum BedStatus {
     Working = 1,
     Stopped,
     Offline,
+    OfflineStopped
 }
 export enum EWsEvents {
     pong = "pong",
