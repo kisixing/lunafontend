@@ -355,7 +355,7 @@ export class Suit extends Draw {
     this.drawobj = null;
     this.barTool = null;
   }
-  resize() {
+  _resize() {
     // this.log('resize');
     this.drawobj.resize();
   }

@@ -19,7 +19,8 @@
   "dependencies": {
     "umi-request": "^1.2.5",
     "store": "^2.0.12",
-    "react-pdf": "^4.1.0"
+    "react-pdf": "^4.1.0",
+    "styled-components":"4.4.1"
   },
   "repository": {
     "type": "git",

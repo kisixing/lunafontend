@@ -25,7 +25,7 @@ const Preview = (props: IProps) => {
                 }
             ]} colors={['#07A9FE', '#fff']} value={diagnosis} style={{ height: '100%', border: 0 }} onChange={setDiagnosis} controls={['text-color', 'line-height', 'subscript']}>
             </Editor> */}
-            <Input.TextArea value={value} onChange={e => onChange(e.target.value)} style={{ height: '100%', lineHeight: 2 }} />
+            <Input.TextArea value={value} onChange={e => onChange(e.target.value)} style={{ height: 240, lineHeight: 2 }} />
         </div>
     );
 }

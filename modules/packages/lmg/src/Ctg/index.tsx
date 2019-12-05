@@ -16,7 +16,7 @@ export default (props: IProps) => {
     onReady = (s: Drawer) => { },
     ...others
   } = props
-  let barTool: IBarTool;
+  const barTool = useRef<IBarTool>(null)
   const canvasgrid = useRef<Canvas>(null);
   const canvasdata = useRef<Canvas>(null);
   const canvasline = useRef<Canvas>(null);
@@ -37,7 +37,7 @@ export default (props: IProps) => {
       canvasselect.current,
       canvasanalyse.current,
       ctgBox.current,
-      barTool,
+      barTool.current,
       suitType
     )
     onReady(instance)
@@ -79,7 +79,7 @@ export default (props: IProps) => {
           </div>
         )
       }
-      <ScrollBar box={box} getBarTool={tool => { barTool = tool }} />
+      <ScrollBar box={box} getBarTool={tool => { barTool.current = tool }} />
     </div>
   );
 };

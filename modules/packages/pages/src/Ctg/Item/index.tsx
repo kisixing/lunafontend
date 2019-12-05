@@ -5,6 +5,7 @@ import { Ctg as L } from '@lianmed/lmg';
 import useItemAlarm from "./useItemAlarm";
 import { BedStatus, ICacheItem, mapStatusToColor, mapStatusToText } from "@lianmed/lmg/lib/services/WsService";
 import { Drawer } from '@lianmed/lmg/lib/interface';
+import styled from 'styled-components';
 import "antd/lib/card/style/index.css"
 import "antd/lib/tag/style/index.css"
 interface IProps {
@@ -28,7 +29,11 @@ interface IItemTitle {
     startTime?: string
     age?: number
 }
-
+const SB = styled(Button)`
+    :hover {
+        background: rgba(255,255,255,.2)
+    }
+`
 const Item = (props: IProps) => {
     const { data, bedname, onClose, onDoubleClick, loading, onSuitRead, themeColor = 'rgb(74, 20, 140)' } = props;
     const status = data && data.status
@@ -49,29 +54,29 @@ const Item = (props: IProps) => {
     }
 
     // item右上角icon
-    const renderExtra = (bedname: string, status: BedStatus) => {
+    const RenderExtra = () => {
         return (
             <div >
                 <span style={{ marginRight: '8px', color: '#fff' }}>{bedname}</span>
                 {
-                    mapStatusToColor[status] && <Tag style={{border:'2px solid #fff'}} color={alarmStatus ? '#f5222d' : mapStatusToColor[status]}>
+                    mapStatusToColor[status] && <Tag style={{ border: '2px solid #fff' }} color={alarmStatus ? '#f5222d' : mapStatusToColor[status]}>
                         {alarmStatus ? alarmStatus : mapStatusToText[status]}
                     </Tag>
                 }
-                {onClose && <Button
+                {onClose && <SB
                     title="关闭监护窗口"
                     icon="close"
                     size="small"
                     type="link"
                     style={{ color: "#fff" }}
                     onClick={onClose}
-                ></Button>}
+                ></SB>}
             </div >
         );
     };
 
     // 床位信息
-    const renderTilte = () => {
+    const RenderTilte = () => {
         const text = (
             <span>
                 {
@@ -86,24 +91,16 @@ const Item = (props: IProps) => {
             </span>
         )
         // 是否已经建档绑定孕册
-        return (
-            <Tooltip title={text}>
-                {text}
-            </Tooltip>
-        );
+        return (<Tooltip title={text}>{text}</Tooltip>);
     };
 
     return (
 
         <Card
             size="small"
-            title={renderTilte()}
-            style={{
-                height: '100%',
-                overflow: 'hidden',
-                userSelect: 'none'
-            }}
-            extra={renderExtra(bedname, status)}
+            title={<RenderTilte />}
+            style={{ height: '100%', overflow: 'hidden', userSelect: 'none' }}
+            extra={<RenderExtra />}
             headStyle={{ background: themeColor, color: '#fff' }}
             bodyStyle={{ padding: 0, height: 'calc(100% - 38px)' }}
         >

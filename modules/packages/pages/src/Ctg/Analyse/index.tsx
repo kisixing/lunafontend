@@ -31,8 +31,8 @@ function Analysis({
   }
   return (
     <Context.Provider value={v}>
-      <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-        <div style={{ flex: 1, padding: 24, marginBottom: 24, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px' }}>
+      <div style={{ height: '100%' }}>
+        <div style={{ height:`calc(100% - 420px - 24px)`, padding: 24, marginBottom: 24, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px' }}>
           <CTGChart ctgData={ctgData} />
         </div>
         <div style={{ height: 420 }}>

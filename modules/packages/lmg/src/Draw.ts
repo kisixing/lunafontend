@@ -9,17 +9,18 @@ export default class Draw extends EventEmitter implements Drawer {
     wrap: HTMLElement
     constructor() {
         super()
-        console.log('resize', this)
     }
     log = console.log.bind(console, this.constructor.name, this.sid)
     destroy() { }
     init(data: any) { }
     resize() {
-        const rect = this.wrap.getBoundingClientRect();
-        const { width, height } = rect;
-        this.width = width
-        this.height = height
-        this._resize()
+        setTimeout(() => {
+            const rect = this.wrap.getBoundingClientRect();
+            const { width, height } = rect;
+            this.width = width
+            this.height = height
+            this._resize()
+        }, 300)
     }
     _resize() {
 

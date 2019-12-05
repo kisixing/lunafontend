@@ -21,7 +21,6 @@ export default (...args) => {
         // setDiagnosis(toggleSelectionColor(diagnosis, '#005cc5'))
     }
     useEffect(() => {
-        console.log(diagnosis)
     }, [diagnosis])
     return {
         diagnosis, setDiagnosis, fn

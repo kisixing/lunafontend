@@ -34,12 +34,12 @@ const PrintPreview = (props: IProps) => {
     const v = useMemo(() => { return {} }, []);
     return (
         <Context.Provider value={v}>
-            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }} ref={inputEl}>
+            <div style={{ height: '100%' }} ref={inputEl}>
                 <div style={{ height: 240, textAlign: 'center' }}>
                     <Preview wh={wh} {...props} />
                 </div>
                 <div style={{
-                    flex: 1,
+                    height:`calc(100% - 250px)`,
                     padding: 24,
                     marginTop: 12,
                     border: '1px solid #d9d9d9',
