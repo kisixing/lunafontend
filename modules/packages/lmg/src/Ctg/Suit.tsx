@@ -139,7 +139,9 @@ export class Suit extends Draw {
       }
     }
     this.createBar();
-
+    
+    this.drawobj.showcur(0,false);
+    this.startingBar.setOffset(0);
     if (this.type > 0) {
       //kisi 2019-10-29 测试增加analyse属性
       // console.log(this.data);
