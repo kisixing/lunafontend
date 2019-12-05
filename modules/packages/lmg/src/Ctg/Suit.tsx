@@ -296,6 +296,7 @@ export class Suit extends Draw {
         this.selectend = 0;
         //this.endingBar.toggleVisibility();
         // console.log('print_lock', this.selectstart, this.data.index);
+        this.selectrpstart = this.selectstart;
         this.selectrpend = this.data.index < this.selectrpstart + this.printlen ? this.data.index : this.selectrpstart + this.printlen
         this.drawobj.showselect(this.selectrpstart, this.selectrpend);
         this.endingBar.setVisibility(false);
