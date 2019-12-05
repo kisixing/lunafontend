@@ -14,13 +14,11 @@ export default class Draw extends EventEmitter implements Drawer {
     destroy() { }
     init(data: any) { }
     resize() {
-        setTimeout(() => {
-            const rect = this.wrap.getBoundingClientRect();
-            const { width, height } = rect;
-            this.width = width
-            this.height = height
-            this._resize()
-        }, 300)
+        const rect = this.wrap.getBoundingClientRect();
+        const { width, height } = rect;
+        this.width = width
+        this.height = height
+        this._resize()
     }
     _resize() {
 

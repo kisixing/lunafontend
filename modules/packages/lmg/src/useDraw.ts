@@ -14,6 +14,7 @@ export default (data: any, box: any, onReady: () => Drawer, onResize?: () => voi
         let resizeObserver = new ResizeObserver(() => {
             onResize && onResize()
             instance.resize()
+            window.hasOwnProperty('ResizeObserver') || setTimeout(instance.resize.bind(instance), 300)
         });
         resizeObserver.observe(box.current);
         return () => {

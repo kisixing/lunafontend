@@ -64,10 +64,9 @@ export default class DrawCTG {
     this.starttime = suit.starttime;
   }
   resize() {
-    const rect = this.suit.wrap.getBoundingClientRect();
-    const { width, height } = rect;
+    const { width, height } = this.suit;
     const oldwidth = JSON.parse(JSON.stringify(this.suit.canvasline.width));
-    console.log('resize',oldwidth);
+    console.log('resize', oldwidth);
     this.suit.canvasline.width = width;
     this.suit.canvasline.height = height;
     this.suit.canvasselect.width = width;
@@ -79,23 +78,23 @@ export default class DrawCTG {
     this.suit.canvasanalyse.width = width;
     this.suit.canvasanalyse.height = height;
     this.yspan = (height - this.scalespan - this.basetop) / (this.max + 100 - this.min);
-    console.log('resize',this.suit.data,this.suit.viewposition,this.suit.toolbarposition,oldwidth,width);
+    console.log('resize', this.suit.data, this.suit.viewposition, this.suit.toolbarposition, oldwidth, width);
     if (typeof (this.suit.data) != 'undefined') {
       if (this.suit.data.index > width * 2) {
-        this.suit.viewposition = Math.floor(2*width);
+        this.suit.viewposition = Math.floor(2 * width);
         if (this.suit.data.index < width * 4) {
           let len = Math.floor((width * 4 - this.suit.data.index) / 2);
           this.suit.barTool.setBarWidth(len);
         } else {
           this.suit.barTool.setBarWidth(100);
         }
-        this.suit.barTool.setBarLeft(Math.floor(this.suit.toolbarposition*width/oldwidth), false);
-      } 
-      this.drawdot(this.suit.viewposition,false);
+        this.suit.barTool.setBarLeft(Math.floor(this.suit.toolbarposition * width / oldwidth), false);
+      }
+      this.drawdot(this.suit.viewposition, false);
     } else {
-      this.drawgrid(width*2,false);
+      this.drawgrid(width * 2, false);
     }
-    if(this.suit.selectstartposition>width){
+    if (this.suit.selectstartposition > width) {
       this.suit.startingBar.setOffset(width);
     }
   }
@@ -151,7 +150,7 @@ export default class DrawCTG {
     // }
     // linecontext.stroke();
   }
-  drawdot(cur,isemit) {
+  drawdot(cur, isemit) {
     const { suit, linecontext, max, analysecontext } = this;
     const { fhr, toco, fm } = suit.data;
     if (typeof (fhr[0]) == "undefined") {
@@ -160,7 +159,7 @@ export default class DrawCTG {
     }
     this.drawgrid(cur);
     if (suit.type == 0) {
-      this.showcur(cur,isemit);
+      this.showcur(cur, isemit);
     }
     var lastx = 0;
     var lasty = 0;
@@ -579,7 +578,7 @@ export default class DrawCTG {
     }
     gridcontext.stroke();
   };
-  showcur = (x: number,eventemit:boolean) => {
+  showcur = (x: number, eventemit: boolean) => {
     const { suit, datacontext } = this;
     const { fhr, toco } = suit.data;
     let curpostion = 10;
@@ -609,15 +608,15 @@ export default class DrawCTG {
         curvalue = fhr[i][x];
         if (curvalue == "0") {
           curvalue = '-- --';
-        }else{
+        } else {
           datacontext.fillStyle = suit.ctgconfig.alarmcolor;
           if (suit.ctgconfig.alarm_enable && fhr[i][x] > suit.ctgconfig.alarm_high) {
-            if(eventemit){
+            if (eventemit) {
               this.suit.alarmOn('心率过高');
             }
             alarm = 1;
           } else if (suit.ctgconfig.alarm_enable && fhr[i][x] < suit.ctgconfig.alarm_low) {
-            if(eventemit){
+            if (eventemit) {
               this.suit.alarmOn('心率过低');
             }
             alarm = 1;
