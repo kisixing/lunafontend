@@ -7,7 +7,7 @@ export default class ScrollEl extends EventEmitter {
         const el = this.el = document.createElement('div')
         this.wrapper = wrapper;
         el.addEventListener('mousedown', this.moveCb)
-        wrapper.append(el)
+        wrapper.appendChild(el)
         el.setAttribute('style', `background:red;position:absolute;user-select:none`)
     }
     setStyle(key: string, value: string | number) {
