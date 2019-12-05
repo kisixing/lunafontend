@@ -612,22 +612,27 @@ export default class DrawCTG {
           datacontext.fillStyle = suit.ctgconfig.alarmcolor;
           if (suit.ctgconfig.alarm_enable && fhr[i][x] > suit.ctgconfig.alarm_high) {
             if (eventemit) {
+              console.log('心率过高',fhr[i][x] );
               this.suit.alarmOn('心率过高');
             }
             alarm = 1;
+            this.suit.alarm = alarm;
           } else if (suit.ctgconfig.alarm_enable && fhr[i][x] < suit.ctgconfig.alarm_low) {
             if (eventemit) {
+              console.log('心率过低',fhr[i][x] );
               this.suit.alarmOn('心率过低');
             }
             alarm = 1;
+            this.suit.alarm = alarm;
           }
           else {
             datacontext.fillStyle = suit.ctgconfig.fhrcolor[i];
           }
         }
       }
-      if (alarm == 0 && suit.ctgconfig.alarm_enable && fhr[i][x - 2] && (fhr[i][x - 2] > suit.ctgconfig.alarm_high || fhr[i][x - 2] < suit.ctgconfig.alarm_low)) {
+      if (alarm == 0 && suit.ctgconfig.alarm_enable && this.suit.alarm==1) {
         this.suit.alarmOff('');
+        this.suit.alarm = alarm;
       }
       //kisi todo 2019-11-14 增加3胎的备注
       if (i == 0) {

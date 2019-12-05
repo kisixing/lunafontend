@@ -30,6 +30,7 @@ export class Suit extends Draw {
   scollscale = 1;
   buffersize = 16;
   curr = -16;
+  alarm = 0; //报警状态
   ctgconfig = {
     normalarea: 'rgb(224,255,255)',
     selectarea: 'rgba(192,192,192,0.5)',
