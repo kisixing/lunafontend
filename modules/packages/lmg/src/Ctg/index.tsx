@@ -26,7 +26,7 @@ export default (props: IProps) => {
   const ctgBox = useRef<Div>(null);
   const ctg = useRef<Drawer>(null)
   const ecg = useRef<Drawer>(null)
-  const [ecgHeight, setEcgHeight] = useState(50)
+  const [ecgHeight, setEcgHeight] = useState(0)
 
 
   useDraw(data, ctgBox, () => {
@@ -65,7 +65,7 @@ export default (props: IProps) => {
           </div>
         )
       }
-      <div style={{ height: showEcg ? `calc(100% - ${ecgHeight}px)` : `100%`, position: 'relative' }} ref={ctgBox}>
+      <div style={{ height: ecgHeight && showEcg ? `calc(100% - ${ecgHeight}px)` : `100%`, position: 'relative' }} ref={ctgBox}>
         <canvas style={canvasStyles} ref={canvasgrid} />
         <canvas style={canvasStyles} ref={canvasline} />
         <canvas style={canvasStyles} ref={canvasdata} />
@@ -73,7 +73,7 @@ export default (props: IProps) => {
         <canvas style={canvasStyles} ref={canvasanalyse} />
       </div>
       {
-        showEcg && (
+        ecgHeight && showEcg && (
           <div style={{ height: ecgHeight, overflow: 'hidden' }} >
             <Ecg data={data} onReady={e => ecg.current = e} />
           </div>
