@@ -466,7 +466,6 @@ export class WsService extends EventEmitter {
                     } else if (received_msg.name == 'end_work') {
                         //结束监护页
                         let devdata = received_msg.data;
-                        debugger
                         let curid = Number(devdata['device_no']) + '-' + Number(devdata['bed_no']);
                         if (datacache.get(curid).pregnancy == null) {
                             console.log('end_work', datacache.get(curid), devdata['doc_id']);
