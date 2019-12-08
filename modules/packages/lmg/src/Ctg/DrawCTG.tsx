@@ -583,12 +583,25 @@ export default class DrawCTG {
     const { fhr, toco } = suit.data;
     let curpostion = 10;
     let curvalue = '-- --';
+    let startx = x;
     let fontsize = Math.floor(suit.canvasline.height / 20);
     if (fontsize < 16)
       fontsize = 16;
     datacontext.clearRect(0, 0, fontsize * 10, fontsize * 5);
     datacontext.textAlign = 'left';
-    datacontext.textBaseline = 'top';
+    datacontext.textBaseline = 'top'; 
+    if (typeof (fhr[0]) == "undefined") {
+      return;
+    }
+    if(x<suit.data.index+1){
+      for(let i=startx;i>0;i--){
+        if(typeof(fhr[0][x]) != "undefined"){
+          x = i;
+          break;
+        }
+      }
+    }
+    //console.log('showcur',x,suit.data.index,suit.data.csspan);
     //datacontext.font = 'bold ' + fontsize + 'px arial';
     let alarm = 0;
     let label = '';
@@ -612,14 +625,14 @@ export default class DrawCTG {
           datacontext.fillStyle = suit.ctgconfig.alarmcolor;
           if (suit.ctgconfig.alarm_enable && fhr[i][x] > suit.ctgconfig.alarm_high) {
             if (eventemit) {
-              console.log('心率过高',fhr[i][x] );
+              //console.log('心率过高',fhr[i][x] );
               this.suit.alarmOn('心率过高');
             }
             alarm = 1;
             this.suit.alarm = alarm;
           } else if (suit.ctgconfig.alarm_enable && fhr[i][x] < suit.ctgconfig.alarm_low) {
             if (eventemit) {
-              console.log('心率过低',fhr[i][x] );
+              //console.log('心率过低',fhr[i][x] );
               this.suit.alarmOn('心率过低');
             }
             alarm = 1;
@@ -635,13 +648,21 @@ export default class DrawCTG {
         this.suit.alarm = alarm;
       }
       //kisi todo 2019-11-14 增加3胎的备注
+      //kisi 2019-12-08 对象修改到 suit.data
+      //console.log('fetalposition',suit.data.fetalposition);
       if (i == 0) {
-        label = suit.fetalposition.fhr1;
+        if(suit.data.fetalposition && typeof(suit.data.fetalposition.fhr1)!='undefined'){
+          label = suit.data.fetalposition.fhr1;
+        }
       } else if (i == 1) {
-        label = suit.fetalposition.fhr2;
+        if(suit.data.fetalposition && typeof(suit.data.fetalposition.fhr2)!='undefined'){
+          label = suit.data.fetalposition.fhr2;
+        }
         offsetfhr = ' ' + this.fhroffset;
       } else if (i == 2) {
-        label = suit.fetalposition.fhr3;
+        if(suit.data.fetalposition && typeof(suit.data.fetalposition.fhr3)!='undefined'){
+          label = suit.data.fetalposition.fhr3;
+        }
         offsetfhr = ' ' + -this.fhroffset;
       } else {
         label = '';

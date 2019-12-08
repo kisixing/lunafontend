@@ -39,6 +39,11 @@ export interface ICacheItem {
         name: string
         outpatientNO: string
     };
+    fetalposition:{
+        fhr1: '',
+        fhr2: '',
+        fhr3: ''
+    };
     status: BedStatus;
     orflag: boolean;
     starttime: string;
@@ -66,4 +71,5 @@ interface IBed {
     is_include_mother: boolean;
     is_working: number;
     pregnancy: string;
+    fetalposition: string;
 }
