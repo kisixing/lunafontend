@@ -1,15 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { event } from "@lianmed/utils";
 import { Suit } from "@lianmed/lmg/lib/Ctg/Suit";
-import { throttle } from "lodash";
 
 export default (suit: Suit) => {
     const [alarmStatus, setAlarmStatus] = useState<string>(null)
-
+    const _setAlarmStatus = useCallback((alarmType) => {
+        setAlarmStatus(alarmType)
+    }, [])
     useEffect(() => {
-        const _setAlarmStatus = throttle((alarmType) => {
-            (alarmType !== alarmStatus) && setAlarmStatus(alarmType)
-        }, 0)
+
         const onCb = (alarmType: string) => {
             event.emit(`Suit:alarmOn`, alarmType)
             _setAlarmStatus(alarmType)
