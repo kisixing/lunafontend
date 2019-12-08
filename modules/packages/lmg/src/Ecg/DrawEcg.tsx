@@ -61,6 +61,7 @@ export class DrawEcg extends Draw {
     super()
     const { canvas, canvasline, canvasmonitor } = args;
     const { width, height } = canvas;
+    canvas.style.letterSpacing = '5px';
     Object.assign(this, {
       ...args,
       width,
@@ -125,7 +126,7 @@ export class DrawEcg extends Draw {
 
   DrawDatatext() {
     const { datactx, data, height, width } = this;
-    const keys = ['脉率bpm', '血氧%', '体温°C', '心率bpm', '呼吸（次/分）', '血压(S/D/M)mmHg'];
+    const keys = ['脉率bpm', '血氧%', '体温℃', '心率bpm', '呼吸(次/分)', '血压(S/D/M)mmHg'];
     const v = Object.assign(Array(7).fill('--'), data.ecgdata)
     v[2] = `${v[2]} ~ ${v[3]}`
     v.splice(3, 1)
@@ -133,31 +134,35 @@ export class DrawEcg extends Draw {
     datactx.clearRect(0, 0, width, height);
 
     if (height > 60) {
+      // 大屏显示
       const V = (height) / 6;
       let size = V / 2;
       let D = 10;
       datactx.fillStyle = "#000";
-      datactx.font = size - 2 + "px bold 黑体";
+      datactx.font = `normal ${size}px 黑体`;
       datactx.textAlign = 'right';
       datactx.textAlign = "center";
       datactx.textBaseline = "middle";
 
       entries.forEach(([k, v], i) => {
-        const isRight = i > 2
-        const x = (isRight ? 10 : 26)
-        const y = D + (i % 3) * V + 3 * size
+        const isRight = i > 2;
+        const x = (isRight ? 10 : 26);
+        const y = D + (i % 3) * V + 3 * size;
         datactx.fillText(`${k}`, width - size * x, y);
         datactx.fillText(`${v}`, width - size * (x - 8), y);
       })
-
     } else {
+      // 小屏显示时
       const d = width / 6
-      let size = 16;
+      let size = 14;
       let D = 14;
       datactx.fillStyle = "#eee";
       datactx.fillRect(0, 0, width, height)
-      datactx.fillStyle = "#666";
-      datactx.font = size + "px bold 黑体";
+      if (width < 622) {
+        size = 12;
+      }
+      datactx.font = `normal ${size}px 黑体`;
+      datactx.fillStyle = "#000";
       datactx.textAlign = "center";
       datactx.textBaseline = "middle";
 
@@ -166,7 +171,6 @@ export class DrawEcg extends Draw {
         datactx.fillText(`${k}`, x, D);
         datactx.fillText(`${v || ''}`, x, 2.5 * D);
       })
-
     }
   }
 
