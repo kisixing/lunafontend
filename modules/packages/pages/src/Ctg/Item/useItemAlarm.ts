@@ -8,7 +8,7 @@ export default (suit: Suit) => {
 
     useEffect(() => {
         const _setAlarmStatus = throttle((alarmType) => {
-            setAlarmStatus(alarmType)
+            (alarmType !== alarmStatus) && setAlarmStatus(alarmType)
         }, 0)
         const onCb = (alarmType: string) => {
             event.emit(`Suit:alarmOn`, alarmType)
