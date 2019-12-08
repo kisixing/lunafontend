@@ -602,7 +602,7 @@ export default class DrawCTG {
         }
       }
     }
-    //console.log('showcur',x,suit.data.index,suit.data.csspan);
+    //console.log('showcur',x,suit.data.index,suit.data.csspan,suit.data.fetalposition,suit);
     //datacontext.font = 'bold ' + fontsize + 'px arial';
     let alarm = 0;
     let label = '';
@@ -627,14 +627,14 @@ export default class DrawCTG {
           datacontext.fillStyle = suit.ctgconfig.alarmcolor;
           if (suit.ctgconfig.alarm_enable && fhr[i][x] > suit.ctgconfig.alarm_high) {
             if (eventemit) {
-              //console.log('心率过高',fhr[i][x] );
+              console.log('心率过高',fhr[i][x] );
               this.suit.alarmOn('心率过高');
             }
             alarm = 1;
             this.suit.alarm = alarm;
           } else if (suit.ctgconfig.alarm_enable && fhr[i][x] < suit.ctgconfig.alarm_low) {
             if (eventemit) {
-              //console.log('心率过低',fhr[i][x] );
+              console.log('心率过低',fhr[i][x] );
               this.suit.alarmOn('心率过低');
             }
             alarm = 1;
@@ -646,6 +646,8 @@ export default class DrawCTG {
         }
       }
       if (alarm == 0 && suit.ctgconfig.alarm_enable && this.suit.alarm==1) {
+        
+        console.log('恢复',fhr[i][x],alarm,this.suit.alarm);
         this.suit.alarmOff('');
         this.suit.alarm = alarm;
       }

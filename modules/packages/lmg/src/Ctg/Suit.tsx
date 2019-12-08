@@ -406,7 +406,7 @@ export class Suit extends Draw {
 
   //胎心数据处理
   InitFileData(oriobj) {
-    let CTGDATA = { fhr: [[], [], []], toco: [], fm: [], fetal_num: 2, index: 0, starttime: '', analyse: { acc: [], dec: [], baseline: [], start: 0, end: 0 } };
+    let CTGDATA = { fhr: [[], [], []], toco: [], fm: [], fetal_num: 2, index: 0, starttime: '',fetalposition:{}, analyse: { acc: [], dec: [], baseline: [], start: 0, end: 0 } };
     if (oriobj.docid) {
       let pureidarr: string[] = oriobj.docid.split('_');
       let pureid = pureidarr[2]
@@ -414,10 +414,8 @@ export class Suit extends Draw {
     }
     if (typeof (oriobj.fetalposition) != 'undefined' && oriobj.fetalposition != null && oriobj.fetalposition != '') {
       let positionobj = JSON.parse(oriobj.fetalposition);
-      
-      // this.setfetalpositionbyobj(positionobj);
-      //console.log(this.fetalposition);
-      this.data.fetalposition = positionobj
+      CTGDATA.fetalposition = positionobj
+      console.log(oriobj.fetalposition,typeof this.data.fetalposition,this.data.fetalposition,this);
     }
     Object.keys(oriobj).forEach(key => {
       let oridata = oriobj[key];
