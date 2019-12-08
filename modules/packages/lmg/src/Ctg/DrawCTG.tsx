@@ -170,7 +170,8 @@ export default class DrawCTG {
     var start = cur - suit.canvasline.width * 2 > 0 ? cur - suit.canvasline.width * 2 : 0;
     //Draw FHR multiply 
     let alarmstate = 0;
-    for (var fetal = 0; fetal < suit.fetalcount; fetal++) {
+    //kisi 2019-12-08 fetalcount 修改为 fetal_num
+    for (var fetal = 0; fetal < suit.data.fetal_num; fetal++) {
       //start 统一为画布的位置点，需根据显示采样率调整取值
       //TODO : kisi 增加多胎偏移处理
       //TODO : kisi 2019-10-08 待增加曲线颜色设置
@@ -607,7 +608,8 @@ export default class DrawCTG {
     let label = '';
     let span = '';
     let offsetfhr = '';
-    for (let i = 0; i < suit.fetalcount; i++) {
+    //kisi 2019-12-08 fetalcount 修改为 fetal_num
+    for (let i = 0; i < suit.data.fetal_num; i++) {
       label = '';
       offsetfhr = '';
       span = '';

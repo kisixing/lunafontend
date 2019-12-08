@@ -127,7 +127,6 @@ export class Suit extends Draw {
     this.initFlag = true
     let defaultinterval = 500;
     this.data = data;
-    this.fetalcount = data.fetal_num;
     this.currentdot = data.index;
     if (data.status) {
       this.type = 0
@@ -135,7 +134,6 @@ export class Suit extends Draw {
       this.type = 1;
       if (typeof (data.index) == 'undefined') {
         this.data = this.InitFileData(data);
-        this.fetalcount = this.data.fetal_num;
       }
     }
     this.createBar();
@@ -455,6 +453,9 @@ export class Suit extends Draw {
     return CTGDATA;
   }
 
+  //TODO: 增加 断网事件，接收到断网事件后，drawdot 方法停止
+  //所有suit的状态位置，隐藏状态
+  //
   drawdot() {
     if (this.data.starttime && this.data.starttime != '' && this.data.status == 1 && this.data.index > 0) {
       if (isNaN(this.data.csspan))

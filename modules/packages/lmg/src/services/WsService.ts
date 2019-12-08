@@ -485,8 +485,11 @@ export class WsService extends EventEmitter {
                         // console.log(2222, new Date(servertime.replace(/-/g,'/')), +new Date());
                     } else if(received_msg.name == 'push_event_alarm'){
                         //kisi 2019-12-08 增加 事件推送
+                        //device_no\bed_no\doc_id\event_alarm_id\event_alarm_status\
                         let devdata = received_msg.data;
-                        
+                        if(devdata.event_alarm_id){
+                            
+                        }
                     }
                 }
             };
