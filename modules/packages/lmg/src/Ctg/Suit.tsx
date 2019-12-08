@@ -11,6 +11,7 @@ let sid = 0;
 type Canvas = HTMLCanvasElement;
 type Context = CanvasRenderingContext2D;
 export class Suit extends Draw {
+  isOn: boolean
   emitInterval: number
   static option: { [x: string]: string }
   option = Suit.option
@@ -137,7 +138,7 @@ export class Suit extends Draw {
       }
     }
     this.createBar();
-    this.drawobj.showcur(0,false);
+    this.drawobj.showcur(0, false);
     this.startingBar.setOffset(0);
     if (this.type > 0) {
       //kisi 2019-10-29 测试增加analyse属性
@@ -362,22 +363,23 @@ export class Suit extends Draw {
   }
   //kisi 2019-11-14 update fhr position
   setfetalposition(fhr1, fhr2, fhr3) {
+    
     this.data.fetalposition.fhr1 = fhr1;
     this.data.fetalposition.fhr2 = fhr2;
     this.data.fetalposition.fhr3 = fhr3;
   }
   //kisi 2019-12-08 update fhr position
-  setfetalpositionbyobj(position) {
-    if(typeof(position.fhr1)!='undefined'){
-      this.data.fetalposition.fhr1 = position.fhr1;
-    }
-    if(typeof(position.fhr2)!='undefined'){
-      this.data.fetalposition.fhr2 = position.fhr2;
-    }
-    if(typeof(position.fhr3)!='undefined'){
-      this.data.fetalposition.fhr3 = position.fhr3;
-    }
-  }
+  // setfetalpositionbyobj(position) {
+  //   if (typeof (position.fhr1) != 'undefined') {
+  //     this.data.fetalposition.fhr1 = position.fhr1;
+  //   }
+  //   if (typeof (position.fhr2) != 'undefined') {
+  //     this.data.fetalposition.fhr2 = position.fhr2;
+  //   }
+  //   if (typeof (position.fhr3) != 'undefined') {
+  //     this.data.fetalposition.fhr3 = position.fhr3;
+  //   }
+  // }
   //kisi 2019-11-21 同步移动barTool
   updateBarTool() {
     this.updateSelectCur();
@@ -410,10 +412,12 @@ export class Suit extends Draw {
       let pureid = pureidarr[2]
       CTGDATA.starttime = convertstarttime(pureid)
     }
-    if(typeof(oriobj.fetalposition) !='undefined' && oriobj.fetalposition!=null && oriobj.fetalposition != ''){
+    if (typeof (oriobj.fetalposition) != 'undefined' && oriobj.fetalposition != null && oriobj.fetalposition != '') {
       let positionobj = JSON.parse(oriobj.fetalposition);
-      this.setfetalpositionbyobj(positionobj);
+      
+      // this.setfetalpositionbyobj(positionobj);
       //console.log(this.fetalposition);
+      this.data.fetalposition = positionobj
     }
     Object.keys(oriobj).forEach(key => {
       let oridata = oriobj[key];

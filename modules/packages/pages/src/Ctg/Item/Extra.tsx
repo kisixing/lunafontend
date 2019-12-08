@@ -1,5 +1,5 @@
 import React, { } from 'react';
-import { Tag, Button, Popconfirm } from 'antd';
+import { Tag, Button } from 'antd';
 
 import useItemAlarm from "./useItemAlarm";
 import { mapStatusToColor, mapStatusToText, BedStatus } from "@lianmed/lmg/lib/services/WsService";
@@ -41,26 +41,14 @@ const C = (props: IProps) => {
             {
                 onClose &&
                 (
-                    alarmStatus ? (
-                        <Popconfirm title={`${alarmStatus}，确认关闭？`} onConfirm={onClose} placement="left">
-                            <SB
-                                title="关闭监护窗口"
-                                icon="close"
-                                size="small"
-                                type="link"
-                                style={{ color: "#fff" }}
-                            ></SB>
-                        </Popconfirm>
-                    ) : (
-                            <SB
-                                title="关闭监护窗口"
-                                icon="close"
-                                size="small"
-                                type="link"
-                                style={{ color: "#fff" }}
-                                onClick={onClose}
-                            ></SB>
-                        )
+                    <SB
+                        title="关闭监护窗口"
+                        icon="close"
+                        size="small"
+                        type="link"
+                        style={{ color: "#fff" }}
+                        onClick={onClose}
+                    ></SB>
                 )
 
 

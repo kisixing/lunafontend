@@ -6,6 +6,7 @@ import { EWsStatus, BedStatus, ICache, IDevice, EWsEvents } from './types'
 import { getEmptyCacheItem, cleardata, convertstarttime } from "./utils";
 export * from './types'
 export * from './utils'
+export * from './useCheckNetwork'
 // import pingpong from "./pingpong";
 
 const ANNOUNCE_INTERVAL = 100
@@ -483,12 +484,12 @@ export class WsService extends EventEmitter {
                         let servertime = convertstarttime(devdata.time);
                         this.span = Math.floor(new Date(servertime).getTime() / 1000 - new Date().getTime() / 1000) * 4 - 12;
                         // console.log(2222, new Date(servertime.replace(/-/g,'/')), +new Date());
-                    } else if(received_msg.name == 'push_event_alarm'){
+                    } else if (received_msg.name == 'push_event_alarm') {
                         //kisi 2019-12-08 增加 事件推送
                         //device_no\bed_no\doc_id\event_alarm_id\event_alarm_status\
                         let devdata = received_msg.data;
-                        if(devdata.event_alarm_id){
-                            
+                        if (devdata.event_alarm_id) {
+
                         }
                     }
                 }
