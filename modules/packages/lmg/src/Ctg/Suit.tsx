@@ -461,7 +461,7 @@ export class Suit extends Draw {
   //所有suit的状态位置，隐藏状态
   //
   drawdot() {
-    if (this.data.starttime && this.data.starttime != '' && this.data.status == 1 && this.data.index > 0) {
+    if (this.data.starttime && this.data.starttime != '' && this.data.status == 1 && this.data.index > 0 && this.isOn) {
       if (isNaN(this.data.csspan))
         return;
       this.curr = (Math.floor(new Date().getTime() / 1000) - Math.floor(new Date(this.data.starttime).getTime() / 1000)) * 4 + this.data.csspan;
