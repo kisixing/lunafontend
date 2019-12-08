@@ -9,9 +9,9 @@ export function useCheckNetwork(fn?: (isOn: boolean) => void) {
         fn && fn(isOn)
     }, [])
     useEffect(() => {
-        WsService._this.on(EWsEvents.pong, cb)
+        WsService._this && WsService._this.on(EWsEvents.pong, cb)
         return () => {
-            WsService._this.off(EWsEvents.pong, cb)
+            WsService._this && WsService._this.off(EWsEvents.pong, cb)
         }
     }, [])
     return [v]
