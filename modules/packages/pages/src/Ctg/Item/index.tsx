@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Card, Button, Tag, Tooltip } from 'antd';
+import { Card, Button, Tooltip } from 'antd';
 import moment from 'moment';
 import { Ctg as L } from '@lianmed/lmg';
-import useItemAlarm from "./useItemAlarm";
-import { BedStatus, ICacheItem, mapStatusToColor, mapStatusToText } from "@lianmed/lmg/lib/services/WsService";
+import { ICacheItem } from "@lianmed/lmg/lib/services/WsService";
 import { Drawer } from '@lianmed/lmg/lib/interface';
+import AlarmStatus from "./AlarmStatus";
 import styled from 'styled-components';
 import "antd/lib/card/style/index.css"
 import "antd/lib/tag/style/index.css"
@@ -22,13 +22,7 @@ interface IProps {
     onSuitRead?: (s: Drawer) => void
     themeColor?: string
 }
-interface IItemTitle {
-    bedNO?: string
-    GP?: string
-    name?: string
-    startTime?: string
-    age?: number
-}
+
 const SB = styled(Button)`
     :hover {
         background: rgba(255,255,255,.2)
@@ -39,30 +33,15 @@ const Item = (props: IProps) => {
     const status = data && data.status
     const ismulti = data && data.ismulti
     let { bedNO, GP, name, age, startTime, } = props
-
-    const [cache, setCache] = useState<IItemTitle>({})
     const [suit, setSuit] = useState(null)
-    const [alarmStatus] = useItemAlarm(suit)
-    if (status === BedStatus.Stopped) {
-        bedNO = cache.bedNO
-        GP = cache.GP
-        name = cache.name
-        age = cache.age
-        startTime = cache.startTime
-    } else {
-        bedNO !== cache.bedNO && name !== cache.name && setCache({ bedNO, GP, name, age, startTime, })
-    }
+
 
     // item右上角icon
     const RenderExtra = () => {
         return (
             <div >
                 <span style={{ marginRight: '8px', color: '#fff' }}>{bedname}号</span>
-                {
-                    mapStatusToColor[status] && <Tag style={{ border: '2px solid #fff' }} color={alarmStatus ? '#f5222d' : mapStatusToColor[status]}>
-                        {alarmStatus ? alarmStatus : mapStatusToText[status]}
-                    </Tag>
-                }
+                <AlarmStatus status={status} suit={suit} />
                 {onClose && <SB
                     title="关闭监护窗口"
                     icon="close"
