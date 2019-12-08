@@ -1,5 +1,5 @@
 import React, { } from 'react';
-import { Tag, Button } from 'antd';
+import { Tag, Button, Popconfirm } from 'antd';
 
 import useItemAlarm from "./useItemAlarm";
 import { mapStatusToColor, mapStatusToText, BedStatus } from "@lianmed/lmg/lib/services/WsService";
@@ -13,6 +13,7 @@ interface IProps {
     suit: Suit
     onClose?: (e: React.MouseEvent) => void
     bedname: string
+
 }
 
 
@@ -28,6 +29,7 @@ const C = (props: IProps) => {
     return (
         <>
             <span style={{ marginRight: '8px', color: '#fff' }}>{bedname}号</span>
+
             {
                 !!mapStatusToColor[status] && (
                     <Tag style={{ border: '2px solid #fff' }} color={alarmStatus ? '#f5222d' : mapStatusToColor[status]}>
@@ -37,14 +39,31 @@ const C = (props: IProps) => {
                 )
             }
             {
-                onClose && <SB
-                    title="关闭监护窗口"
-                    icon="close"
-                    size="small"
-                    type="link"
-                    style={{ color: "#fff" }}
-                    onClick={onClose}
-                ></SB>
+                onClose &&
+                (
+                    alarmStatus ? (
+                        <Popconfirm title={`${alarmStatus}，确认关闭？`} onConfirm={onClose} placement="left">
+                            <SB
+                                title="关闭监护窗口"
+                                icon="close"
+                                size="small"
+                                type="link"
+                                style={{ color: "#fff" }}
+                            ></SB>
+                        </Popconfirm>
+                    ) : (
+                            <SB
+                                title="关闭监护窗口"
+                                icon="close"
+                                size="small"
+                                type="link"
+                                style={{ color: "#fff" }}
+                                onClick={onClose}
+                            ></SB>
+                        )
+                )
+
+
             }
         </>
     )
