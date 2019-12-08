@@ -33,6 +33,7 @@ export function getEmptyCacheItem(base = null): ICacheItem {
         orflag: true,
         starttime: '',
         pregnancy: null,
+        fetalposition: {fhr1:'',fhr2:'',fhr3:''},
         fetal_num: 1,
         csspan: NaN,
         ismulti: false,

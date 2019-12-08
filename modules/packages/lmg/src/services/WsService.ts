@@ -6,6 +6,7 @@ import { EWsStatus, BedStatus, ICache, IDevice, EWsEvents } from './types'
 import { getEmptyCacheItem, cleardata, convertstarttime } from "./utils";
 export * from './types'
 export * from './utils'
+export * from './useCheckNetwork'
 // import pingpong from "./pingpong";
 
 const ANNOUNCE_INTERVAL = 100
@@ -188,6 +189,9 @@ export class WsService extends EventEmitter {
                                     //debugger
                                     if (devdata.beds[bi].pregnancy) {
                                         datacache.get(cachebi).pregnancy = JSON.parse(devdata.beds[bi].pregnancy);
+                                    }
+                                    if (devdata.beds[bi].fetalposition) {
+                                        datacache.get(cachebi).fetalposition = JSON.parse(devdata.beds[bi].fetalposition);
                                     }
                                     datacache.get(cachebi).fetal_num = devdata.beds[bi].fetal_num;
                                     for (let fetal = 0; fetal < devdata.beds[bi].fetal_num; fetal++) {
@@ -410,6 +414,7 @@ export class WsService extends EventEmitter {
                         }
                         console.log('update_status', datacache.get(cachbi))
                         datacache.get(cachbi).pregnancy = statusdata.pregnancy ? JSON.parse(statusdata.pregnancy) : null;
+                        datacache.get(cachbi).fetalposition = statusdata.fetalposition ? JSON.parse(statusdata.fetalposition) : null;
                         this.refresh('update_status')
                     } else if (received_msg.name == 'push_data_ecg') {
                         //TODO 解析母亲应用层数据包
@@ -479,6 +484,13 @@ export class WsService extends EventEmitter {
                         let servertime = convertstarttime(devdata.time);
                         this.span = Math.floor(new Date(servertime).getTime() / 1000 - new Date().getTime() / 1000) * 4 - 12;
                         // console.log(2222, new Date(servertime.replace(/-/g,'/')), +new Date());
+                    } else if (received_msg.name == 'push_event_alarm') {
+                        //kisi 2019-12-08 增加 事件推送
+                        //device_no\bed_no\doc_id\event_alarm_id\event_alarm_status\
+                        let devdata = received_msg.data;
+                        if (devdata.event_alarm_id) {
+
+                        }
                     }
                 }
             };

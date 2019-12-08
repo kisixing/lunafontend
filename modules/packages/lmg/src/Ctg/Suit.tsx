@@ -11,6 +11,7 @@ let sid = 0;
 type Canvas = HTMLCanvasElement;
 type Context = CanvasRenderingContext2D;
 export class Suit extends Draw {
+  isOn: boolean
   emitInterval: number
   static option: { [x: string]: string }
   option = Suit.option
@@ -127,7 +128,6 @@ export class Suit extends Draw {
     this.initFlag = true
     let defaultinterval = 500;
     this.data = data;
-    this.fetalcount = data.fetal_num;
     this.currentdot = data.index;
     if (data.status) {
       this.type = 0
@@ -135,12 +135,10 @@ export class Suit extends Draw {
       this.type = 1;
       if (typeof (data.index) == 'undefined') {
         this.data = this.InitFileData(data);
-        this.fetalcount = this.data.fetal_num;
       }
     }
     this.createBar();
-    
-    this.drawobj.showcur(0,false);
+    this.drawobj.showcur(0, false);
     this.startingBar.setOffset(0);
     if (this.type > 0) {
       //kisi 2019-10-29 测试增加analyse属性
@@ -365,11 +363,23 @@ export class Suit extends Draw {
   }
   //kisi 2019-11-14 update fhr position
   setfetalposition(fhr1, fhr2, fhr3) {
-    this.fetalposition.fhr1 = fhr1;
-    this.fetalposition.fhr2 = fhr2;
-    this.fetalposition.fhr3 = fhr3;
+    
+    this.data.fetalposition.fhr1 = fhr1;
+    this.data.fetalposition.fhr2 = fhr2;
+    this.data.fetalposition.fhr3 = fhr3;
   }
-
+  //kisi 2019-12-08 update fhr position
+  // setfetalpositionbyobj(position) {
+  //   if (typeof (position.fhr1) != 'undefined') {
+  //     this.data.fetalposition.fhr1 = position.fhr1;
+  //   }
+  //   if (typeof (position.fhr2) != 'undefined') {
+  //     this.data.fetalposition.fhr2 = position.fhr2;
+  //   }
+  //   if (typeof (position.fhr3) != 'undefined') {
+  //     this.data.fetalposition.fhr3 = position.fhr3;
+  //   }
+  // }
   //kisi 2019-11-21 同步移动barTool
   updateBarTool() {
     this.updateSelectCur();
@@ -401,6 +411,13 @@ export class Suit extends Draw {
       let pureidarr: string[] = oriobj.docid.split('_');
       let pureid = pureidarr[2]
       CTGDATA.starttime = convertstarttime(pureid)
+    }
+    if (typeof (oriobj.fetalposition) != 'undefined' && oriobj.fetalposition != null && oriobj.fetalposition != '') {
+      let positionobj = JSON.parse(oriobj.fetalposition);
+      
+      // this.setfetalpositionbyobj(positionobj);
+      //console.log(this.fetalposition);
+      this.data.fetalposition = positionobj
     }
     Object.keys(oriobj).forEach(key => {
       let oridata = oriobj[key];
@@ -440,8 +457,11 @@ export class Suit extends Draw {
     return CTGDATA;
   }
 
+  //TODO: 增加 断网事件，接收到断网事件后，drawdot 方法停止
+  //所有suit的状态位置，隐藏状态
+  //
   drawdot() {
-    if (this.data.starttime && this.data.starttime != '' && this.data.status == 1 && this.data.index > 0) {
+    if (this.data.starttime && this.data.starttime != '' && this.data.status == 1 && this.data.index > 0 && this.isOn) {
       if (isNaN(this.data.csspan))
         return;
       this.curr = (Math.floor(new Date().getTime() / 1000) - Math.floor(new Date(this.data.starttime).getTime() / 1000)) * 4 + this.data.csspan;

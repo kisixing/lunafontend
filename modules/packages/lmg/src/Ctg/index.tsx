@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Suit } from './Suit';
 import { IBarTool } from '../ScrollBar/useScroll';
 import ScrollBar from '../ScrollBar';
@@ -6,6 +6,7 @@ import Ecg from "../Ecg";
 import { IProps, Canvas, Div, Drawer } from "../interface";
 import useDraw from "../useDraw";
 import Loading from './Loading'
+import { useCheckNetwork } from '../services/WsService';
 export default (props: IProps) => {
   const {
     data,
@@ -24,7 +25,7 @@ export default (props: IProps) => {
   const canvasanalyse = useRef<Canvas>(null);
   const box = useRef<Div>(null);
   const ctgBox = useRef<Div>(null);
-  const ctg = useRef<Drawer>(null)
+  const ctg = useRef<Suit>(null)
   const ecg = useRef<Drawer>(null)
   const [ecgHeight, setEcgHeight] = useState(0)
 
@@ -55,6 +56,8 @@ export default (props: IProps) => {
   //   ctg.current && ctg.current.resize()
   //   ecg.current && ecg.current.resize()
   // }, [ecgHeight])
+  useCheckNetwork(isOn => ctg.current && (ctg.current.isOn = isOn))
+
   const canvasStyles: React.CSSProperties = { position: 'absolute' }
   return (
     <div style={{ width: '100%', height: '100%' }} ref={box} {...others}>
