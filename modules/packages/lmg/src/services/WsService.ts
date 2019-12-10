@@ -9,7 +9,7 @@ export * from './utils'
 export * from './useCheckNetwork'
 // import pingpong from "./pingpong";
 
-const ANNOUNCE_INTERVAL = 100
+const ANNOUNCE_INTERVAL = 1000
 
 const { Working, Stopped, Offline, OfflineStopped } = BedStatus
 
@@ -180,7 +180,7 @@ export class WsService extends EventEmitter {
                                         datacache.get(cachebi).status = Working;
                                     } else if (devdata.beds[bi].is_working == 1) {
                                         datacache.get(cachebi).status = Stopped;
-                                    } else if (devdata.beds[bi].is_working == 1) {
+                                    } else if (devdata.beds[bi].is_working == 2) {
                                         datacache.get(cachebi).status = Offline;
                                     } else {
                                         datacache.get(cachebi).status = OfflineStopped;
@@ -513,13 +513,8 @@ export class WsService extends EventEmitter {
             } else if (value >= datacache.get(id).index) {
 
                 datacache.get(id).index = value;
-                const arr = id.split('-')
-                let text = id
-                arr[0] && arr[1] && arr[0] === arr[1] && (text = arr[0])
                 if (value > 20 * 240) {
-
-                    announce(text)
-                    // event.emit('bed:announcer', `${text}号子机监护时间到`)
+                    announce(id)
                 }
             }
             if (value > datacache.get(id).last) {

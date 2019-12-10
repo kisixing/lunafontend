@@ -7,6 +7,7 @@ import { convertstarttime } from "../services/utils";
 import { throttle } from "lodash";
 import { ICacheItem } from '../services/WsService';
 import Draw from '../Draw';
+import bindEvents from "./bindEvents";
 let sid = 0;
 type Canvas = HTMLCanvasElement;
 type Context = CanvasRenderingContext2D;
@@ -21,7 +22,7 @@ export class Suit extends Draw {
   startingBar: ScrollEl;
   endingBar: ScrollEl;
   intervalIds: NodeJS.Timeout[] = [];
-  data: any;
+  data: ICacheItem;
   starttime = '2019-09-26';
   fetalcount = 1;
   type = 0; // 0 实时数据，1 历史数据
@@ -86,6 +87,7 @@ export class Suit extends Draw {
     type: number,
   ) {
     super()
+    bindEvents.call(this)
     this.wrap = wrap;
     this.canvasgrid = canvasgrid;
     this.canvasdata = canvasdata;
@@ -179,6 +181,7 @@ export class Suit extends Draw {
       }
       this.updateSelectCur();
       this.drawobj.drawdot(this.viewposition, false);
+      this.log(this.viewposition,len)
     });
     this.barTool.watchGrab(value => {
       if (this.type == 0 && this.data.past > 0) {
@@ -287,54 +290,7 @@ export class Suit extends Draw {
       this.emit('endTime', this.selectrpend)
     })
 
-    this.on('locking', value => {
-      //更新状态
-      // console.log('print_locking', value);
-      this.selectflag = value;
-      if (this.selectflag) {
-        this.startingBar.toggleVisibility();
-        this.barTool.setBarWidth(0);
-        this.selectend = 0;
-        //this.endingBar.toggleVisibility();
-        // console.log('print_lock', this.selectstart, this.data.index);
-        this.selectrpstart = this.selectstart;
-        this.selectrpend = this.data.index < this.selectrpstart + this.printlen ? this.data.index : this.selectrpstart + this.printlen
-        this.drawobj.showselect(this.selectrpstart, this.selectrpend);
-        this.endingBar.setVisibility(false);
-        this.emit('endTime', this.selectrpend);
-      } else {
-        this.startingBar.toggleVisibility();
-        //this.endingBar.toggleVisibility();
-        this.endingBar.setVisibility(false);
-        // console.log(this.selectstart, this.data.index);
-        this.drawobj.showselect(0, 0);
-      }
-    })
-      .on('customizing', value => {
-        // this.log('customizing', value, this.selectrpend, this.viewposition);
-        if (value && this.selectflag) {
-          this.selectend = 1;
-          if (this.data.index < this.canvasline.width * 2) {
-            this.endingBar.setVisibility(true);
-            this.endingBar.setOffset(Math.floor(this.viewposition / 2));
-          }
-          else if (this.viewposition - this.selectrpend >= 0) {
-            this.endingBar.setVisibility(true);
-            this.endingBar.setOffset(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
-          }
-        } else {
-          this.selectend = 0;
-          this.endingBar.setVisibility(false);
-        }
-      })
-      .on('setStartingTime', value => {
-        // this.log('setStartingTime', value);
 
-      })
-      .on('setEndingTime', value => {
-        // this.log('setEndingTime', value);
-
-      })
   }
   lockStartingBar(status: boolean) {
     // console.log('lockStartingBar', status)
@@ -363,7 +319,7 @@ export class Suit extends Draw {
   }
   //kisi 2019-11-14 update fhr position
   setfetalposition(fhr1, fhr2, fhr3) {
-    
+
     this.data.fetalposition.fhr1 = fhr1;
     this.data.fetalposition.fhr2 = fhr2;
     this.data.fetalposition.fhr3 = fhr3;
@@ -406,7 +362,7 @@ export class Suit extends Draw {
 
   //胎心数据处理
   InitFileData(oriobj) {
-    let CTGDATA = { fhr: [[], [], []], toco: [], fm: [], fetal_num: 2, index: 0, starttime: '',fetalposition:{}, analyse: { acc: [], dec: [], baseline: [], start: 0, end: 0 } };
+    let CTGDATA = { fhr: [[], [], []], toco: [], fm: [], fetal_num: 2, index: 0, starttime: '', fetalposition: {}, analyse: { acc: [], dec: [], baseline: [], start: 0, end: 0 } };
     if (oriobj.docid) {
       let pureidarr: string[] = oriobj.docid.split('_');
       let pureid = pureidarr[2]
@@ -415,7 +371,7 @@ export class Suit extends Draw {
     if (typeof (oriobj.fetalposition) != 'undefined' && oriobj.fetalposition != null && oriobj.fetalposition != '') {
       let positionobj = JSON.parse(oriobj.fetalposition);
       CTGDATA.fetalposition = positionobj
-      console.log(oriobj.fetalposition,typeof this.data.fetalposition,this.data.fetalposition,this);
+      console.log(oriobj.fetalposition, typeof this.data.fetalposition, this.data.fetalposition, this);
     }
     Object.keys(oriobj).forEach(key => {
       let oridata = oriobj[key];
