@@ -31,11 +31,11 @@ export default function (this: Suit) {
                 this.selectend = 1;
                 if (this.data.index < this.canvasline.width * 2) {
                     this.endingBar.setVisibility(true);
-                    this.endingBar.setOffset(Math.floor(this.viewposition / 2));
+                    this.endingBar.setLeft(Math.floor(this.viewposition / 2));
                 }
                 else if (this.viewposition - this.selectrpend >= 0) {
                     this.endingBar.setVisibility(true);
-                    this.endingBar.setOffset(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
+                    this.endingBar.setLeft(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
                 }
             } else {
                 this.selectend = 0;

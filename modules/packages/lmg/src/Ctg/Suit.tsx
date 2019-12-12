@@ -21,6 +21,7 @@ export class Suit extends Draw {
   log = console.log.bind(console, 'suit', this.sid)
   startingBar: ScrollEl;
   endingBar: ScrollEl;
+  rowline: ScrollEl;
   intervalIds: NodeJS.Timeout[] = [];
   data: ICacheItem;
   starttime = '2019-09-26';
@@ -139,9 +140,10 @@ export class Suit extends Draw {
         this.data = this.InitFileData(data);
       }
     }
+    this.createLine()
     this.createBar();
     this.drawobj.showcur(0, false);
-    this.startingBar.setOffset(0);
+    this.startingBar.setLeft(0);
     if (this.type > 0) {
       //kisi 2019-10-29 测试增加analyse属性
       // console.log(this.data);
@@ -181,7 +183,7 @@ export class Suit extends Draw {
       }
       this.updateSelectCur();
       this.drawobj.drawdot(this.viewposition, false);
-      this.log(this.viewposition,len)
+      this.log(this.viewposition, len)
     });
     this.barTool.watchGrab(value => {
       if (this.type == 0 && this.data.past > 0) {
@@ -201,7 +203,7 @@ export class Suit extends Draw {
         this.drawobj.drawdot(this.viewposition, false);
         if (this.selectflag) {
           if (this.selectend == 1) {
-            this.endingBar.setOffset(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
+            this.endingBar.setLeft(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
           }
           this.drawobj.showselect(this.selectrpstart, this.selectrpend);
         }
@@ -225,7 +227,7 @@ export class Suit extends Draw {
         if (this.selectend == 1 && this.viewposition - this.selectrpend > -2) {
           this.endingBar.setVisibility(true);
           //this.endingBar.setOffset(this.selectrpend / 2);
-          this.endingBar.setOffset(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
+          this.endingBar.setLeft(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
         } else {
           this.endingBar.setVisibility(false);
         }
@@ -246,6 +248,38 @@ export class Suit extends Draw {
   alarmOff(alarmType: string) {
     this.lazyEmit('alarmOff', alarmType)
   }
+
+  createLine() {
+    if (this.rowline) return
+    const { barTool } = this
+
+    const { rowline, addDot, setBase } = barTool.createHLine('结束')
+
+    // 横线监听y变化
+    this.rowline = rowline.on('change:y', v => {
+      console.log('rowline', v)
+    })
+
+    // 添加点
+    const dot0 = addDot({ left: 10 })
+    const dot1 = addDot({ left: 100 })
+
+    rowline.setStyle('background', 'red')
+    dot0.setStyle('background', 'green')
+
+    // 点监听x变化
+    dot1.on('change:x', v => {
+      console.log('dot1', v)
+    })
+
+    // 隐藏示例
+    const dot2 = addDot({ left: 100 })
+    dot2.setVisibility(false)
+
+    // 最后设置位置
+    setBase(200)
+
+  }
   createBar() {
     if (this.startingBar && this.endingBar) {
       return
@@ -253,7 +287,9 @@ export class Suit extends Draw {
     const { barTool } = this
     const startingBar = this.startingBar = barTool.createRod('')
     const endingBar = this.endingBar = barTool.createRod('结束')
-    startingBar.setOffset(0)
+
+
+    startingBar.setLeft(0)
     //endingBar.setOffset(100)
     endingBar.toggleVisibility()
     startingBar.on('change', value => {
@@ -450,7 +486,7 @@ export class Suit extends Draw {
       var curstamp = new Date().getTime();
       if (curstamp - this.dragtimestamp > this.interval) {
         if (this.selectstartposition != 0) {
-          this.startingBar.setOffset(0);
+          this.startingBar.setLeft(0);
         }
         this.drawdot();
       }

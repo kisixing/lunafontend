@@ -95,7 +95,7 @@ export default class DrawCTG {
       this.drawgrid(width * 2, false);
     }
     if (this.suit.selectstartposition > width) {
-      this.suit.startingBar.setOffset(width);
+      this.suit.startingBar.setLeft(width);
     }
   }
   drawgrid(cur, drawtimespan = true) {

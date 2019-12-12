@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useImperativeHandle, Ref, forwardRef } from 'react';
 import { Suit } from './Suit';
 import { IBarTool } from '../ScrollBar/useScroll';
 import ScrollBar from '../ScrollBar';
@@ -7,7 +7,8 @@ import { IProps, Canvas, Div, Drawer } from "../interface";
 import useDraw from "../useDraw";
 import Loading from './Loading'
 import { useCheckNetwork } from '../services/WsService';
-export default (props: IProps) => {
+import { Rect, Line, FancyCanvas } from "../FancyCanvas";
+export default forwardRef((props: IProps, ref: Ref<any>) => {
   const {
     data,
     mutableSuitObject = { suit: null },
@@ -58,9 +59,20 @@ export default (props: IProps) => {
   // }, [ecgHeight])
   useCheckNetwork(isOn => ctg.current && (ctg.current.isOn = isOn))
 
+  useImperativeHandle(ref, () => ({
+    on(e: string, fn: (...args: any[]) => void) {
+      ctg.current && ctg.current.on(e, fn)
+    },
+    emit(e: string, ...args: any[]) {
+      ctg.current && ctg.current.emit(e, ...args)
+    },
+    getSuit() {
+      return ctg.current
+    }
+  }))
   const canvasStyles: React.CSSProperties = { position: 'absolute' }
   return (
-    <div style={{ width: '100%', height: '100%' }} ref={box} {...others} onContextMenu={e=>{
+    <div style={{ width: '100%', height: '100%' }} ref={box} {...others} onContextMenu={e => {
       e.preventDefault()
       e.stopPropagation()
       console.log(e)
@@ -79,6 +91,10 @@ export default (props: IProps) => {
         <canvas style={canvasStyles} ref={canvasdata} />
         <canvas style={canvasStyles} ref={canvasselect} />
         <canvas style={canvasStyles} ref={canvasanalyse} />
+        {/* <FancyCanvas style={{ position: 'absolute' }}>
+          <Line />
+          <Rect />
+        </FancyCanvas> */}
       </div>
       {
         ecgHeight && showEcg && (
@@ -88,6 +104,7 @@ export default (props: IProps) => {
         )
       }
       <ScrollBar box={box} getBarTool={tool => { barTool.current = tool }} />
+
     </div>
   );
-};
+})
