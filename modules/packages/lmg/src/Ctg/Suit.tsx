@@ -253,7 +253,7 @@ export class Suit extends Draw {
     if (this.rowline) return
     const { barTool } = this
 
-    const { rowline, addDot, setBase } = barTool.createHLine('#eee')
+    const { rowline, addDot, setBase } = barTool.createHLine('blue')
 
     // 横线监听y变化
     this.rowline = rowline.on('change:y', v => {
