@@ -9,7 +9,7 @@ export interface IBarTool {
   setBarWidth: (width: number) => void;
   setBarLeft?: TResolve;
   createRod?: (name: string) => ScrollEl
-  createHLine?: (name: string) => { rowline: ScrollEl, setBase: (n: number) => void, addDot: (obj: { width?: number, height?: number, left?: number }) => ScrollEl }
+  createHLine?: (bg: string) => { rowline: ScrollEl, setBase: (n: number) => void, addDot: (obj: { width?: number, height?: number, left?: number }) => ScrollEl }
 }
 
 function useScroll(
@@ -120,7 +120,7 @@ function useScroll(
           `
         return ins
       },
-      createHLine(name, bg = '#aaa') {
+      createHLine(bg = '#aaa') {
 
         const ins0 = new ScrollEl(wrapper.current, { lockMovementX: true }).setStyles({
           width: '100%',
