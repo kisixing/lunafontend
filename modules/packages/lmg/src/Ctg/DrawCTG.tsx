@@ -707,8 +707,8 @@ export default class DrawCTG {
   showselect = (start: number, end: number) => {
     const { suit, selectcontext } = this;
     // console.log('printin', suit.viewposition,start, end);
-    let drawwidth = suit.canvasselect.width;
-    selectcontext.clearRect(0, 0, drawwidth, suit.canvasselect.height);
+    let drawwidth = suit.width;
+    selectcontext.clearRect(0, 0, drawwidth, suit.height);
     if (end == 0) {
       return;
     }
@@ -729,17 +729,26 @@ export default class DrawCTG {
     //   end = Math.floor(end/2);
     // }
     start = start - curstart > 0 ? start - curstart : 0;
+    start = start + 4
+    const baseHeight = this.suit.height - 4
     // console.log('printts1',curstart, start/2, end);
     selectcontext.fillStyle = suit.ctgconfig.selectarea;
-    selectcontext.fillRect(start / 2, this.basetop, end - start / 2, suit.canvasselect.height - this.basetop);
+    // selectcontext.fillRect(start / 2, this.basetop, end - start / 2, suit.height - this.basetop);
     selectcontext.beginPath();
     selectcontext.strokeStyle = 'rgb(10, 10, 20)';
-    selectcontext.lineWidth = 6;
+    selectcontext.lineWidth = 4;
     selectcontext.moveTo(start / 2, this.basetop);
-    selectcontext.lineTo(start / 2, this.suit.canvasselect.height);
+    selectcontext.lineTo(start / 2, baseHeight);
+
+    
+    selectcontext.moveTo(start / 2, baseHeight);
+    selectcontext.lineTo(end, baseHeight);
+    selectcontext.moveTo(end,  this.basetop);
+    selectcontext.lineTo(start / 2,  this.basetop);
+
     if (suit.selectend == 0) {
       selectcontext.moveTo(end, this.basetop);
-      selectcontext.lineTo(end, this.suit.canvasselect.height);
+      selectcontext.lineTo(end, baseHeight);
     }
     // console.log('printts2',curstart, start/2, end);
     selectcontext.stroke();

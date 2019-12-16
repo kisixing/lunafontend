@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useImperativeHandle } from 'react';
 import { GithubPicker } from 'react-color';
 import tinycolor from 'tinycolor2';
 import { getThemeColor, applyAntdTheme, placementSketchPicker } from './util';
@@ -8,7 +8,7 @@ import { getThemeColor, applyAntdTheme, placementSketchPicker } from './util';
 //     '#00838f', '#546e7a', '#5e35b1', '#1a237e', '#311b92', '#4a148c', '#827717', '#0d47a1'
 // ]
 const colors = [
-    '#33691e', '#006064', '#d81b60','#bc5100', '#1a237e', 
+    '#33691e', '#006064', '#d81b60', '#bc5100', '#1a237e',
     '#4a148c', '#827717', '#0d47a1'
 ]
 
@@ -17,17 +17,26 @@ interface IProps {
     storageName?: string,
     style?: React.CSSProperties,
     placement?: any,
-    onChange?: (color: string) => void
+    onChange?: (color: string) => void,
+    mask?: boolean
 }
 
-const AntdThemeManipulator = (props: IProps) => {
+const A = (props: IProps, ref) => {
+
+
+
+    useImperativeHandle(ref, () => ({
+        toggle: handleClick,
+        handleChange
+    }));
 
     const {
         primaryColor = '#1890ff',
         storageName = 'custom-antd-primary-color',
         style = {},
         placement = null,
-        onChange = null
+        onChange = null,
+        mask = true
     } = props
 
     const [color, setColor] = useState(tinycolor(primaryColor).toRgb())
@@ -92,25 +101,32 @@ const AntdThemeManipulator = (props: IProps) => {
             cursor: 'auto'
         }
     };
-
+    const P = () => {
+        return (
+            <GithubPicker
+                styles={{ default: { card: { boxSizing: 'content-box' } } }}
+                triangle='hide'
+                color={color}
+                onChange={handleChange}
+                colors={colors}
+            />
+        )
+    }
     return (
         <div id='change_antd_theme_button' style={{ ...styles.swatch, ...style }} onClick={handleClick}>
             <div id='change_antd_theme_color' style={styles.color} />
             {
                 displayColorPicker
                     ? <div style={styles.popover}>
-                        <div style={styles.cover} onClick={handleClose} />
-                        <GithubPicker
-                            styles={{ default: { card: { boxSizing: 'content-box' } } }}
-                            triangle='hide'
-                            color={color}
-                            onChange={handleChange}
-                            colors={colors}
-                        />
+                        {mask && <div style={styles.cover} onClick={handleClose} />}
+                        <P />
                     </div> : null
             }
         </div>
     );
 }
-AntdThemeManipulator.colors = colors
-export { AntdThemeManipulator, getThemeColor, applyAntdTheme as changeAntdTheme }
+type T = React.ForwardRefExoticComponent<IProps & React.RefAttributes<unknown>> & { colors?: any, P?: any }
+const AntdThemeManipulator = React.forwardRef(A);
+const C: T = Object.assign(AntdThemeManipulator, { P: GithubPicker, colors })
+
+export { C as AntdThemeManipulator, getThemeColor, applyAntdTheme as changeAntdTheme }

@@ -60,7 +60,12 @@ export default (props: IProps) => {
 
   const canvasStyles: React.CSSProperties = { position: 'absolute' }
   return (
-    <div style={{ width: '100%', height: '100%' }} ref={box} {...others}>
+    <div style={{ width: '100%', height: '100%' }} ref={box} {...others} onContextMenu={e=>{
+      e.preventDefault()
+      e.stopPropagation()
+      console.log(e)
+      return false
+    }}>
       {
         loading && (
           <div style={{ position: 'absolute', width: '100%', height: '100%', background: '#fff', zIndex: 1, opacity: .8 }}>
