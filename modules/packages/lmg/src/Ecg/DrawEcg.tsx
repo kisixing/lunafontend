@@ -130,7 +130,7 @@ export class DrawEcg extends Draw {
     const v = Object.assign(Array(7).fill('--'), data.ecgdata)
     v[2] = `${v[2]} ~ ${v[3]}`
     v.splice(3, 1)
-    const entries = _R.zip(keys, v)
+    const entries = _R.zip(keys, v);
     datactx.clearRect(0, 0, width, height);
 
     if (height > 60) {
@@ -138,8 +138,8 @@ export class DrawEcg extends Draw {
       const V = (height) / 6;
       let size = V / 2;
       let D = 10;
-      datactx.fillStyle = "#000";
-      datactx.font = `normal ${size}px 黑体`;
+      datactx.fillStyle = "#222";
+      datactx.font = `normal ${size}px YaHei`;
       datactx.textAlign = 'right';
       datactx.textAlign = "center";
       datactx.textBaseline = "middle";
@@ -156,23 +156,64 @@ export class DrawEcg extends Draw {
       const d = width / 6
       let size = 14;
       let D = 14;
+      // 绘制“已填色”的矩形。默认的填充颜色是黑色.
       datactx.fillStyle = "#eee";
       datactx.fillRect(0, 0, width, height)
       if (width < 622) {
         size = 12;
       }
-      datactx.font = `normal ${size}px 黑体`;
-      datactx.fillStyle = "#000";
+      if (width < 520) {
+        size = 10;
+      }
+      datactx.font = `normal ${size}px YaHei`;
+      datactx.fillStyle = "#222";
       datactx.textAlign = "center";
       datactx.textBaseline = "middle";
 
+      // // 全部由几个字符
+      // const allByteL = Math.floor(width / size * 100) / 100;
+      // let xxx = width;
+      // for (var i = entries.length - 1; i >= 0; i--) {
+      //   const [k, v] = entries[i];
+      //   // 字符串长度
+      //   const byteL = this.getLength(k);
+      //   const w = (byteL / allByteL) * width;
+
+      //   xxx = xxx - w;
+      //   datactx.fillText(`${k}`, xxx, D, w);
+      //   datactx.fillText(`${v || ''}`, xxx, 2.5 * D, w);
+      // }
+
       entries.forEach(([k, v], i) => {
-        const x = 44 + d * i
-        datactx.fillText(`${k}`, x, D);
-        datactx.fillText(`${v || ''}`, x, 2.5 * D);
+        let x = 50 + d * i;
+        if (width < 622) {
+          x = 40 + d * i;
+        }
+
+        datactx.fillText(`${k}`, x, D, d);
+        datactx.fillText(`${v || ''}`, x, 2.5 * D, d);
       })
     }
   }
+
+  /**
+   * 获取字符串的字节长度
+   * @param  {string} val 字符串
+   * @return {number}     字节长度
+   */
+  getLength(val) {
+    var str = new String(val);
+    var bytesCount = 0;
+    for (var i = 0 ,n = str.length; i < n; i++) {
+      var c = str.charCodeAt(i);
+      if ((c >= 0x0001 && c <= 0x007e) || (0xff60<=c && c<=0xff9f)) {
+        bytesCount += 1;
+      } else {
+        bytesCount += 2;
+      }
+    }
+    return bytesCount;
+   }
 
   //kisi 2019-10-03
   //根据ws数据压入队列

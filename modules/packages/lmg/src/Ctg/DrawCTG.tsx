@@ -168,7 +168,7 @@ export default class DrawCTG {
     analysecontext.clearRect(0, 0, suit.canvasanalyse.width, suit.canvasanalyse.height)
     // 0.5 s 一个点,一个像素画两个点
     var start = cur - suit.canvasline.width * 2 > 0 ? cur - suit.canvasline.width * 2 : 0;
-    //Draw FHR multiply 
+    //Draw FHR multiply
     let alarmstate = 0;
     //kisi 2019-12-08 fetalcount 修改为 fetal_num
     for (var fetal = 0; fetal < suit.data.fetal_num; fetal++) {
@@ -209,7 +209,7 @@ export default class DrawCTG {
         }
         else {
           // 增加 报警颜色处理
-          //kisi 2019-11-08 
+          //kisi 2019-11-08
           //修复连线间变化
           if (suit.ctgconfig.alarm_enable && (lasty > suit.ctgconfig.alarm_high || lasty < suit.ctgconfig.alarm_low)) {
             let type = 1;
@@ -590,7 +590,7 @@ export default class DrawCTG {
       fontsize = 16;
     datacontext.clearRect(0, 0, fontsize * 10, fontsize * 5);
     datacontext.textAlign = 'left';
-    datacontext.textBaseline = 'top'; 
+    datacontext.textBaseline = 'top';
     if (typeof (fhr[0]) == "undefined") {
       return;
     }
@@ -646,7 +646,7 @@ export default class DrawCTG {
         }
       }
       if (alarm == 0 && suit.ctgconfig.alarm_enable && this.suit.alarm==1) {
-        
+
         console.log('恢复',fhr[i][x],alarm,this.suit.alarm);
         this.suit.alarmOff('');
         this.suit.alarm = alarm;
@@ -719,7 +719,7 @@ export default class DrawCTG {
     } else {
       end = (suit.viewposition - end) > 0 ? drawwidth - Math.floor((suit.viewposition - end) / 2) : drawwidth;
     }
-    // if(end>drawwidth*2){     
+    // if(end>drawwidth*2){
     //   end = (suit.viewposition - end) > 0 ? drawwidth - Math.floor((suit.viewposition - end) / 2) : drawwidth;
     // }else{
     //   end = Math.floor(end/2);

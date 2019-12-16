@@ -233,7 +233,7 @@ export class Suit extends Draw {
   lazyEmit = throttle((type: string, ...args: any[]) => {
     // console.log(`Suit:${type}`)
     this.emit(type, ...args)
-    // console.log('alarmtype in',type,this)  
+    // console.log('alarmtype in',type,this)
     return true
   }, this.emitInterval || 0)
   // 报警
@@ -363,7 +363,7 @@ export class Suit extends Draw {
   }
   //kisi 2019-11-14 update fhr position
   setfetalposition(fhr1, fhr2, fhr3) {
-    
+
     this.data.fetalposition.fhr1 = fhr1;
     this.data.fetalposition.fhr2 = fhr2;
     this.data.fetalposition.fhr3 = fhr3;
