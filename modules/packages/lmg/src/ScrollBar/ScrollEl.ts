@@ -47,7 +47,7 @@ export default class ScrollEl extends EventEmitter {
 
     // maxHeight() {
     //     const rect = this.wrapper.getBoundingClientRect();
-    //     var { height } = rect;
+    //     const { height } = rect;
     //     this.setStyle('height', height)
     //     this.setStyle('margin-bottom', height)
     //     return this
@@ -58,18 +58,18 @@ export default class ScrollEl extends EventEmitter {
         this.oldRect = this.getRect()
         e.stopPropagation();
         const { el, wrapper } = this
-        var { x, y } = this.getCoordInDocument(e);
+        const { x, y } = this.getCoordInDocument(e);
 
         const elRex = el.getBoundingClientRect();
-        var boxRec = wrapper.getBoundingClientRect();
-        var { left: elLeft, top: elTop } = elRex;
-        var { left: boxLeft, top: boxTop } = boxRec;
+        const boxRec = wrapper.getBoundingClientRect();
+        const { left: elLeft, top: elTop } = elRex;
+        const { left: boxLeft, top: boxTop } = boxRec;
         const xSpan = x - elLeft;
         const ySpan = y - elTop;
 
         document.onmousemove = (e) => {
             requestAnimationFrame(() => {
-                var { x, y } = this.getCoordInDocument(e);
+                const { x, y } = this.getCoordInDocument(e);
 
                 let offsetLeft = x - (boxLeft + xSpan);
                 let offsetRight = y - (boxTop + ySpan);
@@ -90,7 +90,7 @@ export default class ScrollEl extends EventEmitter {
 
         mates.forEach((_, i) => _.setPosition(offset + matesOldRect[i][direction] - oldRect[direction], true, direction))
 
-        var boxRec = wrapper.getBoundingClientRect();
+        const boxRec = wrapper.getBoundingClientRect();
         const target = el.getBoundingClientRect();
 
         const boxValue = boxRec[valueKey]
@@ -117,8 +117,8 @@ export default class ScrollEl extends EventEmitter {
 
     getCoordInDocument(e: MouseEvent) {
         e = (e as any) || window.event;
-        var x = e.pageX || e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft);
-        var y = e.pageY || e.clientY + (document.documentElement.scrollTop || document.body.scrollTop);
+        const x = e.pageX || e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft);
+        const y = e.pageY || e.clientY + (document.documentElement.scrollTop || document.body.scrollTop);
         return { x: x, y: y };
     }
 }
