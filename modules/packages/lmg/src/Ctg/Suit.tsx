@@ -292,7 +292,7 @@ export class Suit extends Draw {
     startingBar.setLeft(0)
     //endingBar.setOffset(100)
     endingBar.toggleVisibility()
-    startingBar.on('change', value => {
+    startingBar.on('change:x', value => {
       this.selectrpstart = value * 2;
       this.selectstartposition = value;
       // console.log('print_开始', value, this.viewposition, this.canvasline.width);
@@ -312,7 +312,7 @@ export class Suit extends Draw {
       this.selectrpstart = this.selectstart;
       this.emit('startTime', this.selectstart)
     })
-    endingBar.on('change', value => {
+    endingBar.on('change:x', value => {
       if (this.data.index < this.canvasline.width * 2) {
         this.selectrpend = value * 2;
       } else {

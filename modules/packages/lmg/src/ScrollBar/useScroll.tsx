@@ -87,7 +87,7 @@ function useScroll(
   const g = (): IBarTool => {
     return {
       watch(fn) {
-        bar.on('change', value => {
+        bar.on('change:x', value => {
           fn(value)
         })
       },

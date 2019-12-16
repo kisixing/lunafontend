@@ -83,40 +83,32 @@ export default class ScrollEl extends EventEmitter {
             document.onmousemove = null;
         };
     }
-    setLeft(offset: number, isfire = true) {
-        this.mates.forEach((_, i) => _.setLeft(offset + this.matesOldRect[i].left - this.oldRect.left))
+    setPosition(offset: number, isfire = true, direction: 'left' | 'top') {
+        const valueKey = direction === 'left' ? 'width' : 'height'
 
+        const { el, wrapper, mates, matesOldRect, oldRect } = this
 
-        const { el, wrapper } = this
+        mates.forEach((_, i) => _.setPosition(offset + matesOldRect[i][direction] - oldRect[direction], true, direction))
+
         var boxRec = wrapper.getBoundingClientRect();
-        const barRex = el.getBoundingClientRect();
-        var { width: boxWidth } = boxRec;
-        var { width: barWidth } = barRex;
-        const distance = boxWidth - barWidth;
-        // const b = this.lockMovementX ? -this.getRect().width : 0
+        const target = el.getBoundingClientRect();
+
+        const boxValue = boxRec[valueKey]
+        const targetValue = target[valueKey]
+
+        const distance = boxValue - targetValue;
         const result = offset <= 0 ? 0 : offset >= distance ? distance : offset;
-        if (el.style['left'] != (result + 'px')) {
-            this.setStyle('left', result);
-            if (isfire) this.emit('change', result);
-            if (isfire) this.emit('change:x', result);
+        if (el.style[direction] !== (result + 'px')) {
+            this.setStyle(direction, result);
+            isfire && this.emit(`change:${direction === 'left' ? 'x' : 'y'}`, result);
         }
+        return this
+    }
+    setLeft(offset: number, isfire = true) {
+        return this.setPosition(offset, isfire, 'left')
     }
     setTop(offset: number, isfire = true) {
-        this.mates.forEach((_, i) => _.setTop(offset + this.matesOldRect[i].top - this.oldRect.top))
-        const { el, wrapper } = this
-        var boxRec = wrapper.getBoundingClientRect();
-        const barRex = el.getBoundingClientRect();
-        var { height: boxHeight } = boxRec;
-        var { height: barHeight } = barRex;
-        const distance = boxHeight - barHeight;
-        // const b = this.lockMovementY ? -this.getRect().height : 0
-
-        const result = offset <= 0 ? 0 : offset >= distance ? distance : offset;
-        if (el.style['top'] != (result + 'px')) {
-            this.setStyle('top', result);
-            if (isfire) this.emit('change:y', result);
-
-        }
+        return this.setPosition(offset, isfire, 'top')
     }
 
     getRect() {
