@@ -44,6 +44,12 @@ export default class SiderDemo extends React.Component {
                 </span>
               }
             >
+              <Menu.Item key="0">
+                <Link to="/CtgPanel">
+                  <Icon type="user" />
+                  CtgPanel
+                </Link>
+              </Menu.Item>
               <Menu.Item key="1">
                 <Link to="/Ctg">
                   <Icon type="user" />
