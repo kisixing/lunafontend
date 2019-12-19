@@ -142,10 +142,10 @@ export class WsService extends EventEmitter {
                 // this.dirty && location.reload()
                 this.pong()
 
-                this.settingData.area_devices && this.send(JSON.stringify({
-                    name: "area_devices",
-                    data: this.settingData.area_devices
-                }))
+                // this.settingData.area_devices && this.send(JSON.stringify({
+                //     name: "area_devices",
+                //     data: this.settingData.area_devices
+                // }))
             };
             socket.onclose = (event) => {
                 // this.tip('关闭', EWsStatus.Error)
@@ -229,6 +229,9 @@ export class WsService extends EventEmitter {
                             }
                             for (let key in ctgdata) {
                                 for (let fetal = 0; fetal < tmpcache.fetal_num; fetal++) {
+                                    if (!tmpcache.fhr[fetal]) {
+                                        continue;
+                                    }
                                     if (fetal == 0) {
                                         if (ctgdata[key].fhr == 0) {
                                             continue;

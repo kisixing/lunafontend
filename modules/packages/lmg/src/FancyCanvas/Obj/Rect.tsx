@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, Props } from 'react'
+import  {  useEffect, Props } from 'react'
 import { fabric } from "fabric";
 import { ILineOptions } from 'fabric/fabric-impl';
 interface IProps extends Props<any> {

@@ -7,7 +7,6 @@ import { IProps, Canvas, Div, Drawer } from "../interface";
 import useDraw from "../useDraw";
 import Loading from './Loading'
 import { useCheckNetwork } from '../services/WsService';
-import { Rect, Line, FancyCanvas } from "../FancyCanvas";
 export default forwardRef((props: IProps, ref: Ref<any>) => {
   const {
     data,
