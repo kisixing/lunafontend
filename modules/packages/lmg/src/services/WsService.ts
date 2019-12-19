@@ -233,17 +233,20 @@ export class WsService extends EventEmitter {
                                         if (ctgdata[key].fhr == 0) {
                                             continue;
                                         }
-                                        tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr;
+                                        if(tmpcache.fhr[fetal])
+                                            tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr;
                                     } else if (fetal == 1) {
                                         if (ctgdata[key].fhr2 == 0) {
                                             continue;
                                         }
-                                        tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr2;
+                                        if(tmpcache.fhr[fetal])
+                                            tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr2;
                                     } else if (fetal == 2) {
                                         if (ctgdata[key].fhr3 == 0) {
                                             continue;
                                         }
-                                        tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr3;
+                                        if(tmpcache.fhr[fetal])
+                                            tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr3;
                                     }
                                 }
                                 //console.log(tmpcache.fetal_num,ctgdata[key].index,ctgdata[key].fhr,ctgdata[key].fhr2,tmpcache.fhr[0][ctgdata[key].index]);
@@ -350,9 +353,11 @@ export class WsService extends EventEmitter {
                             for (let key in ctgdata) {
                                 for (let fetal = 0; fetal < tmpcache.fetal_num; fetal++) {
                                     if (fetal == 0) {
-                                        tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr;
+                                        if(tmpcache.fhr[fetal])
+                                            tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr;
                                     } else {
-                                        tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr2;
+                                        if(tmpcache.fhr[fetal])
+                                            tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr2;
                                     }
                                 }
                                 tmpcache.toco[ctgdata[key].index] = ctgdata[key].toco;
