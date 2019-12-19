@@ -137,7 +137,7 @@ export class Suit extends Draw {
     } else {
       this.type = 1;
       if (typeof (data.index) == 'undefined') {
-        this.data = this.InitFileData(data);
+        this.data = this.InitFileData(data) as any;
       }
     }
     this.createLine()
