@@ -264,7 +264,7 @@ export class Suit extends Draw {
     const dot0 = addDot({ left: 10 })
     const dot1 = addDot({ left: 100 })
 
-    rowline.setStyle('background', 'red')
+    rowline.setStyle('background', '#FFCC99')
     dot0.setStyle('background', 'green')
 
     // 点监听x变化

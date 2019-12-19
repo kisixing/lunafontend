@@ -120,7 +120,7 @@ function useScroll(
           `
         return ins
       },
-      createHLine(bg = '#aaa') {
+      createHLine(bg = '#FFCC99') {
 
         const ins0 = new ScrollEl(wrapper.current, { lockMovementX: true }).setStyles({
           width: '100%',
