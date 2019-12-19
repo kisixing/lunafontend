@@ -136,9 +136,8 @@ function useScroll(
           },
           addDot({ width = 4, height = 10, left = 0 }) {
             const i = new ScrollEl(wrapper.current, { lockMovementY: true }).setStyles({
-              width,
-              background: bg,
-              height,
+              background: 'transparent',
+              border: `6px solid transparent`,
               left,
             })
             ins.push(i)

@@ -49,7 +49,7 @@ export default forwardRef((props: IProps, ref: Ref<any>) => {
       const { height } = box.current.getBoundingClientRect();
       const h = height / 5;
       let t = 0;
-      h > 50 && (t = h > 200 ? 200 : 50);
+      h > 40 && (t = h > 200 ? 200 : 40);
       setTimeout(() => setEcgHeight(t), 100)
     })
   // useLayoutEffect(() => {

@@ -265,9 +265,15 @@ export class Suit extends Draw {
     const dot1 = addDot({ left: 100 })
 
     rowline.setStyle('background', '#FFCC99')
-    dot0.setStyle('background', 'green')
-
+    // dot0.setStyle('background', 'green')
+    dot0.setStyle('border-right-color', '#AA33AA')
+    dot0.setStyle('border-bottom-color', '#AA33AA')
+    dot1.setStyle('border-left-color', '#FF2233')
+    dot1.setStyle('border-bottom-color', '#FF2233')
     // 点监听x变化
+    dot0.on('change:x', v => {
+      console.log('dot0', v)
+    })
     dot1.on('change:x', v => {
       console.log('dot1', v)
     })
