@@ -51,4 +51,7 @@ export default function (this: Suit) {
             // this.log('setEndingTime', value);
 
         })
+        .on('showLine', () => {
+            this.createLine()
+        })
 }

@@ -140,7 +140,6 @@ export class Suit extends Draw {
         this.data = this.InitFileData(data) as any;
       }
     }
-    this.createLine()
     this.createBar();
     this.drawobj.showcur(0, false);
     this.startingBar.setLeft(0);
