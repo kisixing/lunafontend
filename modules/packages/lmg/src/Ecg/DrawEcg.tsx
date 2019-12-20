@@ -204,7 +204,7 @@ export class DrawEcg extends Draw {
       datactx.textAlign = "center";
       datactx.textBaseline = "middle";
       entries.forEach(([k, v], i) => {
-        let x = 40 + d * i;
+        let x = 40 + (i > 0 ? (i > 4 ? d - 2 : (d - 6)) : d) * i;
         datactx.fillText(`${k}${v || ''}`, x, D, d);
       })
     }

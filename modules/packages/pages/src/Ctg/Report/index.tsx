@@ -4,7 +4,7 @@ import Preview from './Preview';
 
 export const Context = React.createContext({})
 
-export interface IProps {
+interface IProps {
     age: number
     docid: string
     fetalcount: number
@@ -13,7 +13,6 @@ export interface IProps {
     startdate: string
     print_interval: number
     onDownload: () => void
-    gestationalWeek?: any
 }
 
 const PrintPreview = (props: IProps) => {
