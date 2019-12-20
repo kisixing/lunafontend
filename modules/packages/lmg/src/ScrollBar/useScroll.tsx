@@ -9,6 +9,7 @@ export interface IBarTool {
   setBarWidth: (width: number) => void;
   setBarLeft?: TResolve;
   createRod?: (name: string) => ScrollEl
+  createHLine?: (bg: string) => { rowline: ScrollEl, setBase: (n: number) => void, addDot: (obj: { width?: number, height?: number, left?: number }) => ScrollEl }
 }
 
 function useScroll(
@@ -27,7 +28,7 @@ function useScroll(
   useEffect(() => {
     const boxEl = box.current;
 
-    bar = new ScrollEl(wrapper.current).setStyles({
+    bar = new ScrollEl(wrapper.current, { lockMovementY: true }).setStyles({
       background: '#4169E1',
       width: 10, height: 6, bottom: 0
     })
@@ -86,7 +87,7 @@ function useScroll(
   const g = (): IBarTool => {
     return {
       watch(fn) {
-        bar.on('change', value => {
+        bar.on('change:x', value => {
           fn(value)
         })
       },
@@ -98,9 +99,9 @@ function useScroll(
         bar.setStyles({ width })
       },
 
-      setBarLeft: bar.setOffset.bind(bar),
+      setBarLeft: bar.setLeft.bind(bar),
       createRod(name, bg = '#aaa') {
-        const ins = new ScrollEl(wrapper.current).setStyles({
+        const ins = new ScrollEl(wrapper.current, { lockMovementY: true }).setStyles({
           width: 4,
           background: bg,
           height: '100%',
@@ -118,6 +119,32 @@ function useScroll(
               <div style="margin-left:-8px; margin-top:-1px;width: 0; height: 0; border: 10px solid; border-color: ${bg} transparent transparent transparent"></div>
           `
         return ins
+      },
+      createHLine(bg = '#FFCC99') {
+
+        const ins0 = new ScrollEl(wrapper.current, { lockMovementX: true }).setStyles({
+          width: '100%',
+          background: bg,
+          height: '2px',
+        })
+        const ins = []
+        return {
+          rowline: ins0,
+          setBase(n: number) {
+            ins0.setStyle('bottom', n)
+            ins.forEach(i => i.setStyle('bottom', n + ins0.getRect().height))
+          },
+          addDot({ width = 4, height = 10, left = 0 }) {
+            const i = new ScrollEl(wrapper.current, { lockMovementY: true }).setStyles({
+              background: 'transparent',
+              border: `6px solid transparent`,
+              left,
+            })
+            ins.push(i)
+            ins0.mates.push(i)
+            return i
+          }
+        }
       }
     };
   };

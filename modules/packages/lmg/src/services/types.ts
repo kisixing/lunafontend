@@ -19,6 +19,8 @@ export enum EWsEvents {
     explode = "explode"
 }
 export interface ICacheItem {
+
+    analyse?: any;
     fhr: number[][];
     toco: number[];
     fm: number[];
@@ -39,7 +41,7 @@ export interface ICacheItem {
         name: string
         outpatientNO: string
     };
-    fetalposition:{
+    fetalposition: {
         fhr1: '',
         fhr2: '',
         fhr3: ''

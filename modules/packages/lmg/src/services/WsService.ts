@@ -142,10 +142,10 @@ export class WsService extends EventEmitter {
                 // this.dirty && location.reload()
                 this.pong()
 
-                this.settingData.area_devices && this.send(JSON.stringify({
-                    name: "area_devices",
-                    data: this.settingData.area_devices
-                }))
+                // this.settingData.area_devices && this.send(JSON.stringify({
+                //     name: "area_devices",
+                //     data: this.settingData.area_devices
+                // }))
             };
             socket.onclose = (event) => {
                 // this.tip('关闭', EWsStatus.Error)
@@ -229,21 +229,27 @@ export class WsService extends EventEmitter {
                             }
                             for (let key in ctgdata) {
                                 for (let fetal = 0; fetal < tmpcache.fetal_num; fetal++) {
+                                    if (!tmpcache.fhr[fetal]) {
+                                        continue;
+                                    }
                                     if (fetal == 0) {
                                         if (ctgdata[key].fhr == 0) {
                                             continue;
                                         }
-                                        tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr;
+                                        if (tmpcache.fhr[fetal])
+                                            tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr;
                                     } else if (fetal == 1) {
                                         if (ctgdata[key].fhr2 == 0) {
                                             continue;
                                         }
-                                        tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr2;
+                                        if (tmpcache.fhr[fetal])
+                                            tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr2;
                                     } else if (fetal == 2) {
                                         if (ctgdata[key].fhr3 == 0) {
                                             continue;
                                         }
-                                        tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr3;
+                                        if (tmpcache.fhr[fetal])
+                                            tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr3;
                                     }
                                 }
                                 //console.log(tmpcache.fetal_num,ctgdata[key].index,ctgdata[key].fhr,ctgdata[key].fhr2,tmpcache.fhr[0][ctgdata[key].index]);
@@ -264,7 +270,7 @@ export class WsService extends EventEmitter {
                                 }
                                 setcur(cachbi, ctgdata[key].index);
                                 for (let i = datacache.get(cachbi).start; i > datacache.get(cachbi).past; i--) {
-                                    if (!tmpcache.fhr[0][i]) {
+                                    if (tmpcache.fhr[0] && !tmpcache.fhr[0][i]) {
                                         var curstamp = new Date().getTime();
                                         if (this.offrequest < 8 && (tmpcache.orflag || curstamp - tmpcache.timestamp > this.interval)) {
                                             tmpcache.orflag = false;
@@ -302,7 +308,7 @@ export class WsService extends EventEmitter {
                                     var sflag = 0;
                                     var eflag = 0;
                                     for (let il = tmpcache.last; il < tmpcache.index; il++) {
-                                        if (!tmpcache.fhr[0][il] && flag == 0) {
+                                        if (tmpcache.fhr[0] && !tmpcache.fhr[0][il] && flag == 0) {
                                             if (flag == 0) {
                                                 sflag = il;
                                                 flag = 1;
@@ -350,9 +356,11 @@ export class WsService extends EventEmitter {
                             for (let key in ctgdata) {
                                 for (let fetal = 0; fetal < tmpcache.fetal_num; fetal++) {
                                     if (fetal == 0) {
-                                        tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr;
+                                        if (tmpcache.fhr[fetal])
+                                            tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr;
                                     } else {
-                                        tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr2;
+                                        if (tmpcache.fhr[fetal])
+                                            tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr2;
                                     }
                                 }
                                 tmpcache.toco[ctgdata[key].index] = ctgdata[key].toco;

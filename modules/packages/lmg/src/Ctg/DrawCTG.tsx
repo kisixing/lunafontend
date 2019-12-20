@@ -95,7 +95,7 @@ export default class DrawCTG {
       this.drawgrid(width * 2, false);
     }
     if (this.suit.selectstartposition > width) {
-      this.suit.startingBar.setOffset(width);
+      this.suit.startingBar.setLeft(width);
     }
   }
   drawgrid(cur, drawtimespan = true) {
@@ -620,7 +620,7 @@ export default class DrawCTG {
         return;
       }
       if (typeof (fhr[i][x]) != "undefined") {
-        curvalue = fhr[i][x];
+        curvalue = fhr[i][x] as any;
         if (curvalue == "0") {
           curvalue = '-- --';
         } else {
@@ -687,7 +687,7 @@ export default class DrawCTG {
     }
     datacontext.fillStyle = suit.ctgconfig.tococolor;
     if (typeof (toco[x]) != "undefined") {
-      curvalue = toco[x];
+      curvalue = toco[x] as any;
     } else {
       curvalue = '-- --';
     }

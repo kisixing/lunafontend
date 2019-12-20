@@ -153,10 +153,9 @@ export class DrawEcg extends Draw {
       })
     } else {
       // 小屏显示时
-      const d = width / 6
+      const d = width / 6 + -2
       let size = 14;
-      let D = 14;
-      // 绘制“已填色”的矩形。默认的填充颜色是黑色.
+      let D = 12;
       datactx.fillStyle = "#eee";
       datactx.fillRect(0, 0, width, height)
       if (width < 622) {
@@ -244,7 +243,7 @@ export class DrawEcg extends Draw {
   timerEcg(dely) {
     let id = setInterval(() => {
       if (!this) {
-        console.log('ecg','clear interval');
+        console.log('ecg', 'clear interval');
         clearInterval(id);
       }
       this.DrawDatatext();
@@ -294,7 +293,7 @@ export class DrawEcg extends Draw {
       isstop = false;
       return;
     }
-    if (this.data.ecg.GetSize() < points_one_times*5) {
+    if (this.data.ecg.GetSize() < points_one_times * 5) {
       this.start = NaN;
       isstop = false;
       return;

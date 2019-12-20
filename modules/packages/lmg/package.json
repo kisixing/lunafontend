@@ -14,10 +14,12 @@
     "lib"
   ],
   "dependencies": {
-    "lodash":"^4.17.15"
+    "lodash": "^4.17.15",
+    "fabric": "^3.5.1"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.108"
+    "@types/lodash": "^4.14.108",
+    "@types/fabric": "^3.5.0"
   },
   "repository": {
     "type": "git",

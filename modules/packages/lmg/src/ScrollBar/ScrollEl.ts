@@ -1,9 +1,21 @@
 import { EventEmitter } from "@lianmed/utils";
+interface IOptions {
+    lockMovementX?: boolean
+    lockMovementY?: boolean
+    mates?: ScrollEl[]
+
+}
 export default class ScrollEl extends EventEmitter {
     wrapper: HTMLElement;
     el: HTMLElement;
-    constructor(wrapper: HTMLElement) {
+    lockMovementX: false
+    lockMovementY: false
+    mates: ScrollEl[] = []
+    private matesOldRect: (ClientRect | DOMRect)[] = []
+    private oldRect: ClientRect | DOMRect
+    constructor(wrapper: HTMLElement, options: IOptions = null) {
         super()
+        Object.assign(this, options)
         const el = this.el = document.createElement('div')
         this.wrapper = wrapper;
         el.addEventListener('mousedown', this.moveCb)
@@ -35,30 +47,34 @@ export default class ScrollEl extends EventEmitter {
 
     // maxHeight() {
     //     const rect = this.wrapper.getBoundingClientRect();
-    //     var { height } = rect;
+    //     const { height } = rect;
     //     this.setStyle('height', height)
     //     this.setStyle('margin-bottom', height)
     //     return this
     // }
     moveCb = (e) => {
         this.emit('mousedown')
-
+        this.matesOldRect = this.mates.map(_ => _.getRect())
+        this.oldRect = this.getRect()
         e.stopPropagation();
         const { el, wrapper } = this
-        var { x } = this.getCoordInDocument(e);
+        const { x, y } = this.getCoordInDocument(e);
 
         const elRex = el.getBoundingClientRect();
-        var boxRec = wrapper.getBoundingClientRect();
-        var { left: elLeft } = elRex;
-        var { left: boxLeft } = boxRec;
-        const span = x - elLeft;
+        const boxRec = wrapper.getBoundingClientRect();
+        const { left: elLeft, top: elTop } = elRex;
+        const { left: boxLeft, top: boxTop } = boxRec;
+        const xSpan = x - elLeft;
+        const ySpan = y - elTop;
 
         document.onmousemove = (e) => {
             requestAnimationFrame(() => {
-                var { x } = this.getCoordInDocument(e);
+                const { x, y } = this.getCoordInDocument(e);
 
-                let offsetLeft = x - (boxLeft + span);
-                this.setOffset(offsetLeft);
+                let offsetLeft = x - (boxLeft + xSpan);
+                let offsetRight = y - (boxTop + ySpan);
+                this.lockMovementX || this.setLeft(offsetLeft);
+                this.lockMovementY || this.setTop(offsetRight);
             });
         };
 
@@ -67,27 +83,42 @@ export default class ScrollEl extends EventEmitter {
             document.onmousemove = null;
         };
     }
-    setOffset(offset: number, isfire = true) {
-        const { el, wrapper } = this
-        var boxRec = wrapper.getBoundingClientRect();
-        const barRex = el.getBoundingClientRect();
-        var { width: boxWidth } = boxRec;
-        var { width: barWidth } = barRex;
-        const distance = boxWidth - barWidth;
+    setPosition(offset: number, isfire = true, direction: 'left' | 'top') {
+        const valueKey = direction === 'left' ? 'width' : 'height'
 
+        const { el, wrapper, mates, matesOldRect, oldRect } = this
+
+        mates.forEach((_, i) => _.setPosition(offset + matesOldRect[i][direction] - oldRect[direction], true, direction))
+
+        const boxRec = wrapper.getBoundingClientRect();
+        const target = el.getBoundingClientRect();
+
+        const boxValue = boxRec[valueKey]
+        const targetValue = target[valueKey]
+
+        const distance = boxValue - targetValue;
         const result = offset <= 0 ? 0 : offset >= distance ? distance : offset;
-        if (el.style['left'] != (result + 'px')) {
-            this.setStyle('left', result);
-            if (isfire) this.emit('change', result);
-
+        if (el.style[direction] !== (result + 'px')) {
+            this.setStyle(direction, result);
+            isfire && this.emit(`change:${direction === 'left' ? 'x' : 'y'}`, result);
         }
+        return this
+    }
+    setLeft(offset: number, isfire = true) {
+        return this.setPosition(offset, isfire, 'left')
+    }
+    setTop(offset: number, isfire = true) {
+        return this.setPosition(offset, isfire, 'top')
     }
 
+    getRect() {
+        return this.el.getBoundingClientRect()
+    }
 
     getCoordInDocument(e: MouseEvent) {
         e = (e as any) || window.event;
-        var x = e.pageX || e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft);
-        var y = e.pageY || e.clientY + (document.documentElement.scrollTop || document.body.scrollTop);
+        const x = e.pageX || e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft);
+        const y = e.pageY || e.clientY + (document.documentElement.scrollTop || document.body.scrollTop);
         return { x: x, y: y };
     }
 }

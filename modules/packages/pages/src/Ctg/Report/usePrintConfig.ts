@@ -11,6 +11,7 @@ export default (value, print_interval: number): {
     endingTime: number,
     locking: boolean,
     customizable: boolean,
+    total: number,
     remoteSetStartingTime: (v: number) => void,
     remoteSetEndingTime: (v: number) => void,
     toggleLocking: () => any,
@@ -21,9 +22,15 @@ export default (value, print_interval: number): {
     // const [pdfBase64, setPdfBase64] = useState(`data:application/pdf;base64,${pdf}`)
     const [startingTime, setStartingTime] = useState<number>(0)
     const [endingTime, setEndingTime] = useState<number>(0)
+    const [total, setTotal] = useState(0)
     const [locking, setLocking] = useState(false)
     const [customizable, setCustomizable] = useState(false)
 
+
+    useEffect(() => {
+        const resStr = ((endingTime - startingTime) / COEFFICIENT).toFixed(1) || '0'
+        setTotal(Number(resStr))
+    }, [startingTime, endingTime])
 
     useEffect(() => {
         const cb = startingTime => {
@@ -77,6 +84,7 @@ export default (value, print_interval: number): {
         endingTime,
         locking,
         customizable,
+        total,
         remoteSetStartingTime,
         remoteSetEndingTime,
         toggleLocking,

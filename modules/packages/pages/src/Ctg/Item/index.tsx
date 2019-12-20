@@ -61,7 +61,7 @@ const Item = (props: IProps) => {
             style={{ height: '100%', overflow: 'hidden', userSelect: 'none' }}
             extra={<Extra bedname={bedname} onClose={onClose} status={status} suit={suit} />}
             headStyle={{ background: themeColor, color: '#fff' }}
-            bodyStyle={{ padding: 0, height: 'calc(100% - 38px)' }}
+            bodyStyle={{ padding: 0, height: 'calc(100% - 41px)' }}
         >
             <L
                 data={data}

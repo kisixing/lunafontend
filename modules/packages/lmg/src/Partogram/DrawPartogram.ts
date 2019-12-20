@@ -47,7 +47,7 @@ export class DrawPartogram {
     this.canvas.addEventListener(
       'click',
       e => {
-        const p = this.getEventPosition(e);
+        // const p = this.getEventPosition(e);
         // alert(p);
       },
       false
