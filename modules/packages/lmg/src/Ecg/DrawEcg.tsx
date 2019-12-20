@@ -126,7 +126,7 @@ export class DrawEcg extends Draw {
 
   DrawDatatext() {
     const { datactx, data, height, width } = this;
-    const keys = ['脉率bpm', '血氧%', '体温℃', '心率bpm', '呼吸(次/分)', '血压(S/D/M)mmHg'];
+    const keys = ['脉率bpm', '血氧%', '体温℃', '心率bpm', '呼吸(次/分)', '血压(SDM)mmHg'];
     const v = Object.assign(Array(7).fill('--'), data.ecgdata)
     v[2] = `${v[2]} ~ ${v[3]}`
     v.splice(3, 1)
@@ -151,7 +151,7 @@ export class DrawEcg extends Draw {
         datactx.fillText(`${k}`, width - size * x, y);
         datactx.fillText(`${v}`, width - size * (x - 8), y);
       })
-    } else {
+    } else if (height > 30) {
       // 小屏显示时
       const d = width / 6 + -2
       let size = 14;
@@ -192,6 +192,21 @@ export class DrawEcg extends Draw {
         datactx.fillText(`${k}`, x, D, d);
         datactx.fillText(`${v || ''}`, x, 2.5 * D, d);
       })
+    } else {
+      const d = width / 6 + -2
+      let size = d < 100 ? 9 : 11;
+      let D = 14;
+      datactx.fillStyle = "#eee";
+      datactx.fillRect(0, 0, width, height)
+
+      datactx.font = `normal ${size}px YaHei`;
+      datactx.fillStyle = "#222";
+      datactx.textAlign = "center";
+      datactx.textBaseline = "middle";
+      entries.forEach(([k, v], i) => {
+        let x = 40 + d * i;
+        datactx.fillText(`${k}${v || ''}`, x, D, d);
+      })
     }
   }
 
@@ -203,16 +218,16 @@ export class DrawEcg extends Draw {
   getLength(val) {
     var str = new String(val);
     var bytesCount = 0;
-    for (var i = 0 ,n = str.length; i < n; i++) {
+    for (var i = 0, n = str.length; i < n; i++) {
       var c = str.charCodeAt(i);
-      if ((c >= 0x0001 && c <= 0x007e) || (0xff60<=c && c<=0xff9f)) {
+      if ((c >= 0x0001 && c <= 0x007e) || (0xff60 <= c && c <= 0xff9f)) {
         bytesCount += 1;
       } else {
         bytesCount += 2;
       }
     }
     return bytesCount;
-   }
+  }
 
   //kisi 2019-10-03
   //根据ws数据压入队列
