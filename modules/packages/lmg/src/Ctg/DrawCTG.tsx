@@ -151,6 +151,7 @@ export default class DrawCTG {
     // linecontext.stroke();
   }
   drawdot(cur, isemit) {
+    this.suit.log('drawdot', cur, isemit, this.suit.data.index, this.suit.width * 2)
     const { suit, linecontext, max, analysecontext } = this;
     const { fhr, toco, fm } = suit.data;
     if (typeof (fhr[0]) == "undefined") {
@@ -590,13 +591,13 @@ export default class DrawCTG {
       fontsize = 16;
     datacontext.clearRect(0, 0, fontsize * 10, fontsize * 5);
     datacontext.textAlign = 'left';
-    datacontext.textBaseline = 'top'; 
+    datacontext.textBaseline = 'top';
     if (typeof (fhr[0]) == "undefined") {
       return;
     }
-    if(x<suit.data.index+1){
-      for(let i=startx;i>0;i--){
-        if(typeof(fhr[0][x]) != "undefined"){
+    if (x < suit.data.index + 1) {
+      for (let i = startx; i > 0; i--) {
+        if (typeof (fhr[0][x]) != "undefined") {
           x = i;
           break;
         }
@@ -627,14 +628,14 @@ export default class DrawCTG {
           datacontext.fillStyle = suit.ctgconfig.alarmcolor;
           if (suit.ctgconfig.alarm_enable && fhr[i][x] > suit.ctgconfig.alarm_high) {
             if (eventemit) {
-              console.log('心率过高',fhr[i][x] );
+              console.log('心率过高', fhr[i][x]);
               this.suit.alarmOn('心率过高');
             }
             alarm = 1;
             this.suit.alarm = alarm;
           } else if (suit.ctgconfig.alarm_enable && fhr[i][x] < suit.ctgconfig.alarm_low) {
             if (eventemit) {
-              console.log('心率过低',fhr[i][x] );
+              console.log('心率过低', fhr[i][x]);
               this.suit.alarmOn('心率过低');
             }
             alarm = 1;
@@ -645,9 +646,9 @@ export default class DrawCTG {
           }
         }
       }
-      if (alarm == 0 && suit.ctgconfig.alarm_enable && this.suit.alarm==1) {
-        
-        console.log('恢复',fhr[i][x],alarm,this.suit.alarm);
+      if (alarm == 0 && suit.ctgconfig.alarm_enable && this.suit.alarm == 1) {
+
+        console.log('恢复', fhr[i][x], alarm, this.suit.alarm);
         this.suit.alarmOff('');
         this.suit.alarm = alarm;
       }
@@ -655,16 +656,16 @@ export default class DrawCTG {
       //kisi 2019-12-08 对象修改到 suit.data
       //console.log('fetalposition',suit.data.fetalposition);
       if (i == 0) {
-        if(suit.data.fetalposition && typeof(suit.data.fetalposition.fhr1)!='undefined'){
+        if (suit.data.fetalposition && typeof (suit.data.fetalposition.fhr1) != 'undefined') {
           label = suit.data.fetalposition.fhr1;
         }
       } else if (i == 1) {
-        if(suit.data.fetalposition && typeof(suit.data.fetalposition.fhr2)!='undefined'){
+        if (suit.data.fetalposition && typeof (suit.data.fetalposition.fhr2) != 'undefined') {
           label = suit.data.fetalposition.fhr2;
         }
         offsetfhr = ' ' + this.fhroffset;
       } else if (i == 2) {
-        if(suit.data.fetalposition && typeof(suit.data.fetalposition.fhr3)!='undefined'){
+        if (suit.data.fetalposition && typeof (suit.data.fetalposition.fhr3) != 'undefined') {
           label = suit.data.fetalposition.fhr3;
         }
         offsetfhr = ' ' + -this.fhroffset;
@@ -704,8 +705,12 @@ export default class DrawCTG {
     gridcontext.lineTo(postion, yposition + 6);
     gridcontext.stroke();
   };
-  showselect = (start: number, end: number) => {
+  showselect = (start?: number, end?: number) => {
     const { suit, selectcontext } = this;
+    start = start === void 0 ? suit.selectrpstart : start
+    end = end === void 0 ? suit.selectrpend : end
+
+    console.log(start, end)
     // console.log('printin', suit.viewposition,start, end);
     let drawwidth = suit.width;
     selectcontext.clearRect(0, 0, drawwidth, suit.height);
@@ -740,11 +745,11 @@ export default class DrawCTG {
     selectcontext.moveTo(start / 2, this.basetop);
     selectcontext.lineTo(start / 2, baseHeight);
 
-    
+
     selectcontext.moveTo(start / 2, baseHeight);
     selectcontext.lineTo(end, baseHeight);
-    selectcontext.moveTo(end,  this.basetop);
-    selectcontext.lineTo(start / 2,  this.basetop);
+    selectcontext.moveTo(end, this.basetop);
+    selectcontext.lineTo(start / 2, this.basetop);
 
     if (suit.selectend == 0) {
       selectcontext.moveTo(end, this.basetop);

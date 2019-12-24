@@ -204,7 +204,7 @@ export class Suit extends Draw {
           if (this.selectend == 1) {
             this.endingBar.setLeft(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
           }
-          this.drawobj.showselect(this.selectrpstart, this.selectrpend);
+          this.drawobj.showselect();
         }
         this.updateBarTool();
         return;
@@ -230,7 +230,7 @@ export class Suit extends Draw {
         } else {
           this.endingBar.setVisibility(false);
         }
-        this.drawobj.showselect(this.selectrpstart, this.selectrpend);
+        this.drawobj.showselect();
       }
     });
   }
@@ -327,7 +327,7 @@ export class Suit extends Draw {
         return;
       }
       // console.log('print_结束', value, this.selectrpstart, this.selectrpend)
-      this.drawobj.showselect(this.selectrpstart, this.selectrpend);
+      this.drawobj.showselect();
       this.emit('endTime', this.selectrpend)
     })
 

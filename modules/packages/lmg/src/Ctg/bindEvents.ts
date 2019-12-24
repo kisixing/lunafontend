@@ -14,7 +14,7 @@ export default function (this: Suit) {
                 // console.log('print_lock', this.selectstart, this.data.index);
                 this.selectrpstart = this.selectstart;
                 this.selectrpend = this.data.index < this.selectrpstart + this.printlen ? this.data.index : this.selectrpstart + this.printlen
-                this.drawobj.showselect(this.selectrpstart, this.selectrpend);
+                this.drawobj.showselect();
                 this.endingBar.setVisibility(false);
                 this.emit('endTime', this.selectrpend);
             } else {
@@ -40,7 +40,7 @@ export default function (this: Suit) {
             } else {
                 this.selectend = 0;
                 this.endingBar.setVisibility(false);
-                this.drawobj.showselect(this.selectrpstart, this.selectrpend)
+                this.drawobj.showselect()
             }
         })
         .on('setStartingTime', value => {
@@ -54,4 +54,36 @@ export default function (this: Suit) {
         .on('showLine', () => {
             this.createLine()
         })
+        .on('selectBackward', () => {
+            if (!this.selectrpend) {
+                this.selectrpend = this.data.index
+            }
+            this.selectflag = true
+            this.selectrpend -= 200
+
+            if ((this.viewposition - this.selectrpend) > this.width * 2 || this.viewposition < this.selectrpend) {
+                this.viewposition = this.selectrpend + 200
+            }
+            // this.emit('locking', true)
+            this.drawobj.drawdot(this.viewposition, false)
+            this.drawobj.showselect()
+            this.updateBarTool()
+
+        })
+        .on('selectForward', () => {
+            if (!this.selectrpend) {
+                this.selectrpend = this.data.index
+            }
+            this.selectflag = true
+            this.selectrpstart += 200
+
+            if ((this.selectrpstart - this.viewposition) > this.width * 2 || this.selectrpstart < this.viewposition) {
+                this.viewposition = this.selectrpstart + this.width * 2 - 200
+            }
+            // this.emit('locking', true)
+            this.drawobj.drawdot(this.viewposition, false)
+            this.drawobj.showselect()
+            this.updateBarTool()
+        })
+    this.log(this)
 }

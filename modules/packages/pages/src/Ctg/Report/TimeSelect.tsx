@@ -46,7 +46,8 @@ const Preview = (props: IProps) => {
         // remoteSetStartingTime,
         // remoteSetEndingTime,
         total,
-
+        backward,
+        forward,
         // toggleLocking,
         // toggleCustomiz
     } = usePrintConfig(value, print_interval)
@@ -71,13 +72,13 @@ const Preview = (props: IProps) => {
                             <div style={{ width: 400, padding: 24, background: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-around', border: '1px solid #d9d9d9' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <Button icon="forward" />
+                                        <Button icon="forward" onClick={forward} />
                                         <div style={{ marginLeft: 6 }}>
                                             时间：0分
                                         </div>
                                     </div>
                                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <Button icon="backward" />
+                                        <Button icon="backward" onClick={backward} />
                                         <div style={{ marginLeft: 6 }}>
                                             时间：0分
                                         </div>

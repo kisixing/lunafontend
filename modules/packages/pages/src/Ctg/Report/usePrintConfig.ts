@@ -15,7 +15,9 @@ export default (value, print_interval: number): {
     remoteSetStartingTime: (v: number) => void,
     remoteSetEndingTime: (v: number) => void,
     toggleLocking: () => any,
-    toggleCustomiz: () => any
+    toggleCustomiz: () => any,
+    backward: () => any,
+    forward: () => any
 } => {
 
 
@@ -78,6 +80,14 @@ export default (value, print_interval: number): {
         },
         [value],
     )
+    const backward = useCallback(
+        () => value.current.emit('selectBackward'),
+        [value],
+    )
+    const forward = useCallback(
+        () => value.current.emit('selectForward'),
+        [value],
+    )
 
     return {
         startingTime,
@@ -88,6 +98,8 @@ export default (value, print_interval: number): {
         remoteSetStartingTime,
         remoteSetEndingTime,
         toggleLocking,
-        toggleCustomiz
+        toggleCustomiz,
+        backward,
+        forward
     }
 }
