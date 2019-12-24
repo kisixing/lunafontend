@@ -17,7 +17,7 @@ export default class Request {
 
 
     this._request = extend({
-      timeout: 5000,
+      timeout: 10000,
       credentials: 'include', // 默认请求是否带上cookie
       headers: {
         Accept: 'application/json',
