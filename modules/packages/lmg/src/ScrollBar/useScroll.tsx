@@ -1,6 +1,6 @@
 import { useEffect, MutableRefObject } from 'react';
 import ScrollEl from './ScrollEl'
-
+import { getCoordInDocument } from './ScrollEl'
 type TResolve = (value: number, isfire?: boolean) => void;
 
 export interface IBarTool {
@@ -33,54 +33,65 @@ function useScroll(
       width: 10, height: 6, bottom: 0
     })
 
-    const boxGrabCb = e => {
+    const boxGrabCb = (e: MouseEvent) => {
+      // alert('box click')
       var { x: x1 } = getCoordInDocument(e);
       let temp = x1;
       boxEl.style.cursor = 'grab';
-      document.onmousemove = function (e) {
+      const fn = function (e) {
+
         requestAnimationFrame(() => {
           var { x: x2 } = getCoordInDocument(e);
+          if (Math.abs(x2 - temp) > dragInterval) {
+            resolveGrab(x2 - x1);
+
+            temp = x2;
+          }
+        });
+      };
+      document.addEventListener('mousemove', fn)
+
+      document.addEventListener('mouseup', function () {
+
+        //移除鼠标移动事件
+        document.removeEventListener('mousemove', fn)
+        boxEl.style.cursor = 'auto';
+      })
+    };
+    const boxTouchCb = (e: TouchEvent) => {
+      // alert('box touch')
+      var { x: x1 } = getCoordInDocument(e);
+      let temp = x1;
+
+      const fn = function (e) {
+
+        requestAnimationFrame(() => {
+          var { x: x2 } = getCoordInDocument(e as any);
+
           if (Math.abs(x2 - temp) > dragInterval) {
             resolveGrab(x2 - x1);
             temp = x2;
           }
         });
-      };
+      }
+      document.addEventListener('touchmove', fn)
 
-      document.onmouseup = function () {
+      document.addEventListener('touchend', function () {
+
         //移除鼠标移动事件
-        document.onmousemove = null;
+        document.removeEventListener('touchmove', fn)
         boxEl.style.cursor = 'auto';
-      };
-    };
-    // const boxTouchCb = e => {
-    //   var { x: x1 } = getCoordInDocument(e);
-    //   let temp = x1;
-    //   boxEl.style.cursor = 'grab';
-    //   document.ontouchmove = function (e) {
-    //     requestAnimationFrame(() => {
-    //       var { x: x2 } = getCoordInDocument(e as any);
-    //       if (Math.abs(x2 - temp) > dragInterval) {
-    //         resolveGrab(x2 - x1);
-    //         temp = x2;
-    //       }
-    //     });
-    //   };
+      })
 
-    //   document.onmouseup = function () {
-    //     //移除鼠标移动事件
-    //     document.onmousemove = null;
-    //     boxEl.style.cursor = 'auto';
-    //   };
-    // };
+    };
 
     boxEl.addEventListener('mousedown', boxGrabCb);
-    // boxEl.addEventListener('touchstart', boxTouchCb);
+    boxEl.addEventListener('touchstart', boxTouchCb);
 
     return () => {
 
       boxEl.removeEventListener('mousedown', boxGrabCb);
-      // boxEl.removeEventListener('touchstart', boxTouchCb);
+      boxEl.removeEventListener('touchstart', boxTouchCb);
 
     };
   }, []);
@@ -154,11 +165,6 @@ function useScroll(
 
 
 }
-function getCoordInDocument(e: MouseEvent) {
-  e = (e as any) || window.event;
-  var x = e.pageX || e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft);
-  var y = e.pageY || e.clientY + (document.documentElement.scrollTop || document.body.scrollTop);
-  return { x: x, y: y };
-}
+
 
 export default useScroll;

@@ -103,9 +103,7 @@ export class Suit extends Draw {
     this.barTool = barTool;
     this.drawobj = new DrawCTG(this);
     this.type = type;
-    // this.resize();
-    this.barTool.watchGrab(value => {
-    });
+
     if (this.option) {
       this.ctgconfig.tococolor = this.option.tococolor;
       this.ctgconfig.fhrcolor[0] = this.option.fhrcolor1;
@@ -185,6 +183,7 @@ export class Suit extends Draw {
       this.log(this.viewposition, len)
     });
     this.barTool.watchGrab(value => {
+      value = ~~value
       if (this.type == 0 && this.data.past > 0) {
         //console.log('print', this.data,this.selectrpstart, this.selectrpend);
         if (!this.requestflag) {

@@ -18,7 +18,8 @@ export default class ScrollEl extends EventEmitter {
         Object.assign(this, options)
         const el = this.el = document.createElement('div')
         this.wrapper = wrapper;
-        el.addEventListener('mousedown', this.moveCb)
+        el.addEventListener('mousedown', this.mousedownCb)
+        el.addEventListener('touchstart', this.touchstartCb)
         wrapper.appendChild(el)
         el.setAttribute('style', `background:red;position:absolute;user-select:none`)
     }
@@ -52,13 +53,24 @@ export default class ScrollEl extends EventEmitter {
     //     this.setStyle('margin-bottom', height)
     //     return this
     // }
-    moveCb = (e) => {
+    moveCb = (baseX: number, baseY: number, e) => {
+
+        requestAnimationFrame(() => {
+            const { x, y } = getCoordInDocument(e);
+
+            let offsetLeft = x - baseX;
+            let offsetRight = y - baseY;
+            this.lockMovementX || this.setLeft(offsetLeft);
+            this.lockMovementY || this.setTop(offsetRight);
+        });
+    };
+    mousedownCb = (e) => {
         this.emit('mousedown')
         this.matesOldRect = this.mates.map(_ => _.getRect())
         this.oldRect = this.getRect()
         e.stopPropagation();
         const { el, wrapper } = this
-        const { x, y } = this.getCoordInDocument(e);
+        const { x, y } = getCoordInDocument(e);
 
         const elRex = el.getBoundingClientRect();
         const boxRec = wrapper.getBoundingClientRect();
@@ -67,21 +79,33 @@ export default class ScrollEl extends EventEmitter {
         const xSpan = x - elLeft;
         const ySpan = y - elTop;
 
-        document.onmousemove = (e) => {
-            requestAnimationFrame(() => {
-                const { x, y } = this.getCoordInDocument(e);
-
-                let offsetLeft = x - (boxLeft + xSpan);
-                let offsetRight = y - (boxTop + ySpan);
-                this.lockMovementX || this.setLeft(offsetLeft);
-                this.lockMovementY || this.setTop(offsetRight);
-            });
-        };
+        document.onmousemove = this.moveCb.bind(this, (boxLeft + xSpan), (boxTop + ySpan));
 
         document.onmouseup = () => {
             this.emit('mouseup')
             document.onmousemove = null;
         };
+    }
+    touchstartCb = (e) => {
+        this.emit('touchstart')
+        this.matesOldRect = this.mates.map(_ => _.getRect())
+        this.oldRect = this.getRect()
+        e.stopPropagation();
+        const { el, wrapper } = this
+        const { x, y } = getCoordInDocument(e);
+
+        const elRex = el.getBoundingClientRect();
+        const boxRec = wrapper.getBoundingClientRect();
+        const { left: elLeft, top: elTop } = elRex;
+        const { left: boxLeft, top: boxTop } = boxRec;
+        const xSpan = x - elLeft;
+        const ySpan = y - elTop;
+        const fn = this.moveCb.bind(this, (boxLeft + xSpan), (boxTop + ySpan));
+        document.addEventListener('touchmove', fn)
+        document.addEventListener('touchend', () => {
+            this.emit('touchend')
+            document.removeEventListener('touchmove', fn)
+        })
     }
     setPosition(offset: number, isfire = true, direction: 'left' | 'top') {
         const valueKey = direction === 'left' ? 'width' : 'height'
@@ -115,10 +139,11 @@ export default class ScrollEl extends EventEmitter {
         return this.el.getBoundingClientRect()
     }
 
-    getCoordInDocument(e: MouseEvent) {
-        e = (e as any) || window.event;
-        const x = e.pageX || e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft);
-        const y = e.pageY || e.clientY + (document.documentElement.scrollTop || document.body.scrollTop);
-        return { x: x, y: y };
-    }
+}
+
+export function getCoordInDocument(e: any) {
+    e = (e as any) || window.event;
+    var x = e.pageX || e.clientX || (e.targetTouches && e.targetTouches[0] && e.targetTouches[0].clientX) + (document.documentElement.scrollLeft || document.body.scrollLeft);
+    var y = e.pageY || e.clientY || (e.targetTouches && e.targetTouches[0] && e.targetTouches[0].clientY) + (document.documentElement.scrollTop || document.body.scrollTop);
+    return { x: x, y: y };
 }
