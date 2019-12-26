@@ -1,6 +1,6 @@
 import Queue from "../Ecg/Queue";
 
-
+type TDeviceType = 'SR_K9' | 'SR_B5_B6'
 
 
 
@@ -19,7 +19,9 @@ export enum EWsEvents {
     explode = "explode"
 }
 export interface ICacheItem {
-
+    deviceType?: TDeviceType
+    is_include_volume: boolean
+    is_include_tocozero: boolean
     analyse?: any;
     fhr: number[][];
     toco: number[];
@@ -61,7 +63,7 @@ export interface IDevice {
     bed_num: number;
     beds: IBed[];
     device_no: number;
-    device_type: string;
+    device_type: TDeviceType;
     ecg_sampling_rate: number;
     is_handshake_finish: boolean;
     wifi_conn_state: boolean;
@@ -74,4 +76,12 @@ interface IBed {
     is_working: number;
     pregnancy: string;
     fetalposition: string;
+
+
+    event_alarm_status: string
+    vol2: number
+    vol1: number
+    event_alarm_id: string
+    is_include_volume: boolean
+    is_include_tocozero: boolean
 }

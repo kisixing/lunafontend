@@ -7,6 +7,7 @@ import { getEmptyCacheItem, cleardata, convertstarttime } from "./utils";
 export * from './types'
 export * from './utils'
 export * from './useCheckNetwork'
+import { getStrategies } from "./strategies";
 // import pingpong from "./pingpong";
 
 const ANNOUNCE_INTERVAL = 1000
@@ -30,6 +31,8 @@ export class WsService extends EventEmitter {
     settingData: { [x: string]: string };
     socket: WebSocket;
     offrequest: number;
+    strategies = getStrategies(this)
+    BedStatus = BedStatus
     // store = (window as any).g_app._store
     constructor(settingData?) {
         super();
@@ -120,6 +123,7 @@ export class WsService extends EventEmitter {
         this.log(text, status);
 
     }
+    connectResolve: (value: any) => void
     connect = (): Promise<ICache> => {
         const { datacache, settingData } = this
         const { ws_url } = settingData
@@ -132,7 +136,7 @@ export class WsService extends EventEmitter {
         const socket = this.socket;
 
         return new Promise(res => {
-
+            this.connectResolve = res
             socket.onerror = () => {
                 this.log('错误')
             };
@@ -163,50 +167,13 @@ export class WsService extends EventEmitter {
                 } catch (error) {
                     console.log('json parse error', error)
                 }
-                if (received_msg) {
-                    //showMessage(received_msg);
-                    if (received_msg.name == 'push_devices') {
-                        console.log('dev', received_msg.data)
-                        var devlist: IDevice[] = received_msg.data;
-                        for (var i in devlist) {
-                            var devdata = devlist[i];
-                            if (!devdata) continue;
-                            for (let bi in devdata.beds) {
-                                var cachebi = devdata['device_no'] + '-' + devdata.beds[bi].bed_no;
-                                if (!datacache.has(cachebi)) {
-                                    datacache.set(cachebi, getEmptyCacheItem());
-                                    convertdocid(cachebi, devdata.beds[bi].doc_id);
-                                    if (devdata.beds[bi].is_working == 0) {
-                                        datacache.get(cachebi).status = Working;
-                                    } else if (devdata.beds[bi].is_working == 1) {
-                                        datacache.get(cachebi).status = Stopped;
-                                    } else if (devdata.beds[bi].is_working == 2) {
-                                        datacache.get(cachebi).status = Offline;
-                                    } else {
-                                        datacache.get(cachebi).status = OfflineStopped;
 
-                                    }
-                                    //debugger
-                                    if (devdata.beds[bi].pregnancy) {
-                                        datacache.get(cachebi).pregnancy = JSON.parse(devdata.beds[bi].pregnancy);
-                                    }
-                                    if (devdata.beds[bi].fetalposition) {
-                                        datacache.get(cachebi).fetalposition = JSON.parse(devdata.beds[bi].fetalposition);
-                                    }
-                                    datacache.get(cachebi).fetal_num = devdata.beds[bi].fetal_num;
-                                    for (let fetal = 0; fetal < devdata.beds[bi].fetal_num; fetal++) {
-                                        datacache.get(cachebi).fhr[fetal] = [];
-                                    }
-                                    if (devdata.beds[bi].is_include_mother)
-                                        datacache.get(cachebi).ismulti = true;
-                                }
-                            }
-                        }
-                        this.tip('成功', EWsStatus.Success)
-                        res(datacache)
-                        this.emit('read', datacache)
-                        this.isReady = true
-                    } else if (received_msg.name == 'push_data_ctg') {
+                if (received_msg) {
+                    const mesName = received_msg.name
+                    const strategy = this.strategies[mesName]
+                    strategy && strategy(received_msg)
+                    //showMessage(received_msg);
+                    if (received_msg.name == 'push_data_ctg') {
                         //TODO 解析应用层数据包
                         var ctgdata = received_msg.data;
                         //console.this.log(ctgdata);
