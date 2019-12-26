@@ -51,6 +51,9 @@ export class WsService extends EventEmitter {
         WsService._this = this;
         this.settingData = settingData
     }
+    getUnitId(device_no, bed_no) {
+        return `${device_no}-${bed_no}`
+    }
     pongIndex = 0
     sendHeard() {
         this.send(JSON.stringify({
@@ -76,7 +79,7 @@ export class WsService extends EventEmitter {
     }
     refreshInterval = 2000
     refreshTimeout = null
-    refresh(name) {
+    refresh(name = 'default') {
 
         if (this.refreshTimeout) {
             this.log(name, 'explode', 'discarded')
@@ -122,6 +125,46 @@ export class WsService extends EventEmitter {
     tip = (text: string, status: EWsStatus) => {
         this.log(text, status);
 
+    }
+    setTocozero(device_no: number, bed_no: number) {
+        const msg = JSON.stringify({
+            name: "toco_zero",
+            device_no,
+            bed_no
+        })
+        this.send(msg)
+    }
+    getVolume(device_no: number, bed_no: number) {
+        const msg = JSON.stringify({
+            name: "getVolume",
+            device_no,
+            bed_no
+        })
+        this.send(msg)
+    }
+    change_volume(device_no: number, bed_no: number, vol: number) {
+        const msg = JSON.stringify({
+            name: "change_volume",
+            device_no,
+            bed_no,
+            data: {
+                vol,
+            }
+        })
+        this.send(msg)
+    }
+    mute_volume(device_no: number, bed_no: number, fetel_no: number, isMute: number) {
+        const msg = JSON.stringify({
+            name: "mute_volume",
+            device_no,
+            bed_no,
+            data: {
+                fetel_no,
+                isMute,
+            }
+
+        })
+        this.send(msg)
     }
     connectResolve: (value: any) => void
     connect = (): Promise<ICache> => {

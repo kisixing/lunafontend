@@ -2,6 +2,13 @@ import Queue from "../Ecg/Queue";
 
 type TDeviceType = 'SR_K9' | 'SR_B5_B6'
 
+type TF = 0 | 1
+
+export interface IVolumeData {
+    isMute1: TF
+    vol: TF
+    fetel_num: number
+}
 
 
 export enum EWsStatus {
@@ -19,6 +26,7 @@ export enum EWsEvents {
     explode = "explode"
 }
 export interface ICacheItem {
+    volumeData?: IVolumeData
     deviceType?: TDeviceType
     is_include_volume: boolean
     is_include_tocozero: boolean
@@ -85,3 +93,4 @@ interface IBed {
     is_include_volume: boolean
     is_include_tocozero: boolean
 }
+

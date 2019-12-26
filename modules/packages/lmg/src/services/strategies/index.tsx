@@ -1,7 +1,9 @@
 import { push_devices } from "./push_devices";
+import { getVolume } from "./getVolume";
 import { WsService } from "../WsService";
 export const strategies: { [x: string]: Function } = {
-    push_devices
+    push_devices,
+    getVolume
 }
 
 export function getStrategies(context: WsService): { [x: string]: Function } {
