@@ -572,7 +572,7 @@ export class Suit extends Draw {
     let endPosition
     if (isLeft) {
 
-      if (this.selectingBar.getLeft() < 1) {
+      if (this.selectingBarPoint < 1) {
         this.rightViewPosition = this.data.index
         this.selectingBar.setLeft(this.width)
       }
@@ -581,7 +581,7 @@ export class Suit extends Draw {
       this.selectrpend = this.selectingBarPoint
     } else {
 
-      if (this.selectingBar.getLeft() > width - 5) {
+      if (this.selectingBarPoint + 2400 >= data.index) {
         this.rightViewPosition = width * 2
         this.selectingBar.setLeft(0)
       }
@@ -589,7 +589,6 @@ export class Suit extends Draw {
       endPosition = this.selectingBarPoint + ctgconfig.print_interval * 240
       this.selectrpend = endPosition
       this.selectrpstart = this.selectingBarPoint
-      console.log('gggg', this.selectrpend, this.selectrpstart)
 
     }
 
