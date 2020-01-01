@@ -3,13 +3,15 @@ import ScrollEl from './ScrollEl'
 
 type TResolve = (value: number, isfire?: boolean) => void;
 
+
+export type TLineTool = { toggleVisibility: () => void, rowline: ScrollEl, setBase: (n: number) => void, addDot: (obj: { width?: number, height?: number, left?: number }) => ScrollEl }
 export interface IBarTool {
   watch: (fn: TResolve) => void;
   watchGrab: (fn: TResolve, interval?: number) => void;
   setBarWidth: (width: number) => void;
   setBarLeft?: TResolve;
   createRod?: (name: string) => ScrollEl
-  createHLine?: (bg: string) => { rowline: ScrollEl, setBase: (n: number) => void, addDot: (obj: { width?: number, height?: number, left?: number }) => ScrollEl }
+  createHLine?: (bg: string) => TLineTool
 }
 
 function useScroll(
@@ -126,9 +128,19 @@ function useScroll(
           width: '100%',
           background: bg,
           height: '2px',
+          cursor: 'n-resize'
+        }).on('mousedown', () => {
+          document.body.style.cursor = 'n-resize'
+        }).on('mouseup', () => {
+          document.body.style.cursor = 'auto'
         })
-        const ins = []
+        const ins: ScrollEl[] = []
         return {
+
+          toggleVisibility() {
+            ins.forEach(_ => _.toggleVisibility())
+            ins0.toggleVisibility()
+          },
           rowline: ins0,
           setBase(n: number) {
             ins0.setStyle('bottom', n)
@@ -139,6 +151,7 @@ function useScroll(
               background: 'transparent',
               border: `6px solid transparent`,
               left,
+              height: 0
             })
             ins.push(i)
             ins0.mates.push(i)

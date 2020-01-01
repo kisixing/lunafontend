@@ -710,7 +710,7 @@ export default class DrawCTG {
     start = start === void 0 ? suit.selectrpstart : start
     end = end === void 0 ? suit.selectrpend : end
 
-    console.log(start, end)
+    console.log('showselect',start, end)
     // console.log('printin', suit.viewposition,start, end);
     let drawwidth = suit.width;
     selectcontext.clearRect(0, 0, drawwidth, suit.height);

@@ -54,34 +54,28 @@ export default function (this: Suit) {
         .on('showLine', () => {
             this.createLine()
         })
-        .on('selectBackward', () => {
-            if (!this.selectrpend) {
-                this.selectrpend = this.data.index
-            }
-            this.selectflag = true
-            this.selectrpend -= 200
+        .on('selectForward', () => {
+            const { selectrpstart, baseViewposition, ctgconfig, selectingBar } = this
+            const hasMoved = selectingBar.hasMoved
+            console.log('hasMoved', hasMoved)
+            // if (selectrpstart - baseViewposition < ctgconfig.print_interval * 240) {
+            //     this.selectrpstart = baseViewposition + ctgconfig.print_interval * 240
+            // }
+            this.selectBasedOnStartingBar(false)
 
-            if ((this.viewposition - this.selectrpend) > this.width * 2 || this.viewposition < this.selectrpend) {
-                this.viewposition = this.selectrpend + 200
-            }
-            // this.emit('locking', true)
-            this.drawobj.drawdot(this.viewposition, false)
-            this.drawobj.showselect()
             this.updateBarTool()
+            this.drawobj.showselect()
+
 
         })
-        .on('selectForward', () => {
-            if (!this.selectrpend) {
-                this.selectrpend = this.data.index
-            }
-            this.selectflag = true
-            this.selectrpstart += 200
-
-            if ((this.selectrpstart - this.viewposition) > this.width * 2 || this.selectrpstart < this.viewposition) {
-                this.viewposition = this.selectrpstart + this.width * 2 - 200
-            }
-            // this.emit('locking', true)
-            this.drawobj.drawdot(this.viewposition, false)
+        .on('selectBackward', () => {
+            const { selectrpstart, baseViewposition, ctgconfig, selectingBar } = this
+            const hasMoved = selectingBar.hasMoved
+            console.log('hasMoved', hasMoved)
+            // if (selectrpstart - baseViewposition < ctgconfig.print_interval * 240) {
+            //     this.selectrpstart = baseViewposition + ctgconfig.print_interval * 240
+            // }
+            this.selectBasedOnStartingBar()
             this.drawobj.showselect()
             this.updateBarTool()
         })

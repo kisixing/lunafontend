@@ -6,6 +6,7 @@ interface IOptions {
 
 }
 export default class ScrollEl extends EventEmitter {
+    hasMoved = false
     wrapper: HTMLElement;
     el: HTMLElement;
     lockMovementX: false
@@ -36,6 +37,7 @@ export default class ScrollEl extends EventEmitter {
     toggleVisibility() {
         const isHidden = this.el.style.visibility === 'hidden'
         this.setStyle('visibility', isHidden ? 'visible' : 'hidden')
+        return this
     }
     setVisibility(isHidden) {
         this.setStyle('visibility', isHidden ? 'visible' : 'hidden')
@@ -53,6 +55,7 @@ export default class ScrollEl extends EventEmitter {
     //     return this
     // }
     moveCb = (e) => {
+        this.hasMoved = true
         this.emit('mousedown')
         this.matesOldRect = this.mates.map(_ => _.getRect())
         this.oldRect = this.getRect()
@@ -106,9 +109,16 @@ export default class ScrollEl extends EventEmitter {
     }
     setLeft(offset: number, isfire = true) {
         return this.setPosition(offset, isfire, 'left')
+
+    }
+    getLeft() {
+        return parseInt(getComputedStyle(this.el).left) || 0
     }
     setTop(offset: number, isfire = true) {
         return this.setPosition(offset, isfire, 'top')
+    }
+    getTop() {
+        return parseInt(getComputedStyle(this.el).top) || 0
     }
 
     getRect() {
