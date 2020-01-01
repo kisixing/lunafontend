@@ -31,7 +31,7 @@ export default (value, print_interval: number): {
 
     useEffect(() => {
         const resStr = ((endingTime - startingTime) / COEFFICIENT).toFixed(1) || '0'
-        setTotal(Number(resStr))
+        setTotal(Number(resStr)) 
     }, [startingTime, endingTime])
 
     useEffect(() => {

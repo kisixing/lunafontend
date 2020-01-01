@@ -12,7 +12,7 @@ const Preview = (props: IProps) => {
     return (
         <div style={{ background: '#fff', width: 400, marginRight: 10, display: 'flex', flexDirection: 'column' }}>
             {/* <label>NST报告结果</label> */}
-            {/* <Editor extendControls={[
+            {/* <Editor extendControls={[  
                 'separator',
                 {
                     key: 'my-button', // 控件唯一标识，必传

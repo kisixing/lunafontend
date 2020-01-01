@@ -26,6 +26,6 @@ const Preview = (props: IProps) => {
     </div>
 
   );
-}
+} 
 
 export default Preview

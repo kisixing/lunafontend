@@ -33,7 +33,7 @@ export default (docid: string, setPdfBase64: any) => {
             })
     }
     const info = message.info
-    const fetchSigninfo = () => {
+    const fetchSigninfo = () => { 
         request
             .post('/ca/signinfo', {
                 data: { bizSn: docid }

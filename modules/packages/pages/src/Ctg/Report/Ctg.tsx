@@ -19,6 +19,6 @@ const Setting = (props: IProps) => {
       )}
     </Context.Consumer>
   );
-}
+} 
 
 export default Setting

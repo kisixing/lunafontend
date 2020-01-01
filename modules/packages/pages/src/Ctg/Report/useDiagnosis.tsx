@@ -13,7 +13,7 @@ const getText = () => {
 export default (...args) => {
     const [diagnosis, setDiagnosis] = useState(getText())
     useEffect(() => {
-        const a = diagnosis.replace(/【.*?】/, `【${args[0]}】`)
+        const a = diagnosis.replace(/【.*?】/, `【${args[0]}】`) 
         setDiagnosis(a)
     }, [args[0]])
 
