@@ -13,7 +13,7 @@ import 'react-pdf/dist/Page/AnnotationLayer.css';
 // pdfjs.GlobalWorkerOptions.workerSrc = pdf_worker_url;
 
 const PreviewContent = props => {
-    const { pdfBase64 } = props;
+    const { pdfBase64 } = props; 
     const [isFullpage, setFullpage] = useState(false);
     const [height, setHeight] = useState(200); //
     const [width, setWidth] = useState('100%')

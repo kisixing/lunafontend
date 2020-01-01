@@ -128,6 +128,6 @@ const Preview = (props: IProps) => {
       }
     </Context.Consumer >
   );
-}
+} 
 
 export default Preview

@@ -44,7 +44,7 @@ const Preview = (props: IProps) => {
         locking,
         // customizable,
         // remoteSetStartingTime,
-        // remoteSetEndingTime,
+        // remoteSetEndingTime, 
         total,
         backward,
         forward,
