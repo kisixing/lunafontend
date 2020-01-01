@@ -26,7 +26,7 @@ Suit.option = {"fhrcolor1": "#8080ff",
 
 const setting = {
   ws_url: "192.168.123.10:8084",
-  xhr_url: "192.168.123.30:9987",
+  xhr_url: "192.168.123.10:9987",
   alarm_high: "160",
   alarm_low: "110",
   alarm_on_window: "1",
@@ -41,7 +41,7 @@ export default function () {
   const w = new WsService(setting)
   // w.dispatch=()=>{}
   w.connect()
-  Hooks.useLogin(`http://${setting.xhr_url}/api`,{username:'admin',password:'admin'})
+  Hooks.useLogin(`http://${setting.xhr_url}/api`,{username:'admin',password:'123456'})
 
   return (
     <>

@@ -14,7 +14,7 @@ export default function (this: Suit) {
                 // console.log('print_lock', this.selectstart, this.data.index);
                 this.selectrpstart = this.selectstart;
                 this.selectrpend = this.data.index < this.selectrpstart + this.printlen ? this.data.index : this.selectrpstart + this.printlen
-                this.drawobj.showselect(this.selectrpstart, this.selectrpend);
+                this.drawobj.showselect();
                 this.endingBar.setVisibility(false);
                 this.emit('endTime', this.selectrpend);
             } else {
@@ -40,7 +40,7 @@ export default function (this: Suit) {
             } else {
                 this.selectend = 0;
                 this.endingBar.setVisibility(false);
-                this.drawobj.showselect(this.selectrpstart, this.selectrpend)
+                this.drawobj.showselect()
             }
         })
         .on('setStartingTime', value => {
@@ -54,4 +54,30 @@ export default function (this: Suit) {
         .on('showLine', () => {
             this.createLine()
         })
+        .on('selectForward', () => {
+            const { selectrpstart, baseViewposition, ctgconfig, selectingBar } = this
+            const hasMoved = selectingBar.hasMoved
+            console.log('hasMoved', hasMoved)
+            // if (selectrpstart - baseViewposition < ctgconfig.print_interval * 240) {
+            //     this.selectrpstart = baseViewposition + ctgconfig.print_interval * 240
+            // }
+            this.selectBasedOnStartingBar(false)
+
+            this.updateBarTool()
+            this.drawobj.showselect()
+
+
+        })
+        .on('selectBackward', () => {
+            const { selectrpstart, baseViewposition, ctgconfig, selectingBar } = this
+            const hasMoved = selectingBar.hasMoved
+            console.log('hasMoved', hasMoved)
+            // if (selectrpstart - baseViewposition < ctgconfig.print_interval * 240) {
+            //     this.selectrpstart = baseViewposition + ctgconfig.print_interval * 240
+            // }
+            this.selectBasedOnStartingBar()
+            this.drawobj.showselect()
+            this.updateBarTool()
+        })
+    this.log(this)
 }

@@ -1,6 +1,6 @@
 import DrawCTG from './DrawCTG';
 //var rulercolor = 'rgb(67,205,128)';
-import { IBarTool } from '../ScrollBar/useScroll';
+import { IBarTool, TLineTool } from '../ScrollBar/useScroll';
 import ScrollEl from '../ScrollBar/ScrollEl';
 import request from "@lianmed/request"
 import { convertstarttime } from "../services/utils";
@@ -12,6 +12,7 @@ let sid = 0;
 type Canvas = HTMLCanvasElement;
 type Context = CanvasRenderingContext2D;
 export class Suit extends Draw {
+  needScroll = false
   isOn: boolean
   emitInterval: number
   static option: { [x: string]: string }
@@ -21,6 +22,7 @@ export class Suit extends Draw {
   log = console.log.bind(console, 'suit', this.sid)
   startingBar: ScrollEl;
   endingBar: ScrollEl;
+  selectingBar: ScrollEl
   rowline: ScrollEl;
   intervalIds: NodeJS.Timeout[] = [];
   data: ICacheItem;
@@ -30,6 +32,7 @@ export class Suit extends Draw {
   currentdot = 10; //当前实时绘制点
   currentx = 10;
   viewposition = 0;
+  lineTool: TLineTool
   scollscale = 1;
   buffersize = 16;
   curr = -16;
@@ -47,6 +50,8 @@ export class Suit extends Draw {
     alarm_enable: true,
     alarm_high: 160,
     alarm_low: 110,
+    print_interval: 20
+
   };
   fetalposition = {
     fhr1: '',
@@ -60,7 +65,7 @@ export class Suit extends Draw {
   selectrpstart = 0;// 相对开始位置
   selectend = 0;// 选择结束点
   selectrpend = 0;// 相对结束位置
-  selectflag = false;
+  selectflag = true;
   requestflag = false;
   canvasgrid: Canvas;
   contextgrid: Context;
@@ -77,6 +82,20 @@ export class Suit extends Draw {
   dragtimestamp = 0;
   interval = 5000;
   timeout: NodeJS.Timeout;
+  get baseViewposition() {
+    return this.viewposition - this.width * 2
+  }
+  get selectingBarPoint() {
+    return this.baseViewposition + this.selectingBar.getLeft() * 2
+  }
+  get rightViewPosition() {
+    return this.viewposition
+  }
+  set rightViewPosition(value: number) {
+    this.viewposition = value
+    this.updateBarTool()
+  }
+
   constructor(
     canvasgrid: Canvas,
     canvasdata: Canvas,
@@ -117,6 +136,7 @@ export class Suit extends Draw {
       this.ctgconfig.alarm_enable = true;
       this.ctgconfig.alarm_high = Number(this.option.alarm_high);
       this.ctgconfig.alarm_low = Number(this.option.alarm_low);
+      this.ctgconfig.print_interval = Number(this.option.print_interval) || 20
     }
 
   }
@@ -136,6 +156,9 @@ export class Suit extends Draw {
       this.type = 1;
       if (typeof (data.index) == 'undefined') {
         this.data = this.InitFileData(data) as any;
+        if (this.data.index > this.width * 2) {
+          this.needScroll = true
+        }
       }
     }
     this.createBar();
@@ -179,6 +202,7 @@ export class Suit extends Draw {
         this.viewposition = this.canvasline.width * 2;
       }
       this.updateSelectCur();
+      this.drawobj.showselect()
       this.drawobj.drawdot(this.viewposition, false);
       this.log(this.viewposition, len)
     });
@@ -203,7 +227,7 @@ export class Suit extends Draw {
           if (this.selectend == 1) {
             this.endingBar.setLeft(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
           }
-          this.drawobj.showselect(this.selectrpstart, this.selectrpend);
+          this.drawobj.showselect();
         }
         this.updateBarTool();
         return;
@@ -229,7 +253,7 @@ export class Suit extends Draw {
         } else {
           this.endingBar.setVisibility(false);
         }
-        this.drawobj.showselect(this.selectrpstart, this.selectrpend);
+        this.drawobj.showselect();
       }
     });
   }
@@ -251,8 +275,8 @@ export class Suit extends Draw {
     if (this.rowline) return
     const { barTool } = this
 
-    const { rowline, addDot, setBase } = barTool.createHLine('blue')
-
+    const lineTool = this.lineTool = barTool.createHLine('blue')
+    const { rowline, addDot, setBase } = lineTool
     // 横线监听y变化
     this.rowline = rowline.on('change:y', v => {
       console.log('rowline', v)
@@ -282,25 +306,27 @@ export class Suit extends Draw {
 
     // 最后设置位置
     setBase(200)
-
+    lineTool.toggleVisibility()
   }
   createBar() {
-    if (this.startingBar && this.endingBar) {
+    if (this.startingBar && this.endingBar && this.selectingBar) {
       return
     }
+    this.createLine()
     const { barTool } = this
     const startingBar = this.startingBar = barTool.createRod('')
     const endingBar = this.endingBar = barTool.createRod('结束')
-
+    const selectingBar = this.selectingBar = barTool.createRod('选择')
 
     startingBar.setLeft(0)
     //endingBar.setOffset(100)
     endingBar.toggleVisibility()
+    startingBar.toggleVisibility()
     startingBar.on('change:x', value => {
       this.selectrpstart = value * 2;
       this.selectstartposition = value;
       // console.log('print_开始', value, this.viewposition, this.canvasline.width);
-      if (value != 0 && this.type < 1) {
+      if (value !== 0 && this.type < 1) {
         this.dragtimestamp = new Date().getTime();
       }
       if (this.viewposition > this.canvasline.width * 2) {
@@ -326,10 +352,12 @@ export class Suit extends Draw {
         return;
       }
       // console.log('print_结束', value, this.selectrpstart, this.selectrpend)
-      this.drawobj.showselect(this.selectrpstart, this.selectrpend);
+      this.drawobj.showselect();
       this.emit('endTime', this.selectrpend)
     })
-
+    // selectingBar.on('change:x', value => {
+    //   this.selectingBarPoit = value
+    // })
 
   }
   lockStartingBar(status: boolean) {
@@ -538,6 +566,35 @@ export class Suit extends Draw {
         oridata = oridata.substring(2, oridata.length);
       }
     });
+  }
+  selectBasedOnStartingBar(isLeft = true) {
+    const { startingBar, endingBar, needScroll, width, ctgconfig, data, selectstart, baseViewposition, selectingBarPoint } = this
+    let endPosition
+    if (isLeft) {
+
+      if (this.selectingBar.getLeft() < 1) {
+        this.rightViewPosition = this.data.index
+        this.selectingBar.setLeft(this.width)
+      }
+      endPosition = this.selectingBarPoint - ctgconfig.print_interval * 240
+      this.selectrpstart = endPosition
+      this.selectrpend = this.selectingBarPoint
+    } else {
+
+      if (this.selectingBar.getLeft() > width - 5) {
+        this.rightViewPosition = width * 2
+        this.selectingBar.setLeft(0)
+      }
+
+      endPosition = this.selectingBarPoint + ctgconfig.print_interval * 240
+      this.selectrpend = endPosition
+      this.selectrpstart = this.selectingBarPoint
+
+
+    }
+    console.log('ggg', this.selectrpstart, this.selectrpend)
+
+
   }
 }
 

@@ -7,6 +7,8 @@ import { IProps, Canvas, Div, Drawer } from "../interface";
 import useDraw from "../useDraw";
 import Loading from './Loading'
 import { useCheckNetwork } from '../services/WsService';
+
+import { ButtonTools } from "./ButtonTools";
 export default forwardRef((props: IProps, ref: Ref<any>) => {
   const {
     data,
@@ -28,8 +30,8 @@ export default forwardRef((props: IProps, ref: Ref<any>) => {
   const ctg = useRef<Suit>(null)
   const ecg = useRef<Drawer>(null)
   const [ecgHeight, setEcgHeight] = useState(0)
-
-
+  const [showBtns, setShowBtns] = useState(false)
+  const staticType = suitType > 0
   useDraw(data, ctgBox, () => {
     const instance = ctg.current = new Suit(
       canvasgrid.current,
@@ -75,7 +77,10 @@ export default forwardRef((props: IProps, ref: Ref<any>) => {
       e.stopPropagation()
       console.log(e)
       return false
-    }}>
+    }}
+      onMouseEnter={() => staticType && setShowBtns(true)}
+      onMouseLeave={() => staticType && setShowBtns(false)}
+    >
       {
         loading && (
           <div style={{ position: 'absolute', width: '100%', height: '100%', background: '#fff', zIndex: 1, opacity: .8 }}>
@@ -102,7 +107,9 @@ export default forwardRef((props: IProps, ref: Ref<any>) => {
         )
       }
       <ScrollBar box={box} getBarTool={tool => { barTool.current = tool }} />
-
+      {
+        <ButtonTools ctg={ctg} visible={showBtns && staticType} />
+      }
     </div>
   );
 })

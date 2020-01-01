@@ -1,6 +1,7 @@
 import React, { useMemo, useRef, useLayoutEffect, useState } from 'react';
 import Ctg from './Ctg';
 import Preview from './Preview';
+import { EventEmitter } from '@lianmed/utils';
 
 export const Context = React.createContext({})
 
@@ -24,6 +25,7 @@ const PrintPreview = (props: IProps) => {
     }, [])
 
     const inputEl = useRef(null);
+    const v = useRef<EventEmitter>(null);
 
     // const onDownload = () => {
 
@@ -31,7 +33,7 @@ const PrintPreview = (props: IProps) => {
     //     window.open(filePath)
     // }
 
-    const v = useMemo(() => { return {} }, []);
+    // const v = useMemo(() => { return {} }, []);
     return (
         <Context.Provider value={v}>
             <div style={{ height: '100%' }} ref={inputEl}>

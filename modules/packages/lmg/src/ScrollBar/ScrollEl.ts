@@ -6,6 +6,7 @@ interface IOptions {
 
 }
 export default class ScrollEl extends EventEmitter {
+    hasMoved = false
     wrapper: HTMLElement;
     el: HTMLElement;
     lockMovementX: false
@@ -37,6 +38,7 @@ export default class ScrollEl extends EventEmitter {
     toggleVisibility() {
         const isHidden = this.el.style.visibility === 'hidden'
         this.setStyle('visibility', isHidden ? 'visible' : 'hidden')
+        return this
     }
     setVisibility(isHidden) {
         this.setStyle('visibility', isHidden ? 'visible' : 'hidden')
@@ -54,7 +56,7 @@ export default class ScrollEl extends EventEmitter {
     //     return this
     // }
     moveCb = (baseX: number, baseY: number, e) => {
-
+        this.hasMoved = true
         requestAnimationFrame(() => {
             const { x, y } = getCoordInDocument(e);
 
@@ -130,9 +132,16 @@ export default class ScrollEl extends EventEmitter {
     }
     setLeft(offset: number, isfire = true) {
         return this.setPosition(offset, isfire, 'left')
+
+    }
+    getLeft() {
+        return parseInt(getComputedStyle(this.el).left) || 0
     }
     setTop(offset: number, isfire = true) {
         return this.setPosition(offset, isfire, 'top')
+    }
+    getTop() {
+        return parseInt(getComputedStyle(this.el).top) || 0
     }
 
     getRect() {
