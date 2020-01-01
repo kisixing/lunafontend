@@ -86,7 +86,7 @@ export class Suit extends Draw {
     return this.viewposition - this.width * 2
   }
   get selectingBarPoint() {
-    return this.baseViewposition + this.selectingBar.getLeft() * 2
+    return ~~(this.baseViewposition + this.selectingBar.getLeft() * 2)
   }
   get rightViewPosition() {
     return this.viewposition
@@ -317,7 +317,7 @@ export class Suit extends Draw {
     const startingBar = this.startingBar = barTool.createRod('')
     const endingBar = this.endingBar = barTool.createRod('结束')
     const selectingBar = this.selectingBar = barTool.createRod('选择')
-
+    selectingBar.setLeft(0)
     startingBar.setLeft(0)
     //endingBar.setOffset(100)
     endingBar.toggleVisibility()
@@ -589,11 +589,12 @@ export class Suit extends Draw {
       endPosition = this.selectingBarPoint + ctgconfig.print_interval * 240
       this.selectrpend = endPosition
       this.selectrpstart = this.selectingBarPoint
-
+      console.log('gggg', this.selectrpend, this.selectrpstart)
 
     }
-    console.log('ggg', this.selectrpstart, this.selectrpend)
 
+    this.emit('endTime', this.selectrpend)
+    this.emit('startTime', this.selectrpstart)
 
   }
 }

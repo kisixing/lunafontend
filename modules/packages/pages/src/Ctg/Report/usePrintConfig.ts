@@ -23,11 +23,18 @@ export default (value, print_interval: number): {
     // const [pdfBase64, setPdfBase64] = useState(`data:application/pdf;base64,${pdf}`)
     const [startingTime, setStartingTime] = useState<number>(0)
     const [endingTime, setEndingTime] = useState<number>(0)
-    const [locking, setLocking] = useState(false)
+    const [total, setTotal] = useState(0)
+    const [locking, setLocking] = useState(true)
     const [customizable, setCustomizable] = useState(false)
 
 
     useEffect(() => {
+        const resStr = ((endingTime - startingTime) / COEFFICIENT).toFixed(1) || '0'
+        setTotal(Number(resStr))
+    }, [startingTime, endingTime])
+
+    useEffect(() => {
+        const current = value.current || {}
         const cb = startingTime => {
             setStartingTime(
                 startingTime
@@ -42,9 +49,10 @@ export default (value, print_interval: number): {
 
             setEndingTime(endingTime)
         }
-        value.suit && value.suit.on('startTime', cb).on('endTime', cbe)
+
+        current.on && current.on('startTime', cb).on('endTime', cbe)
         return () => {
-            value.suit && value.suit.off('startTime', cb).off('endTime', cb)
+            current.off && current.off('startTime', cb).off('endTime', cb)
         };
     }, [value])
 
@@ -52,24 +60,24 @@ export default (value, print_interval: number): {
     const toggleLocking = () => {
         const nextV = !locking
         setLocking(nextV)
-        value.suit.emit('locking', nextV)
+        value.current.emit('locking', nextV)
     }
     const toggleCustomiz = () => {
         const nextV = !customizable
         setCustomizable(nextV)
-        value.suit.emit('customizing', nextV)
+        value.current.emit('customizing', nextV)
     }
     const remoteSetStartingTime = useCallback(
         (v: number) => {
             setStartingTime(v)
-            value.suit.emit('setStartingTime', v)
+            value.current.emit('setStartingTime', v)
         },
         [value],
     )
     const remoteSetEndingTime = useCallback(
         (v: number) => {
             setEndingTime(v)
-            value.suit.emit('setEndingTime', v)
+            value.current.emit('setEndingTime', v)
         },
         [value],
     )

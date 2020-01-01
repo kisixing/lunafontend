@@ -62,6 +62,11 @@ export default forwardRef((props: IProps, ref: Ref<any>) => {
   useImperativeHandle(ref, () => ({
     on(e: string, fn: (...args: any[]) => void) {
       ctg.current && ctg.current.on(e, fn)
+      return ctg.current
+    },
+    off(e: string, fn: (...args: any[]) => void) {
+      ctg.current && ctg.current.off(e, fn)
+      return ctg.current
     },
     emit(e: string, ...args: any[]) {
       ctg.current && ctg.current.emit(e, ...args)
