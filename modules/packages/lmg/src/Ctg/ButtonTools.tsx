@@ -15,7 +15,7 @@ export const ButtonTools = (props: IProps) => {
     const [activeList, setActiveList] = useState(new Set())
     const btns = [
         {
-            icon: 'border-verticle',
+            text: '基线工具',
             onClick: () => {
                 const lineTool = ctg.current.lineTool
                 lineTool && lineTool.toggleVisibility()
@@ -29,7 +29,7 @@ export const ButtonTools = (props: IProps) => {
                     const _set = new Set(activeList)
                     const isExist = _set.has(index)
 
-                    return <Button type={isExist ? 'primary' : 'default'} key={index} icon={_.icon} onClick={() => {
+                    return <Button type={isExist ? 'primary' : 'default'} key={index}  onClick={() => {
                         if (isExist) {
                             _set.delete(index)
                         } else {
@@ -38,7 +38,7 @@ export const ButtonTools = (props: IProps) => {
                         _.onClick()
                         setActiveList(_set)
 
-                    }} />
+                    }} >{_.text}</Button>
                 })
             }
         </ButtonGroup>

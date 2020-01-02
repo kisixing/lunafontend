@@ -150,7 +150,7 @@ export default class DrawCTG {
     // }
     // linecontext.stroke();
   }
-  drawdot(cur, isemit) {
+  drawdot(cur, isemit = false) {
     this.suit.log('drawdot', cur, isemit, this.suit.data.index, this.suit.width * 2)
     const { suit, linecontext, max, analysecontext } = this;
     const { fhr, toco, fm } = suit.data;
@@ -580,7 +580,7 @@ export default class DrawCTG {
     }
     gridcontext.stroke();
   };
-  showcur = (x: number, eventemit: boolean) => {
+  showcur = (x: number, eventemit = false) => {
     const { suit, datacontext } = this;
     const { fhr, toco } = suit.data;
     let curpostion = 10;
@@ -733,7 +733,7 @@ export default class DrawCTG {
     //   end = Math.floor(end/2);
     // }
     start = start - curstart > 0 ? start - curstart : 0;
-    start = start + 4
+    start = (start + 4) / 2
     const baseHeight = this.suit.height - 4
     // console.log('printts1',curstart, start/2, end);
     selectcontext.fillStyle = suit.ctgconfig.selectarea;
@@ -741,14 +741,14 @@ export default class DrawCTG {
     selectcontext.beginPath();
     selectcontext.strokeStyle = 'rgb(10, 10, 20)';
     selectcontext.lineWidth = 4;
-    selectcontext.moveTo(start / 2, this.basetop);
-    selectcontext.lineTo(start / 2, baseHeight);
+    selectcontext.moveTo(start, this.basetop);
+    selectcontext.lineTo(start, baseHeight);
 
 
-    selectcontext.moveTo(start / 2, baseHeight);
+    selectcontext.moveTo(start, baseHeight);
     selectcontext.lineTo(end, baseHeight);
     selectcontext.moveTo(end, this.basetop);
-    selectcontext.lineTo(start / 2, this.basetop);
+    selectcontext.lineTo(start, this.basetop);
 
     if (suit.selectend == 0) {
       selectcontext.moveTo(end, this.basetop);
@@ -756,5 +756,21 @@ export default class DrawCTG {
     }
     // console.log('printts2',curstart, start/2, end);
     selectcontext.stroke();
+    this.suit.startingBar.setLeft(start - 2, false)
+    this.suit.endingBar.setLeft(end - 2, false)
+
+    const leftEdge = this.suit.leftViewposition - 240
+    const rightEdge = this.suit.rightViewPosition + 240
+
+    if (this.suit.selectrpstart <= leftEdge || this.suit.selectrpstart >= rightEdge) {
+      this.suit.startingBar.setVisibility(false)
+    } else {
+      this.suit.startingBar.setVisibility(this.suit.selectflag)
+    }
+    if (this.suit.selectrpend <= leftEdge || this.suit.selectrpend >= rightEdge) {
+      this.suit.endingBar.setVisibility(false)
+    } else {
+      this.suit.endingBar.setVisibility(this.suit.selectflag)
+    }
   };
 }

@@ -6,23 +6,33 @@ export default function (this: Suit) {
             //更新状态
             // console.log('print_locking', value);
             this.selectflag = value;
-            if (this.selectflag) {
-                this.startingBar.toggleVisibility();
-                this.barTool.setBarWidth(0);
-                this.selectend = 0;
-                //this.endingBar.toggleVisibility();
-                // console.log('print_lock', this.selectstart, this.data.index);
-                this.selectrpstart = this.selectstart;
-                this.selectrpend = this.data.index < this.selectrpstart + this.printlen ? this.data.index : this.selectrpstart + this.printlen
-                this.drawobj.showselect();
-                this.endingBar.setVisibility(false);
-                this.emit('endTime', this.selectrpend);
+            // if (this.selectflag) {
+            //     this.startingBar.toggleVisibility();
+            //     this.barTool.setBarWidth(0);
+            //     this.selectend = 0;
+            //     //this.endingBar.toggleVisibility();
+            //     // console.log('print_lock', this.selectstart, this.data.index);
+            //     this.selectrpstart = this.selectstart;
+            //     this.selectrpend = this.data.index < this.selectrpstart + this.printlen ? this.data.index : this.selectrpstart + this.printlen
+            //     this.drawobj.showselect();
+            //     this.endingBar.setVisibility(false);
+            //     this.emit('endTime', this.selectrpend);
+            // } else {
+            //     this.startingBar.toggleVisibility();
+            //     //this.endingBar.toggleVisibility();
+            //     this.endingBar.setVisibility(false);
+            //     // console.log(this.selectstart, this.data.index);
+            //     this.drawobj.showselect(0, 0);
+            // }
+            if (value) {
+                this.startingBar.setVisibility(true)
+                this.endingBar.setVisibility(true)
+                this.selectingBar.setVisibility(false)
+
             } else {
-                this.startingBar.toggleVisibility();
-                //this.endingBar.toggleVisibility();
-                this.endingBar.setVisibility(false);
-                // console.log(this.selectstart, this.data.index);
-                this.drawobj.showselect(0, 0);
+                this.startingBar.setVisibility(false)
+                this.endingBar.setVisibility(false)
+                this.selectingBar.setVisibility(true)
             }
         })
         .on('customizing', value => {
@@ -54,8 +64,12 @@ export default function (this: Suit) {
         .on('showLine', () => {
             this.createLine()
         })
+        .on('selectAll',()=>{
+            this.$selectrpend = this.data.index - 2
+            this.$selectrpstart = 0
+        })
         .on('selectForward', () => {
-            const { selectrpstart, baseViewposition, ctgconfig, selectingBar } = this
+            const { selectrpstart, leftViewposition: baseViewposition, ctgconfig, selectingBar } = this
             const hasMoved = selectingBar.hasMoved
             console.log('hasMoved', hasMoved)
             // if (selectrpstart - baseViewposition < ctgconfig.print_interval * 240) {
@@ -69,7 +83,7 @@ export default function (this: Suit) {
 
         })
         .on('selectBackward', () => {
-            const { selectrpstart, baseViewposition, ctgconfig, selectingBar } = this
+            const { selectrpstart, leftViewposition: baseViewposition, ctgconfig, selectingBar } = this
             const hasMoved = selectingBar.hasMoved
             console.log('hasMoved', hasMoved)
             // if (selectrpstart - baseViewposition < ctgconfig.print_interval * 240) {

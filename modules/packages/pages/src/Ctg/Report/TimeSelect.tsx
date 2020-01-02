@@ -48,7 +48,9 @@ const Preview = (props: IProps) => {
         total,
         backward,
         forward,
-        // toggleLocking,
+        toggleLocking,
+        selectAll,
+        editable,
         // toggleCustomiz
     } = usePrintConfig(value, print_interval)
 
@@ -72,16 +74,16 @@ const Preview = (props: IProps) => {
                             <div style={{ width: 400, padding: 24, background: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-around', border: '1px solid #d9d9d9' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <Button icon="forward" onClick={forward} />
-                                        <div style={{ marginLeft: 6 }}>
-                                            时间：0分
-                                        </div>
+                                        <Button disabled={locking} onClick={forward} >向后选择</Button>
                                     </div>
                                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <Button icon="backward" onClick={backward} />
-                                        <div style={{ marginLeft: 6 }}>
-                                            时间：0分
-                                        </div>
+                                        <Button disabled={locking} onClick={backward} >向前选择</Button>
+                                    </div>
+                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                        <Button disabled={locking} onClick={selectAll} >全选</Button>
+                                    </div>
+                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                        <Button disabled={!editable} onClick={toggleLocking} >{locking ? '确定' : '自定义'}</Button>
                                     </div>
                                 </div>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -132,7 +134,7 @@ const Preview = (props: IProps) => {
                                     <span><span>时长：</span>{total}  <span>分</span> </span>
                                 </div> */}
                                 <div style={{ display: 'flex' }}>
-                                    <Button block disabled={!locking} type="primary" loading={pdfBase64Loading} onClick={handlePreview} style={{ marginRight: 10 }}>
+                                    <Button disabled={locking || !editable} block type="primary" loading={pdfBase64Loading} onClick={handlePreview} style={{ marginRight: 10 }}>
                                         <span>生成</span>
                                     </Button>
                                     <Button block disabled={!pdfBase64} type="primary" loading={qrCodeBase64Loading} onClick={signHandler} style={{ marginRight: 10 }}>

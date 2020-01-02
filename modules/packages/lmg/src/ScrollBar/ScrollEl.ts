@@ -126,7 +126,7 @@ export default class ScrollEl extends EventEmitter {
         const result = offset <= 0 ? 0 : offset >= distance ? distance : offset;
         if (el.style[direction] !== (result + 'px')) {
             this.setStyle(direction, result);
-            isfire && this.emit(`change:${direction === 'left' ? 'x' : 'y'}`, result);
+            isfire && this.emit(`change:${direction === 'left' ? 'x' : 'y'}`, result || 0);
         }
         return this
     }

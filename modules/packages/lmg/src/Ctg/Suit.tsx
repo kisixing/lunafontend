@@ -65,7 +65,7 @@ export class Suit extends Draw {
   selectrpstart = 0;// 相对开始位置
   selectend = 0;// 选择结束点
   selectrpend = 0;// 相对结束位置
-  selectflag = true;
+  selectflag = false;
   requestflag = false;
   canvasgrid: Canvas;
   contextgrid: Context;
@@ -77,16 +77,41 @@ export class Suit extends Draw {
   contextselect: Context;
   canvasanalyse: Canvas;
   contextanalyse: Context;
-  drawobj: DrawCTG;
   barTool: IBarTool;
+  drawobj: DrawCTG;
   dragtimestamp = 0;
   interval = 5000;
   timeout: NodeJS.Timeout;
-  get baseViewposition() {
+  get $selectrpend() {
+    return this.selectrpend
+  }
+  set $selectrpend(value: number) {
+    this.selectrpend = value
+    const absLen = (value - this.leftViewposition) / 2
+    this.endingBar.setLeft(absLen, false)
+    this.drawobj.showselect()
+    this.selectflag && this.drawobj.showcur(value)
+    this.emit('endTime', value)
+  }
+  get $selectrpstart() {
+    return this.selectrpstart
+  }
+  set $selectrpstart(value: number) {
+    this.selectrpstart = value
+    const absLen = (value - this.leftViewposition) / 2
+
+    this.startingBar.setLeft(absLen, false)
+    this.drawobj.showselect()
+    this.selectflag && this.drawobj.showcur(value)
+    this.emit('startTime', value)
+
+
+  }
+  get leftViewposition() {
     return this.viewposition - this.width * 2
   }
   get selectingBarPoint() {
-    return ~~(this.baseViewposition + this.selectingBar.getLeft() * 2)
+    return ~~(this.leftViewposition + this.selectingBar.getLeft() * 2)
   }
   get rightViewPosition() {
     return this.viewposition
@@ -94,6 +119,7 @@ export class Suit extends Draw {
   set rightViewPosition(value: number) {
     this.viewposition = value
     this.updateBarTool()
+    this.drawobj.drawdot(this.viewposition)
   }
 
   constructor(
@@ -197,16 +223,18 @@ export class Suit extends Draw {
       if (this.data.index < this.canvasline.width * 4) {
         len = Math.floor((this.canvasline.width * 4 - this.data.index) / 2);
       }
-      this.viewposition = this.canvasline.width * 2 + Math.floor((this.data.index - this.canvasline.width * 2) * value / (this.canvasline.width - len));
+      let _viewposition = this.canvasline.width * 2 + Math.floor((this.data.index - this.canvasline.width * 2) * value / (this.canvasline.width - len));
       if (this.viewposition < this.canvasline.width * 2) {
-        this.viewposition = this.canvasline.width * 2;
+        _viewposition = this.canvasline.width * 2;
       }
+      this.rightViewPosition = _viewposition
       this.updateSelectCur();
       this.drawobj.showselect()
       this.drawobj.drawdot(this.viewposition, false);
-      this.log(this.viewposition, len)
+      this.log('gg', this.viewposition, len, value)
     });
     this.barTool.watchGrab(value => {
+      let _viewposition
       value = ~~value
       if (this.type == 0 && this.data.past > 0) {
         //console.log('print', this.data,this.selectrpstart, this.selectrpend);
@@ -221,40 +249,41 @@ export class Suit extends Draw {
       this.dragtimestamp = new Date().getTime();
       //判断开始点
       if (this.viewposition - value < this.canvasline.width * 2) {
-        this.viewposition = this.canvasline.width * 2;
+        _viewposition = this.canvasline.width * 2;
         this.drawobj.drawdot(this.viewposition, false);
-        if (this.selectflag) {
-          if (this.selectend == 1) {
-            this.endingBar.setLeft(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
-          }
-          this.drawobj.showselect();
+        // if (this.selectflag) {
+        if (this.selectend == 1) {
+          this.endingBar.setLeft(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
         }
+        this.drawobj.showselect();
+        // }
         this.updateBarTool();
         return;
       }
       //方向确认
       // console.log('print_drag1', value, this.viewposition, this.selectrpend);
       if (this.viewposition - value < this.data.index) {
-        this.viewposition -= value;
+        _viewposition = this.rightViewPosition - value;
         //this.movescoller();
         this.drawobj.drawdot(this.viewposition, false);
       } else {
-        this.viewposition = this.data.index;
+        _viewposition = this.data.index;
         this.drawobj.drawdot(this.viewposition, false);
         // console.log('print_drag--', this.viewposition);
       }
       this.updateBarTool();
-      if (this.selectflag) {
-        // console.log('print_drag2', value, this.viewposition, this.selectrpend, Math.floor((this.viewposition - this.selectrpend)) / 2);
-        if (this.selectend == 1 && this.viewposition - this.selectrpend > -2) {
-          this.endingBar.setVisibility(true);
-          //this.endingBar.setOffset(this.selectrpend / 2);
-          this.endingBar.setLeft(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
-        } else {
-          this.endingBar.setVisibility(false);
-        }
-        this.drawobj.showselect();
+      this.rightViewPosition = _viewposition
+      // if (this.selectflag) {
+      // console.log('print_drag2', value, this.viewposition, this.selectrpend, Math.floor((this.viewposition - this.selectrpend)) / 2);
+      if (this.selectend == 1 && this.viewposition - this.selectrpend > -2) {
+        // this.endingBar.setVisibility(true);
+        //this.endingBar.setOffset(this.selectrpend / 2);
+        this.endingBar.setLeft(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
+      } else {
+        // this.endingBar.setVisibility(false);
       }
+      this.drawobj.showselect();
+      // }
     });
   }
   lazyEmit = throttle((type: string, ...args: any[]) => {
@@ -314,7 +343,7 @@ export class Suit extends Draw {
     }
     this.createLine()
     const { barTool } = this
-    const startingBar = this.startingBar = barTool.createRod('')
+    const startingBar = this.startingBar = barTool.createRod('开始')
     const endingBar = this.endingBar = barTool.createRod('结束')
     const selectingBar = this.selectingBar = barTool.createRod('选择')
     selectingBar.setLeft(0)
@@ -322,25 +351,30 @@ export class Suit extends Draw {
     //endingBar.setOffset(100)
     endingBar.toggleVisibility()
     startingBar.toggleVisibility()
+    selectingBar.on('change:x', value => {
+
+      // this.drawobj.showcur(this.selectingBarPoint, false);
+    })
     startingBar.on('change:x', value => {
-      this.selectrpstart = value * 2;
-      this.selectstartposition = value;
-      // console.log('print_开始', value, this.viewposition, this.canvasline.width);
-      if (value !== 0 && this.type < 1) {
-        this.dragtimestamp = new Date().getTime();
-      }
-      if (this.viewposition > this.canvasline.width * 2) {
-        this.selectstart = value * 2 + this.viewposition - 2 * this.canvasline.width;
-      } else {
-        if (this.type < 1) {
-          this.selectstart = value * 2 + this.viewposition - 2 * this.canvasline.width;
-        } else {
-          this.selectstart = value * 2;
-        }
-      }
-      this.drawobj.showcur(this.selectstart, false);
-      this.selectrpstart = this.selectstart;
-      this.emit('startTime', this.selectstart)
+      // this.selectrpstart = value * 2;
+      // this.selectstartposition = value;
+      // // console.log('print_开始', value, this.viewposition, this.canvasline.width);
+      // if (value !== 0 && this.type < 1) {
+      //   this.dragtimestamp = new Date().getTime();
+      // }
+      // if (this.viewposition > this.canvasline.width * 2) {
+      //   this.selectstart = value * 2 + this.viewposition - 2 * this.canvasline.width;
+      // } else {
+      //   if (this.type < 1) {
+      //     this.selectstart = value * 2 + this.viewposition - 2 * this.canvasline.width;
+      //   } else {
+      //     this.selectstart = value * 2;
+      //   }
+      // }
+      // this.drawobj.showcur(this.selectstart, false);
+      // this.selectrpstart = this.selectstart;
+      this.$selectrpstart = this.leftViewposition + value * 2
+      // this.emit('startTime', this.selectstart)
     })
     endingBar.on('change:x', value => {
       if (this.data.index < this.canvasline.width * 2) {
@@ -354,6 +388,10 @@ export class Suit extends Draw {
       // console.log('print_结束', value, this.selectrpstart, this.selectrpend)
       this.drawobj.showselect();
       this.emit('endTime', this.selectrpend)
+
+      this.$selectrpend = this.leftViewposition + value * 2
+      // this.emit('startTime', this.selectstart)
+
     })
     // selectingBar.on('change:x', value => {
     //   this.selectingBarPoit = value
@@ -416,15 +454,15 @@ export class Suit extends Draw {
   }
 
   updateSelectCur() {
-    if (!this.selectflag) {
-      if (this.viewposition > this.canvasline.width * 2) {
-        this.selectstart = this.selectstartposition * 2 + this.viewposition - 2 * this.canvasline.width;
-      } else {
-        this.selectstart = this.selectstartposition * 2;
-      }
-      this.emit('startTime', this.selectstart)
-      this.drawobj.showcur(this.selectstart, false);
+    // if (!this.selectflag) {
+    if (this.viewposition > this.canvasline.width * 2) {
+      this.selectstart = this.selectstartposition * 2 + this.viewposition - 2 * this.canvasline.width;
+    } else {
+      this.selectstart = this.selectstartposition * 2;
     }
+    // this.emit('startTime', this.selectstart)
+    this.drawobj.showcur(this.selectstart, false);
+    // }
   }
   movescoller() { }
 
@@ -568,7 +606,7 @@ export class Suit extends Draw {
     });
   }
   selectBasedOnStartingBar(isLeft = true) {
-    const { startingBar, endingBar, needScroll, width, ctgconfig, data, selectstart, baseViewposition, selectingBarPoint } = this
+    const { startingBar, endingBar, needScroll, width, ctgconfig, data, selectstart, leftViewposition: baseViewposition, selectingBarPoint } = this
     let endPosition
     if (isLeft) {
 
@@ -577,23 +615,22 @@ export class Suit extends Draw {
         this.selectingBar.setLeft(this.width)
       }
       endPosition = this.selectingBarPoint - ctgconfig.print_interval * 240
-      this.selectrpstart = endPosition
-      this.selectrpend = this.selectingBarPoint
+      this.$selectrpstart = endPosition < 0 ? 0 : endPosition
+      this.$selectrpend = this.selectingBarPoint
     } else {
 
-      if (this.selectingBarPoint + 2400 >= data.index) {
+      if (this.selectingBarPoint + 10 >= data.index) {
         this.rightViewPosition = width * 2
         this.selectingBar.setLeft(0)
       }
 
       endPosition = this.selectingBarPoint + ctgconfig.print_interval * 240
-      this.selectrpend = endPosition
-      this.selectrpstart = this.selectingBarPoint
+      this.$selectrpend = endPosition
+      this.$selectrpstart = this.selectingBarPoint
 
     }
 
-    this.emit('endTime', this.selectrpend)
-    this.emit('startTime', this.selectrpstart)
+
 
   }
 }

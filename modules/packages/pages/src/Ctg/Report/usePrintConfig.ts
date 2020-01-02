@@ -17,7 +17,9 @@ export default (value, print_interval: number): {
     toggleLocking: () => any,
     toggleCustomiz: () => any,
     backward: () => any,
-    forward: () => any
+    forward: () => any,
+    selectAll: () => any,
+    editable: boolean
 } => {
 
 
@@ -25,13 +27,13 @@ export default (value, print_interval: number): {
     const [startingTime, setStartingTime] = useState<number>(0)
     const [endingTime, setEndingTime] = useState<number>(0)
     const [total, setTotal] = useState(0)
-    const [locking, setLocking] = useState(true)
+    const [locking, setLocking] = useState(false)
     const [customizable, setCustomizable] = useState(false)
-
+    const [editable, setEditable] = useState(false)
 
     useEffect(() => {
         const resStr = ((endingTime - startingTime) / COEFFICIENT).toFixed(1) || '0'
-        setTotal(Number(resStr)) 
+        setTotal(Number(resStr))
     }, [startingTime, endingTime])
 
     useEffect(() => {
@@ -40,10 +42,10 @@ export default (value, print_interval: number): {
             setStartingTime(
                 startingTime
             )
-            //TODO: 计算结束时间
-            setEndingTime(
-                startingTime + print_interval * COEFFICIENT
-            )
+            // //TODO: 计算结束时间
+            // setEndingTime(
+            //     startingTime + print_interval * COEFFICIENT
+            // )
         }
         const cbe = endingTime => {
             console.log('cb')
@@ -83,15 +85,21 @@ export default (value, print_interval: number): {
         [value],
     )
     const backward = useCallback(
-        () => value.current.emit('selectBackward'),
-        [value],
+        () => value.current.emit('selectBackward') && setEditable(true),
+        [value, setEditable],
     )
     const forward = useCallback(
-        () => value.current.emit('selectForward'),
-        [value],
+        () => value.current.emit('selectForward') && setEditable(true),
+        [value, setEditable],
+    )
+    const selectAll = useCallback(
+        () => value.current.emit('selectAll') && setEditable(true),
+        [value, setEditable],
     )
 
     return {
+        editable,
+        selectAll,
         startingTime,
         endingTime,
         locking,
