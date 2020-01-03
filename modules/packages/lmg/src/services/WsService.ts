@@ -16,21 +16,22 @@ const { Working, Stopped, OfflineStopped } = BedStatus
 
 export class WsService extends EventEmitter {
     static wsStatus: typeof EWsStatus = EWsStatus
-    static _this: WsService;
+    static _this: WsService
+    static EWsEvents = EWsEvents
     eventNamespace = "ws"
-    isReady = false;
-    dirty = false;
-    interval: number = 10000;
-    RECONNECT_INTERVAL: number = 3000;
-    span: number = NaN;
-    offQueue: Queue = new Queue();
-    offstart: boolean = false;
+    isReady = false
+    dirty = false
+    interval: number = 10000
+    RECONNECT_INTERVAL: number = 3000
+    span: number = NaN
+    offQueue: Queue = new Queue()
+    offstart: boolean = false
     pongTimeoutId: NodeJS.Timeout = null
     log = console.log.bind(console, 'websocket')
-    datacache: ICache = new Map();
-    settingData: { [x: string]: string };
-    socket: WebSocket;
-    offrequest: number;
+    datacache: ICache = new Map()
+    settingData: { [x: string]: string }
+    socket: WebSocket
+    offrequest: number
     strategies = getStrategies(this)
     BedStatus = BedStatus
     // store = (window as any).g_app._store

@@ -23,7 +23,8 @@ export enum BedStatus {
 }
 export enum EWsEvents {
     pong = "pong",
-    explode = "explode"
+    explode = "explode",
+    updateSubscriptionIfNecessary = "updateSubscriptionIfNecessary"
 }
 export interface ICacheItem {
     volumeData?: IVolumeData
