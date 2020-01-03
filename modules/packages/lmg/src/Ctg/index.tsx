@@ -111,7 +111,7 @@ export default forwardRef((props: IProps, ref: Ref<any>) => {
       }
       <ScrollBar box={box} getBarTool={tool => { barTool.current = tool }} />
       {
-        <ButtonTools ctg={ctg} visible={showBtns && staticType} />
+        suitType > 0 && <ButtonTools ctg={ctg} visible={showBtns && staticType} />
       }
     </div>
   );

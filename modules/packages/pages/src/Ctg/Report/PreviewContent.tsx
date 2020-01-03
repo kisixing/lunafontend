@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback, useLayoutEffect, useRef } from 'react';
+import React, { useState, useCallback, useLayoutEffect, useRef, useEffect } from 'react';
 import { Document, Page } from 'react-pdf';
 import { Pagination, Spin, Icon, Button, Empty } from 'antd';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
@@ -13,7 +13,9 @@ import 'react-pdf/dist/Page/AnnotationLayer.css';
 // pdfjs.GlobalWorkerOptions.workerSrc = pdf_worker_url;
 
 const PreviewContent = props => {
-    const { pdfBase64 } = props; 
+    const { pdfBase64, isFull = false, wh, borderd = true } = props;
+    const { h, w } = wh;
+
     const [isFullpage, setFullpage] = useState(false);
     const [height, setHeight] = useState(200); //
     const [width, setWidth] = useState('100%')
@@ -22,7 +24,6 @@ const PreviewContent = props => {
     const onDocumentLoad = useCallback(({ numPages }) => { setNumPages(numPages) }, [])
     const onChangePage = useCallback(page => { setPageNumber(page) }, [])
     const largen = () => {
-        const { h, w } = props.wh;
         setFullpage(true)
         setHeight(h - 24);
         setWidth(w)
@@ -44,8 +45,14 @@ const PreviewContent = props => {
             `
         }
 
-    }, [])
 
+    }, [])
+    useEffect(() => {
+        if (isFull) {
+            setHeight(h - 24);
+            setWidth(w)
+        }
+    }, [w, h])
     const content = pdfBase64 ? (
         <div style={{
             width: width,
@@ -84,7 +91,7 @@ const PreviewContent = props => {
                     返回<Icon title="缩小" type="fullscreen-exit" />
                 </span>
             ) : (
-                    <span style={{ position: 'absolute', bottom: 36, right: 12, }}>
+                    isFull || <span style={{ position: 'absolute', bottom: 36, right: 12, }}>
                         <Button
                             title="全屏"
                             type="primary"
@@ -106,7 +113,7 @@ const PreviewContent = props => {
             background: '#fff',
             marginRight: 12,
             zIndex: 99,
-            border: '1px solid #d9d9d9',
+            border: borderd && '1px solid #d9d9d9',
         }
         } >
             {content}

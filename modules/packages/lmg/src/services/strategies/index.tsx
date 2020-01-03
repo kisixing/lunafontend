@@ -1,7 +1,7 @@
 import { start_work } from "./start_work";
 import { end_work } from "./end_work";
 import { update_status } from "./update_status";
-import { update_subscribe_device } from "./update_subscribe_device";
+import { push_notification } from "./push_notification";
 import { heard } from "./heard";
 import { getVolume } from "./getVolume";
 import { get_data_ctg } from "./get_data_ctg";
@@ -19,7 +19,7 @@ export const strategies: { [x: string]: Function } = {
     heard,
 
     update_status,
-    update_subscribe_device,
+    push_notification,
 
     getVolume,
     get_data_ctg,

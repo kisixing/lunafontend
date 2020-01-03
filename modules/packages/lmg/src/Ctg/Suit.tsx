@@ -108,7 +108,7 @@ export class Suit extends Draw {
 
   }
   get leftViewposition() {
-    return this.viewposition - this.width * 2
+    return this.viewposition >= this.width * 2 ? (this.viewposition - this.width * 2) : 0
   }
   get selectingBarPoint() {
     return ~~(this.leftViewposition + this.selectingBar.getLeft() * 2)
@@ -625,7 +625,7 @@ export class Suit extends Draw {
       }
 
       endPosition = this.selectingBarPoint + ctgconfig.print_interval * 240
-      this.$selectrpend = endPosition
+      this.$selectrpend = endPosition > data.index ? data.index : endPosition
       this.$selectrpstart = this.selectingBarPoint
 
     }
