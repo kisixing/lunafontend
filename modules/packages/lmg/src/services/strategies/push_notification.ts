@@ -1,7 +1,7 @@
 import { WsService } from "../WsService";
 
 interface II {
-    type: "update_subscribe_device"
+    type: "update_subscribe_device" | ''
     content: {
         devices: string // "243,28,39,21"
         wardId: string
