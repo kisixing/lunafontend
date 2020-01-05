@@ -236,7 +236,7 @@ export class Suit extends Draw {
     this.barTool.watchGrab(value => {
 
       let _viewposition
-      value = ~~value
+      value = ~~value * 2
       if (this.type == 0 && this.data.past > 0) {
         //console.log('print', this.data,this.selectrpstart, this.selectrpend);
         if (!this.requestflag) {
@@ -266,7 +266,6 @@ export class Suit extends Draw {
       if (this.viewposition - value < this.data.index) {
         _viewposition = this.rightViewPosition - value;
         //this.movescoller();
-        console.log('gggggggg', value, _viewposition)
         this.drawobj.drawdot(this.viewposition, false);
       } else {
         _viewposition = this.data.index;

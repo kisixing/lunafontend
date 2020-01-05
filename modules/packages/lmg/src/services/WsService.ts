@@ -192,7 +192,7 @@ export class WsService extends EventEmitter {
         } else if (value >= datacache.get(id).index) {
 
             datacache.get(id).index = value;
-            if (value > 0) {
+            if (value > 20 * 240) {
                 announce(id)
             }
         }
@@ -345,7 +345,7 @@ function sp(key: string) {
         timeoutKey = setTimeout(() => {
             spObj = {}
             timeoutKey = null
-        }, 1);
+        }, SECOND * 60 * 20);
     }
     const old = spObj[key]
     return old ? false : (spObj[key] = true)
