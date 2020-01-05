@@ -37,15 +37,15 @@ function useScroll(
 
     const boxGrabCb = (e: MouseEvent) => {
       // alert('box click')
-      var { x: x1 } = getCoordInDocument(e);
+      let { x: x1 } = getCoordInDocument(e);
       let temp = x1;
       boxEl.style.cursor = 'grab';
       const fn = function (e) {
 
         requestAnimationFrame(() => {
-          var { x: x2 } = getCoordInDocument(e);
+          let { x: x2 } = getCoordInDocument(e);
           if (Math.abs(x2 - temp) > dragInterval) {
-            resolveGrab(x2 - x1);
+            resolveGrab(x2 - temp);
 
             temp = x2;
           }

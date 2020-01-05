@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import request from "@lianmed/request";
 import { message } from 'antd';
+import { event } from '@lianmed/utils';
 
 
 
@@ -39,10 +40,12 @@ export default (docid: string, setPdfBase64: any) => {
                 bizSn: docId
             }
         }).then(({ ret, data }) => {
+
             if (ret === '1') {
                 setModalVisible(false)
                 if (data) {
                     info('签名成功')
+                    event.emit('signed', docid)
                     setPdfBase64(`data:application/pdf;base64,${data}`)
                 } else {
                     info('签名失败')

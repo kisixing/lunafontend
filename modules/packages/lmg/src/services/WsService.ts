@@ -11,7 +11,7 @@ import { getStrategies } from "./strategies";
 // import pingpong from "./pingpong";
 
 const ANNOUNCE_INTERVAL = 1000
-
+const SECOND = 1000
 const { Working, Stopped, OfflineStopped } = BedStatus
 
 export class WsService extends EventEmitter {
@@ -34,6 +34,7 @@ export class WsService extends EventEmitter {
     offrequest: number
     strategies = getStrategies(this)
     BedStatus = BedStatus
+    PENDDING_INTERVAL = SECOND * 30
     // store = (window as any).g_app._store
     constructor(settingData?) {
         super();
@@ -63,7 +64,13 @@ export class WsService extends EventEmitter {
         }))
         this.pongIndex++
     }
+    t = +new Date()
     pong() {
+        const t = +new Date()
+        t - this.t > this.PENDDING_INTERVAL && this.pongFailed()
+
+        this.t = t
+
         let count = 0
         const MS = 3000
         this.pongTimeoutId ? clearInterval(this.pongTimeoutId) : this.sendHeard()
@@ -338,7 +345,7 @@ function sp(key: string) {
         timeoutKey = setTimeout(() => {
             spObj = {}
             timeoutKey = null
-        }, 1000 * 60 * 20);
+        }, SECOND * 60 * 20);
     }
     const old = spObj[key]
     return old ? false : (spObj[key] = true)
