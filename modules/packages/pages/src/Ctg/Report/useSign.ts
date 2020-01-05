@@ -8,7 +8,7 @@ import { message } from 'antd';
 
 export default (docid: string, setPdfBase64: any) => {
 
-
+    const [docId, setDocId] = useState(docid);
     const [qrCodeBase64, setQrCodeBase64] = useState('')
     const [qrCodeBase64Loading, setQrCodeBase64Loading] = useState(false)
     const [modalVisible, setModalVisible] = useState(false)
@@ -21,9 +21,12 @@ export default (docid: string, setPdfBase64: any) => {
         request.post('/ca/signreq', {
             data: {
                 action: "sign",
-                docid
+                docid: docId
             }
         }).then(r => {
+            if (r && r.sn) {
+              setDocId(r.sn)
+            }
             setQrCodeBase64(r && r.data)
             setModalVisible(true)
             setQrCodeBase64Loading(false)
@@ -33,7 +36,7 @@ export default (docid: string, setPdfBase64: any) => {
     const fetchSigninfo = () => {
         request.post('/ca/signinfo', {
             data: {
-                bizSn: docid
+                bizSn: docId
             }
         }).then(({ ret, data }) => {
             if (ret === '1') {
@@ -48,7 +51,7 @@ export default (docid: string, setPdfBase64: any) => {
         })
     }
     useEffect(() => {
-        let timeoutId = modalVisible && setInterval(fetchSigninfo, 1500)
+        let timeoutId = modalVisible && setInterval(fetchSigninfo, 1000 * 10)
         return () => {
             timeoutId && clearInterval(timeoutId)
         }

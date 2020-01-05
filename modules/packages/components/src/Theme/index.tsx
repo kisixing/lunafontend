@@ -8,9 +8,18 @@ import { getThemeColor, applyAntdTheme, placementSketchPicker } from './util';
 //     '#00838f', '#546e7a', '#5e35b1', '#1a237e', '#311b92', '#4a148c', '#827717', '#0d47a1'
 // ]
 const colors = [
-    '#33691e', '#006064', '#d81b60', '#bc5100', '#1a237e',
-    '#4a148c', '#827717', '#0d47a1'
-]
+  '#33691e',
+  '#006064',
+  '#ffa7c4',
+  '#bc5100',
+  '#1a237e',
+  '#4a148c',
+  '#827717',
+  '#0d47a1',
+  '#1890ff',
+  '#1DA57A',
+  '#0078d7',
+];
 
 interface IProps {
     primaryColor?: string,
