@@ -234,6 +234,7 @@ export class Suit extends Draw {
       this.log('gg', this.viewposition, len, value)
     });
     this.barTool.watchGrab(value => {
+
       let _viewposition
       value = ~~value
       if (this.type == 0 && this.data.past > 0) {
@@ -265,6 +266,7 @@ export class Suit extends Draw {
       if (this.viewposition - value < this.data.index) {
         _viewposition = this.rightViewPosition - value;
         //this.movescoller();
+        console.log('gggggggg', value, _viewposition)
         this.drawobj.drawdot(this.viewposition, false);
       } else {
         _viewposition = this.data.index;
@@ -346,6 +348,7 @@ export class Suit extends Draw {
     const startingBar = this.startingBar = barTool.createRod('开始')
     const endingBar = this.endingBar = barTool.createRod('结束')
     const selectingBar = this.selectingBar = barTool.createRod('选择')
+    this.type === 0 && selectingBar.setVisibility(false)
     selectingBar.setLeft(0)
     startingBar.setLeft(0)
     //endingBar.setOffset(100)
@@ -353,7 +356,7 @@ export class Suit extends Draw {
     startingBar.toggleVisibility()
     selectingBar.on('change:x', value => {
 
-      // this.drawobj.showcur(this.selectingBarPoint, false);
+      this.drawobj.showcur(this.selectingBarPoint, false);
     })
     startingBar.on('change:x', value => {
       // this.selectrpstart = value * 2;
