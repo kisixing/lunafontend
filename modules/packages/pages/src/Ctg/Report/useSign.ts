@@ -54,7 +54,7 @@ export default (docid: string, setPdfBase64: any) => {
         })
     }
     useEffect(() => {
-        let timeoutId = modalVisible && setInterval(fetchSigninfo, 1000 * 10)
+        let timeoutId = modalVisible && setInterval(fetchSigninfo, 1500)
         return () => {
             timeoutId && clearInterval(timeoutId)
         }
