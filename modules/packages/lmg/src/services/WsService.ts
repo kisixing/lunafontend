@@ -67,6 +67,7 @@ export class WsService extends EventEmitter {
     t = +new Date()
     pong() {
         const t = +new Date()
+        console.log('pong', new Date().getMinutes())
         t - this.t > this.PENDDING_INTERVAL && this.pongFailed()
 
         this.t = t
@@ -82,6 +83,7 @@ export class WsService extends EventEmitter {
         }, MS)
     }
     pongFailed() {
+        console.log('pong failed')
         this.emit(EWsEvents.pong, false)
         this.socket.close()
     }
@@ -281,7 +283,7 @@ export class WsService extends EventEmitter {
     connect = (): Promise<ICache> => {
         const { datacache, settingData } = this
         const { ws_url } = settingData
-        this.tip('连接中', EWsStatus.Pendding)
+        this.tip('pong 连接中', EWsStatus.Pendding)
         if (!ws_url) return Promise.reject('错误的ws_url')
         this.socket = new WebSocket(
 
