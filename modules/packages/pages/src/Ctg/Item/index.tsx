@@ -16,6 +16,7 @@ interface IProps {
     bedNO: string
     startTime: string
     GP: string,
+    gestationalWeek: string,
     onDoubleClick?: (e: React.MouseEvent) => void
     onClose?: (e: React.MouseEvent) => void
     loading?: boolean
@@ -28,7 +29,7 @@ const Item = (props: IProps) => {
     const { data, bedname, onClose, onDoubleClick, loading, onSuitRead, themeColor = 'rgb(74, 20, 140)' } = props;
     const status = props.status === undefined ? data && data.status : props.status
     const ismulti = data && data.ismulti
-    let { bedNO, GP, name, age, startTime } = props;
+    let { bedNO, GP, gestationalWeek, name, age, startTime } = props;
     const [suit, setSuit] = useState(null)
 
 
@@ -43,7 +44,7 @@ const Item = (props: IProps) => {
                         ['床号', bedNO],
                         ['姓名', name],
                         ['年龄', age],
-                        // ['孕周', 'aaa'],
+                        ['孕周', gestationalWeek],
                         ['GP', GP],
                         ['开始时间', moment(startTime).format('HH:mm')],
                     ]

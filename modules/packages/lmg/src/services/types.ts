@@ -44,6 +44,7 @@ export interface ICacheItem {
     docid: string;
     pregnancy: {
         GP: string
+        gestationalWeek: string
         age: string
         bedNO: string
         edd: string
