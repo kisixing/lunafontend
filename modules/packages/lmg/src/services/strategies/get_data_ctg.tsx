@@ -1,6 +1,6 @@
 import { WsService } from "../WsService";
 
-interface II {
+interface IData {
     fhr: number
     fhr2: number
     fhr3: number
@@ -10,7 +10,7 @@ interface II {
 }
 interface IData {
     bed_no: number
-    data: II[]
+    data: IData[]
     device_no: number
     name: "get_data_ctg"
 }
