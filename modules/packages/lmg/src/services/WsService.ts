@@ -53,7 +53,7 @@ export class WsService extends EventEmitter {
         WsService._this = this;
         this.settingData = settingData
     }
-    getUnitId(device_no, bed_no) {
+    getUnitId(device_no: number | string, bed_no: number | string) {
         return `${device_no}-${bed_no}`
     }
     pongIndex = 0
@@ -175,12 +175,12 @@ export class WsService extends EventEmitter {
         this.send(msg)
     }
     connectResolve: (value: any) => void
-    convertdocid(id: string, doc_id: string) {
-        this.datacache.get(id).docid = doc_id;
+    convertdocid(unitId: string, doc_id: string) {
+        this.datacache.get(unitId).docid = doc_id;
         if (doc_id != '') {
             let vt = doc_id.split('_');
             if (vt.length > 2) {
-                this.datacache.get(id).starttime = convertstarttime(vt[2]);
+                this.datacache.get(unitId).starttime = convertstarttime(vt[2]);
             }
         }
     }

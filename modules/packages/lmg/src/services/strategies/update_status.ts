@@ -16,29 +16,30 @@ interface IData {
 }
 
 export function update_status(this: WsService, received_msg: IData) {
-    const { Working, Stopped, Offline, OfflineStopped } = this.BedStatus
-
-    const { datacache } = this
-    console.log('update_status 11111', received_msg.data)
+    const { datacache, BedStatus } = this
+    const { Working, Stopped, Offline, OfflineStopped } = BedStatus
     // 状态机处理
     var statusdata = received_msg.data;
-    var id = statusdata.device_no;
-    var bi = statusdata.bed_no;
-    var cachbi = id + '-' + bi;
-    if (!datacache.has(cachbi)) {
-        datacache.set(cachbi, getEmptyCacheItem());
+    const { device_no, bed_no, doc_id } = statusdata
+    var unitId = this.getUnitId(device_no, bed_no);
+
+
+    if (!datacache.has(unitId)) {
+        datacache.set(unitId, getEmptyCacheItem());
     }
+    this.convertdocid(unitId, doc_id)
+
     if (statusdata.status == 0) {
-        datacache.get(cachbi).status = Working;
+        datacache.get(unitId).status = Working;
     } else if (statusdata.status == 1) {
-        datacache.get(cachbi).status = Stopped;
+        datacache.get(unitId).status = Stopped;
     } else if (statusdata.status == 2) {
-        datacache.get(cachbi).status = Offline;
+        datacache.get(unitId).status = Offline;
     } else {
-        datacache.get(cachbi).status = OfflineStopped;
+        datacache.get(unitId).status = OfflineStopped;
     }
-    console.log('update_status', datacache.get(cachbi))
-    datacache.get(cachbi).pregnancy = statusdata.pregnancy ? JSON.parse(statusdata.pregnancy) : null;
-    datacache.get(cachbi).fetalposition = statusdata.fetalposition ? JSON.parse(statusdata.fetalposition) : null;
+    console.log('update_status', datacache.get(unitId))
+    datacache.get(unitId).pregnancy = statusdata.pregnancy ? JSON.parse(statusdata.pregnancy) : null;
+    datacache.get(unitId).fetalposition = statusdata.fetalposition ? JSON.parse(statusdata.fetalposition) : null;
     this.refresh('update_status')
 }

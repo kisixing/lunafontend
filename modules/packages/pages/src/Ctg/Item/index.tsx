@@ -43,6 +43,7 @@ const Item = (props: IProps) => {
                         ['床号', bedNO],
                         ['姓名', name],
                         ['年龄', age],
+                        // ['孕周', 'aaa'],
                         ['GP', GP],
                         ['开始时间', moment(startTime).format('HH:mm')],
                     ]
