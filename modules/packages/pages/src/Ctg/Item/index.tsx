@@ -15,7 +15,8 @@ interface IProps {
     age: number
     bedNO: string
     startTime: string
-    GP: string
+    GP: string,
+    isIn: boolean,
     onDoubleClick?: (e: React.MouseEvent) => void
     onClose?: (e: React.MouseEvent) => void
     loading?: boolean
@@ -28,7 +29,7 @@ const Item = (props: IProps) => {
     const { data, bedname, onClose, onDoubleClick, loading, onSuitRead, themeColor = 'rgb(74, 20, 140)' } = props;
     const status = props.status === undefined ? data && data.status : props.status
     const ismulti = data && data.ismulti
-    let { bedNO, GP, name, age, startTime, } = props
+    let { bedNO, GP, name, age, startTime, isIn } = props;
     const [suit, setSuit] = useState(null)
 
 
@@ -45,7 +46,16 @@ const Item = (props: IProps) => {
                         ['年龄', age],
                         ['GP', GP],
                         ['开始时间', startTime && moment(startTime).format('HH:mm')],
-                    ].map(([a, b]) => (<span key={a} style={{ marginRight: 12 }}>{a}：{b}</span>))
+                    ].map(([a, b]) => {
+                        if (a === '床号' && !isIn) {
+                            return null
+                        }
+                        return (
+                            <span key={a} style={{ marginRight: 12 }}>
+                                {a}：{b}
+                            </span>
+                        );
+                    })
                 }
             </span>
         )
