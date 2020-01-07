@@ -67,7 +67,6 @@ export class WsService extends EventEmitter {
     t = +new Date()
     pong() {
         const t = +new Date()
-        console.log('pong', new Date().getMinutes())
         t - this.t > this.PENDDING_INTERVAL && this.pongFailed()
 
         this.t = t
@@ -83,7 +82,6 @@ export class WsService extends EventEmitter {
         }, MS)
     }
     pongFailed() {
-        console.log('pong failed')
         this.emit(EWsEvents.pong, false)
         this.socket.close()
     }
@@ -222,7 +220,6 @@ export class WsService extends EventEmitter {
         request.get(`/bedinfos?documentno.equals=${doc_id}`).then(responseData => {
             let vt = doc_id.split('_');
             let curid = vt[0] + '-' + vt[1];
-            console.log(doc_id, curid, responseData);
             if (responseData) {
                 if (responseData['pregnancy'] == null) {
                     cleardata(datacache, curid, datacache.get(curid).fetal_num);

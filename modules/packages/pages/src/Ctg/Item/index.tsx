@@ -44,8 +44,10 @@ const Item = (props: IProps) => {
                         ['姓名', name],
                         ['年龄', age],
                         ['GP', GP],
-                        ['开始时间', startTime && moment(startTime).format('HH:mm')],
-                    ].map(([a, b]) => (<span key={a} style={{ marginRight: 12 }}>{a}：{b}</span>))
+                        ['开始时间', moment(startTime).format('HH:mm')],
+                    ]
+                        .filter(_ => !!_[1])
+                        .map(([a, b]) => <span key={a} style={{ marginRight: 12 }}>{a}：{b}</span>)
                 }
             </span>
         )
