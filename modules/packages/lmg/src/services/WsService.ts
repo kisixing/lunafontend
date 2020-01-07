@@ -176,11 +176,12 @@ export class WsService extends EventEmitter {
     }
     connectResolve: (value: any) => void
     convertdocid(unitId: string, doc_id: string) {
-        this.datacache.get(unitId).docid = doc_id;
+        const target = this.datacache.get(unitId)
+        target.docid = doc_id;
         if (doc_id != '') {
             let vt = doc_id.split('_');
             if (vt.length > 2) {
-                this.datacache.get(unitId).starttime = convertstarttime(vt[2]);
+                target.starttime = convertstarttime(vt[2]);
             }
         }
     }
@@ -222,7 +223,7 @@ export class WsService extends EventEmitter {
             let curid = vt[0] + '-' + vt[1];
             if (responseData) {
                 if (responseData['pregnancy'] == null) {
-                    cleardata(datacache, curid, datacache.get(curid).fetal_num);
+                    datacache.get(curid) && cleardata(datacache, curid, datacache.get(curid).fetal_num);
                 }
                 if (is_working == 0) {
                     datacache.get(curid).status = Working;

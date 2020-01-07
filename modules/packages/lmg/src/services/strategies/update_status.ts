@@ -27,7 +27,7 @@ export function update_status(this: WsService, received_msg: IData) {
     if (!datacache.has(unitId)) {
         datacache.set(unitId, getEmptyCacheItem());
     }
-    this.convertdocid(unitId, doc_id)
+    // this.convertdocid(unitId, doc_id)
 
     if (statusdata.status == 0) {
         datacache.get(unitId).status = Working;

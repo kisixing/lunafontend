@@ -17,51 +17,53 @@ export function push_devices(this: WsService, received_msg: IData) {
         if (!devdata) continue;
         for (let bi in devdata.beds) {
             const bedData = devdata.beds[bi]
-            const { is_include_tocozero, is_include_volume } = bedData
-            var cachebi = devdata['device_no'] + '-' + bedData.bed_no;
-            if (!datacache.has(cachebi)) {
+            const { is_include_tocozero, is_include_volume, doc_id } = bedData
+            var unitId = this.getUnitId(devdata.device_no, bedData.bed_no);
+            const old = datacache.get(unitId)
 
+            if (!old || (old.docid !== doc_id)) {
                 const item = getEmptyCacheItem({ is_include_tocozero, is_include_volume })
 
                 item.deviceType = devdata.device_type
 
-                datacache.set(cachebi, item);
-                const doc_id = bedData.doc_id
+                datacache.set(unitId, item);
                 item.docid = doc_id;
-                if (doc_id) {
-                    let vt = doc_id.split('_');
-                    if (vt.length > 2) {
-                        item.starttime = convertstarttime(vt[2]);
-                    }
-                }
+                this.convertdocid(unitId, doc_id)
+                // if (doc_id) {
+                //     let vt = doc_id.split('_');
+                //     if (vt.length > 2) {
+                //         item.starttime = convertstarttime(vt[2]);
+                //     }
+                // }
 
 
                 if (devdata.beds[bi].is_working == 0) {
-                    datacache.get(cachebi).status = Working;
+                    datacache.get(unitId).status = Working;
                 } else if (devdata.beds[bi].is_working == 1) {
-                    datacache.get(cachebi).status = Stopped;
+                    datacache.get(unitId).status = Stopped;
                 } else if (devdata.beds[bi].is_working == 2) {
-                    datacache.get(cachebi).status = Offline;
+                    datacache.get(unitId).status = Offline;
                 } else {
-                    datacache.get(cachebi).status = OfflineStopped;
+                    datacache.get(unitId).status = OfflineStopped;
 
                 }
                 //debugger
                 if (devdata.beds[bi].pregnancy) {
-                    datacache.get(cachebi).pregnancy = JSON.parse(devdata.beds[bi].pregnancy);
+                    datacache.get(unitId).pregnancy = JSON.parse(devdata.beds[bi].pregnancy);
                 }
                 if (devdata.beds[bi].fetalposition) {
-                    datacache.get(cachebi).fetalposition = JSON.parse(devdata.beds[bi].fetalposition);
+                    datacache.get(unitId).fetalposition = JSON.parse(devdata.beds[bi].fetalposition);
                 }
-                datacache.get(cachebi).fetal_num = devdata.beds[bi].fetal_num;
+                datacache.get(unitId).fetal_num = devdata.beds[bi].fetal_num;
                 for (let fetal = 0; fetal < devdata.beds[bi].fetal_num; fetal++) {
-                    datacache.get(cachebi).fhr[fetal] = [];
+                    datacache.get(unitId).fhr[fetal] = [];
                 }
                 if (devdata.beds[bi].is_include_mother)
-                    datacache.get(cachebi).ismulti = true;
+                    datacache.get(unitId).ismulti = true;
             }
         }
     }
+    this.isReady && this.refresh()
     this.connectResolve(datacache)
     this.emit('read', datacache)
     this.isReady = true
