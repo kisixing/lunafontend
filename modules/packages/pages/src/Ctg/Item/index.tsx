@@ -15,7 +15,7 @@ interface IProps {
     age: number
     bedNO: string
     startTime: string
-    GP: string
+    GP: string,
     onDoubleClick?: (e: React.MouseEvent) => void
     onClose?: (e: React.MouseEvent) => void
     loading?: boolean
@@ -28,7 +28,7 @@ const Item = (props: IProps) => {
     const { data, bedname, onClose, onDoubleClick, loading, onSuitRead, themeColor = 'rgb(74, 20, 140)' } = props;
     const status = props.status === undefined ? data && data.status : props.status
     const ismulti = data && data.ismulti
-    let { bedNO, GP, name, age, startTime, } = props
+    let { bedNO, GP, name, age, startTime } = props;
     const [suit, setSuit] = useState(null)
 
 
