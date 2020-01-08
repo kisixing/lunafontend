@@ -45,7 +45,6 @@ export function push_devices(this: WsService, received_msg: IData) {
                     datacache.get(unitId).status = Offline;
                 } else {
                     datacache.get(unitId).status = OfflineStopped;
-
                 }
                 //debugger
                 if (devdata.beds[bi].pregnancy) {
