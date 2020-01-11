@@ -25,9 +25,9 @@ export default (docid: string, setPdfBase64: any) => {
                 docid: docId
             }
         }).then(r => {
-            // if (r && r.sn) {
-            //   setDocId(r.sn)
-            // }
+            if (r && r.sn) {
+                setDocId(r.sn)
+            }
             setQrCodeBase64(r && r.data)
             setModalVisible(true)
             setQrCodeBase64Loading(false)
