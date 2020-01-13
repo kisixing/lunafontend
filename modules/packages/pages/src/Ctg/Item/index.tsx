@@ -41,8 +41,8 @@ const Item = (props: IProps) => {
             <span>
                 {
                     [
-                        ['床号', bedNO],
                         ['姓名', name],
+                        ['床号', bedNO],
                         ['年龄', age],
                         ['孕周', gestationalWeek],
                         ['GP', GP],
