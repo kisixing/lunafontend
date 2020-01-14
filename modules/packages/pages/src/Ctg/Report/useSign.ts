@@ -22,7 +22,7 @@ export default (docid: string, setPdfBase64: any) => {
         request.post('/ca/signreq', {
             data: {
                 action: "sign",
-                docid: docId
+                docid,
             }
         }).then(r => {
             if (r && r.sn) {
