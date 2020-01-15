@@ -6,7 +6,7 @@ import { EventEmitter } from '@lianmed/utils';
 export const Context = React.createContext({})
 
 export interface IProps {
-    age: number
+    age: string
     docid: string
     fetalcount: number
     inpatientNO: string

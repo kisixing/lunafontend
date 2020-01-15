@@ -26,6 +26,19 @@ export enum EWsEvents {
     explode = "explode",
     updateSubscriptionIfNecessary = "updateSubscriptionIfNecessary"
 }
+
+export interface ICacheItemPregnancy {
+    pvId?: string
+    GP?: string
+    gestationalWeek?: string
+    age?: string
+    bedNO?: string
+    edd?: string
+    id?: number
+    inpatientNO?: string
+    name?: string
+    outpatientNO?: string
+}
 export interface ICacheItem {
     volumeData?: IVolumeData
     deviceType?: TDeviceType
@@ -42,17 +55,7 @@ export interface ICacheItem {
     past: number;
     timestamp: number;
     docid: string;
-    pregnancy: {
-        GP: string
-        gestationalWeek: string
-        age: string
-        bedNO: string
-        edd: string
-        id: number
-        inpatientNO: string
-        name: string
-        outpatientNO: string
-    };
+    pregnancy: ICacheItemPregnancy;
     fetalposition: {
         fhr1: '',
         fhr2: '',

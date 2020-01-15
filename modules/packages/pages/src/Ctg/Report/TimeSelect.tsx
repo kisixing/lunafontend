@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Modal } from 'antd';
+import { Button, Modal, Radio } from 'antd';
 import { Context } from './index'
 import usePrintConfig from "./usePrintConfig";
 import useSign from "./useSign";
@@ -25,6 +25,7 @@ const Preview = (props: IProps) => {
                 diagnosis,
                 start: startingTime,
                 end: endingTime,
+                outputType,
                 ...args
             },
         }).then(res => {
@@ -51,6 +52,8 @@ const Preview = (props: IProps) => {
         toggleLocking,
         selectAll,
         editable,
+        outputType,
+        setOutputType
         // toggleCustomiz
     } = usePrintConfig(value, print_interval)
 
@@ -133,6 +136,13 @@ const Preview = (props: IProps) => {
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <span><span>时长：</span>{total}  <span>分</span> </span>
                                 </div> */}
+                                <div style={{ textAlign: 'left' }}>
+                                    <label>胎心率范围：</label>
+                                    <Radio.Group value={outputType} onChange={setOutputType}>
+                                        <Radio value="180">90~180</Radio>
+                                        <Radio value="210">50~210</Radio>
+                                    </Radio.Group>
+                                </div>
                                 <div style={{ display: 'flex' }}>
                                     <Button disabled={locking || !editable} block type="primary" loading={pdfBase64Loading} onClick={handlePreview} style={{ marginRight: 10 }}>
                                         <span>生成</span>

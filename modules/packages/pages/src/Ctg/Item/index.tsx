@@ -12,7 +12,7 @@ interface IProps {
     data: ICacheItem
     bedname: string
     name: string
-    age: number
+    age: string
     bedNO: string
     startTime: string
     GP: string,
