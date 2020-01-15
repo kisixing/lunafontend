@@ -1,4 +1,4 @@
-<h1 align="center">LUNA FontEnd</h1>
+<h1 align="center">LUNA FrontEnd</h1>
 
 <div align="center">
 
