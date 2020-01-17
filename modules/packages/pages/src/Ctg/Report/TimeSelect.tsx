@@ -71,7 +71,7 @@ const Preview = (props: IProps) => {
                 (v: any) => {
                     setValue(v)
                     return (
-                        <div style={{ display: 'flex', height: '100%' }}>
+                        <div id="modal_id" style={{ display: 'flex', height: '100%' }}>
 
 
                             <div style={{ width: 400, padding: 24, background: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-around', border: '1px solid #d9d9d9' }}>
@@ -156,7 +156,7 @@ const Preview = (props: IProps) => {
                                 </div>
                             </div>
 
-                            <Modal visible={modalVisible} footer={null} centered onCancel={() => setModalVisible(false)} bodyStyle={{ textAlign: 'center' }}>
+                            <Modal getContainer={() => document.querySelector("#modal_id")} visible={modalVisible} footer={null} centered onCancel={() => setModalVisible(false)} bodyStyle={{ textAlign: 'center' }}>
                                 <img alt="qrcode" src={qrCodeBase64} />
                             </Modal>
                         </div>
