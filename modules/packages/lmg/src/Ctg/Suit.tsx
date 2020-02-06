@@ -2,27 +2,27 @@ import DrawCTG from './DrawCTG';
 //var rulercolor = 'rgb(67,205,128)';
 import { IBarTool, TLineTool } from '../ScrollBar/useScroll';
 import ScrollEl from '../ScrollBar/ScrollEl';
-import request from "@lianmed/request"
-import { convertstarttime } from "../services/utils";
-import { throttle } from "lodash";
+import request from '@lianmed/request';
+import { convertstarttime } from '../services/utils';
+import { throttle } from 'lodash';
 import { ICacheItem } from '../services/WsService';
 import Draw from '../Draw';
-import bindEvents from "./bindEvents";
+import bindEvents from './bindEvents';
 let sid = 0;
 type Canvas = HTMLCanvasElement;
 type Context = CanvasRenderingContext2D;
 export class Suit extends Draw {
-  needScroll = false
-  isOn: boolean
-  emitInterval: number
-  static option: { [x: string]: string }
-  option = Suit.option
-  initFlag = false
+  needScroll = false;
+  isOn: boolean;
+  emitInterval: number;
+  static option: { [x: string]: string };
+  option = Suit.option;
+  initFlag = false;
   sid = sid++;
-  log = console.log.bind(console, 'suit', this.sid)
+  log = console.log.bind(console, 'suit', this.sid);
   startingBar: ScrollEl;
   endingBar: ScrollEl;
-  selectingBar: ScrollEl
+  selectingBar: ScrollEl;
   rowline: ScrollEl;
   intervalIds: NodeJS.Timeout[] = [];
   data: ICacheItem;
@@ -32,7 +32,7 @@ export class Suit extends Draw {
   currentdot = 10; //当前实时绘制点
   currentx = 10;
   viewposition = 0;
-  lineTool: TLineTool
+  lineTool: TLineTool;
   scollscale = 1;
   buffersize = 16;
   curr = -16;
@@ -42,29 +42,30 @@ export class Suit extends Draw {
     selectarea: 'rgba(192,192,192,0.5)',
     rule: 'rgba(0,51,102,1)',
     scale: 'rgba(0,0,0,1)',
-    primarygrid: 'rgba(144, 159, 180,1)',
-    secondarygrid: 'rgba(221, 230, 237,1)',
+    // primarygrid: 'rgba(144, 159, 180,1)',
+    // secondarygrid: 'rgba(221, 230, 237,1)',
+    primarygrid: 'rgba(100, 100, 100, 1)',
+    secondarygrid: 'rgba(200, 200, 200, 1)',
     fhrcolor: ['green', 'blue', 'rgb(0,0,0)'],
     tococolor: 'rgb(0,0,0)',
     alarmcolor: 'rgb(255, 1, 1)',
     alarm_enable: true,
     alarm_high: 160,
     alarm_low: 110,
-    print_interval: 20
-
+    print_interval: 20,
   };
   fetalposition = {
     fhr1: '',
     fhr2: '',
-    fhr3: ''
+    fhr3: '',
   };
   printlen = 4800;
-  selectstart = 0;// 选择开始点
-  selectstartposition = 0;// 选择开始相对位置与数据长度无关
+  selectstart = 0; // 选择开始点
+  selectstartposition = 0; // 选择开始相对位置与数据长度无关
   toolbarposition = 0; //滚动条位置，事件更新
-  selectrpstart = 0;// 相对开始位置
-  selectend = 0;// 选择结束点
-  selectrpend = 0;// 相对结束位置
+  selectrpstart = 0; // 相对开始位置
+  selectend = 0; // 选择结束点
+  selectrpend = 0; // 相对结束位置
   selectflag = false;
   requestflag = false;
   canvasgrid: Canvas;
@@ -83,43 +84,41 @@ export class Suit extends Draw {
   interval = 5000;
   timeout: NodeJS.Timeout;
   get $selectrpend() {
-    return this.selectrpend
+    return this.selectrpend;
   }
   set $selectrpend(value: number) {
-    this.selectrpend = value
-    const absLen = (value - this.leftViewposition) / 2
-    this.endingBar.setLeft(absLen, false)
-    this.drawobj.showselect()
-    this.selectflag && this.drawobj.showcur(value)
-    this.emit('endTime', value)
+    this.selectrpend = value;
+    const absLen = (value - this.leftViewposition) / 2;
+    this.endingBar.setLeft(absLen, false);
+    this.drawobj.showselect();
+    this.selectflag && this.drawobj.showcur(value);
+    this.emit('endTime', value);
   }
   get $selectrpstart() {
-    return this.selectrpstart
+    return this.selectrpstart;
   }
   set $selectrpstart(value: number) {
-    this.selectrpstart = value
-    const absLen = (value - this.leftViewposition) / 2
+    this.selectrpstart = value;
+    const absLen = (value - this.leftViewposition) / 2;
 
-    this.startingBar.setLeft(absLen, false)
-    this.drawobj.showselect()
-    this.selectflag && this.drawobj.showcur(value)
-    this.emit('startTime', value)
-
-
+    this.startingBar.setLeft(absLen, false);
+    this.drawobj.showselect();
+    this.selectflag && this.drawobj.showcur(value);
+    this.emit('startTime', value);
   }
   get leftViewposition() {
-    return this.viewposition >= this.width * 2 ? (this.viewposition - this.width * 2) : 0
+    return this.viewposition >= this.width * 2 ? this.viewposition - this.width * 2 : 0;
   }
   get selectingBarPoint() {
-    return ~~(this.leftViewposition + this.selectingBar.getLeft() * 2)
+    return ~~(this.leftViewposition + this.selectingBar.getLeft() * 2);
   }
   get rightViewPosition() {
-    return this.viewposition
+    return this.viewposition;
   }
   set rightViewPosition(value: number) {
-    this.viewposition = value
-    this.updateBarTool()
-    this.drawobj.drawdot(this.viewposition)
+    this.viewposition = value;
+    this.updateBarTool();
+    this.drawobj.drawdot(this.viewposition);
   }
 
   constructor(
@@ -130,10 +129,10 @@ export class Suit extends Draw {
     canvasanalyse: Canvas,
     wrap: HTMLElement,
     barTool: IBarTool,
-    type: number,
+    type: number
   ) {
-    super()
-    bindEvents.call(this)
+    super();
+    bindEvents.call(this);
     this.wrap = wrap;
     this.canvasgrid = canvasgrid;
     this.canvasdata = canvasdata;
@@ -154,7 +153,7 @@ export class Suit extends Draw {
       this.ctgconfig.fhrcolor[0] = this.option.fhrcolor1;
       this.ctgconfig.fhrcolor[1] = this.option.fhrcolor2;
       this.ctgconfig.fhrcolor[2] = this.option.fhrcolor3;
-      if (this.option.alarm_enable == "0") {
+      if (this.option.alarm_enable == '0') {
         this.ctgconfig.alarm_enable = false;
       } else {
         this.ctgconfig.alarm_enable = true;
@@ -162,28 +161,27 @@ export class Suit extends Draw {
       this.ctgconfig.alarm_enable = true;
       this.ctgconfig.alarm_high = Number(this.option.alarm_high);
       this.ctgconfig.alarm_low = Number(this.option.alarm_low);
-      this.ctgconfig.print_interval = Number(this.option.print_interval) || 20
+      this.ctgconfig.print_interval = Number(this.option.print_interval) || 20;
     }
-
   }
 
   init(data: ICacheItem) {
     if (!data) {
-      return
+      return;
     }
     // this.log('init', data)
-    this.initFlag = true
+    this.initFlag = true;
     let defaultinterval = 500;
     this.data = data;
     this.currentdot = data.index;
     if (data.status) {
-      this.type = 0
+      this.type = 0;
     } else {
       this.type = 1;
-      if (typeof (data.index) == 'undefined') {
+      if (typeof data.index == 'undefined') {
         this.data = this.InitFileData(data) as any;
         if (this.data.index > this.width * 2) {
-          this.needScroll = true
+          this.needScroll = true;
         }
       }
     }
@@ -223,20 +221,23 @@ export class Suit extends Draw {
       if (this.data.index < this.canvasline.width * 4) {
         len = Math.floor((this.canvasline.width * 4 - this.data.index) / 2);
       }
-      let _viewposition = this.canvasline.width * 2 + Math.floor((this.data.index - this.canvasline.width * 2) * value / (this.canvasline.width - len));
+      let _viewposition =
+        this.canvasline.width * 2 +
+        Math.floor(
+          ((this.data.index - this.canvasline.width * 2) * value) / (this.canvasline.width - len)
+        );
       if (this.viewposition < this.canvasline.width * 2) {
         _viewposition = this.canvasline.width * 2;
       }
-      this.rightViewPosition = _viewposition
+      this.rightViewPosition = _viewposition;
       this.updateSelectCur();
-      this.drawobj.showselect()
+      this.drawobj.showselect();
       this.drawobj.drawdot(this.viewposition, false);
-      this.log('gg', this.viewposition, len, value)
+      this.log('gg', this.viewposition, len, value);
     });
     this.barTool.watchGrab(value => {
-
-      let _viewposition
-      value = ~~value * 2
+      let _viewposition;
+      value = ~~value * 2;
       if (this.type == 0 && this.data.past > 0) {
         //console.log('print', this.data,this.selectrpstart, this.selectrpend);
         if (!this.requestflag) {
@@ -254,7 +255,9 @@ export class Suit extends Draw {
         this.drawobj.drawdot(this.viewposition, false);
         // if (this.selectflag) {
         if (this.selectend == 1) {
-          this.endingBar.setLeft(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
+          this.endingBar.setLeft(
+            this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2)
+          );
         }
         this.drawobj.showselect();
         // }
@@ -273,13 +276,15 @@ export class Suit extends Draw {
         // console.log('print_drag--', this.viewposition);
       }
       this.updateBarTool();
-      this.rightViewPosition = _viewposition
+      this.rightViewPosition = _viewposition;
       // if (this.selectflag) {
       // console.log('print_drag2', value, this.viewposition, this.selectrpend, Math.floor((this.viewposition - this.selectrpend)) / 2);
       if (this.selectend == 1 && this.viewposition - this.selectrpend > -2) {
         // this.endingBar.setVisibility(true);
         //this.endingBar.setOffset(this.selectrpend / 2);
-        this.endingBar.setLeft(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
+        this.endingBar.setLeft(
+          this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2)
+        );
       } else {
         // this.endingBar.setVisibility(false);
       }
@@ -289,74 +294,73 @@ export class Suit extends Draw {
   }
   lazyEmit = throttle((type: string, ...args: any[]) => {
     // console.log(`Suit:${type}`)
-    this.emit(type, ...args)
+    this.emit(type, ...args);
     // console.log('alarmtype in',type,this)
-    return true
-  }, this.emitInterval || 0)
+    return true;
+  }, this.emitInterval || 0);
   // 报警
   alarmOn(alarmType: string = '') {
-    this.lazyEmit('alarmOn', alarmType)
+    this.lazyEmit('alarmOn', alarmType);
   }
   alarmOff(alarmType: string) {
-    this.lazyEmit('alarmOff', alarmType)
+    this.lazyEmit('alarmOff', alarmType);
   }
 
   createLine() {
-    if (this.rowline) return
-    const { barTool } = this
+    if (this.rowline) return;
+    const { barTool } = this;
 
-    const lineTool = this.lineTool = barTool.createHLine('blue')
-    const { rowline, addDot, setBase } = lineTool
+    const lineTool = (this.lineTool = barTool.createHLine('blue'));
+    const { rowline, addDot, setBase } = lineTool;
     // 横线监听y变化
     this.rowline = rowline.on('change:y', v => {
-      console.log('rowline', v)
-    })
+      console.log('rowline', v);
+    });
 
     // 添加点
-    const dot0 = addDot({ left: 10 })
-    const dot1 = addDot({ left: 100 })
+    const dot0 = addDot({ left: 10 });
+    const dot1 = addDot({ left: 100 });
 
-    rowline.setStyle('background', '#FFCC99')
+    rowline.setStyle('background', '#FFCC99');
     // dot0.setStyle('background', 'green')
-    dot0.setStyle('border-right-color', '#AA33AA')
-    dot0.setStyle('border-bottom-color', '#AA33AA')
-    dot1.setStyle('border-left-color', '#FF2233')
-    dot1.setStyle('border-bottom-color', '#FF2233')
+    dot0.setStyle('border-right-color', '#AA33AA');
+    dot0.setStyle('border-bottom-color', '#AA33AA');
+    dot1.setStyle('border-left-color', '#FF2233');
+    dot1.setStyle('border-bottom-color', '#FF2233');
     // 点监听x变化
     dot0.on('change:x', v => {
-      console.log('dot0', v)
-    })
+      console.log('dot0', v);
+    });
     dot1.on('change:x', v => {
-      console.log('dot1', v)
-    })
+      console.log('dot1', v);
+    });
 
     // 隐藏示例
-    const dot2 = addDot({ left: 100 })
-    dot2.setVisibility(false)
+    const dot2 = addDot({ left: 100 });
+    dot2.setVisibility(false);
 
     // 最后设置位置
-    setBase(200)
-    lineTool.toggleVisibility()
+    setBase(200);
+    lineTool.toggleVisibility();
   }
   createBar() {
     if (this.startingBar && this.endingBar && this.selectingBar) {
-      return
+      return;
     }
-    this.createLine()
-    const { barTool } = this
-    const startingBar = this.startingBar = barTool.createRod('开始')
-    const endingBar = this.endingBar = barTool.createRod('结束')
-    const selectingBar = this.selectingBar = barTool.createRod('选择')
-    this.type === 0 && selectingBar.setVisibility(false)
-    selectingBar.setLeft(0)
-    startingBar.setLeft(0)
+    this.createLine();
+    const { barTool } = this;
+    const startingBar = (this.startingBar = barTool.createRod('开始'));
+    const endingBar = (this.endingBar = barTool.createRod('结束'));
+    const selectingBar = (this.selectingBar = barTool.createRod('选择'));
+    this.type === 0 && selectingBar.setVisibility(false);
+    selectingBar.setLeft(0);
+    startingBar.setLeft(0);
     //endingBar.setOffset(100)
-    endingBar.toggleVisibility()
-    startingBar.toggleVisibility()
+    endingBar.toggleVisibility();
+    startingBar.toggleVisibility();
     selectingBar.on('change:x', value => {
-
       this.drawobj.showcur(this.selectingBarPoint, false);
-    })
+    });
     startingBar.on('change:x', value => {
       // this.selectrpstart = value * 2;
       // this.selectstartposition = value;
@@ -375,9 +379,9 @@ export class Suit extends Draw {
       // }
       // this.drawobj.showcur(this.selectstart, false);
       // this.selectrpstart = this.selectstart;
-      this.$selectrpstart = this.leftViewposition + value * 2
+      this.$selectrpstart = this.leftViewposition + value * 2;
       // this.emit('startTime', this.selectstart)
-    })
+    });
     endingBar.on('change:x', value => {
       if (this.data.index < this.canvasline.width * 2) {
         this.selectrpend = value * 2;
@@ -389,16 +393,14 @@ export class Suit extends Draw {
       }
       // console.log('print_结束', value, this.selectrpstart, this.selectrpend)
       this.drawobj.showselect();
-      this.emit('endTime', this.selectrpend)
+      this.emit('endTime', this.selectrpend);
 
-      this.$selectrpend = this.leftViewposition + value * 2
+      this.$selectrpend = this.leftViewposition + value * 2;
       // this.emit('startTime', this.selectstart)
-
-    })
+    });
     // selectingBar.on('change:x', value => {
     //   this.selectingBarPoit = value
     // })
-
   }
   lockStartingBar(status: boolean) {
     // console.log('lockStartingBar', status)
@@ -427,7 +429,6 @@ export class Suit extends Draw {
   }
   //kisi 2019-11-14 update fhr position
   setfetalposition(fhr1, fhr2, fhr3) {
-
     this.data.fetalposition.fhr1 = fhr1;
     this.data.fetalposition.fhr2 = fhr2;
     this.data.fetalposition.fhr3 = fhr3;
@@ -451,14 +452,18 @@ export class Suit extends Draw {
     if (this.data.index < this.canvasline.width * 4) {
       len = Math.floor((this.canvasline.width * 4 - this.data.index) / 2);
     }
-    this.toolbarposition = Math.floor((this.canvasline.width - len) * (this.viewposition - this.canvasline.width * 2) / (this.data.index - this.canvasline.width * 2));
+    this.toolbarposition = Math.floor(
+      ((this.canvasline.width - len) * (this.viewposition - this.canvasline.width * 2)) /
+        (this.data.index - this.canvasline.width * 2)
+    );
     this.barTool.setBarLeft(this.toolbarposition, false);
   }
 
   updateSelectCur() {
     // if (!this.selectflag) {
     if (this.viewposition > this.canvasline.width * 2) {
-      this.selectstart = this.selectstartposition * 2 + this.viewposition - 2 * this.canvasline.width;
+      this.selectstart =
+        this.selectstartposition * 2 + this.viewposition - 2 * this.canvasline.width;
     } else {
       this.selectstart = this.selectstartposition * 2;
     }
@@ -466,20 +471,38 @@ export class Suit extends Draw {
     this.drawobj.showcur(this.selectstart, false);
     // }
   }
-  movescoller() { }
+  movescoller() {}
 
   //胎心数据处理
   InitFileData(oriobj) {
-    let CTGDATA = { fhr: [[], [], []], toco: [], fm: [], fetal_num: 2, index: 0, starttime: '', fetalposition: {}, analyse: { acc: [], dec: [], baseline: [], start: 0, end: 0 } };
+    let CTGDATA = {
+      fhr: [[], [], []],
+      toco: [],
+      fm: [],
+      fetal_num: 2,
+      index: 0,
+      starttime: '',
+      fetalposition: {},
+      analyse: { acc: [], dec: [], baseline: [], start: 0, end: 0 },
+    };
     if (oriobj.docid) {
       let pureidarr: string[] = oriobj.docid.split('_');
-      let pureid = pureidarr[2]
-      CTGDATA.starttime = convertstarttime(pureid)
+      let pureid = pureidarr[2];
+      CTGDATA.starttime = convertstarttime(pureid);
     }
-    if (typeof (oriobj.fetalposition) != 'undefined' && oriobj.fetalposition != null && oriobj.fetalposition != '') {
+    if (
+      typeof oriobj.fetalposition != 'undefined' &&
+      oriobj.fetalposition != null &&
+      oriobj.fetalposition != ''
+    ) {
       let positionobj = JSON.parse(oriobj.fetalposition);
-      CTGDATA.fetalposition = positionobj
-      console.log(oriobj.fetalposition, typeof this.data.fetalposition, this.data.fetalposition, this);
+      CTGDATA.fetalposition = positionobj;
+      console.log(
+        oriobj.fetalposition,
+        typeof this.data.fetalposition,
+        this.data.fetalposition,
+        this
+      );
     }
     Object.keys(oriobj).forEach(key => {
       let oridata = oriobj[key];
@@ -490,14 +513,14 @@ export class Suit extends Draw {
         return false;
       }
       if (key === 'analyse') {
-        Object.assign(CTGDATA.analyse, formatAnalyseData(oridata))
-        return
+        Object.assign(CTGDATA.analyse, formatAnalyseData(oridata));
+        return;
       }
       if (key === 'fhr1') {
         CTGDATA.index = oridata.length / 2;
       }
       for (let i = 0; i < CTGDATA.index; i++) {
-        if (typeof (oridata) != "string" || oridata.length < 2) {
+        if (typeof oridata != 'string' || oridata.length < 2) {
           return;
         }
         let hexBits = oridata.substring(0, 2);
@@ -523,12 +546,20 @@ export class Suit extends Draw {
   //所有suit的状态位置，隐藏状态
   //
   drawdot() {
-    if (this.data.starttime && this.data.starttime != '' && this.data.status == 1 && this.data.index > 0 && this.isOn) {
-      if (isNaN(this.data.csspan))
-        return;
-      this.curr = (Math.floor(new Date().getTime() / 1000) - Math.floor(new Date(this.data.starttime).getTime() / 1000)) * 4 + this.data.csspan;
-      if (this.curr < 0)
-        return;
+    if (
+      this.data.starttime &&
+      this.data.starttime != '' &&
+      this.data.status == 1 &&
+      this.data.index > 0 &&
+      this.isOn
+    ) {
+      if (isNaN(this.data.csspan)) return;
+      this.curr =
+        (Math.floor(new Date().getTime() / 1000) -
+          Math.floor(new Date(this.data.starttime).getTime() / 1000)) *
+          4 +
+        this.data.csspan;
+      if (this.curr < 0) return;
       this.drawobj.drawdot(this.curr, true);
       this.viewposition = this.curr;
       if (this.data.index > this.canvasline.width * 2) {
@@ -578,7 +609,7 @@ export class Suit extends Draw {
         this.data.past = 0;
         this.requestflag = false;
       }
-    })
+    });
   }
 
   initfhrdata(data, datacache, offindex) {
@@ -593,14 +624,12 @@ export class Suit extends Draw {
         if (key === 'fhr1') {
           datacache.fhr[0][i] = data_to_push;
         } else if (key === 'fhr2') {
-          if (datacache.fhr[1])
-            datacache.fhr[1][i] = data_to_push;
+          if (datacache.fhr[1]) datacache.fhr[1][i] = data_to_push;
         } else if (key === 'fhr3') {
-          if (datacache.fhr[2])
-            datacache.fhr[2][i] = data_to_push;
+          if (datacache.fhr[2]) datacache.fhr[2][i] = data_to_push;
         } else if (key === 'toco') {
           datacache.toco[i] = data_to_push;
-        } else if (key === "fm") {
+        } else if (key === 'fm') {
           datacache.fm[i] = data_to_push;
         }
         oridata = oridata.substring(2, oridata.length);
@@ -608,47 +637,57 @@ export class Suit extends Draw {
     });
   }
   selectBasedOnStartingBar(isLeft = true) {
-    const { startingBar, endingBar, needScroll, width, ctgconfig, data, selectstart, leftViewposition: baseViewposition, selectingBarPoint } = this
-    let endPosition
+    const {
+      startingBar,
+      endingBar,
+      needScroll,
+      width,
+      ctgconfig,
+      data,
+      selectstart,
+      leftViewposition: baseViewposition,
+      selectingBarPoint,
+    } = this;
+    let endPosition;
     if (isLeft) {
-
       if (this.selectingBarPoint < 1) {
-        this.rightViewPosition = this.data.index
-        this.selectingBar.setLeft(this.width)
+        this.rightViewPosition = this.data.index;
+        this.selectingBar.setLeft(this.width);
       }
-      endPosition = this.selectingBarPoint - ctgconfig.print_interval * 240
-      this.$selectrpstart = endPosition < 0 ? 0 : endPosition
-      this.$selectrpend = this.selectingBarPoint
+      endPosition = this.selectingBarPoint - ctgconfig.print_interval * 240;
+      this.$selectrpstart = endPosition < 0 ? 0 : endPosition;
+      this.$selectrpend = this.selectingBarPoint;
     } else {
-
       if (this.selectingBarPoint + 10 >= data.index) {
-        this.rightViewPosition = width * 2
-        this.selectingBar.setLeft(0)
+        this.rightViewPosition = width * 2;
+        this.selectingBar.setLeft(0);
       }
 
-      endPosition = this.selectingBarPoint + ctgconfig.print_interval * 240
-      this.$selectrpend = endPosition > data.index ? data.index : endPosition
-      this.$selectrpstart = this.selectingBarPoint
-
+      endPosition = this.selectingBarPoint + ctgconfig.print_interval * 240;
+      this.$selectrpend = endPosition > data.index ? data.index : endPosition;
+      this.$selectrpstart = this.selectingBarPoint;
     }
-
-
-
   }
 }
 
 function formatAnalyseData(obj: { [x: string]: string }) {
-  const keys = ['acc', 'baseline', 'dec', 'meanbaseline']
+  const keys = ['acc', 'baseline', 'dec', 'meanbaseline'];
   const arr: [string, number[]][] = Object.entries(obj)
     .filter(([k, v]) => keys.includes(k))
     .map(([k, v]) => {
-      v = typeof v === 'string' ? v : ''
-      return [k, v.split(',').map(_ => parseInt(_)).filter(_ => !isNaN(_))]
-    })
+      v = typeof v === 'string' ? v : '';
+      return [
+        k,
+        v
+          .split(',')
+          .map(_ => parseInt(_))
+          .filter(_ => !isNaN(_)),
+      ];
+    });
   return {
     ...obj,
     ...arr.reduce((a, [k, v]) => {
-      return Object.assign(a, { [k]: v })
-    }, {})
-  }
+      return Object.assign(a, { [k]: v });
+    }, {}),
+  };
 }
