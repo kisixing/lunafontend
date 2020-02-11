@@ -11,9 +11,9 @@ const getText = () => {
 // const raw = JSON.stringify({ blocks: [{ key: "fjqe2", text, type: "unstyled", depth: 0, inlineStyleRanges: [{ offset: 2, length: 1, "style": "COLOR - 07A9FE" }, { "offset": 12, "length": 1, "style": "COLOR - 07A9FE" }, { "offset": 3, "length": 10, "style": "BGCOLOR - 07A9FE" }, { "offset": 3, "length": 9, "style": "COLOR - FFFFFF" }, { "offset": 69, "length": 9, "style": "ITALIC" }], "entityRanges": [], "data": {} }], "entityMap": {} })
 
 export default (...args) => {
-    const [diagnosis, setDiagnosis] = useState(getText())
+    const [diagnosis, setDiagnosis] = useState('')
     useEffect(() => {
-        const a = diagnosis.replace(/【.*?】/, `【${args[0]}】`) 
+        const a = diagnosis.replace(/【.*?】/, `【${args[0]}】`)
         setDiagnosis(a)
     }, [args[0]])
 
@@ -23,6 +23,11 @@ export default (...args) => {
     useEffect(() => {
     }, [diagnosis])
     return {
-        diagnosis, setDiagnosis, fn
+        diagnosis,
+        setDiagnosis(v) {
+            const a = v.replace(/【.*?】/, `【${args[0]}】`)
+            setDiagnosis(a)
+        },
+        fn
     }
 }
