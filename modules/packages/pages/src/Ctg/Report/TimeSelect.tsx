@@ -59,7 +59,7 @@ const Preview = (props: IProps) => {
 
 
 
-    const { signHandler, qrCodeBase64, modalVisible, qrCodeBase64Loading, setModalVisible } = useSign(docid, setPdfBase64)
+    const { fetchQrCode, qrCodeBase64, modalVisible, qrCodeBase64Loading, setModalVisible, signed, archive, archiveLoading, archived } = useSign(docid, setPdfBase64)
 
 
     useEffect(() => {
@@ -147,11 +147,14 @@ const Preview = (props: IProps) => {
                                     <Button disabled={locking || !editable} block type="primary" loading={pdfBase64Loading} onClick={handlePreview} style={{ marginRight: 10 }}>
                                         <span>生成</span>
                                     </Button>
-                                    <Button block disabled={!pdfBase64} type="primary" loading={qrCodeBase64Loading} onClick={signHandler} style={{ marginRight: 10 }}>
+                                    <Button block disabled={!pdfBase64} type="primary" loading={qrCodeBase64Loading} onClick={fetchQrCode} style={{ marginRight: 10 }}>
                                         <span> 签名</span>
                                     </Button>
-                                    <Button block disabled={!pdfBase64} type="primary" onClick={onDownload}>
+                                    <Button block disabled={!pdfBase64} type="primary" style={{ marginRight: 10 }} onClick={onDownload}>
                                         <span>打印</span>
+                                    </Button>
+                                    <Button block disabled={!signed} type="primary" loading={archiveLoading} onClick={archive}>
+                                        <span>{archived ? '取消规定' : '归档'}</span>
                                     </Button>
                                 </div>
                             </div>
