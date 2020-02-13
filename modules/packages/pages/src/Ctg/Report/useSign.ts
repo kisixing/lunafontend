@@ -32,7 +32,9 @@ export default (docid: string, setPdfBase64: any) => {
         setArchiveLoading(true)
         request.put(`/doc/${archived ? 'undo-' : ''}archive`, { data: { bizSn } })
             .then(r => {
-                r && setArchived(!archived)
+                if (!r) return
+                setArchived(!archived)
+                event.emit('signed')
             })
             .finally(() => setArchiveLoading(false))
     }

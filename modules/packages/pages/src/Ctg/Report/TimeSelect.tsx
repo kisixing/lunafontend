@@ -154,7 +154,7 @@ const Preview = (props: IProps) => {
                                         <span>打印</span>
                                     </Button>
                                     <Button block disabled={!signed} type="primary" loading={archiveLoading} onClick={archive}>
-                                        <span>{archived ? '取消规定' : '归档'}</span>
+                                        <span>{archived ? '取消归档' : '归档'}</span>
                                     </Button>
                                 </div>
                             </div>
