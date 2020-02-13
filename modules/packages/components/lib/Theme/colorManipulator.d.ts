@@ -1,0 +1,11 @@
+export declare function hexToRgb(color: any): string;
+export declare function rgbToHex(color: any): any;
+export declare function hslToRgb(color: any): string;
+export declare function decomposeColor(color: any): any;
+export declare function recomposeColor(color: any): string;
+export declare function getContrastRatio(foreground: any, background: any): number;
+export declare function getLuminance(color: any): number;
+export declare function emphasize(color: any, coefficient?: number): string;
+export declare function fade(color: any, value: any): string;
+export declare function darken(color: any, coefficient: any): string;
+export declare function lighten(color: any, coefficient: any): string;
