@@ -1,8 +1,22 @@
-/// <reference types="react" />
-import BraftEditor, { BraftEditorProps } from 'braft-editor';
+import React from 'react';
+import { BraftEditorProps, EditorState } from 'braft-editor';
+export { ContentUtils } from 'braft-utils';
 import 'braft-editor/dist/index.css';
-declare function C(props: BraftEditorProps): JSX.Element;
-declare const Editor: typeof C & typeof BraftEditor & {
-    toggleSelectionBackgroundColor: any;
-};
-export default Editor;
+interface IProps extends BraftEditorProps {
+    bordered?: boolean;
+}
+interface IState {
+    value: EditorState;
+}
+declare class C extends React.Component<IProps, IState> {
+    state: {
+        value: EditorState;
+    };
+    static getDerivedStateFromProps(p: IProps, s: IState): {
+        value?: undefined;
+    } | {
+        value: any;
+    };
+    render(): JSX.Element;
+}
+export default C;
