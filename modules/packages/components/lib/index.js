@@ -16,14 +16,14 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var RemarkCheckbox_1 = require("./RemarkCheckbox");
 exports.RemarkCheckbox = RemarkCheckbox_1.default;
-var Icon_1 = require("./Icon");
-exports.Icon = Icon_1.default;
 var Editor_1 = require("./Editor");
 exports.Editor = Editor_1.default;
 var Button_1 = require("./Button");
 exports.Button = Button_1.default;
 var PartogramTable_1 = require("./PartogramTable");
 exports.PartogramTable = PartogramTable_1.default;
+var DataSelect_1 = require("./DataSelect");
+exports.DataSelect = DataSelect_1.default;
 __export(require("./Theme"));
 exports.configs = {};
 exports.config = function (data) {
