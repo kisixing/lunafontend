@@ -25,11 +25,11 @@ var react_1 = __importStar(require("react"));
 var antd_1 = require("antd");
 var request_1 = __importDefault(require("@lianmed/request"));
 exports.default = (function (props) {
-    var _a = props.valueKey, valueKey = _a === void 0 ? 'id' : _a, _b = props.labelKey, labelKey = _b === void 0 ? 'name' : _b, url = props.url, _c = props.method, method = _c === void 0 ? 'get' : _c;
+    var _a = props.valueKey, valueKey = _a === void 0 ? 'value' : _a, _b = props.labelKey, labelKey = _b === void 0 ? 'label' : _b, url = props.url, _c = props.method, method = _c === void 0 ? 'get' : _c, _d = props.dataSource, dataSource = _d === void 0 ? [] : _d;
     var Option = antd_1.Select.Option;
-    var _d = react_1.useState(null), options = _d[0], setOptions = _d[1];
+    var _e = react_1.useState(dataSource), options = _e[0], setOptions = _e[1];
     react_1.useEffect(function () {
-        request_1.default[method](url).then(function (r) {
+        url && request_1.default[method](url).then(function (r) {
             setOptions(r);
         });
     }, []);
