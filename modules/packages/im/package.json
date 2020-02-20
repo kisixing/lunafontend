@@ -1,0 +1,33 @@
+{
+  "name": "@lianmed/im",
+  "version": "1.0.2",
+  "description": "> TODO: description",
+  "author": "lxf <lixiaofan.dev@gmail.com>",
+  "homepage": "https://github.com/kisixing/LUNA_FontEnd#readme",
+  "license": "ISC",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kisixing/LUNA_FontEnd.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1",
+    "build:watch": "tsc --declaration -w",
+    "build": "tsc --declaration",
+    "deploy": "sh deploy.sh",
+    "link": "npm link"
+  },
+  "bugs": {
+    "url": "https://github.com/kisixing/LUNA_FontEnd/issues"
+  },
+  "dependencies": {
+    "easemob-websdk": "^3.0.7"
+  }
+}
