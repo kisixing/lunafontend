@@ -1,9 +1,9 @@
 export interface IConfig {
-    heartBeatWait?: Number;
-    xmppURL?: String;
-    apiURL?: String;
-    appkey?: String;
-    Host?: String;
+    heartBeatWait?: number;
+    xmppURL?: string;
+    apiURL?: string;
+    appkey?: string;
+    Host?: string;
     https?: Boolean;
     isHttpDNS?: Boolean;
     isMultiLoginSessions?: Boolean;
@@ -11,15 +11,15 @@ export interface IConfig {
     isSandBox?: Boolean;
     isDebug?: Boolean;
     isStropheLog?: Boolean;
-    autoReconnectNumMax?: Number;
-    autoReconnectInterval?: Number;
+    autoReconnectNumMax?: number;
+    autoReconnectInterval?: number;
     isWebRTC?: Boolean;
-    i18n?: String;
+    i18n?: string;
     isAutoLogin?: Boolean;
-    p2pMessageCacheSize?: Number;
+    p2pMessageCacheSize?: number;
     delivery?: Boolean;
-    groupMessageCacheSize?: Number;
-    loglevel?: String;
+    groupMessageCacheSize?: number;
+    loglevel?: string;
     enableLocalStorage?: Boolean;
 }
 export declare const defaultConfig: IConfig;

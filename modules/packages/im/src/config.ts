@@ -25,13 +25,13 @@ function getUrl() {
 
 
 export interface IConfig {
-    heartBeatWait?: Number,
-    xmppURL?: String
-    apiURL?: String
+    heartBeatWait?: number,
+    xmppURL?: string
+    apiURL?: string
 
-    appkey?: String
+    appkey?: string
 
-    Host?: String
+    Host?: string
 
     https?: Boolean
     isHttpDNS?: Boolean
@@ -46,22 +46,22 @@ export interface IConfig {
 
     isStropheLog?: Boolean
 
-    autoReconnectNumMax?: Number
+    autoReconnectNumMax?: number
 
-    autoReconnectInterval?: Number
+    autoReconnectInterval?: number
 
     isWebRTC?: Boolean
 
-    i18n?: String
+    i18n?: string
 
     isAutoLogin?: Boolean
 
-    p2pMessageCacheSize?: Number
+    p2pMessageCacheSize?: number
     delivery?: Boolean
 
-    groupMessageCacheSize?: Number
+    groupMessageCacheSize?: number
 
-    loglevel?: String
+    loglevel?: string
 
 
     enableLocalStorage?: Boolean

@@ -18,11 +18,10 @@ var easemob_websdk_1 = __importDefault(require("easemob-websdk"));
 var config_1 = require("./config");
 var emoji_1 = __importDefault(require("./emoji"));
 exports.default = (function (userConfig) {
-    if (userConfig === void 0) { userConfig = {}; }
-    var config = __assign(__assign({}, userConfig), config_1.defaultConfig);
-    var WebIM = window.WebIM || {};
+    var WebIM = window.WebIM || (window.WebIM = {});
+    var config = __assign(__assign({}, config_1.defaultConfig), userConfig);
     WebIM.config = config;
-    WebIM.conn = new easemob_websdk_1.default.connection({
+    var conn = WebIM.conn = new easemob_websdk_1.default.connection({
         isHttpDNS: config.isHttpDNS,
         isMultiLoginSessions: config.isMultiLoginSessions,
         https: config.https,
@@ -35,10 +34,20 @@ exports.default = (function (userConfig) {
         delivery: config.delivery,
         appKey: config.appkey
     });
-    if (!WebIM.conn.apiUrl) {
-        WebIM.conn.apiUrl = config.apiURL;
+    if (!conn.apiUrl) {
+        conn.apiUrl = config.apiURL;
     }
     easemob_websdk_1.default.debug(true);
     WebIM.emoji = emoji_1.default;
-    return WebIM;
+    return new Promise(function (res) {
+        var user = userConfig.user, token = userConfig.token;
+        conn.open({
+            user: user,
+            pwd: token,
+            accessToken: token,
+            apiUrl: config.apiURL,
+            appKey: config.appkey
+        });
+        res(WebIM);
+    });
 });

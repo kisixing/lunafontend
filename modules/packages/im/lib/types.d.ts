@@ -1,3 +1,4 @@
+import { IConfig } from "./config";
 interface IPresenceMsg {
     type: 'joinGroupNotifications' | 'deleteGroupChat' | 'leaveGroup' | 'removedFromGroup' | 'invite' | 'direct_joined' | 'joinPublicGroupSuccess' | 'joinPublicGroupDeclined' | 'joinChatRoomSuccess' | 'reachChatRoomCapacity' | 'subscribe' | 'subscribed' | 'unsubscribe' | 'unsubscribed' | 'memberJoinPublicGroupSuccess' | 'memberJoinChatRoomSuccess' | 'leaveChatRoom' | 'addMute' | 'removeMute' | 'addAdmin' | 'removeAdmin' | 'changeOwner';
     gid?: any;
@@ -28,14 +29,23 @@ interface IMutedMsg {
     mid?: any;
 }
 interface ITextMsg {
-    from?: any;
-    to?: any;
+    from?: string;
+    to?: string;
     type?: 'chat' | 'groupchat' | 'chatroom' | 'stranger';
     ext?: {
         msg_extension?: any;
         conferenceId?: any;
         password?: any;
     };
+    id: string;
+    data: string;
+    sourceMsg: string;
+    time: string;
+    msgConfig: null;
+    error: boolean;
+    errorText: string;
+    errorCode: number;
+    message_type: string;
 }
 interface ICbs {
     onOpened: (msg: any) => void;
@@ -60,17 +70,52 @@ interface ICbs {
     onMutedMessage: (msg: IMutedMsg) => void;
 }
 export interface IWebIM {
-    config: {
-        [x: string]: any;
-    };
+    config: IConfig;
     conn: {
         autoReconnectNumTotal: any;
         autoReconnectNumMax: any;
-        apiUrl: String;
+        apiUrl: string;
         listen: (cbs: ICbs) => void;
+        subscribe: (data: {
+            to: any;
+            message: any;
+        }) => void;
+        getRoster: (data: {
+            success: (roster: {
+                name: string;
+                subscription: string;
+                jid: {
+                    appKey: string;
+                    name: string;
+                    domain: string;
+                    clientResource: string;
+                };
+            }[]) => void;
+            error: (error: any) => void;
+        }) => void;
+        open: (data: {
+            apiUrl: string;
+            user: string;
+            pwd?: string;
+            accessToken?: string;
+            appKey: string;
+            success: (token: {
+                access_token: string;
+                expires_in: number;
+                user: {
+                    uuid: string;
+                    type: string;
+                    created: number;
+                    modified: number;
+                    username: string;
+                    activated: Boolean;
+                };
+            }) => void;
+            error: (e: any) => void;
+        }) => void;
     };
     emoji: {
-        [x: string]: String;
+        [x: string]: string;
     };
     statusCode: {
         WEBIM_CONNCTION_DISCONNECTED: any;

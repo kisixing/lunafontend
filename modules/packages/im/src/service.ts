@@ -6,16 +6,19 @@ import { defaultConfig, IConfig } from './config'
 import emoji from './emoji'
 import { IWebIM } from "./types";
 
-
-export default (userConfig: IConfig = {}): IWebIM => {
-    let config = { ...userConfig, ...defaultConfig }
+interface IOpen extends IConfig {
+    user?: string
+    token?: string
+}
+export default (userConfig: IOpen): Promise<IWebIM> => {
     // init DOMParser / document for strophe and sdk
-    let WebIM: IWebIM = (window as any).WebIM || {}
+    let WebIM: IWebIM = (window as any).WebIM || ((window as any).WebIM = {})
+
+    let config = { ...defaultConfig, ...userConfig, }
 
     WebIM.config = config
 
-
-    WebIM.conn = new websdk.connection({
+    const conn = WebIM.conn = new websdk.connection({
         isHttpDNS: config.isHttpDNS,
         isMultiLoginSessions: config.isMultiLoginSessions,
         https: config.https,
@@ -30,12 +33,30 @@ export default (userConfig: IConfig = {}): IWebIM => {
     })
 
     // for downward compatibility
-    if (!WebIM.conn.apiUrl) {
-        WebIM.conn.apiUrl = config.apiURL
+    if (!conn.apiUrl) {
+        conn.apiUrl = config.apiURL
     }
 
     websdk.debug(true)
 
     WebIM.emoji = emoji
-    return WebIM
+    return new Promise((res) => {
+        const { user, token } = userConfig
+        conn.open({
+            user,
+            pwd: token,
+            accessToken: token,
+            apiUrl: config.apiURL,
+            // success(token) {
+            //     console.log(`login success`, token)
+            //     sessionStorage.setItem(TOKEN_KEY, token)
+            //     res(WebIM)
+            // },
+            // error(e) {
+            //     console.log('webim error', e)
+            // },
+            appKey: config.appkey
+        })
+        res(WebIM)
+    })
 }
