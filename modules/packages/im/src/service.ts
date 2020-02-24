@@ -4,8 +4,8 @@
 import websdk from 'easemob-websdk'
 import { defaultConfig, IConfig } from './config'
 import emoji from './emoji'
-import { IWebIM } from "./types";
-
+import { IWebIM } from "./types/index";
+import { listenerIntercept } from "./utils/listenerIntercept";
 interface IOpen extends IConfig {
     user?: string
     token?: string
@@ -57,6 +57,8 @@ export default (userConfig: IOpen): Promise<IWebIM> => {
             // },
             appKey: config.appkey
         })
+        // const old = WebIM.conn.listen
+        WebIM.conn = listenerIntercept(conn)
         res(WebIM)
     })
 }

@@ -1,5 +1,5 @@
 import { IConfig } from './config';
-import { IWebIM } from "./types";
+import { IWebIM } from "./types/index";
 interface IOpen extends IConfig {
     user?: string;
     token?: string;

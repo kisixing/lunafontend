@@ -17,6 +17,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var easemob_websdk_1 = __importDefault(require("easemob-websdk"));
 var config_1 = require("./config");
 var emoji_1 = __importDefault(require("./emoji"));
+var listenerIntercept_1 = require("./utils/listenerIntercept");
 exports.default = (function (userConfig) {
     var WebIM = window.WebIM || (window.WebIM = {});
     var config = __assign(__assign({}, config_1.defaultConfig), userConfig);
@@ -48,6 +49,7 @@ exports.default = (function (userConfig) {
             apiUrl: config.apiURL,
             appKey: config.appkey
         });
+        WebIM.conn = listenerIntercept_1.listenerIntercept(conn);
         res(WebIM);
     });
 });
