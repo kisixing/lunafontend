@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { IConn } from "../types/conn";
-import { ImDb } from "../utils/ImDb";
+import { imDb } from "../utils/ImDb";
 import { IMessage } from "../types/msg";
 
 
 
-export const useUnread = (isOpen: boolean, conn: IConn, imDb: ImDb) => {
+export const useUnread = (conn: IConn) => {
     // let collection = {
     //     'chat': {},
     //     'chatroom': {},
@@ -16,9 +16,9 @@ export const useUnread = (isOpen: boolean, conn: IConn, imDb: ImDb) => {
 
     const [chatUnread, setChatUnread] = useState<{ [x: string]: IMessage }>({})
     useEffect(() => {
-        if (isOpen) {
+        if (conn) {
 
-            const b: string[] = conn.getBlacklist()
+            // const b: string[] = conn.getBlacklist()
 
             imDb.getUnreadList().then((res: IMessage[]) => {
                 console.log('unread', res)
@@ -37,7 +37,7 @@ export const useUnread = (isOpen: boolean, conn: IConn, imDb: ImDb) => {
 
             })
         }
-    }, [isOpen, conn])
+    }, [conn])
     // let history: any = window.history;
 
     return { chatUnread }

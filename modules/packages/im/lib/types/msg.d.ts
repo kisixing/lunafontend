@@ -1,12 +1,12 @@
-declare type TMsgType = 'chat' | 'groupchat' | 'chatroom';
+declare type TMsgType = 'chat' | 'groupchat' | 'chatroom' | 'stranger';
 export declare enum EMsgBodyType {
-    txt = 0,
-    img = 1,
-    file = 2,
-    video = 3,
-    audio = 4
+    txt = "txt",
+    img = "img",
+    file = "file",
+    video = "video",
+    audio = "audio"
 }
-export interface IMsg {
+export interface IRawMsg {
     id: string;
     type: TMsgType | string;
     from: string;
@@ -27,50 +27,81 @@ export interface IMsg {
     status?: any;
 }
 export declare type TAnyMsgType = IPresenceMsg | IFileMsg | IAudioMsg | ITextMsg | IMutedMsg | IPictureMsg | IInviteMsg | IVideoMsg;
-export interface IPresenceMsg extends IMsg {
+export interface IPresenceMsg extends IRawMsg {
     bodyType: void;
     type: 'joinGroupNotifications' | 'deleteGroupChat' | 'leaveGroup' | 'removedFromGroup' | 'invite' | 'direct_joined' | 'joinPublicGroupSuccess' | 'joinPublicGroupDeclined' | 'joinChatRoomSuccess' | 'reachChatRoomCapacity' | 'subscribe' | 'subscribed' | 'unsubscribe' | 'unsubscribed' | 'memberJoinPublicGroupSuccess' | 'memberJoinChatRoomSuccess' | 'leaveChatRoom' | 'addMute' | 'removeMute' | 'addAdmin' | 'removeAdmin' | 'changeOwner';
     gid?: any;
     kicked?: any;
     owner?: any;
 }
-export interface IPictureMsg extends IMsg {
+export interface IPictureMsg extends IRawMsg {
     bodyType: EMsgBodyType.img;
-    url: string;
-    secret: string;
-    filename: string;
     thumb: string;
     thumb_secret: string;
-    file_length: string;
     width: number;
     height: number;
     filetype: string;
+    url: string;
+    secret: string;
+    filename: string;
+    file_length: string;
     accessToken: string;
 }
-export interface IFileMsg extends IMsg {
+export interface IFileMsg extends IRawMsg {
     bodyType: EMsgBodyType.file;
-    url: "http://a1.easemob.com/easemob-demo/chatdemoui/chatfiles/aea92a50-56db-11ea-b17b-7334681c33ae";
-    secret: "rql4cFbbEeqVORfy6HL0wIPRQ1sG5y3HH-Vm7cdD-sAyxdOV";
-    filename: "uninstall.exe";
-    file_length: 420297;
-    accessToken: "YWMtMMREGlamEeqiPUHSYOhM6k1-S6DcShHjkNXh_7qs2vVDfE3gU7QR6pIahZ2qs3x0AwMAAAFwdNdhJwBPGgArPE_4zppzsOyeiU7joQ6FqwJmcSg4RbMtiGGWkvqGxg";
+    url: string;
+    secret: string;
+    filename: string;
+    file_length: number;
+    accessToken: string;
 }
-export interface IAudioMsg extends IMsg {
+export interface IAudioMsg extends IRawMsg {
     bodyType: EMsgBodyType.audio;
 }
-export interface IVideoMsg extends IMsg {
+export interface IVideoMsg extends IRawMsg {
     bodyType: EMsgBodyType.video;
 }
-export interface IInviteMsg extends IMsg {
+export interface IInviteMsg extends IRawMsg {
     bodyType: void;
 }
-export interface IMutedMsg extends IMsg {
+export interface IMutedMsg extends IRawMsg {
     bodyType: void;
     mid?: any;
 }
-export interface ITextMsg extends IMsg {
+export interface ITextMsg extends IRawMsg {
     bodyType: EMsgBodyType.txt;
     data: string;
     sourceMsg: string;
+}
+export interface IMessageBody {
+    type: EMsgBodyType;
+    msg?: string;
+    file_length?: number;
+    filename?: string;
+    filetype?: string;
+    length?: number;
+    secret?: string;
+    width?: number;
+    height?: number;
+    url?: string;
+    thumb?: string;
+    thumb_secret?: string;
+}
+export interface IMessage {
+    error: boolean;
+    errorCode: string;
+    errorText: string;
+    id: string;
+    from: string;
+    to: string;
+    toJid: string;
+    body: IMessageBody;
+    type: TMsgType;
+    ext: {};
+    isUnread: number;
+    bySelf: boolean;
+    status: string;
+    time: number;
+    chatId: string;
 }
 export {};

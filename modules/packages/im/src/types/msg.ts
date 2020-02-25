@@ -1,10 +1,10 @@
 type TMsgType = 'chat' | 'groupchat' | 'chatroom' | 'stranger'
 export enum EMsgBodyType {
-    txt,
-    img,
-    file,
-    video,
-    audio
+    txt = 'txt',
+    img = 'img',
+    file = 'file',
+    video = 'video',
+    audio = 'audio'
 }
 export interface IRawMsg {
     id: string
@@ -25,7 +25,6 @@ export interface IRawMsg {
 export type TAnyMsgType = IPresenceMsg | IFileMsg | IAudioMsg | ITextMsg | IMutedMsg | IPictureMsg | IInviteMsg | IVideoMsg
 export interface IPresenceMsg extends IRawMsg {
     bodyType: void
-
     type: 'joinGroupNotifications' | 'deleteGroupChat' | 'leaveGroup' | 'removedFromGroup' | 'invite' | 'direct_joined' | 'joinPublicGroupSuccess' | 'joinPublicGroupDeclined' | 'joinChatRoomSuccess' | 'reachChatRoomCapacity' | 'subscribe' | 'subscribed' | 'unsubscribe' | 'unsubscribed' | 'memberJoinPublicGroupSuccess' | 'memberJoinChatRoomSuccess' | 'leaveChatRoom' | 'addMute' | 'removeMute' | 'addAdmin' | 'removeAdmin' | 'changeOwner';
     gid?: any;
     kicked?: any;

@@ -5,11 +5,13 @@ export interface IConn {
     _event: EventEmitter
     on(event: string, listener: (...args: any[]) => void): this;
     emit(event: string, ...args: any[]): boolean;
+    off(event: string, listener: (...args: any[]) => void): this;
     user: string
     autoReconnectNumTotal: any
     autoReconnectNumMax: any
     apiUrl: string
     listen: TListen
+    close: () => void
     subscribe: (data: { to: any, message: any }) => void
     getRoster: (
         data: {

@@ -1,5 +1,12 @@
-import { IConfig } from "../config";
+import { IConfig } from "../utils/config";
 import { IConn } from "./conn";
+export * from './event';
+export interface IContact {
+    name: string;
+    unread?: number;
+    latestMessage?: string;
+    latestTime?: string;
+}
 export interface IWebIM {
     aa: string;
     config: IConfig;

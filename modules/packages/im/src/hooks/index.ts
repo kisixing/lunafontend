@@ -6,35 +6,39 @@ import { useRoster } from "./useRoster";
 import { useUnread } from "./useUnread";
 import { useMessage } from "./useMessage";
 
-interface IMsg {
 
-}
-
-export default () => {
-    const { isOpen, conn, imDb } = useInit()
-    const [msg, setMsg] = useState<{ [x: string]: IMsg[] }>({})
+export function useIm() {
+    const { conn } = useInit()
     const [contacts, setContacts] = useState<IContact[]>([])
     const [currentContact, setCurrentContact] = useState<IContact>(null)
-    const { friends } = useRoster(isOpen, conn)
-    const { chatUnread } = useUnread(isOpen, conn, imDb)
+
+    const { friends } = useRoster(conn)
+    const { chatMessage } = useMessage(conn)
+    const { chatUnread } = useUnread(conn)
     useEffect(() => {
-        const data = friends.map(f => {
-            const allMsg = msg[f]
-            if (allMsg) {
-                const latestMsg = allMsg[f]
-                latestMsg
+        const data = friends.map(chatId => {
+            const msgArr = chatMessage[chatId]
+            const c: IContact = { name: chatId }
+            if (msgArr) {
+                const latestMsg = msgArr[msgArr.length - 1]
+                c.latestMessage = latestMsg.body.type === 'txt' ? latestMsg.body.msg : '[media]';
+                c.unread = latestMsg.isUnread
+                c.latestTime = new Date(latestMsg.time).toLocaleDateString()
             }
+            return c
         })
-    }, [friends, chatUnread])
+        setContacts(data)
+
+    }, [friends, chatUnread, setContacts])
 
     useEffect(() => {
 
 
 
 
-    }, [isOpen, conn])
+    }, [conn])
     // let history: any = window.history;
 
-    return [friends]
+    return { friends, chatMessage, currentContact, setCurrentContact, contacts }
 
 }

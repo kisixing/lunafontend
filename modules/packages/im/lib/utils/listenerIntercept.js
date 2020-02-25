@@ -32,13 +32,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var utils_1 = require("@lianmed/utils");
 var msgParse_1 = require("./msgParse");
 var msg_1 = require("../types/msg");
-var CHAT_MSG = 'chattingMessage';
+var types_1 = require("../types");
+var CHAT_MSG = types_1.EEvents.chatMessage;
 function listenerIntercept(conn) {
-    conn._event = new utils_1.EventEmitter();
-    conn.on = function (event, listener) {
-        this._event.on(event, listener);
-        return this;
-    };
+    var event = conn._event = new utils_1.EventEmitter();
+    conn.on = event.on.bind(event);
+    conn.emit = event.on.bind(event);
+    conn.off = event.on.bind(event);
     conn.emit = function emit(event) {
         var _a;
         var args = [];

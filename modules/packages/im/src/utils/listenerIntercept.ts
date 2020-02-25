@@ -6,11 +6,10 @@ import { EMsgBodyType } from "../types/msg";
 import { EEvents } from "../types";
 const CHAT_MSG = EEvents.chatMessage
 export function listenerIntercept(conn: IConn) {
-    conn._event = new EventEmitter()
-    conn.on = function (this: IConn, event: string, listener: (...args: any[]) => void) {
-        this._event.on(event, listener)
-        return this
-    }
+    const event = conn._event = new EventEmitter()
+    conn.on = event.on.bind(event)
+    conn.emit = event.on.bind(event)
+    conn.off = event.on.bind(event)
     conn.emit = function emit(this: IConn, event: string, ...args: any[]) {
         this._event.emit(event, ...args)
         return true
@@ -19,7 +18,6 @@ export function listenerIntercept(conn: IConn) {
     const user = conn.user
     conn.listen = function name(this: IConn, cbs: ICbs) {
         const { onTextMessage, onAudioMessage, onVideoMessage, onFileMessage, onPictureMessage, ...others } = cbs
-
 
         oldListen({
             ...others,

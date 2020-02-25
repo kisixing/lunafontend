@@ -12,12 +12,12 @@ interface IOpen extends IConfig {
 }
 export const open = (userConfig: IOpen): Promise<IWebIM> => {
     // init DOMParser / document for strophe and sdk
+    (window as any).WebIM = null
     let WebIM: IWebIM = (window as any).WebIM || ((window as any).WebIM = {})
 
     let config = { ...defaultConfig, ...userConfig, }
 
     WebIM.config = config
-
     const conn = WebIM.conn = new websdk.connection({
         isHttpDNS: config.isHttpDNS,
         isMultiLoginSessions: config.isMultiLoginSessions,
@@ -42,7 +42,7 @@ export const open = (userConfig: IOpen): Promise<IWebIM> => {
     WebIM.emoji = emoji
     return new Promise((res) => {
         const { user, token } = userConfig
-        conn.open({
+        const data = {
             user,
             pwd: token,
             accessToken: token,
@@ -56,7 +56,9 @@ export const open = (userConfig: IOpen): Promise<IWebIM> => {
             //     console.log('webim error', e)
             // },
             appKey: config.appkey
-        })
+        }
+
+        conn.open(data)
         // const old = WebIM.conn.listen
         WebIM.conn = listenerIntercept(conn)
         res(WebIM)

@@ -15,10 +15,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var easemob_websdk_1 = __importDefault(require("easemob-websdk"));
-var config_1 = require("./config");
-var emoji_1 = __importDefault(require("./emoji"));
-var listenerIntercept_1 = require("./utils/listenerIntercept");
-exports.default = (function (userConfig) {
+var config_1 = require("../utils/config");
+var emoji_1 = __importDefault(require("../utils/emoji"));
+var listenerIntercept_1 = require("../utils/listenerIntercept");
+exports.open = function (userConfig) {
+    window.WebIM = null;
     var WebIM = window.WebIM || (window.WebIM = {});
     var config = __assign(__assign({}, config_1.defaultConfig), userConfig);
     WebIM.config = config;
@@ -42,14 +43,15 @@ exports.default = (function (userConfig) {
     WebIM.emoji = emoji_1.default;
     return new Promise(function (res) {
         var user = userConfig.user, token = userConfig.token;
-        conn.open({
+        var data = {
             user: user,
             pwd: token,
             accessToken: token,
             apiUrl: config.apiURL,
             appKey: config.appkey
-        });
+        };
+        conn.open(data);
         WebIM.conn = listenerIntercept_1.listenerIntercept(conn);
         res(WebIM);
     });
-});
+};

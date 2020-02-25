@@ -3,12 +3,12 @@ import { IConn } from "../types/conn";
 
 
 
-export const useRoster = (isOpen: boolean, conn: IConn) => {
+export const useRoster = (conn: IConn) => {
     const [friends, setFriends] = useState<string[]>([])
 
 
     useEffect(() => {
-        isOpen && conn.getRoster({
+         conn && conn.getRoster({
             success(data) {
                 if (!data) return
                 console.log('getRoster success ', data)
@@ -17,7 +17,7 @@ export const useRoster = (isOpen: boolean, conn: IConn) => {
 
             }
         })
-    }, [isOpen, conn])
+    }, [ conn])
     // let history: any = window.history;
 
     return { friends }

@@ -1,25 +1,22 @@
 import { open } from '../service';
-import { imDb, ImDb } from '../utils/ImDb';
+import { imDb } from '../utils/ImDb';
 import { message } from 'antd';
 import { useEffect, useState } from "react";
 import { IConn } from '../types/conn';
 let IM_TOKEN_KEY = 'web_im_lianmed'
 export const useInit = () => {
 
-    const [isOpen, setIsOpen] = useState(false)
     const [conn, setConn] = useState<IConn>(null)
-    const [imDb, setImDb] = useState<ImDb>(null)
+    function init(conn: IConn) {
+
+        imDb.init(conn.user)
+        setConn(conn)
+
+    }
     useEffect(() => {
+
         open({ user: 'ahemyugo', token: sessionStorage.getItem(IM_TOKEN_KEY) || 'admin' }).then(WebIM => {
 
-            function init() {
-
-                imDb.init(conn.user)
-                setImDb(imDb)
-                setIsOpen(true)
-                setConn(WebIM.conn)
-
-            }
             // fake login
             function fakeLogin() {
                 conn.open({
@@ -39,7 +36,6 @@ export const useInit = () => {
             }
 
             const { conn, config } = WebIM
-
             conn.listen({
                 // success connect to xmpp
                 onOpened: msg => {
@@ -50,8 +46,8 @@ export const useInit = () => {
                     // const path =
                     // history.location.pathname.indexOf('login') !=== -1 ? '/contact' : history.location.pathname;
                     // const redirectUrl = `${path}?username=${username}`;
-                    init()
-
+                    init(conn)
+                    console.log('onOpened')
                 },
                 onPresence: msg => {
                     // console.log("onPresence", msg, store.getState())
@@ -277,13 +273,15 @@ export const useInit = () => {
                     console.log('onMutedMessage', msg);
                 },
             });
-            conn.on('chattingMessage', m => {
-                console.log('chattingMessage', m)
-            })
+   
         })
-    }, [])
+        return () => {
+            console.log('close')
+            conn && conn.close()
+        }
+    }, [conn])
     // let history: any = window.history;
 
-    return { isOpen, conn, imDb }
+    return {  conn, imDb }
 
 }

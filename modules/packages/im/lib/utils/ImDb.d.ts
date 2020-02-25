@@ -1,5 +1,5 @@
 import Dexie from 'dexie';
-declare class ImDb {
+export declare class ImDb {
     pageLimit: number;
     db: Dexie;
     $_TABLE: Dexie.Table<{
@@ -16,5 +16,4 @@ declare class ImDb {
     addMessage(message: any, isUnread?: number): Promise<unknown>;
     clearMessage(chatType: any, id: any): Promise<unknown>;
 }
-declare const imDb: ImDb;
-export default imDb;
+export declare const imDb: ImDb;

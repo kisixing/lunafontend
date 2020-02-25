@@ -121,7 +121,8 @@ function parse(message, username) {
     if (type === 'stranger') {
         chatId = from;
     }
-    var _message = __assign(__assign({}, m), { bySelf: bySelf, time: +new Date(), status: status, chatId: chatId });
+    var _message = __assign(__assign({}, m), { bySelf: bySelf, time: +new Date(), status: status,
+        chatId: chatId });
     return _message;
 }
 exports.parse = parse;

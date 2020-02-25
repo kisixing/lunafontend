@@ -3,9 +3,9 @@ import { IConn } from "./conn";
 export * from './event'
 export interface IContact {
     name: string
-    unread: number
-    latestMessage: string
-    latestTime: string
+    unread?: number
+    latestMessage?: string
+    latestTime?: string
 }
 
 export interface IWebIM {

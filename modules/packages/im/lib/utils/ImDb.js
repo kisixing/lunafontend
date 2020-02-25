@@ -149,7 +149,7 @@ var ImDb = (function () {
     };
     return ImDb;
 }());
+exports.ImDb = ImDb;
 ;
-var imDb = new ImDb();
-window.appDb = imDb;
-exports.default = imDb;
+exports.imDb = new ImDb();
+window.appDb = exports.imDb;

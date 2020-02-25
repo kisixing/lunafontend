@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { IConn } from "../types/conn";
-import { ImDb } from "../utils/ImDb";
+import { imDb } from "../utils/ImDb";
 import { IMessage } from "../types/msg";
 import { EEvents } from "../types";
 
-interface IMessageMap {
+export interface IMessageMap {
     [x: string]: IMessage[]
 }
 
-export const useMessage = (isOpen: boolean, conn: IConn, imDb: ImDb) => {
+export const useMessage = ( conn: IConn) => {
     // let collection = {
     //     'chat': {},
     //     'chatroom': {},
@@ -18,7 +18,7 @@ export const useMessage = (isOpen: boolean, conn: IConn, imDb: ImDb) => {
     const [chatMessage, setChatMessage] = useState<IMessageMap>({})
 
     useEffect(() => {
-        conn.on(EEvents.chatMessage, (mes: IMessage) => {
+        const cb = (mes: IMessage) => {
             const { type, chatId } = mes
             if (type === 'chat') {
                 const oldArr = chatMessage[chatId] || []
@@ -26,9 +26,12 @@ export const useMessage = (isOpen: boolean, conn: IConn, imDb: ImDb) => {
                 setChatMessage({ ...chatMessage, [chatId]: newArr })
                 imDb.addMessage(mes, 1)
             }
-        })
-
-    }, [isOpen, conn])
+        }
+         conn && conn.on(EEvents.chatMessage, cb)
+        return () => {
+             conn && conn.off(EEvents.chatMessage, cb)
+        }
+    }, [conn])
 
     return { chatMessage }
 
