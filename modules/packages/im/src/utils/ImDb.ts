@@ -8,7 +8,7 @@ const DB_VERSION = 2
 const TABLE_NAME = 'webim_history'
 const TABLE_INDEX_KEYS = ['id', 'from', 'to', 'type', 'isUnread', 'status', 'toJid']
 
-class ImDb {
+export class ImDb {
     pageLimit: number
     db: Dexie
     $_TABLE: Dexie.Table<{ [x: string]: any }, string>
@@ -160,8 +160,7 @@ class ImDb {
     }
 
 };
-const imDb = new ImDb();
+export const imDb = new ImDb();
 // in order to test in browser, will be removed
 (window as any).appDb = imDb
 
-export default imDb

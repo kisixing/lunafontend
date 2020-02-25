@@ -3,7 +3,8 @@ import { EventEmitter } from "@lianmed/utils";
 import { ICbs, TListen } from "../types/listen";
 import { parse } from "./msgParse";
 import { EMsgBodyType } from "../types/msg";
-const CHAT_MSG = 'chattingMessage'
+import { EEvents } from "../types";
+const CHAT_MSG = EEvents.chatMessage
 export function listenerIntercept(conn: IConn) {
     conn._event = new EventEmitter()
     conn.on = function (this: IConn, event: string, listener: (...args: any[]) => void) {

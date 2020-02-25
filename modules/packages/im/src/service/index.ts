@@ -2,15 +2,15 @@
 //import "script-loader!easemob-websdk/dist/strophe-1.2.8.js"
 /* eslint-enable */
 import websdk from 'easemob-websdk'
-import { defaultConfig, IConfig } from './config'
-import emoji from './emoji'
-import { IWebIM } from "./types/index";
-import { listenerIntercept } from "./utils/listenerIntercept";
+import { defaultConfig, IConfig } from '../utils/config'
+import emoji from '../utils/emoji'
+import { IWebIM } from "../types/index";
+import { listenerIntercept } from "../utils/listenerIntercept";
 interface IOpen extends IConfig {
     user?: string
     token?: string
 }
-export default (userConfig: IOpen): Promise<IWebIM> => {
+export const open = (userConfig: IOpen): Promise<IWebIM> => {
     // init DOMParser / document for strophe and sdk
     let WebIM: IWebIM = (window as any).WebIM || ((window as any).WebIM = {})
 

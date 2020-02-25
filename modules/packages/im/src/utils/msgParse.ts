@@ -1,4 +1,4 @@
-import { EMsgBodyType, TAnyMsgType, IMsg } from "../types/msg";
+import { EMsgBodyType, TAnyMsgType, IMessage, IMessageBody } from "../types/msg";
 const msgTpl = {
     base: {
         error: false,
@@ -74,26 +74,24 @@ const msgTpl = {
         thumb_secret: ''
     }
 }
-interface IObj extends IMsg {
 
-}
 function copy(message, tpl) {
     let obj = {}
     Object.keys(tpl).forEach(v => {
         obj[v] = message[v] || tpl[v]
     })
-    return obj as IObj
+    return obj as any
 }
 
 
-export const parseFromServer = (message: TAnyMsgType) => {
+export const parseFromServer = (message: TAnyMsgType): IMessage => {
 
 
     let ext = message.ext || {}
-    let obj = copy(message, msgTpl.base)
+    let obj: IMessage = copy(message, msgTpl.base)
     // all of entities of message should in body, not in base
     // body.ext could save any customize info of message, like image size, width, height etc
-    let body = copy(message, msgTpl[message.bodyType as EMsgBodyType])
+    let body: IMessageBody = copy(message, msgTpl[message.bodyType as EMsgBodyType])
     switch (message.bodyType) {
         case EMsgBodyType.txt:
             return {
@@ -172,11 +170,11 @@ export function parse(message: TAnyMsgType, username: string) {
     // }
 
     // update message array
-    const _message = {
+    const _message: IMessage = {
         ...m,
         bySelf,
         time: +new Date(),
-        status: status,
+        status,
         chatId
     }
     return _message
