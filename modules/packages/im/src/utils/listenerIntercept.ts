@@ -22,6 +22,7 @@ export function listenerIntercept(conn: IConn) {
         oldListen({
             ...others,
             onTextMessage(this: IConn, msg) {
+                console.log('raw txt msg', msg)
                 const _msg = parse({ ...msg, bodyType: EMsgBodyType.txt }, user)
                 this._event.emit(CHAT_MSG, _msg)
                 onTextMessage && onTextMessage.call(msg, this)

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { IConn } from "../types/conn";
 import { imDb } from "../utils/ImDb";
 import { IMessage } from "../types/msg";
+import { IMessageMap } from "./useMessage";
 
 
 
@@ -14,7 +15,7 @@ export const useUnread = (conn: IConn) => {
     // }
 
 
-    const [chatUnread, setChatUnread] = useState<{ [x: string]: IMessage }>({})
+    const [chatUnread, setChatUnread] = useState<IMessageMap>({})
     useEffect(() => {
         if (conn) {
 

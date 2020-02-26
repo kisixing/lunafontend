@@ -115,7 +115,7 @@ export const useInit = () => {
                 // handle all exception
                 onError: error => {
 
-                    fakeLogin()
+                    // fakeLogin()
 
                     // 16: server-side close the websocket connection
                     if (error.type === WebIM.statusCode.WEBIM_CONNCTION_DISCONNECTED) {

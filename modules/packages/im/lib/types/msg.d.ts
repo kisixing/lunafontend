@@ -1,4 +1,7 @@
-declare type TMsgType = 'chat' | 'groupchat' | 'chatroom' | 'stranger';
+declare type Partial<T> = {
+    [x in keyof T]?: T[x];
+};
+export declare type TRawMsgType = 'chat' | 'groupchat' | 'chatroom' | 'stranger';
 export declare enum EMsgBodyType {
     txt = "txt",
     img = "img",
@@ -8,7 +11,7 @@ export declare enum EMsgBodyType {
 }
 export interface IRawMsg {
     id: string;
-    type: TMsgType | string;
+    type: TRawMsgType | string;
     from: string;
     to: string;
     ext?: {
@@ -19,14 +22,15 @@ export interface IRawMsg {
             unsigned: number;
         };
     };
-    error: boolean;
-    errorText: string;
-    errorCode: number;
-    msgConfig: any;
-    time: string;
+    error?: boolean;
+    errorText?: string;
+    errorCode?: number;
+    msgConfig?: any;
+    time?: string;
     status?: any;
 }
-export declare type TAnyMsgType = IPresenceMsg | IFileMsg | IAudioMsg | ITextMsg | IMutedMsg | IPictureMsg | IInviteMsg | IVideoMsg;
+export declare type PartialRawMsg = Partial<IRawMsg>;
+export declare type TAnyMsgType = IFileMsg | IAudioMsg | ITextMsg | IPictureMsg | IVideoMsg;
 export interface IPresenceMsg extends IRawMsg {
     bodyType: void;
     type: 'joinGroupNotifications' | 'deleteGroupChat' | 'leaveGroup' | 'removedFromGroup' | 'invite' | 'direct_joined' | 'joinPublicGroupSuccess' | 'joinPublicGroupDeclined' | 'joinChatRoomSuccess' | 'reachChatRoomCapacity' | 'subscribe' | 'subscribed' | 'unsubscribe' | 'unsubscribed' | 'memberJoinPublicGroupSuccess' | 'memberJoinChatRoomSuccess' | 'leaveChatRoom' | 'addMute' | 'removeMute' | 'addAdmin' | 'removeAdmin' | 'changeOwner';
@@ -71,7 +75,7 @@ export interface IMutedMsg extends IRawMsg {
 export interface ITextMsg extends IRawMsg {
     bodyType: EMsgBodyType.txt;
     data: string;
-    sourceMsg: string;
+    sourceMsg?: string;
 }
 export interface IMessageBody {
     type: EMsgBodyType;
@@ -96,11 +100,11 @@ export interface IMessage {
     to: string;
     toJid: string;
     body: IMessageBody;
-    type: TMsgType;
+    type: TRawMsgType;
     ext: {};
     isUnread: number;
     bySelf: boolean;
-    status: string;
+    status: 'sent' | 'fail' | 'sending' | 'read';
     time: number;
     chatId: string;
 }

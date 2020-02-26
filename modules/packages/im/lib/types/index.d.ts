@@ -29,5 +29,13 @@ export interface IWebIM {
             onInvite?: any;
         };
     };
+    connection: (data: any) => any;
+    utils: {
+        [x: string]: any;
+    };
+    message: (a?: any, b?: any) => any;
+    doQuery: (a?: any, b?: any, c?: any) => any;
+    debug: (a: any) => void;
+    version: string;
 }
 export {};

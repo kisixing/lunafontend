@@ -89,7 +89,6 @@ exports.useInit = function () {
                     }
                 },
                 onError: function (error) {
-                    fakeLogin();
                     if (error.type === WebIM.statusCode.WEBIM_CONNCTION_DISCONNECTED) {
                         console.log('WEBIM_CONNCTION_DISCONNECTED', WebIM.conn.autoReconnectNumTotal, WebIM.conn.autoReconnectNumMax);
                         return;

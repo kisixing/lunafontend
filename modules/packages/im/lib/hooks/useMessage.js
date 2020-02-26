@@ -26,6 +26,7 @@ exports.useMessage = function (conn) {
     react_1.useEffect(function () {
         var cb = function (mes) {
             var _a;
+            console.log('parsed message', mes);
             var type = mes.type, chatId = mes.chatId;
             if (type === 'chat') {
                 var oldArr = chatMessage[chatId] || [];

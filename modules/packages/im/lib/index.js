@@ -7,6 +7,5 @@ var service_1 = require("./service");
 exports.open = service_1.open;
 var ImDb_1 = require("./utils/ImDb");
 exports.imDb = ImDb_1.imDb;
-var hooks_1 = require("./hooks");
-exports.useIm = hooks_1.useIm;
+__export(require("./hooks"));
 __export(require("./types"));

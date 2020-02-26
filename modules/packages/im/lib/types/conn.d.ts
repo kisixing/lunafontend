@@ -11,10 +11,12 @@ export interface IConn {
     apiUrl: string;
     listen: TListen;
     close: () => void;
+    send: (data: any) => void;
     subscribe: (data: {
         to: any;
         message: any;
     }) => void;
+    getUniqueId: () => number;
     getRoster: (data: {
         success: (roster: {
             name: string;

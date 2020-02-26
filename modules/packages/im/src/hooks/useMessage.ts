@@ -19,6 +19,7 @@ export const useMessage = ( conn: IConn) => {
 
     useEffect(() => {
         const cb = (mes: IMessage) => {
+            console.log('parsed message',mes)
             const { type, chatId } = mes
             if (type === 'chat') {
                 const oldArr = chatMessage[chatId] || []

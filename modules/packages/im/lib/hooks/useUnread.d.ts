@@ -1,7 +1,5 @@
 import { IConn } from "../types/conn";
-import { IMessage } from "../types/msg";
+import { IMessageMap } from "./useMessage";
 export declare const useUnread: (conn: IConn) => {
-    chatUnread: {
-        [x: string]: IMessage;
-    };
+    chatUnread: IMessageMap;
 };

@@ -12,7 +12,6 @@ interface IOpen extends IConfig {
 }
 export const open = (userConfig: IOpen): Promise<IWebIM> => {
     // init DOMParser / document for strophe and sdk
-    (window as any).WebIM = null
     let WebIM: IWebIM = (window as any).WebIM || ((window as any).WebIM = {})
 
     let config = { ...defaultConfig, ...userConfig, }

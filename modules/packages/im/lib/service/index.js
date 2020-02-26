@@ -19,7 +19,6 @@ var config_1 = require("../utils/config");
 var emoji_1 = __importDefault(require("../utils/emoji"));
 var listenerIntercept_1 = require("../utils/listenerIntercept");
 exports.open = function (userConfig) {
-    window.WebIM = null;
     var WebIM = window.WebIM || (window.WebIM = {});
     var config = __assign(__assign({}, config_1.defaultConfig), userConfig);
     WebIM.config = config;

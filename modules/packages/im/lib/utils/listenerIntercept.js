@@ -53,6 +53,7 @@ function listenerIntercept(conn) {
     conn.listen = function name(cbs) {
         var onTextMessage = cbs.onTextMessage, onAudioMessage = cbs.onAudioMessage, onVideoMessage = cbs.onVideoMessage, onFileMessage = cbs.onFileMessage, onPictureMessage = cbs.onPictureMessage, others = __rest(cbs, ["onTextMessage", "onAudioMessage", "onVideoMessage", "onFileMessage", "onPictureMessage"]);
         oldListen(__assign(__assign({}, others), { onTextMessage: function (msg) {
+                console.log('raw txt msg', msg);
                 var _msg = msgParse_1.parse(__assign(__assign({}, msg), { bodyType: msg_1.EMsgBodyType.txt }), user);
                 this._event.emit(CHAT_MSG, _msg);
                 onTextMessage && onTextMessage.call(msg, this);

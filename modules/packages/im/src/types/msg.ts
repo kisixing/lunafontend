@@ -1,4 +1,8 @@
-type TMsgType = 'chat' | 'groupchat' | 'chatroom' | 'stranger'
+type Partial<T> = {
+    [x in keyof T]?: T[x]
+}
+
+export type TRawMsgType = 'chat' | 'groupchat' | 'chatroom' | 'stranger'
 export enum EMsgBodyType {
     txt = 'txt',
     img = 'img',
@@ -8,21 +12,22 @@ export enum EMsgBodyType {
 }
 export interface IRawMsg {
     id: string
-    type: TMsgType | string
+    type: TRawMsgType | string
     from: string
     to: string
     ext?: {
         [x: string]: any
         file_length: { low: number, high: number, unsigned: number }
     }
-    error: boolean
-    errorText: string
-    errorCode: number
-    msgConfig: any
-    time: string
+    error?: boolean
+    errorText?: string
+    errorCode?: number
+    msgConfig?: any
+    time?: string
     status?: any
 }
-export type TAnyMsgType = IPresenceMsg | IFileMsg | IAudioMsg | ITextMsg | IMutedMsg | IPictureMsg | IInviteMsg | IVideoMsg
+export type PartialRawMsg = Partial<IRawMsg>
+export type TAnyMsgType = IFileMsg | IAudioMsg | ITextMsg | IPictureMsg | IVideoMsg
 export interface IPresenceMsg extends IRawMsg {
     bodyType: void
     type: 'joinGroupNotifications' | 'deleteGroupChat' | 'leaveGroup' | 'removedFromGroup' | 'invite' | 'direct_joined' | 'joinPublicGroupSuccess' | 'joinPublicGroupDeclined' | 'joinChatRoomSuccess' | 'reachChatRoomCapacity' | 'subscribe' | 'subscribed' | 'unsubscribe' | 'unsubscribed' | 'memberJoinPublicGroupSuccess' | 'memberJoinChatRoomSuccess' | 'leaveChatRoom' | 'addMute' | 'removeMute' | 'addAdmin' | 'removeAdmin' | 'changeOwner';
@@ -70,7 +75,7 @@ export interface IMutedMsg extends IRawMsg {
 export interface ITextMsg extends IRawMsg {
     bodyType: EMsgBodyType.txt
     data: string
-    sourceMsg: string
+    sourceMsg?: string
 }
 
 export interface IMessageBody {
@@ -97,11 +102,11 @@ export interface IMessage {
     to: string
     toJid: string
     body: IMessageBody
-    type: TMsgType
+    type: TRawMsgType
     ext: {}
     isUnread: number
     bySelf: boolean
-    status: string
+    status: 'sent' | 'fail' | 'sending' | 'read'
     time: number
     chatId: string
 }
