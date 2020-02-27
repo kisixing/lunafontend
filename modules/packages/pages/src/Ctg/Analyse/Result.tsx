@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Radio, Form, Button, InputNumber, Select } from 'antd';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
-import { WrappedFormUtils } from 'antd/lib/form/Form';
-import useAnalyse, { IResult } from './useAnalyse'
+import useAnalyse from './useAnalyse'
 import { event } from '@lianmed/utils';
 const intervals = [20, 40]
 
 const ScoringMethod = (props: IProps) => {
-  const { form, docid, v, ctgData, fetal, setFetal, ...others } = props;
-
+  const { docid, v, ctgData, fetal, setFetal, ...others } = props;
+  const [form] = Form.useForm()
   const [disabled, setDisabled] = useState(true)
   const {
     responseData,
@@ -108,13 +107,11 @@ const ScoringMethod = (props: IProps) => {
             ))
           }
         </Radio.Group>
-        <Form labelAlign="left" {...formItemLayout} style={{ width: '100%' }}>
+        <Form form={form} labelAlign="left" {...formItemLayout} style={{ width: '100%' }}>
           {
-            activeItem.map(({ label, key, required, message }) => (
-              <Form.Item label={label} key={key} style={{ marginBottom: 0 }}>
-                {form.getFieldDecorator(key, {
-                  rules: [{ required, message }],
-                })(<InputNumber disabled={disabled} style={{ width: '150px' }} />)}
+            activeItem.map(({ label, key, rules }) => (
+              <Form.Item label={label} key={key} style={{ marginBottom: 0 }} rules={rules}>
+                <InputNumber disabled={disabled} style={{ width: '150px' }} />
               </Form.Item>
             ))
           }
@@ -141,8 +138,7 @@ const ScoringMethod = (props: IProps) => {
 interface IProps {
   ctgData: any;
   docid: string,
-  form: WrappedFormUtils<IResult>,
   v: { suit: Suit }
   [x: string]: any
 }
-export default Form.create<IProps>()(ScoringMethod);
+export default ScoringMethod

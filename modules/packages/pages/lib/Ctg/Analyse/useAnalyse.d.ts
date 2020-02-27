@@ -1,9 +1,10 @@
 /// <reference types="react" />
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
-import { WrappedFormUtils } from 'antd/lib/form/Form';
+import { FormInstance } from 'antd/lib/form/Form';
+import { Rule } from 'rc-field-form/lib/interface';
 declare const _default: (v: {
     suit: Suit;
-}, docid: any, fetal: any, form: WrappedFormUtils<any>, cb: (result: IResult) => void) => {
+}, docid: any, fetal: any, form: FormInstance, cb: (result: IResult) => void) => {
     setMark: (mark: string) => void;
     mark: string;
     activeItem: IItem[];
@@ -31,8 +32,7 @@ interface IResponseData {
 interface IItem {
     key: string;
     label: string;
-    message: string;
-    required: boolean;
+    rules: Rule[];
 }
 export interface IResult {
     fhr_uptime_score: number;

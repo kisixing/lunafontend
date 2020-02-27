@@ -3,9 +3,10 @@ import { useState, useEffect, useMemo } from 'react';
 import request from "@lianmed/request";
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import { event, _R } from "@lianmed/utils";
-import { WrappedFormUtils } from 'antd/lib/form/Form';
+import { FormInstance } from 'antd/lib/form/Form';
+import { Rule } from 'rc-field-form/lib/interface';
 
-export default (v: { suit: Suit }, docid, fetal: any, form: WrappedFormUtils, cb: (result: IResult) => void) => {
+export default (v: { suit: Suit }, docid, fetal: any, form: FormInstance, cb: (result: IResult) => void) => {
     const resultData = useMemo<{ [x: string]: IResponseData }>(() => { return {} }, [])
 
     const [mark, setMark] = useState(MARKS[0])
@@ -121,7 +122,7 @@ const allItems: IItem[] = [
     { key: 'dec_score', label: '减速' },
     { key: 'Krebs', label: '分析法' },
     { key: 'movement_score', label: '胎动' },
-].map(_ => ({ ..._, required: true, message: '请输入分数' }))
+].map(_ => ({ ..._, rules: [{ required: true, message: '请输入分数' }] }))
 
 interface IResponseData {
     acc?: string,
@@ -135,8 +136,7 @@ interface IResponseData {
 interface IItem {
     key: string;
     label: string;
-    message: string;
-    required: boolean;
+    rules:  Rule[]
 }
 export interface IResult {
     fhr_uptime_score: number;

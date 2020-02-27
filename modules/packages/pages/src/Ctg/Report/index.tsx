@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useLayoutEffect, useState } from 'react';
+import React, { useRef, useLayoutEffect, useState } from 'react';
 import Ctg from './Ctg';
 import Preview from './Preview';
 import { EventEmitter } from '@lianmed/utils';
@@ -42,12 +42,12 @@ const PrintPreview = (props: IProps) => {
                     <Preview wh={wh} {...props} />
                 </div>
                 <div style={{
-                    height:`calc(100% - 250px)`,
+                    height: `calc(100% - 250px)`,
                     padding: 24,
                     marginTop: 12,
                     border: '1px solid #d9d9d9',
                     background: '#fff'
-                }}> 
+                }}>
                     <Ctg docid={docid} />
                 </div>
             </div>

@@ -1,7 +1,8 @@
 
 import React, { useState, useCallback, useLayoutEffect, useRef, useEffect } from 'react';
 import { Document, Page } from 'react-pdf';
-import { Pagination, Spin, Icon, Button, Empty } from 'antd';
+import { Pagination, Spin, Button, Empty } from 'antd';
+import { FullscreenExitOutlined } from "@ant-design/icons";
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 
 // import workerSrc from './pdf.worker.min'
@@ -88,7 +89,7 @@ const PreviewContent = props => {
             />
             {isFullpage ? (
                 <span style={{ position: 'absolute', top: 24, right: 24, cursor: 'pointer' }} onClick={shrink}>
-                    返回<Icon title="缩小" type="fullscreen-exit" />
+                    返回<FullscreenExitOutlined title="缩小" />
                 </span>
             ) : (
                     isFull || <span style={{ position: 'absolute', bottom: 36, right: 12, }}>

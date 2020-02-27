@@ -111,4 +111,4 @@ var allItems = [
     { key: 'dec_score', label: '减速' },
     { key: 'Krebs', label: '分析法' },
     { key: 'movement_score', label: '胎动' },
-].map(function (_) { return (__assign(__assign({}, _), { required: true, message: '请输入分数' })); });
+].map(function (_) { return (__assign(__assign({}, _), { rules: [{ required: true, message: '请输入分数' }] })); });

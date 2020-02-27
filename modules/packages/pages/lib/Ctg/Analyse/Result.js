@@ -38,7 +38,8 @@ var useAnalyse_1 = __importDefault(require("./useAnalyse"));
 var utils_1 = require("@lianmed/utils");
 var intervals = [20, 40];
 var ScoringMethod = function (props) {
-    var form = props.form, docid = props.docid, v = props.v, ctgData = props.ctgData, fetal = props.fetal, setFetal = props.setFetal, others = __rest(props, ["form", "docid", "v", "ctgData", "fetal", "setFetal"]);
+    var docid = props.docid, v = props.v, ctgData = props.ctgData, fetal = props.fetal, setFetal = props.setFetal, others = __rest(props, ["docid", "v", "ctgData", "fetal", "setFetal"]);
+    var form = antd_1.Form.useForm()[0];
     var _a = react_1.useState(true), disabled = _a[0], setDisabled = _a[1];
     var _b = useAnalyse_1.default(v, docid, fetal, form, function (_result) {
         form.setFieldsValue(_result);
@@ -101,12 +102,11 @@ var ScoringMethod = function (props) {
             react_1.default.createElement(antd_1.Radio.Group, { onChange: onChange, value: mark, style: { maxWidth: 200 } }, MARKS.map(function (_) { return (react_1.default.createElement(antd_1.Radio, { value: _, key: _ },
                 _,
                 "\u5206\u6790\u6CD5")); })),
-            react_1.default.createElement(antd_1.Form, __assign({ labelAlign: "left" }, formItemLayout, { style: { width: '100%' } }),
+            react_1.default.createElement(antd_1.Form, __assign({ form: form, labelAlign: "left" }, formItemLayout, { style: { width: '100%' } }),
                 activeItem.map(function (_a) {
-                    var label = _a.label, key = _a.key, required = _a.required, message = _a.message;
-                    return (react_1.default.createElement(antd_1.Form.Item, { label: label, key: key, style: { marginBottom: 0 } }, form.getFieldDecorator(key, {
-                        rules: [{ required: required, message: message }],
-                    })(react_1.default.createElement(antd_1.InputNumber, { disabled: disabled, style: { width: '150px' } }))));
+                    var label = _a.label, key = _a.key, rules = _a.rules;
+                    return (react_1.default.createElement(antd_1.Form.Item, { label: label, key: key, style: { marginBottom: 0 }, rules: rules },
+                        react_1.default.createElement(antd_1.InputNumber, { disabled: disabled, style: { width: '150px' } })));
                 }),
                 react_1.default.createElement(antd_1.Form.Item, { label: "\u7535\u8111\u8BC4\u5206" },
                     react_1.default.createElement("span", null,
@@ -123,4 +123,4 @@ var ScoringMethod = function (props) {
                     } }, disabled ? '修改' : '确认'),
                 react_1.default.createElement(antd_1.Button, { style: { marginBottom: 10 } }, "\u6253\u5370")))));
 };
-exports.default = antd_1.Form.create()(ScoringMethod);
+exports.default = ScoringMethod;

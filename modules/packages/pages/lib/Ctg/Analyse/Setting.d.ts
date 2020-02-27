@@ -1,8 +1,5 @@
 /// <reference types="react" />
-declare const _default: import("antd/lib/form/interface").ConnectedComponentClass<(props: {
-    form: any;
-}) => JSX.Element, Pick<{
+declare const _default: (props: {
     [x: string]: any;
-    form: any;
-}, import("csstype").AnimationIterationCountProperty>>;
+}) => JSX.Element;
 export default _default;
