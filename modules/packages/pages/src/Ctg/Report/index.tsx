@@ -41,7 +41,6 @@ const PrintPreview = (props: IProps) => {
                 <div style={{ height: 240, textAlign: 'center' }}>
                     <Preview wh={wh} {...props} />
                 </div>
-                111
                 <div style={{
                     height: `calc(100% - 250px)`,
                     padding: 24,

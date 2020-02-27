@@ -38,7 +38,6 @@ var PrintPreview = function (props) {
         react_1.default.createElement("div", { style: { height: '100%' }, ref: inputEl },
             react_1.default.createElement("div", { style: { height: 240, textAlign: 'center' } },
                 react_1.default.createElement(Preview_1.default, __assign({ wh: wh }, props))),
-            "111",
             react_1.default.createElement("div", { style: {
                     height: "calc(100% - 250px)",
                     padding: 24,

@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
-import { Layout, Menu, Breadcrumb, Icon } from 'antd';
+import { Layout, Menu, Icon } from 'antd';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -44,6 +44,12 @@ export default class SiderDemo extends React.Component {
                 </span>
               }
             >
+              <Menu.Item key="-1">
+                <Link to="/Analyse">
+                  <Icon type="user" />
+                  分析
+                </Link>
+              </Menu.Item>
               <Menu.Item key="0">
                 <Link to="/CtgPanel">
                   <Icon type="user" />
