@@ -1,23 +1,25 @@
 import React, { Component } from 'react';
 import { Menu } from 'antd';
-import styles from "./SiderMenu.module.less";
+import styles from "./SiderMenu.module.css";
+import { obvuew } from '@lianmed/f_types';
 
-class SiderMenu extends Component {
-  constructor(props) {
+class SiderMenu extends Component<{ dataSource: obvuew.prenatal_visitspage[], setItem: any, selected: any }, any> {
+  constructor(props: any) {
     super(props);
     this.state = {
       selectedKeys: []
     }
   }
 
-  handleClick = e => {
-    const { setItem } = this.props;
+  handleClick = (e: any) => {
+    console.log(e)
+    const { setItem, dataSource } = this.props;
     const { keyPath, item } = e;
-    const current = item.props.data;
     this.setState({
       selectedKeys: keyPath
     });
-    setItem(current)
+    const target = dataSource.find(_ => _.id == keyPath[0])
+    setItem(target)
   };
 
   render() {
@@ -31,9 +33,9 @@ class SiderMenu extends Component {
         selectedKeys={selected.id && [selected.id.toString()]}
         onClick={this.handleClick}
       >
-        {dataSource.map(item => {
+        {dataSource.map((item) => {
           return (
-            <Menu.Item key={item.id} data={item} className={styles.item}>
+            <Menu.Item key={item.id} className={styles.item}>
               <div>{item.visitTime || item.visitDate}</div>
             </Menu.Item>
           );

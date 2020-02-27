@@ -3,12 +3,12 @@ import React, { Component } from 'react';
 import { Layout, Menu, Spin, Button, Popconfirm } from 'antd';
 import PreviewContent from '@lianmed/pages/lib/Ctg/Report/PreviewContent';
 import { request } from '@lianmed/utils';
-import styles from './ReportContent.module.less';
+import styles from './ReportContent.module.css';
 
-class ReportContent extends Component {
+class ReportContent extends Component<any, any> {
   static propTypes = {};
 
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     this.state = {
       loading: false,
@@ -20,31 +20,32 @@ class ReportContent extends Component {
     };
     this.myRef = React.createRef();
   }
-
+  myRef: any
   componentDidMount() {
     const { clientHeight, clientWidth } = this.myRef.current;
     this.setState({ wh: { w: clientWidth - 302, h: clientHeight } });
   }
 
   // 提取改孕妇所有报告
-  getAllReports = data => {
-    let ctgexam = [];
+  getAllReports = (data: any) => {
+    let ctgexam: any[] = [];
     for (let i = 0; i < data.length; i++) {
-      const visitDate = data[i]['visitDate'];
-      const element = data[i]['ctgexam'];
-      ctgexam.push({ ...element, visitDate });
+      const visitDate: any = data[i]['visitDate'];
+      const element: any = data[i]['ctgexam'];
+      const d = { ...element, visitDate: visitDate }
+      ctgexam.push(d);
     }
     return ctgexam;
   };
 
-  handleClick = (e) => {
+  handleClick = (e: any) => {
     const { key, item } = e;
     const value = item.props.data;
     this.fetchpdf(key);
     this.setState({ currentReport: value });
   };
 
-  fetchpdf = (value) => {
+  fetchpdf = (value: any) => {
     this.setState({ loading: true });
     request
       .get('/ctg-exams-pdf', {
@@ -62,17 +63,18 @@ class ReportContent extends Component {
       });
   };
 
-  onDownload = (id) => {
-    const filePath = `${window.CONFIG.baseURL}/ctg-exams-pdfurl/${id}`;
+  onDownload = (id: any) => {
+    const filePath = `${(window as any).CONFIG.baseURL
+      }/ctg-exams-pdfurl/${id} `;
     window.open(filePath);
   };
 
-  onDelect = bizSn => {
+  onDelect = (bizSn: any) => {
     // 删除报告
     // 当前档案id --> currentReport.bizSn
     this.setState({ deleteLoading: true });
     request
-      .delete(`/obsolete-report/${bizSn}`)
+      .delete(`/ obsolete - report / ${bizSn} `)
       .then((res) => {
         // 重新请求档案列表
         this.props.fetchList();
@@ -87,7 +89,7 @@ class ReportContent extends Component {
       });
   };
 
-  doArchiving = bizSn => {
+  doArchiving = (bizSn: any) => {
     this.setState({ archiveLoading: true });
     // 归档
     // 当前档案id --> currentReport.bizSn
@@ -103,7 +105,7 @@ class ReportContent extends Component {
       });
   };
 
-  undoArchiving = bizSn => {
+  undoArchiving = (bizSn: any) => {
     this.setState({ archiveLoading: true });
     // 撤销归档
     request
@@ -118,25 +120,25 @@ class ReportContent extends Component {
       });
   };
 
-  renderMenus = data => {
-    const childrenLoop = children => {
-      return children.map(e => {
+  renderMenus = (data: any) => {
+    const childrenLoop = (children: any) => {
+      return children.map((e: any) => {
         const { bizSn, archived, valid, time } = e;
         return (
-          <Menu.Item key={bizSn} data={e} className={styles.item}>
+          <Menu.Item key={bizSn} className={styles.item}>
             <div>{bizSn}</div>
           </Menu.Item>
         );
       });
     };
-    const loop = dataSource => {
+    const loop = (dataSource: any) => {
       // eslint-disable-next-line array-callback-return
-      return dataSource.map(item => {
+      return dataSource.map((item: any) => {
         const { visitDate, report, id } = item;
         // return (
         //   <Menu.ItemGroup
         //     key={id}
-        //     title={`检查日期：${visitDate || (report && moment(report.endTime).format('YYYY-MM-DD'))}`}
+        //     title={`检查日期：${ visitDate || (report && moment(report.endTime).format('YYYY-MM-DD')) } `}
         //   >
         //     {report && report.length ? childrenLoop(report) : null}
         //   </Menu.ItemGroup>
@@ -178,16 +180,16 @@ class ReportContent extends Component {
                   撤销归档
                 </Button>
               ) : (
-                <Button
-                  loading={archiveLoading}
-                  type="primary"
-                  onClick={() => this.doArchiving(bizSn)}
-                >
-                  归档
+                  <Button
+                    loading={archiveLoading}
+                    type="primary"
+                    onClick={() => this.doArchiving(bizSn)}
+                  >
+                    归档
                 </Button>
-              )}
+                )}
               <Popconfirm
-                title={`确认删除档案号为${currentReport.bizSn}的报告吗？`}
+                title={`确认删除档案号为${currentReport.bizSn} 的报告吗？`}
                 placement="topRight"
                 onConfirm={() => this.onDelect(bizSn)}
                 okText="是"

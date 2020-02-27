@@ -5,3 +5,4 @@ import * as qrcode from 'qrcode';
 export * from './Event';
 export { default as request } from '@lianmed/request';
 export { _R, qrcode };
+export * from './fn';
