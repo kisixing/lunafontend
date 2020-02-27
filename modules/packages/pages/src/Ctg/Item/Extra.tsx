@@ -1,6 +1,6 @@
 import React, { } from 'react';
 import { Tag, Button } from 'antd';
-
+import { CloseOutlined } from "@ant-design/icons";
 import useItemAlarm from "./useItemAlarm";
 import { mapStatusToColor, mapStatusToText, BedStatus } from "@lianmed/lmg/lib/services/WsService";
 import styled from 'styled-components';
@@ -43,7 +43,7 @@ const C = (props: IProps) => {
                 (
                     <SB
                         title="关闭监护窗口"
-                        icon="close"
+                        icon={<CloseOutlined />}
                         size="small"
                         type="link"
                         style={{ color: "#fff" }}
