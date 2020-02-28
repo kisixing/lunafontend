@@ -10,6 +10,8 @@ import { FormInstance } from 'antd/lib/form';
 // 'acc_score',
 // 'dec_score',
 
+
+
 const dataSource = [
     {
         name: '心率基线',
@@ -27,26 +29,26 @@ const dataSource = [
 
     },
     {
-        name: '周期变异',
+        name: '胎动FHR上升时间',
         0: '',
         1: '',
         2: '',
-        key: 'zhouqi_lv',
+        key: 'fhr_uptime',
 
     },
     {
-        name: '加速',
+        name: '胎动FHR变化',
         0: '',
         1: '',
         2: '',
-        key: 'acc',
+        key: 'fm_fhrv',
     },
     {
-        name: '减速',
+        name: '胎动次数',
         0: '',
         1: '',
         2: '',
-        key: 'dec',
+        key: 'fm',
     },
 ]
 
@@ -56,6 +58,7 @@ interface IProps {
     [x: string]: any
 }
 export default forwardRef<FormInstance, IProps>((props, ref) => {
+
     const columns = [
         {
             title: '项目',
@@ -100,7 +103,7 @@ export default forwardRef<FormInstance, IProps>((props, ref) => {
 
     const [form] = Form.useForm()
     return (
-        <Form ref={ref} form={form} size="small" style={{ display: props.name !== 'Fisher' ? 'none' : 'block' }}>
+        <Form ref={ref} form={form} size="small" style={{ display: props.name !== 'Nst' ? 'none' : 'block' }}>
             <Table size="small" pagination={false} columns={columns} dataSource={dataSource} />
         </Form>
     );

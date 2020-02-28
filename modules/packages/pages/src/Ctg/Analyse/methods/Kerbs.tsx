@@ -4,11 +4,7 @@ import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import { FormInstance } from 'antd/lib/form';
 
 
-// 'fhrbaseline_score',
-// 'zhenfu_lv_score',
-// 'zhouqi_lv_score',
-// 'acc_score',
-// 'dec_score',
+
 
 const dataSource = [
     {
@@ -47,6 +43,13 @@ const dataSource = [
         1: '',
         2: '',
         key: 'dec',
+    },
+    {
+        name: '胎动',
+        0: '',
+        1: '',
+        2: '',
+        key: 'movement',
     },
 ]
 
@@ -100,7 +103,7 @@ export default forwardRef<FormInstance, IProps>((props, ref) => {
 
     const [form] = Form.useForm()
     return (
-        <Form ref={ref} form={form} size="small" style={{ display: props.name !== 'Fisher' ? 'none' : 'block' }}>
+        <Form ref={ref} form={form} size="small" style={{ display: props.name !== 'Kerbs' ? 'none' : 'block' }}>
             <Table size="small" pagination={false} columns={columns} dataSource={dataSource} />
         </Form>
     );

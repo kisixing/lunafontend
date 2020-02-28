@@ -35,6 +35,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importStar(require("react"));
 var antd_1 = require("antd");
 var useAnalyse_1 = __importDefault(require("./useAnalyse"));
+var Fisher_1 = __importDefault(require("./methods/Fisher"));
+var Kerbs_1 = __importDefault(require("./methods/Kerbs"));
+var Nst_1 = __importDefault(require("./methods/Nst"));
 var utils_1 = require("@lianmed/utils");
 var intervals = [20, 40];
 var ScoringMethod = function (props) {
@@ -43,17 +46,13 @@ var ScoringMethod = function (props) {
     var _a = react_1.useState(true), disabled = _a[0], setDisabled = _a[1];
     var _b = useAnalyse_1.default(v, docid, fetal, form, function (_result) {
         form.setFieldsValue(_result);
-    }), responseData = _b.responseData, activeItem = _b.activeItem, MARKS = _b.MARKS, analyse = _b.analyse, startTime = _b.startTime, mark = _b.mark, setMark = _b.setMark, interval = _b.interval, setInterval = _b.setInterval, modifyData = _b.modifyData;
+    }), responseData = _b.responseData, activeItem = _b.activeItem, MARKS = _b.MARKS, analyse = _b.analyse, startTime = _b.startTime, mark = _b.mark, setMark = _b.setMark, interval = _b.interval, setInterval = _b.setInterval, modifyData = _b.modifyData, Fisher_ref = _b.Fisher_ref, Nst_ref = _b.Nst_ref, Kerbs_ref = _b.Kerbs_ref;
     var onChange = function (e) {
         var mark = e.target.value;
         modifyData();
         setDisabled(true);
         form.resetFields();
         setMark(mark);
-    };
-    var formItemLayout = {
-        labelCol: { span: 10 },
-        wrapperCol: { span: 14 },
     };
     var formScores = form.getFieldsValue();
     react_1.useEffect(function () {
@@ -99,20 +98,13 @@ var ScoringMethod = function (props) {
                     react_1.default.createElement(StartTime, null),
                     react_1.default.createElement(EndTime, null)))),
         react_1.default.createElement("div", { style: { padding: '10px 24px 0' } },
-            react_1.default.createElement(antd_1.Radio.Group, { onChange: onChange, value: mark, style: {} }, MARKS.map(function (_) { return (react_1.default.createElement(antd_1.Radio, { value: _, key: _ },
+            react_1.default.createElement(antd_1.Radio.Group, { onChange: onChange, value: mark, style: { marginBottom: 5 } }, MARKS.map(function (_) { return (react_1.default.createElement(antd_1.Radio, { value: _, key: _ },
                 _,
                 "\u5206\u6790\u6CD5")); })),
-            react_1.default.createElement(antd_1.Form, __assign({ form: form, labelAlign: "left" }, formItemLayout, { style: { width: '100%' } }),
-                activeItem.map(function (_a) {
-                    var label = _a.label, key = _a.key, rules = _a.rules;
-                    return (react_1.default.createElement(antd_1.Form.Item, { label: label, key: key, style: { marginBottom: 0 }, rules: rules },
-                        react_1.default.createElement(antd_1.InputNumber, { disabled: disabled, style: { width: '150px' } })));
-                }),
-                react_1.default.createElement(antd_1.Form.Item, { label: "\u7535\u8111\u8BC4\u5206" },
-                    react_1.default.createElement("span", null,
-                        "CTG = ",
-                        Object.values(formScores).reduce(function (a, b) { return ~~a + ~~b; }, 0)))),
-            react_1.default.createElement("div", { style: {} },
+            react_1.default.createElement(Fisher_1.default, { name: mark, ref: Fisher_ref }),
+            react_1.default.createElement(Kerbs_1.default, { name: mark, ref: Kerbs_ref }),
+            react_1.default.createElement(Nst_1.default, { name: mark, ref: Nst_ref }),
+            react_1.default.createElement("div", { style: { marginTop: 5 } },
                 react_1.default.createElement(antd_1.Button, { style: { marginBottom: 10 }, type: "primary", onClick: analyse }, "\u5206\u6790"),
                 react_1.default.createElement(antd_1.Button, { style: { marginBottom: 10 }, onClick: function () {
                         var next = !disabled;

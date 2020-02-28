@@ -1,7 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Radio, Form, Button, InputNumber, Select } from 'antd';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import useAnalyse from './useAnalyse'
+import Fisher from "./methods/Fisher";
+import Kerbs from "./methods/Kerbs";
+import Nst from "./methods/Nst";
+
 import { event } from '@lianmed/utils';
 const intervals = [20, 40]
 
@@ -9,6 +13,7 @@ const ScoringMethod = (props: IProps) => {
   const { docid, v, ctgData, fetal, setFetal, ...others } = props;
   const [form] = Form.useForm()
   const [disabled, setDisabled] = useState(true)
+
   const {
     responseData,
     activeItem,
@@ -17,7 +22,10 @@ const ScoringMethod = (props: IProps) => {
     startTime,
     mark, setMark,
     interval, setInterval,
-    modifyData
+    modifyData,
+    Fisher_ref,
+    Nst_ref,
+    Kerbs_ref
   } = useAnalyse(v, docid, fetal, form, (_result) => {
     form.setFieldsValue(_result)
   })
@@ -30,10 +38,7 @@ const ScoringMethod = (props: IProps) => {
     setMark(mark)
   };
 
-  const formItemLayout = {
-    labelCol: { span: 10 },
-    wrapperCol: { span: 14 },
-  };
+
   const formScores = form.getFieldsValue()
 
   useEffect(() => {
@@ -100,14 +105,14 @@ const ScoringMethod = (props: IProps) => {
         </>
       </div>
       <div style={{ padding: '10px 24px 0' }}>
-        <Radio.Group onChange={onChange} value={mark} style={{  }}>
+        <Radio.Group onChange={onChange} value={mark} style={{marginBottom:5}}>
           {
             MARKS.map(_ => (
               <Radio value={_} key={_}>{_}分析法</Radio>
             ))
           }
         </Radio.Group>
-        <Form form={form} labelAlign="left" {...formItemLayout} style={{ width: '100%' }}>
+        {/* <Form form={form} labelAlign="left" {...formItemLayout} style={{ width: '100%' }}>
           {
             activeItem.map(({ label, key, rules }) => (
               <Form.Item label={label} key={key} style={{ marginBottom: 0 }} rules={rules}>
@@ -119,8 +124,12 @@ const ScoringMethod = (props: IProps) => {
             <span>CTG = {Object.values(formScores).reduce((a, b) => ~~a + ~~b, 0)}</span>
           </Form.Item>
 
-        </Form>
-        <div style={{  }}>
+        </Form> */}
+
+        <Fisher name={mark} ref={Fisher_ref} />
+        <Kerbs name={mark} ref={Kerbs_ref} />
+        <Nst name={mark} ref={Nst_ref} />
+        <div style={{marginTop:5}}>
           <Button style={{ marginBottom: 10 }} type="primary" onClick={analyse}>分析</Button>
           <Button style={{ marginBottom: 10 }} onClick={() => {
             const next = !disabled

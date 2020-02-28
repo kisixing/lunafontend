@@ -46,7 +46,7 @@ var dataSource = [
         key: 'dec',
     },
 ];
-exports.default = react_1.forwardRef(function (props, ref) {
+var Fisher = function (props) {
     var columns = [
         {
             title: '项目',
@@ -84,6 +84,8 @@ exports.default = react_1.forwardRef(function (props, ref) {
         },
     ];
     var form = antd_1.Form.useForm()[0];
-    return (react_1.default.createElement(antd_1.Form, { ref: ref, form: form, size: "small", style: { display: props.name !== 'Fisher' ? 'none' : 'block' } },
+    console.log('form', form);
+    return (react_1.default.createElement(antd_1.Form, { form: form, size: "small" },
         react_1.default.createElement(antd_1.Table, { size: "small", pagination: false, columns: columns, dataSource: dataSource })));
-});
+};
+exports.default = react_1.forwardRef(Fisher);

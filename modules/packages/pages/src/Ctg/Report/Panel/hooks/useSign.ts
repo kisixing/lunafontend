@@ -8,9 +8,9 @@ const info = message.info
 
 
 
-export default (docid: string, setPdfBase64: any) => {
+export default (bizSn: string, setPdfBase64: any, setBizSn: React.Dispatch<React.SetStateAction<string>>) => {
 
-    const [bizSn, setBizSn] = useState(docid);
+
 
     const [qrCodeBase64, setQrCodeBase64] = useState('')
     const [qrCodeBase64Loading, setQrCodeBase64Loading] = useState(false)
@@ -18,8 +18,6 @@ export default (docid: string, setPdfBase64: any) => {
 
     const [signed, setSigned] = useState(false)
 
-    const [archived, setArchived] = useState(false)
-    const [archiveLoading, setArchiveLoading] = useState(false)
 
     useEffect(() => {
         let timeoutId = modalVisible && setInterval(fetchSigninfo, 1500)
@@ -28,20 +26,11 @@ export default (docid: string, setPdfBase64: any) => {
         }
     }, [modalVisible])
 
-    const archive = () => {
-        setArchiveLoading(true)
-        request.put(`/doc/${archived ? 'undo-' : ''}archive`, { data: { bizSn } })
-            .then(r => {
-                if (!r) return
-                setArchived(!archived)
-                event.emit('signed')
-            })
-            .finally(() => setArchiveLoading(false))
-    }
+
 
     const fetchQrCode = () => {
         setQrCodeBase64Loading(true)
-        request.post('/ca/signreq', { data: { action: "sign", docid, } })
+        request.post('/ca/signreq', { data: { action: "sign", docid: bizSn, } })
             .then(r => {
                 if (r && r.sn) {
                     setBizSn(r.sn)
@@ -59,7 +48,7 @@ export default (docid: string, setPdfBase64: any) => {
                 if (data) {
                     setSigned(true)
                     info('签名成功')
-                    event.emit('signed', docid)
+                    event.emit('signed', bizSn)
                     setPdfBase64(`data:application/pdf;base64,${data}`)
                 } else {
                     info('签名失败')
@@ -69,6 +58,6 @@ export default (docid: string, setPdfBase64: any) => {
     }
 
     return {
-        fetchQrCode, qrCodeBase64, modalVisible, setModalVisible, qrCodeBase64Loading, signed, archive, archiveLoading, archived
+        fetchQrCode, qrCodeBase64, modalVisible, setModalVisible, qrCodeBase64Loading, signed
     }
 }

@@ -54,9 +54,9 @@ function Analysis(_a) {
     }, [docid, ctgData]);
     return (react_1.default.createElement(exports.Context.Provider, { value: v },
         react_1.default.createElement("div", { style: { height: '100%' } },
-            react_1.default.createElement("div", { style: { height: "calc(100% - 520px - 24px)", padding: 24, marginBottom: 24, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px' } },
+            react_1.default.createElement("div", { style: { height: "calc(100% - 420px - 24px)", padding: 24, marginBottom: 24, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px' } },
                 react_1.default.createElement(lmg_1.Ctg, { loading: loading, data: ctgData, mutableSuitObject: v })),
-            react_1.default.createElement("div", { style: { height: 520 } },
+            react_1.default.createElement("div", { style: { height: 420 } },
                 react_1.default.createElement(antd_1.Row, { gutter: 24, style: { height: '100%' } },
                     react_1.default.createElement(antd_1.Col, { span: 12, style: { height: '100%' } },
                         react_1.default.createElement(Result_1.default, { fetal: fetal, setFetal: setFetal, ctgData: ctgData, docid: docid, v: v, style: __assign(__assign({}, border), { height: '100%', background: '#fff' }) })),

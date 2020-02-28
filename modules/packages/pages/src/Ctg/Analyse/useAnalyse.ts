@@ -1,10 +1,10 @@
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef, MutableRefObject } from 'react';
 import request from "@lianmed/request";
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import { event, _R } from "@lianmed/utils";
-import { FormInstance } from 'antd/lib/form/Form';
 import { Rule } from 'rc-field-form/lib/interface';
+import { FormInstance } from 'antd/lib/form';
 
 export default (v: { suit: Suit }, docid, fetal: any, form: FormInstance, cb: (result: IResult) => void) => {
     const resultData = useMemo<{ [x: string]: IResponseData }>(() => { return {} }, [])
@@ -14,9 +14,16 @@ export default (v: { suit: Suit }, docid, fetal: any, form: FormInstance, cb: (r
     const [interval, setInterval] = useState(20)
     const [startTime, setStartTime] = useState(0)
 
+    const Fisher_ref = useRef<FormInstance>(null)
+    const Kerbs_ref = useRef<FormInstance>(null)
+    const Nst_ref = useRef<FormInstance>(null)
 
     const fetalKey = `fhr${fetal}`
-
+    const mapFormToMark = {
+        Fisher_ref,
+        Kerbs_ref,
+        Nst_ref
+    }
     useEffect(() => {
         const s = (time) => {
             setStartTime(time)
@@ -35,6 +42,7 @@ export default (v: { suit: Suit }, docid, fetal: any, form: FormInstance, cb: (r
     useEffect(() => {
         const keys: string[] = mapItemsToMarks[mark]
         setActiveItem(allItems.filter(_ => keys.includes(_.key)))
+        console.log('mark', mark)
     }, [mark])
     useEffect(() => {
         const defaultMark = MARKS[0]
@@ -55,7 +63,7 @@ export default (v: { suit: Suit }, docid, fetal: any, form: FormInstance, cb: (r
 
             event.emit('analysis:setCtgData', { analyse: resultData[fetalKey] })
 
-            let _result: IResult = null
+            let _result: any = null
             try {
                 _result = JSON.parse(r.result)
             } catch (error) {
@@ -63,7 +71,8 @@ export default (v: { suit: Suit }, docid, fetal: any, form: FormInstance, cb: (r
             }
             console.log(_result)
             cb(_result)
-
+            const cur: MutableRefObject<FormInstance> = mapFormToMark[`${mark}_ref`]
+            cur.current.setFieldsValue(_result)
         })
     }
 
@@ -75,8 +84,16 @@ export default (v: { suit: Suit }, docid, fetal: any, form: FormInstance, cb: (r
         resultData[fetalKey] = { ...resultData[fetalKey], result: JSON.stringify(form.getFieldsValue()) }
     }
 
-    return { setMark: setMarkAndItems, mark, activeItem, responseData: resultData, MARKS, analyse, startTime, setStartTime, interval, setInterval, modifyData }
+    return {
+        setMark: setMarkAndItems, mark,
+        activeItem, responseData: resultData,
+        MARKS, analyse, startTime, setStartTime, interval, setInterval, modifyData,
+        Fisher_ref,
+        Nst_ref,
+        Kerbs_ref
+    }
 }
+
 
 
 
@@ -136,7 +153,7 @@ interface IResponseData {
 interface IItem {
     key: string;
     label: string;
-    rules:  Rule[]
+    rules: Rule[]
 }
 export interface IResult {
     fhr_uptime_score: number;

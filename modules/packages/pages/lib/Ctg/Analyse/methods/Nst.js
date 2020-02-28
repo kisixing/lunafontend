@@ -25,25 +25,25 @@ var dataSource = [
         key: 'zhenfu_lv',
     },
     {
-        name: '周期变异',
+        name: '胎动FHR上升时间',
         0: '',
         1: '',
         2: '',
-        key: 'zhouqi_lv',
+        key: 'fhr_uptime',
     },
     {
-        name: '加速',
+        name: '胎动FHR变化',
         0: '',
         1: '',
         2: '',
-        key: 'acc',
+        key: 'fm_fhrv',
     },
     {
-        name: '减速',
+        name: '胎动次数',
         0: '',
         1: '',
         2: '',
-        key: 'dec',
+        key: 'fm',
     },
 ];
 exports.default = react_1.forwardRef(function (props, ref) {
@@ -84,6 +84,6 @@ exports.default = react_1.forwardRef(function (props, ref) {
         },
     ];
     var form = antd_1.Form.useForm()[0];
-    return (react_1.default.createElement(antd_1.Form, { ref: ref, form: form, size: "small", style: { display: props.name !== 'Fisher' ? 'none' : 'block' } },
+    return (react_1.default.createElement(antd_1.Form, { ref: ref, form: form, size: "small", style: { display: props.name !== 'Nst' ? 'none' : 'block' } },
         react_1.default.createElement(antd_1.Table, { size: "small", pagination: false, columns: columns, dataSource: dataSource })));
 });

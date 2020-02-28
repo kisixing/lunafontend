@@ -41,6 +41,7 @@ var antd_1 = require("antd");
 var usePrintConfig_1 = __importDefault(require("./hooks/usePrintConfig"));
 var useSign_1 = __importDefault(require("./hooks/useSign"));
 var useSave_1 = __importDefault(require("./hooks/useSave"));
+var useArchive_1 = __importDefault(require("./hooks/useArchive"));
 var request_1 = __importDefault(require("@lianmed/request"));
 var index_1 = require("../index");
 var styled_components_1 = __importDefault(require("styled-components"));
@@ -62,8 +63,9 @@ var Preview = function (props) {
     };
     var _b = react_1.useState({ suit: null }), value = _b[0], setValue = _b[1];
     var _c = usePrintConfig_1.default(value, print_interval), startingTime = _c.startingTime, endingTime = _c.endingTime, locking = _c.locking, total = _c.total, backward = _c.backward, forward = _c.forward, toggleLocking = _c.toggleLocking, selectAll = _c.selectAll, editable = _c.editable, outputType = _c.outputType, setOutputType = _c.setOutputType;
-    var _d = useSign_1.default(docid, setPdfBase64), fetchQrCode = _d.fetchQrCode, qrCodeBase64 = _d.qrCodeBase64, modalVisible = _d.modalVisible, qrCodeBase64Loading = _d.qrCodeBase64Loading, setModalVisible = _d.setModalVisible, signed = _d.signed, archive = _d.archive, archiveLoading = _d.archiveLoading, archived = _d.archived;
-    var _e = useSave_1.default(docid), caEnable = _e.caEnable, save = _e.save, saveLoading = _e.saveLoading;
+    var _d = useArchive_1.default(docid), setBizSn = _d.setBizSn, bizSn = _d.bizSn, archive = _d.archive, archiveLoading = _d.archiveLoading, archived = _d.archived;
+    var _e = useSign_1.default(bizSn, setPdfBase64, setBizSn), fetchQrCode = _e.fetchQrCode, qrCodeBase64 = _e.qrCodeBase64, modalVisible = _e.modalVisible, qrCodeBase64Loading = _e.qrCodeBase64Loading, setModalVisible = _e.setModalVisible, signed = _e.signed;
+    var _f = useSave_1.default(bizSn, setBizSn), caEnable = _f.caEnable, save = _f.save, saveLoading = _f.saveLoading, saved = _f.saved;
     react_1.useEffect(function () {
         onTotalChange(total);
     }, [total]);
@@ -103,10 +105,10 @@ var Preview = function (props) {
                         react_1.default.createElement("span", null, "\u751F\u6210")),
                     caEnable ? (react_1.default.createElement(react_1.default.Fragment, null,
                         react_1.default.createElement(antd_1.Button, { block: true, disabled: !pdfBase64, type: "primary", loading: qrCodeBase64Loading, onClick: fetchQrCode },
-                            react_1.default.createElement("span", null, " \u7B7E\u540D")),
-                        react_1.default.createElement(antd_1.Button, { block: true, disabled: !signed, type: "primary", loading: archiveLoading, onClick: archive },
-                            react_1.default.createElement("span", null, archived ? '取消归档' : '归档')))) : (react_1.default.createElement(antd_1.Button, { block: true, disabled: !pdfBase64, type: "primary", loading: saveLoading, onClick: save },
+                            react_1.default.createElement("span", null, " \u7B7E\u540D")))) : (react_1.default.createElement(antd_1.Button, { block: true, disabled: !pdfBase64, type: "primary", loading: saveLoading, onClick: save },
                         react_1.default.createElement("span", null, "\u4FDD\u5B58"))),
+                    react_1.default.createElement(antd_1.Button, { block: true, disabled: !(signed || saved), type: "primary", loading: archiveLoading, onClick: archive },
+                        react_1.default.createElement("span", null, archived ? '取消归档' : '归档')),
                     react_1.default.createElement(antd_1.Button, { block: true, disabled: !pdfBase64, type: "primary", onClick: onDownload },
                         react_1.default.createElement("span", null, "\u6253\u5370")))),
             react_1.default.createElement(antd_1.Modal, { getContainer: function () { return document.querySelector("#modal_id"); }, visible: modalVisible, footer: null, centered: true, onCancel: function () { return setModalVisible(false); }, bodyStyle: { textAlign: 'center' } },

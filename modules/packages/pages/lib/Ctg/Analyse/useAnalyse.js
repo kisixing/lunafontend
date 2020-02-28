@@ -23,7 +23,15 @@ exports.default = (function (v, docid, fetal, form, cb) {
     var _b = react_1.useState([]), activeItem = _b[0], setActiveItem = _b[1];
     var _c = react_1.useState(20), interval = _c[0], setInterval = _c[1];
     var _d = react_1.useState(0), startTime = _d[0], setStartTime = _d[1];
+    var Fisher_ref = react_1.useRef(null);
+    var Kerbs_ref = react_1.useRef(null);
+    var Nst_ref = react_1.useRef(null);
     var fetalKey = "fhr" + fetal;
+    var mapFormToMark = {
+        Fisher_ref: Fisher_ref,
+        Kerbs_ref: Kerbs_ref,
+        Nst_ref: Nst_ref
+    };
     react_1.useEffect(function () {
         var s = function (time) {
             setStartTime(time);
@@ -39,6 +47,7 @@ exports.default = (function (v, docid, fetal, form, cb) {
     react_1.useEffect(function () {
         var keys = mapItemsToMarks[mark];
         setActiveItem(allItems.filter(function (_) { return keys.includes(_.key); }));
+        console.log('mark', mark);
     }, [mark]);
     react_1.useEffect(function () {
         var defaultMark = MARKS[0];
@@ -64,6 +73,8 @@ exports.default = (function (v, docid, fetal, form, cb) {
             }
             console.log(_result);
             cb(_result);
+            var cur = mapFormToMark[mark + "_ref"];
+            cur.current.setFieldsValue(_result);
         });
     };
     var setMarkAndItems = function (mark) {
@@ -72,7 +83,14 @@ exports.default = (function (v, docid, fetal, form, cb) {
     var modifyData = function () {
         resultData[fetalKey] = __assign(__assign({}, resultData[fetalKey]), { result: JSON.stringify(form.getFieldsValue()) });
     };
-    return { setMark: setMarkAndItems, mark: mark, activeItem: activeItem, responseData: resultData, MARKS: MARKS, analyse: analyse, startTime: startTime, setStartTime: setStartTime, interval: interval, setInterval: setInterval, modifyData: modifyData };
+    return {
+        setMark: setMarkAndItems, mark: mark,
+        activeItem: activeItem, responseData: resultData,
+        MARKS: MARKS, analyse: analyse, startTime: startTime, setStartTime: setStartTime, interval: interval, setInterval: setInterval, modifyData: modifyData,
+        Fisher_ref: Fisher_ref,
+        Nst_ref: Nst_ref,
+        Kerbs_ref: Kerbs_ref
+    };
 });
 var mapItemsToMarks = {
     Nst: [

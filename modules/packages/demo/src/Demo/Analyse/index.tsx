@@ -27,7 +27,7 @@ const App = (props: any) => {
 
 
     const fetchList = (loader = true) => {
-        const qs = `?CTGExamId.specified=true&pregnancyId.specified=true&size=50&page=${page}&sort=visitDate%2Casc&visitDate.greaterOrEqualThan=${sDate}&visitDate.lessOrEqualThan=${eDate}`
+        const qs = `?CTGExamId.specified=true&pregnancyId.specified=true&size=16&page=${page}&sort=visitDate%2Casc&visitDate.greaterOrEqualThan=${sDate}&visitDate.lessOrEqualThan=${eDate}`
 
         request
             .get(`/prenatal-visitspage${qs}`)
@@ -56,14 +56,14 @@ const App = (props: any) => {
     // console.log('loading -->', isLoading)
 
     return (
-        <Layout className={styles['app-wrapper']} >
+        <div >
             <div>
                 <span>开始时间:</span><DatePicker value={moment(sDate)} onChange={e => setSDate(formatDate(e))} />
                 <Divider type="vertical" />
                 <span>结束时间:</span><DatePicker value={moment(eDate)} onChange={e => setEDate(formatDate(e))} />
             </div>
-            <Layout style={{ height: '100%' }}>
-                <Layout.Sider width={260} className={styles['app-sider']} style={{ background: '#fff' }}>
+            <Layout style={{ height: 'cacl(100vh - 160px)' }}>
+                <Layout.Sider style={{ background: '#fff' }} width={260} className={styles['app-sider']} >
                     <SiderMenu setItem={setItem} selected={selected} dataSource={dataSource} />
                     <Pagination size="small" total={total} onChange={p => setPage(p)} />
                 </Layout.Sider>
@@ -73,7 +73,7 @@ const App = (props: any) => {
                 </Layout.Content>
             </Layout>
 
-        </Layout>
+        </div>
     );
 }
 

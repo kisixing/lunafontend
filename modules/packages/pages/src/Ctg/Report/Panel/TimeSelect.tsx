@@ -3,6 +3,7 @@ import { Button, Modal, Radio } from 'antd';
 import usePrintConfig from "./hooks/usePrintConfig";
 import useSign from "./hooks/useSign";
 import useSave from "./hooks/useSave";
+import useArchive from "./hooks/useArchive";
 import request from "@lianmed/request";
 import { IProps as IP, Context } from "../index";
 import styled from 'styled-components';
@@ -66,9 +67,10 @@ const Preview = (props: IProps) => {
     } = usePrintConfig(value, print_interval)
 
 
+    const { setBizSn, bizSn, archive, archiveLoading, archived } = useArchive(docid)
 
-    const { fetchQrCode, qrCodeBase64, modalVisible, qrCodeBase64Loading, setModalVisible, signed, archive, archiveLoading, archived } = useSign(docid, setPdfBase64)
-    const { caEnable, save, saveLoading } = useSave(docid)
+    const { fetchQrCode, qrCodeBase64, modalVisible, qrCodeBase64Loading, setModalVisible, signed } = useSign(bizSn, setPdfBase64, setBizSn)
+    const { caEnable, save, saveLoading, saved } = useSave(bizSn, setBizSn)
 
 
     useEffect(() => {
@@ -162,15 +164,17 @@ const Preview = (props: IProps) => {
                                                 <Button block disabled={!pdfBase64} type="primary" loading={qrCodeBase64Loading} onClick={fetchQrCode}>
                                                     <span> 签名</span>
                                                 </Button>
-                                                <Button block disabled={!signed} type="primary" loading={archiveLoading} onClick={archive}>
-                                                    <span>{archived ? '取消归档' : '归档'}</span>
-                                                </Button></>
+
+                                            </>
                                         ) : (
                                                 <Button block disabled={!pdfBase64} type="primary" loading={saveLoading} onClick={save}>
                                                     <span>保存</span>
                                                 </Button>
                                             )
                                     }
+                                    <Button block disabled={!(signed || saved)} type="primary" loading={archiveLoading} onClick={archive}>
+                                        <span>{archived ? '取消归档' : '归档'}</span>
+                                    </Button>
                                     <Button block disabled={!pdfBase64} type="primary" onClick={onDownload}>
                                         <span>打印</span>
                                     </Button>

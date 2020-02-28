@@ -12,17 +12,17 @@ import { event } from "@lianmed/utils";
 // }
 // const raw = JSON.stringify({ blocks: [{ key: "fjqe2", text, type: "unstyled", depth: 0, inlineStyleRanges: [{ offset: 2, length: 1, "style": "COLOR - 07A9FE" }, { "offset": 12, "length": 1, "style": "COLOR - 07A9FE" }, { "offset": 3, "length": 10, "style": "BGCOLOR - 07A9FE" }, { "offset": 3, "length": 9, "style": "COLOR - FFFFFF" }, { "offset": 69, "length": 9, "style": "ITALIC" }], "entityRanges": [], "data": {} }], "entityMap": {} })
 
-export default (docid: string) => {
+export default (bizSn: string, setBizSn: React.Dispatch<React.SetStateAction<string>>) => {
     const [caEnable, setCaEnable] = useState(false)
     const [saveLoading, setSaveLoading] = useState(false)
-    const [bizSn, setBizSn] = useState(docid)
+    const [saved, setSaved] = useState(false)
     const save = useCallback(
         () => {
             setSaveLoading(true)
             request.post('/rep/save', { data: { bizSn } }).then(r => {
                 r.sn && setBizSn(r.sn)
                 event.emit('signed')
-
+                setSaved(true)
             }).finally(() => setSaveLoading(false))
         },
         [bizSn],
@@ -36,6 +36,7 @@ export default (docid: string) => {
     return {
         caEnable,
         save,
-        saveLoading
+        saveLoading,
+        saved
     }
 }

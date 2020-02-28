@@ -36,11 +36,11 @@ function Analysis({
   return (
     <Context.Provider value={v}>
       <div style={{ height: '100%' }}>
-        <div style={{ height: `calc(100% - 520px - 24px)`, padding: 24, marginBottom: 24, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px' }}>
+        <div style={{ height: `calc(100% - 420px - 24px)`, padding: 24, marginBottom: 24, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px' }}>
           <Ctg loading={loading} data={ctgData} mutableSuitObject={v} />
 
         </div>
-        <div style={{ height: 520 }}>
+        <div style={{ height: 420 }}>
           <Row gutter={24} style={{ height: '100%' }}>
             <Col span={12} style={{ height: '100%' }} >
               <Result fetal={fetal} setFetal={setFetal} ctgData={ctgData} docid={docid} v={v} style={{ ...border, height: '100%', background: '#fff' }} />

@@ -45,6 +45,13 @@ var dataSource = [
         2: '',
         key: 'dec',
     },
+    {
+        name: '胎动',
+        0: '',
+        1: '',
+        2: '',
+        key: 'movement',
+    },
 ];
 exports.default = react_1.forwardRef(function (props, ref) {
     var columns = [
@@ -84,6 +91,6 @@ exports.default = react_1.forwardRef(function (props, ref) {
         },
     ];
     var form = antd_1.Form.useForm()[0];
-    return (react_1.default.createElement(antd_1.Form, { ref: ref, form: form, size: "small", style: { display: props.name !== 'Fisher' ? 'none' : 'block' } },
+    return (react_1.default.createElement(antd_1.Form, { ref: ref, form: form, size: "small", style: { display: props.name !== 'Kerbs' ? 'none' : 'block' } },
         react_1.default.createElement(antd_1.Table, { size: "small", pagination: false, columns: columns, dataSource: dataSource })));
 });
