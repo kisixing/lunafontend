@@ -1,6 +1,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import request from "@lianmed/request";
+import { event } from "@lianmed/utils";
 // import { Editor } from "@lianmed/components";
 
 // const { createEditorState, toggleSelectionColor } = Editor
@@ -20,12 +21,12 @@ export default (docid: string) => {
             setSaveLoading(true)
             request.post('/rep/save', { data: { bizSn } }).then(r => {
                 r.sn && setBizSn(r.sn)
+                event.emit('signed')
+
             }).finally(() => setSaveLoading(false))
         },
         [bizSn],
     )
-
-
     useEffect(() => {
         request.get('/ca/isEnable').then(r => {
             console.log('ca enable', r)

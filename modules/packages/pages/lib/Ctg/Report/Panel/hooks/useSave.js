@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = require("react");
 var request_1 = __importDefault(require("@lianmed/request"));
+var utils_1 = require("@lianmed/utils");
 exports.default = (function (docid) {
     var _a = react_1.useState(false), caEnable = _a[0], setCaEnable = _a[1];
     var _b = react_1.useState(false), saveLoading = _b[0], setSaveLoading = _b[1];
@@ -13,6 +14,7 @@ exports.default = (function (docid) {
         setSaveLoading(true);
         request_1.default.post('/rep/save', { data: { bizSn: bizSn } }).then(function (r) {
             r.sn && setBizSn(r.sn);
+            utils_1.event.emit('signed');
         }).finally(function () { return setSaveLoading(false); });
     }, [bizSn]);
     react_1.useEffect(function () {
