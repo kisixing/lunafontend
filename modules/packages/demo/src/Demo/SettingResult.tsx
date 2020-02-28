@@ -5,9 +5,8 @@ import { event } from '@lianmed/utils';
 const Setting = (props: { form: any }) => {
 
   const { form, ...others } = props;
-  const { getFieldDecorator } = form;
 
-  
+
   return (
     <div {...others}>
       <div >
@@ -15,10 +14,10 @@ const Setting = (props: { form: any }) => {
           课程分数
           </div>
         <Form style={{ padding: '12px 24px' }}>
-          
+
           <Form.Item label='' style={{ marginBottom: 0 }} >
-            {form.getFieldDecorator('diagnosis', {
-            })(<Input.TextArea style={{maxWidth:400}} />)}
+
+            <Input.TextArea style={{ maxWidth: 400 }} />
 
           </Form.Item>
         </Form>
@@ -27,4 +26,4 @@ const Setting = (props: { form: any }) => {
   );
 }
 
-export default Form.create<{ form: any;[x: string]: any }>()(Setting);
+export default (Setting);

@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
-import { Layout, Menu, Icon } from 'antd';
+import { Layout, Menu } from 'antd';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -39,44 +39,37 @@ export default class SiderDemo extends React.Component {
               key="sub1"
               title={
                 <span>
-                  <Icon type="user" />
                   <span>曲线组件</span>
                 </span>
               }
             >
               <Menu.Item key="-1">
                 <Link to="/Analyse">
-                  <Icon type="user" />
                   分析
                 </Link>
               </Menu.Item>
               <Menu.Item key="0">
                 <Link to="/CtgPanel">
-                  <Icon type="user" />
                   CtgPanel
                 </Link>
               </Menu.Item>
               <Menu.Item key="1">
                 <Link to="/Ctg">
-                  <Icon type="user" />
                   Ctg
                 </Link>
               </Menu.Item>
               <Menu.Item key="2">
                 <Link to="/Ecg">
-                  <Icon type="video-camera" />
                   Ecg
                 </Link>
               </Menu.Item>
               <Menu.Item key="3">
                 <Link to="/Partogram">
-                  <Icon type="upload" />
                   Partogram
                 </Link>
               </Menu.Item>
               <Menu.Item key="4">
                 <Link to="/Pages">
-                  <Icon type="upload" />
                   Pages
                 </Link>
               </Menu.Item>
@@ -85,11 +78,7 @@ export default class SiderDemo extends React.Component {
         </Sider>
         <Layout>
           <Header style={{ background: '#fff', padding: 0 }}>
-            <Icon
-              style={{ padding: '0 24px', fontSize: 20 }}
-              type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-              onClick={this.toggle}
-            />
+     
           </Header>
           <Content
             style={{
