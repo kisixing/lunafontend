@@ -5,7 +5,7 @@ import ScrollBar from '../ScrollBar';
 import Ecg from "../Ecg";
 import { IProps, Canvas, Div, Drawer } from "../interface";
 import useDraw from "../useDraw";
-import Loading from './Loading'
+import { Loading } from './Loading'
 import { useCheckNetwork } from '../services/WsService';
 
 import { ButtonTools } from "./ButtonTools";
@@ -86,7 +86,7 @@ export default forwardRef((props: IProps, ref: Ref<any>) => {
     >
       {
         loading && (
-          <div style={{ position: 'absolute', width: '100%', height: '100%', background: '#fff', zIndex: 1, opacity: .8 }}>
+          <div style={{ position: 'absolute', width: '100%', height: '100%', background: '#fff', zIndex: 1, opacity: .9 }}>
             <Loading style={{ margin: 'auto', position: 'absolute', left: 0, right: 0, bottom: 0, top: 0 }} />
           </div>
         )

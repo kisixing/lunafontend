@@ -34,7 +34,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importStar(require("react"));
 var PreviewContent_1 = __importDefault(require("./PreviewContent"));
-var useDiagnosis_1 = __importDefault(require("./useDiagnosis"));
+var useDiagnosis_1 = __importDefault(require("./hooks/useDiagnosis"));
 var Diagnosis_1 = __importDefault(require("./Diagnosis"));
 var TimeSelect_1 = __importDefault(require("./TimeSelect"));
 var Preview = function (props) {

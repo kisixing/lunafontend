@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import { IProps as IP } from "./index";
+import { IProps as IP } from "../index";
 interface IProps extends IP {
     diagnosis: string;
     onTotalChange: (total: number) => void;

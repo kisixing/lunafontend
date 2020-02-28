@@ -1,10 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, Radio } from 'antd';
-import { Context } from './index'
-import usePrintConfig from "./usePrintConfig";
-import useSign from "./useSign";
+import usePrintConfig from "./hooks/usePrintConfig";
+import useSign from "./hooks/useSign";
+import useSave from "./hooks/useSave";
 import request from "@lianmed/request";
-import { IProps as IP } from "./index";
+import { IProps as IP, Context } from "../index";
+import styled from 'styled-components';
+const Wrapper = styled.div`
+    .bottomBtns button {
+        margin-right: 10px 
+    }
+    .bottomBtns button:last-child {
+        margin-right: 0px 
+    }
+`
 const COEFFICIENT = 240
 
 interface IProps extends IP {
@@ -16,7 +25,6 @@ interface IProps extends IP {
 const Preview = (props: IProps) => {
     const { onDownload, docid, print_interval, diagnosis, onTotalChange, pdfBase64, setPdfBase64, ...args } = props;
     const [pdfBase64Loading, setPdfBase64Loading] = useState(false)
-
     const handlePreview = () => {
         setPdfBase64Loading(true)
         request.post(`/ctg-exams-pdf`, {
@@ -60,6 +68,7 @@ const Preview = (props: IProps) => {
 
 
     const { fetchQrCode, qrCodeBase64, modalVisible, qrCodeBase64Loading, setModalVisible, signed, archive, archiveLoading, archived } = useSign(docid, setPdfBase64)
+    const { caEnable, save, saveLoading } = useSave(docid)
 
 
     useEffect(() => {
@@ -74,7 +83,7 @@ const Preview = (props: IProps) => {
                         <div id="modal_id" style={{ display: 'flex', height: '100%' }}>
 
 
-                            <div style={{ width: 400, padding: 24, background: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-around', border: '1px solid #d9d9d9' }}>
+                            <Wrapper style={{ width: 400, padding: 24, background: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-around', border: '1px solid #d9d9d9' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                     <div style={{ display: 'flex', alignItems: 'center' }}>
                                         <Button disabled={locking} onClick={forward} >向后选择</Button>
@@ -143,21 +152,30 @@ const Preview = (props: IProps) => {
                                         <Radio value="210">50~210</Radio>
                                     </Radio.Group>
                                 </div>
-                                <div style={{ display: 'flex' }}>
-                                    <Button disabled={locking || !editable} block type="primary" loading={pdfBase64Loading} onClick={handlePreview} style={{ marginRight: 10 }}>
+                                <div style={{ display: 'flex' }} className="bottomBtns">
+                                    <Button disabled={locking || !editable} block type="primary" loading={pdfBase64Loading} onClick={handlePreview} >
                                         <span>生成</span>
                                     </Button>
-                                    <Button block disabled={!pdfBase64} type="primary" loading={qrCodeBase64Loading} onClick={fetchQrCode} style={{ marginRight: 10 }}>
-                                        <span> 签名</span>
-                                    </Button>
-                                    <Button block disabled={!pdfBase64} type="primary" style={{ marginRight: 10 }} onClick={onDownload}>
+                                    {
+                                        caEnable ? (
+                                            <>
+                                                <Button block disabled={!pdfBase64} type="primary" loading={qrCodeBase64Loading} onClick={fetchQrCode}>
+                                                    <span> 签名</span>
+                                                </Button>
+                                                <Button block disabled={!signed} type="primary" loading={archiveLoading} onClick={archive}>
+                                                    <span>{archived ? '取消归档' : '归档'}</span>
+                                                </Button></>
+                                        ) : (
+                                                <Button block disabled={!pdfBase64} type="primary" loading={saveLoading} onClick={save}>
+                                                    <span>保存</span>
+                                                </Button>
+                                            )
+                                    }
+                                    <Button block disabled={!pdfBase64} type="primary" onClick={onDownload}>
                                         <span>打印</span>
                                     </Button>
-                                    <Button block disabled={!signed} type="primary" loading={archiveLoading} onClick={archive}>
-                                        <span>{archived ? '取消归档' : '归档'}</span>
-                                    </Button>
                                 </div>
-                            </div>
+                            </Wrapper>
 
                             <Modal getContainer={() => document.querySelector("#modal_id")} visible={modalVisible} footer={null} centered onCancel={() => setModalVisible(false)} bodyStyle={{ textAlign: 'center' }}>
                                 <img alt="qrcode" src={qrCodeBase64} />

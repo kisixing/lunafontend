@@ -18,12 +18,14 @@ var react_1 = require("react");
 var utils_1 = require("@lianmed/utils");
 var request_1 = __importDefault(require("@lianmed/request"));
 var CTGChart = function (docid) {
-    var _a = react_1.useState({ fetalnum: '1', docid: docid }), ctgData = _a[0], setCtgData = _a[1];
+    var _a = react_1.useState(false), loading = _a[0], setLoading = _a[1];
+    var _b = react_1.useState({ fetalnum: '1', docid: docid }), ctgData = _b[0], setCtgData = _b[1];
     react_1.useEffect(function () {
+        setLoading(true);
         request_1.default.get("/ctg-exams-data/" + docid).then(function (res) {
             setCtgData(__assign({ docid: docid }, res));
-        });
-    }, []);
+        }).finally(function () { return setLoading(false); });
+    }, [docid]);
     react_1.useEffect(function () {
         var fn = function (data) {
             setCtgData(__assign(__assign({}, ctgData), data));
@@ -33,6 +35,6 @@ var CTGChart = function (docid) {
             utils_1.event.off('analysis:setCtgData', fn);
         };
     }, [ctgData]);
-    return [ctgData];
+    return { ctgData: ctgData, loading: loading };
 };
 exports.default = CTGChart;

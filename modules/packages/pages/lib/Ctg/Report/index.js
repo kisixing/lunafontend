@@ -23,7 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importStar(require("react"));
 var Ctg_1 = __importDefault(require("./Ctg"));
-var Preview_1 = __importDefault(require("./Preview"));
+var Panel_1 = __importDefault(require("./Panel"));
 exports.Context = react_1.default.createContext({});
 var PrintPreview = function (props) {
     var docid = props.docid;
@@ -37,7 +37,7 @@ var PrintPreview = function (props) {
     return (react_1.default.createElement(exports.Context.Provider, { value: v },
         react_1.default.createElement("div", { style: { height: '100%' }, ref: inputEl },
             react_1.default.createElement("div", { style: { height: 240, textAlign: 'center' } },
-                react_1.default.createElement(Preview_1.default, __assign({ wh: wh }, props))),
+                react_1.default.createElement(Panel_1.default, __assign({ wh: wh }, props))),
             react_1.default.createElement("div", { style: {
                     height: "calc(100% - 250px)",
                     padding: 24,

@@ -44,7 +44,7 @@ var Suit_1 = require("./Suit");
 var ScrollBar_1 = __importDefault(require("../ScrollBar"));
 var Ecg_1 = __importDefault(require("../Ecg"));
 var useDraw_1 = __importDefault(require("../useDraw"));
-var Loading_1 = __importDefault(require("./Loading"));
+var Loading_1 = require("./Loading");
 var WsService_1 = require("../services/WsService");
 var ButtonTools_1 = require("./ButtonTools");
 exports.default = react_1.forwardRef(function (props, ref) {
@@ -100,8 +100,8 @@ exports.default = react_1.forwardRef(function (props, ref) {
             console.log(e);
             return false;
         }, onMouseEnter: function () { return staticType && setShowBtns(true); }, onMouseLeave: function () { return staticType && setShowBtns(false); } }),
-        loading && (react_1.default.createElement("div", { style: { position: 'absolute', width: '100%', height: '100%', background: '#fff', zIndex: 1, opacity: .8 } },
-            react_1.default.createElement(Loading_1.default, { style: { margin: 'auto', position: 'absolute', left: 0, right: 0, bottom: 0, top: 0 } }))),
+        loading && (react_1.default.createElement("div", { style: { position: 'absolute', width: '100%', height: '100%', background: '#fff', zIndex: 1, opacity: .9 } },
+            react_1.default.createElement(Loading_1.Loading, { style: { margin: 'auto', position: 'absolute', left: 0, right: 0, bottom: 0, top: 0 } }))),
         react_1.default.createElement("div", { style: { height: ecgHeight && showEcg ? "calc(100% - " + ecgHeight + "px)" : "100%", position: 'relative' }, ref: ctgBox },
             react_1.default.createElement("canvas", { style: canvasStyles, ref: canvasgrid }),
             react_1.default.createElement("canvas", { style: canvasStyles, ref: canvasline }),

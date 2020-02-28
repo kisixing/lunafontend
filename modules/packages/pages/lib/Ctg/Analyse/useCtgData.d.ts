@@ -1,5 +1,9 @@
 declare const CTGChart: (docid: string) => {
-    fetalnum: string;
-    docid?: string;
-}[];
+    ctgData: {
+        fetalnum: string;
+        docid?: string;
+        fhr1?: any;
+    };
+    loading: boolean;
+};
 export default CTGChart;

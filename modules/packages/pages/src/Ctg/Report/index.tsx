@@ -1,6 +1,6 @@
 import React, { useRef, useLayoutEffect, useState } from 'react';
 import Ctg from './Ctg';
-import Preview from './Preview';
+import Panel from './Panel';
 import { EventEmitter } from '@lianmed/utils';
 
 export const Context = React.createContext({})
@@ -39,7 +39,7 @@ const PrintPreview = (props: IProps) => {
         <Context.Provider value={v}>
             <div style={{ height: '100%' }} ref={inputEl}>
                 <div style={{ height: 240, textAlign: 'center' }}>
-                    <Preview wh={wh} {...props} />
+                    <Panel wh={wh} {...props} />
                 </div>
                 <div style={{
                     height: `calc(100% - 250px)`,

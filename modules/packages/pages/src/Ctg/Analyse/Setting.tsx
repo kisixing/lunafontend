@@ -35,7 +35,7 @@ const Setting = (props: { [x: string]: any }) => {
               <Radio value={4}>不满意</Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item label="CST/OCT" style={{ marginBottom: 0 }} required key='info'>
+          <Form.Item label="CST/OCT" style={{ marginBottom: 0 }} required key='info1'>
 
             <Radio.Group>
               <Radio value={1}>阴性</Radio>
@@ -44,7 +44,7 @@ const Setting = (props: { [x: string]: any }) => {
               <Radio value={4}>不满意</Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item label="短变异（毫秒）" style={{ marginBottom: 0 }} key="info" required>
+          <Form.Item label="短变异（毫秒）" style={{ marginBottom: 0 }} key="info2" required>
 
             <Radio.Group>
               <Radio value={1}>平滑</Radio>

@@ -98,8 +98,8 @@ var ScoringMethod = function (props) {
                 react_1.default.createElement("div", { style: { marginTop: 10 } },
                     react_1.default.createElement(StartTime, null),
                     react_1.default.createElement(EndTime, null)))),
-        react_1.default.createElement("div", { style: { display: 'flex', padding: '10px 24px 0' } },
-            react_1.default.createElement(antd_1.Radio.Group, { onChange: onChange, value: mark, style: { maxWidth: 200 } }, MARKS.map(function (_) { return (react_1.default.createElement(antd_1.Radio, { value: _, key: _ },
+        react_1.default.createElement("div", { style: { padding: '10px 24px 0' } },
+            react_1.default.createElement(antd_1.Radio.Group, { onChange: onChange, value: mark, style: {} }, MARKS.map(function (_) { return (react_1.default.createElement(antd_1.Radio, { value: _, key: _ },
                 _,
                 "\u5206\u6790\u6CD5")); })),
             react_1.default.createElement(antd_1.Form, __assign({ form: form, labelAlign: "left" }, formItemLayout, { style: { width: '100%' } }),
@@ -112,7 +112,7 @@ var ScoringMethod = function (props) {
                     react_1.default.createElement("span", null,
                         "CTG = ",
                         Object.values(formScores).reduce(function (a, b) { return ~~a + ~~b; }, 0)))),
-            react_1.default.createElement("div", { style: { width: 68 } },
+            react_1.default.createElement("div", { style: {} },
                 react_1.default.createElement(antd_1.Button, { style: { marginBottom: 10 }, type: "primary", onClick: analyse }, "\u5206\u6790"),
                 react_1.default.createElement(antd_1.Button, { style: { marginBottom: 10 }, onClick: function () {
                         var next = !disabled;

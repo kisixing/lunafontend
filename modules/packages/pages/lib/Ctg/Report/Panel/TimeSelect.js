@@ -1,4 +1,8 @@
 "use strict";
+var __makeTemplateObject = (this && this.__makeTemplateObject) || function (cooked, raw) {
+    if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
+    return cooked;
+};
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -34,10 +38,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importStar(require("react"));
 var antd_1 = require("antd");
-var index_1 = require("./index");
-var usePrintConfig_1 = __importDefault(require("./usePrintConfig"));
-var useSign_1 = __importDefault(require("./useSign"));
+var usePrintConfig_1 = __importDefault(require("./hooks/usePrintConfig"));
+var useSign_1 = __importDefault(require("./hooks/useSign"));
+var useSave_1 = __importDefault(require("./hooks/useSave"));
 var request_1 = __importDefault(require("@lianmed/request"));
+var index_1 = require("../index");
+var styled_components_1 = __importDefault(require("styled-components"));
+var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n    .bottomBtns button {\n        margin-right: 10px \n    }\n    .bottomBtns button:last-child {\n        margin-right: 0px \n    }\n"], ["\n    .bottomBtns button {\n        margin-right: 10px \n    }\n    .bottomBtns button:last-child {\n        margin-right: 0px \n    }\n"])));
 var COEFFICIENT = 240;
 var Preview = function (props) {
     var onDownload = props.onDownload, docid = props.docid, print_interval = props.print_interval, diagnosis = props.diagnosis, onTotalChange = props.onTotalChange, pdfBase64 = props.pdfBase64, setPdfBase64 = props.setPdfBase64, args = __rest(props, ["onDownload", "docid", "print_interval", "diagnosis", "onTotalChange", "pdfBase64", "setPdfBase64"]);
@@ -56,13 +63,14 @@ var Preview = function (props) {
     var _b = react_1.useState({ suit: null }), value = _b[0], setValue = _b[1];
     var _c = usePrintConfig_1.default(value, print_interval), startingTime = _c.startingTime, endingTime = _c.endingTime, locking = _c.locking, total = _c.total, backward = _c.backward, forward = _c.forward, toggleLocking = _c.toggleLocking, selectAll = _c.selectAll, editable = _c.editable, outputType = _c.outputType, setOutputType = _c.setOutputType;
     var _d = useSign_1.default(docid, setPdfBase64), fetchQrCode = _d.fetchQrCode, qrCodeBase64 = _d.qrCodeBase64, modalVisible = _d.modalVisible, qrCodeBase64Loading = _d.qrCodeBase64Loading, setModalVisible = _d.setModalVisible, signed = _d.signed, archive = _d.archive, archiveLoading = _d.archiveLoading, archived = _d.archived;
+    var _e = useSave_1.default(docid), caEnable = _e.caEnable, save = _e.save, saveLoading = _e.saveLoading;
     react_1.useEffect(function () {
         onTotalChange(total);
     }, [total]);
     return (react_1.default.createElement(index_1.Context.Consumer, null, function (v) {
         setValue(v);
         return (react_1.default.createElement("div", { id: "modal_id", style: { display: 'flex', height: '100%' } },
-            react_1.default.createElement("div", { style: { width: 400, padding: 24, background: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-around', border: '1px solid #d9d9d9' } },
+            react_1.default.createElement(Wrapper, { style: { width: 400, padding: 24, background: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-around', border: '1px solid #d9d9d9' } },
                 react_1.default.createElement("div", { style: { display: 'flex', justifyContent: 'space-between' } },
                     react_1.default.createElement("div", { style: { display: 'flex', alignItems: 'center' } },
                         react_1.default.createElement(antd_1.Button, { disabled: locking, onClick: forward }, "\u5411\u540E\u9009\u62E9")),
@@ -90,17 +98,20 @@ var Preview = function (props) {
                     react_1.default.createElement(antd_1.Radio.Group, { value: outputType, onChange: setOutputType },
                         react_1.default.createElement(antd_1.Radio, { value: "180" }, "90~180"),
                         react_1.default.createElement(antd_1.Radio, { value: "210" }, "50~210"))),
-                react_1.default.createElement("div", { style: { display: 'flex' } },
-                    react_1.default.createElement(antd_1.Button, { disabled: locking || !editable, block: true, type: "primary", loading: pdfBase64Loading, onClick: handlePreview, style: { marginRight: 10 } },
+                react_1.default.createElement("div", { style: { display: 'flex' }, className: "bottomBtns" },
+                    react_1.default.createElement(antd_1.Button, { disabled: locking || !editable, block: true, type: "primary", loading: pdfBase64Loading, onClick: handlePreview },
                         react_1.default.createElement("span", null, "\u751F\u6210")),
-                    react_1.default.createElement(antd_1.Button, { block: true, disabled: !pdfBase64, type: "primary", loading: qrCodeBase64Loading, onClick: fetchQrCode, style: { marginRight: 10 } },
-                        react_1.default.createElement("span", null, " \u7B7E\u540D")),
-                    react_1.default.createElement(antd_1.Button, { block: true, disabled: !pdfBase64, type: "primary", style: { marginRight: 10 }, onClick: onDownload },
-                        react_1.default.createElement("span", null, "\u6253\u5370")),
-                    react_1.default.createElement(antd_1.Button, { block: true, disabled: !signed, type: "primary", loading: archiveLoading, onClick: archive },
-                        react_1.default.createElement("span", null, archived ? '取消归档' : '归档')))),
+                    caEnable ? (react_1.default.createElement(react_1.default.Fragment, null,
+                        react_1.default.createElement(antd_1.Button, { block: true, disabled: !pdfBase64, type: "primary", loading: qrCodeBase64Loading, onClick: fetchQrCode },
+                            react_1.default.createElement("span", null, " \u7B7E\u540D")),
+                        react_1.default.createElement(antd_1.Button, { block: true, disabled: !signed, type: "primary", loading: archiveLoading, onClick: archive },
+                            react_1.default.createElement("span", null, archived ? '取消归档' : '归档')))) : (react_1.default.createElement(antd_1.Button, { block: true, disabled: !pdfBase64, type: "primary", loading: saveLoading, onClick: save },
+                        react_1.default.createElement("span", null, "\u4FDD\u5B58"))),
+                    react_1.default.createElement(antd_1.Button, { block: true, disabled: !pdfBase64, type: "primary", onClick: onDownload },
+                        react_1.default.createElement("span", null, "\u6253\u5370")))),
             react_1.default.createElement(antd_1.Modal, { getContainer: function () { return document.querySelector("#modal_id"); }, visible: modalVisible, footer: null, centered: true, onCancel: function () { return setModalVisible(false); }, bodyStyle: { textAlign: 'center' } },
                 react_1.default.createElement("img", { alt: "qrcode", src: qrCodeBase64 }))));
     }));
 };
 exports.default = Preview;
+var templateObject_1;

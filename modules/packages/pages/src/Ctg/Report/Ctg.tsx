@@ -10,15 +10,15 @@ interface IProps {
 
 const Setting = (props: IProps) => {
 
-  const [ctgData] = useCtgData(props.docid)
+  const { ctgData, loading } = useCtgData(props.docid)
 
   return (
     <Context.Consumer>
       {(value: any) => (
-        <L suitType={2} loading={(ctgData as any).fhr1 === undefined} data={ctgData} ref={value}></L>
+        <L suitType={2} loading={loading} data={ctgData} ref={value}></L>
       )}
     </Context.Consumer>
   );
-} 
+}
 
 export default Setting

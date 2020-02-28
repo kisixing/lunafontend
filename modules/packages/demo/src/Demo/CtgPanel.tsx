@@ -27,7 +27,7 @@ function CtgPanel({ form: { getFieldDecorator } }: any) {
   const box = useRef<HTMLDivElement>(null)
   const [datacache, setDatacache] = useState(new Map());
   const [activeH, setActiveH] = useState('产检记录')
-  const [ctgData] = useCtgData('1_1112_160415144057')
+  const { ctgData } = useCtgData('1_1112_160415144057')
   function callback(key: string) {
     console.log(key);
   }
@@ -55,7 +55,7 @@ function CtgPanel({ form: { getFieldDecorator } }: any) {
         <Ctg data={ctgData} />
 
       </div>
-      <div style={{  marginBottom: 10,textAlign:'center' }}>
+      <div style={{ marginBottom: 10, textAlign: 'center' }}>
         <ButtonGroup>
           <Button type="primary">
             <Icon type="caret-right" />

@@ -3,13 +3,14 @@ import { useEffect, useState } from 'react';
 import { event } from '@lianmed/utils'
 import request from "@lianmed/request";
 const CTGChart = (docid: string) => {
-
-    const [ctgData, setCtgData] = useState<{ fetalnum: string; docid?: string }>({fetalnum:'1',docid})
+    const [loading, setLoading] = useState(false)
+    const [ctgData, setCtgData] = useState<{ fetalnum: string; docid?: string; fhr1?: any }>({ fetalnum: '1', docid })
     useEffect(() => {
+        setLoading(true)
         request.get(`/ctg-exams-data/${docid}`).then(res => {
             setCtgData({ docid, ...res })
-        })
-    }, [])
+        }).finally(() => setLoading(false))
+    }, [docid])
 
     useEffect(() => {
         const fn = data => {
@@ -22,7 +23,7 @@ const CTGChart = (docid: string) => {
     }, [ctgData])
 
 
-    return [ctgData];
+    return { ctgData, loading };
 }
 
 export default CTGChart

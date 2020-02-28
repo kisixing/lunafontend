@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import PreviewContent from './PreviewContent'
-import useDiagnosis from "./useDiagnosis";
+import useDiagnosis from "./hooks/useDiagnosis";
 import Diagnosis from './Diagnosis'
 import TimeSelect from "./TimeSelect";
 
-import { IProps as IP } from "./index";
+import { IProps as IP } from "../index";
 
 
 interface IProps extends IP {

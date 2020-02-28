@@ -99,8 +99,8 @@ const ScoringMethod = (props: IProps) => {
           </div>
         </>
       </div>
-      <div style={{ display: 'flex', padding: '10px 24px 0' }}>
-        <Radio.Group onChange={onChange} value={mark} style={{ maxWidth: 200 }}>
+      <div style={{ padding: '10px 24px 0' }}>
+        <Radio.Group onChange={onChange} value={mark} style={{  }}>
           {
             MARKS.map(_ => (
               <Radio value={_} key={_}>{_}分析法</Radio>
@@ -120,7 +120,7 @@ const ScoringMethod = (props: IProps) => {
           </Form.Item>
 
         </Form>
-        <div style={{ width: 68 }}>
+        <div style={{  }}>
           <Button style={{ marginBottom: 10 }} type="primary" onClick={analyse}>分析</Button>
           <Button style={{ marginBottom: 10 }} onClick={() => {
             const next = !disabled
