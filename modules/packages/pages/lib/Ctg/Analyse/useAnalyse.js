@@ -100,14 +100,14 @@ var mapItemsToMarks = {
         'fm_fhrv_score',
         'fm_score',
     ],
-    Fisher: [
+    Fischer: [
         'fhrbaseline_score',
         'zhenfu_lv_score',
         'zhouqi_lv_score',
         'acc_score',
         'dec_score',
     ],
-    Kerbs: [
+    Krebs: [
         'fhrbaseline_score',
         'zhenfu_lv_score',
         'zhouqi_lv_score',
