@@ -5,9 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = require("react");
 var request_1 = __importDefault(require("@lianmed/request"));
-var antd_1 = require("antd");
 var utils_1 = require("@lianmed/utils");
-var info = antd_1.message.info;
 exports.default = (function (docid) {
     var _a = react_1.useState(docid), bizSn = _a[0], setBizSn = _a[1];
     var _b = react_1.useState(false), archived = _b[0], setArchived = _b[1];
