@@ -16,7 +16,7 @@ const App = (props: any) => {
     const [dataSource, setDataSource] = useState<obvuew.prenatal_visitspage[]>([])
     const [pregnancy, setPregnancy] = useState({})
     const [selected, setSelected] = useState<obvuew.prenatal_visitspage>({})
-    const [sDate, setSDate] = useState(formatDate(new Date('2019-1-1')))
+    const [sDate, setSDate] = useState(formatDate(new Date('2020-02-29')))
     const [eDate, setEDate] = useState(formatDate())
     const [total, setTotal] = useState(0)
     const [page, setPage] = useState(0)

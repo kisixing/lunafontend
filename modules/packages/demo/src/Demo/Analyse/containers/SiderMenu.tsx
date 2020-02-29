@@ -37,7 +37,7 @@ class SiderMenu extends Component<{ dataSource: obvuew.prenatal_visitspage[], se
         {dataSource.map((item) => {
           return (
             <Menu.Item key={item.id} className={styles.item}>
-              <div>{item.visitTime || item.visitDate}</div>
+              <div>{item.ctgexam?item.ctgexam.note:item.visitDate}</div>
             </Menu.Item>
           );
         })}
