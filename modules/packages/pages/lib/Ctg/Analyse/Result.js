@@ -46,7 +46,7 @@ var ScoringMethod = function (props) {
     var _a = react_1.useState(true), disabled = _a[0], setDisabled = _a[1];
     var _b = useAnalyse_1.default(v, docid, fetal, form, function (_result) {
         form.setFieldsValue(_result);
-    }), responseData = _b.responseData, activeItem = _b.activeItem, MARKS = _b.MARKS, analyse = _b.analyse, startTime = _b.startTime, mark = _b.mark, setMark = _b.setMark, interval = _b.interval, setInterval = _b.setInterval, modifyData = _b.modifyData, Fisher_ref = _b.Fisher_ref, Nst_ref = _b.Nst_ref, Kerbs_ref = _b.Kerbs_ref;
+    }), responseData = _b.responseData, MARKS = _b.MARKS, analyse = _b.analyse, startTime = _b.startTime, mark = _b.mark, setMark = _b.setMark, interval = _b.interval, setInterval = _b.setInterval, modifyData = _b.modifyData, Fisher_ref = _b.Fisher_ref, Nst_ref = _b.Nst_ref, Kerbs_ref = _b.Kerbs_ref;
     var onChange = function (e) {
         var mark = e.target.value;
         modifyData();

@@ -1,6 +1,5 @@
-import React, { useState, useEffect, forwardRef } from 'react';
-import { Table, Form, Button, InputNumber, Select } from 'antd';
-import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
+import React, { forwardRef } from 'react';
+import { Table, Form, InputNumber } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 
 

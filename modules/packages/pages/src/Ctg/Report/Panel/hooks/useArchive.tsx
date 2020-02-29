@@ -1,10 +1,8 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import request from "@lianmed/request";
-import { message } from 'antd';
 import { event } from '@lianmed/utils';
 
-const info = message.info
 
 
 

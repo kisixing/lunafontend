@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Radio, Form, Button, InputNumber, Select } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Radio, Form, Button,  Select } from 'antd';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import useAnalyse from './useAnalyse'
 import Fisher from "./methods/Fisher";
@@ -16,7 +16,7 @@ const ScoringMethod = (props: IProps) => {
 
   const {
     responseData,
-    activeItem,
+    // activeItem,
     MARKS,
     analyse,
     startTime,
