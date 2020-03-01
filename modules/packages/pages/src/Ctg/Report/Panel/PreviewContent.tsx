@@ -24,6 +24,7 @@ const PreviewContent = props => {
     const [pageNumber, setPageNumber] = useState(1)
     const onDocumentLoad = useCallback(({ numPages }) => { setNumPages(numPages) }, [])
     const onChangePage = useCallback(page => { setPageNumber(page) }, [])
+    const [f, setF] = useState(true)
     const largen = () => {
         setFullpage(true)
         setHeight(h - 24);
@@ -54,6 +55,8 @@ const PreviewContent = props => {
             setWidth(w)
         }
     }, [w, h])
+    console.log('base111111111111',pdfBase64.length)
+
     const content = pdfBase64 ? (
         <div style={{
             width: width,
@@ -65,28 +68,29 @@ const PreviewContent = props => {
             } : {})
         }
         }>
-            <Document
-                ref={ref1}
-                loading={<Spin style={{ margin: '120px 0' }} />}
-                onLoadSuccess={onDocumentLoad}
-                file={pdfBase64}
-                renderMode="canvas"
-                options={{
-                    cMapUrl: 'cmaps/',
-                    cMapPacked: true,
-                }}
-            >
-                <Page pageNumber={pageNumber} scale={1} height={height} />
-            </Document>
-            <Pagination ref={ref2}
+            <Button onClick={() => setF(!f)}>1111</Button>
+            {
+             f &&   <>
+                    <Document
+                        ref={ref1}
+                        loading={<Spin style={{ margin: '120px 0' }} />}
+                        onLoadSuccess={onDocumentLoad}
+                        file={pdfBase64}
+                        renderMode="canvas"
+             
+                    >
+                        <Page pageNumber={pageNumber} scale={1} height={height} />
+                    </Document>
+                    <Pagination ref={ref2}
 
-                total={numPages}
-                showTotal={total => `共 ${total} 页`}
-                current={pageNumber}
-                pageSize={1}
-                size="small"
-                onChange={onChangePage}
-            />
+                        total={numPages}
+                        showTotal={total => `共 ${total} 页`}
+                        current={pageNumber}
+                        pageSize={1}
+                        size="small"
+                        onChange={onChangePage}
+                    /></>
+            }
             {isFullpage ? (
                 <span style={{ position: 'absolute', top: 24, right: 24, cursor: 'pointer' }} onClick={shrink}>
                     返回<FullscreenExitOutlined title="缩小" />

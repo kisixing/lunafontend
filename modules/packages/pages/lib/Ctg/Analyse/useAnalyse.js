@@ -62,19 +62,9 @@ exports.default = (function (v, docid, fetal, form, cb) {
         v.suit && v.suit.data && request_1.default.post("/ctg-exams-analyse", {
             data: { docid: docid, mark: mark, start: startTime, end: startTime + interval * 240, fetal: fetal }
         }).then(function (r) {
-            Object.assign(resultData[fetalKey], r);
-            utils_1.event.emit('analysis:setCtgData', { analyse: resultData[fetalKey] });
-            var _result = null;
-            try {
-                _result = JSON.parse(r.result);
-            }
-            catch (error) {
-                console.log('parse analysis data error');
-            }
-            console.log(_result);
-            cb(_result);
+            var f = r.score.fischerdata;
             var cur = mapFormToMark[mark + "_ref"];
-            cur.current.setFieldsValue(_result);
+            cur.current.setFieldsValue(f);
         });
     };
     var setMarkAndItems = function (mark) {

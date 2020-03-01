@@ -76,7 +76,7 @@ exports.default = react_1.forwardRef(function (props, ref) {
             dataIndex: 'result',
             render: function (a, _a) {
                 var key = _a.key;
-                return (react_1.default.createElement(antd_1.Form.Item, { name: key + "_result", style: { margin: -8 } },
+                return (react_1.default.createElement(antd_1.Form.Item, { name: key + "value", style: { margin: -8 } },
                     react_1.default.createElement(antd_1.InputNumber, null)));
             }
         },
@@ -85,12 +85,12 @@ exports.default = react_1.forwardRef(function (props, ref) {
             dataIndex: 'score',
             render: function (a, _a) {
                 var key = _a.key;
-                return (react_1.default.createElement(antd_1.Form.Item, { name: key + "_score", style: { margin: -8 } },
+                return (react_1.default.createElement(antd_1.Form.Item, { name: key + "score", style: { margin: -8 } },
                     react_1.default.createElement(antd_1.InputNumber, null)));
             }
         },
     ];
     var form = antd_1.Form.useForm()[0];
-    return (react_1.default.createElement(antd_1.Form, { ref: ref, form: form, size: "small", style: { display: props.name !== 'Kerbs' ? 'none' : 'block' } },
+    return (react_1.default.createElement(antd_1.Form, { ref: ref, form: form, size: "small", style: { display: props.name !== 'Krebs' ? 'none' : 'block' } },
         react_1.default.createElement(antd_1.Table, { size: "small", pagination: false, columns: columns, dataSource: dataSource })));
 });

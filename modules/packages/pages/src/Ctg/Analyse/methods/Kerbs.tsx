@@ -80,7 +80,7 @@ export default forwardRef<FormInstance, IProps>((props, ref) => {
             dataIndex: 'result',
             render(a, { key }) {
                 return (
-                    <Form.Item name={`${key}_result`} style={{ margin: -8 }}>
+                    <Form.Item name={`${key}value`} style={{ margin: -8 }}>
                         <InputNumber />
                     </Form.Item>
                 )
@@ -91,7 +91,7 @@ export default forwardRef<FormInstance, IProps>((props, ref) => {
             dataIndex: 'score',
             render(a, { key }) {
                 return (
-                    <Form.Item name={`${key}_score`} style={{ margin: -8 }}>
+                    <Form.Item name={`${key}score`} style={{ margin: -8 }}>
                         <InputNumber />
                     </Form.Item>
                 )
@@ -102,7 +102,7 @@ export default forwardRef<FormInstance, IProps>((props, ref) => {
 
     const [form] = Form.useForm()
     return (
-        <Form ref={ref} form={form} size="small" style={{ display: props.name !== 'Kerbs' ? 'none' : 'block' }}>
+        <Form ref={ref} form={form} size="small" style={{ display: props.name !== 'Krebs' ? 'none' : 'block' }}>
             <Table size="small" pagination={false} columns={columns} dataSource={dataSource} />
         </Form>
     );

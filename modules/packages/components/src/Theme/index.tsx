@@ -29,7 +29,7 @@ const A = (props: IProps, ref) => {
         toggle: handleClick,
         handleChange
     }));
-
+    
     const {
         primaryColor = '#1890ff',
         storageName = 'custom-antd-primary-color',

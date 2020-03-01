@@ -5,7 +5,7 @@ import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import { event, _R } from "@lianmed/utils";
 import { Rule } from 'rc-field-form/lib/interface';
 import { FormInstance } from 'antd/lib/form';
-
+import { obvuew } from "@lianmed/f_types";
 export default (v: { suit: Suit }, docid, fetal: any, form: FormInstance, cb: (result: IResult) => void) => {
     const resultData = useMemo<{ [x: string]: IResponseData }>(() => { return {} }, [])
 
@@ -57,22 +57,11 @@ export default (v: { suit: Suit }, docid, fetal: any, form: FormInstance, cb: (r
     const analyse = () => {
         v.suit && v.suit.data && request.post(`/ctg-exams-analyse`, {
             data: { docid, mark, start: startTime, end: startTime + interval * 240, fetal }
-        }).then((r: IResponseData) => {
+        }).then((r: obvuew.ctg_exams_analyse) => {
 
-            Object.assign(resultData[fetalKey], r)
-
-            event.emit('analysis:setCtgData', { analyse: resultData[fetalKey] })
-
-            let _result: any = null
-            try {
-                _result = JSON.parse(r.result)
-            } catch (error) {
-                console.log('parse analysis data error')
-            }
-            console.log(_result)
-            cb(_result)
+            const f =r.score.fischerdata
             const cur: MutableRefObject<FormInstance> = mapFormToMark[`${mark}_ref`]
-            cur.current.setFieldsValue(_result)
+            cur.current.setFieldsValue(f)
         })
     }
 
