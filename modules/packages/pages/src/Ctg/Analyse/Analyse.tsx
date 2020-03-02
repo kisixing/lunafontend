@@ -1,6 +1,7 @@
 import React, { useEffect,forwardRef } from 'react';
 import { Form, Radio, Input, Divider, InputNumber, Row, Col } from 'antd';
 import { event } from '@lianmed/utils';
+import { FormInstance } from 'antd/lib/form';
 
 const Setting = forwardRef<FormInstance,{ [x: string]: any }>((props,ref) => {
 
@@ -58,7 +59,7 @@ const Setting = forwardRef<FormInstance,{ [x: string]: any }>((props,ref) => {
           <Divider >胎心率</Divider>
           <Row>
             <Col span={6}>
-              <Form.Item label="短变异" style={{ marginBottom: 0 }} name="t0">
+              <Form.Item label="短变异" style={{ marginBottom: 0 }} name="stv">
 
                 <InputNumber />
 

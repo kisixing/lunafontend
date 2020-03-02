@@ -1,11 +1,9 @@
 import { MutableRefObject } from 'react';
-import { Rule } from 'rc-field-form/lib/interface';
 import { FormInstance } from 'antd/lib/form';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 declare const _default: (v: Suit, docid: any, fetal: any) => {
     setMark: (mark: string) => void;
     mark: string;
-    activeItem: IItem[];
     responseData: {
         [x: string]: IResponseData;
     };
@@ -30,11 +28,6 @@ interface IResponseData {
     mark?: string;
     result: string;
     diagnosis?: any;
-}
-interface IItem {
-    key: string;
-    label: string;
-    rules: Rule[];
 }
 export interface IResult {
     fhr_uptime_score: number;

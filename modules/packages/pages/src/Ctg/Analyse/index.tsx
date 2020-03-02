@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState,  useRef } from 'react';
 import { Row, Col, Button } from 'antd';
 import Score from './Score';
 import Analyse from './Analyse';

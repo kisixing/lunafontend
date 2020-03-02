@@ -65,7 +65,7 @@ var Setting = react_1.forwardRef(function (props, ref) {
                 react_1.default.createElement(antd_1.Divider, null, "\u80CE\u5FC3\u7387"),
                 react_1.default.createElement(antd_1.Row, null,
                     react_1.default.createElement(antd_1.Col, { span: 6 },
-                        react_1.default.createElement(antd_1.Form.Item, { label: "\u77ED\u53D8\u5F02", style: { marginBottom: 0 }, name: "t0" },
+                        react_1.default.createElement(antd_1.Form.Item, { label: "\u77ED\u53D8\u5F02", style: { marginBottom: 0 }, name: "stv" },
                             react_1.default.createElement(antd_1.InputNumber, null)))),
                 react_1.default.createElement(antd_1.Divider, null, "\u51CF\u901F"),
                 react_1.default.createElement(antd_1.Row, null,

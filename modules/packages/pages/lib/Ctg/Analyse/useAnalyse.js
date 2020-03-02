@@ -20,9 +20,8 @@ var utils_1 = require("@lianmed/utils");
 exports.default = (function (v, docid, fetal) {
     var resultData = react_1.useMemo(function () { return {}; }, []);
     var _a = react_1.useState(MARKS[0]), mark = _a[0], setMark = _a[1];
-    var _b = react_1.useState([]), activeItem = _b[0], setActiveItem = _b[1];
-    var _c = react_1.useState(20), interval = _c[0], setInterval = _c[1];
-    var _d = react_1.useState(0), startTime = _d[0], setStartTime = _d[1];
+    var _b = react_1.useState(20), interval = _b[0], setInterval = _b[1];
+    var _c = react_1.useState(0), startTime = _c[0], setStartTime = _c[1];
     var Fischer_ref = react_1.useRef(null);
     var Krebs_ref = react_1.useRef(null);
     var Nst_ref = react_1.useRef(null);
@@ -45,10 +44,11 @@ exports.default = (function (v, docid, fetal) {
             v && v.off('change:selectPoint', s);
         };
     }, [interval, v]);
+    react_1.useEffect(function () {
+        Object.values(mapFormToMark).forEach(function (f) { return f.current && f.current.resetFields(); });
+    }, [docid]);
     react_1.useEffect(function () { setMarkAndItems(MARKS[0]); }, []);
     react_1.useEffect(function () {
-        var keys = mapItemsToMarks[mark];
-        setActiveItem(allItems.filter(function (_) { return keys.includes(_.key); }));
         console.log('mark', mark);
     }, [mark]);
     react_1.useEffect(function () {
@@ -61,11 +61,12 @@ exports.default = (function (v, docid, fetal) {
         v && request_1.default.post("/ctg-exams-analyse", {
             data: { docid: docid, mark: mark, start: startTime, end: startTime + interval * 240, fetal: fetal }
         }).then(function (r) {
-            var f = r.score[mark.toLowerCase() + "data"];
+            var analysis = r.analysis, score = r.score;
+            var f = score[mark.toLowerCase() + "data"];
             var cur = mapFormToMark[mark + "_ref"];
             cur && cur.current.setFieldsValue(f);
-            var ucdata = r.analysis.ucdata;
-            analysis_ref.current.setFieldsValue(__assign({}, ucdata));
+            var stv = analysis.stv, ucdata = analysis.ucdata;
+            analysis_ref.current.setFieldsValue(__assign({ stv: stv }, ucdata));
         });
     };
     var setMarkAndItems = function (mark) {
@@ -76,7 +77,7 @@ exports.default = (function (v, docid, fetal) {
     };
     return {
         setMark: setMarkAndItems, mark: mark,
-        activeItem: activeItem, responseData: resultData,
+        responseData: resultData,
         MARKS: MARKS, analyse: analyse, startTime: startTime, setStartTime: setStartTime, interval: interval, setInterval: setInterval, modifyData: modifyData,
         Fischer_ref: Fischer_ref,
         Nst_ref: Nst_ref,
@@ -109,16 +110,3 @@ var mapItemsToMarks = {
     ]
 };
 var MARKS = Object.keys(mapItemsToMarks);
-var allItems = [
-    { key: 'fhrbaseline_score', label: '基线' },
-    { key: 'zhenfu_lv_score', label: '振幅' },
-    { key: 'fhr_uptime_score', label: '胎动FHR上升时间' },
-    { key: 'fm_fhrv_score', label: '胎动FHR变化' },
-    { key: 'fm_score', label: '胎动次数' },
-    { key: 'Fischer', label: '分析法' },
-    { key: 'zhouqi_lv_score', label: '周期变异' },
-    { key: 'acc_score', label: '加速' },
-    { key: 'dec_score', label: '减速' },
-    { key: 'Krebs', label: '分析法' },
-    { key: 'movement_score', label: '胎动' },
-].map(function (_) { return (__assign(__assign({}, _), { rules: [{ required: true, message: '请输入分数' }] })); });
