@@ -21,13 +21,6 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
-};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -74,25 +67,7 @@ exports.default = react_1.forwardRef(function (props, ref) {
         setTimeout(function () { return setEcgHeight(t); }, 100);
     });
     WsService_1.useCheckNetwork(function (isOn) { return ctg.current && (ctg.current.isOn = isOn); });
-    react_1.useImperativeHandle(ref, function () { return ({
-        on: function (e, fn) {
-            return ctg.current && ctg.current.on(e, fn);
-        },
-        off: function (e, fn) {
-            return ctg.current && ctg.current.off(e, fn);
-        },
-        emit: function (e) {
-            var _a;
-            var args = [];
-            for (var _i = 1; _i < arguments.length; _i++) {
-                args[_i - 1] = arguments[_i];
-            }
-            return ctg.current && (_a = ctg.current).emit.apply(_a, __spreadArrays([e], args));
-        },
-        getSuit: function () {
-            return ctg.current;
-        }
-    }); });
+    react_1.useImperativeHandle(ref, function () { return ctg.current; });
     var canvasStyles = { position: 'absolute' };
     return (react_1.default.createElement("div", __assign({ style: { width: '100%', height: '100%' }, ref: box }, others, { onContextMenu: function (e) {
             e.preventDefault();

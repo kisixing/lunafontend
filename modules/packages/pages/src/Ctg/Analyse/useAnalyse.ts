@@ -1,12 +1,14 @@
 
 import { useState, useEffect, useMemo, useRef, MutableRefObject } from 'react';
 import request from "@lianmed/request";
-import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
-import {  _R } from "@lianmed/utils";
+import { _R } from "@lianmed/utils";
 import { Rule } from 'rc-field-form/lib/interface';
 import { FormInstance } from 'antd/lib/form';
 import { obvuew } from "@lianmed/f_types";
-export default (v: { suit: Suit }, docid, fetal: any, form: FormInstance, cb: (result: IResult) => void) => {
+import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
+
+
+export default (v: Suit, docid, fetal: any, form: FormInstance, cb: (result: IResult) => void) => {
     const resultData = useMemo<{ [x: string]: IResponseData }>(() => { return {} }, [])
 
     const [mark, setMark] = useState(MARKS[0])
@@ -25,14 +27,14 @@ export default (v: { suit: Suit }, docid, fetal: any, form: FormInstance, cb: (r
         Nst_ref
     }
     useEffect(() => {
+        console.log('zzzz',v)
         const s = (time) => {
+            console.log('zzz', time)
             setStartTime(time)
         }
-        v.suit && v.suit
-            .on('startTime', s)
+       v && v.on('change:selectPoint', s)
         return () => {
-            v.suit && v.suit
-                .off('startTime', s)
+           v && v.off('change:selectPoint', s)
 
         };
     }, [interval, v])
@@ -53,13 +55,12 @@ export default (v: { suit: Suit }, docid, fetal: any, form: FormInstance, cb: (r
             form.setFieldsValue(JSON.parse(value.result))
         }, 400)
     }, [fetalKey])
-
     const analyse = () => {
-        v.suit && v.suit.data && request.post(`/ctg-exams-analyse`, {
+        v  && request.post(`/ctg-exams-analyse`, {
             data: { docid, mark, start: startTime, end: startTime + interval * 240, fetal }
         }).then((r: obvuew.ctg_exams_analyse) => {
 
-            const f =r.score.fischerdata
+            const f = r.score.fischerdata
             const cur: MutableRefObject<FormInstance> = mapFormToMark[`${mark}_ref`]
             cur.current.setFieldsValue(f)
         })

@@ -1,10 +1,8 @@
 import { MutableRefObject } from 'react';
-import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import { Rule } from 'rc-field-form/lib/interface';
 import { FormInstance } from 'antd/lib/form';
-declare const _default: (v: {
-    suit: Suit;
-}, docid: any, fetal: any, form: FormInstance, cb: (result: IResult) => void) => {
+import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
+declare const _default: (v: Suit, docid: any, fetal: any, form: FormInstance, cb: (result: IResult) => void) => {
     setMark: (mark: string) => void;
     mark: string;
     activeItem: IItem[];

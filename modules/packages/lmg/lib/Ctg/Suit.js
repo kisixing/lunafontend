@@ -165,7 +165,7 @@ var Suit = (function (_super) {
     });
     Object.defineProperty(Suit.prototype, "leftViewposition", {
         get: function () {
-            return this.viewposition >= this.width * 2 ? this.viewposition - this.width * 2 : 0;
+            return this.rightViewPosition >= this.width * 2 ? this.rightViewPosition - this.width * 2 : 0;
         },
         enumerable: true,
         configurable: true
@@ -183,6 +183,7 @@ var Suit = (function (_super) {
         },
         set: function (value) {
             this.viewposition = value;
+            this.emit('change:selectPoint', this.selectingBarPoint);
             this.updateBarTool();
             this.drawobj.drawdot(this.viewposition);
         },
@@ -346,6 +347,7 @@ var Suit = (function (_super) {
         startingBar.toggleVisibility();
         selectingBar.on('change:x', function (value) {
             _this.drawobj.showcur(_this.selectingBarPoint, false);
+            _this.emit('change:selectPoint', _this.selectingBarPoint);
         });
         startingBar.on('change:x', function (value) {
             _this.$selectrpstart = _this.leftViewposition + value * 2;
@@ -574,7 +576,7 @@ var Suit = (function (_super) {
     };
     Suit.prototype.selectBasedOnStartingBar = function (isLeft) {
         if (isLeft === void 0) { isLeft = true; }
-        var _a = this, startingBar = _a.startingBar, endingBar = _a.endingBar, needScroll = _a.needScroll, width = _a.width, ctgconfig = _a.ctgconfig, data = _a.data, selectstart = _a.selectstart, baseViewposition = _a.leftViewposition, selectingBarPoint = _a.selectingBarPoint;
+        var _a = this, width = _a.width, ctgconfig = _a.ctgconfig, data = _a.data;
         var endPosition;
         if (isLeft) {
             if (this.selectingBarPoint < 1) {

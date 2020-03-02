@@ -107,7 +107,7 @@ export class Suit extends Draw {
     this.emit('startTime', value);
   }
   get leftViewposition() {
-    return this.viewposition >= this.width * 2 ? this.viewposition - this.width * 2 : 0;
+    return this.rightViewPosition >= this.width * 2 ? this.rightViewPosition - this.width * 2 : 0;
   }
   get selectingBarPoint() {
     return ~~(this.leftViewposition + this.selectingBar.getLeft() * 2);
@@ -117,6 +117,8 @@ export class Suit extends Draw {
   }
   set rightViewPosition(value: number) {
     this.viewposition = value;
+    this.emit('change:selectPoint', this.selectingBarPoint)
+
     this.updateBarTool();
     this.drawobj.drawdot(this.viewposition);
   }
@@ -360,6 +362,9 @@ export class Suit extends Draw {
     startingBar.toggleVisibility();
     selectingBar.on('change:x', value => {
       this.drawobj.showcur(this.selectingBarPoint, false);
+      this.emit('change:selectPoint', this.selectingBarPoint)
+      
+
     });
     startingBar.on('change:x', value => {
       // this.selectrpstart = value * 2;
@@ -638,15 +643,15 @@ export class Suit extends Draw {
   }
   selectBasedOnStartingBar(isLeft = true) {
     const {
-      startingBar,
-      endingBar,
-      needScroll,
+      // startingBar,
+      // endingBar,
+      // needScroll,
       width,
       ctgconfig,
       data,
-      selectstart,
-      leftViewposition: baseViewposition,
-      selectingBarPoint,
+      // selectstart,
+      // leftViewposition: baseViewposition,
+      // selectingBarPoint,
     } = this;
     let endPosition;
     if (isLeft) {

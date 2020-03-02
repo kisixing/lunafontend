@@ -11,6 +11,7 @@ const intervals = [20, 40]
 
 const ScoringMethod = (props: IProps) => {
   const { docid, v, ctgData, fetal, setFetal, ...others } = props;
+  
   const [form] = Form.useForm()
   const [disabled, setDisabled] = useState(true)
 
@@ -145,7 +146,7 @@ const ScoringMethod = (props: IProps) => {
 interface IProps {
   ctgData: any;
   docid: string,
-  v: { suit: Suit }
+  v: Suit
   [x: string]: any
 }
 export default ScoringMethod

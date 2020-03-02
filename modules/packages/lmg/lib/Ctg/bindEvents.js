@@ -46,7 +46,7 @@ function default_1() {
         _this.$selectrpstart = 0;
     })
         .on('selectForward', function () {
-        var _a = _this, selectrpstart = _a.selectrpstart, baseViewposition = _a.leftViewposition, ctgconfig = _a.ctgconfig, selectingBar = _a.selectingBar;
+        var selectingBar = _this.selectingBar;
         var hasMoved = selectingBar.hasMoved;
         console.log('hasMoved', hasMoved);
         _this.selectBasedOnStartingBar(false);
@@ -54,7 +54,7 @@ function default_1() {
         _this.drawobj.showselect();
     })
         .on('selectBackward', function () {
-        var _a = _this, selectrpstart = _a.selectrpstart, baseViewposition = _a.leftViewposition, ctgconfig = _a.ctgconfig, selectingBar = _a.selectingBar;
+        var selectingBar = _this.selectingBar;
         var hasMoved = selectingBar.hasMoved;
         console.log('hasMoved', hasMoved);
         _this.selectBasedOnStartingBar();

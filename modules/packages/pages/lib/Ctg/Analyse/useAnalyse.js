@@ -33,14 +33,14 @@ exports.default = (function (v, docid, fetal, form, cb) {
         Nst_ref: Nst_ref
     };
     react_1.useEffect(function () {
+        console.log('zzzz', v);
         var s = function (time) {
+            console.log('zzz', time);
             setStartTime(time);
         };
-        v.suit && v.suit
-            .on('startTime', s);
+        v && v.on('change:selectPoint', s);
         return function () {
-            v.suit && v.suit
-                .off('startTime', s);
+            v && v.off('change:selectPoint', s);
         };
     }, [interval, v]);
     react_1.useEffect(function () { setMarkAndItems(MARKS[0]); }, []);
@@ -59,7 +59,7 @@ exports.default = (function (v, docid, fetal, form, cb) {
         }, 400);
     }, [fetalKey]);
     var analyse = function () {
-        v.suit && v.suit.data && request_1.default.post("/ctg-exams-analyse", {
+        v && request_1.default.post("/ctg-exams-analyse", {
             data: { docid: docid, mark: mark, start: startTime, end: startTime + interval * 240, fetal: fetal }
         }).then(function (r) {
             var f = r.score.fischerdata;

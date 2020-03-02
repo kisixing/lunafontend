@@ -4,24 +4,14 @@ export interface _ctg_exams_analyse {
         "bhr": number,
         "ltv": number,
         "stv": number,
-        "acc": [
-            {
-                "index": number,
-                "start": number,
-                "end": number,
-                "peak": number,
-                "duration": number,
-                "ampl": number
-            },
-            {
-                "index": number,
-                "start": number,
-                "end": number,
-                "peak": number,
-                "duration": number,
-                "ampl": number
-            }
-        ],
+        "acc": {
+            "index": number;
+            "start": number;
+            "end": number;
+            "peak": number;
+            "duration": number;
+            "ampl": number;
+        }[],
         "dec": [
         ],
         "fm": null,

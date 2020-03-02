@@ -36,7 +36,6 @@ var PreviewContent = function (props) {
         setNumPages(numPages);
     }, []);
     var onChangePage = react_1.useCallback(function (page) { setPageNumber(page); }, []);
-    var _h = react_1.useState(true), f = _h[0], setF = _h[1];
     var largen = function () {
         setFullpage(true);
         setHeight(h - 24);

@@ -64,12 +64,12 @@ export default function (this: Suit) {
         .on('showLine', () => {
             this.createLine()
         })
-        .on('selectAll',()=>{
+        .on('selectAll', () => {
             this.$selectrpend = this.data.index - 2
             this.$selectrpstart = 0
         })
         .on('selectForward', () => {
-            const { selectrpstart, leftViewposition: baseViewposition, ctgconfig, selectingBar } = this
+            const { selectingBar } = this
             const hasMoved = selectingBar.hasMoved
             console.log('hasMoved', hasMoved)
             // if (selectrpstart - baseViewposition < ctgconfig.print_interval * 240) {
@@ -83,7 +83,7 @@ export default function (this: Suit) {
 
         })
         .on('selectBackward', () => {
-            const { selectrpstart, leftViewposition: baseViewposition, ctgconfig, selectingBar } = this
+            const { selectingBar } = this
             const hasMoved = selectingBar.hasMoved
             console.log('hasMoved', hasMoved)
             // if (selectrpstart - baseViewposition < ctgconfig.print_interval * 240) {
