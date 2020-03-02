@@ -1,46 +1,56 @@
 import React, { useState, useEffect } from 'react';
-import { Radio, Form, Button, Select } from 'antd';
+import { Radio, Button, Select } from 'antd';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
-import useAnalyse from './useAnalyse'
-import Fisher from "./methods/Fisher";
-import Kerbs from "./methods/Kerbs";
+import Fischer from "./methods/Fischer";
+import Krebs from "./methods/Krebs";
 import Nst from "./methods/Nst";
 
 import { event } from '@lianmed/utils';
 const intervals = [20, 40]
+interface IProps {
+  ctgData: any;
+  docid: string,
+  v: Suit
+  responseData: any
+  MARKS: any
+  analyse: any
+  startTime: any
+  mark, setMark: any
+  interval, setInterval: any
+  modifyData: any
+  Fischer_ref: any
+  Nst_ref: any
+  Krebs_ref: any
+  [x: string]: any
+}
 
 const ScoringMethod = (props: IProps) => {
   const { docid, v, ctgData, fetal, setFetal, ...others } = props;
-  
-  const [form] = Form.useForm()
+
   const [disabled, setDisabled] = useState(true)
 
   const {
     responseData,
-    // activeItem,
     MARKS,
     analyse,
     startTime,
     mark, setMark,
     interval, setInterval,
     modifyData,
-    Fisher_ref,
+    Fischer_ref,
     Nst_ref,
-    Kerbs_ref
-  } = useAnalyse(v, docid, fetal, form, (_result) => {
-    form.setFieldsValue(_result)
-  })
+    Krebs_ref
+  } = props
+
   const onChange = e => {
     const mark = e.target.value
     modifyData()
 
     setDisabled(true)
-    form.resetFields()
     setMark(mark)
   };
 
 
-  const formScores = form.getFieldsValue()
 
   useEffect(() => {
 
@@ -52,7 +62,7 @@ const ScoringMethod = (props: IProps) => {
     return () => {
       event.off('analysis:result', cb)
     };
-  }, [responseData, formScores])
+  }, [responseData])
 
 
   const IntervalRadio = () => {
@@ -125,8 +135,8 @@ const ScoringMethod = (props: IProps) => {
 
         </Form> */}
 
-        <Fisher name={mark} ref={Fisher_ref} />
-        <Kerbs name={mark} ref={Kerbs_ref} />
+        <Fischer name={mark} ref={Fischer_ref} />
+        <Krebs name={mark} ref={Krebs_ref} />
         <Nst name={mark} ref={Nst_ref} />
         <div style={{ marginTop: 5 }}>
           <Button size="small" style={{ marginBottom: 10 }} type="primary" onClick={analyse}>分析</Button>
@@ -143,10 +153,5 @@ const ScoringMethod = (props: IProps) => {
     </div>
   );
 }
-interface IProps {
-  ctgData: any;
-  docid: string,
-  v: Suit
-  [x: string]: any
-}
+
 export default ScoringMethod

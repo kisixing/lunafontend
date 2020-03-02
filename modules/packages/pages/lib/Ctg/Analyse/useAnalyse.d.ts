@@ -2,7 +2,7 @@ import { MutableRefObject } from 'react';
 import { Rule } from 'rc-field-form/lib/interface';
 import { FormInstance } from 'antd/lib/form';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
-declare const _default: (v: Suit, docid: any, fetal: any, form: FormInstance, cb: (result: IResult) => void) => {
+declare const _default: (v: Suit, docid: any, fetal: any) => {
     setMark: (mark: string) => void;
     mark: string;
     activeItem: IItem[];
@@ -16,9 +16,10 @@ declare const _default: (v: Suit, docid: any, fetal: any, form: FormInstance, cb
     interval: number;
     setInterval: import("react").Dispatch<import("react").SetStateAction<number>>;
     modifyData: () => void;
-    Fisher_ref: MutableRefObject<FormInstance>;
+    Fischer_ref: MutableRefObject<FormInstance>;
     Nst_ref: MutableRefObject<FormInstance>;
-    Kerbs_ref: MutableRefObject<FormInstance>;
+    Krebs_ref: MutableRefObject<FormInstance>;
+    analysis_ref: MutableRefObject<FormInstance>;
 };
 export default _default;
 interface IResponseData {

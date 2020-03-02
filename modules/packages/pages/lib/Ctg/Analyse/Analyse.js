@@ -32,8 +32,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importStar(require("react"));
 var antd_1 = require("antd");
 var utils_1 = require("@lianmed/utils");
-var Setting = function (props) {
-    var others = __rest(props, []);
+var Setting = react_1.forwardRef(function (props, ref) {
+    var analysis_ref = props.analysis_ref, others = __rest(props, ["analysis_ref"]);
     var form = antd_1.Form.useForm()[0];
     react_1.useEffect(function () {
         var formData = form.getFieldsValue();
@@ -47,51 +47,51 @@ var Setting = function (props) {
     }, [form]);
     return (react_1.default.createElement("div", __assign({}, others),
         react_1.default.createElement("div", null,
-            react_1.default.createElement(antd_1.Form, { size: "small", style: { padding: '12px 24px' }, form: form, labelCol: { xs: 8 }, wrapperCol: { xs: 16 }, labelAlign: "left" },
+            react_1.default.createElement(antd_1.Form, { ref: ref, size: "small", style: { padding: '12px 24px' }, form: form, labelCol: { xs: 8 }, wrapperCol: { xs: 16 }, labelAlign: "left" },
                 react_1.default.createElement(antd_1.Divider, null, "\u5BAB\u7F29 "),
                 react_1.default.createElement(antd_1.Row, null,
                     react_1.default.createElement(antd_1.Col, { span: 6 },
-                        react_1.default.createElement(antd_1.Form.Item, { label: "\u5BAB\u7F29\u6B21\u6570", style: { marginBottom: 0 }, key: "g0" },
+                        react_1.default.createElement(antd_1.Form.Item, { label: "\u5BAB\u7F29\u6B21\u6570", style: { marginBottom: 0 }, name: "uctimes" },
                             react_1.default.createElement(antd_1.InputNumber, null))),
                     react_1.default.createElement(antd_1.Col, { span: 6 },
-                        react_1.default.createElement(antd_1.Form.Item, { label: "\u5BAB\u7F29\u5F3A\u5EA6", style: { marginBottom: 0 }, key: "g1" },
+                        react_1.default.createElement(antd_1.Form.Item, { label: "\u5BAB\u7F29\u5F3A\u5EA6", style: { marginBottom: 0 }, name: "ucStrong" },
                             react_1.default.createElement(antd_1.InputNumber, null))),
                     react_1.default.createElement(antd_1.Col, { span: 6 },
-                        react_1.default.createElement(antd_1.Form.Item, { label: "\u95F4\u9694\u65F6\u95F4", style: { marginBottom: 0 }, key: "g2" },
+                        react_1.default.createElement(antd_1.Form.Item, { label: "\u95F4\u9694\u65F6\u95F4", style: { marginBottom: 0 }, name: "uckeeptime" },
                             react_1.default.createElement(antd_1.InputNumber, null))),
                     react_1.default.createElement(antd_1.Col, { span: 6 },
-                        react_1.default.createElement(antd_1.Form.Item, { label: "\u6301\u6301\u7EED\u65F6\u95F4", style: { marginBottom: 0 }, key: "g3" },
+                        react_1.default.createElement(antd_1.Form.Item, { label: "\u6301\u6301\u7EED\u65F6\u95F4", style: { marginBottom: 0 }, name: "ucdurationtime" },
                             react_1.default.createElement(antd_1.InputNumber, null)))),
                 react_1.default.createElement(antd_1.Divider, null, "\u80CE\u5FC3\u7387"),
                 react_1.default.createElement(antd_1.Row, null,
                     react_1.default.createElement(antd_1.Col, { span: 6 },
-                        react_1.default.createElement(antd_1.Form.Item, { label: "\u77ED\u53D8\u5F02", style: { marginBottom: 0 }, key: "t0" },
+                        react_1.default.createElement(antd_1.Form.Item, { label: "\u77ED\u53D8\u5F02", style: { marginBottom: 0 }, name: "t0" },
                             react_1.default.createElement(antd_1.InputNumber, null)))),
                 react_1.default.createElement(antd_1.Divider, null, "\u51CF\u901F"),
                 react_1.default.createElement(antd_1.Row, null,
                     react_1.default.createElement(antd_1.Col, { span: 6 },
-                        react_1.default.createElement(antd_1.Form.Item, { label: "\u65E9\u51CF", style: { marginBottom: 0 }, key: "j0" },
+                        react_1.default.createElement(antd_1.Form.Item, { label: "\u65E9\u51CF", style: { marginBottom: 0 }, name: "j0" },
                             react_1.default.createElement(antd_1.InputNumber, null))),
                     react_1.default.createElement(antd_1.Col, { span: 6 },
-                        react_1.default.createElement(antd_1.Form.Item, { label: "\u665A\u51CF", style: { marginBottom: 0 }, key: "j0" },
+                        react_1.default.createElement(antd_1.Form.Item, { label: "\u665A\u51CF", style: { marginBottom: 0 }, name: "j0" },
                             react_1.default.createElement(antd_1.InputNumber, null))),
                     react_1.default.createElement(antd_1.Col, { span: 6 },
-                        react_1.default.createElement(antd_1.Form.Item, { label: "\u53D8\u5F02\u51CF\u901F", style: { marginBottom: 0 }, key: "j0" },
+                        react_1.default.createElement(antd_1.Form.Item, { label: "\u53D8\u5F02\u51CF\u901F", style: { marginBottom: 0 }, name: "j0" },
                             react_1.default.createElement(antd_1.InputNumber, null)))),
-                react_1.default.createElement(antd_1.Form.Item, { label: "CST/OCT", style: { marginBottom: 0 }, required: true, key: 'info1' },
+                react_1.default.createElement(antd_1.Form.Item, { label: "CST/OCT", style: { marginBottom: 0 }, required: true, name: 'info1' },
                     react_1.default.createElement(antd_1.Radio.Group, null,
                         react_1.default.createElement(antd_1.Radio, { value: 1 }, "\u9634\u6027"),
                         react_1.default.createElement(antd_1.Radio, { value: 2 }, "\u9633\u6027"),
                         react_1.default.createElement(antd_1.Radio, { value: 3 }, "\u53EF\u4EE5"),
                         react_1.default.createElement(antd_1.Radio, { value: 4 }, "\u4E0D\u6EE1\u610F"))),
-                react_1.default.createElement(antd_1.Form.Item, { label: "\u77ED\u53D8\u5F02\uFF08\u6BEB\u79D2\uFF09", style: { marginBottom: 0 }, key: "info2", required: true },
+                react_1.default.createElement(antd_1.Form.Item, { label: "\u77ED\u53D8\u5F02\uFF08\u6BEB\u79D2\uFF09", style: { marginBottom: 0 }, name: "info2", required: true },
                     react_1.default.createElement(antd_1.Radio.Group, null,
                         react_1.default.createElement(antd_1.Radio, { value: 1 }, "\u5E73\u6ED1"),
                         react_1.default.createElement(antd_1.Radio, { value: 2 }, "\u5C0F\u6CE2\u6D6A"),
                         react_1.default.createElement(antd_1.Radio, { value: 3 }, "\u4E2D\u6CE2\u6D6A"),
                         react_1.default.createElement(antd_1.Radio, { value: 4 }, "\u5927\u6CE2\u6D6A"),
                         react_1.default.createElement(antd_1.Radio, { value: 5 }, "\u6B63\u5F26\u578B"))),
-                react_1.default.createElement(antd_1.Form.Item, { label: '\u8BCA\u65AD', style: { marginBottom: 0 }, key: "diagnosis" },
+                react_1.default.createElement(antd_1.Form.Item, { label: '\u8BCA\u65AD', style: { marginBottom: 0 }, name: "diagnosis" },
                     react_1.default.createElement(antd_1.Input.TextArea, { style: { maxWidth: 400 } }))))));
-};
+});
 exports.default = (Setting);

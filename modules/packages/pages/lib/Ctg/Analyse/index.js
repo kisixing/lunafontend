@@ -29,6 +29,7 @@ var utils_1 = require("@lianmed/utils");
 var request_1 = __importDefault(require("@lianmed/request"));
 var useCtgData_1 = __importDefault(require("./useCtgData"));
 var lmg_1 = require("@lianmed/lmg");
+var useAnalyse_1 = __importDefault(require("./useAnalyse"));
 require("antd/dist/antd.css");
 exports.Context = react_1.default.createContext({});
 var border = { border: '1px solid #ddd' };
@@ -46,20 +47,29 @@ function Analysis(_a) {
         });
         request_1.default.put("/ctg-exams-note", { data: data });
     };
-    react_1.useEffect(function () {
-        console.log('docid', docid, ctgData);
-    }, [docid, ctgData]);
     var ref = react_1.useRef(null);
-    return (react_1.default.createElement(exports.Context.Provider, { value: ref },
-        react_1.default.createElement("div", { style: { height: '100%' } },
-            react_1.default.createElement("div", { style: { height: "calc(100% - 420px - 24px)", padding: 24, marginBottom: 24, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px' } },
-                react_1.default.createElement(lmg_1.Ctg, { ref: ref, loading: loading, data: ctgData })),
-            react_1.default.createElement("div", { style: { height: 420 } },
-                react_1.default.createElement(antd_1.Row, { gutter: 24, style: { height: '100%' } },
-                    react_1.default.createElement(antd_1.Col, { span: 12, style: { height: '100%' } },
-                        react_1.default.createElement(Score_1.default, { fetal: fetal, setFetal: setFetal, ctgData: ctgData, docid: docid, v: ref.current, style: __assign(__assign({}, border), { height: '100%', background: '#fff' }) })),
-                    react_1.default.createElement(antd_1.Col, { span: 12, style: { height: '100%' } },
-                        react_1.default.createElement(Analyse_1.default, { fetal: fetal, style: __assign(__assign({}, border), { height: '100%', background: '#fff' }) }),
-                        react_1.default.createElement(antd_1.Button, { size: "small", style: { position: 'absolute', right: 24, bottom: 16 }, type: "primary", onClick: submit }, "\u4FDD\u5B58")))))));
+    var _e = useAnalyse_1.default(ref.current, docid, fetal), responseData = _e.responseData, MARKS = _e.MARKS, analyse = _e.analyse, startTime = _e.startTime, mark = _e.mark, setMark = _e.setMark, interval = _e.interval, setInterval = _e.setInterval, modifyData = _e.modifyData, Fischer_ref = _e.Fischer_ref, Nst_ref = _e.Nst_ref, Krebs_ref = _e.Krebs_ref, analysis_ref = _e.analysis_ref;
+    var d = {
+        responseData: responseData,
+        MARKS: MARKS,
+        analyse: analyse,
+        startTime: startTime,
+        mark: mark, setMark: setMark,
+        interval: interval, setInterval: setInterval,
+        modifyData: modifyData,
+        Fischer_ref: Fischer_ref,
+        Nst_ref: Nst_ref,
+        Krebs_ref: Krebs_ref
+    };
+    return (react_1.default.createElement("div", { style: { height: '100%' } },
+        react_1.default.createElement("div", { style: { height: "calc(100% - 420px - 24px)", padding: 24, marginBottom: 24, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px' } },
+            react_1.default.createElement(lmg_1.Ctg, { ref: ref, loading: loading, data: ctgData })),
+        react_1.default.createElement("div", { style: { height: 420 } },
+            react_1.default.createElement(antd_1.Row, { gutter: 24, style: { height: '100%' } },
+                react_1.default.createElement(antd_1.Col, { span: 12, style: { height: '100%' } },
+                    react_1.default.createElement(Score_1.default, __assign({}, d, { fetal: fetal, setFetal: setFetal, ctgData: ctgData, docid: docid, v: ref.current, style: __assign(__assign({}, border), { height: '100%', background: '#fff' }) }))),
+                react_1.default.createElement(antd_1.Col, { span: 12, style: { height: '100%' } },
+                    react_1.default.createElement(Analyse_1.default, { ref: analysis_ref, fetal: fetal, style: __assign(__assign({}, border), { height: '100%', background: '#fff' }) }),
+                    react_1.default.createElement(antd_1.Button, { size: "small", style: { position: 'absolute', right: 24, bottom: 16 }, type: "primary", onClick: submit }, "\u4FDD\u5B58"))))));
 }
 exports.default = Analysis;

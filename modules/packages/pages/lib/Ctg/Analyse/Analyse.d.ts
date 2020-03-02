@@ -1,5 +1,5 @@
-/// <reference types="react" />
-declare const _default: (props: {
+import React from 'react';
+declare const _default: React.ForwardRefExoticComponent<Pick<{
     [x: string]: any;
-}) => JSX.Element;
+}, React.ReactText> & React.RefAttributes<any>>;
 export default _default;

@@ -11,14 +11,14 @@ const dataSource = [
         0: '',
         1: '',
         2: '',
-        key: 'fhrbaseline',
+        key: 'bhr',
     },
     {
         name: '振幅变异',
         0: '',
         1: '',
         2: '',
-        key: 'zhenfu_lv',
+        key: 'ltv',
 
     },
     {
@@ -26,7 +26,7 @@ const dataSource = [
         0: '',
         1: '',
         2: '',
-        key: 'zhouqi_lv',
+        key: 'stv',
 
     },
     {
@@ -48,7 +48,7 @@ const dataSource = [
         0: '',
         1: '',
         2: '',
-        key: 'movement',
+        key: 'fm',
     },
 ]
 

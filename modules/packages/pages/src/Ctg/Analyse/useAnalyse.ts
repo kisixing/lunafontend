@@ -8,7 +8,7 @@ import { obvuew } from "@lianmed/f_types";
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 
 
-export default (v: Suit, docid, fetal: any, form: FormInstance, cb: (result: IResult) => void) => {
+export default (v: Suit, docid, fetal: any) => {
     const resultData = useMemo<{ [x: string]: IResponseData }>(() => { return {} }, [])
 
     const [mark, setMark] = useState(MARKS[0])
@@ -16,15 +16,17 @@ export default (v: Suit, docid, fetal: any, form: FormInstance, cb: (result: IRe
     const [interval, setInterval] = useState(20)
     const [startTime, setStartTime] = useState(0)
 
-    const Fisher_ref = useRef<FormInstance>(null)
-    const Kerbs_ref = useRef<FormInstance>(null)
+    const Fischer_ref = useRef<FormInstance>(null)
+    const Krebs_ref = useRef<FormInstance>(null)
     const Nst_ref = useRef<FormInstance>(null)
+    const analysis_ref = useRef<FormInstance>(null)
 
     const fetalKey = `fhr${fetal}`
     const mapFormToMark = {
-        Fisher_ref,
-        Kerbs_ref,
-        Nst_ref
+        Fischer_ref,
+        Krebs_ref,
+        Nst_ref,
+        analysis_ref
     }
     useEffect(() => {
         console.log('zzzz',v)
@@ -51,18 +53,20 @@ export default (v: Suit, docid, fetal: any, form: FormInstance, cb: (result: IRe
         const keys = mapItemsToMarks[defaultMark]
         const value = resultData[fetalKey] = resultData[fetalKey] || { result: JSON.stringify(_R.zipObj(keys, keys.map(() => null))), mark: defaultMark }
         setMark(value.mark)
-        setTimeout(() => {
-            form.setFieldsValue(JSON.parse(value.result))
-        }, 400)
+
     }, [fetalKey])
     const analyse = () => {
         v  && request.post(`/ctg-exams-analyse`, {
             data: { docid, mark, start: startTime, end: startTime + interval * 240, fetal }
         }).then((r: obvuew.ctg_exams_analyse) => {
 
-            const f = r.score.fischerdata
+            const f = r.score[`${mark.toLowerCase()}data`]
             const cur: MutableRefObject<FormInstance> = mapFormToMark[`${mark}_ref`]
-            cur.current.setFieldsValue(f)
+            cur &&  cur.current.setFieldsValue(f)
+
+     
+            const ucdata = r.analysis.ucdata
+            analysis_ref.current.setFieldsValue({...ucdata})
         })
     }
 
@@ -71,16 +75,17 @@ export default (v: Suit, docid, fetal: any, form: FormInstance, cb: (result: IRe
 
     }
     const modifyData = () => {
-        resultData[fetalKey] = { ...resultData[fetalKey], result: JSON.stringify(form.getFieldsValue()) }
+        resultData[fetalKey] = { ...resultData[fetalKey], result: JSON.stringify({}) }
     }
 
     return {
         setMark: setMarkAndItems, mark,
         activeItem, responseData: resultData,
         MARKS, analyse, startTime, setStartTime, interval, setInterval, modifyData,
-        Fisher_ref,
+        Fischer_ref,
         Nst_ref,
-        Kerbs_ref
+        Krebs_ref,
+        analysis_ref
     }
 }
 

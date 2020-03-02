@@ -34,27 +34,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importStar(require("react"));
 var antd_1 = require("antd");
-var useAnalyse_1 = __importDefault(require("./useAnalyse"));
-var Fisher_1 = __importDefault(require("./methods/Fisher"));
-var Kerbs_1 = __importDefault(require("./methods/Kerbs"));
+var Fischer_1 = __importDefault(require("./methods/Fischer"));
+var Krebs_1 = __importDefault(require("./methods/Krebs"));
 var Nst_1 = __importDefault(require("./methods/Nst"));
 var utils_1 = require("@lianmed/utils");
 var intervals = [20, 40];
 var ScoringMethod = function (props) {
     var docid = props.docid, v = props.v, ctgData = props.ctgData, fetal = props.fetal, setFetal = props.setFetal, others = __rest(props, ["docid", "v", "ctgData", "fetal", "setFetal"]);
-    var form = antd_1.Form.useForm()[0];
     var _a = react_1.useState(true), disabled = _a[0], setDisabled = _a[1];
-    var _b = useAnalyse_1.default(v, docid, fetal, form, function (_result) {
-        form.setFieldsValue(_result);
-    }), responseData = _b.responseData, MARKS = _b.MARKS, analyse = _b.analyse, startTime = _b.startTime, mark = _b.mark, setMark = _b.setMark, interval = _b.interval, setInterval = _b.setInterval, modifyData = _b.modifyData, Fisher_ref = _b.Fisher_ref, Nst_ref = _b.Nst_ref, Kerbs_ref = _b.Kerbs_ref;
+    var responseData = props.responseData, MARKS = props.MARKS, analyse = props.analyse, startTime = props.startTime, mark = props.mark, setMark = props.setMark, interval = props.interval, setInterval = props.setInterval, modifyData = props.modifyData, Fischer_ref = props.Fischer_ref, Nst_ref = props.Nst_ref, Krebs_ref = props.Krebs_ref;
     var onChange = function (e) {
         var mark = e.target.value;
         modifyData();
         setDisabled(true);
-        form.resetFields();
         setMark(mark);
     };
-    var formScores = form.getFieldsValue();
     react_1.useEffect(function () {
         var cb = function (fn) {
             fn(JSON.stringify(responseData));
@@ -63,7 +57,7 @@ var ScoringMethod = function (props) {
         return function () {
             utils_1.event.off('analysis:result', cb);
         };
-    }, [responseData, formScores]);
+    }, [responseData]);
     var IntervalRadio = function () {
         return (react_1.default.createElement("span", { style: { marginRight: 10 } },
             " \u65F6\u957F\uFF1A",
@@ -100,8 +94,8 @@ var ScoringMethod = function (props) {
             react_1.default.createElement(antd_1.Radio.Group, { onChange: onChange, value: mark, style: { marginBottom: 5 } }, MARKS.map(function (_) { return (react_1.default.createElement(antd_1.Radio, { value: _, key: _ },
                 _,
                 "\u5206\u6790\u6CD5")); })),
-            react_1.default.createElement(Fisher_1.default, { name: mark, ref: Fisher_ref }),
-            react_1.default.createElement(Kerbs_1.default, { name: mark, ref: Kerbs_ref }),
+            react_1.default.createElement(Fischer_1.default, { name: mark, ref: Fischer_ref }),
+            react_1.default.createElement(Krebs_1.default, { name: mark, ref: Krebs_ref }),
             react_1.default.createElement(Nst_1.default, { name: mark, ref: Nst_ref }),
             react_1.default.createElement("div", { style: { marginTop: 5 } },
                 react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, type: "primary", onClick: analyse }, "\u5206\u6790"),

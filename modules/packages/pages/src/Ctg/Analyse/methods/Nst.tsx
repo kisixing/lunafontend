@@ -3,11 +3,6 @@ import { Table, Form,  InputNumber } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 
 
-// 'fhrbaseline_score',
-// 'zhenfu_lv_score',
-// 'zhouqi_lv_score',
-// 'acc_score',
-// 'dec_score',
 
 
 
@@ -17,14 +12,14 @@ const dataSource = [
         0: '',
         1: '',
         2: '',
-        key: 'fhrbaseline',
+        key: 'bhr',
     },
     {
         name: '振幅变异',
         0: '',
         1: '',
         2: '',
-        key: 'zhenfu_lv',
+        key: 'ltv',
 
     },
     {
@@ -32,7 +27,7 @@ const dataSource = [
         0: '',
         1: '',
         2: '',
-        key: 'fhr_uptime',
+        key: 'accduration',
 
     },
     {
@@ -40,7 +35,7 @@ const dataSource = [
         0: '',
         1: '',
         2: '',
-        key: 'fm_fhrv',
+        key: 'accampl',
     },
     {
         name: '胎动次数',

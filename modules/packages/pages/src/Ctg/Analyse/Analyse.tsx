@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,forwardRef } from 'react';
 import { Form, Radio, Input, Divider, InputNumber, Row, Col } from 'antd';
 import { event } from '@lianmed/utils';
 
-const Setting = (props: { [x: string]: any }) => {
+const Setting = forwardRef<FormInstance,{ [x: string]: any }>((props,ref) => {
 
-  const { ...others } = props;
+  const { analysis_ref,...others } = props;
   const [form] = Form.useForm()
 
   useEffect(() => {
@@ -22,31 +22,31 @@ const Setting = (props: { [x: string]: any }) => {
   }, [form])
   return (
     <div {...others}>
-      <div >
+      <div >  
 
         {/* <div style={{ padding: '12px 24px', background: '#ddd' }}>
           <span> &nbsp;</span>
         </div> */}
-        <Form size="small" style={{ padding: '12px 24px' }} form={form} labelCol={{ xs: 8 }} wrapperCol={{ xs: 16 }} labelAlign="left">
+        <Form ref={ref} size="small" style={{ padding: '12px 24px' }} form={form} labelCol={{ xs: 8 }} wrapperCol={{ xs: 16 }} labelAlign="left">
           <Divider >宫缩 </Divider>
           <Row>
             <Col span={6}>
-              <Form.Item label="宫缩次数" style={{ marginBottom: 0 }} key="g0">
+              <Form.Item label="宫缩次数" style={{ marginBottom: 0 }} name="uctimes">
                 <InputNumber />
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label="宫缩强度" style={{ marginBottom: 0 }} key="g1">
+              <Form.Item label="宫缩强度" style={{ marginBottom: 0 }} name="ucStrong">
                 <InputNumber />
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label="间隔时间" style={{ marginBottom: 0 }} key="g2">
+              <Form.Item label="间隔时间" style={{ marginBottom: 0 }} name="uckeeptime">
                 <InputNumber />
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label="持持续时间" style={{ marginBottom: 0 }} key="g3">
+              <Form.Item label="持持续时间" style={{ marginBottom: 0 }} name="ucdurationtime">
                 <InputNumber />
               </Form.Item>
             </Col>
@@ -58,7 +58,7 @@ const Setting = (props: { [x: string]: any }) => {
           <Divider >胎心率</Divider>
           <Row>
             <Col span={6}>
-              <Form.Item label="短变异" style={{ marginBottom: 0 }} key="t0">
+              <Form.Item label="短变异" style={{ marginBottom: 0 }} name="t0">
 
                 <InputNumber />
 
@@ -69,24 +69,24 @@ const Setting = (props: { [x: string]: any }) => {
 
           <Row>
             <Col span={6}>
-              <Form.Item label="早减" style={{ marginBottom: 0 }} key="j0">
+              <Form.Item label="早减" style={{ marginBottom: 0 }} name="j0">
                 <InputNumber />
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label="晚减" style={{ marginBottom: 0 }} key="j0">
+              <Form.Item label="晚减" style={{ marginBottom: 0 }} name="j0">
                 <InputNumber />
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label="变异减速" style={{ marginBottom: 0 }} key="j0">
+              <Form.Item label="变异减速" style={{ marginBottom: 0 }} name="j0">
                 <InputNumber />
               </Form.Item>
             </Col>
           </Row>
 
 
-          <Form.Item label="CST/OCT" style={{ marginBottom: 0 }} required key='info1'>
+          <Form.Item label="CST/OCT" style={{ marginBottom: 0 }} required name='info1'>
 
             <Radio.Group>
               <Radio value={1}>阴性</Radio>
@@ -95,7 +95,7 @@ const Setting = (props: { [x: string]: any }) => {
               <Radio value={4}>不满意</Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item label="短变异（毫秒）" style={{ marginBottom: 0 }} key="info2" required>
+          <Form.Item label="短变异（毫秒）" style={{ marginBottom: 0 }} name="info2" required>
 
             <Radio.Group>
               <Radio value={1}>平滑</Radio>
@@ -105,13 +105,13 @@ const Setting = (props: { [x: string]: any }) => {
               <Radio value={5}>正弦型</Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item label='诊断' style={{ marginBottom: 0 }} key="diagnosis" >
+          <Form.Item label='诊断' style={{ marginBottom: 0 }} name="diagnosis" >
             <Input.TextArea style={{ maxWidth: 400 }} />
           </Form.Item>
         </Form>
       </div>
     </div>
   );
-}
+})
 
 export default (Setting)

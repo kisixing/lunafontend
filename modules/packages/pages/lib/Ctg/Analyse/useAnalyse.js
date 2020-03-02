@@ -17,20 +17,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = require("react");
 var request_1 = __importDefault(require("@lianmed/request"));
 var utils_1 = require("@lianmed/utils");
-exports.default = (function (v, docid, fetal, form, cb) {
+exports.default = (function (v, docid, fetal) {
     var resultData = react_1.useMemo(function () { return {}; }, []);
     var _a = react_1.useState(MARKS[0]), mark = _a[0], setMark = _a[1];
     var _b = react_1.useState([]), activeItem = _b[0], setActiveItem = _b[1];
     var _c = react_1.useState(20), interval = _c[0], setInterval = _c[1];
     var _d = react_1.useState(0), startTime = _d[0], setStartTime = _d[1];
-    var Fisher_ref = react_1.useRef(null);
-    var Kerbs_ref = react_1.useRef(null);
+    var Fischer_ref = react_1.useRef(null);
+    var Krebs_ref = react_1.useRef(null);
     var Nst_ref = react_1.useRef(null);
+    var analysis_ref = react_1.useRef(null);
     var fetalKey = "fhr" + fetal;
     var mapFormToMark = {
-        Fisher_ref: Fisher_ref,
-        Kerbs_ref: Kerbs_ref,
-        Nst_ref: Nst_ref
+        Fischer_ref: Fischer_ref,
+        Krebs_ref: Krebs_ref,
+        Nst_ref: Nst_ref,
+        analysis_ref: analysis_ref
     };
     react_1.useEffect(function () {
         console.log('zzzz', v);
@@ -54,32 +56,32 @@ exports.default = (function (v, docid, fetal, form, cb) {
         var keys = mapItemsToMarks[defaultMark];
         var value = resultData[fetalKey] = resultData[fetalKey] || { result: JSON.stringify(utils_1._R.zipObj(keys, keys.map(function () { return null; }))), mark: defaultMark };
         setMark(value.mark);
-        setTimeout(function () {
-            form.setFieldsValue(JSON.parse(value.result));
-        }, 400);
     }, [fetalKey]);
     var analyse = function () {
         v && request_1.default.post("/ctg-exams-analyse", {
             data: { docid: docid, mark: mark, start: startTime, end: startTime + interval * 240, fetal: fetal }
         }).then(function (r) {
-            var f = r.score.fischerdata;
+            var f = r.score[mark.toLowerCase() + "data"];
             var cur = mapFormToMark[mark + "_ref"];
-            cur.current.setFieldsValue(f);
+            cur && cur.current.setFieldsValue(f);
+            var ucdata = r.analysis.ucdata;
+            analysis_ref.current.setFieldsValue(__assign({}, ucdata));
         });
     };
     var setMarkAndItems = function (mark) {
         setMark(mark);
     };
     var modifyData = function () {
-        resultData[fetalKey] = __assign(__assign({}, resultData[fetalKey]), { result: JSON.stringify(form.getFieldsValue()) });
+        resultData[fetalKey] = __assign(__assign({}, resultData[fetalKey]), { result: JSON.stringify({}) });
     };
     return {
         setMark: setMarkAndItems, mark: mark,
         activeItem: activeItem, responseData: resultData,
         MARKS: MARKS, analyse: analyse, startTime: startTime, setStartTime: setStartTime, interval: interval, setInterval: setInterval, modifyData: modifyData,
-        Fisher_ref: Fisher_ref,
+        Fischer_ref: Fischer_ref,
         Nst_ref: Nst_ref,
-        Kerbs_ref: Kerbs_ref
+        Krebs_ref: Krebs_ref,
+        analysis_ref: analysis_ref
     };
 });
 var mapItemsToMarks = {
