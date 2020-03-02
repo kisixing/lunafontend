@@ -47,7 +47,7 @@ function Analysis({
             </Col>
             <Col span={12} style={{ height: '100%' }} >
               <Setting fetal={fetal} style={{ ...border, height: '100%', background: '#fff' }} />
-              <Button style={{ position: 'absolute', right: 24, bottom: 16 }} type="primary" onClick={submit}>保存</Button>
+              <Button size="small"  style={{ position: 'absolute', right: 24, bottom: 16 }} type="primary" onClick={submit}>保存</Button>
             </Col>
           </Row>
         </div>

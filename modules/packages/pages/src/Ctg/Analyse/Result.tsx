@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Radio, Form, Button,  Select } from 'antd';
+import { Radio, Form, Button, Select } from 'antd';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import useAnalyse from './useAnalyse'
 import Fisher from "./methods/Fisher";
@@ -98,14 +98,12 @@ const ScoringMethod = (props: IProps) => {
         <>
           <IntervalRadio />
           <FetalSelect />
-          <div style={{ marginTop: 10 }}>
-            <StartTime />
-            <EndTime />
-          </div>
+          <StartTime />
+          <EndTime />
         </>
       </div>
       <div style={{ padding: '10px 24px 0' }}>
-        <Radio.Group onChange={onChange} value={mark} style={{marginBottom:5}}>
+        <Radio.Group onChange={onChange} value={mark} style={{ marginBottom: 5 }}>
           {
             MARKS.map(_ => (
               <Radio value={_} key={_}>{_}分析法</Radio>
@@ -129,16 +127,16 @@ const ScoringMethod = (props: IProps) => {
         <Fisher name={mark} ref={Fisher_ref} />
         <Kerbs name={mark} ref={Kerbs_ref} />
         <Nst name={mark} ref={Nst_ref} />
-        <div style={{marginTop:5}}>
-          <Button style={{ marginBottom: 10 }} type="primary" onClick={analyse}>分析</Button>
-          <Button style={{ marginBottom: 10 }} onClick={() => {
+        <div style={{ marginTop: 5 }}>
+          <Button size="small" style={{ marginBottom: 10 }} type="primary" onClick={analyse}>分析</Button>
+          <Button size="small" style={{ marginBottom: 10 }} onClick={() => {
             const next = !disabled
             if (next) {
               modifyData()
             }
             setDisabled(next)
           }}>{disabled ? '修改' : '确认'}</Button>
-          <Button style={{ marginBottom: 10 }}>打印</Button>
+          <Button size="small" style={{ marginBottom: 10 }}>打印</Button>
         </div>
       </div>
     </div>

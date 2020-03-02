@@ -94,9 +94,8 @@ var ScoringMethod = function (props) {
             react_1.default.createElement(react_1.default.Fragment, null,
                 react_1.default.createElement(IntervalRadio, null),
                 react_1.default.createElement(FetalSelect, null),
-                react_1.default.createElement("div", { style: { marginTop: 10 } },
-                    react_1.default.createElement(StartTime, null),
-                    react_1.default.createElement(EndTime, null)))),
+                react_1.default.createElement(StartTime, null),
+                react_1.default.createElement(EndTime, null))),
         react_1.default.createElement("div", { style: { padding: '10px 24px 0' } },
             react_1.default.createElement(antd_1.Radio.Group, { onChange: onChange, value: mark, style: { marginBottom: 5 } }, MARKS.map(function (_) { return (react_1.default.createElement(antd_1.Radio, { value: _, key: _ },
                 _,
@@ -105,14 +104,14 @@ var ScoringMethod = function (props) {
             react_1.default.createElement(Kerbs_1.default, { name: mark, ref: Kerbs_ref }),
             react_1.default.createElement(Nst_1.default, { name: mark, ref: Nst_ref }),
             react_1.default.createElement("div", { style: { marginTop: 5 } },
-                react_1.default.createElement(antd_1.Button, { style: { marginBottom: 10 }, type: "primary", onClick: analyse }, "\u5206\u6790"),
-                react_1.default.createElement(antd_1.Button, { style: { marginBottom: 10 }, onClick: function () {
+                react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, type: "primary", onClick: analyse }, "\u5206\u6790"),
+                react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, onClick: function () {
                         var next = !disabled;
                         if (next) {
                             modifyData();
                         }
                         setDisabled(next);
                     } }, disabled ? '修改' : '确认'),
-                react_1.default.createElement(antd_1.Button, { style: { marginBottom: 10 } }, "\u6253\u5370")))));
+                react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 } }, "\u6253\u5370")))));
 };
 exports.default = ScoringMethod;

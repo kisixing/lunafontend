@@ -60,15 +60,13 @@ var PreviewContent = function (props) {
             setWidth(w);
         }
     }, [w, h]);
-    console.log('base111111111111', pdfBase64.length);
     var content = pdfBase64 ? (react_1.default.createElement("div", { style: __assign({ width: width }, (isFullpage ? {
             position: 'absolute',
             top: 0,
             left: 0,
             background: '#fff'
         } : {})) },
-        react_1.default.createElement(antd_1.Button, { onClick: function () { return setF(!f); } }, "1111"),
-        f && react_1.default.createElement(react_1.default.Fragment, null,
+        react_1.default.createElement(react_1.default.Fragment, null,
             react_1.default.createElement(react_pdf_1.Document, { ref: ref1, loading: react_1.default.createElement(antd_1.Spin, { style: { margin: '120px 0' } }), onLoadSuccess: onDocumentLoad, file: pdfBase64, renderMode: "canvas" },
                 react_1.default.createElement(react_pdf_1.Page, { pageNumber: pageNumber, scale: 1, height: height })),
             react_1.default.createElement(antd_1.Pagination, { ref: ref2, total: numPages, showTotal: function (total) { return "\u5171 " + total + " \u9875"; }, current: pageNumber, pageSize: 1, size: "small", onChange: onChangePage })),

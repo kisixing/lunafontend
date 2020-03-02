@@ -8,7 +8,7 @@ const { SubMenu } = Menu;
 
 export default class SiderDemo extends React.Component {
   state = {
-    collapsed: false,
+    collapsed: true,
   };
 
   toggle = () => {
@@ -34,12 +34,12 @@ export default class SiderDemo extends React.Component {
           >
             Demo
           </div>
-          <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
+          <Menu theme="dark" mode="inline" defaultSelectedKeys={['-1']}>
             <SubMenu
               key="sub1"
               title={
                 <span>
-                  <span>曲线组件</span>
+                  <span>组件</span>
                 </span>
               }
             >

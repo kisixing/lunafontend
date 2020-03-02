@@ -28,8 +28,8 @@ Suit.option = {
 }
 
 const setting = {
-  ws_url: "transfer.lian-med.com:8084",
-  xhr_url: "transfer.lian-med.com:9987",
+  ws_url: "192.168.123.10:8084",
+  xhr_url: "192.168.123.10:9987",
   alarm_high: "160",
   alarm_low: "110",
   alarm_on_window: "1",

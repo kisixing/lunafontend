@@ -7,7 +7,6 @@ import { Button, Spin } from 'antd';
 import moment from 'moment';
 import { Ctg as CTG } from '@lianmed/lmg';
 import request from '@lianmed/request';
-import { transformsCTG } from '../utils';
 
 
 // import ReportPreview from '../../archives-management/ReportPreview';

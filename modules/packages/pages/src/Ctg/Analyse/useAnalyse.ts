@@ -2,7 +2,7 @@
 import { useState, useEffect, useMemo, useRef, MutableRefObject } from 'react';
 import request from "@lianmed/request";
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
-import { event, _R } from "@lianmed/utils";
+import {  _R } from "@lianmed/utils";
 import { Rule } from 'rc-field-form/lib/interface';
 import { FormInstance } from 'antd/lib/form';
 import { obvuew } from "@lianmed/f_types";

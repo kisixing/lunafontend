@@ -62,6 +62,6 @@ function Analysis(_a) {
                         react_1.default.createElement(Result_1.default, { fetal: fetal, setFetal: setFetal, ctgData: ctgData, docid: docid, v: v, style: __assign(__assign({}, border), { height: '100%', background: '#fff' }) })),
                     react_1.default.createElement(antd_1.Col, { span: 12, style: { height: '100%' } },
                         react_1.default.createElement(Setting_1.default, { fetal: fetal, style: __assign(__assign({}, border), { height: '100%', background: '#fff' }) }),
-                        react_1.default.createElement(antd_1.Button, { style: { position: 'absolute', right: 24, bottom: 16 }, type: "primary", onClick: submit }, "\u4FDD\u5B58")))))));
+                        react_1.default.createElement(antd_1.Button, { size: "small", style: { position: 'absolute', right: 24, bottom: 16 }, type: "primary", onClick: submit }, "\u4FDD\u5B58")))))));
 }
 exports.default = Analysis;

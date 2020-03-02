@@ -55,7 +55,6 @@ const PreviewContent = props => {
             setWidth(w)
         }
     }, [w, h])
-    console.log('base111111111111',pdfBase64.length)
 
     const content = pdfBase64 ? (
         <div style={{
@@ -68,16 +67,15 @@ const PreviewContent = props => {
             } : {})
         }
         }>
-            <Button onClick={() => setF(!f)}>1111</Button>
             {
-             f &&   <>
+                <>
                     <Document
                         ref={ref1}
                         loading={<Spin style={{ margin: '120px 0' }} />}
                         onLoadSuccess={onDocumentLoad}
                         file={pdfBase64}
                         renderMode="canvas"
-             
+
                     >
                         <Page pageNumber={pageNumber} scale={1} height={height} />
                     </Document>
