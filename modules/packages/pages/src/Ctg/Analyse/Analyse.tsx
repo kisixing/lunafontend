@@ -27,25 +27,25 @@ const Setting = (props: { [x: string]: any }) => {
         {/* <div style={{ padding: '12px 24px', background: '#ddd' }}>
           <span> &nbsp;</span>
         </div> */}
-        <Form size="small" style={{ padding: '12px 24px' }} form={form} labelCol={{ xs: 6 }}  wrapperCol={{ xs: 16 }} labelAlign="left">
+        <Form size="small" style={{ padding: '12px 24px' }} form={form} labelCol={{ xs: 8 }} wrapperCol={{ xs: 16 }} labelAlign="left">
           <Divider >宫缩 </Divider>
           <Row>
-            <Col span={12}>
+            <Col span={6}>
               <Form.Item label="宫缩次数" style={{ marginBottom: 0 }} key="g0">
                 <InputNumber />
               </Form.Item>
             </Col>
-            <Col span={12}>
+            <Col span={6}>
               <Form.Item label="宫缩强度" style={{ marginBottom: 0 }} key="g1">
                 <InputNumber />
               </Form.Item>
             </Col>
-            <Col span={12}>
+            <Col span={6}>
               <Form.Item label="间隔时间" style={{ marginBottom: 0 }} key="g2">
                 <InputNumber />
               </Form.Item>
             </Col>
-            <Col span={12}>
+            <Col span={6}>
               <Form.Item label="持持续时间" style={{ marginBottom: 0 }} key="g3">
                 <InputNumber />
               </Form.Item>
@@ -56,26 +56,29 @@ const Setting = (props: { [x: string]: any }) => {
 
 
           <Divider >胎心率</Divider>
+          <Row>
+            <Col span={6}>
+              <Form.Item label="短变异" style={{ marginBottom: 0 }} key="t0">
 
-          <Form.Item label="短变异" style={{ marginBottom: 0 }} key="t0">
-            <InputNumber />
+                <InputNumber />
 
-          </Form.Item>
-
+              </Form.Item>
+            </Col>
+          </Row>
           <Divider >减速</Divider>
 
           <Row>
-            <Col span={8}>
+            <Col span={6}>
               <Form.Item label="早减" style={{ marginBottom: 0 }} key="j0">
                 <InputNumber />
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col span={6}>
               <Form.Item label="晚减" style={{ marginBottom: 0 }} key="j0">
                 <InputNumber />
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col span={6}>
               <Form.Item label="变异减速" style={{ marginBottom: 0 }} key="j0">
                 <InputNumber />
               </Form.Item>
