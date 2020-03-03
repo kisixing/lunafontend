@@ -27,6 +27,8 @@ export interface _ctg_exams_analyse {
     score: {
         ret: number,
         msg: string,
+        cstdata?: null,
+        sogcdata?: null,
         nstdata?: {
             bhrscore:number
             ltvscore:number
@@ -40,8 +42,6 @@ export interface _ctg_exams_analyse {
             accamplvalue: number
             fmvalue:number
         },
-        cstdata?: null,
-        sogcdata?: null,
         Krebsdata?: {
             bhrscore: number
             ltvscore: number

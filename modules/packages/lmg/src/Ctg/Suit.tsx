@@ -167,6 +167,7 @@ export class Suit extends Draw {
   }
 
   init(data: ICacheItem) {
+    this.log('init')
     if (!data) {
       return;
     }
@@ -187,9 +188,7 @@ export class Suit extends Draw {
         }
       }
     }
-    this.createBar();
     this.drawobj.showcur(0, false);
-    this.startingBar.setLeft(0);
     if (this.type > 0) {
       //kisi 2019-10-29 测试增加analyse属性
       // console.log(this.data);
@@ -293,6 +292,8 @@ export class Suit extends Draw {
       this.drawobj.showselect();
       // }
     });
+    this.createBar();
+
   }
   lazyEmit = throttle((type: string, ...args: any[]) => {
     // console.log(`Suit:${type}`)
@@ -347,6 +348,9 @@ export class Suit extends Draw {
   }
   createBar() {
     if (this.startingBar && this.endingBar && this.selectingBar) {
+      this.selectingBar.setLeft(0)
+      this.startingBar.setLeft(0);
+
       return;
     }
     this.createLine();
@@ -411,7 +415,7 @@ export class Suit extends Draw {
     // console.log('lockStartingBar', status)
   }
   destroy() {
-    // this.log('destroy')
+    this.log('destroy')
     this.intervalIds.forEach(_ => clearInterval(_));
     this.canvasgrid = null;
     this.canvasdata = null;

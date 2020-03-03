@@ -1,8 +1,16 @@
 import Draw from "../Draw";
 
+interface accDecPoint {
+    index: number;
+    start: number;
+    end: number;
+    peak: number;
+    duration: number;
+    ampl: number;
+}
 interface AnalyseData {
-    acc?: number[]
-    dec?: number[]
+    acc?: accDecPoint[]
+    dec?: accDecPoint[]
     baseline?: number[]
     start?: number
     end?: number
@@ -24,7 +32,6 @@ export class DrawAnalyse extends Draw {
         if (!analyseData) {
             return
         }
-
         let lastx = 0;
         const start = cur - width * 2 > 0 ? cur - width * 2 : 0;
 
@@ -71,17 +78,20 @@ export class DrawAnalyse extends Draw {
         }
     }
     //kisi 2019-10-28 绘制 acc dec
-    drawflag = (x, y, index) => {
+    drawflag = (x, y, index: number) => {
         const { context2D, analyseData } = this;
+        if (!context2D || !analyseData) return
+        const acc = analyseData.acc.map(_ => _.index)
+        const dec = analyseData.dec.map(_ => _.index)
         context2D.textAlign = 'left';
         context2D.textBaseline = 'top';
         let txt = '';
-        if (typeof (analyseData) != "undefined" && analyseData.acc.indexOf(index) > -1) {
+        if (acc.indexOf(index) > -1) {
             txt = '+';
             context2D.font = '25px arial';
             context2D.fillStyle = 'black';
             context2D.fillText(txt, x + 1, y + 5);
-        } else if (typeof (analyseData) != "undefined" && analyseData.dec.indexOf(index) > -1) {
+        } else if (dec.indexOf(index) > -1) {
             txt = '—';
             context2D.font = 'bold 15px arial';
             context2D.fillStyle = 'red';

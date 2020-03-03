@@ -15,7 +15,7 @@ interface IProps {
 }
 export default forwardRef<FormInstance, IProps>((props, ref) => {
     const { hidden, dataSource, disabled } = props
-    const columns = [
+    const columns: any = [
         {
             title: '项目',
             dataIndex: 'name'
@@ -55,11 +55,24 @@ export default forwardRef<FormInstance, IProps>((props, ref) => {
             }
         },
 
-    ]
+    ].map(_ => ({ ..._, align: 'center' }))
 
     const [form] = Form.useForm()
     return (
-        <Form ref={ref} form={form} size="small" style={{ display: hidden ? 'none' : 'block' }}>
+        <Form ref={ref} form={form} size="small" style={{ display: hidden ? 'none' : 'block', position: 'relative' }} onValuesChange={(a, b) => {
+            const k = Object.keys(a)[0]
+            if (/score$/.test(k)) {
+                const total = Object.entries(b)
+                    .filter(([k, v]) => /score$/.test(k))
+                    .map(_ => _[1])
+                    .reduce((a, b) => a + b, 0)
+                form.setFieldsValue({ total })
+            }
+
+        }}>
+            <Form.Item name="total" label="总分" style={{ position: 'absolute', top: -28, right: 16 }}>
+                <InputNumber disabled />
+            </Form.Item>
             <Table bordered size="small" pagination={false} columns={columns} dataSource={dataSource} />
         </Form>
     );

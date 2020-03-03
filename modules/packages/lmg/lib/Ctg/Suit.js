@@ -181,6 +181,7 @@ var Suit = (function (_super) {
     });
     Suit.prototype.init = function (data) {
         var _this = this;
+        this.log('init');
         if (!data) {
             return;
         }
@@ -201,9 +202,7 @@ var Suit = (function (_super) {
                 }
             }
         }
-        this.createBar();
         this.drawobj.showcur(0, false);
-        this.startingBar.setLeft(0);
         if (this.type > 0) {
             if (this.data.index > this.canvasline.width * 2) {
                 this.curr = this.canvasline.width * 2;
@@ -285,6 +284,7 @@ var Suit = (function (_super) {
             }
             _this.drawobj.showselect();
         });
+        this.createBar();
     };
     Suit.prototype.alarmOn = function (alarmType) {
         if (alarmType === void 0) { alarmType = ''; }
@@ -323,6 +323,8 @@ var Suit = (function (_super) {
     Suit.prototype.createBar = function () {
         var _this = this;
         if (this.startingBar && this.endingBar && this.selectingBar) {
+            this.selectingBar.setLeft(0);
+            this.startingBar.setLeft(0);
             return;
         }
         this.createLine();
@@ -360,6 +362,7 @@ var Suit = (function (_super) {
     Suit.prototype.lockStartingBar = function (status) {
     };
     Suit.prototype.destroy = function () {
+        this.log('destroy');
         this.intervalIds.forEach(function (_) { return clearInterval(_); });
         this.canvasgrid = null;
         this.canvasdata = null;

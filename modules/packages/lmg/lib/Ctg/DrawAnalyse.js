@@ -25,16 +25,20 @@ var DrawAnalyse = (function (_super) {
         var _this = _super.call(this, width, height, canvas) || this;
         _this.drawflag = function (x, y, index) {
             var _a = _this, context2D = _a.context2D, analyseData = _a.analyseData;
+            if (!context2D || !analyseData)
+                return;
+            var acc = analyseData.acc.map(function (_) { return _.index; });
+            var dec = analyseData.dec.map(function (_) { return _.index; });
             context2D.textAlign = 'left';
             context2D.textBaseline = 'top';
             var txt = '';
-            if (typeof (analyseData) != "undefined" && analyseData.acc.indexOf(index) > -1) {
+            if (acc.indexOf(index) > -1) {
                 txt = '+';
                 context2D.font = '25px arial';
                 context2D.fillStyle = 'black';
                 context2D.fillText(txt, x + 1, y + 5);
             }
-            else if (typeof (analyseData) != "undefined" && analyseData.dec.indexOf(index) > -1) {
+            else if (dec.indexOf(index) > -1) {
                 txt = '—';
                 context2D.font = 'bold 15px arial';
                 context2D.fillStyle = 'red';
