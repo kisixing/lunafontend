@@ -62,11 +62,6 @@ var Setting = react_1.forwardRef(function (props, ref) {
                     react_1.default.createElement(antd_1.Col, { span: 6 },
                         react_1.default.createElement(antd_1.Form.Item, { label: "\u6301\u7EED\u65F6\u95F4", style: { marginBottom: 0 }, name: "uckeeptime" },
                             react_1.default.createElement(antd_1.InputNumber, null)))),
-                react_1.default.createElement(antd_1.Divider, null, "\u80CE\u5FC3\u7387"),
-                react_1.default.createElement(antd_1.Row, null,
-                    react_1.default.createElement(antd_1.Col, { span: 6 },
-                        react_1.default.createElement(antd_1.Form.Item, { label: "\u77ED\u53D8\u5F02", style: { marginBottom: 0 }, name: "stv" },
-                            react_1.default.createElement(antd_1.InputNumber, null)))),
                 react_1.default.createElement(antd_1.Divider, null, "\u51CF\u901F"),
                 react_1.default.createElement(antd_1.Row, null,
                     react_1.default.createElement(antd_1.Col, { span: 6 },
@@ -78,6 +73,7 @@ var Setting = react_1.forwardRef(function (props, ref) {
                     react_1.default.createElement(antd_1.Col, { span: 6 },
                         react_1.default.createElement(antd_1.Form.Item, { label: "\u53D8\u5F02\u51CF\u901F", style: { marginBottom: 0 }, name: "j0" },
                             react_1.default.createElement(antd_1.InputNumber, null)))),
+                react_1.default.createElement(antd_1.Divider, null, "\u5185\u5BB9\u4FEE\u6539"),
                 react_1.default.createElement(antd_1.Form.Item, { label: "CST/OCT", style: { marginBottom: 0 }, required: true, name: 'info1' },
                     react_1.default.createElement(antd_1.Radio.Group, null,
                         react_1.default.createElement(antd_1.Radio, { value: 1 }, "\u9634\u6027"),
@@ -91,6 +87,7 @@ var Setting = react_1.forwardRef(function (props, ref) {
                         react_1.default.createElement(antd_1.Radio, { value: 3 }, "\u4E2D\u6CE2\u6D6A"),
                         react_1.default.createElement(antd_1.Radio, { value: 4 }, "\u5927\u6CE2\u6D6A"),
                         react_1.default.createElement(antd_1.Radio, { value: 5 }, "\u6B63\u5F26\u578B"))),
+                react_1.default.createElement(antd_1.Divider, null, "\u7C7B\u4F3C\u5982\u4E0B"),
                 react_1.default.createElement(antd_1.Form.Item, { label: '\u8BCA\u65AD', style: { marginBottom: 0 }, name: "diagnosis" },
                     react_1.default.createElement(antd_1.Input.TextArea, { style: { maxWidth: 400 } }))))));
 });

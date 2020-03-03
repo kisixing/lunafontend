@@ -15,7 +15,7 @@ const App = (props: any) => {
     const [dataSource, setDataSource] = useState<obvuew.prenatal_visitspage[]>([])
     const [pregnancy, setPregnancy] = useState({})
     const [selected, setSelected] = useState<obvuew.prenatal_visitspage>({})
-    const [sDate, setSDate] = useState(formatDate(new Date('2019-02-29')))
+    const [sDate, setSDate] = useState(formatDate(new Date('2020-03-1')))
     const [eDate, setEDate] = useState(formatDate())
     const [total, setTotal] = useState(0)
     const [page, setPage] = useState(1)
@@ -26,7 +26,7 @@ const App = (props: any) => {
 
 
     const fetchList = (loader = true) => {
-        const qs = `?CTGExamId.specified=true&pregnancyId.specified=true&size=10&page=${page}&sort=visitDate%2Casc&visitDate.greaterOrEqualThan=${sDate}&visitDate.lessOrEqualThan=${eDate}`
+        const qs = `?CTGExamId.specified=true&pregnancyId.specified=true&size=10&page=${page - 1 | 0}&sort=visitDate%2Casc&visitDate.greaterOrEqualThan=${sDate}&visitDate.lessOrEqualThan=${eDate}`
 
         request
             .get(`/prenatal-visitspage${qs}`)

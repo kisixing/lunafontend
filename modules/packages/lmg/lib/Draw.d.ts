@@ -2,13 +2,17 @@ import { EventEmitter } from "@lianmed/utils";
 import { Drawer } from "./interface";
 export default class Draw extends EventEmitter implements Drawer {
     sid: number;
+    canvas: HTMLCanvasElement;
+    context2D: CanvasRenderingContext2D;
+    _width: number;
+    _height: number;
     width: number;
     height: number;
     wrap: HTMLElement;
-    constructor();
+    constructor(width?: number, height?: number, canvas?: HTMLCanvasElement);
     log: any;
     destroy(): void;
     init(data: any): void;
-    resize(): void;
+    resize(w?: number, h?: number): void;
     _resize(): void;
 }

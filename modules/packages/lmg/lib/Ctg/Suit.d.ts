@@ -5,9 +5,11 @@ import { IBarTool, TLineTool } from '../ScrollBar/useScroll';
 import ScrollEl from '../ScrollBar/ScrollEl';
 import { ICacheItem } from '../services/WsService';
 import Draw from '../Draw';
+import { DrawAnalyse } from './DrawAnalyse';
 declare type Canvas = HTMLCanvasElement;
 declare type Context = CanvasRenderingContext2D;
 export declare class Suit extends Draw {
+    drawAnalyse: DrawAnalyse;
     needScroll: boolean;
     isOn: boolean;
     emitInterval: number;

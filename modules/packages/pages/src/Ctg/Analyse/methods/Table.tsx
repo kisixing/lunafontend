@@ -60,7 +60,7 @@ export default forwardRef<FormInstance, IProps>((props, ref) => {
     const [form] = Form.useForm()
     return (
         <Form ref={ref} form={form} size="small" style={{ display: hidden ? 'none' : 'block' }}>
-            <Table size="small" pagination={false} columns={columns} dataSource={dataSource} />
+            <Table bordered size="small" pagination={false} columns={columns} dataSource={dataSource} />
         </Form>
     );
 })

@@ -56,7 +56,7 @@ const Setting = forwardRef<FormInstance,{ [x: string]: any }>((props,ref) => {
 
 
 
-          <Divider >胎心率</Divider>
+          {/* <Divider >胎心率</Divider>
           <Row>
             <Col span={6}>
               <Form.Item label="短变异" style={{ marginBottom: 0 }} name="stv">
@@ -65,7 +65,7 @@ const Setting = forwardRef<FormInstance,{ [x: string]: any }>((props,ref) => {
 
               </Form.Item>
             </Col>
-          </Row>
+          </Row> */}
           <Divider >减速</Divider>
 
           <Row>
@@ -86,6 +86,7 @@ const Setting = forwardRef<FormInstance,{ [x: string]: any }>((props,ref) => {
             </Col>
           </Row>
 
+          <Divider >内容修改</Divider>
 
           <Form.Item label="CST/OCT" style={{ marginBottom: 0 }} required name='info1'>
 
@@ -106,6 +107,8 @@ const Setting = forwardRef<FormInstance,{ [x: string]: any }>((props,ref) => {
               <Radio value={5}>正弦型</Radio>
             </Radio.Group>
           </Form.Item>
+          <Divider >类似如下</Divider>
+
           <Form.Item label='诊断' style={{ marginBottom: 0 }} name="diagnosis" >
             <Input.TextArea style={{ maxWidth: 400 }} />
           </Form.Item>

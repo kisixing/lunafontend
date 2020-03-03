@@ -17,7 +17,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = require("react");
 var request_1 = __importDefault(require("@lianmed/request"));
 var utils_1 = require("@lianmed/utils");
-exports.default = (function (v, docid, fetal) {
+exports.default = (function (v, docid, fetal, setCtgData) {
     var resultData = react_1.useMemo(function () { return {}; }, []);
     var _a = react_1.useState(MARKS[0]), mark = _a[0], setMark = _a[1];
     var _b = react_1.useState(20), interval = _b[0], setInterval = _b[1];
@@ -63,8 +63,17 @@ exports.default = (function (v, docid, fetal) {
             var f = score[mark.toLowerCase() + "data"];
             var cur = mapFormToMark[mark + "_ref"];
             cur && cur.current.setFieldsValue(f);
-            var stv = analysis.stv, ucdata = analysis.ucdata;
+            var stv = analysis.stv, ucdata = analysis.ucdata, acc = analysis.acc, dec = analysis.dec, fhrbaselineMinute = analysis.fhrbaselineMinute;
             analysis_ref.current.setFieldsValue(__assign({ stv: stv }, ucdata));
+            setCtgData({
+                analyse: {
+                    start: startTime,
+                    end: startTime + 240 * interval,
+                    acc: acc,
+                    dec: dec,
+                    baseline: fhrbaselineMinute
+                }
+            });
         });
     };
     var setMarkAndItems = function (mark) {

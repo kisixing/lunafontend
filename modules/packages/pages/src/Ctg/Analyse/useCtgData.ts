@@ -23,7 +23,15 @@ const CTGChart = (docid: string) => {
     }, [ctgData])
 
 
-    return { ctgData, loading };
+    return {
+        ctgData, loading,
+        setCtgData(data: { [x: string]: any }) {
+            console.log('zzz')
+
+            setCtgData({ ...data, ...ctgData, })
+        }
+
+    };
 }
 
 export default CTGChart

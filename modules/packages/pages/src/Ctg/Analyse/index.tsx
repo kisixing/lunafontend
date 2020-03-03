@@ -15,7 +15,7 @@ function Analysis({
   docid = '1_1112_160415144057'
 }) {
   // docid = '1_1112_160415144057'
-  const { ctgData, loading } = useCtgData(docid)
+  const { ctgData, loading, setCtgData } = useCtgData(docid)
 
   const [fetal, setFetal] = useState(1)
   const submit = () => {
@@ -43,7 +43,7 @@ function Analysis({
     Nst_ref,
     Krebs_ref,
     analysis_ref
-  } = useAnalyse(ref.current, docid, fetal)
+  } = useAnalyse(ref.current, docid, fetal, setCtgData)
 
   const d = {
     responseData,

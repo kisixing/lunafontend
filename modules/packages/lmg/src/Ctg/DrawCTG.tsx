@@ -1,5 +1,6 @@
 import { Suit } from './Suit';
 
+
 function formatDate(date: any, format) {
   if (!date) return;
   if (!format) format = 'yyyy-MM-dd';
@@ -153,6 +154,7 @@ export default class DrawCTG {
   drawdot(cur, isemit = false) {
     this.suit.log('drawdot', cur, isemit, this.suit.data.index, this.suit.width * 2)
     const { suit, linecontext, max, analysecontext } = this;
+    const { drawAnalyse } = suit
     const { fhr, toco, fm } = suit.data;
     if (typeof (fhr[0]) == "undefined") {
       this.drawgrid(cur, false);
@@ -312,39 +314,40 @@ export default class DrawCTG {
     }
     //kisi 2019-10-29 baseline
     //TODO
-    // if(typeof(suit.data.analyse) != 'undefined'){
+    drawAnalyse.draw(suit.data.analyse,cur,'red',this.yspan,this.xspan,max,this.basetop)
+    // if (typeof (suit.data.analyse) != 'undefined') {
     //   let curfhroffset = 0;
     //   analysecontext.beginPath();
     //   analysecontext.strokeStyle = suit.ctgconfig.fhrcolor[2];//基线颜色
     //   analysecontext.lineWidth = 1;
-    //   if(start <= suit.data.analyse.start && cur>suit.data.analyse.start){
-    //     let baselineoff = Math.ceil((suit.data.analyse.start - start)/(this.xspan*6));
-    //     let firstindex = baselineoff-2 >0 ? baselineoff-2 : 0;
+    //   if (start <= suit.data.analyse.start && cur > suit.data.analyse.start) {
+    //     let baselineoff = Math.ceil((suit.data.analyse.start - start) / (this.xspan * 6));
+    //     let firstindex = baselineoff - 2 > 0 ? baselineoff - 2 : 0;
     //     console.log(firstindex);
-    //     analysecontext.moveTo(baselineoff*this.xspan*3,(max - curfhroffset - suit.data.analyse.baseline[firstindex]) * this.yspan+ this.basetop);
-    //     for (var i = baselineoff*this.xspan*3+1; i < cur; i++) {
-    //       baselineoff = Math.ceil((i-start)/(this.xspan*6));
-    //       if(baselineoff>=suit.data.analyse.baseline.length-1){
+    //     analysecontext.moveTo(baselineoff * this.xspan * 3, (max - curfhroffset - suit.data.analyse.baseline[firstindex]) * this.yspan + this.basetop);
+    //     for (var i = baselineoff * this.xspan * 3 + 1; i < cur; i++) {
+    //       baselineoff = Math.ceil((i - start) / (this.xspan * 6));
+    //       if (baselineoff >= suit.data.analyse.baseline.length - 1) {
     //         break;
     //       }
-    //       if((i)%(this.xspan*6)== 0){
+    //       if ((i) % (this.xspan * 6) == 0) {
     //         lastx = Math.floor((i - start) / 2);
-    //         analysecontext.lineTo(lastx, (max - curfhroffset - suit.data.analyse.baseline[baselineoff]) * this.yspan+ this.basetop);
+    //         analysecontext.lineTo(lastx, (max - curfhroffset - suit.data.analyse.baseline[baselineoff]) * this.yspan + this.basetop);
     //       }
     //     }
     //     analysecontext.stroke();
-    //   }else if(start < suit.data.analyse.end){
-    //     let baselineoff = Math.ceil((start-suit.data.analyse.start)/(this.xspan*6));
-    //     let firstindex = baselineoff-1 >0 ? baselineoff-1 : 0;
-    //     analysecontext.moveTo(0, (max - curfhroffset - suit.data.analyse.baseline[firstindex]) * this.yspan+ this.basetop);
-    //     for (var i = start+1; i < cur; i++) {
-    //       baselineoff = Math.ceil((i-suit.data.analyse.start)/(this.xspan*6));
-    //       if(baselineoff>=suit.data.analyse.baseline.length-1){
+    //   } else if (start < suit.data.analyse.end) {
+    //     let baselineoff = Math.ceil((start - suit.data.analyse.start) / (this.xspan * 6));
+    //     let firstindex = baselineoff - 1 > 0 ? baselineoff - 1 : 0;
+    //     analysecontext.moveTo(0, (max - curfhroffset - suit.data.analyse.baseline[firstindex]) * this.yspan + this.basetop);
+    //     for (var i = start + 1; i < cur; i++) {
+    //       baselineoff = Math.ceil((i - suit.data.analyse.start) / (this.xspan * 6));
+    //       if (baselineoff >= suit.data.analyse.baseline.length - 1) {
     //         break;
     //       }
-    //       if((i)%(this.xspan*6)== 0){
+    //       if ((i) % (this.xspan * 6) == 0) {
     //         lastx = Math.floor((i - start) / 2);
-    //         analysecontext.lineTo(lastx,(max - curfhroffset - suit.data.analyse.baseline[baselineoff]) * this.yspan+ this.basetop);
+    //         analysecontext.lineTo(lastx, (max - curfhroffset - suit.data.analyse.baseline[baselineoff]) * this.yspan + this.basetop);
     //       }
     //     }
     //     analysecontext.stroke();

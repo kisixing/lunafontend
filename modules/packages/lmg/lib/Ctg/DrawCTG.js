@@ -495,6 +495,7 @@ var DrawCTG = (function () {
         if (isemit === void 0) { isemit = false; }
         this.suit.log('drawdot', cur, isemit, this.suit.data.index, this.suit.width * 2);
         var _a = this, suit = _a.suit, linecontext = _a.linecontext, max = _a.max, analysecontext = _a.analysecontext;
+        var drawAnalyse = suit.drawAnalyse;
         var _b = suit.data, fhr = _b.fhr, toco = _b.toco, fm = _b.fm;
         if (typeof (fhr[0]) == "undefined") {
             this.drawgrid(cur, false);
@@ -647,6 +648,7 @@ var DrawCTG = (function () {
                 this.showfm(lastx);
             }
         }
+        drawAnalyse.draw(suit.data.analyse, cur, 'red', this.yspan, this.xspan, max, this.basetop);
     };
     DrawCTG.prototype.setscalestyle = function (context, color) {
         context.font = 'bold 10px consolas';

@@ -35,7 +35,7 @@ exports.Context = react_1.default.createContext({});
 var border = { border: '1px solid #ddd' };
 function Analysis(_a) {
     var _b = _a.docid, docid = _b === void 0 ? '1_1112_160415144057' : _b;
-    var _c = useCtgData_1.default(docid), ctgData = _c.ctgData, loading = _c.loading;
+    var _c = useCtgData_1.default(docid), ctgData = _c.ctgData, loading = _c.loading, setCtgData = _c.setCtgData;
     var _d = react_1.useState(1), fetal = _d[0], setFetal = _d[1];
     var submit = function () {
         var data = { note: docid };
@@ -48,7 +48,7 @@ function Analysis(_a) {
         request_1.default.put("/ctg-exams-note", { data: data });
     };
     var ref = react_1.useRef(null);
-    var _e = useAnalyse_1.default(ref.current, docid, fetal), responseData = _e.responseData, MARKS = _e.MARKS, analyse = _e.analyse, startTime = _e.startTime, mark = _e.mark, setMark = _e.setMark, interval = _e.interval, setInterval = _e.setInterval, modifyData = _e.modifyData, Fischer_ref = _e.Fischer_ref, Nst_ref = _e.Nst_ref, Krebs_ref = _e.Krebs_ref, analysis_ref = _e.analysis_ref;
+    var _e = useAnalyse_1.default(ref.current, docid, fetal, setCtgData), responseData = _e.responseData, MARKS = _e.MARKS, analyse = _e.analyse, startTime = _e.startTime, mark = _e.mark, setMark = _e.setMark, interval = _e.interval, setInterval = _e.setInterval, modifyData = _e.modifyData, Fischer_ref = _e.Fischer_ref, Nst_ref = _e.Nst_ref, Krebs_ref = _e.Krebs_ref, analysis_ref = _e.analysis_ref;
     var d = {
         responseData: responseData,
         MARKS: MARKS,

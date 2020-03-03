@@ -7,7 +7,7 @@ import { obvuew } from "@lianmed/f_types";
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 
 
-export default (v: Suit, docid, fetal: any) => {
+export default (v: Suit, docid, fetal: any, setCtgData: any) => {
     const resultData = useMemo<{ [x: string]: IResponseData }>(() => { return {} }, [])
 
     const [mark, setMark] = useState(MARKS[0])
@@ -61,8 +61,17 @@ export default (v: Suit, docid, fetal: any) => {
             cur && cur.current.setFieldsValue(f)
 
 
-            const { stv, ucdata } = analysis
+            const { stv, ucdata, acc, dec, fhrbaselineMinute } = analysis
             analysis_ref.current.setFieldsValue({ stv, ...ucdata })
+            setCtgData({
+                analyse: {
+                    start: startTime,
+                    end: startTime + 240 * interval,
+                    acc,
+                    dec,
+                    baseline: fhrbaselineMinute
+                }
+            })
         })
     }
 

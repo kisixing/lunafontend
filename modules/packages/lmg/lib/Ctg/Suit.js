@@ -12,17 +12,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __spreadArrays = (this && this.__spreadArrays) || function () {
     for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
     for (var r = Array(s), k = 0, i = 0; i < il; i++)
@@ -40,6 +29,7 @@ var utils_1 = require("../services/utils");
 var lodash_1 = require("lodash");
 var Draw_1 = __importDefault(require("../Draw"));
 var bindEvents_1 = __importDefault(require("./bindEvents"));
+var DrawAnalyse_1 = require("./DrawAnalyse");
 var sid = 0;
 var Suit = (function (_super) {
     __extends(Suit, _super);
@@ -115,6 +105,7 @@ var Suit = (function (_super) {
         _this.barTool = barTool;
         _this.drawobj = new DrawCTG_1.default(_this);
         _this.type = type;
+        _this.drawAnalyse = new DrawAnalyse_1.DrawAnalyse(canvasanalyse);
         if (_this.option) {
             _this.ctgconfig.tococolor = _this.option.tococolor;
             _this.ctgconfig.fhrcolor[0] = _this.option.fhrcolor1;
@@ -386,7 +377,9 @@ var Suit = (function (_super) {
         this.barTool = null;
     };
     Suit.prototype._resize = function () {
+        var _a = this.wrap.getBoundingClientRect(), width = _a.width, height = _a.height;
         this.drawobj.resize();
+        this.drawAnalyse.resize(width, height);
     };
     Suit.prototype.setfetalposition = function (fhr1, fhr2, fhr3) {
         this.data.fetalposition.fhr1 = fhr1;
@@ -445,8 +438,8 @@ var Suit = (function (_super) {
             if (key === 'docid') {
                 return false;
             }
-            if (key === 'analyse') {
-                Object.assign(CTGDATA.analyse, formatAnalyseData(oridata));
+            if (key === 'analyse' && oridata) {
+                Object.assign(CTGDATA.analyse, oridata);
                 return;
             }
             if (key === 'fhr1') {
@@ -600,27 +593,3 @@ var Suit = (function (_super) {
     return Suit;
 }(Draw_1.default));
 exports.Suit = Suit;
-function formatAnalyseData(obj) {
-    var keys = ['acc', 'baseline', 'dec', 'meanbaseline'];
-    var arr = Object.entries(obj)
-        .filter(function (_a) {
-        var k = _a[0], v = _a[1];
-        return keys.includes(k);
-    })
-        .map(function (_a) {
-        var k = _a[0], v = _a[1];
-        v = typeof v === 'string' ? v : '';
-        return [
-            k,
-            v
-                .split(',')
-                .map(function (_) { return parseInt(_); })
-                .filter(function (_) { return !isNaN(_); }),
-        ];
-    });
-    return __assign(__assign({}, obj), arr.reduce(function (a, _a) {
-        var _b;
-        var k = _a[0], v = _a[1];
-        return Object.assign(a, (_b = {}, _b[k] = v, _b));
-    }, {}));
-}

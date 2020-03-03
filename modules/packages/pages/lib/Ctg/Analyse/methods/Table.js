@@ -49,5 +49,5 @@ exports.default = react_1.forwardRef(function (props, ref) {
     ];
     var form = antd_1.Form.useForm()[0];
     return (react_1.default.createElement(antd_1.Form, { ref: ref, form: form, size: "small", style: { display: hidden ? 'none' : 'block' } },
-        react_1.default.createElement(antd_1.Table, { size: "small", pagination: false, columns: columns, dataSource: dataSource })));
+        react_1.default.createElement(antd_1.Table, { bordered: true, size: "small", pagination: false, columns: columns, dataSource: dataSource })));
 });

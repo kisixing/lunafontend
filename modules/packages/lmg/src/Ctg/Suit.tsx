@@ -8,10 +8,13 @@ import { throttle } from 'lodash';
 import { ICacheItem } from '../services/WsService';
 import Draw from '../Draw';
 import bindEvents from './bindEvents';
+import { DrawAnalyse } from './DrawAnalyse';
 let sid = 0;
 type Canvas = HTMLCanvasElement;
 type Context = CanvasRenderingContext2D;
 export class Suit extends Draw {
+  drawAnalyse: DrawAnalyse
+
   needScroll = false;
   isOn: boolean;
   emitInterval: number;
@@ -149,7 +152,7 @@ export class Suit extends Draw {
     this.barTool = barTool;
     this.drawobj = new DrawCTG(this);
     this.type = type;
-
+    this.drawAnalyse = new DrawAnalyse(canvasanalyse)
     if (this.option) {
       this.ctgconfig.tococolor = this.option.tococolor;
       this.ctgconfig.fhrcolor[0] = this.option.fhrcolor1;
@@ -171,6 +174,7 @@ export class Suit extends Draw {
     if (!data) {
       return;
     }
+
     // this.log('init', data)
     this.initFlag = true;
     let defaultinterval = 500;
@@ -363,7 +367,7 @@ export class Suit extends Draw {
     selectingBar.on('change:x', value => {
       this.drawobj.showcur(this.selectingBarPoint, false);
       this.emit('change:selectPoint', this.selectingBarPoint)
-      
+
 
     });
     startingBar.on('change:x', value => {
@@ -430,7 +434,10 @@ export class Suit extends Draw {
   }
   _resize() {
     // this.log('resize');
+    const { width, height } = this.wrap.getBoundingClientRect()
+
     this.drawobj.resize();
+    this.drawAnalyse.resize(width, height)
   }
   //kisi 2019-11-14 update fhr position
   setfetalposition(fhr1, fhr2, fhr3) {
@@ -459,7 +466,7 @@ export class Suit extends Draw {
     }
     this.toolbarposition = Math.floor(
       ((this.canvasline.width - len) * (this.viewposition - this.canvasline.width * 2)) /
-        (this.data.index - this.canvasline.width * 2)
+      (this.data.index - this.canvasline.width * 2)
     );
     this.barTool.setBarLeft(this.toolbarposition, false);
   }
@@ -476,7 +483,7 @@ export class Suit extends Draw {
     this.drawobj.showcur(this.selectstart, false);
     // }
   }
-  movescoller() {}
+  movescoller() { }
 
   //胎心数据处理
   InitFileData(oriobj) {
@@ -517,8 +524,10 @@ export class Suit extends Draw {
       if (key === 'docid') {
         return false;
       }
-      if (key === 'analyse') {
-        Object.assign(CTGDATA.analyse, formatAnalyseData(oridata));
+
+
+      if (key === 'analyse' && oridata) {
+        Object.assign(CTGDATA.analyse, oridata);
         return;
       }
       if (key === 'fhr1') {
@@ -562,7 +571,7 @@ export class Suit extends Draw {
       this.curr =
         (Math.floor(new Date().getTime() / 1000) -
           Math.floor(new Date(this.data.starttime).getTime() / 1000)) *
-          4 +
+        4 +
         this.data.csspan;
       if (this.curr < 0) return;
       this.drawobj.drawdot(this.curr, true);
@@ -675,24 +684,24 @@ export class Suit extends Draw {
   }
 }
 
-function formatAnalyseData(obj: { [x: string]: string }) {
-  const keys = ['acc', 'baseline', 'dec', 'meanbaseline'];
-  const arr: [string, number[]][] = Object.entries(obj)
-    .filter(([k, v]) => keys.includes(k))
-    .map(([k, v]) => {
-      v = typeof v === 'string' ? v : '';
-      return [
-        k,
-        v
-          .split(',')
-          .map(_ => parseInt(_))
-          .filter(_ => !isNaN(_)),
-      ];
-    });
-  return {
-    ...obj,
-    ...arr.reduce((a, [k, v]) => {
-      return Object.assign(a, { [k]: v });
-    }, {}),
-  };
-}
+// function formatAnalyseData(obj: { [x: string]: string }) {
+//   const keys = ['acc', 'baseline', 'dec', 'meanbaseline'];
+//   const arr: [string, number[]][] = Object.entries(obj)
+//     .filter(([k, v]) => keys.includes(k))
+//     .map(([k, v]) => {
+//       v = typeof v === 'string' ? v : '';
+//       return [
+//         k,
+//         v
+//           .split(',')
+//           .map(_ => parseInt(_))
+//           .filter(_ => !isNaN(_)),
+//       ];
+//     });
+//   return {
+//     ...obj,
+//     ...arr.reduce((a, [k, v]) => {
+//       return Object.assign(a, { [k]: v });
+//     }, {}),
+//   };
+// }
