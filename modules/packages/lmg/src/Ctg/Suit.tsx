@@ -231,7 +231,7 @@ export class Suit extends Draw {
       if (this.viewposition < this.canvasline.width * 2) {
         _viewposition = this.canvasline.width * 2;
       }
-      this.viewposition = _viewposition;
+      this.rightViewPosition = _viewposition;
       this.updateSelectCur();
       this.drawobj.showselect();
       this.drawobj.drawdot(this.rightViewPosition, false);

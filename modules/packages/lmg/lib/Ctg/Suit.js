@@ -238,7 +238,7 @@ var Suit = (function (_super) {
             if (_this.viewposition < _this.canvasline.width * 2) {
                 _viewposition = _this.canvasline.width * 2;
             }
-            _this.viewposition = _viewposition;
+            _this.rightViewPosition = _viewposition;
             _this.updateSelectCur();
             _this.drawobj.showselect();
             _this.drawobj.drawdot(_this.rightViewPosition, false);
