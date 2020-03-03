@@ -118,6 +118,7 @@ export class Suit extends Draw {
   }
   set rightViewPosition(value: number) {
     this.viewposition = value;
+ 
     this.emit('change:selectPoint', this.selectingBarPoint)
 
     this.updateBarTool();
@@ -216,7 +217,7 @@ export class Suit extends Draw {
       //显示历史数据
       //kisi 优化拖动赋值
       this.toolbarposition = value;
-      //console.log(this.curr,this.viewposition,value,this.canvasline.width ,this.data.index);
+      //console.log(this.curr,this.rightViewPosition,value,this.canvasline.width ,this.data.index);
       this.dragtimestamp = new Date().getTime();
       let len = 100;
       if (this.data.index < this.canvasline.width * 4) {
@@ -230,11 +231,11 @@ export class Suit extends Draw {
       if (this.viewposition < this.canvasline.width * 2) {
         _viewposition = this.canvasline.width * 2;
       }
-      this.rightViewPosition = _viewposition;
+      this.viewposition = _viewposition;
       this.updateSelectCur();
       this.drawobj.showselect();
-      this.drawobj.drawdot(this.viewposition, false);
-      this.log('gg', this.viewposition, len, value);
+      this.drawobj.drawdot(this.rightViewPosition, false);
+      this.log('gg', this.rightViewPosition, len, value);
     });
     this.barTool.watchGrab(value => {
       let _viewposition;
@@ -251,13 +252,13 @@ export class Suit extends Draw {
       }
       this.dragtimestamp = new Date().getTime();
       //判断开始点
-      if (this.viewposition - value < this.canvasline.width * 2) {
+      if (this.rightViewPosition - value < this.canvasline.width * 2) {
         _viewposition = this.canvasline.width * 2;
-        this.drawobj.drawdot(this.viewposition, false);
+        this.drawobj.drawdot(this.rightViewPosition, false);
         // if (this.selectflag) {
         if (this.selectend == 1) {
           this.endingBar.setLeft(
-            this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2)
+            this.canvasline.width - Math.floor((this.rightViewPosition - this.selectrpend) / 2)
           );
         }
         this.drawobj.showselect();
@@ -266,25 +267,25 @@ export class Suit extends Draw {
         return;
       }
       //方向确认
-      // console.log('print_drag1', value, this.viewposition, this.selectrpend);
-      if (this.viewposition - value < this.data.index) {
+      // console.log('print_drag1', value, this.rightViewPosition, this.selectrpend);
+      if (this.rightViewPosition - value < this.data.index) {
         _viewposition = this.rightViewPosition - value;
         //this.movescoller();
-        this.drawobj.drawdot(this.viewposition, false);
+        this.drawobj.drawdot(this.rightViewPosition, false);
       } else {
         _viewposition = this.data.index;
-        this.drawobj.drawdot(this.viewposition, false);
-        // console.log('print_drag--', this.viewposition);
+        this.drawobj.drawdot(this.rightViewPosition, false);
+        // console.log('print_drag--', this.rightViewPosition);
       }
       this.updateBarTool();
       this.rightViewPosition = _viewposition;
       // if (this.selectflag) {
-      // console.log('print_drag2', value, this.viewposition, this.selectrpend, Math.floor((this.viewposition - this.selectrpend)) / 2);
-      if (this.selectend == 1 && this.viewposition - this.selectrpend > -2) {
+      // console.log('print_drag2', value, this.rightViewPosition, this.selectrpend, Math.floor((this.rightViewPosition - this.selectrpend)) / 2);
+      if (this.selectend == 1 && this.rightViewPosition - this.selectrpend > -2) {
         // this.endingBar.setVisibility(true);
         //this.endingBar.setOffset(this.selectrpend / 2);
         this.endingBar.setLeft(
-          this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2)
+          this.canvasline.width - Math.floor((this.rightViewPosition - this.selectrpend) / 2)
         );
       } else {
         // this.endingBar.setVisibility(false);
@@ -373,15 +374,15 @@ export class Suit extends Draw {
     startingBar.on('change:x', value => {
       // this.selectrpstart = value * 2;
       // this.selectstartposition = value;
-      // // console.log('print_开始', value, this.viewposition, this.canvasline.width);
+      // // console.log('print_开始', value, this.rightViewPosition, this.canvasline.width);
       // if (value !== 0 && this.type < 1) {
       //   this.dragtimestamp = new Date().getTime();
       // }
-      // if (this.viewposition > this.canvasline.width * 2) {
-      //   this.selectstart = value * 2 + this.viewposition - 2 * this.canvasline.width;
+      // if (this.rightViewPosition > this.canvasline.width * 2) {
+      //   this.selectstart = value * 2 + this.rightViewPosition - 2 * this.canvasline.width;
       // } else {
       //   if (this.type < 1) {
-      //     this.selectstart = value * 2 + this.viewposition - 2 * this.canvasline.width;
+      //     this.selectstart = value * 2 + this.rightViewPosition - 2 * this.canvasline.width;
       //   } else {
       //     this.selectstart = value * 2;
       //   }
@@ -395,7 +396,7 @@ export class Suit extends Draw {
       if (this.data.index < this.canvasline.width * 2) {
         this.selectrpend = value * 2;
       } else {
-        this.selectrpend = this.viewposition - (this.canvasline.width - value) * 2;
+        this.selectrpend = this.rightViewPosition - (this.canvasline.width - value) * 2;
       }
       if (this.selectrpstart > this.selectrpend) {
         return;
@@ -463,7 +464,7 @@ export class Suit extends Draw {
       len = Math.floor((this.canvasline.width * 4 - this.data.index) / 2);
     }
     this.toolbarposition = Math.floor(
-      ((this.canvasline.width - len) * (this.viewposition - this.canvasline.width * 2)) /
+      ((this.canvasline.width - len) * (this.rightViewPosition - this.canvasline.width * 2)) /
       (this.data.index - this.canvasline.width * 2)
     );
     this.barTool.setBarLeft(this.toolbarposition, false);
@@ -471,9 +472,9 @@ export class Suit extends Draw {
 
   updateSelectCur() {
     // if (!this.selectflag) {
-    if (this.viewposition > this.canvasline.width * 2) {
+    if (this.rightViewPosition > this.canvasline.width * 2) {
       this.selectstart =
-        this.selectstartposition * 2 + this.viewposition - 2 * this.canvasline.width;
+        this.selectstartposition * 2 + this.rightViewPosition - 2 * this.canvasline.width;
     } else {
       this.selectstart = this.selectstartposition * 2;
     }
@@ -573,7 +574,7 @@ export class Suit extends Draw {
         this.data.csspan;
       if (this.curr < 0) return;
       this.drawobj.drawdot(this.curr, true);
-      this.viewposition = this.curr;
+      this.rightViewPosition = this.curr;
       if (this.data.index > this.canvasline.width * 2) {
         if (this.data.index < this.canvasline.width * 4) {
           let len = Math.floor((this.canvasline.width * 4 - this.data.index) / 2);

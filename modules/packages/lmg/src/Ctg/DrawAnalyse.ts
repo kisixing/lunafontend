@@ -33,7 +33,7 @@ export class DrawAnalyse extends Draw {
             return
         }
         let lastx = 0;
-        const start = cur - width * 2 > 0 ? cur - width * 2 : 0;
+        const leftViewposition = cur - width * 2 > 0 ? cur - width * 2 : 0;
 
 
 
@@ -44,37 +44,43 @@ export class DrawAnalyse extends Draw {
         context2D.beginPath();
         context2D.strokeStyle = color;//基线颜色
         context2D.lineWidth = 1;
-        if (start <= analyseData.start && cur > analyseData.start) {
-            let baselineoff = Math.ceil((analyseData.start - start) / (xspan * 6));
+
+
+        if (leftViewposition <= analyseData.start && cur > analyseData.start) {
+
+            let baselineoff = Math.ceil((analyseData.start - leftViewposition) / (xspan * 6));
             let firstindex = baselineoff - 2 > 0 ? baselineoff - 2 : 0;
             console.log(firstindex);
             context2D.moveTo(baselineoff * xspan * 3, (max - curfhroffset - analyseData.baseline[firstindex]) * yspan + basetop);
             for (var i = baselineoff * xspan * 3 + 1; i < cur; i++) {
-                baselineoff = Math.ceil((i - start) / (xspan * 6));
+                baselineoff = Math.ceil((i - leftViewposition) / (xspan * 6));
                 if (baselineoff >= analyseData.baseline.length - 1) {
                     break;
                 }
                 if ((i) % (xspan * 6) == 0) {
-                    lastx = Math.floor((i - start) / 2);
+                    lastx = Math.floor((i - leftViewposition) / 2);
                     context2D.lineTo(lastx, (max - curfhroffset - analyseData.baseline[baselineoff]) * yspan + basetop);
                 }
             }
             context2D.stroke();
-        } else if (start < analyseData.end) {
-            let baselineoff = Math.ceil((start - analyseData.start) / (xspan * 6));
+
+        } else if (leftViewposition < analyseData.end) {
+
+            let baselineoff = Math.ceil((leftViewposition - analyseData.start) / (xspan * 6));
             let firstindex = baselineoff - 1 > 0 ? baselineoff - 1 : 0;
             context2D.moveTo(0, (max - curfhroffset - analyseData.baseline[firstindex]) * yspan + basetop);
-            for (var i = start + 1; i < cur; i++) {
+            for (var i = leftViewposition + 1; i < cur; i++) {
                 baselineoff = Math.ceil((i - analyseData.start) / (xspan * 6));
                 if (baselineoff >= analyseData.baseline.length - 1) {
                     break;
                 }
                 if ((i) % (xspan * 6) == 0) {
-                    lastx = Math.floor((i - start) / 2);
+                    lastx = Math.floor((i - leftViewposition) / 2);
                     context2D.lineTo(lastx, (max - curfhroffset - analyseData.baseline[baselineoff]) * yspan + basetop);
                 }
             }
             context2D.stroke();
+            
         }
     }
     //kisi 2019-10-28 绘制 acc dec

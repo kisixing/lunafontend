@@ -238,11 +238,11 @@ var Suit = (function (_super) {
             if (_this.viewposition < _this.canvasline.width * 2) {
                 _viewposition = _this.canvasline.width * 2;
             }
-            _this.rightViewPosition = _viewposition;
+            _this.viewposition = _viewposition;
             _this.updateSelectCur();
             _this.drawobj.showselect();
-            _this.drawobj.drawdot(_this.viewposition, false);
-            _this.log('gg', _this.viewposition, len, value);
+            _this.drawobj.drawdot(_this.rightViewPosition, false);
+            _this.log('gg', _this.rightViewPosition, len, value);
         });
         this.barTool.watchGrab(function (value) {
             var _viewposition;
@@ -257,28 +257,28 @@ var Suit = (function (_super) {
                 return;
             }
             _this.dragtimestamp = new Date().getTime();
-            if (_this.viewposition - value < _this.canvasline.width * 2) {
+            if (_this.rightViewPosition - value < _this.canvasline.width * 2) {
                 _viewposition = _this.canvasline.width * 2;
-                _this.drawobj.drawdot(_this.viewposition, false);
+                _this.drawobj.drawdot(_this.rightViewPosition, false);
                 if (_this.selectend == 1) {
-                    _this.endingBar.setLeft(_this.canvasline.width - Math.floor((_this.viewposition - _this.selectrpend) / 2));
+                    _this.endingBar.setLeft(_this.canvasline.width - Math.floor((_this.rightViewPosition - _this.selectrpend) / 2));
                 }
                 _this.drawobj.showselect();
                 _this.updateBarTool();
                 return;
             }
-            if (_this.viewposition - value < _this.data.index) {
+            if (_this.rightViewPosition - value < _this.data.index) {
                 _viewposition = _this.rightViewPosition - value;
-                _this.drawobj.drawdot(_this.viewposition, false);
+                _this.drawobj.drawdot(_this.rightViewPosition, false);
             }
             else {
                 _viewposition = _this.data.index;
-                _this.drawobj.drawdot(_this.viewposition, false);
+                _this.drawobj.drawdot(_this.rightViewPosition, false);
             }
             _this.updateBarTool();
             _this.rightViewPosition = _viewposition;
-            if (_this.selectend == 1 && _this.viewposition - _this.selectrpend > -2) {
-                _this.endingBar.setLeft(_this.canvasline.width - Math.floor((_this.viewposition - _this.selectrpend) / 2));
+            if (_this.selectend == 1 && _this.rightViewPosition - _this.selectrpend > -2) {
+                _this.endingBar.setLeft(_this.canvasline.width - Math.floor((_this.rightViewPosition - _this.selectrpend) / 2));
             }
             else {
             }
@@ -349,7 +349,7 @@ var Suit = (function (_super) {
                 _this.selectrpend = value * 2;
             }
             else {
-                _this.selectrpend = _this.viewposition - (_this.canvasline.width - value) * 2;
+                _this.selectrpend = _this.rightViewPosition - (_this.canvasline.width - value) * 2;
             }
             if (_this.selectrpstart > _this.selectrpend) {
                 return;
@@ -392,14 +392,14 @@ var Suit = (function (_super) {
         if (this.data.index < this.canvasline.width * 4) {
             len = Math.floor((this.canvasline.width * 4 - this.data.index) / 2);
         }
-        this.toolbarposition = Math.floor(((this.canvasline.width - len) * (this.viewposition - this.canvasline.width * 2)) /
+        this.toolbarposition = Math.floor(((this.canvasline.width - len) * (this.rightViewPosition - this.canvasline.width * 2)) /
             (this.data.index - this.canvasline.width * 2));
         this.barTool.setBarLeft(this.toolbarposition, false);
     };
     Suit.prototype.updateSelectCur = function () {
-        if (this.viewposition > this.canvasline.width * 2) {
+        if (this.rightViewPosition > this.canvasline.width * 2) {
             this.selectstart =
-                this.selectstartposition * 2 + this.viewposition - 2 * this.canvasline.width;
+                this.selectstartposition * 2 + this.rightViewPosition - 2 * this.canvasline.width;
         }
         else {
             this.selectstart = this.selectstartposition * 2;
@@ -487,7 +487,7 @@ var Suit = (function (_super) {
             if (this.curr < 0)
                 return;
             this.drawobj.drawdot(this.curr, true);
-            this.viewposition = this.curr;
+            this.rightViewPosition = this.curr;
             if (this.data.index > this.canvasline.width * 2) {
                 if (this.data.index < this.canvasline.width * 4) {
                     var len = Math.floor((this.canvasline.width * 4 - this.data.index) / 2);

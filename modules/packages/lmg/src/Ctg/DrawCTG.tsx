@@ -76,10 +76,10 @@ export default class DrawCTG {
     this.suit.canvasdata.height = height;
 
     this.yspan = (height - this.scalespan - this.basetop) / (this.max + 100 - this.min);
-    console.log('resize', this.suit.data, this.suit.viewposition, this.suit.toolbarposition, oldwidth, width);
+    console.log('resize', this.suit.data, this.suit.rightViewPosition, this.suit.toolbarposition, oldwidth, width);
     if (typeof (this.suit.data) != 'undefined') {
       if (this.suit.data.index > width * 2) {
-        this.suit.viewposition = Math.floor(2 * width);
+        this.suit.rightViewPosition = Math.floor(2 * width);
         if (this.suit.data.index < width * 4) {
           let len = Math.floor((width * 4 - this.suit.data.index) / 2);
           this.suit.barTool.setBarWidth(len);
@@ -88,7 +88,7 @@ export default class DrawCTG {
         }
         this.suit.barTool.setBarLeft(Math.floor(this.suit.toolbarposition * width / oldwidth), false);
       }
-      this.drawdot(this.suit.viewposition, false);
+      this.drawdot(this.suit.rightViewPosition, false);
     } else {
       this.drawgrid(width * 2, false);
     }
@@ -655,21 +655,21 @@ export default class DrawCTG {
     start = start === void 0 ? suit.selectrpstart : start
     end = end === void 0 ? suit.selectrpend : end
 
-    // console.log('printin', suit.viewposition,start, end);
+    // console.log('printin', suit.rightViewPosition,start, end);
     let drawwidth = suit.width;
     selectcontext.clearRect(0, 0, drawwidth, suit.height);
     if (end == 0) {
       return;
     }
     //横向选择区域设置填充色
-    let curstart = suit.viewposition < drawwidth * 2 ? 0 : (suit.viewposition - drawwidth * 2);
+    let curstart = suit.rightViewPosition < drawwidth * 2 ? 0 : (suit.rightViewPosition - drawwidth * 2);
     if (suit.data.index <= drawwidth * 2) {
       end = end / 2;
     } else {
-      end = (suit.viewposition - end) > 0 ? drawwidth - Math.floor((suit.viewposition - end) / 2) : drawwidth;
+      end = (suit.rightViewPosition - end) > 0 ? drawwidth - Math.floor((suit.rightViewPosition - end) / 2) : drawwidth;
     }
     // if(end>drawwidth*2){
-    //   end = (suit.viewposition - end) > 0 ? drawwidth - Math.floor((suit.viewposition - end) / 2) : drawwidth;
+    //   end = (suit.rightViewPosition - end) > 0 ? drawwidth - Math.floor((suit.rightViewPosition - end) / 2) : drawwidth;
     // }else{
     //   end = Math.floor(end/2);
     // }

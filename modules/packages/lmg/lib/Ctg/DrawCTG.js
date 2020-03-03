@@ -365,12 +365,12 @@ var DrawCTG = (function () {
             if (end == 0) {
                 return;
             }
-            var curstart = suit.viewposition < drawwidth * 2 ? 0 : (suit.viewposition - drawwidth * 2);
+            var curstart = suit.rightViewPosition < drawwidth * 2 ? 0 : (suit.rightViewPosition - drawwidth * 2);
             if (suit.data.index <= drawwidth * 2) {
                 end = end / 2;
             }
             else {
-                end = (suit.viewposition - end) > 0 ? drawwidth - Math.floor((suit.viewposition - end) / 2) : drawwidth;
+                end = (suit.rightViewPosition - end) > 0 ? drawwidth - Math.floor((suit.rightViewPosition - end) / 2) : drawwidth;
             }
             start = start - curstart > 0 ? start - curstart : 0;
             start = (start + 4) / 2;
@@ -435,10 +435,10 @@ var DrawCTG = (function () {
         this.suit.canvasdata.width = width;
         this.suit.canvasdata.height = height;
         this.yspan = (height - this.scalespan - this.basetop) / (this.max + 100 - this.min);
-        console.log('resize', this.suit.data, this.suit.viewposition, this.suit.toolbarposition, oldwidth, width);
+        console.log('resize', this.suit.data, this.suit.rightViewPosition, this.suit.toolbarposition, oldwidth, width);
         if (typeof (this.suit.data) != 'undefined') {
             if (this.suit.data.index > width * 2) {
-                this.suit.viewposition = Math.floor(2 * width);
+                this.suit.rightViewPosition = Math.floor(2 * width);
                 if (this.suit.data.index < width * 4) {
                     var len = Math.floor((width * 4 - this.suit.data.index) / 2);
                     this.suit.barTool.setBarWidth(len);
@@ -448,7 +448,7 @@ var DrawCTG = (function () {
                 }
                 this.suit.barTool.setBarLeft(Math.floor(this.suit.toolbarposition * width / oldwidth), false);
             }
-            this.drawdot(this.suit.viewposition, false);
+            this.drawdot(this.suit.rightViewPosition, false);
         }
         else {
             this.drawgrid(width * 2, false);

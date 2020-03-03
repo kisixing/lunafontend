@@ -21,11 +21,11 @@ function default_1() {
             _this.selectend = 1;
             if (_this.data.index < _this.canvasline.width * 2) {
                 _this.endingBar.setVisibility(true);
-                _this.endingBar.setLeft(Math.floor(_this.viewposition / 2));
+                _this.endingBar.setLeft(Math.floor(_this.rightViewPosition / 2));
             }
-            else if (_this.viewposition - _this.selectrpend >= 0) {
+            else if (_this.rightViewPosition - _this.selectrpend >= 0) {
                 _this.endingBar.setVisibility(true);
-                _this.endingBar.setLeft(_this.canvasline.width - Math.floor((_this.viewposition - _this.selectrpend) / 2));
+                _this.endingBar.setLeft(_this.canvasline.width - Math.floor((_this.rightViewPosition - _this.selectrpend) / 2));
             }
         }
         else {

@@ -36,16 +36,16 @@ export default function (this: Suit) {
             }
         })
         .on('customizing', value => {
-            // this.log('customizing', value, this.selectrpend, this.viewposition);
+            // this.log('customizing', value, this.selectrpend, this.rightViewPosition);
             if (value && this.selectflag) {
                 this.selectend = 1;
                 if (this.data.index < this.canvasline.width * 2) {
                     this.endingBar.setVisibility(true);
-                    this.endingBar.setLeft(Math.floor(this.viewposition / 2));
+                    this.endingBar.setLeft(Math.floor(this.rightViewPosition / 2));
                 }
-                else if (this.viewposition - this.selectrpend >= 0) {
+                else if (this.rightViewPosition - this.selectrpend >= 0) {
                     this.endingBar.setVisibility(true);
-                    this.endingBar.setLeft(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
+                    this.endingBar.setLeft(this.canvasline.width - Math.floor((this.rightViewPosition - this.selectrpend) / 2));
                 }
             } else {
                 this.selectend = 0;
