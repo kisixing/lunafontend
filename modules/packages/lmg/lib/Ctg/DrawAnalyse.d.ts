@@ -7,7 +7,7 @@ interface accDecPoint {
     duration: number;
     ampl: number;
 }
-interface AnalyseData {
+export interface AnalyseData {
     acc?: accDecPoint[];
     dec?: accDecPoint[];
     baseline?: number[];
@@ -17,6 +17,7 @@ interface AnalyseData {
 export declare class DrawAnalyse extends Draw {
     analyseData: AnalyseData;
     constructor(canvas: HTMLCanvasElement, width?: number, height?: number);
+    init(): void;
     setData(analyseData: AnalyseData): void;
     drawBaseline(cur: any, color: any, yspan: any, xspan: any, max: any, basetop: any): void;
     drawflag: (x: any, y: any, index: number) => void;

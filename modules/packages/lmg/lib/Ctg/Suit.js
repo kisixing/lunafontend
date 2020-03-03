@@ -182,6 +182,7 @@ var Suit = (function (_super) {
     Suit.prototype.init = function (data) {
         var _this = this;
         this.log('init');
+        this.drawAnalyse.init();
         if (!data) {
             return;
         }
@@ -284,6 +285,10 @@ var Suit = (function (_super) {
             _this.drawobj.showselect();
         });
         this.createBar();
+    };
+    Suit.prototype.analyse = function (data) {
+        this.drawAnalyse.setData(data);
+        this.drawobj.drawdot(this.canvasline.width * 2, false);
     };
     Suit.prototype.alarmOn = function (alarmType) {
         if (alarmType === void 0) { alarmType = ''; }

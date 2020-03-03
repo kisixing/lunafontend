@@ -8,7 +8,7 @@ interface accDecPoint {
     duration: number;
     ampl: number;
 }
-interface AnalyseData {
+export interface AnalyseData {
     acc?: accDecPoint[]
     dec?: accDecPoint[]
     baseline?: number[]
@@ -20,6 +20,9 @@ export class DrawAnalyse extends Draw {
     analyseData: AnalyseData
     constructor(canvas: HTMLCanvasElement, width = 0, height = 0) {
         super(width, height, canvas)
+    }
+    init() {
+        this.analyseData = null
     }
     setData(analyseData: AnalyseData, ) {
         this.analyseData = analyseData
@@ -80,7 +83,7 @@ export class DrawAnalyse extends Draw {
                 }
             }
             context2D.stroke();
-            
+
         }
     }
     //kisi 2019-10-28 绘制 acc dec

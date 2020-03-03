@@ -47,6 +47,9 @@ var DrawAnalyse = (function (_super) {
         };
         return _this;
     }
+    DrawAnalyse.prototype.init = function () {
+        this.analyseData = null;
+    };
     DrawAnalyse.prototype.setData = function (analyseData) {
         this.analyseData = analyseData;
     };

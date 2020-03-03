@@ -63,7 +63,8 @@ export default (v: Suit, docid, fetal: any) => {
 
             const { stv, ucdata, acc, dec, fhrbaselineMinute } = analysis
             analysis_ref.current.setFieldsValue({ stv, ...ucdata })
-            v.drawAnalyse.setData({
+
+            v.analyse({
                 start: startTime,
                 end: startTime + 240 * interval,
                 acc,

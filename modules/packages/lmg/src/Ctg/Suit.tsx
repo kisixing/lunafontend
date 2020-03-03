@@ -8,7 +8,7 @@ import { throttle } from 'lodash';
 import { ICacheItem } from '../services/WsService';
 import Draw from '../Draw';
 import bindEvents from './bindEvents';
-import { DrawAnalyse } from './DrawAnalyse';
+import { DrawAnalyse, AnalyseData } from './DrawAnalyse';
 let sid = 0;
 type Canvas = HTMLCanvasElement;
 type Context = CanvasRenderingContext2D;
@@ -169,6 +169,7 @@ export class Suit extends Draw {
 
   init(data: ICacheItem) {
     this.log('init')
+    this.drawAnalyse.init()
     if (!data) {
       return;
     }
@@ -295,7 +296,12 @@ export class Suit extends Draw {
     this.createBar();
 
   }
+  analyse(data:AnalyseData){
+    this.drawAnalyse.setData(data)
+    this.drawobj.drawdot(this.canvasline.width * 2, false);
 
+
+  }
   lazyEmit = throttle((type: string, ...args: any[]) => {
     // console.log(`Suit:${type}`)
     this.emit(type, ...args);

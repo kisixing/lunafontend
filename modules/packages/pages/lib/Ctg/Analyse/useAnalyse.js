@@ -65,7 +65,7 @@ exports.default = (function (v, docid, fetal) {
             cur && cur.current.setFieldsValue(f);
             var stv = analysis.stv, ucdata = analysis.ucdata, acc = analysis.acc, dec = analysis.dec, fhrbaselineMinute = analysis.fhrbaselineMinute;
             analysis_ref.current.setFieldsValue(__assign({ stv: stv }, ucdata));
-            v.drawAnalyse.setData({
+            v.analyse({
                 start: startTime,
                 end: startTime + 240 * interval,
                 acc: acc,

@@ -5,7 +5,7 @@ import { IBarTool, TLineTool } from '../ScrollBar/useScroll';
 import ScrollEl from '../ScrollBar/ScrollEl';
 import { ICacheItem } from '../services/WsService';
 import Draw from '../Draw';
-import { DrawAnalyse } from './DrawAnalyse';
+import { DrawAnalyse, AnalyseData } from './DrawAnalyse';
 declare type Canvas = HTMLCanvasElement;
 declare type Context = CanvasRenderingContext2D;
 export declare class Suit extends Draw {
@@ -88,6 +88,7 @@ export declare class Suit extends Draw {
     rightViewPosition: number;
     constructor(canvasgrid: Canvas, canvasdata: Canvas, canvasline: Canvas, canvasselect: Canvas, canvasanalyse: Canvas, wrap: HTMLElement, barTool: IBarTool, type: number);
     init(data: ICacheItem): void;
+    analyse(data: AnalyseData): void;
     lazyEmit: ((type: string, ...args: any[]) => boolean) & import("lodash").Cancelable;
     alarmOn(alarmType?: string): void;
     alarmOff(alarmType: string): void;
