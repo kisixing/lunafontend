@@ -65,6 +65,7 @@ export class DrawAnalyse extends Draw {
                     context2D.lineTo(lastx, (max - curfhroffset - analyseData.baseline[baselineoff]) * yspan + basetop);
                 }
             }
+            context2D.lineTo(cur, (max - curfhroffset - analyseData.baseline[baselineoff]) * yspan + basetop)
             context2D.stroke();
 
         } else if (leftViewposition < analyseData.end) {
@@ -82,6 +83,8 @@ export class DrawAnalyse extends Draw {
                     context2D.lineTo(lastx, (max - curfhroffset - analyseData.baseline[baselineoff]) * yspan + basetop);
                 }
             }
+            context2D.lineTo((analyseData.end - leftViewposition) / 2, (max - curfhroffset - analyseData.baseline[baselineoff]) * yspan + basetop)
+
             context2D.stroke();
 
         }
