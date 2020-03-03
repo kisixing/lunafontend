@@ -96,12 +96,10 @@ var Suit = (function (_super) {
         _this.canvasdata = canvasdata;
         _this.canvasline = canvasline;
         _this.canvasselect = canvasselect;
-        _this.canvasanalyse = canvasanalyse;
         _this.contextgrid = canvasgrid.getContext('2d');
         _this.contextdata = canvasdata.getContext('2d');
         _this.contextline = canvasline.getContext('2d');
         _this.contextselect = canvasselect.getContext('2d');
-        _this.contextanalyse = canvasanalyse.getContext('2d');
         _this.barTool = barTool;
         _this.drawobj = new DrawCTG_1.default(_this);
         _this.type = type;
@@ -186,6 +184,7 @@ var Suit = (function (_super) {
         if (!data) {
             return;
         }
+        this.drawAnalyse.setData(data.analyse);
         this.initFlag = true;
         var defaultinterval = 500;
         this.data = data;
@@ -370,8 +369,6 @@ var Suit = (function (_super) {
         this.contextline = null;
         this.canvasselect = null;
         this.contextselect = null;
-        this.canvasanalyse = null;
-        this.contextanalyse = null;
         this.wrap = null;
         this.drawobj = null;
         this.barTool = null;

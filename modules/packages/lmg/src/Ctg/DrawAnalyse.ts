@@ -1,20 +1,30 @@
 import Draw from "../Draw";
 
-
+interface AnalyseData {
+    acc?: number[]
+    dec?: number[]
+    baseline?: number[]
+    start?: number
+    end?: number
+}
 
 export class DrawAnalyse extends Draw {
-
-    constructor(canvas: HTMLCanvasElement, width = 30, height = -20) {
+    analyseData: AnalyseData
+    constructor(canvas: HTMLCanvasElement, width = 0, height = 0) {
         super(width, height, canvas)
     }
+    setData(analyseData: AnalyseData, ) {
+        this.analyseData = analyseData
+    }
+    drawBaseline(cur, color, yspan, xspan, max, basetop) {
+        //清空分析画布
+        const { context2D, width, height, analyseData } = this;
+        context2D && context2D.clearRect(0, 0, width, height)
 
-    draw(analyseData, cur, color, yspan, xspan, max, basetop) {
         if (!analyseData) {
             return
         }
-        const { context2D, width, height } = this;
 
-        context2D.clearRect(0, 0, width, height)
         let lastx = 0;
         const start = cur - width * 2 > 0 ? cur - width * 2 : 0;
 
@@ -60,6 +70,23 @@ export class DrawAnalyse extends Draw {
             context2D.stroke();
         }
     }
-
+    //kisi 2019-10-28 绘制 acc dec
+    drawflag = (x, y, index) => {
+        const { context2D, analyseData } = this;
+        context2D.textAlign = 'left';
+        context2D.textBaseline = 'top';
+        let txt = '';
+        if (typeof (analyseData) != "undefined" && analyseData.acc.indexOf(index) > -1) {
+            txt = '+';
+            context2D.font = '25px arial';
+            context2D.fillStyle = 'black';
+            context2D.fillText(txt, x + 1, y + 5);
+        } else if (typeof (analyseData) != "undefined" && analyseData.dec.indexOf(index) > -1) {
+            txt = '—';
+            context2D.font = 'bold 15px arial';
+            context2D.fillStyle = 'red';
+            context2D.fillText(txt, x + 1, y + 5);
+        }
+    }
 
 }

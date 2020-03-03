@@ -29,7 +29,7 @@ const Setting = forwardRef<FormInstance,{ [x: string]: any }>((props,ref) => {
           <span> &nbsp;</span>
         </div> */}
         <Form ref={ref} size="small" style={{ padding: '6px 12px' }} form={form} labelCol={{ xs: 9 }} wrapperCol={{ xs: 15 }} labelAlign="left">
-          <Divider >宫缩 </Divider>
+          <Divider orientation="left" style={{background:'#f0f0f0'}} >宫缩 </Divider>
           <Row>
             <Col span={6}>
               <Form.Item label="宫缩次数" style={{ marginBottom: 0 }} name="uctimes">
@@ -66,7 +66,7 @@ const Setting = forwardRef<FormInstance,{ [x: string]: any }>((props,ref) => {
               </Form.Item>
             </Col>
           </Row> */}
-          <Divider >减速</Divider>
+          <Divider orientation="left" style={{background:'#f0f0f0'}}>减速</Divider>
 
           <Row>
             <Col span={6}>
@@ -86,7 +86,7 @@ const Setting = forwardRef<FormInstance,{ [x: string]: any }>((props,ref) => {
             </Col>
           </Row>
 
-          <Divider >内容修改</Divider>
+          <Divider orientation="left" style={{background:'#f0f0f0'}}>波形</Divider>
 
           <Form.Item label="CST/OCT" style={{ marginBottom: 0 }} required name='info1'>
 
@@ -107,10 +107,10 @@ const Setting = forwardRef<FormInstance,{ [x: string]: any }>((props,ref) => {
               <Radio value={5}>正弦型</Radio>
             </Radio.Group>
           </Form.Item>
-          <Divider >类似如下</Divider>
+          <Divider orientation="left" style={{background:'#f0f0f0'}}>诊断</Divider>
 
-          <Form.Item label='诊断' style={{ marginBottom: 0 }} name="diagnosis" >
-            <Input.TextArea style={{ maxWidth: 400 }} />
+          <Form.Item wrapperCol={{xs:24}} style={{ marginBottom: 0 }} name="diagnosis" >
+            <Input.TextArea />
           </Form.Item>
         </Form>
       </div>

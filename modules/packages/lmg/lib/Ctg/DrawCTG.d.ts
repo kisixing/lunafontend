@@ -5,7 +5,6 @@ export default class DrawCTG {
     linecontext: CanvasRenderingContext2D;
     datacontext: CanvasRenderingContext2D;
     selectcontext: CanvasRenderingContext2D;
-    analysecontext: CanvasRenderingContext2D;
     baseleft: number;
     basetop: number;
     min: number;
@@ -20,7 +19,6 @@ export default class DrawCTG {
     drawgrid(cur: any, drawtimespan?: boolean): void;
     drawdotright(cur: any): void;
     drawdot(cur: any, isemit?: boolean): void;
-    drawflag: (x: any, y: any, index: any) => void;
     sethorizontal: (length: number, startposition: number, drawtimespan?: boolean) => void;
     sethorizontalright: (length: number, startposition: number, drawtimespan?: boolean) => void;
     setvertical: (_maxline: number, startposition: number) => void;

@@ -7,5 +7,5 @@ interface IProps {
     disabled: boolean;
     [x: string]: any;
 }
-declare const _default: React.ForwardRefExoticComponent<Pick<IProps, React.ReactText> & React.RefAttributes<FormInstance>>;
+declare const _default: React.ForwardRefExoticComponent<Pick<IProps, import("csstype").AnimationIterationCountProperty> & React.RefAttributes<FormInstance>>;
 export default _default;

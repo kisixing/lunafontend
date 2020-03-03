@@ -1,5 +1,16 @@
 import Draw from "../Draw";
-export declare class DrawAnalyse extends Draw {
-    constructor(canvas: HTMLCanvasElement, width?: number, height?: number);
-    draw(analyseData: any, cur: any, color: any, yspan: any, xspan: any, max: any, basetop: any): void;
+interface AnalyseData {
+    acc?: number[];
+    dec?: number[];
+    baseline?: number[];
+    start?: number;
+    end?: number;
 }
+export declare class DrawAnalyse extends Draw {
+    analyseData: AnalyseData;
+    constructor(canvas: HTMLCanvasElement, width?: number, height?: number);
+    setData(analyseData: AnalyseData): void;
+    drawBaseline(cur: any, color: any, yspan: any, xspan: any, max: any, basetop: any): void;
+    drawflag: (x: any, y: any, index: any) => void;
+}
+export {};

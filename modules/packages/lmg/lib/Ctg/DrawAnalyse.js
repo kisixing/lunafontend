@@ -20,16 +20,38 @@ var Draw_1 = __importDefault(require("../Draw"));
 var DrawAnalyse = (function (_super) {
     __extends(DrawAnalyse, _super);
     function DrawAnalyse(canvas, width, height) {
-        if (width === void 0) { width = 30; }
-        if (height === void 0) { height = -20; }
-        return _super.call(this, width, height, canvas) || this;
+        if (width === void 0) { width = 0; }
+        if (height === void 0) { height = 0; }
+        var _this = _super.call(this, width, height, canvas) || this;
+        _this.drawflag = function (x, y, index) {
+            var _a = _this, context2D = _a.context2D, analyseData = _a.analyseData;
+            context2D.textAlign = 'left';
+            context2D.textBaseline = 'top';
+            var txt = '';
+            if (typeof (analyseData) != "undefined" && analyseData.acc.indexOf(index) > -1) {
+                txt = '+';
+                context2D.font = '25px arial';
+                context2D.fillStyle = 'black';
+                context2D.fillText(txt, x + 1, y + 5);
+            }
+            else if (typeof (analyseData) != "undefined" && analyseData.dec.indexOf(index) > -1) {
+                txt = '—';
+                context2D.font = 'bold 15px arial';
+                context2D.fillStyle = 'red';
+                context2D.fillText(txt, x + 1, y + 5);
+            }
+        };
+        return _this;
     }
-    DrawAnalyse.prototype.draw = function (analyseData, cur, color, yspan, xspan, max, basetop) {
+    DrawAnalyse.prototype.setData = function (analyseData) {
+        this.analyseData = analyseData;
+    };
+    DrawAnalyse.prototype.drawBaseline = function (cur, color, yspan, xspan, max, basetop) {
+        var _a = this, context2D = _a.context2D, width = _a.width, height = _a.height, analyseData = _a.analyseData;
+        context2D && context2D.clearRect(0, 0, width, height);
         if (!analyseData) {
             return;
         }
-        var _a = this, context2D = _a.context2D, width = _a.width, height = _a.height;
-        context2D.clearRect(0, 0, width, height);
         var lastx = 0;
         var start = cur - width * 2 > 0 ? cur - width * 2 : 0;
         var curfhroffset = 0;

@@ -79,8 +79,6 @@ export class Suit extends Draw {
   contextline: Context;
   canvasselect: Canvas;
   contextselect: Context;
-  canvasanalyse: Canvas;
-  contextanalyse: Context;
   barTool: IBarTool;
   drawobj: DrawCTG;
   dragtimestamp = 0;
@@ -143,12 +141,10 @@ export class Suit extends Draw {
     this.canvasdata = canvasdata;
     this.canvasline = canvasline;
     this.canvasselect = canvasselect;
-    this.canvasanalyse = canvasanalyse;
     this.contextgrid = canvasgrid.getContext('2d');
     this.contextdata = canvasdata.getContext('2d');
     this.contextline = canvasline.getContext('2d');
     this.contextselect = canvasselect.getContext('2d');
-    this.contextanalyse = canvasanalyse.getContext('2d');
     this.barTool = barTool;
     this.drawobj = new DrawCTG(this);
     this.type = type;
@@ -174,7 +170,7 @@ export class Suit extends Draw {
     if (!data) {
       return;
     }
-
+    this.drawAnalyse.setData(data.analyse)
     // this.log('init', data)
     this.initFlag = true;
     let defaultinterval = 500;
@@ -425,8 +421,6 @@ export class Suit extends Draw {
     this.contextline = null;
     this.canvasselect = null;
     this.contextselect = null;
-    this.canvasanalyse = null;
-    this.contextanalyse = null;
     // this.p = null;
     this.wrap = null;
     this.drawobj = null;

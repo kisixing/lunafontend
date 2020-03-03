@@ -43,24 +43,6 @@ var DrawCTG = (function () {
         if (basetop === void 0) { basetop = 10; }
         if (min === void 0) { min = 50; }
         if (max === void 0) { max = 210; }
-        this.drawflag = function (x, y, index) {
-            var _a = _this, analysecontext = _a.analysecontext, suit = _a.suit;
-            analysecontext.textAlign = 'left';
-            analysecontext.textBaseline = 'top';
-            var txt = '';
-            if (typeof (suit.data.analyse) != "undefined" && suit.data.analyse.acc.indexOf(index) > -1) {
-                txt = '+';
-                analysecontext.font = '25px arial';
-                analysecontext.fillStyle = 'black';
-                analysecontext.fillText(txt, x + 1, y + 5);
-            }
-            else if (typeof (suit.data.analyse) != "undefined" && suit.data.analyse.dec.indexOf(index) > -1) {
-                txt = '—';
-                analysecontext.font = 'bold 15px arial';
-                analysecontext.fillStyle = 'red';
-                analysecontext.fillText(txt, x + 1, y + 5);
-            }
-        };
         this.sethorizontal = function (length, startposition, drawtimespan) {
             if (drawtimespan === void 0) { drawtimespan = true; }
             var _a = _this, setrules = _a.setrules, gridcontext = _a.gridcontext, baseleft = _a.baseleft, min = _a.min, max = _a.max, xspan = _a.xspan;
@@ -430,7 +412,6 @@ var DrawCTG = (function () {
         this.linecontext = suit.contextline;
         this.datacontext = suit.contextdata;
         this.selectcontext = suit.contextselect;
-        this.analysecontext = suit.contextanalyse;
         this.xspan = xspan;
         this.yspan = yspan;
         this.scalespan = scalespan;
@@ -453,8 +434,6 @@ var DrawCTG = (function () {
         this.suit.canvasgrid.height = height;
         this.suit.canvasdata.width = width;
         this.suit.canvasdata.height = height;
-        this.suit.canvasanalyse.width = width;
-        this.suit.canvasanalyse.height = height;
         this.yspan = (height - this.scalespan - this.basetop) / (this.max + 100 - this.min);
         console.log('resize', this.suit.data, this.suit.viewposition, this.suit.toolbarposition, oldwidth, width);
         if (typeof (this.suit.data) != 'undefined') {
@@ -494,7 +473,7 @@ var DrawCTG = (function () {
     DrawCTG.prototype.drawdot = function (cur, isemit) {
         if (isemit === void 0) { isemit = false; }
         this.suit.log('drawdot', cur, isemit, this.suit.data.index, this.suit.width * 2);
-        var _a = this, suit = _a.suit, linecontext = _a.linecontext, max = _a.max, analysecontext = _a.analysecontext;
+        var _a = this, suit = _a.suit, linecontext = _a.linecontext, max = _a.max;
         var drawAnalyse = suit.drawAnalyse;
         var _b = suit.data, fhr = _b.fhr, toco = _b.toco, fm = _b.fm;
         if (typeof (fhr[0]) == "undefined") {
@@ -508,7 +487,6 @@ var DrawCTG = (function () {
         var lastx = 0;
         var lasty = 0;
         linecontext.clearRect(0, 0, suit.canvasline.width, suit.canvasline.height);
-        analysecontext.clearRect(0, 0, suit.canvasanalyse.width, suit.canvasanalyse.height);
         var start = cur - suit.canvasline.width * 2 > 0 ? cur - suit.canvasline.width * 2 : 0;
         var alarmstate = 0;
         for (var fetal = 0; fetal < suit.data.fetal_num; fetal++) {
@@ -599,7 +577,7 @@ var DrawCTG = (function () {
                         }
                         this.linecontext.lineTo(lastx, (max - lasty - curfhroffset) * this.yspan + this.basetop);
                     }
-                    this.drawflag(lastx, (max - lasty - curfhroffset) * this.yspan, i_1);
+                    this.suit.drawAnalyse.drawflag(lastx, (max - lasty - curfhroffset) * this.yspan, i_1);
                 }
             }
             this.linecontext.stroke();
@@ -648,7 +626,7 @@ var DrawCTG = (function () {
                 this.showfm(lastx);
             }
         }
-        drawAnalyse.draw(suit.data.analyse, cur, 'red', this.yspan, this.xspan, max, this.basetop);
+        drawAnalyse.drawBaseline(cur, 'red', this.yspan, this.xspan, max, this.basetop);
     };
     DrawCTG.prototype.setscalestyle = function (context, color) {
         context.font = 'bold 10px consolas';

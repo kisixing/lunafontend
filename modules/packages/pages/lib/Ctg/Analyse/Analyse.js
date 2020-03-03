@@ -48,7 +48,7 @@ var Setting = react_1.forwardRef(function (props, ref) {
     return (react_1.default.createElement("div", __assign({}, others),
         react_1.default.createElement("div", null,
             react_1.default.createElement(antd_1.Form, { ref: ref, size: "small", style: { padding: '6px 12px' }, form: form, labelCol: { xs: 9 }, wrapperCol: { xs: 15 }, labelAlign: "left" },
-                react_1.default.createElement(antd_1.Divider, null, "\u5BAB\u7F29 "),
+                react_1.default.createElement(antd_1.Divider, { orientation: "left", style: { background: '#f0f0f0' } }, "\u5BAB\u7F29 "),
                 react_1.default.createElement(antd_1.Row, null,
                     react_1.default.createElement(antd_1.Col, { span: 6 },
                         react_1.default.createElement(antd_1.Form.Item, { label: "\u5BAB\u7F29\u6B21\u6570", style: { marginBottom: 0 }, name: "uctimes" },
@@ -62,7 +62,7 @@ var Setting = react_1.forwardRef(function (props, ref) {
                     react_1.default.createElement(antd_1.Col, { span: 6 },
                         react_1.default.createElement(antd_1.Form.Item, { label: "\u6301\u7EED\u65F6\u95F4", style: { marginBottom: 0 }, name: "uckeeptime" },
                             react_1.default.createElement(antd_1.InputNumber, null)))),
-                react_1.default.createElement(antd_1.Divider, null, "\u51CF\u901F"),
+                react_1.default.createElement(antd_1.Divider, { orientation: "left", style: { background: '#f0f0f0' } }, "\u51CF\u901F"),
                 react_1.default.createElement(antd_1.Row, null,
                     react_1.default.createElement(antd_1.Col, { span: 6 },
                         react_1.default.createElement(antd_1.Form.Item, { label: "\u65E9\u51CF", style: { marginBottom: 0 }, name: "j0" },
@@ -73,7 +73,7 @@ var Setting = react_1.forwardRef(function (props, ref) {
                     react_1.default.createElement(antd_1.Col, { span: 6 },
                         react_1.default.createElement(antd_1.Form.Item, { label: "\u53D8\u5F02\u51CF\u901F", style: { marginBottom: 0 }, name: "j0" },
                             react_1.default.createElement(antd_1.InputNumber, null)))),
-                react_1.default.createElement(antd_1.Divider, null, "\u5185\u5BB9\u4FEE\u6539"),
+                react_1.default.createElement(antd_1.Divider, { orientation: "left", style: { background: '#f0f0f0' } }, "\u6CE2\u5F62"),
                 react_1.default.createElement(antd_1.Form.Item, { label: "CST/OCT", style: { marginBottom: 0 }, required: true, name: 'info1' },
                     react_1.default.createElement(antd_1.Radio.Group, null,
                         react_1.default.createElement(antd_1.Radio, { value: 1 }, "\u9634\u6027"),
@@ -87,8 +87,8 @@ var Setting = react_1.forwardRef(function (props, ref) {
                         react_1.default.createElement(antd_1.Radio, { value: 3 }, "\u4E2D\u6CE2\u6D6A"),
                         react_1.default.createElement(antd_1.Radio, { value: 4 }, "\u5927\u6CE2\u6D6A"),
                         react_1.default.createElement(antd_1.Radio, { value: 5 }, "\u6B63\u5F26\u578B"))),
-                react_1.default.createElement(antd_1.Divider, null, "\u7C7B\u4F3C\u5982\u4E0B"),
-                react_1.default.createElement(antd_1.Form.Item, { label: '\u8BCA\u65AD', style: { marginBottom: 0 }, name: "diagnosis" },
-                    react_1.default.createElement(antd_1.Input.TextArea, { style: { maxWidth: 400 } }))))));
+                react_1.default.createElement(antd_1.Divider, { orientation: "left", style: { background: '#f0f0f0' } }, "\u8BCA\u65AD"),
+                react_1.default.createElement(antd_1.Form.Item, { wrapperCol: { xs: 24 }, style: { marginBottom: 0 }, name: "diagnosis" },
+                    react_1.default.createElement(antd_1.Input.TextArea, null))))));
 });
 exports.default = (Setting);

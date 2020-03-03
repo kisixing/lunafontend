@@ -29,18 +29,18 @@ Suit.option = {
 
 const setting = {
   ws_url: "192.168.123.10:8084",
-  // xhr_url: "transfer.lian-med.com:9987",
-  xhr_url: "192.168.123.56:9987",
+  xhr_url: "transfer.lian-med.com:9987",
+  // xhr_url: "192.168.123.56:9987",
   alarm_high: "160",
   alarm_low: "110",
   alarm_on_window: "1",
   alarm_on_sound: "1"
 }
 
-request.config({
-  prefix: `http://${setting.xhr_url}/api`,
-  Authorization: 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOIiwiZXhwIjoxNTczNDY2MDAyfQ.NWtIOKu61dARucHpTO9Usyb9D9s3rLkuJwGxZL4nHtlC9AAVb6yfz509i0e3sYhbXFBi8HYVV97sm67Rxi0sXA'
-})
+// request.config({
+//   prefix: `http://${setting.xhr_url}/api`,
+//   Authorization: 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOIiwiZXhwIjoxNTczNDY2MDAyfQ.NWtIOKu61dARucHpTO9Usyb9D9s3rLkuJwGxZL4nHtlC9AAVb6yfz509i0e3sYhbXFBi8HYVV97sm67Rxi0sXA'
+// })
 export default function () {
   const w = new WsService(setting)
   const [ok, setOk] = useState(false)
