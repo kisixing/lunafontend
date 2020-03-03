@@ -111,14 +111,14 @@ export class Suit extends Draw {
     return this.rightViewPosition >= this.width * 2 ? this.rightViewPosition - this.width * 2 : 0;
   }
   get selectingBarPoint() {
-    return ~~(this.leftViewposition + this.selectingBar.getLeft() * 2);
+    return ~~(this.leftViewposition + (this.selectingBar ? this.selectingBar.getLeft() * 2 : 0));
   }
   get rightViewPosition() {
     return this.viewposition;
   }
   set rightViewPosition(value: number) {
     this.viewposition = value;
- 
+
     this.emit('change:selectPoint', this.selectingBarPoint)
 
     this.updateBarTool();
@@ -172,7 +172,6 @@ export class Suit extends Draw {
     if (!data) {
       return;
     }
-    this.drawAnalyse.setData(data.analyse)
     // this.log('init', data)
     this.initFlag = true;
     let defaultinterval = 500;
@@ -209,7 +208,7 @@ export class Suit extends Draw {
         this.curr = this.data.index;
       }
       this.drawobj.drawdot(this.canvasline.width * 2, false);
-      this.viewposition = this.curr;
+      this.rightViewPosition = this.curr;
     } else {
       this.timerCtg(defaultinterval);
     }
@@ -296,6 +295,7 @@ export class Suit extends Draw {
     this.createBar();
 
   }
+
   lazyEmit = throttle((type: string, ...args: any[]) => {
     // console.log(`Suit:${type}`)
     this.emit(type, ...args);

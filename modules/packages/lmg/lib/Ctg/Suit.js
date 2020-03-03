@@ -161,7 +161,7 @@ var Suit = (function (_super) {
     });
     Object.defineProperty(Suit.prototype, "selectingBarPoint", {
         get: function () {
-            return ~~(this.leftViewposition + this.selectingBar.getLeft() * 2);
+            return ~~(this.leftViewposition + (this.selectingBar ? this.selectingBar.getLeft() * 2 : 0));
         },
         enumerable: true,
         configurable: true
@@ -185,7 +185,6 @@ var Suit = (function (_super) {
         if (!data) {
             return;
         }
-        this.drawAnalyse.setData(data.analyse);
         this.initFlag = true;
         var defaultinterval = 500;
         this.data = data;
@@ -221,7 +220,7 @@ var Suit = (function (_super) {
                 this.curr = this.data.index;
             }
             this.drawobj.drawdot(this.canvasline.width * 2, false);
-            this.viewposition = this.curr;
+            this.rightViewPosition = this.curr;
         }
         else {
             this.timerCtg(defaultinterval);

@@ -25,11 +25,7 @@ const CTGChart = (docid: string) => {
 
     return {
         ctgData, loading,
-        setCtgData(data: { [x: string]: any }) {
-            console.log('zzz')
 
-            setCtgData({ ...data, ...ctgData, })
-        }
 
     };
 }
