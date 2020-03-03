@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Radio, Button, Select } from 'antd';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
-import Fischer from "./methods/Fischer";
-import Krebs from "./methods/Krebs";
-import Nst from "./methods/Nst";
 
+import Methods from './methods'
 import { event } from '@lianmed/utils';
 const intervals = [20, 40]
 interface IProps {
@@ -36,17 +34,13 @@ const ScoringMethod = (props: IProps) => {
     startTime,
     mark, setMark,
     interval, setInterval,
-    modifyData,
-    Fischer_ref,
-    Nst_ref,
-    Krebs_ref
+    modifyData
   } = props
 
   const onChange = e => {
     const mark = e.target.value
     modifyData()
 
-    setDisabled(true)
     setMark(mark)
   };
 
@@ -135,9 +129,9 @@ const ScoringMethod = (props: IProps) => {
 
         </Form> */}
 
-        <Fischer name={mark} ref={Fischer_ref} />
-        <Krebs name={mark} ref={Krebs_ref} />
-        <Nst name={mark} ref={Nst_ref} />
+
+        <Methods {...props} disabled={disabled} />
+
         <div style={{ marginTop: 5 }}>
           <Button size="small" style={{ marginBottom: 10 }} type="primary" onClick={analyse}>分析</Button>
           <Button size="small" style={{ marginBottom: 10 }} onClick={() => {

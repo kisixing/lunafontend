@@ -27,9 +27,7 @@ export default (v: Suit, docid, fetal: any) => {
         analysis_ref
     }
     useEffect(() => {
-        console.log('zzzz', v)
         const s = (time) => {
-            console.log('zzz', time)
             setStartTime(time)
         }
         v && v.on('change:selectPoint', s)

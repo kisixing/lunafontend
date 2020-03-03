@@ -34,9 +34,7 @@ exports.default = (function (v, docid, fetal) {
         analysis_ref: analysis_ref
     };
     react_1.useEffect(function () {
-        console.log('zzzz', v);
         var s = function (time) {
-            console.log('zzz', time);
             setStartTime(time);
         };
         v && v.on('change:selectPoint', s);
