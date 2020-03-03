@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Router } from "react-router-dom";
 
 import { WsService } from '@lianmed/lmg'
 import { Hooks } from "@lianmed/utils";
@@ -12,6 +12,10 @@ import Partogram from './Partogram'
 import Page from './Page'
 import request from "@lianmed/request";
 import Analyse from "./Analyse/index";
+
+
+
+
 Suit.option = {
   "fhrcolor1": "#8080ff",
   "fhrcolor2": "#008040",
@@ -77,6 +81,8 @@ export default function () {
 
         </Switch>
 
-      } </>
+      }
+    </>
+
   );
 }
