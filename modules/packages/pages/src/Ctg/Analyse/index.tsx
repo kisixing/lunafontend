@@ -1,4 +1,4 @@
-import React, { useState,  useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Row, Col, Button } from 'antd';
 import Score from './Score';
 import Analyse from './Analyse';
@@ -60,21 +60,19 @@ function Analysis({
 
   return (
     <div style={{ height: '100%' }}>
-      <div style={{ height: `calc(100% - 420px - 24px)`, padding: 24, marginBottom: 24, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px' }}>
+      <div style={{ height: `calc(100% - 420px - 12px)`, marginBottom: 12, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px', overflow: 'hidden' }}>
         <Ctg ref={ref} loading={loading} data={ctgData} />
 
       </div>
-      <div style={{ height: 420 }}>
-        <Row gutter={24} style={{ height: '100%' }}>
-          <Col span={12} style={{ height: '100%' }} >
-            <Score {...d} fetal={fetal} setFetal={setFetal} ctgData={ctgData} docid={docid} v={ref.current} style={{ ...border, height: '100%', background: '#fff' }} />
-          </Col>
-          <Col span={12} style={{ height: '100%' }} >
-            <Analyse ref={analysis_ref} fetal={fetal} style={{ ...border, height: '100%', background: '#fff' }} />
-            <Button size="small" style={{ position: 'absolute', right: 24, bottom: 16 }} type="primary" onClick={submit}>保存</Button>
-          </Col>
-        </Row>
-      </div>
+      <Row gutter={12} style={{ height: 420 }}>
+        <Col span={12} style={{ height: '100%' }} >
+          <Score {...d} fetal={fetal} setFetal={setFetal} ctgData={ctgData} docid={docid} v={ref.current} style={{ ...border, height: '100%', background: '#fff' }} />
+        </Col>
+        <Col span={12} style={{ height: '100%' }} >
+          <Analyse ref={analysis_ref} fetal={fetal} style={{ ...border, height: '100%', background: '#fff' }} />
+          <Button size="small" style={{ position: 'absolute', right: 24, bottom: 16 }} type="primary" onClick={submit}>保存</Button>
+        </Col>
+      </Row>
     </div>
   );
 }

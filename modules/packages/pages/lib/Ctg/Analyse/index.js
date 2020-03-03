@@ -62,14 +62,13 @@ function Analysis(_a) {
         Krebs_ref: Krebs_ref
     };
     return (react_1.default.createElement("div", { style: { height: '100%' } },
-        react_1.default.createElement("div", { style: { height: "calc(100% - 420px - 24px)", padding: 24, marginBottom: 24, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px' } },
+        react_1.default.createElement("div", { style: { height: "calc(100% - 420px - 12px)", marginBottom: 12, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px', overflow: 'hidden' } },
             react_1.default.createElement(lmg_1.Ctg, { ref: ref, loading: loading, data: ctgData })),
-        react_1.default.createElement("div", { style: { height: 420 } },
-            react_1.default.createElement(antd_1.Row, { gutter: 24, style: { height: '100%' } },
-                react_1.default.createElement(antd_1.Col, { span: 12, style: { height: '100%' } },
-                    react_1.default.createElement(Score_1.default, __assign({}, d, { fetal: fetal, setFetal: setFetal, ctgData: ctgData, docid: docid, v: ref.current, style: __assign(__assign({}, border), { height: '100%', background: '#fff' }) }))),
-                react_1.default.createElement(antd_1.Col, { span: 12, style: { height: '100%' } },
-                    react_1.default.createElement(Analyse_1.default, { ref: analysis_ref, fetal: fetal, style: __assign(__assign({}, border), { height: '100%', background: '#fff' }) }),
-                    react_1.default.createElement(antd_1.Button, { size: "small", style: { position: 'absolute', right: 24, bottom: 16 }, type: "primary", onClick: submit }, "\u4FDD\u5B58"))))));
+        react_1.default.createElement(antd_1.Row, { gutter: 12, style: { height: 420 } },
+            react_1.default.createElement(antd_1.Col, { span: 12, style: { height: '100%' } },
+                react_1.default.createElement(Score_1.default, __assign({}, d, { fetal: fetal, setFetal: setFetal, ctgData: ctgData, docid: docid, v: ref.current, style: __assign(__assign({}, border), { height: '100%', background: '#fff' }) }))),
+            react_1.default.createElement(antd_1.Col, { span: 12, style: { height: '100%' } },
+                react_1.default.createElement(Analyse_1.default, { ref: analysis_ref, fetal: fetal, style: __assign(__assign({}, border), { height: '100%', background: '#fff' }) }),
+                react_1.default.createElement(antd_1.Button, { size: "small", style: { position: 'absolute', right: 24, bottom: 16 }, type: "primary", onClick: submit }, "\u4FDD\u5B58")))));
 }
 exports.default = Analysis;

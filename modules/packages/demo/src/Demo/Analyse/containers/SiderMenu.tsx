@@ -23,7 +23,6 @@ class SiderMenu extends Component<{ dataSource: obvuew.prenatal_visitspage[], se
   };
 
   render() {
-    const { selectedKeys } = this.state;
     const { dataSource, selected } = this.props;
     // console.log('555555555', selectedKeys, [selected.id]);
     return (
@@ -32,7 +31,7 @@ class SiderMenu extends Component<{ dataSource: obvuew.prenatal_visitspage[], se
         className={styles.wrapper}
         selectedKeys={selected.id && [selected.id.toString()]}
         onClick={this.handleClick}
-        style={{height: 'calc(100vh - 259px)',}}
+        style={{height: 'calc(100% - 75px)'}}
       >
         {dataSource.map((item) => {
           return (

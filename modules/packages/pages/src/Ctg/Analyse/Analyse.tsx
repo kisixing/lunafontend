@@ -28,7 +28,7 @@ const Setting = forwardRef<FormInstance,{ [x: string]: any }>((props,ref) => {
         {/* <div style={{ padding: '12px 24px', background: '#ddd' }}>
           <span> &nbsp;</span>
         </div> */}
-        <Form ref={ref} size="small" style={{ padding: '12px 24px' }} form={form} labelCol={{ xs: 8 }} wrapperCol={{ xs: 16 }} labelAlign="left">
+        <Form ref={ref} size="small" style={{ padding: '6px 12px' }} form={form} labelCol={{ xs: 9 }} wrapperCol={{ xs: 15 }} labelAlign="left">
           <Divider >宫缩 </Divider>
           <Row>
             <Col span={6}>
@@ -42,12 +42,12 @@ const Setting = forwardRef<FormInstance,{ [x: string]: any }>((props,ref) => {
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label="间隔时间" style={{ marginBottom: 0 }} name="uckeeptime">
+              <Form.Item label="间隔时间" style={{ marginBottom: 0 }} name="ucdurationtime">
                 <InputNumber />
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label="持持续时间" style={{ marginBottom: 0 }} name="ucdurationtime">
+              <Form.Item label="持续时间" style={{ marginBottom: 0 }} name="uckeeptime">
                 <InputNumber />
               </Form.Item>
             </Col>
