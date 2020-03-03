@@ -20,6 +20,6 @@ export declare class DrawAnalyse extends Draw {
     init(): void;
     setData(analyseData: AnalyseData): void;
     drawBaseline(cur: any, color: any, yspan: any, xspan: any, max: any, basetop: any): void;
-    drawflag: (x: any, y: any, index: number) => void;
+    drawflag: (canvas: any, x: any, y: any, index: number) => void;
 }
 export {};

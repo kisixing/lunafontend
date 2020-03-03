@@ -6,8 +6,10 @@ export default class Draw extends EventEmitter implements Drawer {
     context2D: CanvasRenderingContext2D;
     _width: number;
     _height: number;
-    width: number;
-    height: number;
+    get width(): number;
+    set width(v: number);
+    get height(): number;
+    set height(v: number);
     wrap: HTMLElement;
     constructor(width?: number, height?: number, canvas?: HTMLCanvasElement);
     log: any;

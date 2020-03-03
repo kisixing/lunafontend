@@ -263,7 +263,7 @@ export default class DrawCTG {
           }
           //kisi 2019-10-29
           //绘制加减速标记
-          this.suit.drawAnalyse.drawflag(lastx, (max - lasty - curfhroffset) * this.yspan, i);
+          this.suit.drawAnalyse.drawflag(this.linecontext,lastx, (max - lasty - curfhroffset) * this.yspan, i);
         }
       }
       this.linecontext.stroke();

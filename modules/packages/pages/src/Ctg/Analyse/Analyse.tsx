@@ -70,34 +70,41 @@ const Setting = forwardRef<FormInstance,{ [x: string]: any }>((props,ref) => {
 
           <Row>
             <Col span={6}>
-              <Form.Item label="早减" style={{ marginBottom: 0 }} name="j0">
+              <Form.Item label="早减" style={{ marginBottom: 0 }} name="edtimes">
                 <InputNumber />
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label="晚减" style={{ marginBottom: 0 }} name="j0">
+              <Form.Item label="晚减" style={{ marginBottom: 0 }} name="ldtimes">
                 <InputNumber />
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label="变异减速" style={{ marginBottom: 0 }} name="j0">
+              <Form.Item label="变异减速" style={{ marginBottom: 0 }} name="vdtimes">
                 <InputNumber />
               </Form.Item>
             </Col>
           </Row>
 
-          <Divider orientation="left" style={{background:'#f0f0f0'}}>波形</Divider>
-
-          <Form.Item label="CST/OCT" style={{ marginBottom: 0 }} required name='info1'>
-
+          <Divider orientation="left" style={{background:'#f0f0f0'}}>类型</Divider>
+          <Form.Item label="NST" style={{ marginBottom: 0 }} required name='nst'>
             <Radio.Group>
-              <Radio value={1}>阴性</Radio>
-              <Radio value={2}>阳性</Radio>
-              <Radio value={3}>可以</Radio>
+              <Radio value={1}>有反应</Radio>
+              <Radio value={2}>无反应</Radio>
+              <Radio value={3}>可疑</Radio>
               <Radio value={4}>不满意</Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item label="短变异（毫秒）" style={{ marginBottom: 0 }} name="info2" required>
+          <Form.Item label="CST/OCT" style={{ marginBottom: 0 }} required name='cst'>
+            <Radio.Group>
+              <Radio value={1}>阴性</Radio>
+              <Radio value={2}>阳性</Radio>
+              <Radio value={3}>可疑</Radio>
+              <Radio value={4}>不满意</Radio>
+            </Radio.Group>
+          </Form.Item>
+          <Divider orientation="left" style={{background:'#f0f0f0'}}>波形</Divider>
+          <Form.Item label="" style={{ marginBottom: 0 }} name="wave" required>
 
             <Radio.Group>
               <Radio value={1}>平滑</Radio>

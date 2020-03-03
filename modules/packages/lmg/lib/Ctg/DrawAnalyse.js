@@ -23,7 +23,7 @@ var DrawAnalyse = (function (_super) {
         if (width === void 0) { width = 0; }
         if (height === void 0) { height = 0; }
         var _this = _super.call(this, width, height, canvas) || this;
-        _this.drawflag = function (x, y, index) {
+        _this.drawflag = function (canvas, x, y, index) {
             var _a = _this, context2D = _a.context2D, analyseData = _a.analyseData;
             if (!context2D || !analyseData)
                 return;
@@ -32,17 +32,18 @@ var DrawAnalyse = (function (_super) {
             context2D.textAlign = 'left';
             context2D.textBaseline = 'top';
             var txt = '';
-            if (acc.indexOf(index) > -1) {
+            if (acc.indexOf(index) > -1 || acc.indexOf(index - 1) > -1) {
+                console.log(acc, index);
                 txt = '+';
-                context2D.font = '25px arial';
-                context2D.fillStyle = 'black';
-                context2D.fillText(txt, x + 1, y + 5);
+                canvas.font = '25px arial';
+                canvas.fillStyle = 'black';
+                canvas.fillText(txt, x + 1, y - 1);
             }
-            else if (dec.indexOf(index) > -1) {
+            else if (dec.indexOf(index) > -1 || dec.indexOf(index - 1) > -1) {
                 txt = '—';
-                context2D.font = 'bold 15px arial';
-                context2D.fillStyle = 'red';
-                context2D.fillText(txt, x + 1, y + 5);
+                canvas.font = 'bold 15px arial';
+                canvas.fillStyle = 'red';
+                canvas.fillText(txt, x + 1, y - 1);
             }
         };
         return _this;

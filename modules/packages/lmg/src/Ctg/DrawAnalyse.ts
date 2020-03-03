@@ -90,7 +90,8 @@ export class DrawAnalyse extends Draw {
         }
     }
     //kisi 2019-10-28 绘制 acc dec
-    drawflag = (x, y, index: number) => {
+    //2020-03-04 用 linecanvas 绘制标记
+    drawflag = (canvas,x, y, index: number) => {
         const { context2D, analyseData } = this;
         if (!context2D || !analyseData) return
         const acc = analyseData.acc.map(_ => _.index)
@@ -98,16 +99,17 @@ export class DrawAnalyse extends Draw {
         context2D.textAlign = 'left';
         context2D.textBaseline = 'top';
         let txt = '';
-        if (acc.indexOf(index) > -1) {
+        if (acc.indexOf(index) > -1 || acc.indexOf(index-1) > -1) {
+            console.log(acc,index);
             txt = '+';
-            context2D.font = '25px arial';
-            context2D.fillStyle = 'black';
-            context2D.fillText(txt, x + 1, y + 5);
-        } else if (dec.indexOf(index) > -1) {
+            canvas.font = '25px arial';
+            canvas.fillStyle = 'black';
+            canvas.fillText(txt, x + 1, y - 1);
+        } else if (dec.indexOf(index) > -1 || dec.indexOf(index-1) > -1) {
             txt = '—';
-            context2D.font = 'bold 15px arial';
-            context2D.fillStyle = 'red';
-            context2D.fillText(txt, x + 1, y + 5);
+            canvas.font = 'bold 15px arial';
+            canvas.fillStyle = 'red';
+            canvas.fillText(txt, x + 1, y - 1);
         }
     }
 
