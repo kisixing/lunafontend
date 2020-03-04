@@ -308,7 +308,7 @@ export default class DrawCTG {
     }
     //kisi 2019-10-29 baseline
     //TODO
-    drawAnalyse.drawBaseline(cur, 'red', this.yspan, this.xspan, max, this.basetop)
+    drawAnalyse.drawBaseline(cur, 'black', this.yspan, this.xspan, max, this.basetop)
 
   }
 

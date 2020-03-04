@@ -159,6 +159,7 @@ export class Suit extends Draw {
         }
       }
     }
+    this.drawSelect.clearselect();
     this.drawobj.showcur(0, false);
     if (this.type > 0) {
       //kisi 2019-10-29 测试增加analyse属性
@@ -318,7 +319,9 @@ export class Suit extends Draw {
   analyse(data: AnalyseData) {
     this.drawAnalyse.setData(data)
     this.emit('selectForward', data.end - data.start)
-    this.drawobj.drawdot(this.canvasline.width * 2, false);
+    //this.drawobj.drawdot(this.canvasline.width * 2, false);
+    //kisi 2020-03-05 
+    this.drawobj.drawdot(this.rightViewPosition, false);
   }
   lazyEmit = throttle((type: string, ...args: any[]) => {
     // console.log(`Suit:${type}`)

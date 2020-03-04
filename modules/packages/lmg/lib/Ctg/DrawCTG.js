@@ -572,7 +572,7 @@ var DrawCTG = (function () {
                 this.showfm(lastx);
             }
         }
-        drawAnalyse.drawBaseline(cur, 'red', this.yspan, this.xspan, max, this.basetop);
+        drawAnalyse.drawBaseline(cur, 'black', this.yspan, this.xspan, max, this.basetop);
     };
     DrawCTG.prototype.setscalestyle = function (context, color) {
         context.font = 'bold 10px consolas';

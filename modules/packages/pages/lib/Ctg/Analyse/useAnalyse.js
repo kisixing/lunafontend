@@ -46,6 +46,7 @@ exports.default = (function (v, docid, fetal) {
     };
     react_1.useEffect(function () {
         var s = function (time) {
+            time = time + 4800 <= v.data.index ? time : v.data.index - 4800;
             setStartTime(time);
         };
         v && v.on('change:selectPoint', s);

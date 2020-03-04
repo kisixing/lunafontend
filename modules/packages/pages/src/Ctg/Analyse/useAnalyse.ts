@@ -28,6 +28,7 @@ export default (v: Suit, docid, fetal: any) => {
     }
     useEffect(() => {
         const s = (time) => {
+            time = time+4800<=v.data.index?time:v.data.index-4800
             setStartTime(time)
         }
         v && v.on('change:selectPoint', s)

@@ -1,5 +1,13 @@
 import Draw from "../../Draw";
-interface accDecPoint {
+interface accPoint {
+    index: number;
+    start: number;
+    end: number;
+    peak: number;
+    duration: number;
+    ampl: number;
+}
+interface decPoint {
     index: number;
     start: number;
     end: number;
@@ -9,8 +17,8 @@ interface accDecPoint {
     type: string;
 }
 export interface AnalyseData {
-    acc?: accDecPoint[];
-    dec?: accDecPoint[];
+    acc?: accPoint[];
+    dec?: decPoint[];
     baseline?: number[];
     start?: number;
     end?: number;

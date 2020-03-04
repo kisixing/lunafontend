@@ -160,6 +160,7 @@ var Suit = (function (_super) {
                 }
             }
         }
+        this.drawSelect.clearselect();
         this.drawobj.showcur(0, false);
         if (this.type > 0) {
             if (this.data.index > this.canvasline.width * 2) {
@@ -283,7 +284,7 @@ var Suit = (function (_super) {
     Suit.prototype.analyse = function (data) {
         this.drawAnalyse.setData(data);
         this.emit('selectForward', data.end - data.start);
-        this.drawobj.drawdot(this.canvasline.width * 2, false);
+        this.drawobj.drawdot(this.rightViewPosition, false);
     };
     Suit.prototype.alarmOn = function (alarmType) {
         if (alarmType === void 0) { alarmType = ''; }

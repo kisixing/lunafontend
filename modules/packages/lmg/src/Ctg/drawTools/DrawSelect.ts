@@ -51,6 +51,18 @@ export class DrawSelect extends Draw {
     init() {
         this.createBar();
     }
+    //2020-03-05 add clear
+    clearselect = ()=>{
+        const { suit, context2D } = this;
+        const selectcontext = context2D
+        selectcontext.clearRect(0, 0, suit.width, suit.height);
+        this.selectrpstart = 0; // 相对开始位置
+        this.selectend = 0; // 选择结束点
+        this.selectrpend = 0; // 相对结束位置
+        this.selectflag = false;
+        this.selectstart = 0; // 选择开始点
+        this.selectstartposition = 0; // 选择开始相对位置与数据长度无关
+    }
     showselect = (start?: number, end?: number) => {
         const { suit, context2D } = this;
         const selectcontext = context2D

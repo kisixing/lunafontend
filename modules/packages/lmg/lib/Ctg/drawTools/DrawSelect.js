@@ -29,6 +29,17 @@ var DrawSelect = (function (_super) {
         _this.selectflag = false;
         _this.selectstart = 0;
         _this.selectstartposition = 0;
+        _this.clearselect = function () {
+            var _a = _this, suit = _a.suit, context2D = _a.context2D;
+            var selectcontext = context2D;
+            selectcontext.clearRect(0, 0, suit.width, suit.height);
+            _this.selectrpstart = 0;
+            _this.selectend = 0;
+            _this.selectrpend = 0;
+            _this.selectflag = false;
+            _this.selectstart = 0;
+            _this.selectstartposition = 0;
+        };
         _this.showselect = function (start, end) {
             var _a = _this, suit = _a.suit, context2D = _a.context2D;
             var selectcontext = context2D;
