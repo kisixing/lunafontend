@@ -5,7 +5,7 @@ import { useSearchResult as useSearchResultHooks, UseSearchResultConfig } from '
 declare type StoreBaseValue = string | number | boolean;
 export declare type StoreValue = StoreBaseValue | Store | StoreBaseValue[];
 export interface Store {
-  [name: string]: StoreValue;
+  [name: string]: StoreValue | undefined;
 }
 export interface SearchResponseData {
   dataSource: Store[];
@@ -16,13 +16,12 @@ export interface UseSearchResultAntdConfig
   extends UseSearchResultConfig<SearchResponseData, Store> {
   defaultPageSize?: number;
   defaultCurrent?: number;
-  defaultFormValues?: Store | (() => (Promise<Store> | Store));
+  defaultFormValues?: Store | (() => Promise<Store> | Store);
   form: any;
 }
 
-
 export const useFormTable = (config: UseSearchResultAntdConfig) => {
-  const formTableConfig = config || {} as UseSearchResultAntdConfig;
+  const formTableConfig = config || ({} as UseSearchResultAntdConfig);
   const {
     search,
     autoFirstSearch = true,
@@ -50,7 +49,7 @@ export const useFormTable = (config: UseSearchResultAntdConfig) => {
   const [initialValues, setInitialValues] = useState();
   const {
     loading,
-    requestData = {} as Store,
+    requestData = { pageSize: defaultPageSize, current: defaultCurrent } as Store,
     setRequestData,
     responseData = {} as SearchResponseData,
     defaultRequestDataLoading,
@@ -108,25 +107,27 @@ export const useFormTable = (config: UseSearchResultAntdConfig) => {
     });
   };
 
-  const formProps = version === 4 ? {
-    form: formInstance,
-    onFinish,
-    initialValues,
-  } : {
-    onSubmit(e) {
-      e.preventDefault();
-      formInstance.validateFields((err, values) => {
-        if (!err) {
-          searchFunc({
-            current: 1,
-            pageSize: requestData.pageSize,
-            ...values,
-          });
+  const formProps =
+    version === 4
+      ? {
+          form: formInstance,
+          onFinish,
+          initialValues,
         }
-      });
-    },
-  };
-
+      : {
+          onSubmit(e) {
+            e.preventDefault();
+            formInstance.validateFields((err, values) => {
+              if (!err) {
+                searchFunc({
+                  current: 1,
+                  pageSize: requestData.pageSize,
+                  ...values,
+                });
+              }
+            });
+          },
+        };
 
   const tableProps = {
     pagination: {
@@ -139,8 +140,7 @@ export const useFormTable = (config: UseSearchResultAntdConfig) => {
     loading,
     dataSource: responseData.dataSource,
     onChange,
-  }
-
+  };
 
   const formValues = { ...requestData };
   delete formValues.current;
@@ -161,7 +161,7 @@ export const useFormTable = (config: UseSearchResultAntdConfig) => {
     pageSize: requestData.pageSize as number,
     dataSource: responseData.dataSource,
     total: responseData.total,
-    search: (data) => {
+    search: data => {
       searchFunc({
         ...requestData,
         ...data,
