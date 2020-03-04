@@ -51,7 +51,6 @@ export default class DrawCTG {
     this.gridcontext = suit.contextgrid;
     this.linecontext = suit.contextline;
     this.datacontext = suit.contextdata;
-    this.selectcontext = suit.contextselect;
     this.xspan = xspan;
     this.yspan = yspan;
     this.scalespan = scalespan;
@@ -68,8 +67,7 @@ export default class DrawCTG {
     console.log('resize', oldwidth);
     this.suit.canvasline.width = width;
     this.suit.canvasline.height = height;
-    this.suit.canvasselect.width = width;
-    this.suit.canvasselect.height = height;
+
     this.suit.canvasgrid.width = width;
     this.suit.canvasgrid.height = height;
     this.suit.canvasdata.width = width;

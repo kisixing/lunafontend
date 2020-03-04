@@ -50,16 +50,12 @@ function default_1() {
         var hasMoved = selectingBar.hasMoved;
         console.log('hasMoved', hasMoved);
         _this.drawSelect.selectBasedOnStartingBar(false);
-        _this.updateBarTool();
-        _this.drawSelect.showselect();
     })
         .on('selectBackward', function () {
         var selectingBar = _this.drawSelect.selectingBar;
         var hasMoved = selectingBar.hasMoved;
         console.log('hasMoved', hasMoved);
         _this.drawSelect.selectBasedOnStartingBar();
-        _this.drawSelect.showselect();
-        _this.updateBarTool();
     });
     this.log(this);
 }

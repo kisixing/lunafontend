@@ -20,7 +20,7 @@ export declare class DrawSelect extends Draw {
     constructor(canvas: HTMLCanvasElement, suit: Suit, width?: number, height?: number);
     init(): void;
     showselect: (start?: number, end?: number) => void;
-    selectBasedOnStartingBar(isLeft?: boolean): void;
+    selectBasedOnStartingBar(isLeft?: boolean, len?: number): void;
     updateSelectCur(): void;
     createBar(): void;
 }

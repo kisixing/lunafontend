@@ -40,7 +40,8 @@ var DrawAnalyse = (function (_super) {
                 canvas.fillText(txt, x + 1, y - 1);
             }
             else if (dec.indexOf(index) > -1 || dec.indexOf(index - 1) > -1) {
-                txt = '—';
+                var target = analyseData.dec.find(function (_) { return [index, index - 1].includes(_.index); });
+                txt = target ? target.type : '-';
                 canvas.font = 'bold 15px arial';
                 canvas.fillStyle = 'red';
                 canvas.fillText(txt, x + 1, y - 1);

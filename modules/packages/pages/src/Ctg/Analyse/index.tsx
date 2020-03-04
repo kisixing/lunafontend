@@ -71,7 +71,7 @@ function Analysis({
   return (
     <Wrapper >
       <div style={{ height: `calc(100% - 420px - 12px)`, marginBottom: 12, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px', overflow: 'hidden' }}>
-        <Ctg ref={ref} loading={loading} data={ctgData} />
+        <Ctg suitType={1} ref={ref} loading={loading} data={ctgData} />
 
       </div>
       <Row gutter={12} style={{ height: 420 }}>

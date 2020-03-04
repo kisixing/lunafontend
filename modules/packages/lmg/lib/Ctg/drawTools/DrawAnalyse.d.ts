@@ -6,6 +6,7 @@ interface accDecPoint {
     peak: number;
     duration: number;
     ampl: number;
+    type: string;
 }
 export interface AnalyseData {
     acc?: accDecPoint[];

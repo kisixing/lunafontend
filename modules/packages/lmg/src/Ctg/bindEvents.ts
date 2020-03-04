@@ -77,8 +77,6 @@ export default function (this: Suit) {
             // }
             this.drawSelect.selectBasedOnStartingBar(false)
 
-            this.updateBarTool()
-            this.drawSelect.showselect()
 
 
         })
@@ -90,8 +88,6 @@ export default function (this: Suit) {
             //     this.selectrpstart = baseViewposition + ctgconfig.print_interval * 240
             // }
             this.drawSelect.selectBasedOnStartingBar()
-            this.drawSelect.showselect()
-            this.updateBarTool()
         })
     this.log(this)
 }

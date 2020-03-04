@@ -7,6 +7,7 @@ interface accDecPoint {
     peak: number;
     duration: number;
     ampl: number;
+    type: string
 }
 export interface AnalyseData {
     acc?: accDecPoint[]
@@ -106,7 +107,8 @@ export class DrawAnalyse extends Draw {
             canvas.fillStyle = 'black';
             canvas.fillText(txt, x + 1, y - 1);
         } else if (dec.indexOf(index) > -1 || dec.indexOf(index - 1) > -1) {
-            txt = '—';
+            const target = analyseData.dec.find(_ => [index, index - 1].includes(_.index))
+            txt = target ? target.type : '-';
             canvas.font = 'bold 15px arial';
             canvas.fillStyle = 'red';
             canvas.fillText(txt, x + 1, y - 1);

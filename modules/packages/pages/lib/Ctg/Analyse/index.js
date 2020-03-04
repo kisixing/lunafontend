@@ -68,7 +68,7 @@ function Analysis(_a) {
     };
     return (react_1.default.createElement(Wrapper, null,
         react_1.default.createElement("div", { style: { height: "calc(100% - 420px - 12px)", marginBottom: 12, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px', overflow: 'hidden' } },
-            react_1.default.createElement(lmg_1.Ctg, { ref: ref, loading: loading, data: ctgData })),
+            react_1.default.createElement(lmg_1.Ctg, { suitType: 1, ref: ref, loading: loading, data: ctgData })),
         react_1.default.createElement(antd_1.Row, { gutter: 12, style: { height: 420 } },
             react_1.default.createElement(antd_1.Col, { span: 12, style: { height: '100%' } },
                 react_1.default.createElement(Score_1.default, __assign({ disabled: disabled }, d, { fetal: fetal, setFetal: setFetal, ctgData: ctgData, docid: docid, v: ref.current, style: __assign(__assign({}, border), { height: '100%', background: '#fff' }) })),

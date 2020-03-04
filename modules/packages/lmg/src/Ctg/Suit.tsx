@@ -71,8 +71,6 @@ export class Suit extends Draw {
   contextdata: Context;
   canvasline: Canvas;
   contextline: Context;
-  canvasselect: Canvas;
-  contextselect: Context;
   barTool: IBarTool;
   drawobj: DrawCTG;
   dragtimestamp = 0;
@@ -113,16 +111,14 @@ export class Suit extends Draw {
     this.canvasgrid = canvasgrid;
     this.canvasdata = canvasdata;
     this.canvasline = canvasline;
-    this.canvasselect = canvasselect;
     this.contextgrid = canvasgrid.getContext('2d');
     this.contextdata = canvasdata.getContext('2d');
     this.contextline = canvasline.getContext('2d');
-    this.contextselect = canvasselect.getContext('2d');
     this.barTool = barTool;
     this.drawobj = new DrawCTG(this);
     this.type = type;
     this.drawAnalyse = new DrawAnalyse(canvasanalyse)
-    this.drawSelect = new DrawSelect(canvasanalyse, this)
+    this.drawSelect = new DrawSelect(canvasselect, this)
     if (this.option) {
       this.ctgconfig.tococolor = this.option.tococolor;
       this.ctgconfig.fhrcolor[0] = this.option.fhrcolor1;
@@ -141,7 +137,7 @@ export class Suit extends Draw {
   }
 
   init(data: ICacheItem) {
-    this.log('init')
+    this.log('init',this)
     this.drawAnalyse.init()
     this.drawSelect.init()
     if (!data) {
@@ -209,7 +205,6 @@ export class Suit extends Draw {
       this.drawSelect.updateSelectCur();
       this.drawSelect.showselect();
       this.drawobj.drawdot(this.rightViewPosition, false);
-      this.log('gg', this.rightViewPosition, len, value);
     });
     this.barTool.watchGrab(value => {
       let _viewposition;
@@ -266,6 +261,8 @@ export class Suit extends Draw {
       }
       this.drawSelect.showselect();
       // }
+      this.drawobj.drawdot(this.rightViewPosition, false);
+
     });
 
   }
@@ -320,9 +317,8 @@ export class Suit extends Draw {
   }
   analyse(data: AnalyseData) {
     this.drawAnalyse.setData(data)
+    this.emit('selectForward', data.end - data.start)
     this.drawobj.drawdot(this.canvasline.width * 2, false);
-
-
   }
   lazyEmit = throttle((type: string, ...args: any[]) => {
     // console.log(`Suit:${type}`)
@@ -348,8 +344,7 @@ export class Suit extends Draw {
     this.contextdata = null;
     this.canvasline = null;
     this.contextline = null;
-    this.canvasselect = null;
-    this.contextselect = null;
+
     // this.p = null;
     this.wrap = null;
     this.drawobj = null;
@@ -359,7 +354,7 @@ export class Suit extends Draw {
     // this.log('resize');
     const { width, height } = this.wrap.getBoundingClientRect()
 
-    Object.values(this).forEach(_=>_ &&_.resize && _.resize(width, height))
+    Object.values(this).forEach(_ => _ && _.resize && _.resize(width, height))
   }
   //kisi 2019-11-14 update fhr position
   setfetalposition(fhr1, fhr2, fhr3) {

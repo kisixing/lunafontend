@@ -49,9 +49,7 @@ export class DrawSelect extends Draw {
         this.suit = suit
     }
     init() {
-
         this.createBar();
-
     }
     showselect = (start?: number, end?: number) => {
         const { suit, context2D } = this;
@@ -122,26 +120,16 @@ export class DrawSelect extends Draw {
             this.endingBar.setVisibility(this.selectflag)
         }
     };
-    selectBasedOnStartingBar(isLeft = true) {
+    selectBasedOnStartingBar(isLeft = true, len = this.suit.ctgconfig.print_interval * 240) {
         const { suit } = this
-        const {
-            // startingBar,
-            // endingBar,
-            // needScroll,
-            width,
-            ctgconfig,
-            data,
-            // selectstart,
-            // leftViewposition: baseViewposition,
-            // selectingBarPoint,
-        } = this.suit;
+        const { width, data, } = suit;
         let endPosition;
         if (isLeft) {
             if (this.selectingBarPoint < 1) {
                 this.selectingBar.setLeft(this.width);
                 suit.rightViewPosition = data.index;
             }
-            endPosition = this.selectingBarPoint - ctgconfig.print_interval * 240;
+            endPosition = this.selectingBarPoint - len;
             this.$selectrpstart = endPosition < 0 ? 0 : endPosition;
             this.$selectrpend = this.selectingBarPoint;
         } else {
@@ -150,10 +138,13 @@ export class DrawSelect extends Draw {
                 this.selectingBar.setLeft(0);
             }
 
-            endPosition = this.selectingBarPoint + ctgconfig.print_interval * 240;
+            endPosition = this.selectingBarPoint + len;
             this.$selectrpend = endPosition > data.index ? data.index : endPosition;
             this.$selectrpstart = this.selectingBarPoint;
         }
+        this.showselect()
+        this.suit.updateBarTool()
+
     }
 
 
@@ -226,7 +217,7 @@ export class DrawSelect extends Draw {
                 return;
             }
             // console.log('print_结束', value, this.selectrpstart, this.selectrpend)
-           this.showselect();
+            this.showselect();
             this.suit.emit('endTime', this.selectrpend);
 
             this.$selectrpend = suit.leftViewposition + value * 2;

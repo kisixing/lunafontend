@@ -126,17 +126,18 @@ var DrawSelect = (function (_super) {
     DrawSelect.prototype.init = function () {
         this.createBar();
     };
-    DrawSelect.prototype.selectBasedOnStartingBar = function (isLeft) {
+    DrawSelect.prototype.selectBasedOnStartingBar = function (isLeft, len) {
         if (isLeft === void 0) { isLeft = true; }
+        if (len === void 0) { len = this.suit.ctgconfig.print_interval * 240; }
         var suit = this.suit;
-        var _a = this.suit, width = _a.width, ctgconfig = _a.ctgconfig, data = _a.data;
+        var width = suit.width, data = suit.data;
         var endPosition;
         if (isLeft) {
             if (this.selectingBarPoint < 1) {
                 this.selectingBar.setLeft(this.width);
                 suit.rightViewPosition = data.index;
             }
-            endPosition = this.selectingBarPoint - ctgconfig.print_interval * 240;
+            endPosition = this.selectingBarPoint - len;
             this.$selectrpstart = endPosition < 0 ? 0 : endPosition;
             this.$selectrpend = this.selectingBarPoint;
         }
@@ -145,10 +146,12 @@ var DrawSelect = (function (_super) {
                 suit.rightViewPosition = width * 2;
                 this.selectingBar.setLeft(0);
             }
-            endPosition = this.selectingBarPoint + ctgconfig.print_interval * 240;
+            endPosition = this.selectingBarPoint + len;
             this.$selectrpend = endPosition > data.index ? data.index : endPosition;
             this.$selectrpstart = this.selectingBarPoint;
         }
+        this.showselect();
+        this.suit.updateBarTool();
     };
     DrawSelect.prototype.updateSelectCur = function () {
         var suit = this.suit;

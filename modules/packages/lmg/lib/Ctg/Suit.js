@@ -90,16 +90,14 @@ var Suit = (function (_super) {
         _this.canvasgrid = canvasgrid;
         _this.canvasdata = canvasdata;
         _this.canvasline = canvasline;
-        _this.canvasselect = canvasselect;
         _this.contextgrid = canvasgrid.getContext('2d');
         _this.contextdata = canvasdata.getContext('2d');
         _this.contextline = canvasline.getContext('2d');
-        _this.contextselect = canvasselect.getContext('2d');
         _this.barTool = barTool;
         _this.drawobj = new DrawCTG_1.default(_this);
         _this.type = type;
         _this.drawAnalyse = new DrawAnalyse_1.DrawAnalyse(canvasanalyse);
-        _this.drawSelect = new DrawSelect_1.DrawSelect(canvasanalyse, _this);
+        _this.drawSelect = new DrawSelect_1.DrawSelect(canvasselect, _this);
         if (_this.option) {
             _this.ctgconfig.tococolor = _this.option.tococolor;
             _this.ctgconfig.fhrcolor[0] = _this.option.fhrcolor1;
@@ -140,7 +138,7 @@ var Suit = (function (_super) {
     });
     Suit.prototype.init = function (data) {
         var _this = this;
-        this.log('init');
+        this.log('init', this);
         this.drawAnalyse.init();
         this.drawSelect.init();
         if (!data) {
@@ -202,7 +200,6 @@ var Suit = (function (_super) {
             _this.drawSelect.updateSelectCur();
             _this.drawSelect.showselect();
             _this.drawobj.drawdot(_this.rightViewPosition, false);
-            _this.log('gg', _this.rightViewPosition, len, value);
         });
         this.barTool.watchGrab(function (value) {
             var _viewposition;
@@ -243,6 +240,7 @@ var Suit = (function (_super) {
             else {
             }
             _this.drawSelect.showselect();
+            _this.drawobj.drawdot(_this.rightViewPosition, false);
         });
     };
     Suit.prototype.createLine = function () {
@@ -284,6 +282,7 @@ var Suit = (function (_super) {
     };
     Suit.prototype.analyse = function (data) {
         this.drawAnalyse.setData(data);
+        this.emit('selectForward', data.end - data.start);
         this.drawobj.drawdot(this.canvasline.width * 2, false);
     };
     Suit.prototype.alarmOn = function (alarmType) {
@@ -302,8 +301,6 @@ var Suit = (function (_super) {
         this.contextdata = null;
         this.canvasline = null;
         this.contextline = null;
-        this.canvasselect = null;
-        this.contextselect = null;
         this.wrap = null;
         this.drawobj = null;
         this.barTool = null;

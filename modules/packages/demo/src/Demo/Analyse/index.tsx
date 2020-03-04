@@ -20,8 +20,10 @@ const App = (props: any) => {
     const [total, setTotal] = useState(0)
     const [page, setPage] = useState(1)
     const [docid, setDocid] = useState('')
-
-
+    const [loading, setLoading] = useState(false)
+    useEffect(() => {
+        fetchList()
+    }, [page])
 
     const fetchCtgExamData = () => {
         return new Promise<number>((res, rej) => {
@@ -34,7 +36,8 @@ const App = (props: any) => {
             }
         })
     }
-    const fetchList = (e:any) => {
+    const fetchList = (e?: any) => {
+        setLoading(true)
         const params = {
             'CTGExamId.specified': true,
             'pregnancyId.specified': true,
@@ -57,6 +60,7 @@ const App = (props: any) => {
             .then(function (t) {
                 setTotal(t)
             })
+            .finally(() => setLoading(false))
 
         return []
     };
@@ -86,7 +90,7 @@ const App = (props: any) => {
                     <span style={{ marginRight: 14 }}>档案号：</span><Input style={{ width: 136 }} size="small" value={docid} onChange={e => setDocid(e.target.value)} />
                 </div>
 
-                <Button type="primary" size="small" style={{ width: 206, marginBottom: 5 }} onClick={fetchList}>搜索</Button>
+                <Button loading={loading} type="primary" size="small" style={{ width: 206, marginBottom: 5 }} onClick={fetchList}>搜索</Button>
 
                 <SiderMenu setItem={setItem} selected={selected} dataSource={dataSource} />
                 <Pagination current={page} size="small" total={total} onChange={p => setPage(p)} />

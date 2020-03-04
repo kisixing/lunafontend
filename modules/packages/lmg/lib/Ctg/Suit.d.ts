@@ -65,8 +65,6 @@ export declare class Suit extends Draw {
     contextdata: Context;
     canvasline: Canvas;
     contextline: Context;
-    canvasselect: Canvas;
-    contextselect: Context;
     barTool: IBarTool;
     drawobj: DrawCTG;
     dragtimestamp: number;
