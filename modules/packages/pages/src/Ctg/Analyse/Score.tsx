@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Radio, Button, Select } from 'antd';
+import React, {  useEffect } from 'react';
+import { Radio,  Select } from 'antd';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 
 import Methods from './methods'
@@ -15,31 +15,27 @@ interface IProps {
   startTime: any
   mark, setMark: any
   interval, setInterval: any
-  modifyData: any
   Fischer_ref: any
   Nst_ref: any
   Krebs_ref: any
+  disabled: boolean
   [x: string]: any
 }
 
 const ScoringMethod = (props: IProps) => {
-  const { docid, v, ctgData, fetal, setFetal, ...others } = props;
+  const { docid, v, ctgData, fetal, setFetal, disabled, ...others } = props;
 
-  const [disabled, setDisabled] = useState(true)
 
   const {
     responseData,
     MARKS,
-    analyse,
     startTime,
     mark, setMark,
     interval, setInterval,
-    modifyData
   } = props
 
   const onChange = e => {
     const mark = e.target.value
-    modifyData()
 
     setMark(mark)
   };
@@ -132,17 +128,6 @@ const ScoringMethod = (props: IProps) => {
 
         <Methods {...props} disabled={disabled} />
 
-        <div style={{ marginTop: 5 }}>
-          <Button size="small" style={{ marginBottom: 10 }} type="primary" onClick={analyse}>分析</Button>
-          <Button size="small" style={{ marginBottom: 10 }} onClick={() => {
-            const next = !disabled
-            if (next) {
-              modifyData()
-            }
-            setDisabled(next)
-          }}>{disabled ? '修改' : '确认'}</Button>
-          <Button size="small" style={{ marginBottom: 10 }}>打印</Button>
-        </div>
       </div>
     </div>
   );

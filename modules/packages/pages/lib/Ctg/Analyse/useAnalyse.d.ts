@@ -13,7 +13,6 @@ declare const _default: (v: Suit, docid: any, fetal: any) => {
     setStartTime: import("react").Dispatch<import("react").SetStateAction<number>>;
     interval: number;
     setInterval: import("react").Dispatch<import("react").SetStateAction<number>>;
-    modifyData: () => void;
     Fischer_ref: MutableRefObject<FormInstance>;
     Nst_ref: MutableRefObject<FormInstance>;
     Krebs_ref: MutableRefObject<FormInstance>;

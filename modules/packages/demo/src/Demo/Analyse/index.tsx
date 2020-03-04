@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Modal, DatePicker, Divider, Pagination } from 'antd';
+import { Layout, Modal, DatePicker, Divider, Pagination, Input, Button } from 'antd';
 import request from "@lianmed/request";
 // import { parse, stringify } from 'qs';
 import { obvuew } from "@lianmed/f_types";
@@ -19,23 +19,41 @@ const App = (props: any) => {
     const [eDate, setEDate] = useState(formatDate())
     const [total, setTotal] = useState(0)
     const [page, setPage] = useState(1)
-    useEffect(() => {
-        fetchList()
-    }, [eDate, sDate, page])
+    const [docid, setDocid] = useState('')
 
 
 
-    const fetchList = (loader = true) => {
-        const qs = `?CTGExamId.specified=true&pregnancyId.specified=true&size=10&page=${page - 1 | 0}&sort=visitDate%2Casc&visitDate.greaterOrEqualThan=${sDate}&visitDate.lessOrEqualThan=${eDate}`
+    const fetchCtgExamData = () => {
+        return new Promise<number>((res, rej) => {
+            if (docid) {
+                request.get(`/ctg-exams`).then((r: obvuew.ctg_exams_data) => {
+                    res(r.id)
+                }).catch(rej)
+            } else {
+                res()
+            }
+        })
+    }
+    const fetchList = (e:any) => {
+        const params = {
+            'CTGExamId.specified': true,
+            'pregnancyId.specified': true,
+            size: 10,
+            sort: 'visitDate,asc',
+            'visitDate.greaterOrEqualThan': sDate,
+            'visitDate.lessOrEqualThan': eDate,
+            page: page - 1
 
+        }
+        fetchCtgExamData()
         request
-            .get(`/prenatal-visitspage${qs}`)
+            .get(`/prenatal-visitspage`, { params })
             .then(function (response) {
                 setDataSource(response)
             })
 
         request
-            .get(`/prenatal-visits/count?${qs}`)
+            .get(`/prenatal-visits/count`, { params })
             .then(function (t) {
                 setTotal(t)
             })
@@ -64,6 +82,12 @@ const App = (props: any) => {
                 <div style={{ marginBottom: 5 }}>
                     <span>结束时间：</span><DatePicker size="small" value={moment(eDate)} onChange={e => setEDate(formatDate(e))} />
                 </div>
+                <div style={{ marginBottom: 5 }}>
+                    <span style={{ marginRight: 14 }}>档案号：</span><Input style={{ width: 136 }} size="small" value={docid} onChange={e => setDocid(e.target.value)} />
+                </div>
+
+                <Button type="primary" size="small" style={{ width: 206, marginBottom: 5 }} onClick={fetchList}>搜索</Button>
+
                 <SiderMenu setItem={setItem} selected={selected} dataSource={dataSource} />
                 <Pagination current={page} size="small" total={total} onChange={p => setPage(p)} />
             </Layout.Sider>

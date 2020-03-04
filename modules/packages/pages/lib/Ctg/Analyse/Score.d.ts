@@ -12,10 +12,10 @@ interface IProps {
     setMark: any;
     interval: any;
     setInterval: any;
-    modifyData: any;
     Fischer_ref: any;
     Nst_ref: any;
     Krebs_ref: any;
+    disabled: boolean;
     [x: string]: any;
 }
 declare const ScoringMethod: (props: IProps) => JSX.Element;

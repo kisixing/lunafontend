@@ -1,4 +1,6 @@
 import DrawCTG from './DrawCTG';
+import { DrawAnalyse, AnalyseData } from './drawTools/DrawAnalyse';
+import { DrawSelect } from './drawTools/DrawSelect';
 //var rulercolor = 'rgb(67,205,128)';
 import { IBarTool, TLineTool } from '../ScrollBar/useScroll';
 import ScrollEl from '../ScrollBar/ScrollEl';
@@ -8,12 +10,12 @@ import { throttle } from 'lodash';
 import { ICacheItem } from '../services/WsService';
 import Draw from '../Draw';
 import bindEvents from './bindEvents';
-import { DrawAnalyse, AnalyseData } from './DrawAnalyse';
 let sid = 0;
 type Canvas = HTMLCanvasElement;
 type Context = CanvasRenderingContext2D;
 export class Suit extends Draw {
   drawAnalyse: DrawAnalyse
+  drawSelect: DrawSelect
 
   needScroll = false;
   isOn: boolean;
@@ -150,6 +152,7 @@ export class Suit extends Draw {
     this.drawobj = new DrawCTG(this);
     this.type = type;
     this.drawAnalyse = new DrawAnalyse(canvasanalyse)
+    this.drawSelect = new DrawSelect(canvasanalyse)
     if (this.option) {
       this.ctgconfig.tococolor = this.option.tococolor;
       this.ctgconfig.fhrcolor[0] = this.option.fhrcolor1;
@@ -296,7 +299,7 @@ export class Suit extends Draw {
     this.createBar();
 
   }
-  analyse(data:AnalyseData){
+  analyse(data: AnalyseData) {
     this.drawAnalyse.setData(data)
     this.drawobj.drawdot(this.canvasline.width * 2, false);
 

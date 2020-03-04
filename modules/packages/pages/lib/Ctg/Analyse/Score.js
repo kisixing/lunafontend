@@ -38,12 +38,10 @@ var methods_1 = __importDefault(require("./methods"));
 var utils_1 = require("@lianmed/utils");
 var intervals = [20, 40];
 var ScoringMethod = function (props) {
-    var docid = props.docid, v = props.v, ctgData = props.ctgData, fetal = props.fetal, setFetal = props.setFetal, others = __rest(props, ["docid", "v", "ctgData", "fetal", "setFetal"]);
-    var _a = react_1.useState(true), disabled = _a[0], setDisabled = _a[1];
-    var responseData = props.responseData, MARKS = props.MARKS, analyse = props.analyse, startTime = props.startTime, mark = props.mark, setMark = props.setMark, interval = props.interval, setInterval = props.setInterval, modifyData = props.modifyData;
+    var docid = props.docid, v = props.v, ctgData = props.ctgData, fetal = props.fetal, setFetal = props.setFetal, disabled = props.disabled, others = __rest(props, ["docid", "v", "ctgData", "fetal", "setFetal", "disabled"]);
+    var responseData = props.responseData, MARKS = props.MARKS, startTime = props.startTime, mark = props.mark, setMark = props.setMark, interval = props.interval, setInterval = props.setInterval;
     var onChange = function (e) {
         var mark = e.target.value;
-        modifyData();
         setMark(mark);
     };
     react_1.useEffect(function () {
@@ -91,16 +89,6 @@ var ScoringMethod = function (props) {
             react_1.default.createElement(antd_1.Radio.Group, { onChange: onChange, value: mark, style: { marginBottom: 5 } }, MARKS.map(function (_) { return (react_1.default.createElement(antd_1.Radio, { value: _, key: _ },
                 _,
                 "\u5206\u6790\u6CD5")); })),
-            react_1.default.createElement(methods_1.default, __assign({}, props, { disabled: disabled })),
-            react_1.default.createElement("div", { style: { marginTop: 5 } },
-                react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, type: "primary", onClick: analyse }, "\u5206\u6790"),
-                react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, onClick: function () {
-                        var next = !disabled;
-                        if (next) {
-                            modifyData();
-                        }
-                        setDisabled(next);
-                    } }, disabled ? '修改' : '确认'),
-                react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 } }, "\u6253\u5370")))));
+            react_1.default.createElement(methods_1.default, __assign({}, props, { disabled: disabled })))));
 };
 exports.default = ScoringMethod;

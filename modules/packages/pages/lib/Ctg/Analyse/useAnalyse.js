@@ -10,6 +10,17 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -63,8 +74,8 @@ exports.default = (function (v, docid, fetal) {
             var f = score[mark.toLowerCase() + "data"];
             var cur = mapFormToMark[mark + "_ref"];
             cur && cur.current.setFieldsValue(f);
-            var stv = analysis.stv, ucdata = analysis.ucdata, acc = analysis.acc, dec = analysis.dec, fhrbaselineMinute = analysis.fhrbaselineMinute;
-            analysis_ref.current.setFieldsValue(__assign({ stv: stv }, ucdata));
+            var stv = analysis.stv, ucdata = analysis.ucdata, acc = analysis.acc, dec = analysis.dec, fhrbaselineMinute = analysis.fhrbaselineMinute, others = __rest(analysis, ["stv", "ucdata", "acc", "dec", "fhrbaselineMinute"]);
+            analysis_ref.current.setFieldsValue(__assign(__assign({ stv: stv }, ucdata), others));
             v.analyse({
                 start: startTime,
                 end: startTime + 240 * interval,
@@ -77,13 +88,10 @@ exports.default = (function (v, docid, fetal) {
     var setMarkAndItems = function (mark) {
         setMark(mark);
     };
-    var modifyData = function () {
-        resultData[fetalKey] = __assign(__assign({}, resultData[fetalKey]), { result: JSON.stringify({}) });
-    };
     return {
         setMark: setMarkAndItems, mark: mark,
         responseData: resultData,
-        MARKS: MARKS, analyse: analyse, startTime: startTime, setStartTime: setStartTime, interval: interval, setInterval: setInterval, modifyData: modifyData,
+        MARKS: MARKS, analyse: analyse, startTime: startTime, setStartTime: setStartTime, interval: interval, setInterval: setInterval,
         Fischer_ref: Fischer_ref,
         Nst_ref: Nst_ref,
         Krebs_ref: Krebs_ref,

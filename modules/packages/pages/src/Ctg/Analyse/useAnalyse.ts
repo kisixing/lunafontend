@@ -61,8 +61,8 @@ export default (v: Suit, docid, fetal: any) => {
             cur && cur.current.setFieldsValue(f)
 
 
-            const { stv, ucdata, acc, dec, fhrbaselineMinute } = analysis
-            analysis_ref.current.setFieldsValue({ stv, ...ucdata })
+            const { stv, ucdata, acc, dec, fhrbaselineMinute, ...others } = analysis
+            analysis_ref.current.setFieldsValue({ stv, ...ucdata, ...others })
 
             v.analyse({
                 start: startTime,
@@ -80,14 +80,11 @@ export default (v: Suit, docid, fetal: any) => {
         setMark(mark)
 
     }
-    const modifyData = () => {
-        resultData[fetalKey] = { ...resultData[fetalKey], result: JSON.stringify({}) }
-    }
 
     return {
         setMark: setMarkAndItems, mark,
         responseData: resultData,
-        MARKS, analyse, startTime, setStartTime, interval, setInterval, modifyData,
+        MARKS, analyse, startTime, setStartTime, interval, setInterval,
         Fischer_ref,
         Nst_ref,
         Krebs_ref,

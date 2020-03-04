@@ -1,19 +1,21 @@
 export interface _ctg_exams_analyse {
 
     analysis: {
-        bhr: number,
-        ltv: number,
-        stv: number,
+        bhr: number
+        ltv: number
+        stv: number
+        edtimes: number
+        ldtimes: number
+        vdtimes: number
         acc: {
-            index: number;
-            start: number;
-            end: number;
-            peak: number;
-            duration: number;
-            ampl: number;
-        }[],
-        dec: [
-        ],
+            index: number
+            start: number
+            end: number
+            peak: number
+            duration: number
+            ampl: number
+        }[]
+        dec: []
         fm: null,
         fhrbaselineMinute: number[],
         ucdata: {
@@ -30,17 +32,17 @@ export interface _ctg_exams_analyse {
         cstdata?: null,
         sogcdata?: null,
         nstdata?: {
-            bhrscore:number
-            ltvscore:number
-            accdurationscore:number
-            accamplscore:number
-            fmscore:number
-            totalscore:number
+            bhrscore: number
+            ltvscore: number
+            accdurationscore: number
+            accamplscore: number
+            fmscore: number
+            totalscore: number
             bhrvalue: number
             ltvvalue: number
             accdurationvalue: number
             accamplvalue: number
-            fmvalue:number
+            fmvalue: number
         },
         Krebsdata?: {
             bhrscore: number

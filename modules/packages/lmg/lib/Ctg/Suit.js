@@ -24,12 +24,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var DrawCTG_1 = __importDefault(require("./DrawCTG"));
+var DrawAnalyse_1 = require("./drawTools/DrawAnalyse");
+var DrawSelect_1 = require("./drawTools/DrawSelect");
 var request_1 = __importDefault(require("@lianmed/request"));
 var utils_1 = require("../services/utils");
 var lodash_1 = require("lodash");
 var Draw_1 = __importDefault(require("../Draw"));
 var bindEvents_1 = __importDefault(require("./bindEvents"));
-var DrawAnalyse_1 = require("./DrawAnalyse");
 var sid = 0;
 var Suit = (function (_super) {
     __extends(Suit, _super);
@@ -104,6 +105,7 @@ var Suit = (function (_super) {
         _this.drawobj = new DrawCTG_1.default(_this);
         _this.type = type;
         _this.drawAnalyse = new DrawAnalyse_1.DrawAnalyse(canvasanalyse);
+        _this.drawSelect = new DrawSelect_1.DrawSelect(canvasanalyse);
         if (_this.option) {
             _this.ctgconfig.tococolor = _this.option.tococolor;
             _this.ctgconfig.fhrcolor[0] = _this.option.fhrcolor1;

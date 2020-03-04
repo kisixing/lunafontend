@@ -31,7 +31,7 @@ class SiderMenu extends Component<{ dataSource: obvuew.prenatal_visitspage[], se
         className={styles.wrapper}
         selectedKeys={selected.id && [selected.id.toString()]}
         onClick={this.handleClick}
-        style={{height: 'calc(100% - 75px)'}}
+        style={{height: 'calc(100% - 150px)'}}
       >
         {dataSource.map((item) => {
           return (

@@ -1,15 +1,17 @@
 /// <reference types="node" />
 /// <reference types="lodash" />
 import DrawCTG from './DrawCTG';
+import { DrawAnalyse, AnalyseData } from './drawTools/DrawAnalyse';
+import { DrawSelect } from './drawTools/DrawSelect';
 import { IBarTool, TLineTool } from '../ScrollBar/useScroll';
 import ScrollEl from '../ScrollBar/ScrollEl';
 import { ICacheItem } from '../services/WsService';
 import Draw from '../Draw';
-import { DrawAnalyse, AnalyseData } from './DrawAnalyse';
 declare type Canvas = HTMLCanvasElement;
 declare type Context = CanvasRenderingContext2D;
 export declare class Suit extends Draw {
     drawAnalyse: DrawAnalyse;
+    drawSelect: DrawSelect;
     needScroll: boolean;
     isOn: boolean;
     emitInterval: number;

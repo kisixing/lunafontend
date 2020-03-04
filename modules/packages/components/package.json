@@ -15,7 +15,6 @@
   ],
   "peerDependencies": {
     "@babel/runtime": "^7.4.4",
-    "antd": "^3.14.1",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0",
     "@lianmed/request": "^1.0.0"
