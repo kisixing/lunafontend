@@ -1,5 +1,6 @@
 import { Suit } from './Suit';
 
+
 function formatDate(date: any, format) {
   if (!date) return;
   if (!format) format = 'yyyy-MM-dd';
@@ -36,7 +37,6 @@ export default class DrawCTG {
   linecontext: CanvasRenderingContext2D;
   datacontext: CanvasRenderingContext2D;
   selectcontext: CanvasRenderingContext2D;
-  analysecontext: CanvasRenderingContext2D;
   baseleft: number;
   basetop: number;
   min: number;
@@ -52,7 +52,6 @@ export default class DrawCTG {
     this.linecontext = suit.contextline;
     this.datacontext = suit.contextdata;
     this.selectcontext = suit.contextselect;
-    this.analysecontext = suit.contextanalyse;
     this.xspan = xspan;
     this.yspan = yspan;
     this.scalespan = scalespan;
@@ -75,13 +74,12 @@ export default class DrawCTG {
     this.suit.canvasgrid.height = height;
     this.suit.canvasdata.width = width;
     this.suit.canvasdata.height = height;
-    this.suit.canvasanalyse.width = width;
-    this.suit.canvasanalyse.height = height;
+
     this.yspan = (height - this.scalespan - this.basetop) / (this.max + 100 - this.min);
-    console.log('resize', this.suit.data, this.suit.viewposition, this.suit.toolbarposition, oldwidth, width);
+    console.log('resize', this.suit.data, this.suit.rightViewPosition, this.suit.toolbarposition, oldwidth, width);
     if (typeof (this.suit.data) != 'undefined') {
       if (this.suit.data.index > width * 2) {
-        this.suit.viewposition = Math.floor(2 * width);
+        this.suit.rightViewPosition = Math.floor(2 * width);
         if (this.suit.data.index < width * 4) {
           let len = Math.floor((width * 4 - this.suit.data.index) / 2);
           this.suit.barTool.setBarWidth(len);
@@ -90,7 +88,7 @@ export default class DrawCTG {
         }
         this.suit.barTool.setBarLeft(Math.floor(this.suit.toolbarposition * width / oldwidth), false);
       }
-      this.drawdot(this.suit.viewposition, false);
+      this.drawdot(this.suit.rightViewPosition, false);
     } else {
       this.drawgrid(width * 2, false);
     }
@@ -152,7 +150,8 @@ export default class DrawCTG {
   }
   drawdot(cur, isemit = false) {
     this.suit.log('drawdot', cur, isemit, this.suit.data.index, this.suit.width * 2)
-    const { suit, linecontext, max, analysecontext } = this;
+    const { suit, linecontext, max } = this;
+    const { drawAnalyse } = suit
     const { fhr, toco, fm } = suit.data;
     if (typeof (fhr[0]) == "undefined") {
       this.drawgrid(cur, false);
@@ -165,8 +164,7 @@ export default class DrawCTG {
     var lastx = 0;
     var lasty = 0;
     linecontext.clearRect(0, 0, suit.canvasline.width, suit.canvasline.height);
-    //清空分析画布
-    analysecontext.clearRect(0, 0, suit.canvasanalyse.width, suit.canvasanalyse.height)
+
     // 0.5 s 一个点,一个像素画两个点
     var start = cur - suit.canvasline.width * 2 > 0 ? cur - suit.canvasline.width * 2 : 0;
     //Draw FHR multiply
@@ -265,7 +263,7 @@ export default class DrawCTG {
           }
           //kisi 2019-10-29
           //绘制加减速标记
-          this.drawflag(lastx, (max - lasty - curfhroffset) * this.yspan, i);
+          this.suit.drawAnalyse.drawflag(this.linecontext,lastx, (max - lasty - curfhroffset) * this.yspan, i);
         }
       }
       this.linecontext.stroke();
@@ -312,64 +310,11 @@ export default class DrawCTG {
     }
     //kisi 2019-10-29 baseline
     //TODO
-    // if(typeof(suit.data.analyse) != 'undefined'){
-    //   let curfhroffset = 0;
-    //   analysecontext.beginPath();
-    //   analysecontext.strokeStyle = suit.ctgconfig.fhrcolor[2];//基线颜色
-    //   analysecontext.lineWidth = 1;
-    //   if(start <= suit.data.analyse.start && cur>suit.data.analyse.start){
-    //     let baselineoff = Math.ceil((suit.data.analyse.start - start)/(this.xspan*6));
-    //     let firstindex = baselineoff-2 >0 ? baselineoff-2 : 0;
-    //     console.log(firstindex);
-    //     analysecontext.moveTo(baselineoff*this.xspan*3,(max - curfhroffset - suit.data.analyse.baseline[firstindex]) * this.yspan+ this.basetop);
-    //     for (var i = baselineoff*this.xspan*3+1; i < cur; i++) {
-    //       baselineoff = Math.ceil((i-start)/(this.xspan*6));
-    //       if(baselineoff>=suit.data.analyse.baseline.length-1){
-    //         break;
-    //       }
-    //       if((i)%(this.xspan*6)== 0){
-    //         lastx = Math.floor((i - start) / 2);
-    //         analysecontext.lineTo(lastx, (max - curfhroffset - suit.data.analyse.baseline[baselineoff]) * this.yspan+ this.basetop);
-    //       }
-    //     }
-    //     analysecontext.stroke();
-    //   }else if(start < suit.data.analyse.end){
-    //     let baselineoff = Math.ceil((start-suit.data.analyse.start)/(this.xspan*6));
-    //     let firstindex = baselineoff-1 >0 ? baselineoff-1 : 0;
-    //     analysecontext.moveTo(0, (max - curfhroffset - suit.data.analyse.baseline[firstindex]) * this.yspan+ this.basetop);
-    //     for (var i = start+1; i < cur; i++) {
-    //       baselineoff = Math.ceil((i-suit.data.analyse.start)/(this.xspan*6));
-    //       if(baselineoff>=suit.data.analyse.baseline.length-1){
-    //         break;
-    //       }
-    //       if((i)%(this.xspan*6)== 0){
-    //         lastx = Math.floor((i - start) / 2);
-    //         analysecontext.lineTo(lastx,(max - curfhroffset - suit.data.analyse.baseline[baselineoff]) * this.yspan+ this.basetop);
-    //       }
-    //     }
-    //     analysecontext.stroke();
-    //   }
-    // }
+    drawAnalyse.drawBaseline(cur, 'red', this.yspan, this.xspan, max, this.basetop)
+
   }
 
-  //kisi 2019-10-28 绘制 acc dec
-  drawflag = (x, y, index) => {
-    const { analysecontext, suit } = this;
-    analysecontext.textAlign = 'left';
-    analysecontext.textBaseline = 'top';
-    let txt = '';
-    if (typeof (suit.data.analyse) != "undefined" && suit.data.analyse.acc.indexOf(index) > -1) {
-      txt = '+';
-      analysecontext.font = '25px arial';
-      analysecontext.fillStyle = 'black';
-      analysecontext.fillText(txt, x + 1, y + 5);
-    } else if (typeof (suit.data.analyse) != "undefined" && suit.data.analyse.dec.indexOf(index) > -1) {
-      txt = '—';
-      analysecontext.font = 'bold 15px arial';
-      analysecontext.fillStyle = 'red';
-      analysecontext.fillText(txt, x + 1, y + 5);
-    }
-  }
+
 
   sethorizontal = (length: number, startposition: number, drawtimespan = true) => {
     const { setrules, gridcontext, baseleft, min, max, xspan } = this;
@@ -710,21 +655,21 @@ export default class DrawCTG {
     start = start === void 0 ? suit.selectrpstart : start
     end = end === void 0 ? suit.selectrpend : end
 
-    // console.log('printin', suit.viewposition,start, end);
+    // console.log('printin', suit.rightViewPosition,start, end);
     let drawwidth = suit.width;
     selectcontext.clearRect(0, 0, drawwidth, suit.height);
     if (end == 0) {
       return;
     }
     //横向选择区域设置填充色
-    let curstart = suit.viewposition < drawwidth * 2 ? 0 : (suit.viewposition - drawwidth * 2);
+    let curstart = suit.rightViewPosition < drawwidth * 2 ? 0 : (suit.rightViewPosition - drawwidth * 2);
     if (suit.data.index <= drawwidth * 2) {
       end = end / 2;
     } else {
-      end = (suit.viewposition - end) > 0 ? drawwidth - Math.floor((suit.viewposition - end) / 2) : drawwidth;
+      end = (suit.rightViewPosition - end) > 0 ? drawwidth - Math.floor((suit.rightViewPosition - end) / 2) : drawwidth;
     }
     // if(end>drawwidth*2){
-    //   end = (suit.viewposition - end) > 0 ? drawwidth - Math.floor((suit.viewposition - end) / 2) : drawwidth;
+    //   end = (suit.rightViewPosition - end) > 0 ? drawwidth - Math.floor((suit.rightViewPosition - end) / 2) : drawwidth;
     // }else{
     //   end = Math.floor(end/2);
     // }

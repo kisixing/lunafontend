@@ -8,10 +8,13 @@ import { throttle } from 'lodash';
 import { ICacheItem } from '../services/WsService';
 import Draw from '../Draw';
 import bindEvents from './bindEvents';
+import { DrawAnalyse, AnalyseData } from './DrawAnalyse';
 let sid = 0;
 type Canvas = HTMLCanvasElement;
 type Context = CanvasRenderingContext2D;
 export class Suit extends Draw {
+  drawAnalyse: DrawAnalyse
+
   needScroll = false;
   isOn: boolean;
   emitInterval: number;
@@ -76,8 +79,6 @@ export class Suit extends Draw {
   contextline: Context;
   canvasselect: Canvas;
   contextselect: Context;
-  canvasanalyse: Canvas;
-  contextanalyse: Context;
   barTool: IBarTool;
   drawobj: DrawCTG;
   dragtimestamp = 0;
@@ -107,16 +108,19 @@ export class Suit extends Draw {
     this.emit('startTime', value);
   }
   get leftViewposition() {
-    return this.viewposition >= this.width * 2 ? this.viewposition - this.width * 2 : 0;
+    return this.rightViewPosition >= this.width * 2 ? this.rightViewPosition - this.width * 2 : 0;
   }
   get selectingBarPoint() {
-    return ~~(this.leftViewposition + this.selectingBar.getLeft() * 2);
+    return ~~(this.leftViewposition + (this.selectingBar ? this.selectingBar.getLeft() * 2 : 0));
   }
   get rightViewPosition() {
     return this.viewposition;
   }
   set rightViewPosition(value: number) {
     this.viewposition = value;
+
+    this.emit('change:selectPoint', this.selectingBarPoint)
+
     this.updateBarTool();
     this.drawobj.drawdot(this.viewposition);
   }
@@ -138,16 +142,14 @@ export class Suit extends Draw {
     this.canvasdata = canvasdata;
     this.canvasline = canvasline;
     this.canvasselect = canvasselect;
-    this.canvasanalyse = canvasanalyse;
     this.contextgrid = canvasgrid.getContext('2d');
     this.contextdata = canvasdata.getContext('2d');
     this.contextline = canvasline.getContext('2d');
     this.contextselect = canvasselect.getContext('2d');
-    this.contextanalyse = canvasanalyse.getContext('2d');
     this.barTool = barTool;
     this.drawobj = new DrawCTG(this);
     this.type = type;
-
+    this.drawAnalyse = new DrawAnalyse(canvasanalyse)
     if (this.option) {
       this.ctgconfig.tococolor = this.option.tococolor;
       this.ctgconfig.fhrcolor[0] = this.option.fhrcolor1;
@@ -166,6 +168,8 @@ export class Suit extends Draw {
   }
 
   init(data: ICacheItem) {
+    this.log('init')
+    this.drawAnalyse.init()
     if (!data) {
       return;
     }
@@ -185,9 +189,7 @@ export class Suit extends Draw {
         }
       }
     }
-    this.createBar();
     this.drawobj.showcur(0, false);
-    this.startingBar.setLeft(0);
     if (this.type > 0) {
       //kisi 2019-10-29 测试增加analyse属性
       // console.log(this.data);
@@ -207,7 +209,7 @@ export class Suit extends Draw {
         this.curr = this.data.index;
       }
       this.drawobj.drawdot(this.canvasline.width * 2, false);
-      this.viewposition = this.curr;
+      this.rightViewPosition = this.curr;
     } else {
       this.timerCtg(defaultinterval);
     }
@@ -215,7 +217,7 @@ export class Suit extends Draw {
       //显示历史数据
       //kisi 优化拖动赋值
       this.toolbarposition = value;
-      //console.log(this.curr,this.viewposition,value,this.canvasline.width ,this.data.index);
+      //console.log(this.curr,this.rightViewPosition,value,this.canvasline.width ,this.data.index);
       this.dragtimestamp = new Date().getTime();
       let len = 100;
       if (this.data.index < this.canvasline.width * 4) {
@@ -232,8 +234,8 @@ export class Suit extends Draw {
       this.rightViewPosition = _viewposition;
       this.updateSelectCur();
       this.drawobj.showselect();
-      this.drawobj.drawdot(this.viewposition, false);
-      this.log('gg', this.viewposition, len, value);
+      this.drawobj.drawdot(this.rightViewPosition, false);
+      this.log('gg', this.rightViewPosition, len, value);
     });
     this.barTool.watchGrab(value => {
       let _viewposition;
@@ -250,13 +252,13 @@ export class Suit extends Draw {
       }
       this.dragtimestamp = new Date().getTime();
       //判断开始点
-      if (this.viewposition - value < this.canvasline.width * 2) {
+      if (this.rightViewPosition - value < this.canvasline.width * 2) {
         _viewposition = this.canvasline.width * 2;
-        this.drawobj.drawdot(this.viewposition, false);
+        this.drawobj.drawdot(this.rightViewPosition, false);
         // if (this.selectflag) {
         if (this.selectend == 1) {
           this.endingBar.setLeft(
-            this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2)
+            this.canvasline.width - Math.floor((this.rightViewPosition - this.selectrpend) / 2)
           );
         }
         this.drawobj.showselect();
@@ -265,25 +267,25 @@ export class Suit extends Draw {
         return;
       }
       //方向确认
-      // console.log('print_drag1', value, this.viewposition, this.selectrpend);
-      if (this.viewposition - value < this.data.index) {
+      // console.log('print_drag1', value, this.rightViewPosition, this.selectrpend);
+      if (this.rightViewPosition - value < this.data.index) {
         _viewposition = this.rightViewPosition - value;
         //this.movescoller();
-        this.drawobj.drawdot(this.viewposition, false);
+        this.drawobj.drawdot(this.rightViewPosition, false);
       } else {
         _viewposition = this.data.index;
-        this.drawobj.drawdot(this.viewposition, false);
-        // console.log('print_drag--', this.viewposition);
+        this.drawobj.drawdot(this.rightViewPosition, false);
+        // console.log('print_drag--', this.rightViewPosition);
       }
       this.updateBarTool();
       this.rightViewPosition = _viewposition;
       // if (this.selectflag) {
-      // console.log('print_drag2', value, this.viewposition, this.selectrpend, Math.floor((this.viewposition - this.selectrpend)) / 2);
-      if (this.selectend == 1 && this.viewposition - this.selectrpend > -2) {
+      // console.log('print_drag2', value, this.rightViewPosition, this.selectrpend, Math.floor((this.rightViewPosition - this.selectrpend)) / 2);
+      if (this.selectend == 1 && this.rightViewPosition - this.selectrpend > -2) {
         // this.endingBar.setVisibility(true);
         //this.endingBar.setOffset(this.selectrpend / 2);
         this.endingBar.setLeft(
-          this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2)
+          this.canvasline.width - Math.floor((this.rightViewPosition - this.selectrpend) / 2)
         );
       } else {
         // this.endingBar.setVisibility(false);
@@ -291,6 +293,14 @@ export class Suit extends Draw {
       this.drawobj.showselect();
       // }
     });
+    this.createBar();
+
+  }
+  analyse(data:AnalyseData){
+    this.drawAnalyse.setData(data)
+    this.drawobj.drawdot(this.canvasline.width * 2, false);
+
+
   }
   lazyEmit = throttle((type: string, ...args: any[]) => {
     // console.log(`Suit:${type}`)
@@ -345,6 +355,9 @@ export class Suit extends Draw {
   }
   createBar() {
     if (this.startingBar && this.endingBar && this.selectingBar) {
+      this.selectingBar.setLeft(0)
+      this.startingBar.setLeft(0);
+
       return;
     }
     this.createLine();
@@ -360,19 +373,22 @@ export class Suit extends Draw {
     startingBar.toggleVisibility();
     selectingBar.on('change:x', value => {
       this.drawobj.showcur(this.selectingBarPoint, false);
+      this.emit('change:selectPoint', this.selectingBarPoint)
+
+
     });
     startingBar.on('change:x', value => {
       // this.selectrpstart = value * 2;
       // this.selectstartposition = value;
-      // // console.log('print_开始', value, this.viewposition, this.canvasline.width);
+      // // console.log('print_开始', value, this.rightViewPosition, this.canvasline.width);
       // if (value !== 0 && this.type < 1) {
       //   this.dragtimestamp = new Date().getTime();
       // }
-      // if (this.viewposition > this.canvasline.width * 2) {
-      //   this.selectstart = value * 2 + this.viewposition - 2 * this.canvasline.width;
+      // if (this.rightViewPosition > this.canvasline.width * 2) {
+      //   this.selectstart = value * 2 + this.rightViewPosition - 2 * this.canvasline.width;
       // } else {
       //   if (this.type < 1) {
-      //     this.selectstart = value * 2 + this.viewposition - 2 * this.canvasline.width;
+      //     this.selectstart = value * 2 + this.rightViewPosition - 2 * this.canvasline.width;
       //   } else {
       //     this.selectstart = value * 2;
       //   }
@@ -386,7 +402,7 @@ export class Suit extends Draw {
       if (this.data.index < this.canvasline.width * 2) {
         this.selectrpend = value * 2;
       } else {
-        this.selectrpend = this.viewposition - (this.canvasline.width - value) * 2;
+        this.selectrpend = this.rightViewPosition - (this.canvasline.width - value) * 2;
       }
       if (this.selectrpstart > this.selectrpend) {
         return;
@@ -406,7 +422,7 @@ export class Suit extends Draw {
     // console.log('lockStartingBar', status)
   }
   destroy() {
-    // this.log('destroy')
+    this.log('destroy')
     this.intervalIds.forEach(_ => clearInterval(_));
     this.canvasgrid = null;
     this.canvasdata = null;
@@ -416,8 +432,6 @@ export class Suit extends Draw {
     this.contextline = null;
     this.canvasselect = null;
     this.contextselect = null;
-    this.canvasanalyse = null;
-    this.contextanalyse = null;
     // this.p = null;
     this.wrap = null;
     this.drawobj = null;
@@ -425,7 +439,10 @@ export class Suit extends Draw {
   }
   _resize() {
     // this.log('resize');
+    const { width, height } = this.wrap.getBoundingClientRect()
+
     this.drawobj.resize();
+    this.drawAnalyse.resize(width, height)
   }
   //kisi 2019-11-14 update fhr position
   setfetalposition(fhr1, fhr2, fhr3) {
@@ -453,17 +470,17 @@ export class Suit extends Draw {
       len = Math.floor((this.canvasline.width * 4 - this.data.index) / 2);
     }
     this.toolbarposition = Math.floor(
-      ((this.canvasline.width - len) * (this.viewposition - this.canvasline.width * 2)) /
-        (this.data.index - this.canvasline.width * 2)
+      ((this.canvasline.width - len) * (this.rightViewPosition - this.canvasline.width * 2)) /
+      (this.data.index - this.canvasline.width * 2)
     );
     this.barTool.setBarLeft(this.toolbarposition, false);
   }
 
   updateSelectCur() {
     // if (!this.selectflag) {
-    if (this.viewposition > this.canvasline.width * 2) {
+    if (this.rightViewPosition > this.canvasline.width * 2) {
       this.selectstart =
-        this.selectstartposition * 2 + this.viewposition - 2 * this.canvasline.width;
+        this.selectstartposition * 2 + this.rightViewPosition - 2 * this.canvasline.width;
     } else {
       this.selectstart = this.selectstartposition * 2;
     }
@@ -471,7 +488,7 @@ export class Suit extends Draw {
     this.drawobj.showcur(this.selectstart, false);
     // }
   }
-  movescoller() {}
+  movescoller() { }
 
   //胎心数据处理
   InitFileData(oriobj) {
@@ -512,8 +529,10 @@ export class Suit extends Draw {
       if (key === 'docid') {
         return false;
       }
-      if (key === 'analyse') {
-        Object.assign(CTGDATA.analyse, formatAnalyseData(oridata));
+
+
+      if (key === 'analyse' && oridata) {
+        Object.assign(CTGDATA.analyse, oridata);
         return;
       }
       if (key === 'fhr1') {
@@ -557,11 +576,11 @@ export class Suit extends Draw {
       this.curr =
         (Math.floor(new Date().getTime() / 1000) -
           Math.floor(new Date(this.data.starttime).getTime() / 1000)) *
-          4 +
+        4 +
         this.data.csspan;
       if (this.curr < 0) return;
       this.drawobj.drawdot(this.curr, true);
-      this.viewposition = this.curr;
+      this.rightViewPosition = this.curr;
       if (this.data.index > this.canvasline.width * 2) {
         if (this.data.index < this.canvasline.width * 4) {
           let len = Math.floor((this.canvasline.width * 4 - this.data.index) / 2);
@@ -638,15 +657,15 @@ export class Suit extends Draw {
   }
   selectBasedOnStartingBar(isLeft = true) {
     const {
-      startingBar,
-      endingBar,
-      needScroll,
+      // startingBar,
+      // endingBar,
+      // needScroll,
       width,
       ctgconfig,
       data,
-      selectstart,
-      leftViewposition: baseViewposition,
-      selectingBarPoint,
+      // selectstart,
+      // leftViewposition: baseViewposition,
+      // selectingBarPoint,
     } = this;
     let endPosition;
     if (isLeft) {
@@ -670,24 +689,24 @@ export class Suit extends Draw {
   }
 }
 
-function formatAnalyseData(obj: { [x: string]: string }) {
-  const keys = ['acc', 'baseline', 'dec', 'meanbaseline'];
-  const arr: [string, number[]][] = Object.entries(obj)
-    .filter(([k, v]) => keys.includes(k))
-    .map(([k, v]) => {
-      v = typeof v === 'string' ? v : '';
-      return [
-        k,
-        v
-          .split(',')
-          .map(_ => parseInt(_))
-          .filter(_ => !isNaN(_)),
-      ];
-    });
-  return {
-    ...obj,
-    ...arr.reduce((a, [k, v]) => {
-      return Object.assign(a, { [k]: v });
-    }, {}),
-  };
-}
+// function formatAnalyseData(obj: { [x: string]: string }) {
+//   const keys = ['acc', 'baseline', 'dec', 'meanbaseline'];
+//   const arr: [string, number[]][] = Object.entries(obj)
+//     .filter(([k, v]) => keys.includes(k))
+//     .map(([k, v]) => {
+//       v = typeof v === 'string' ? v : '';
+//       return [
+//         k,
+//         v
+//           .split(',')
+//           .map(_ => parseInt(_))
+//           .filter(_ => !isNaN(_)),
+//       ];
+//     });
+//   return {
+//     ...obj,
+//     ...arr.reduce((a, [k, v]) => {
+//       return Object.assign(a, { [k]: v });
+//     }, {}),
+//   };
+// }

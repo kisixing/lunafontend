@@ -23,7 +23,11 @@ const CTGChart = (docid: string) => {
     }, [ctgData])
 
 
-    return { ctgData, loading };
+    return {
+        ctgData, loading,
+
+
+    };
 }
 
 export default CTGChart

@@ -29,7 +29,7 @@ export default class ScrollEl extends EventEmitter {
     getLeft(): number;
     setTop(offset: number, isfire?: boolean): this;
     getTop(): number;
-    getRect(): ClientRect | DOMRect;
+    getRect(): DOMRect;
 }
 export declare function getCoordInDocument(e: any): {
     x: any;

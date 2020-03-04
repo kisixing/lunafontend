@@ -21,11 +21,11 @@ function default_1() {
             _this.selectend = 1;
             if (_this.data.index < _this.canvasline.width * 2) {
                 _this.endingBar.setVisibility(true);
-                _this.endingBar.setLeft(Math.floor(_this.viewposition / 2));
+                _this.endingBar.setLeft(Math.floor(_this.rightViewPosition / 2));
             }
-            else if (_this.viewposition - _this.selectrpend >= 0) {
+            else if (_this.rightViewPosition - _this.selectrpend >= 0) {
                 _this.endingBar.setVisibility(true);
-                _this.endingBar.setLeft(_this.canvasline.width - Math.floor((_this.viewposition - _this.selectrpend) / 2));
+                _this.endingBar.setLeft(_this.canvasline.width - Math.floor((_this.rightViewPosition - _this.selectrpend) / 2));
             }
         }
         else {
@@ -46,7 +46,7 @@ function default_1() {
         _this.$selectrpstart = 0;
     })
         .on('selectForward', function () {
-        var _a = _this, selectrpstart = _a.selectrpstart, baseViewposition = _a.leftViewposition, ctgconfig = _a.ctgconfig, selectingBar = _a.selectingBar;
+        var selectingBar = _this.selectingBar;
         var hasMoved = selectingBar.hasMoved;
         console.log('hasMoved', hasMoved);
         _this.selectBasedOnStartingBar(false);
@@ -54,7 +54,7 @@ function default_1() {
         _this.drawobj.showselect();
     })
         .on('selectBackward', function () {
-        var _a = _this, selectrpstart = _a.selectrpstart, baseViewposition = _a.leftViewposition, ctgconfig = _a.ctgconfig, selectingBar = _a.selectingBar;
+        var selectingBar = _this.selectingBar;
         var hasMoved = selectingBar.hasMoved;
         console.log('hasMoved', hasMoved);
         _this.selectBasedOnStartingBar();

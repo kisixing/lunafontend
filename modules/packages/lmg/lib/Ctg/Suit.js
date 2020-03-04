@@ -12,17 +12,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __spreadArrays = (this && this.__spreadArrays) || function () {
     for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
     for (var r = Array(s), k = 0, i = 0; i < il; i++)
@@ -40,6 +29,7 @@ var utils_1 = require("../services/utils");
 var lodash_1 = require("lodash");
 var Draw_1 = __importDefault(require("../Draw"));
 var bindEvents_1 = __importDefault(require("./bindEvents"));
+var DrawAnalyse_1 = require("./DrawAnalyse");
 var sid = 0;
 var Suit = (function (_super) {
     __extends(Suit, _super);
@@ -106,15 +96,14 @@ var Suit = (function (_super) {
         _this.canvasdata = canvasdata;
         _this.canvasline = canvasline;
         _this.canvasselect = canvasselect;
-        _this.canvasanalyse = canvasanalyse;
         _this.contextgrid = canvasgrid.getContext('2d');
         _this.contextdata = canvasdata.getContext('2d');
         _this.contextline = canvasline.getContext('2d');
         _this.contextselect = canvasselect.getContext('2d');
-        _this.contextanalyse = canvasanalyse.getContext('2d');
         _this.barTool = barTool;
         _this.drawobj = new DrawCTG_1.default(_this);
         _this.type = type;
+        _this.drawAnalyse = new DrawAnalyse_1.DrawAnalyse(canvasanalyse);
         if (_this.option) {
             _this.ctgconfig.tococolor = _this.option.tococolor;
             _this.ctgconfig.fhrcolor[0] = _this.option.fhrcolor1;
@@ -165,14 +154,14 @@ var Suit = (function (_super) {
     });
     Object.defineProperty(Suit.prototype, "leftViewposition", {
         get: function () {
-            return this.viewposition >= this.width * 2 ? this.viewposition - this.width * 2 : 0;
+            return this.rightViewPosition >= this.width * 2 ? this.rightViewPosition - this.width * 2 : 0;
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(Suit.prototype, "selectingBarPoint", {
         get: function () {
-            return ~~(this.leftViewposition + this.selectingBar.getLeft() * 2);
+            return ~~(this.leftViewposition + (this.selectingBar ? this.selectingBar.getLeft() * 2 : 0));
         },
         enumerable: true,
         configurable: true
@@ -183,6 +172,7 @@ var Suit = (function (_super) {
         },
         set: function (value) {
             this.viewposition = value;
+            this.emit('change:selectPoint', this.selectingBarPoint);
             this.updateBarTool();
             this.drawobj.drawdot(this.viewposition);
         },
@@ -191,6 +181,8 @@ var Suit = (function (_super) {
     });
     Suit.prototype.init = function (data) {
         var _this = this;
+        this.log('init');
+        this.drawAnalyse.init();
         if (!data) {
             return;
         }
@@ -210,9 +202,7 @@ var Suit = (function (_super) {
                 }
             }
         }
-        this.createBar();
         this.drawobj.showcur(0, false);
-        this.startingBar.setLeft(0);
         if (this.type > 0) {
             if (this.data.index > this.canvasline.width * 2) {
                 this.curr = this.canvasline.width * 2;
@@ -231,7 +221,7 @@ var Suit = (function (_super) {
                 this.curr = this.data.index;
             }
             this.drawobj.drawdot(this.canvasline.width * 2, false);
-            this.viewposition = this.curr;
+            this.rightViewPosition = this.curr;
         }
         else {
             this.timerCtg(defaultinterval);
@@ -251,8 +241,8 @@ var Suit = (function (_super) {
             _this.rightViewPosition = _viewposition;
             _this.updateSelectCur();
             _this.drawobj.showselect();
-            _this.drawobj.drawdot(_this.viewposition, false);
-            _this.log('gg', _this.viewposition, len, value);
+            _this.drawobj.drawdot(_this.rightViewPosition, false);
+            _this.log('gg', _this.rightViewPosition, len, value);
         });
         this.barTool.watchGrab(function (value) {
             var _viewposition;
@@ -267,33 +257,38 @@ var Suit = (function (_super) {
                 return;
             }
             _this.dragtimestamp = new Date().getTime();
-            if (_this.viewposition - value < _this.canvasline.width * 2) {
+            if (_this.rightViewPosition - value < _this.canvasline.width * 2) {
                 _viewposition = _this.canvasline.width * 2;
-                _this.drawobj.drawdot(_this.viewposition, false);
+                _this.drawobj.drawdot(_this.rightViewPosition, false);
                 if (_this.selectend == 1) {
-                    _this.endingBar.setLeft(_this.canvasline.width - Math.floor((_this.viewposition - _this.selectrpend) / 2));
+                    _this.endingBar.setLeft(_this.canvasline.width - Math.floor((_this.rightViewPosition - _this.selectrpend) / 2));
                 }
                 _this.drawobj.showselect();
                 _this.updateBarTool();
                 return;
             }
-            if (_this.viewposition - value < _this.data.index) {
+            if (_this.rightViewPosition - value < _this.data.index) {
                 _viewposition = _this.rightViewPosition - value;
-                _this.drawobj.drawdot(_this.viewposition, false);
+                _this.drawobj.drawdot(_this.rightViewPosition, false);
             }
             else {
                 _viewposition = _this.data.index;
-                _this.drawobj.drawdot(_this.viewposition, false);
+                _this.drawobj.drawdot(_this.rightViewPosition, false);
             }
             _this.updateBarTool();
             _this.rightViewPosition = _viewposition;
-            if (_this.selectend == 1 && _this.viewposition - _this.selectrpend > -2) {
-                _this.endingBar.setLeft(_this.canvasline.width - Math.floor((_this.viewposition - _this.selectrpend) / 2));
+            if (_this.selectend == 1 && _this.rightViewPosition - _this.selectrpend > -2) {
+                _this.endingBar.setLeft(_this.canvasline.width - Math.floor((_this.rightViewPosition - _this.selectrpend) / 2));
             }
             else {
             }
             _this.drawobj.showselect();
         });
+        this.createBar();
+    };
+    Suit.prototype.analyse = function (data) {
+        this.drawAnalyse.setData(data);
+        this.drawobj.drawdot(this.canvasline.width * 2, false);
     };
     Suit.prototype.alarmOn = function (alarmType) {
         if (alarmType === void 0) { alarmType = ''; }
@@ -332,6 +327,8 @@ var Suit = (function (_super) {
     Suit.prototype.createBar = function () {
         var _this = this;
         if (this.startingBar && this.endingBar && this.selectingBar) {
+            this.selectingBar.setLeft(0);
+            this.startingBar.setLeft(0);
             return;
         }
         this.createLine();
@@ -346,6 +343,7 @@ var Suit = (function (_super) {
         startingBar.toggleVisibility();
         selectingBar.on('change:x', function (value) {
             _this.drawobj.showcur(_this.selectingBarPoint, false);
+            _this.emit('change:selectPoint', _this.selectingBarPoint);
         });
         startingBar.on('change:x', function (value) {
             _this.$selectrpstart = _this.leftViewposition + value * 2;
@@ -355,7 +353,7 @@ var Suit = (function (_super) {
                 _this.selectrpend = value * 2;
             }
             else {
-                _this.selectrpend = _this.viewposition - (_this.canvasline.width - value) * 2;
+                _this.selectrpend = _this.rightViewPosition - (_this.canvasline.width - value) * 2;
             }
             if (_this.selectrpstart > _this.selectrpend) {
                 return;
@@ -368,6 +366,7 @@ var Suit = (function (_super) {
     Suit.prototype.lockStartingBar = function (status) {
     };
     Suit.prototype.destroy = function () {
+        this.log('destroy');
         this.intervalIds.forEach(function (_) { return clearInterval(_); });
         this.canvasgrid = null;
         this.canvasdata = null;
@@ -377,14 +376,14 @@ var Suit = (function (_super) {
         this.contextline = null;
         this.canvasselect = null;
         this.contextselect = null;
-        this.canvasanalyse = null;
-        this.contextanalyse = null;
         this.wrap = null;
         this.drawobj = null;
         this.barTool = null;
     };
     Suit.prototype._resize = function () {
+        var _a = this.wrap.getBoundingClientRect(), width = _a.width, height = _a.height;
         this.drawobj.resize();
+        this.drawAnalyse.resize(width, height);
     };
     Suit.prototype.setfetalposition = function (fhr1, fhr2, fhr3) {
         this.data.fetalposition.fhr1 = fhr1;
@@ -397,14 +396,14 @@ var Suit = (function (_super) {
         if (this.data.index < this.canvasline.width * 4) {
             len = Math.floor((this.canvasline.width * 4 - this.data.index) / 2);
         }
-        this.toolbarposition = Math.floor(((this.canvasline.width - len) * (this.viewposition - this.canvasline.width * 2)) /
+        this.toolbarposition = Math.floor(((this.canvasline.width - len) * (this.rightViewPosition - this.canvasline.width * 2)) /
             (this.data.index - this.canvasline.width * 2));
         this.barTool.setBarLeft(this.toolbarposition, false);
     };
     Suit.prototype.updateSelectCur = function () {
-        if (this.viewposition > this.canvasline.width * 2) {
+        if (this.rightViewPosition > this.canvasline.width * 2) {
             this.selectstart =
-                this.selectstartposition * 2 + this.viewposition - 2 * this.canvasline.width;
+                this.selectstartposition * 2 + this.rightViewPosition - 2 * this.canvasline.width;
         }
         else {
             this.selectstart = this.selectstartposition * 2;
@@ -443,8 +442,8 @@ var Suit = (function (_super) {
             if (key === 'docid') {
                 return false;
             }
-            if (key === 'analyse') {
-                Object.assign(CTGDATA.analyse, formatAnalyseData(oridata));
+            if (key === 'analyse' && oridata) {
+                Object.assign(CTGDATA.analyse, oridata);
                 return;
             }
             if (key === 'fhr1') {
@@ -492,7 +491,7 @@ var Suit = (function (_super) {
             if (this.curr < 0)
                 return;
             this.drawobj.drawdot(this.curr, true);
-            this.viewposition = this.curr;
+            this.rightViewPosition = this.curr;
             if (this.data.index > this.canvasline.width * 2) {
                 if (this.data.index < this.canvasline.width * 4) {
                     var len = Math.floor((this.canvasline.width * 4 - this.data.index) / 2);
@@ -574,7 +573,7 @@ var Suit = (function (_super) {
     };
     Suit.prototype.selectBasedOnStartingBar = function (isLeft) {
         if (isLeft === void 0) { isLeft = true; }
-        var _a = this, startingBar = _a.startingBar, endingBar = _a.endingBar, needScroll = _a.needScroll, width = _a.width, ctgconfig = _a.ctgconfig, data = _a.data, selectstart = _a.selectstart, baseViewposition = _a.leftViewposition, selectingBarPoint = _a.selectingBarPoint;
+        var _a = this, width = _a.width, ctgconfig = _a.ctgconfig, data = _a.data;
         var endPosition;
         if (isLeft) {
             if (this.selectingBarPoint < 1) {
@@ -598,27 +597,3 @@ var Suit = (function (_super) {
     return Suit;
 }(Draw_1.default));
 exports.Suit = Suit;
-function formatAnalyseData(obj) {
-    var keys = ['acc', 'baseline', 'dec', 'meanbaseline'];
-    var arr = Object.entries(obj)
-        .filter(function (_a) {
-        var k = _a[0], v = _a[1];
-        return keys.includes(k);
-    })
-        .map(function (_a) {
-        var k = _a[0], v = _a[1];
-        v = typeof v === 'string' ? v : '';
-        return [
-            k,
-            v
-                .split(',')
-                .map(function (_) { return parseInt(_); })
-                .filter(function (_) { return !isNaN(_); }),
-        ];
-    });
-    return __assign(__assign({}, obj), arr.reduce(function (a, _a) {
-        var _b;
-        var k = _a[0], v = _a[1];
-        return Object.assign(a, (_b = {}, _b[k] = v, _b));
-    }, {}));
-}

@@ -9,7 +9,7 @@ import { Loading } from './Loading'
 import { useCheckNetwork } from '../services/WsService';
 
 import { ButtonTools } from "./ButtonTools";
-export default forwardRef((props: IProps, ref: Ref<any>) => {
+export default forwardRef((props: IProps, ref: Ref<Suit>) => {
   const {
     data,
     mutableSuitObject = { suit: null },
@@ -59,20 +59,7 @@ export default forwardRef((props: IProps, ref: Ref<any>) => {
   // }, [ecgHeight])
   useCheckNetwork(isOn => ctg.current && (ctg.current.isOn = isOn))
 
-  useImperativeHandle(ref, () => ({
-    on(e: string, fn: (...args: any[]) => void) {
-      return ctg.current && ctg.current.on(e, fn)
-    },
-    off(e: string, fn: (...args: any[]) => void) {
-      return ctg.current && ctg.current.off(e, fn)
-    },
-    emit(e: string, ...args: any[]) {
-      return ctg.current && ctg.current.emit(e, ...args)
-    },
-    getSuit() {
-      return ctg.current
-    }
-  }))
+  useImperativeHandle(ref, () => ctg.current)
   const canvasStyles: React.CSSProperties = { position: 'absolute' }
   return (
     <div style={{ width: '100%', height: '100%' }} ref={box} {...others} onContextMenu={e => {

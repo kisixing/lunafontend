@@ -20,9 +20,8 @@
     "umi-request": "^1.2.5",
     "store": "^2.0.12",
     "react-pdf": "^4.1.0",
-    "styled-components": "4.4.1",
-    "antd":"^4.0.0-rc.5",
-    "@ant-design/icons":"^4.0.0-alpha.19"
+    "styled-components": "4.4.1"
+
   },
   "repository": {
     "type": "git",

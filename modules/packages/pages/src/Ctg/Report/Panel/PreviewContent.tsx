@@ -24,7 +24,6 @@ const PreviewContent = props => {
     const [pageNumber, setPageNumber] = useState(1)
     const onDocumentLoad = useCallback(({ numPages }) => { setNumPages(numPages) }, [])
     const onChangePage = useCallback(page => { setPageNumber(page) }, [])
-    const [f, setF] = useState(true)
     const largen = () => {
         setFullpage(true)
         setHeight(h - 24);

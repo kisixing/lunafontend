@@ -20,7 +20,7 @@ export function update_status(this: WsService, received_msg: IData) {
     const { Working, Stopped, Offline, OfflineStopped } = BedStatus
     // 状态机处理
     var statusdata = received_msg.data;
-    const { device_no, bed_no, doc_id } = statusdata
+    const { device_no, bed_no } = statusdata
     var unitId = this.getUnitId(device_no, bed_no);
 
 

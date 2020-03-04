@@ -1,15 +1,15 @@
 import { BedStatus, ICacheItem, ICache } from './types';
 export declare const mapStatusToColor: {
-    [BedStatus.Offline]: string;
-    [BedStatus.Stopped]: string;
-    [BedStatus.OfflineStopped]: string;
-    [BedStatus.Working]: string;
+    3: string;
+    2: string;
+    4: string;
+    1: string;
 };
 export declare const mapStatusToText: {
-    [BedStatus.Offline]: string;
-    [BedStatus.Stopped]: string;
-    [BedStatus.OfflineStopped]: string;
-    [BedStatus.Working]: string;
+    3: string;
+    2: string;
+    4: string;
+    1: string;
 };
 export declare function getEmptyCacheItem(base?: any): ICacheItem;
 export declare function cleardata(datacache: ICache, curid: string, fetal_num: number): void;

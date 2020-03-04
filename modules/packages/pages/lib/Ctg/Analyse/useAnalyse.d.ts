@@ -1,13 +1,9 @@
 import { MutableRefObject } from 'react';
-import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
-import { Rule } from 'rc-field-form/lib/interface';
 import { FormInstance } from 'antd/lib/form';
-declare const _default: (v: {
-    suit: Suit;
-}, docid: any, fetal: any, form: FormInstance, cb: (result: IResult) => void) => {
+import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
+declare const _default: (v: Suit, docid: any, fetal: any) => {
     setMark: (mark: string) => void;
     mark: string;
-    activeItem: IItem[];
     responseData: {
         [x: string]: IResponseData;
     };
@@ -18,9 +14,10 @@ declare const _default: (v: {
     interval: number;
     setInterval: import("react").Dispatch<import("react").SetStateAction<number>>;
     modifyData: () => void;
-    Fisher_ref: MutableRefObject<FormInstance>;
+    Fischer_ref: MutableRefObject<FormInstance>;
     Nst_ref: MutableRefObject<FormInstance>;
-    Kerbs_ref: MutableRefObject<FormInstance>;
+    Krebs_ref: MutableRefObject<FormInstance>;
+    analysis_ref: MutableRefObject<FormInstance>;
 };
 export default _default;
 interface IResponseData {
@@ -31,11 +28,6 @@ interface IResponseData {
     mark?: string;
     result: string;
     diagnosis?: any;
-}
-interface IItem {
-    key: string;
-    label: string;
-    rules: Rule[];
 }
 export interface IResult {
     fhr_uptime_score: number;

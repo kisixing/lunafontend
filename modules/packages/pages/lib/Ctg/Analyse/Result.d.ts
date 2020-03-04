@@ -4,9 +4,7 @@ declare const ScoringMethod: (props: IProps) => JSX.Element;
 interface IProps {
     ctgData: any;
     docid: string;
-    v: {
-        suit: Suit;
-    };
+    v: Suit;
     [x: string]: any;
 }
 export default ScoringMethod;

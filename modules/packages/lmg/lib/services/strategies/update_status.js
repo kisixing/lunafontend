@@ -5,7 +5,7 @@ function update_status(received_msg) {
     var _a = this, datacache = _a.datacache, BedStatus = _a.BedStatus;
     var Working = BedStatus.Working, Stopped = BedStatus.Stopped, Offline = BedStatus.Offline, OfflineStopped = BedStatus.OfflineStopped;
     var statusdata = received_msg.data;
-    var device_no = statusdata.device_no, bed_no = statusdata.bed_no, doc_id = statusdata.doc_id;
+    var device_no = statusdata.device_no, bed_no = statusdata.bed_no;
     var unitId = this.getUnitId(device_no, bed_no);
     if (!datacache.has(unitId)) {
         datacache.set(unitId, utils_1.getEmptyCacheItem());

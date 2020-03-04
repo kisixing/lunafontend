@@ -77,15 +77,12 @@ export default class SiderDemo extends React.Component {
           </Menu>
         </Sider>
         <Layout>
-          <Header style={{ background: '#fff', padding: 0 }}>
-     
-          </Header>
           <Content
             style={{
               margin: '24px 16px',
               padding: 24,
               background: '#fff',
-              minHeight: 'unset'
+              height:'calc(100vh - 64px)'
             }}
           >
             {this.props.children}

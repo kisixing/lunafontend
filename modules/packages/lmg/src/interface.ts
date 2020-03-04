@@ -1,3 +1,4 @@
+
 export interface IProps {
     data: any;
     mutableSuitObject?: { suit: (Drawer | any) };
@@ -5,6 +6,7 @@ export interface IProps {
     loading?: boolean;
     [x: string]: any
 }
+
 
 export interface Drawer {
     wrap: HTMLElement;

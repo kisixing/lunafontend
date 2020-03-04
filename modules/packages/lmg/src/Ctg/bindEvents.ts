@@ -36,16 +36,16 @@ export default function (this: Suit) {
             }
         })
         .on('customizing', value => {
-            // this.log('customizing', value, this.selectrpend, this.viewposition);
+            // this.log('customizing', value, this.selectrpend, this.rightViewPosition);
             if (value && this.selectflag) {
                 this.selectend = 1;
                 if (this.data.index < this.canvasline.width * 2) {
                     this.endingBar.setVisibility(true);
-                    this.endingBar.setLeft(Math.floor(this.viewposition / 2));
+                    this.endingBar.setLeft(Math.floor(this.rightViewPosition / 2));
                 }
-                else if (this.viewposition - this.selectrpend >= 0) {
+                else if (this.rightViewPosition - this.selectrpend >= 0) {
                     this.endingBar.setVisibility(true);
-                    this.endingBar.setLeft(this.canvasline.width - Math.floor((this.viewposition - this.selectrpend) / 2));
+                    this.endingBar.setLeft(this.canvasline.width - Math.floor((this.rightViewPosition - this.selectrpend) / 2));
                 }
             } else {
                 this.selectend = 0;
@@ -64,12 +64,12 @@ export default function (this: Suit) {
         .on('showLine', () => {
             this.createLine()
         })
-        .on('selectAll',()=>{
+        .on('selectAll', () => {
             this.$selectrpend = this.data.index - 2
             this.$selectrpstart = 0
         })
         .on('selectForward', () => {
-            const { selectrpstart, leftViewposition: baseViewposition, ctgconfig, selectingBar } = this
+            const { selectingBar } = this
             const hasMoved = selectingBar.hasMoved
             console.log('hasMoved', hasMoved)
             // if (selectrpstart - baseViewposition < ctgconfig.print_interval * 240) {
@@ -83,7 +83,7 @@ export default function (this: Suit) {
 
         })
         .on('selectBackward', () => {
-            const { selectrpstart, leftViewposition: baseViewposition, ctgconfig, selectingBar } = this
+            const { selectingBar } = this
             const hasMoved = selectingBar.hasMoved
             console.log('hasMoved', hasMoved)
             // if (selectrpstart - baseViewposition < ctgconfig.print_interval * 240) {

@@ -16,5 +16,6 @@
     "paths": {
       "rxjs/*": ["./node_modules/rxjs/*"]
     }
-  }
+  },
+  "exclude": ["./node_modules/**/*"]
 }

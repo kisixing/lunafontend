@@ -35,6 +35,8 @@ var CTGChart = function (docid) {
             utils_1.event.off('analysis:setCtgData', fn);
         };
     }, [ctgData]);
-    return { ctgData: ctgData, loading: loading };
+    return {
+        ctgData: ctgData, loading: loading,
+    };
 };
 exports.default = CTGChart;

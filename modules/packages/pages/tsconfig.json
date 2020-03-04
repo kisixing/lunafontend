@@ -9,6 +9,7 @@
     "./src/**/*.js"
   ],
   "exclude": [
-    "./src/__tests__/*"
+    "./src/__tests__/*",
+    "../../node_modules/**/*"
   ],
 }
