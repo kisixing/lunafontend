@@ -25,10 +25,7 @@ export class Suit extends Draw {
   initFlag = false;
   sid = sid++;
   log = console.log.bind(console, 'suit', this.sid);
-  startingBar: ScrollEl;
-  endingBar: ScrollEl;
-  selectingBar: ScrollEl;
-  rowline: ScrollEl;
+
   intervalIds: NodeJS.Timeout[] = [];
   data: ICacheItem;
   starttime = '2019-09-26';
@@ -65,13 +62,8 @@ export class Suit extends Draw {
     fhr3: '',
   };
   printlen = 4800;
-  selectstart = 0; // 选择开始点
-  selectstartposition = 0; // 选择开始相对位置与数据长度无关
-  toolbarposition = 0; //滚动条位置，事件更新
-  selectrpstart = 0; // 相对开始位置
-  selectend = 0; // 选择结束点
-  selectrpend = 0; // 相对结束位置
-  selectflag = false;
+
+
   requestflag = false;
   canvasgrid: Canvas;
   contextgrid: Context;
@@ -86,34 +78,12 @@ export class Suit extends Draw {
   dragtimestamp = 0;
   interval = 5000;
   timeout: NodeJS.Timeout;
-  get $selectrpend() {
-    return this.selectrpend;
-  }
-  set $selectrpend(value: number) {
-    this.selectrpend = value;
-    const absLen = (value - this.leftViewposition) / 2;
-    this.endingBar.setLeft(absLen, false);
-    this.drawobj.showselect();
-    this.selectflag && this.drawobj.showcur(value);
-    this.emit('endTime', value);
-  }
-  get $selectrpstart() {
-    return this.selectrpstart;
-  }
-  set $selectrpstart(value: number) {
-    this.selectrpstart = value;
-    const absLen = (value - this.leftViewposition) / 2;
+  rowline: ScrollEl;
 
-    this.startingBar.setLeft(absLen, false);
-    this.drawobj.showselect();
-    this.selectflag && this.drawobj.showcur(value);
-    this.emit('startTime', value);
-  }
+  toolbarposition = 0; //滚动条位置，事件更新
+
   get leftViewposition() {
     return this.rightViewPosition >= this.width * 2 ? this.rightViewPosition - this.width * 2 : 0;
-  }
-  get selectingBarPoint() {
-    return ~~(this.leftViewposition + (this.selectingBar ? this.selectingBar.getLeft() * 2 : 0));
   }
   get rightViewPosition() {
     return this.viewposition;
@@ -121,7 +91,7 @@ export class Suit extends Draw {
   set rightViewPosition(value: number) {
     this.viewposition = value;
 
-    this.emit('change:selectPoint', this.selectingBarPoint)
+    this.emit('change:selectPoint', this.drawSelect.selectingBarPoint)
 
     this.updateBarTool();
     this.drawobj.drawdot(this.viewposition);
@@ -152,7 +122,7 @@ export class Suit extends Draw {
     this.drawobj = new DrawCTG(this);
     this.type = type;
     this.drawAnalyse = new DrawAnalyse(canvasanalyse)
-    this.drawSelect = new DrawSelect(canvasanalyse)
+    this.drawSelect = new DrawSelect(canvasanalyse, this)
     if (this.option) {
       this.ctgconfig.tococolor = this.option.tococolor;
       this.ctgconfig.fhrcolor[0] = this.option.fhrcolor1;
@@ -173,6 +143,7 @@ export class Suit extends Draw {
   init(data: ICacheItem) {
     this.log('init')
     this.drawAnalyse.init()
+    this.drawSelect.init()
     if (!data) {
       return;
     }
@@ -235,8 +206,8 @@ export class Suit extends Draw {
         _viewposition = this.canvasline.width * 2;
       }
       this.rightViewPosition = _viewposition;
-      this.updateSelectCur();
-      this.drawobj.showselect();
+      this.drawSelect.updateSelectCur();
+      this.drawSelect.showselect();
       this.drawobj.drawdot(this.rightViewPosition, false);
       this.log('gg', this.rightViewPosition, len, value);
     });
@@ -259,12 +230,12 @@ export class Suit extends Draw {
         _viewposition = this.canvasline.width * 2;
         this.drawobj.drawdot(this.rightViewPosition, false);
         // if (this.selectflag) {
-        if (this.selectend == 1) {
-          this.endingBar.setLeft(
-            this.canvasline.width - Math.floor((this.rightViewPosition - this.selectrpend) / 2)
+        if (this.drawSelect.selectend == 1) {
+          this.drawSelect.endingBar.setLeft(
+            this.canvasline.width - Math.floor((this.rightViewPosition - this.drawSelect.selectrpend) / 2)
           );
         }
-        this.drawobj.showselect();
+        this.drawSelect.showselect();
         // }
         this.updateBarTool();
         return;
@@ -284,44 +255,23 @@ export class Suit extends Draw {
       this.rightViewPosition = _viewposition;
       // if (this.selectflag) {
       // console.log('print_drag2', value, this.rightViewPosition, this.selectrpend, Math.floor((this.rightViewPosition - this.selectrpend)) / 2);
-      if (this.selectend == 1 && this.rightViewPosition - this.selectrpend > -2) {
+      if (this.drawSelect.selectend == 1 && this.rightViewPosition - this.drawSelect.selectrpend > -2) {
         // this.endingBar.setVisibility(true);
         //this.endingBar.setOffset(this.selectrpend / 2);
-        this.endingBar.setLeft(
-          this.canvasline.width - Math.floor((this.rightViewPosition - this.selectrpend) / 2)
+        this.drawSelect.endingBar.setLeft(
+          this.canvasline.width - Math.floor((this.rightViewPosition - this.drawSelect.selectrpend) / 2)
         );
       } else {
         // this.endingBar.setVisibility(false);
       }
-      this.drawobj.showselect();
+      this.drawSelect.showselect();
       // }
     });
-    this.createBar();
 
   }
-  analyse(data: AnalyseData) {
-    this.drawAnalyse.setData(data)
-    this.drawobj.drawdot(this.canvasline.width * 2, false);
-
-
-  }
-  lazyEmit = throttle((type: string, ...args: any[]) => {
-    // console.log(`Suit:${type}`)
-    this.emit(type, ...args);
-    // console.log('alarmtype in',type,this)
-    return true;
-  }, this.emitInterval || 0);
-  // 报警
-  alarmOn(alarmType: string = '') {
-    this.lazyEmit('alarmOn', alarmType);
-  }
-  alarmOff(alarmType: string) {
-    this.lazyEmit('alarmOff', alarmType);
-  }
-
   createLine() {
     if (this.rowline) return;
-    const { barTool } = this;
+    const { barTool, } = this
 
     const lineTool = (this.lineTool = barTool.createHLine('blue'));
     const { rowline, addDot, setBase } = lineTool;
@@ -356,74 +306,39 @@ export class Suit extends Draw {
     setBase(200);
     lineTool.toggleVisibility();
   }
-  createBar() {
-    if (this.startingBar && this.endingBar && this.selectingBar) {
-      this.selectingBar.setLeft(0)
-      this.startingBar.setLeft(0);
-
-      return;
+  updateBarTool() {
+    this.drawSelect.updateSelectCur();
+    let len = 100;
+    if (this.data.index < this.canvasline.width * 4) {
+      len = Math.floor((this.canvasline.width * 4 - this.data.index) / 2);
     }
-    this.createLine();
-    const { barTool } = this;
-    const startingBar = (this.startingBar = barTool.createRod('开始'));
-    const endingBar = (this.endingBar = barTool.createRod('结束'));
-    const selectingBar = (this.selectingBar = barTool.createRod('选择'));
-    this.type === 0 && selectingBar.setVisibility(false);
-    selectingBar.setLeft(0);
-    startingBar.setLeft(0);
-    //endingBar.setOffset(100)
-    endingBar.toggleVisibility();
-    startingBar.toggleVisibility();
-    selectingBar.on('change:x', value => {
-      this.drawobj.showcur(this.selectingBarPoint, false);
-      this.emit('change:selectPoint', this.selectingBarPoint)
-
-
-    });
-    startingBar.on('change:x', value => {
-      // this.selectrpstart = value * 2;
-      // this.selectstartposition = value;
-      // // console.log('print_开始', value, this.rightViewPosition, this.canvasline.width);
-      // if (value !== 0 && this.type < 1) {
-      //   this.dragtimestamp = new Date().getTime();
-      // }
-      // if (this.rightViewPosition > this.canvasline.width * 2) {
-      //   this.selectstart = value * 2 + this.rightViewPosition - 2 * this.canvasline.width;
-      // } else {
-      //   if (this.type < 1) {
-      //     this.selectstart = value * 2 + this.rightViewPosition - 2 * this.canvasline.width;
-      //   } else {
-      //     this.selectstart = value * 2;
-      //   }
-      // }
-      // this.drawobj.showcur(this.selectstart, false);
-      // this.selectrpstart = this.selectstart;
-      this.$selectrpstart = this.leftViewposition + value * 2;
-      // this.emit('startTime', this.selectstart)
-    });
-    endingBar.on('change:x', value => {
-      if (this.data.index < this.canvasline.width * 2) {
-        this.selectrpend = value * 2;
-      } else {
-        this.selectrpend = this.rightViewPosition - (this.canvasline.width - value) * 2;
-      }
-      if (this.selectrpstart > this.selectrpend) {
-        return;
-      }
-      // console.log('print_结束', value, this.selectrpstart, this.selectrpend)
-      this.drawobj.showselect();
-      this.emit('endTime', this.selectrpend);
-
-      this.$selectrpend = this.leftViewposition + value * 2;
-      // this.emit('startTime', this.selectstart)
-    });
-    // selectingBar.on('change:x', value => {
-    //   this.selectingBarPoit = value
-    // })
+    this.toolbarposition = Math.floor(
+      ((this.canvasline.width - len) * (this.rightViewPosition - this.canvasline.width * 2)) /
+      (this.data.index - this.canvasline.width * 2)
+    );
+    this.barTool.setBarLeft(this.toolbarposition, false);
   }
-  lockStartingBar(status: boolean) {
-    // console.log('lockStartingBar', status)
+  analyse(data: AnalyseData) {
+    this.drawAnalyse.setData(data)
+    this.drawobj.drawdot(this.canvasline.width * 2, false);
+
+
   }
+  lazyEmit = throttle((type: string, ...args: any[]) => {
+    // console.log(`Suit:${type}`)
+    this.emit(type, ...args);
+    // console.log('alarmtype in',type,this)
+    return true;
+  }, this.emitInterval || 0);
+  // 报警
+  alarmOn(alarmType: string = '') {
+    this.lazyEmit('alarmOn', alarmType);
+  }
+  alarmOff(alarmType: string) {
+    this.lazyEmit('alarmOff', alarmType);
+  }
+
+
   destroy() {
     this.log('destroy')
     this.intervalIds.forEach(_ => clearInterval(_));
@@ -444,8 +359,7 @@ export class Suit extends Draw {
     // this.log('resize');
     const { width, height } = this.wrap.getBoundingClientRect()
 
-    this.drawobj.resize();
-    this.drawAnalyse.resize(width, height)
+    Object.values(this).forEach(_=>_ &&_.resize && _.resize(width, height))
   }
   //kisi 2019-11-14 update fhr position
   setfetalposition(fhr1, fhr2, fhr3) {
@@ -466,31 +380,7 @@ export class Suit extends Draw {
   //   }
   // }
   //kisi 2019-11-21 同步移动barTool
-  updateBarTool() {
-    this.updateSelectCur();
-    let len = 100;
-    if (this.data.index < this.canvasline.width * 4) {
-      len = Math.floor((this.canvasline.width * 4 - this.data.index) / 2);
-    }
-    this.toolbarposition = Math.floor(
-      ((this.canvasline.width - len) * (this.rightViewPosition - this.canvasline.width * 2)) /
-      (this.data.index - this.canvasline.width * 2)
-    );
-    this.barTool.setBarLeft(this.toolbarposition, false);
-  }
 
-  updateSelectCur() {
-    // if (!this.selectflag) {
-    if (this.rightViewPosition > this.canvasline.width * 2) {
-      this.selectstart =
-        this.selectstartposition * 2 + this.rightViewPosition - 2 * this.canvasline.width;
-    } else {
-      this.selectstart = this.selectstartposition * 2;
-    }
-    // this.emit('startTime', this.selectstart)
-    this.drawobj.showcur(this.selectstart, false);
-    // }
-  }
   movescoller() { }
 
   //胎心数据处理
@@ -610,8 +500,8 @@ export class Suit extends Draw {
       }
       var curstamp = new Date().getTime();
       if (curstamp - this.dragtimestamp > this.interval) {
-        if (this.selectstartposition != 0) {
-          this.startingBar.setLeft(0);
+        if (this.drawSelect.selectstartposition != 0) {
+          this.drawSelect.startingBar.setLeft(0);
         }
         this.drawdot();
       }
@@ -658,38 +548,7 @@ export class Suit extends Draw {
       }
     });
   }
-  selectBasedOnStartingBar(isLeft = true) {
-    const {
-      // startingBar,
-      // endingBar,
-      // needScroll,
-      width,
-      ctgconfig,
-      data,
-      // selectstart,
-      // leftViewposition: baseViewposition,
-      // selectingBarPoint,
-    } = this;
-    let endPosition;
-    if (isLeft) {
-      if (this.selectingBarPoint < 1) {
-        this.rightViewPosition = this.data.index;
-        this.selectingBar.setLeft(this.width);
-      }
-      endPosition = this.selectingBarPoint - ctgconfig.print_interval * 240;
-      this.$selectrpstart = endPosition < 0 ? 0 : endPosition;
-      this.$selectrpend = this.selectingBarPoint;
-    } else {
-      if (this.selectingBarPoint + 10 >= data.index) {
-        this.rightViewPosition = width * 2;
-        this.selectingBar.setLeft(0);
-      }
 
-      endPosition = this.selectingBarPoint + ctgconfig.print_interval * 240;
-      this.$selectrpend = endPosition > data.index ? data.index : endPosition;
-      this.$selectrpstart = this.selectingBarPoint;
-    }
-  }
 }
 
 // function formatAnalyseData(obj: { [x: string]: string }) {

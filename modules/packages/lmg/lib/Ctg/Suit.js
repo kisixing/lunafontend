@@ -73,16 +73,10 @@ var Suit = (function (_super) {
             fhr3: '',
         };
         _this.printlen = 4800;
-        _this.selectstart = 0;
-        _this.selectstartposition = 0;
-        _this.toolbarposition = 0;
-        _this.selectrpstart = 0;
-        _this.selectend = 0;
-        _this.selectrpend = 0;
-        _this.selectflag = false;
         _this.requestflag = false;
         _this.dragtimestamp = 0;
         _this.interval = 5000;
+        _this.toolbarposition = 0;
         _this.lazyEmit = lodash_1.throttle(function (type) {
             var args = [];
             for (var _i = 1; _i < arguments.length; _i++) {
@@ -105,7 +99,7 @@ var Suit = (function (_super) {
         _this.drawobj = new DrawCTG_1.default(_this);
         _this.type = type;
         _this.drawAnalyse = new DrawAnalyse_1.DrawAnalyse(canvasanalyse);
-        _this.drawSelect = new DrawSelect_1.DrawSelect(canvasanalyse);
+        _this.drawSelect = new DrawSelect_1.DrawSelect(canvasanalyse, _this);
         if (_this.option) {
             _this.ctgconfig.tococolor = _this.option.tococolor;
             _this.ctgconfig.fhrcolor[0] = _this.option.fhrcolor1;
@@ -124,46 +118,9 @@ var Suit = (function (_super) {
         }
         return _this;
     }
-    Object.defineProperty(Suit.prototype, "$selectrpend", {
-        get: function () {
-            return this.selectrpend;
-        },
-        set: function (value) {
-            this.selectrpend = value;
-            var absLen = (value - this.leftViewposition) / 2;
-            this.endingBar.setLeft(absLen, false);
-            this.drawobj.showselect();
-            this.selectflag && this.drawobj.showcur(value);
-            this.emit('endTime', value);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Suit.prototype, "$selectrpstart", {
-        get: function () {
-            return this.selectrpstart;
-        },
-        set: function (value) {
-            this.selectrpstart = value;
-            var absLen = (value - this.leftViewposition) / 2;
-            this.startingBar.setLeft(absLen, false);
-            this.drawobj.showselect();
-            this.selectflag && this.drawobj.showcur(value);
-            this.emit('startTime', value);
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(Suit.prototype, "leftViewposition", {
         get: function () {
             return this.rightViewPosition >= this.width * 2 ? this.rightViewPosition - this.width * 2 : 0;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Suit.prototype, "selectingBarPoint", {
-        get: function () {
-            return ~~(this.leftViewposition + (this.selectingBar ? this.selectingBar.getLeft() * 2 : 0));
         },
         enumerable: true,
         configurable: true
@@ -174,7 +131,7 @@ var Suit = (function (_super) {
         },
         set: function (value) {
             this.viewposition = value;
-            this.emit('change:selectPoint', this.selectingBarPoint);
+            this.emit('change:selectPoint', this.drawSelect.selectingBarPoint);
             this.updateBarTool();
             this.drawobj.drawdot(this.viewposition);
         },
@@ -185,6 +142,7 @@ var Suit = (function (_super) {
         var _this = this;
         this.log('init');
         this.drawAnalyse.init();
+        this.drawSelect.init();
         if (!data) {
             return;
         }
@@ -241,8 +199,8 @@ var Suit = (function (_super) {
                 _viewposition = _this.canvasline.width * 2;
             }
             _this.rightViewPosition = _viewposition;
-            _this.updateSelectCur();
-            _this.drawobj.showselect();
+            _this.drawSelect.updateSelectCur();
+            _this.drawSelect.showselect();
             _this.drawobj.drawdot(_this.rightViewPosition, false);
             _this.log('gg', _this.rightViewPosition, len, value);
         });
@@ -262,10 +220,10 @@ var Suit = (function (_super) {
             if (_this.rightViewPosition - value < _this.canvasline.width * 2) {
                 _viewposition = _this.canvasline.width * 2;
                 _this.drawobj.drawdot(_this.rightViewPosition, false);
-                if (_this.selectend == 1) {
-                    _this.endingBar.setLeft(_this.canvasline.width - Math.floor((_this.rightViewPosition - _this.selectrpend) / 2));
+                if (_this.drawSelect.selectend == 1) {
+                    _this.drawSelect.endingBar.setLeft(_this.canvasline.width - Math.floor((_this.rightViewPosition - _this.drawSelect.selectrpend) / 2));
                 }
-                _this.drawobj.showselect();
+                _this.drawSelect.showselect();
                 _this.updateBarTool();
                 return;
             }
@@ -279,25 +237,13 @@ var Suit = (function (_super) {
             }
             _this.updateBarTool();
             _this.rightViewPosition = _viewposition;
-            if (_this.selectend == 1 && _this.rightViewPosition - _this.selectrpend > -2) {
-                _this.endingBar.setLeft(_this.canvasline.width - Math.floor((_this.rightViewPosition - _this.selectrpend) / 2));
+            if (_this.drawSelect.selectend == 1 && _this.rightViewPosition - _this.drawSelect.selectrpend > -2) {
+                _this.drawSelect.endingBar.setLeft(_this.canvasline.width - Math.floor((_this.rightViewPosition - _this.drawSelect.selectrpend) / 2));
             }
             else {
             }
-            _this.drawobj.showselect();
+            _this.drawSelect.showselect();
         });
-        this.createBar();
-    };
-    Suit.prototype.analyse = function (data) {
-        this.drawAnalyse.setData(data);
-        this.drawobj.drawdot(this.canvasline.width * 2, false);
-    };
-    Suit.prototype.alarmOn = function (alarmType) {
-        if (alarmType === void 0) { alarmType = ''; }
-        this.lazyEmit('alarmOn', alarmType);
-    };
-    Suit.prototype.alarmOff = function (alarmType) {
-        this.lazyEmit('alarmOff', alarmType);
     };
     Suit.prototype.createLine = function () {
         if (this.rowline)
@@ -326,46 +272,26 @@ var Suit = (function (_super) {
         setBase(200);
         lineTool.toggleVisibility();
     };
-    Suit.prototype.createBar = function () {
-        var _this = this;
-        if (this.startingBar && this.endingBar && this.selectingBar) {
-            this.selectingBar.setLeft(0);
-            this.startingBar.setLeft(0);
-            return;
+    Suit.prototype.updateBarTool = function () {
+        this.drawSelect.updateSelectCur();
+        var len = 100;
+        if (this.data.index < this.canvasline.width * 4) {
+            len = Math.floor((this.canvasline.width * 4 - this.data.index) / 2);
         }
-        this.createLine();
-        var barTool = this.barTool;
-        var startingBar = (this.startingBar = barTool.createRod('开始'));
-        var endingBar = (this.endingBar = barTool.createRod('结束'));
-        var selectingBar = (this.selectingBar = barTool.createRod('选择'));
-        this.type === 0 && selectingBar.setVisibility(false);
-        selectingBar.setLeft(0);
-        startingBar.setLeft(0);
-        endingBar.toggleVisibility();
-        startingBar.toggleVisibility();
-        selectingBar.on('change:x', function (value) {
-            _this.drawobj.showcur(_this.selectingBarPoint, false);
-            _this.emit('change:selectPoint', _this.selectingBarPoint);
-        });
-        startingBar.on('change:x', function (value) {
-            _this.$selectrpstart = _this.leftViewposition + value * 2;
-        });
-        endingBar.on('change:x', function (value) {
-            if (_this.data.index < _this.canvasline.width * 2) {
-                _this.selectrpend = value * 2;
-            }
-            else {
-                _this.selectrpend = _this.rightViewPosition - (_this.canvasline.width - value) * 2;
-            }
-            if (_this.selectrpstart > _this.selectrpend) {
-                return;
-            }
-            _this.drawobj.showselect();
-            _this.emit('endTime', _this.selectrpend);
-            _this.$selectrpend = _this.leftViewposition + value * 2;
-        });
+        this.toolbarposition = Math.floor(((this.canvasline.width - len) * (this.rightViewPosition - this.canvasline.width * 2)) /
+            (this.data.index - this.canvasline.width * 2));
+        this.barTool.setBarLeft(this.toolbarposition, false);
     };
-    Suit.prototype.lockStartingBar = function (status) {
+    Suit.prototype.analyse = function (data) {
+        this.drawAnalyse.setData(data);
+        this.drawobj.drawdot(this.canvasline.width * 2, false);
+    };
+    Suit.prototype.alarmOn = function (alarmType) {
+        if (alarmType === void 0) { alarmType = ''; }
+        this.lazyEmit('alarmOn', alarmType);
+    };
+    Suit.prototype.alarmOff = function (alarmType) {
+        this.lazyEmit('alarmOff', alarmType);
     };
     Suit.prototype.destroy = function () {
         this.log('destroy');
@@ -384,33 +310,12 @@ var Suit = (function (_super) {
     };
     Suit.prototype._resize = function () {
         var _a = this.wrap.getBoundingClientRect(), width = _a.width, height = _a.height;
-        this.drawobj.resize();
-        this.drawAnalyse.resize(width, height);
+        Object.values(this).forEach(function (_) { return _ && _.resize && _.resize(width, height); });
     };
     Suit.prototype.setfetalposition = function (fhr1, fhr2, fhr3) {
         this.data.fetalposition.fhr1 = fhr1;
         this.data.fetalposition.fhr2 = fhr2;
         this.data.fetalposition.fhr3 = fhr3;
-    };
-    Suit.prototype.updateBarTool = function () {
-        this.updateSelectCur();
-        var len = 100;
-        if (this.data.index < this.canvasline.width * 4) {
-            len = Math.floor((this.canvasline.width * 4 - this.data.index) / 2);
-        }
-        this.toolbarposition = Math.floor(((this.canvasline.width - len) * (this.rightViewPosition - this.canvasline.width * 2)) /
-            (this.data.index - this.canvasline.width * 2));
-        this.barTool.setBarLeft(this.toolbarposition, false);
-    };
-    Suit.prototype.updateSelectCur = function () {
-        if (this.rightViewPosition > this.canvasline.width * 2) {
-            this.selectstart =
-                this.selectstartposition * 2 + this.rightViewPosition - 2 * this.canvasline.width;
-        }
-        else {
-            this.selectstart = this.selectstartposition * 2;
-        }
-        this.drawobj.showcur(this.selectstart, false);
     };
     Suit.prototype.movescoller = function () { };
     Suit.prototype.InitFileData = function (oriobj) {
@@ -522,8 +427,8 @@ var Suit = (function (_super) {
             }
             var curstamp = new Date().getTime();
             if (curstamp - _this.dragtimestamp > _this.interval) {
-                if (_this.selectstartposition != 0) {
-                    _this.startingBar.setLeft(0);
+                if (_this.drawSelect.selectstartposition != 0) {
+                    _this.drawSelect.startingBar.setLeft(0);
                 }
                 _this.drawdot();
             }
@@ -572,29 +477,6 @@ var Suit = (function (_super) {
                 oridata = oridata.substring(2, oridata.length);
             }
         });
-    };
-    Suit.prototype.selectBasedOnStartingBar = function (isLeft) {
-        if (isLeft === void 0) { isLeft = true; }
-        var _a = this, width = _a.width, ctgconfig = _a.ctgconfig, data = _a.data;
-        var endPosition;
-        if (isLeft) {
-            if (this.selectingBarPoint < 1) {
-                this.rightViewPosition = this.data.index;
-                this.selectingBar.setLeft(this.width);
-            }
-            endPosition = this.selectingBarPoint - ctgconfig.print_interval * 240;
-            this.$selectrpstart = endPosition < 0 ? 0 : endPosition;
-            this.$selectrpend = this.selectingBarPoint;
-        }
-        else {
-            if (this.selectingBarPoint + 10 >= data.index) {
-                this.rightViewPosition = width * 2;
-                this.selectingBar.setLeft(0);
-            }
-            endPosition = this.selectingBarPoint + ctgconfig.print_interval * 240;
-            this.$selectrpend = endPosition > data.index ? data.index : endPosition;
-            this.$selectrpstart = this.selectingBarPoint;
-        }
     };
     return Suit;
 }(Draw_1.default));

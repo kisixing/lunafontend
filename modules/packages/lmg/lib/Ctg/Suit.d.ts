@@ -24,10 +24,6 @@ export declare class Suit extends Draw {
     initFlag: boolean;
     sid: number;
     log: any;
-    startingBar: ScrollEl;
-    endingBar: ScrollEl;
-    selectingBar: ScrollEl;
-    rowline: ScrollEl;
     intervalIds: NodeJS.Timeout[];
     data: ICacheItem;
     starttime: string;
@@ -62,13 +58,6 @@ export declare class Suit extends Draw {
         fhr3: string;
     };
     printlen: number;
-    selectstart: number;
-    selectstartposition: number;
-    toolbarposition: number;
-    selectrpstart: number;
-    selectend: number;
-    selectrpend: number;
-    selectflag: boolean;
     requestflag: boolean;
     canvasgrid: Canvas;
     contextgrid: Context;
@@ -83,28 +72,22 @@ export declare class Suit extends Draw {
     dragtimestamp: number;
     interval: number;
     timeout: NodeJS.Timeout;
-    get $selectrpend(): number;
-    set $selectrpend(value: number);
-    get $selectrpstart(): number;
-    set $selectrpstart(value: number);
+    rowline: ScrollEl;
+    toolbarposition: number;
     get leftViewposition(): number;
-    get selectingBarPoint(): number;
     get rightViewPosition(): number;
     set rightViewPosition(value: number);
     constructor(canvasgrid: Canvas, canvasdata: Canvas, canvasline: Canvas, canvasselect: Canvas, canvasanalyse: Canvas, wrap: HTMLElement, barTool: IBarTool, type: number);
     init(data: ICacheItem): void;
+    createLine(): void;
+    updateBarTool(): void;
     analyse(data: AnalyseData): void;
     lazyEmit: ((type: string, ...args: any[]) => boolean) & import("lodash").Cancelable;
     alarmOn(alarmType?: string): void;
     alarmOff(alarmType: string): void;
-    createLine(): void;
-    createBar(): void;
-    lockStartingBar(status: boolean): void;
     destroy(): void;
     _resize(): void;
     setfetalposition(fhr1: any, fhr2: any, fhr3: any): void;
-    updateBarTool(): void;
-    updateSelectCur(): void;
     movescoller(): void;
     InitFileData(oriobj: any): {
         fhr: any[][];
@@ -127,6 +110,5 @@ export declare class Suit extends Draw {
     onStatusChange(status: boolean): boolean | void;
     getoffline(doc_id: string, offlineend: number): void;
     initfhrdata(data: any, datacache: any, offindex: any): void;
-    selectBasedOnStartingBar(isLeft?: boolean): void;
 }
 export {};

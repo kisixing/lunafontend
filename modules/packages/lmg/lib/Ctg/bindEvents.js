@@ -4,34 +4,34 @@ function default_1() {
     var _this = this;
     this
         .on('locking', function (value) {
-        _this.selectflag = value;
+        _this.drawSelect.selectflag = value;
         if (value) {
-            _this.startingBar.setVisibility(true);
-            _this.endingBar.setVisibility(true);
-            _this.selectingBar.setVisibility(false);
+            _this.drawSelect.startingBar.setVisibility(true);
+            _this.drawSelect.endingBar.setVisibility(true);
+            _this.drawSelect.selectingBar.setVisibility(false);
         }
         else {
-            _this.startingBar.setVisibility(false);
-            _this.endingBar.setVisibility(false);
-            _this.selectingBar.setVisibility(true);
+            _this.drawSelect.startingBar.setVisibility(false);
+            _this.drawSelect.endingBar.setVisibility(false);
+            _this.drawSelect.selectingBar.setVisibility(true);
         }
     })
         .on('customizing', function (value) {
-        if (value && _this.selectflag) {
-            _this.selectend = 1;
+        if (value && _this.drawSelect.selectflag) {
+            _this.drawSelect.selectend = 1;
             if (_this.data.index < _this.canvasline.width * 2) {
-                _this.endingBar.setVisibility(true);
-                _this.endingBar.setLeft(Math.floor(_this.rightViewPosition / 2));
+                _this.drawSelect.endingBar.setVisibility(true);
+                _this.drawSelect.endingBar.setLeft(Math.floor(_this.rightViewPosition / 2));
             }
-            else if (_this.rightViewPosition - _this.selectrpend >= 0) {
-                _this.endingBar.setVisibility(true);
-                _this.endingBar.setLeft(_this.canvasline.width - Math.floor((_this.rightViewPosition - _this.selectrpend) / 2));
+            else if (_this.rightViewPosition - _this.drawSelect.selectrpend >= 0) {
+                _this.drawSelect.endingBar.setVisibility(true);
+                _this.drawSelect.endingBar.setLeft(_this.canvasline.width - Math.floor((_this.rightViewPosition - _this.drawSelect.selectrpend) / 2));
             }
         }
         else {
-            _this.selectend = 0;
-            _this.endingBar.setVisibility(false);
-            _this.drawobj.showselect();
+            _this.drawSelect.selectend = 0;
+            _this.drawSelect.endingBar.setVisibility(false);
+            _this.drawSelect.showselect();
         }
     })
         .on('setStartingTime', function (value) {
@@ -42,23 +42,23 @@ function default_1() {
         _this.createLine();
     })
         .on('selectAll', function () {
-        _this.$selectrpend = _this.data.index - 2;
-        _this.$selectrpstart = 0;
+        _this.drawSelect.$selectrpend = _this.data.index - 2;
+        _this.drawSelect.$selectrpstart = 0;
     })
         .on('selectForward', function () {
-        var selectingBar = _this.selectingBar;
+        var selectingBar = _this.drawSelect.selectingBar;
         var hasMoved = selectingBar.hasMoved;
         console.log('hasMoved', hasMoved);
-        _this.selectBasedOnStartingBar(false);
+        _this.drawSelect.selectBasedOnStartingBar(false);
         _this.updateBarTool();
-        _this.drawobj.showselect();
+        _this.drawSelect.showselect();
     })
         .on('selectBackward', function () {
-        var selectingBar = _this.selectingBar;
+        var selectingBar = _this.drawSelect.selectingBar;
         var hasMoved = selectingBar.hasMoved;
         console.log('hasMoved', hasMoved);
-        _this.selectBasedOnStartingBar();
-        _this.drawobj.showselect();
+        _this.drawSelect.selectBasedOnStartingBar();
+        _this.drawSelect.showselect();
         _this.updateBarTool();
     });
     this.log(this);

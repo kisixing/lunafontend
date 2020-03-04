@@ -26,5 +26,4 @@ export default class DrawCTG {
     setrules: (x: number) => void;
     showcur: (x: number, eventemit?: boolean) => void;
     showfm: (postion: any) => void;
-    showselect: (start?: number, end?: number) => void;
 }

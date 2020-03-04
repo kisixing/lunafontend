@@ -356,57 +356,6 @@ var DrawCTG = (function () {
             gridcontext.lineTo(postion, yposition + 6);
             gridcontext.stroke();
         };
-        this.showselect = function (start, end) {
-            var _a = _this, suit = _a.suit, selectcontext = _a.selectcontext;
-            start = start === void 0 ? suit.selectrpstart : start;
-            end = end === void 0 ? suit.selectrpend : end;
-            var drawwidth = suit.width;
-            selectcontext.clearRect(0, 0, drawwidth, suit.height);
-            if (end == 0) {
-                return;
-            }
-            var curstart = suit.rightViewPosition < drawwidth * 2 ? 0 : (suit.rightViewPosition - drawwidth * 2);
-            if (suit.data.index <= drawwidth * 2) {
-                end = end / 2;
-            }
-            else {
-                end = (suit.rightViewPosition - end) > 0 ? drawwidth - Math.floor((suit.rightViewPosition - end) / 2) : drawwidth;
-            }
-            start = start - curstart > 0 ? start - curstart : 0;
-            start = (start + 4) / 2;
-            var baseHeight = _this.suit.height - 4;
-            selectcontext.fillStyle = suit.ctgconfig.selectarea;
-            selectcontext.beginPath();
-            selectcontext.strokeStyle = 'rgb(10, 10, 20)';
-            selectcontext.lineWidth = 4;
-            selectcontext.moveTo(start, _this.basetop);
-            selectcontext.lineTo(start, baseHeight);
-            selectcontext.moveTo(start, baseHeight);
-            selectcontext.lineTo(end, baseHeight);
-            selectcontext.moveTo(end, _this.basetop);
-            selectcontext.lineTo(start, _this.basetop);
-            if (suit.selectend == 0) {
-                selectcontext.moveTo(end, _this.basetop);
-                selectcontext.lineTo(end, baseHeight);
-            }
-            selectcontext.stroke();
-            _this.suit.startingBar.setLeft(start - 2, false);
-            _this.suit.endingBar.setLeft(end - 2, false);
-            var leftEdge = _this.suit.leftViewposition - 240;
-            var rightEdge = _this.suit.rightViewPosition + 240;
-            if (_this.suit.selectrpstart <= leftEdge || _this.suit.selectrpstart >= rightEdge) {
-                _this.suit.startingBar.setVisibility(false);
-            }
-            else {
-                _this.suit.startingBar.setVisibility(_this.suit.selectflag);
-            }
-            if (_this.suit.selectrpend <= leftEdge || _this.suit.selectrpend >= rightEdge) {
-                _this.suit.endingBar.setVisibility(false);
-            }
-            else {
-                _this.suit.endingBar.setVisibility(_this.suit.selectflag);
-            }
-        };
         this.suit = suit;
         this.gridcontext = suit.contextgrid;
         this.linecontext = suit.contextline;
@@ -453,8 +402,8 @@ var DrawCTG = (function () {
         else {
             this.drawgrid(width * 2, false);
         }
-        if (this.suit.selectstartposition > width) {
-            this.suit.startingBar.setLeft(width);
+        if (this.suit.drawSelect.selectstartposition > width) {
+            this.suit.drawSelect.startingBar.setLeft(width);
         }
     };
     DrawCTG.prototype.drawgrid = function (cur, drawtimespan) {
