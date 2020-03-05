@@ -20,9 +20,9 @@
   },
   "dependencies": {
     "@alifd/next": "^1.13.1",
-    "@uform/antd": "^0.4.0",
-    "@uform/next": "^0.4.0",
-    "@uform/printer": "^0.4.0",
+    "@uform/antd": "^1.0.5",
+    "@uform/next": "^1.0.5",
+    "@uform/printer": "^1.0.5",
     "antd": "^4.0.0",
     "doc-scripts": "^1.7.29",
     "fs-extra": "^8.1.0",
