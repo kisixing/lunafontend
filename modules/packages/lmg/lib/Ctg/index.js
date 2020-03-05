@@ -33,13 +33,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importStar(require("react"));
-var Suit_1 = require("./Suit");
-var ScrollBar_1 = __importDefault(require("../ScrollBar"));
 var Ecg_1 = __importDefault(require("../Ecg"));
-var useDraw_1 = __importDefault(require("../useDraw"));
-var Loading_1 = require("./Loading");
+var ScrollBar_1 = __importDefault(require("../ScrollBar"));
 var WsService_1 = require("../services/WsService");
+var useDraw_1 = __importDefault(require("../useDraw"));
 var ButtonTools_1 = require("./ButtonTools");
+var ContextMenu_1 = __importDefault(require("./ContextMenu"));
+var Loading_1 = require("./Loading");
+var Suit_1 = require("./Suit");
 exports.default = react_1.forwardRef(function (props, ref) {
     var data = props.data, _a = props.mutableSuitObject, mutableSuitObject = _a === void 0 ? { suit: null } : _a, _b = props.suitType, suitType = _b === void 0 ? 0 : _b, _c = props.showEcg, showEcg = _c === void 0 ? false : _c, _d = props.loading, loading = _d === void 0 ? false : _d, _e = props.onReady, onReady = _e === void 0 ? function (s) { } : _e, others = __rest(props, ["data", "mutableSuitObject", "suitType", "showEcg", "loading", "onReady"]);
     var barTool = react_1.useRef(null);
@@ -55,6 +56,7 @@ exports.default = react_1.forwardRef(function (props, ref) {
     var _f = react_1.useState(0), ecgHeight = _f[0], setEcgHeight = _f[1];
     var _g = react_1.useState(false), showBtns = _g[0], setShowBtns = _g[1];
     var staticType = suitType > 0;
+    var rightClickXy = react_1.useRef({ x: 0, y: 0 });
     useDraw_1.default(data, ctgBox, function () {
         var instance = ctg.current = new Suit_1.Suit(canvasgrid.current, canvasdata.current, canvasline.current, canvasselect.current, canvasanalyse.current, ctgBox.current, barTool.current, suitType);
         onReady(instance);
@@ -70,10 +72,15 @@ exports.default = react_1.forwardRef(function (props, ref) {
     react_1.useImperativeHandle(ref, function () { return ctg.current; });
     var canvasStyles = { position: 'absolute' };
     return (react_1.default.createElement("div", __assign({ style: { width: '100%', height: '100%' }, ref: box }, others, { onContextMenu: function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log(e);
-            return false;
+            console.log('menu', e);
+        }, onMouseDownCapture: function (e) {
+            var x = e.nativeEvent.offsetX;
+            var y = e.nativeEvent.offsetY;
+            var which = e.nativeEvent.which;
+            if (which === 3) {
+                rightClickXy.current.x = x;
+                rightClickXy.current.y = y;
+            }
         }, onMouseEnter: function () { return staticType && setShowBtns(true); }, onMouseLeave: function () { return staticType && setShowBtns(false); } }),
         loading && (react_1.default.createElement("div", { style: { position: 'absolute', width: '100%', height: '100%', background: '#fff', zIndex: 1, opacity: .9 } },
             react_1.default.createElement(Loading_1.Loading, { style: { margin: 'auto', position: 'absolute', left: 0, right: 0, bottom: 0, top: 0 } }))),
@@ -85,6 +92,7 @@ exports.default = react_1.forwardRef(function (props, ref) {
             react_1.default.createElement("canvas", { style: canvasStyles, ref: canvasanalyse })),
         ecgHeight && showEcg && (react_1.default.createElement("div", { style: { height: ecgHeight, overflow: 'hidden' } },
             react_1.default.createElement(Ecg_1.default, { data: data, onReady: function (e) { return ecg.current = e; } }))),
-        react_1.default.createElement(ScrollBar_1.default, { box: box, getBarTool: function (tool) { barTool.current = tool; } }),
+        react_1.default.createElement(ContextMenu_1.default, { rightClickXy: rightClickXy },
+            react_1.default.createElement(ScrollBar_1.default, { box: box, getBarTool: function (tool) { barTool.current = tool; } })),
         suitType > 100 && react_1.default.createElement(ButtonTools_1.ButtonTools, { ctg: ctg, visible: showBtns && staticType })));
 });

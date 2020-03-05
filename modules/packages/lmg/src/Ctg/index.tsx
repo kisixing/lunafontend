@@ -1,14 +1,15 @@
-import React, { useRef, useState, useImperativeHandle, Ref, forwardRef } from 'react';
-import { Suit } from './Suit';
-import { IBarTool } from '../ScrollBar/useScroll';
-import ScrollBar from '../ScrollBar';
+import React, { forwardRef, Ref, useImperativeHandle, useRef, useState } from 'react';
 import Ecg from "../Ecg";
-import { IProps, Canvas, Div, Drawer } from "../interface";
-import useDraw from "../useDraw";
-import { Loading } from './Loading'
+import { Canvas, Div, Drawer, IProps } from "../interface";
+import ScrollBar from '../ScrollBar';
+import { IBarTool } from '../ScrollBar/useScroll';
 import { useCheckNetwork } from '../services/WsService';
-
+import useDraw from "../useDraw";
 import { ButtonTools } from "./ButtonTools";
+import ContextMenu from "./ContextMenu";
+import { Loading } from './Loading';
+import { Suit } from './Suit';
+
 export default forwardRef((props: IProps, ref: Ref<Suit>) => {
   const {
     data,
@@ -32,6 +33,10 @@ export default forwardRef((props: IProps, ref: Ref<Suit>) => {
   const [ecgHeight, setEcgHeight] = useState(0)
   const [showBtns, setShowBtns] = useState(false)
   const staticType = suitType > 0
+
+  const rightClickXy = useRef<{x:number,y:number}>({x:0,y:0});
+
+
   useDraw(data, ctgBox, () => {
     const instance = ctg.current = new Suit(
       canvasgrid.current,
@@ -63,11 +68,20 @@ export default forwardRef((props: IProps, ref: Ref<Suit>) => {
   const canvasStyles: React.CSSProperties = { position: 'absolute' }
   return (
     <div style={{ width: '100%', height: '100%' }} ref={box} {...others} onContextMenu={e => {
-      e.preventDefault()
-      e.stopPropagation()
-      console.log(e)
-      return false
+      // e.preventDefault()
+      // e.stopPropagation()
+      console.log('menu', e)
+      // return false
     }}
+      onMouseDownCapture={e => {
+        const x = e.nativeEvent.offsetX
+        const y = e.nativeEvent.offsetY
+        const which =  e.nativeEvent.which
+        if(which === 3){
+          rightClickXy.current.x = x
+          rightClickXy.current.y = y
+        }
+      }}
       onMouseEnter={() => staticType && setShowBtns(true)}
       onMouseLeave={() => staticType && setShowBtns(false)}
     >
@@ -96,7 +110,16 @@ export default forwardRef((props: IProps, ref: Ref<Suit>) => {
           </div>
         )
       }
-      <ScrollBar box={box} getBarTool={tool => { barTool.current = tool }} />
+
+      <ContextMenu rightClickXy={rightClickXy}>
+        <ScrollBar box={box} getBarTool={tool => { barTool.current = tool }} />
+      </ContextMenu>
+
+
+
+
+
+
       {
         suitType > 100 && <ButtonTools ctg={ctg} visible={showBtns && staticType} />
       }
