@@ -56,16 +56,16 @@ var ScoringMethod = function (props) {
     var IntervalRadio = react_1.useMemo(function () {
         return (react_1.default.createElement("span", { style: { marginRight: 10 } },
             " \u65F6\u957F\uFF1A",
-            react_1.default.createElement(antd_1.Select, { onChange: function (e) {
+            react_1.default.createElement(antd_1.Select, { disabled: !docid, onChange: function (e) {
                     var i = Number(e) || 20;
                     setInterval(i);
                 }, value: interval }, intervals.map(function (value) { return (react_1.default.createElement(antd_1.Select.Option, { value: value, key: value }, value + '分钟')); }))));
-    }, [interval]);
+    }, [interval, docid]);
     var FetalSelect = react_1.useMemo(function () {
         return (react_1.default.createElement("span", { style: { marginRight: 10 } },
             " \u80CE\u5FC3\u7387\uFF1A",
-            react_1.default.createElement(antd_1.Select, { onChange: setFetal, value: fetal }, Array(+ctgData.fetalnum).fill(0).map(function (_, i) { return (react_1.default.createElement(antd_1.Select.Option, { value: i + 1, key: i + 1 }, "FHR" + (i + 1))); }))));
-    }, [ctgData, fetal, setFetal]);
+            react_1.default.createElement(antd_1.Select, { disabled: !docid, onChange: setFetal, value: fetal }, Array(+ctgData.fetalnum).fill(0).map(function (_, i) { return (react_1.default.createElement(antd_1.Select.Option, { value: i + 1, key: i + 1 }, "FHR" + (i + 1))); }))));
+    }, [ctgData, fetal, setFetal, docid]);
     var StartTime = function () {
         return react_1.default.createElement("span", { style: { marginRight: 10 } },
             "\u5F00\u59CB\u65F6\u95F4\uFF1A",
@@ -79,12 +79,11 @@ var ScoringMethod = function (props) {
             "\u5206");
     };
     var R = react_1.useMemo(function () {
-        console.log(123);
-        return (react_1.default.createElement(antd_1.Radio.Group, { onChange: onChange, value: mark, style: { marginBottom: 5 } }, MARKS.map(function (_) { return (react_1.default.createElement(antd_1.Radio, { value: _, key: _ },
+        return (react_1.default.createElement(antd_1.Radio.Group, { disabled: !docid, onChange: onChange, value: mark, style: { marginBottom: 5 } }, MARKS.map(function (_) { return (react_1.default.createElement(antd_1.Radio, { value: _, key: _ },
             _,
             "\u5206\u6790\u6CD5")); })));
-    }, [mark]);
-    return (react_1.default.createElement("div", __assign({}, others),
+    }, [mark, docid]);
+    return (react_1.default.createElement("div", __assign({}, others, { style: { height: '100%', background: '#fff' }, className: "bordered" }),
         react_1.default.createElement("div", { style: { padding: '12px 24px', background: '#ddd' } },
             react_1.default.createElement(react_1.default.Fragment, null,
                 IntervalRadio,

@@ -58,7 +58,7 @@ const ScoringMethod = (props: IProps) => {
   const IntervalRadio = useMemo(() => {
     return (
       <span style={{ marginRight: 10 }}> 时长：
-            <Select onChange={e => {
+            <Select disabled={!docid} onChange={e => {
           const i = Number(e) || 20
           setInterval(i)
 
@@ -71,11 +71,11 @@ const ScoringMethod = (props: IProps) => {
         </Select>
       </span>
     )
-  }, [interval])
+  }, [interval, docid])
   const FetalSelect = useMemo(() => {
     return (
       <span style={{ marginRight: 10 }}> 胎心率：
-            <Select onChange={setFetal} value={fetal}>
+            <Select disabled={!docid} onChange={setFetal} value={fetal}>
           {
             Array(+ctgData.fetalnum).fill(0).map((_, i) => (
               <Select.Option value={i + 1} key={i + 1}>{`FHR${i + 1}`}</Select.Option>
@@ -84,7 +84,7 @@ const ScoringMethod = (props: IProps) => {
         </Select>
       </span>
     )
-  }, [ctgData, fetal, setFetal])
+  }, [ctgData, fetal, setFetal, docid])
 
   const StartTime = () => {
     return <span style={{ marginRight: 10 }}>开始时间：{(startTime / 240).toFixed(1)}分</span>
@@ -94,9 +94,8 @@ const ScoringMethod = (props: IProps) => {
   }
   const R = useMemo(
     () => {
-      console.log(123)
       return (
-        <Radio.Group onChange={onChange} value={mark} style={{ marginBottom: 5 }}>
+        <Radio.Group disabled={!docid} onChange={onChange} value={mark} style={{ marginBottom: 5 }}>
           {
             MARKS.map(_ => (
               <Radio value={_} key={_}>{_}分析法</Radio>
@@ -105,10 +104,10 @@ const ScoringMethod = (props: IProps) => {
         </Radio.Group>
       )
     },
-    [mark],
+    [mark, docid],
   )
   return (
-    <div  {...others}>
+    <div  {...others} style={{ height: '100%',background:'#fff' }} className="bordered">
       <div style={{ padding: '12px 24px', background: '#ddd' }}>
         <>
           {

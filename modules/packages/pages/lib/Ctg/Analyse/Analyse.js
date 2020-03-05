@@ -38,7 +38,7 @@ var Setting = react_1.forwardRef(function (props, ref) {
         formatter: function (v) { return v && "" + v + t; },
         parser: function (v) { return v.replace(t, ''); }
     }); };
-    return (react_1.default.createElement("div", null,
+    return (react_1.default.createElement("div", { style: { height: '100%', background: '#fff' }, className: "bordered" },
         react_1.default.createElement("div", null,
             react_1.default.createElement(antd_1.Form, { ref: ref, size: "small", style: { padding: '6px 12px' }, form: form, labelCol: { xs: 9 }, wrapperCol: { xs: 15 }, labelAlign: "left" },
                 react_1.default.createElement(antd_1.Divider, { orientation: "left", style: { background: '#f0f0f0' } }, "\u5BAB\u7F29 "),

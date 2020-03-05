@@ -14,10 +14,11 @@ export default (v: Suit, docid, fetal: any) => {
     const [interval, setInterval] = useState(20)
     const [startTime, setStartTime] = useState(0)
 
-    const Fischer_ref = useRef<FormInstance>(null)
-    const Krebs_ref = useRef<FormInstance>(null)
-    const Nst_ref = useRef<FormInstance>(null)
-    const analysis_ref = useRef<FormInstance>(null)
+    const Fischer_ref = useRef<FormInstance>()
+    const Krebs_ref = useRef<FormInstance>()
+    const Nst_ref = useRef<FormInstance>()
+    const analysis_ref = useRef<FormInstance>()
+    const old_ref = useRef<{ [x: string]: any }>({})
 
     const fetalKey = `fhr${fetal}`
     const mapFormToMark = {
@@ -28,8 +29,8 @@ export default (v: Suit, docid, fetal: any) => {
     }
     useEffect(() => {
         const s = (time) => {
-            time = time+4800<=v.data.index?time:v.data.index-4800
-            setStartTime(time)
+            time = time + 4800 <= v.data.index ? time : v.data.index - 4800
+            docid && setStartTime(time)
         }
         v && v.on('change:selectPoint', s)
         return () => {
@@ -59,12 +60,13 @@ export default (v: Suit, docid, fetal: any) => {
             const { analysis, score } = r
             const f = score[`${mark.toLowerCase()}data`]
             const cur: MutableRefObject<FormInstance> = mapFormToMark[`${mark}_ref`]
-            cur && cur.current.setFieldsValue(f)
+            cur.current.setFieldsValue(f);
+            old_ref.current[mark] = f
+
 
 
             const { stv, ucdata, acc, dec, fhrbaselineMinute, ...others } = analysis
             analysis_ref.current.setFieldsValue({ stv, ...ucdata, ...others })
-
             v.analyse({
                 start: startTime,
                 end: startTime + 240 * interval,
@@ -89,7 +91,8 @@ export default (v: Suit, docid, fetal: any) => {
         Fischer_ref,
         Nst_ref,
         Krebs_ref,
-        analysis_ref
+        analysis_ref,
+        old_ref
     }
 }
 

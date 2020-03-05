@@ -26,7 +26,7 @@ const Setting = forwardRef<FormInstance, { [x: string]: any }>((props, ref) => {
     parser: v => v.replace(t, '')
   })
   return (
-    <div>
+    <div style={{ height: '100%',background:'#fff' }} className="bordered">
       <div >
 
         {/* <div style={{ padding: '12px 24px', background: '#ddd' }}>

@@ -60,9 +60,10 @@ const T =  forwardRef<FormInstance, IProps>((props, ref) => {
     const [form] = Form.useForm()
     return (
         <Form ref={ref} form={form} size="small" style={{ display: hidden ? 'none' : 'block', position: 'relative' }} onValuesChange={(a, b) => {
+            const vk = Object.entries(b)
             const k = Object.keys(a)[0]
             if (/score$/.test(k)) {
-                const total = Object.entries(b)
+                const total = vk
                     .filter(([k, v]) => /score$/.test(k))
                     .map(_ => _[1])
                     .reduce((a, b) => a + b, 0)

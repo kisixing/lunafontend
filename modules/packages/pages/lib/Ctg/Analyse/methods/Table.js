@@ -60,9 +60,10 @@ var T = react_1.forwardRef(function (props, ref) {
     ].map(function (_) { return (__assign(__assign({}, _), { align: 'center' })); });
     var form = antd_1.Form.useForm()[0];
     return (react_1.default.createElement(antd_1.Form, { ref: ref, form: form, size: "small", style: { display: hidden ? 'none' : 'block', position: 'relative' }, onValuesChange: function (a, b) {
+            var vk = Object.entries(b);
             var k = Object.keys(a)[0];
             if (/score$/.test(k)) {
-                var total = Object.entries(b)
+                var total = vk
                     .filter(function (_a) {
                     var k = _a[0], v = _a[1];
                     return /score$/.test(k);

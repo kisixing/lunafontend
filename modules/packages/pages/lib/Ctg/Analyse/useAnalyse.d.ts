@@ -17,6 +17,9 @@ declare const _default: (v: Suit, docid: any, fetal: any) => {
     Nst_ref: MutableRefObject<FormInstance>;
     Krebs_ref: MutableRefObject<FormInstance>;
     analysis_ref: MutableRefObject<FormInstance>;
+    old_ref: MutableRefObject<{
+        [x: string]: any;
+    }>;
 };
 export default _default;
 interface IResponseData {

@@ -33,10 +33,11 @@ exports.default = (function (v, docid, fetal) {
     var _a = react_1.useState(MARKS[0]), mark = _a[0], setMark = _a[1];
     var _b = react_1.useState(20), interval = _b[0], setInterval = _b[1];
     var _c = react_1.useState(0), startTime = _c[0], setStartTime = _c[1];
-    var Fischer_ref = react_1.useRef(null);
-    var Krebs_ref = react_1.useRef(null);
-    var Nst_ref = react_1.useRef(null);
-    var analysis_ref = react_1.useRef(null);
+    var Fischer_ref = react_1.useRef();
+    var Krebs_ref = react_1.useRef();
+    var Nst_ref = react_1.useRef();
+    var analysis_ref = react_1.useRef();
+    var old_ref = react_1.useRef({});
     var fetalKey = "fhr" + fetal;
     var mapFormToMark = {
         Fischer_ref: Fischer_ref,
@@ -47,7 +48,7 @@ exports.default = (function (v, docid, fetal) {
     react_1.useEffect(function () {
         var s = function (time) {
             time = time + 4800 <= v.data.index ? time : v.data.index - 4800;
-            setStartTime(time);
+            docid && setStartTime(time);
         };
         v && v.on('change:selectPoint', s);
         return function () {
@@ -74,7 +75,8 @@ exports.default = (function (v, docid, fetal) {
             var analysis = r.analysis, score = r.score;
             var f = score[mark.toLowerCase() + "data"];
             var cur = mapFormToMark[mark + "_ref"];
-            cur && cur.current.setFieldsValue(f);
+            cur.current.setFieldsValue(f);
+            old_ref.current[mark] = f;
             var stv = analysis.stv, ucdata = analysis.ucdata, acc = analysis.acc, dec = analysis.dec, fhrbaselineMinute = analysis.fhrbaselineMinute, others = __rest(analysis, ["stv", "ucdata", "acc", "dec", "fhrbaselineMinute"]);
             analysis_ref.current.setFieldsValue(__assign(__assign({ stv: stv }, ucdata), others));
             v.analyse({
@@ -96,7 +98,8 @@ exports.default = (function (v, docid, fetal) {
         Fischer_ref: Fischer_ref,
         Nst_ref: Nst_ref,
         Krebs_ref: Krebs_ref,
-        analysis_ref: analysis_ref
+        analysis_ref: analysis_ref,
+        old_ref: old_ref
     };
 });
 var mapItemsToMarks = {
