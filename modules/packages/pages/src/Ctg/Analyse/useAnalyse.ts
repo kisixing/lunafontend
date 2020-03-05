@@ -29,7 +29,10 @@ export default (v: Suit, docid, fetal: any) => {
     }
     useEffect(() => {
         const s = (time) => {
+            console.log('change', time, docid)
+
             time = time + 4800 <= v.data.index ? time : v.data.index - 4800
+            
             docid && setStartTime(time)
         }
         v && v.on('change:selectPoint', s)
@@ -37,7 +40,7 @@ export default (v: Suit, docid, fetal: any) => {
             v && v.off('change:selectPoint', s)
 
         };
-    }, [interval, v])
+    }, [interval, v, docid])
 
     useEffect(() => {
         Object.values(mapFormToMark).forEach(f => f.current && f.current.resetFields())

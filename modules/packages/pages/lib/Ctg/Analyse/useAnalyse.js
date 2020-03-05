@@ -47,6 +47,7 @@ exports.default = (function (v, docid, fetal) {
     };
     react_1.useEffect(function () {
         var s = function (time) {
+            console.log('change', time, docid);
             time = time + 4800 <= v.data.index ? time : v.data.index - 4800;
             docid && setStartTime(time);
         };
@@ -54,7 +55,7 @@ exports.default = (function (v, docid, fetal) {
         return function () {
             v && v.off('change:selectPoint', s);
         };
-    }, [interval, v]);
+    }, [interval, v, docid]);
     react_1.useEffect(function () {
         Object.values(mapFormToMark).forEach(function (f) { return f.current && f.current.resetFields(); });
     }, [docid]);
