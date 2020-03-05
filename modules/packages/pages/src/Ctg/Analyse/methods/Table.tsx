@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, memo } from 'react';
 import { Table, Form, InputNumber } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 
@@ -13,7 +13,7 @@ interface IProps {
     disabled: boolean
     [x: string]: any
 }
-export default forwardRef<FormInstance, IProps>((props, ref) => {
+const T =  forwardRef<FormInstance, IProps>((props, ref) => {
     const { hidden, dataSource, disabled } = props
     const columns: any = [
         {
@@ -77,3 +77,5 @@ export default forwardRef<FormInstance, IProps>((props, ref) => {
         </Form>
     );
 })
+
+export default memo(T)

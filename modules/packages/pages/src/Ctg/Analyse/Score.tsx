@@ -1,5 +1,5 @@
-import React, {  useEffect } from 'react';
-import { Radio,  Select } from 'antd';
+import React, { useEffect, useCallback, useMemo } from 'react';
+import { Radio, Select } from 'antd';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 
 import Methods from './methods'
@@ -55,7 +55,7 @@ const ScoringMethod = (props: IProps) => {
   }, [responseData])
 
 
-  const IntervalRadio = () => {
+  const IntervalRadio = useMemo(() => {
     return (
       <span style={{ marginRight: 10 }}> 时长：
             <Select onChange={e => {
@@ -71,8 +71,8 @@ const ScoringMethod = (props: IProps) => {
         </Select>
       </span>
     )
-  }
-  const FetalSelect = () => {
+  }, [interval])
+  const FetalSelect = useMemo(() => {
     return (
       <span style={{ marginRight: 10 }}> 胎心率：
             <Select onChange={setFetal} value={fetal}>
@@ -84,7 +84,7 @@ const ScoringMethod = (props: IProps) => {
         </Select>
       </span>
     )
-  }
+  }, [ctgData, fetal, setFetal])
 
   const StartTime = () => {
     return <span style={{ marginRight: 10 }}>开始时间：{(startTime / 240).toFixed(1)}分</span>
@@ -92,18 +92,10 @@ const ScoringMethod = (props: IProps) => {
   const EndTime = () => {
     return <span>结束时间：{(startTime / 240 + interval).toFixed(1)}分</span>
   }
-
-  return (
-    <div  {...others}>
-      <div style={{ padding: '12px 24px', background: '#ddd' }}>
-        <>
-          <IntervalRadio />
-          <FetalSelect />
-          <StartTime />
-          <EndTime />
-        </>
-      </div>
-      <div style={{ padding: '10px 24px 0' }}>
+  const R = useMemo(
+    () => {
+      console.log(123)
+      return (
         <Radio.Group onChange={onChange} value={mark} style={{ marginBottom: 5 }}>
           {
             MARKS.map(_ => (
@@ -111,6 +103,28 @@ const ScoringMethod = (props: IProps) => {
             ))
           }
         </Radio.Group>
+      )
+    },
+    [mark],
+  )
+  return (
+    <div  {...others}>
+      <div style={{ padding: '12px 24px', background: '#ddd' }}>
+        <>
+          {
+            IntervalRadio
+          }
+          {
+            FetalSelect
+          }
+          <StartTime />
+          <EndTime />
+        </>
+      </div>
+      <div style={{ padding: '10px 24px 0' }}>
+        {
+          R
+        }
         {/* <Form form={form} labelAlign="left" {...formItemLayout} style={{ width: '100%' }}>
           {
             activeItem.map(({ label, key, rules }) => (

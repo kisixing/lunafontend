@@ -6,10 +6,12 @@ const CTGChart = (docid: string) => {
     const [loading, setLoading] = useState(false)
     const [ctgData, setCtgData] = useState<{ fetalnum: string; docid?: string; fhr1?: any }>({ fetalnum: '1', docid })
     useEffect(() => {
-        setLoading(true)
-        request.get(`/ctg-exams-data/${docid}`).then(res => {
-            setCtgData({ docid, ...res })
-        }).finally(() => setLoading(false))
+        if(docid){
+            setLoading(true)
+            request.get(`/ctg-exams-data/${docid}`).then(res => {
+                setCtgData({ docid, ...res })
+            }).finally(() => setLoading(false))
+        }
     }, [docid])
 
     useEffect(() => {

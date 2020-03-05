@@ -10,17 +10,6 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-var __rest = (this && this.__rest) || function (s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
-        }
-    return t;
-};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -33,7 +22,7 @@ var react_1 = __importStar(require("react"));
 var antd_1 = require("antd");
 var utils_1 = require("@lianmed/utils");
 var Setting = react_1.forwardRef(function (props, ref) {
-    var analysis_ref = props.analysis_ref, others = __rest(props, ["analysis_ref"]);
+    var analysis_ref = props.analysis_ref;
     var form = antd_1.Form.useForm()[0];
     react_1.useEffect(function () {
         var formData = form.getFieldsValue();
@@ -49,7 +38,7 @@ var Setting = react_1.forwardRef(function (props, ref) {
         formatter: function (v) { return v && "" + v + t; },
         parser: function (v) { return v.replace(t, ''); }
     }); };
-    return (react_1.default.createElement("div", __assign({}, others),
+    return (react_1.default.createElement("div", null,
         react_1.default.createElement("div", null,
             react_1.default.createElement(antd_1.Form, { ref: ref, size: "small", style: { padding: '6px 12px' }, form: form, labelCol: { xs: 9 }, wrapperCol: { xs: 15 }, labelAlign: "left" },
                 react_1.default.createElement(antd_1.Divider, { orientation: "left", style: { background: '#f0f0f0' } }, "\u5BAB\u7F29 "),
@@ -102,4 +91,4 @@ var Setting = react_1.forwardRef(function (props, ref) {
                 react_1.default.createElement(antd_1.Form.Item, { wrapperCol: { xs: 24 }, style: { marginBottom: 0 }, name: "diagnosis" },
                     react_1.default.createElement(antd_1.Input.TextArea, null))))));
 });
-exports.default = (Setting);
+exports.default = react_1.memo(Setting);

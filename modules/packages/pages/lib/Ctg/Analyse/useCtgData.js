@@ -21,10 +21,12 @@ var CTGChart = function (docid) {
     var _a = react_1.useState(false), loading = _a[0], setLoading = _a[1];
     var _b = react_1.useState({ fetalnum: '1', docid: docid }), ctgData = _b[0], setCtgData = _b[1];
     react_1.useEffect(function () {
-        setLoading(true);
-        request_1.default.get("/ctg-exams-data/" + docid).then(function (res) {
-            setCtgData(__assign({ docid: docid }, res));
-        }).finally(function () { return setLoading(false); });
+        if (docid) {
+            setLoading(true);
+            request_1.default.get("/ctg-exams-data/" + docid).then(function (res) {
+                setCtgData(__assign({ docid: docid }, res));
+            }).finally(function () { return setLoading(false); });
+        }
     }, [docid]);
     react_1.useEffect(function () {
         var fn = function (data) {

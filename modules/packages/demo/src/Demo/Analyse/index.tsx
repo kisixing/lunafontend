@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Layout, Modal, DatePicker, Divider, Pagination, Input, Button } from 'antd';
 import request from "@lianmed/request";
 // import { parse, stringify } from 'qs';
@@ -19,7 +19,7 @@ const App = (props: any) => {
     const [eDate, setEDate] = useState(formatDate())
     const [total, setTotal] = useState(0)
     const [page, setPage] = useState(1)
-    const [docid, setDocid] = useState('')
+    let docid = useMemo(() => '', [])
     const [loading, setLoading] = useState(false)
     useEffect(() => {
         fetchList()
@@ -28,7 +28,7 @@ const App = (props: any) => {
     const fetchCtgExamData = () => {
         return new Promise<number>((res, rej) => {
             if (docid) {
-                request.get(`/ctg-exams`).then((r: obvuew.ctg_exams_data) => {
+                request.get(`/ctg-exams${docid}`).then((r: obvuew.ctg_exams_data) => {
                     res(r.id)
                 }).catch(rej)
             } else {
@@ -87,13 +87,14 @@ const App = (props: any) => {
                     <span>结束时间：</span><DatePicker size="small" value={moment(eDate)} onChange={e => setEDate(formatDate(e))} />
                 </div>
                 <div style={{ marginBottom: 5 }}>
-                    <span style={{ marginRight: 14 }}>档案号：</span><Input style={{ width: 136 }} size="small" value={docid} onChange={e => setDocid(e.target.value)} />
+                    <span style={{ marginRight: 14 }}>档案号：</span>
+                    <Input style={{ width: 136 }} size="small" onChange={e => docid = (e.target.value)} />
                 </div>
 
                 <Button loading={loading} type="primary" size="small" style={{ width: 206, marginBottom: 5 }} onClick={fetchList}>搜索</Button>
 
                 <SiderMenu setItem={setItem} selected={selected} dataSource={dataSource} />
-                <Pagination current={page} size="small" total={total} onChange={p => setPage(p)} />
+                <Pagination simple current={page} size="small" total={total} onChange={p => setPage(p)} />
             </Layout.Sider>
             <Layout.Content style={{ padding: 12 }}>
                 {/* <Content selected={selected} /> */}

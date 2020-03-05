@@ -1,11 +1,11 @@
-import React, { useEffect, forwardRef } from 'react';
+import React, { useEffect, forwardRef,memo } from 'react';
 import { Form, Radio, Input, Divider, InputNumber, Row, Col } from 'antd';
 import { event } from '@lianmed/utils';
 import { FormInstance } from 'antd/lib/form';
 
 const Setting = forwardRef<FormInstance, { [x: string]: any }>((props, ref) => {
 
-  const { analysis_ref, ...others } = props;
+  const { analysis_ref } = props;
   const [form] = Form.useForm()
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const Setting = forwardRef<FormInstance, { [x: string]: any }>((props, ref) => {
     parser: v => v.replace(t, '')
   })
   return (
-    <div {...others}>
+    <div>
       <div >
 
         {/* <div style={{ padding: '12px 24px', background: '#ddd' }}>
@@ -129,4 +129,4 @@ const Setting = forwardRef<FormInstance, { [x: string]: any }>((props, ref) => {
   );
 })
 
-export default (Setting)
+export default memo(Setting)
