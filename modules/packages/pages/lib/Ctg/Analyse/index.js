@@ -14,6 +14,17 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -35,7 +46,7 @@ var Analyse_1 = __importDefault(require("./Analyse"));
 var Score_1 = __importDefault(require("./Score"));
 var useAnalyse_1 = __importDefault(require("./useAnalyse"));
 var useCtgData_1 = __importDefault(require("./useCtgData"));
-var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  height:100%;\n  .ant-divider {\n    margin:10px 0 2px;\n    border-radius:2px;\n  }\n  button {\n    margin:0 6px 6px 0\n  }\n  .bordered {\n    border: 1px solid #ddd;\n  }\n"], ["\n  height:100%;\n  .ant-divider {\n    margin:10px 0 2px;\n    border-radius:2px;\n  }\n  button {\n    margin:0 6px 6px 0\n  }\n  .bordered {\n    border: 1px solid #ddd;\n  }\n"])));
+var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  height:100%;\n  .ant-divider {\n    margin:10px 0 2px !important;\n    border-radius:2px;\n  }\n  button {\n    margin:0 6px 6px 0\n  }\n  .bordered {\n    border: 1px solid #ddd;\n  }\n"], ["\n  height:100%;\n  .ant-divider {\n    margin:10px 0 2px !important;\n    border-radius:2px;\n  }\n  button {\n    margin:0 6px 6px 0\n  }\n  .bordered {\n    border: 1px solid #ddd;\n  }\n"])));
 function Analysis(_a) {
     var _b = _a.docid, docid = _b === void 0 ? '' : _b;
     var _c = useCtgData_1.default(docid), ctgData = _c.ctgData, loading = _c.loading;
@@ -58,14 +69,16 @@ function Analysis(_a) {
     var submit = function () {
         var curData = d[mark + "_ref"].current.getFieldsValue();
         var oldData = old_ref.current[mark];
+        var rightData = analysis_ref.current.getFieldsValue();
+        var wave = rightData.wave, diagnosistxt = rightData.diagnosistxt, classification0 = rightData.classification0, classification1 = rightData.classification1, analyseData = __rest(rightData, ["wave", "diagnosistxt", "classification0", "classification1"]);
         var isedit = Object.entries(curData).find(function (_a) {
             var k = _a[0], v = _a[1];
             return oldData[k] !== v;
         }) ? true : false;
         var data = {
             note: docid,
-            diagnosis: __assign({}, analysis_ref.current.getFieldsValue()),
-            result: __assign(__assign({}, curData), { isedit: isedit })
+            diagnosis: { wave: wave, diagnosistxt: diagnosistxt, classification0: classification0, classification1: classification1 },
+            result: __assign(__assign(__assign({}, analyseData), curData), { isedit: isedit })
         };
         request_1.default.put("/ctg-exams-note", { data: data });
     };

@@ -13,7 +13,7 @@ import useCtgData from './useCtgData';
 const Wrapper = styled.div`
   height:100%;
   .ant-divider {
-    margin:10px 0 2px;
+    margin:10px 0 2px !important;
     border-radius:2px;
   }
   button {
@@ -64,11 +64,16 @@ function Analysis({
   const submit = () => {
     const curData: { [x: string]: number } = d[`${mark}_ref`].current.getFieldsValue()
     const oldData: { [x: string]: number } = old_ref.current[mark]
+    const rightData = analysis_ref.current.getFieldsValue()
+    const { wave, diagnosistxt, classification0, classification1, ...analyseData } = rightData
+
+
     const isedit = Object.entries(curData).find(([k, v]) => oldData[k] !== v) ? true : false
     const data = {
       note: docid,
-      diagnosis: { ...analysis_ref.current.getFieldsValue() },
+      diagnosis: { wave, diagnosistxt, classification0, classification1 },
       result: {
+        ...analyseData,
         ...curData,
         isedit
       }

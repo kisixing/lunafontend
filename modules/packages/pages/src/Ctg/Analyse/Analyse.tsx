@@ -25,6 +25,9 @@ const Setting = forwardRef<FormInstance, { [x: string]: any }>((props, ref) => {
     formatter: v => v && `${v}${t}`,
     parser: v => v.replace(t, '')
   })
+  
+
+
   return (
     <div style={{ height: '100%',background:'#fff' }} className="bordered">
       <div >
@@ -91,7 +94,7 @@ const Setting = forwardRef<FormInstance, { [x: string]: any }>((props, ref) => {
           </Row>
 
           <Divider orientation="left" style={{ background: '#f0f0f0' }}>类型</Divider>
-          <Form.Item label="NST" labelCol={{ xs: 4 }} wrapperCol={{ xs: 18 }} style={{ marginBottom: 0 }} required name='nst'>
+          <Form.Item label="NST" labelCol={{ xs: 4 }} wrapperCol={{ xs: 18 }} style={{ marginBottom: 0 }} required name='classification0'>
             <Radio.Group>
               <Radio value={1}>有反应</Radio>
               <Radio value={2}>无反应</Radio>
@@ -99,7 +102,7 @@ const Setting = forwardRef<FormInstance, { [x: string]: any }>((props, ref) => {
               <Radio value={4}>不满意</Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item label="CST/OCT" style={{ marginBottom: 0 }} labelCol={{ xs: 4 }} wrapperCol={{ xs: 18 }} required name='cst'>
+          <Form.Item label="CST/OCT" style={{ marginBottom: 0 }} labelCol={{ xs: 4 }} wrapperCol={{ xs: 18 }} name='classification1'>
             <Radio.Group>
               <Radio value={1}>阴性</Radio>
               <Radio value={2}>阳性</Radio>
@@ -108,7 +111,7 @@ const Setting = forwardRef<FormInstance, { [x: string]: any }>((props, ref) => {
             </Radio.Group>
           </Form.Item>
           <Divider orientation="left" style={{ background: '#f0f0f0' }}>波形</Divider>
-          <Form.Item label="" style={{ marginBottom: 0 }} name="wave" required>
+          <Form.Item label="" style={{ marginBottom: 0 }} name="wave">
 
             <Radio.Group>
               <Radio value={1}>平滑</Radio>
@@ -120,7 +123,7 @@ const Setting = forwardRef<FormInstance, { [x: string]: any }>((props, ref) => {
           </Form.Item>
           <Divider orientation="left" style={{ background: '#f0f0f0' }}>诊断</Divider>
 
-          <Form.Item wrapperCol={{ xs: 24 }} style={{ marginBottom: 0 }} name="diagnosis" >
+          <Form.Item wrapperCol={{ xs: 24 }} style={{ marginBottom: 0 }} name="diagnosistxt" >
             <Input.TextArea />
           </Form.Item>
         </Form>
