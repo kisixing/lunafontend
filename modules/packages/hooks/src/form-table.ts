@@ -46,7 +46,7 @@ export const useFormTable = (config: UseSearchResultAntdConfig) => {
     }
   }
 
-  const [initialValues, setInitialValues] = useState();
+  const [initialValues, setInitialValues] = useState<Store>();
   const {
     loading,
     requestData = { pageSize: defaultPageSize, current: defaultCurrent } as Store,
@@ -110,24 +110,24 @@ export const useFormTable = (config: UseSearchResultAntdConfig) => {
   const formProps =
     version === 4
       ? {
-          form: formInstance,
-          onFinish,
-          initialValues,
-        }
+        form: formInstance,
+        onFinish,
+        initialValues,
+      }
       : {
-          onSubmit(e) {
-            e.preventDefault();
-            formInstance.validateFields((err, values) => {
-              if (!err) {
-                searchFunc({
-                  current: 1,
-                  pageSize: requestData.pageSize,
-                  ...values,
-                });
-              }
-            });
-          },
-        };
+        onSubmit(e) {
+          e.preventDefault();
+          formInstance.validateFields((err, values) => {
+            if (!err) {
+              searchFunc({
+                current: 1,
+                pageSize: requestData.pageSize,
+                ...values,
+              });
+            }
+          });
+        },
+      };
 
   const tableProps = {
     pagination: {
