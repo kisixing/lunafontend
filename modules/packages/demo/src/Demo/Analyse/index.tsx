@@ -28,7 +28,7 @@ const App = (props: any) => {
     const fetchCtgExamData = () => {
         return new Promise<number>((res, rej) => {
             if (docid) {
-                request.get(`/ctg-exams${docid}`).then((r: obvuew.ctg_exams_data) => {
+                request.get(`/ctg-exams-criteria?note.equals=${docid}`).then((r: obvuew.ctg_exams_data) => {
                     res(r.id)
                 }).catch(rej)
             } else {
