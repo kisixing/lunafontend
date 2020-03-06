@@ -1,5 +1,5 @@
-import React, { useEffect, forwardRef,memo } from 'react';
-import { Form, Radio, Input, Divider, InputNumber, Row, Col } from 'antd';
+import React, { useEffect, forwardRef, memo } from 'react';
+import { Form, Radio, Input,  InputNumber, Row, Col } from 'antd';
 import { event } from '@lianmed/utils';
 import { FormInstance } from 'antd/lib/form';
 
@@ -24,18 +24,18 @@ const Setting = forwardRef<FormInstance, { [x: string]: any }>((props, ref) => {
     formatter: v => v && `${v}${t}`,
     parser: v => v.replace(t, '')
   })
-  
+
 
 
   return (
-    <div style={{ height: '100%',background:'#fff' }} className="bordered">
+    <div style={{ height: '100%', background: '#fff' }} className="bordered">
       <div >
 
         {/* <div style={{ padding: '12px 24px', background: '#ddd' }}>
           <span> &nbsp;</span>
         </div> */}
         <Form ref={ref} size="small" style={{ padding: '6px 12px' }} form={form} labelCol={{ xs: 9 }} wrapperCol={{ xs: 15 }} labelAlign="left">
-          <Divider orientation="left" style={{ background: '#f0f0f0' }} >宫缩 </Divider>
+          <div className="divider"  >宫缩 </div>
           <Row>
             <Col span={6}>
               <Form.Item label="宫缩次数" style={{ marginBottom: 0 }} name="uctimes">
@@ -48,13 +48,13 @@ const Setting = forwardRef<FormInstance, { [x: string]: any }>((props, ref) => {
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label="间隔时间"  style={{ marginBottom: 0 }} name="ucdurationtime">
-                <InputNumber {...cFn('min')}   />
+              <Form.Item label="间隔时间" style={{ marginBottom: 0 }} name="ucdurationtime">
+                <InputNumber {...cFn('min')} />
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label="持续时间"  style={{ marginBottom: 0 }} name="uckeeptime">
-                <InputNumber {...cFn('s')}  />
+              <Form.Item label="持续时间" style={{ marginBottom: 0 }} name="uckeeptime">
+                <InputNumber {...cFn('s')} />
               </Form.Item>
             </Col>
 
@@ -62,7 +62,7 @@ const Setting = forwardRef<FormInstance, { [x: string]: any }>((props, ref) => {
 
 
 
-          {/* <Divider >胎心率</Divider>
+          {/* <div >胎心率</div>
           <Row>
             <Col span={6}>
               <Form.Item label="短变异" style={{ marginBottom: 0 }} name="stv">
@@ -72,7 +72,7 @@ const Setting = forwardRef<FormInstance, { [x: string]: any }>((props, ref) => {
               </Form.Item>
             </Col>
           </Row> */}
-          <Divider orientation="left" style={{ background: '#f0f0f0' }}>减速</Divider>
+          <div className="divider" >减速</div>
 
           <Row>
             <Col span={6}>
@@ -92,8 +92,8 @@ const Setting = forwardRef<FormInstance, { [x: string]: any }>((props, ref) => {
             </Col>
           </Row>
 
-          <Divider orientation="left" style={{ background: '#f0f0f0' }}>类型</Divider>
-          <Form.Item label="NST" labelCol={{ xs: 4 }} wrapperCol={{ xs: 18 }} style={{ marginBottom: 0 }} required name='classification0'>
+          <div className="divider" >类型</div>
+          <Form.Item label="NST" labelCol={{ xs: 4 }} wrapperCol={{ xs: 18 }} style={{ marginBottom: 0 }}  name='classification0'>
             <Radio.Group>
               <Radio value={1}>有反应</Radio>
               <Radio value={2}>无反应</Radio>
@@ -109,7 +109,7 @@ const Setting = forwardRef<FormInstance, { [x: string]: any }>((props, ref) => {
               <Radio value={4}>不满意</Radio>
             </Radio.Group>
           </Form.Item>
-          <Divider orientation="left" style={{ background: '#f0f0f0' }}>波形</Divider>
+          <div className="divider" >波形</div>
           <Form.Item label="" style={{ marginBottom: 0 }} name="wave">
 
             <Radio.Group>
@@ -120,7 +120,7 @@ const Setting = forwardRef<FormInstance, { [x: string]: any }>((props, ref) => {
               <Radio value={5}>正弦型</Radio>
             </Radio.Group>
           </Form.Item>
-          <Divider orientation="left" style={{ background: '#f0f0f0' }}>诊断</Divider>
+          <div className="divider" >诊断</div>
 
           <Form.Item wrapperCol={{ xs: 24 }} style={{ marginBottom: 0 }} name="diagnosistxt" >
             <Input.TextArea />

@@ -20,6 +20,7 @@ declare const _default: (v: Suit, docid: any, fetal: any) => {
     old_ref: MutableRefObject<{
         [x: string]: any;
     }>;
+    analysed: boolean;
 };
 export default _default;
 interface IResponseData {

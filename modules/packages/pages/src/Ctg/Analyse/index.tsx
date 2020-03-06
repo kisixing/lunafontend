@@ -12,9 +12,11 @@ import useCtgData from './useCtgData';
 
 const Wrapper = styled.div`
   height:100%;
-  .ant-divider {
-    margin:10px 0 2px !important;
+  .divider {
     border-radius:2px;
+    background:linear-gradient(45deg, #e0e0e0, transparent) !important;
+    padding-left:20px;
+    margin: 8px 0;
   }
   button {
     margin:0 6px 6px 0
@@ -47,6 +49,7 @@ function Analysis({
     Krebs_ref,
     analysis_ref,
     old_ref,
+    analysed
   } = useAnalyse(ref.current, docid, fetal)
 
   const d = {
@@ -101,8 +104,8 @@ function Analysis({
         <Col span={12}  >
           <Analyse ref={analysis_ref} />
           <div style={{ position: 'absolute', right: 12, bottom: 0 }}>
-            <Button size="small" style={{ marginBottom: 10 }} disabled={btnDisabled}>打印</Button>
-            <Button size="small" type="primary" onClick={submit} disabled={btnDisabled}>保存</Button>
+            <Button size="small" style={{ marginBottom: 10 }} disabled={btnDisabled || !analysed}>打印</Button>
+            <Button size="small" type="primary" onClick={submit} disabled={btnDisabled || !analysed}>保存</Button>
           </div>
 
         </Col>

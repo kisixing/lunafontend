@@ -13,6 +13,7 @@ export default (v: Suit, docid, fetal: any) => {
     const [mark, setMark] = useState(MARKS[0])
     const [interval, setInterval] = useState(20)
     const [startTime, setStartTime] = useState(0)
+    const [analysed, setAnalysed] = useState(false)
 
     const Fischer_ref = useRef<FormInstance>()
     const Krebs_ref = useRef<FormInstance>()
@@ -44,12 +45,10 @@ export default (v: Suit, docid, fetal: any) => {
 
     useEffect(() => {
         Object.values(mapFormToMark).forEach(f => f.current && f.current.resetFields())
+        setAnalysed(false)
     }, [docid])
     useEffect(() => { setMarkAndItems(MARKS[0]) }, [])
-    useEffect(() => {
-
-        console.log('mark', mark)
-    }, [mark])
+ 
     useEffect(() => {
         const defaultMark = MARKS[0]
         const keys = mapItemsToMarks[defaultMark]
@@ -59,8 +58,9 @@ export default (v: Suit, docid, fetal: any) => {
     const analyse = () => {
         v && request.post(`/ctg-exams-analyse`, {
             data: { docid, mark, start: startTime, end: startTime + interval * 240, fetal },
-            successText:`${docid}分析完成`,
+            successText: `${docid}分析完成`,
         }).then((r: obvuew.ctg_exams_analyse) => {
+            setAnalysed(true)
             const { analysis, score } = r
             const f = score[`${mark.toLowerCase()}data`]
             const cur: MutableRefObject<FormInstance> = mapFormToMark[`${mark}_ref`]
@@ -96,7 +96,8 @@ export default (v: Suit, docid, fetal: any) => {
         Nst_ref,
         Krebs_ref,
         analysis_ref,
-        old_ref
+        old_ref,
+        analysed
     }
 }
 

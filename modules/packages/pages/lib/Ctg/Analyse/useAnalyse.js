@@ -33,6 +33,7 @@ exports.default = (function (v, docid, fetal) {
     var _a = react_1.useState(MARKS[0]), mark = _a[0], setMark = _a[1];
     var _b = react_1.useState(20), interval = _b[0], setInterval = _b[1];
     var _c = react_1.useState(0), startTime = _c[0], setStartTime = _c[1];
+    var _d = react_1.useState(false), analysed = _d[0], setAnalysed = _d[1];
     var Fischer_ref = react_1.useRef();
     var Krebs_ref = react_1.useRef();
     var Nst_ref = react_1.useRef();
@@ -58,11 +59,9 @@ exports.default = (function (v, docid, fetal) {
     }, [interval, v, docid]);
     react_1.useEffect(function () {
         Object.values(mapFormToMark).forEach(function (f) { return f.current && f.current.resetFields(); });
+        setAnalysed(false);
     }, [docid]);
     react_1.useEffect(function () { setMarkAndItems(MARKS[0]); }, []);
-    react_1.useEffect(function () {
-        console.log('mark', mark);
-    }, [mark]);
     react_1.useEffect(function () {
         var defaultMark = MARKS[0];
         var keys = mapItemsToMarks[defaultMark];
@@ -74,6 +73,7 @@ exports.default = (function (v, docid, fetal) {
             data: { docid: docid, mark: mark, start: startTime, end: startTime + interval * 240, fetal: fetal },
             successText: docid + "\u5206\u6790\u5B8C\u6210",
         }).then(function (r) {
+            setAnalysed(true);
             var analysis = r.analysis, score = r.score;
             var f = score[mark.toLowerCase() + "data"];
             var cur = mapFormToMark[mark + "_ref"];
@@ -101,7 +101,8 @@ exports.default = (function (v, docid, fetal) {
         Nst_ref: Nst_ref,
         Krebs_ref: Krebs_ref,
         analysis_ref: analysis_ref,
-        old_ref: old_ref
+        old_ref: old_ref,
+        analysed: analysed
     };
 });
 var mapItemsToMarks = {
