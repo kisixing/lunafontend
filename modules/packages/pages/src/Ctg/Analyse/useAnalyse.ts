@@ -3,7 +3,7 @@ import { useState, useEffect, useMemo, useRef, MutableRefObject } from 'react';
 import request from "@lianmed/request";
 import { _R } from "@lianmed/utils";
 import { FormInstance } from 'antd/lib/form';
-import { obvuew } from "@lianmed/f_types";
+import { obvue } from "@lianmed/f_types";
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 
 
@@ -13,7 +13,6 @@ export default (v: Suit, docid, fetal: any) => {
     const [mark, setMark] = useState(MARKS[0])
     const [interval, setInterval] = useState(20)
     const [startTime, setStartTime] = useState(0)
-    const [analysed, setAnalysed] = useState(false)
 
     const Fischer_ref = useRef<FormInstance>()
     const Krebs_ref = useRef<FormInstance>()
@@ -36,16 +35,16 @@ export default (v: Suit, docid, fetal: any) => {
 
             docid && setStartTime(time)
         }
-        v && v.on('change:selectPoint', s)
+        v && v.on('change:selectPoint', s).on('afterInit',analyse)
         return () => {
-            v && v.off('change:selectPoint', s)
+            v && v.off('change:selectPoint', s).off('afterInit',analyse)
 
         };
     }, [interval, v, docid])
 
     useEffect(() => {
         Object.values(mapFormToMark).forEach(f => f.current && f.current.resetFields())
-        setAnalysed(false)
+        analyse()
     }, [docid])
     useEffect(() => { setMarkAndItems(MARKS[0]) }, [])
  
@@ -58,9 +57,9 @@ export default (v: Suit, docid, fetal: any) => {
     const analyse = () => {
         v && request.post(`/ctg-exams-analyse`, {
             data: { docid, mark, start: startTime, end: startTime + interval * 240, fetal },
-            successText: `${docid}分析完成`,
-        }).then((r: obvuew.ctg_exams_analyse) => {
-            setAnalysed(true)
+        }).then((r: obvue.ctg_exams_analyse) => {
+
+
             const { analysis, score } = r
             const f = score[`${mark.toLowerCase()}data`]
             const cur: MutableRefObject<FormInstance> = mapFormToMark[`${mark}_ref`]
@@ -97,7 +96,6 @@ export default (v: Suit, docid, fetal: any) => {
         Krebs_ref,
         analysis_ref,
         old_ref,
-        analysed
     }
 }
 

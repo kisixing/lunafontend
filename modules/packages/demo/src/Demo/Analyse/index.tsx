@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Layout, Modal, DatePicker,  Pagination, Input, Button } from 'antd';
 import request from "@lianmed/request";
-import { obvuew } from "@lianmed/f_types";
+import { obvue } from "@lianmed/f_types";
 import SiderMenu from "./containers/SiderMenu";
 import moment from "moment";
 import { formatDate } from '@lianmed/utils';
@@ -9,9 +9,9 @@ import { Ctg_Analyse } from "@lianmed/pages";
 
 const App = (props: any) => {
 
-    const [dataSource, setDataSource] = useState<obvuew.prenatal_visitspage[]>([])
+    const [dataSource, setDataSource] = useState<obvue.prenatal_visitspage[]>([])
     const [pregnancy, setPregnancy] = useState({})
-    const [selected, setSelected] = useState<obvuew.prenatal_visitspage>({})
+    const [selected, setSelected] = useState<obvue.prenatal_visitspage>({})
     const [sDate, setSDate] = useState(formatDate(new Date('2020-03-1')))
     const [eDate, setEDate] = useState(formatDate())
     const [total, setTotal] = useState(0)
@@ -97,7 +97,7 @@ const App = (props: any) => {
                     'visitDate.lessOrEqualThan': eDate,
                 })}>搜索</Button>
                 <SiderMenu setItem={setSelected} selected={selected} dataSource={dataSource} />
-                <Pagination showLessItems current={page} size="small" total={total} onChange={p => setPage(p)} />
+                <Pagination disabled={loading} showLessItems current={page} size="small" total={total} onChange={p => setPage(p)} />
             </Layout.Sider>
             <Layout.Content style={{ padding: 12 }}>
                 <Ctg_Analyse docid={selected && selected.ctgexam && selected.ctgexam.note} />

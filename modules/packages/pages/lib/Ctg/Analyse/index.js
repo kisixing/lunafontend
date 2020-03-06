@@ -92,7 +92,7 @@ function Analysis(_a) {
                 react_1.default.createElement("div", { style: { position: 'absolute', right: 12, bottom: 0 } },
                     react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, onClick: analyse, disabled: btnDisabled }, "\u5386\u53F2\u5206\u6790"),
                     react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, disabled: !docid, onClick: function () { return setDisabled(!disabled); } }, disabled ? '修改' : '确认'),
-                    react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, type: "primary", onClick: analyse, disabled: !docid }, "\u5206\u6790"))),
+                    react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, type: "primary", onClick: analyse, disabled: !docid }, "\u8BC4\u5206"))),
             react_1.default.createElement(antd_1.Col, { span: 12 },
                 react_1.default.createElement(Analyse_1.default, { ref: analysis_ref }),
                 react_1.default.createElement("div", { style: { position: 'absolute', right: 12, bottom: 0 } },

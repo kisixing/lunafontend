@@ -1,1 +1,1 @@
-export { obvuew } from './obvue';
+export { obvue } from './obvue';

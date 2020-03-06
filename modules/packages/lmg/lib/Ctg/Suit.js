@@ -243,6 +243,7 @@ var Suit = (function (_super) {
             _this.drawSelect.showselect();
             _this.drawobj.drawdot(_this.rightViewPosition, false);
         });
+        this.emit('afterInit');
     };
     Suit.prototype.createLine = function () {
         if (this.rowline)

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Menu } from 'antd';
-import { obvuew } from '@lianmed/f_types';
+import { obvue } from '@lianmed/f_types';
 
-class SiderMenu extends Component<{ dataSource: obvuew.prenatal_visitspage[], setItem: any, selected: any }, any> {
+class SiderMenu extends Component<{ dataSource: obvue.prenatal_visitspage[], setItem: any, selected: any }, any> {
   constructor(props: any) {
     super(props);
     this.state = {

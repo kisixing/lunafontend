@@ -98,7 +98,7 @@ function Analysis({
           <div style={{ position: 'absolute', right: 12, bottom: 0 }}>
             <Button size="small" style={{ marginBottom: 10 }} onClick={analyse} disabled={btnDisabled}>历史分析</Button>
             <Button size="small" style={{ marginBottom: 10 }} disabled={!docid} onClick={() => setDisabled(!disabled)}>{disabled ? '修改' : '确认'}</Button>
-            <Button size="small" style={{ marginBottom: 10 }} type="primary" onClick={analyse} disabled={!docid}>分析</Button>
+            <Button size="small" style={{ marginBottom: 10 }} type="primary" onClick={analyse} disabled={!docid}>评分</Button>
           </div>
         </Col>
         <Col span={12}  >

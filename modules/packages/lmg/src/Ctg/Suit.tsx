@@ -265,7 +265,7 @@ export class Suit extends Draw {
       this.drawobj.drawdot(this.rightViewPosition, false);
 
     });
-
+    this.emit('afterInit')
   }
   createLine() {
     if (this.rowline) return;

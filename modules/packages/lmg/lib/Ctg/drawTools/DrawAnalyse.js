@@ -33,7 +33,8 @@ var DrawAnalyse = (function (_super) {
             context2D.textBaseline = 'top';
             var txt = '';
             if (acc.indexOf(index) > -1 || acc.indexOf(index - 1) > -1) {
-                txt = '+';
+                var target = analyseData.acc.find(function (_) { return [index, index - 1].includes(_.index); });
+                txt = "+" + (target.reliability || 0).toFixed(1);
                 canvas.font = '25px arial';
                 canvas.fillStyle = 'blue';
                 canvas.fillText(txt, x + 1, y - 1);
