@@ -27,33 +27,7 @@ export default (v: Suit, docid, fetal: any) => {
         Nst_ref,
         analysis_ref
     }
-    useEffect(() => {
-        const s = (time) => {
-            console.log('change', time, docid)
 
-            time = time + 4800 <= v.data.index ? time : v.data.index - 4800
-
-            docid && setStartTime(time)
-        }
-        v && v.on('change:selectPoint', s).on('afterInit',analyse)
-        return () => {
-            v && v.off('change:selectPoint', s).off('afterInit',analyse)
-
-        };
-    }, [interval, v, docid])
-
-    useEffect(() => {
-        Object.values(mapFormToMark).forEach(f => f.current && f.current.resetFields())
-        analyse()
-    }, [docid])
-    useEffect(() => { setMarkAndItems(MARKS[0]) }, [])
- 
-    useEffect(() => {
-        const defaultMark = MARKS[0]
-        const keys = mapItemsToMarks[defaultMark]
-        const value = resultData[fetalKey] = resultData[fetalKey] || { result: JSON.stringify(_R.zipObj(keys, keys.map(() => null))), mark: defaultMark }
-        setMark(value.mark)
-    }, [fetalKey])
     const analyse = () => {
         v && request.post(`/ctg-exams-analyse`, {
             data: { docid, mark, start: startTime, end: startTime + interval * 240, fetal },
@@ -81,6 +55,34 @@ export default (v: Suit, docid, fetal: any) => {
 
         })
     }
+
+    useEffect(() => {
+        const s = (time) => {
+            console.log('change', time, docid)
+
+            time = time + 4800 <= v.data.index ? time : v.data.index - 4800
+            docid && setStartTime(time)
+        }
+        v && v.on('change:selectPoint', s).on('afterInit', analyse)
+        return () => {
+            v && v.off('change:selectPoint', s).off('afterInit', analyse)
+
+        };
+    }, [interval, v, docid, analyse])
+
+    useEffect(() => {
+        Object.values(mapFormToMark).forEach(f => f.current && f.current.resetFields())
+        setStartTime(0)
+    }, [docid])
+    useEffect(() => { setMarkAndItems(MARKS[0]) }, [])
+
+    useEffect(() => {
+        const defaultMark = MARKS[0]
+        const keys = mapItemsToMarks[defaultMark]
+        const value = resultData[fetalKey] = resultData[fetalKey] || { result: JSON.stringify(_R.zipObj(keys, keys.map(() => null))), mark: defaultMark }
+        setMark(value.mark)
+    }, [fetalKey])
+
 
     const setMarkAndItems = (mark: string) => {
         setMark(mark)

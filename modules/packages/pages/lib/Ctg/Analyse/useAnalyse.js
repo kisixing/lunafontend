@@ -45,28 +45,6 @@ exports.default = (function (v, docid, fetal) {
         Nst_ref: Nst_ref,
         analysis_ref: analysis_ref
     };
-    react_1.useEffect(function () {
-        var s = function (time) {
-            console.log('change', time, docid);
-            time = time + 4800 <= v.data.index ? time : v.data.index - 4800;
-            docid && setStartTime(time);
-        };
-        v && v.on('change:selectPoint', s).on('afterInit', analyse);
-        return function () {
-            v && v.off('change:selectPoint', s).off('afterInit', analyse);
-        };
-    }, [interval, v, docid]);
-    react_1.useEffect(function () {
-        Object.values(mapFormToMark).forEach(function (f) { return f.current && f.current.resetFields(); });
-        analyse();
-    }, [docid]);
-    react_1.useEffect(function () { setMarkAndItems(MARKS[0]); }, []);
-    react_1.useEffect(function () {
-        var defaultMark = MARKS[0];
-        var keys = mapItemsToMarks[defaultMark];
-        var value = resultData[fetalKey] = resultData[fetalKey] || { result: JSON.stringify(utils_1._R.zipObj(keys, keys.map(function () { return null; }))), mark: defaultMark };
-        setMark(value.mark);
-    }, [fetalKey]);
     var analyse = function () {
         v && request_1.default.post("/ctg-exams-analyse", {
             data: { docid: docid, mark: mark, start: startTime, end: startTime + interval * 240, fetal: fetal },
@@ -87,6 +65,28 @@ exports.default = (function (v, docid, fetal) {
             });
         });
     };
+    react_1.useEffect(function () {
+        var s = function (time) {
+            console.log('change', time, docid);
+            time = time + 4800 <= v.data.index ? time : v.data.index - 4800;
+            docid && setStartTime(time);
+        };
+        v && v.on('change:selectPoint', s).on('afterInit', analyse);
+        return function () {
+            v && v.off('change:selectPoint', s).off('afterInit', analyse);
+        };
+    }, [interval, v, docid, analyse]);
+    react_1.useEffect(function () {
+        Object.values(mapFormToMark).forEach(function (f) { return f.current && f.current.resetFields(); });
+        setStartTime(0);
+    }, [docid]);
+    react_1.useEffect(function () { setMarkAndItems(MARKS[0]); }, []);
+    react_1.useEffect(function () {
+        var defaultMark = MARKS[0];
+        var keys = mapItemsToMarks[defaultMark];
+        var value = resultData[fetalKey] = resultData[fetalKey] || { result: JSON.stringify(utils_1._R.zipObj(keys, keys.map(function () { return null; }))), mark: defaultMark };
+        setMark(value.mark);
+    }, [fetalKey]);
     var setMarkAndItems = function (mark) {
         setMark(mark);
     };
