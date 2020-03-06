@@ -26,7 +26,7 @@ class SiderMenu extends Component<{ dataSource: obvue.prenatal_visitspage[], set
     return (
       <Menu
         mode="inline"
-        selectedKeys={selected.id && [selected.id.toString()]}
+        selectedKeys={selected && selected.id && [selected.id.toString()]}
         onClick={this.handleClick}
         style={{ height: 'calc(100% - 200px)' }}
       >
