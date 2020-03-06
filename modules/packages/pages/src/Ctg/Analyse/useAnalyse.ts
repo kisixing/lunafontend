@@ -32,7 +32,7 @@ export default (v: Suit, docid, fetal: any) => {
             console.log('change', time, docid)
 
             time = time + 4800 <= v.data.index ? time : v.data.index - 4800
-            
+
             docid && setStartTime(time)
         }
         v && v.on('change:selectPoint', s)
@@ -58,7 +58,8 @@ export default (v: Suit, docid, fetal: any) => {
     }, [fetalKey])
     const analyse = () => {
         v && request.post(`/ctg-exams-analyse`, {
-            data: { docid, mark, start: startTime, end: startTime + interval * 240, fetal }
+            data: { docid, mark, start: startTime, end: startTime + interval * 240, fetal },
+            successText:`${docid}分析完成`,
         }).then((r: obvuew.ctg_exams_analyse) => {
             const { analysis, score } = r
             const f = score[`${mark.toLowerCase()}data`]

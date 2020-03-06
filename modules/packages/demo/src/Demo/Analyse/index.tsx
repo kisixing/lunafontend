@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Layout, Modal, DatePicker, Divider, Pagination, Input, Button } from 'antd';
 import request from "@lianmed/request";
 // import { parse, stringify } from 'qs';
@@ -19,18 +19,33 @@ const App = (props: any) => {
     const [eDate, setEDate] = useState(formatDate())
     const [total, setTotal] = useState(0)
     const [page, setPage] = useState(1)
-    let docid = useMemo(() => '', [])
+    const docidRef = useRef('')
+    const [params, setParams] = useState({
+        'CTGExamId.specified': true,
+        'pregnancyId.specified': true,
+        'visitDate.greaterOrEqualThan': sDate,
+        'visitDate.lessOrEqualThan': eDate,
+        'cTGExamId.equals': 0,
+        size: 10,
+        sort: 'visitDate,asc',
+        page,
+    })
     const [loading, setLoading] = useState(false)
     useEffect(() => {
-        fetchList()
+        setParams({ ...params, page })
     }, [page])
+    useEffect(() => {
+        fetchList()
+    }, [params])
 
     const fetchCtgExamData = () => {
         return new Promise<number>((res, rej) => {
+            const docid = docidRef.current
             if (docid) {
-                request.get(`/ctg-exams-criteria?note.equals=${docid}`).then((r: obvuew.ctg_exams_data) => {
-                    res(r.id)
-                }).catch(rej)
+                request.get(`/ctg-exams-criteria?note.equals=${docid}`).then((r: any[]) => {
+                    const t = r[0] || { id: 0 }
+                    res(t.id)
+                })
             } else {
                 res()
             }
@@ -38,43 +53,27 @@ const App = (props: any) => {
     }
     const fetchList = (e?: any) => {
         setLoading(true)
-        const params = {
-            'CTGExamId.specified': true,
-            'pregnancyId.specified': true,
-            size: 10,
-            sort: 'visitDate,asc',
-            'visitDate.greaterOrEqualThan': sDate,
-            'visitDate.lessOrEqualThan': eDate,
-            page: page - 1
 
-        }
-        fetchCtgExamData()
-        request
-            .get(`/prenatal-visitspage`, { params })
-            .then(function (response) {
-                setDataSource(response)
-            })
+        fetchCtgExamData().then(id => {
+            params["cTGExamId.equals"] = id
+            params["page"] = page - 1
+            request
+                .get(`/prenatal-visitspage`, { params })
+                .then(function (response) {
+                    setDataSource(response)
+                }).finally(() => setLoading(false))
 
-        request
-            .get(`/prenatal-visits/count`, { params })
-            .then(function (t) {
-                setTotal(t)
-            })
-            .finally(() => setLoading(false))
+            request
+                .get(`/prenatal-visits/count`, { params })
+                .then(function (t) {
+                    setTotal(t)
+                    if (page > t) setPage(t < 1 ? 1 : t)
+                })
 
-        return []
+        })
     };
 
-    const setItem = (item: any) => {
-        console.log('selected', selected)
-        setSelected(item)
-    };
 
-    // tabs标签卡切换
-
-
-
-    // console.log('loading -->', isLoading)
 
     return (
 
@@ -88,16 +87,18 @@ const App = (props: any) => {
                 </div>
                 <div style={{ marginBottom: 5 }}>
                     <span style={{ marginRight: 14 }}>档案号：</span>
-                    <Input style={{ width: 136 }} size="small" onChange={e => docid = (e.target.value)} />
+                    <Input allowClear style={{ width: 136 }} size="small" onChange={e => docidRef.current = (e.target.value)} />
                 </div>
 
-                <Button loading={loading} type="primary" size="small" style={{ width: 206, marginBottom: 5 }} onClick={fetchList}>搜索</Button>
+                <Button loading={loading} type="primary" size="small" style={{ width: 206, marginBottom: 5 }} onClick={() => setParams({
+                    ...params, 'visitDate.greaterOrEqualThan': sDate,
+                    'visitDate.lessOrEqualThan': eDate,
+                })}>搜索</Button>
 
-                <SiderMenu setItem={setItem} selected={selected} dataSource={dataSource} />
+                <SiderMenu setItem={setSelected} selected={selected} dataSource={dataSource} />
                 <Pagination simple current={page} size="small" total={total} onChange={p => setPage(p)} />
             </Layout.Sider>
             <Layout.Content style={{ padding: 12 }}>
-                {/* <Content selected={selected} /> */}
                 <Ctg_Analyse docid={selected && selected.ctgexam && selected.ctgexam.note} />
             </Layout.Content>
         </Layout>

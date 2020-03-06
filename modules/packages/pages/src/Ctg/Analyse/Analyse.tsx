@@ -5,7 +5,6 @@ import { FormInstance } from 'antd/lib/form';
 
 const Setting = forwardRef<FormInstance, { [x: string]: any }>((props, ref) => {
 
-  const { analysis_ref } = props;
   const [form] = Form.useForm()
 
   useEffect(() => {

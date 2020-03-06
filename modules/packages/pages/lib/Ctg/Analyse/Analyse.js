@@ -22,7 +22,6 @@ var react_1 = __importStar(require("react"));
 var antd_1 = require("antd");
 var utils_1 = require("@lianmed/utils");
 var Setting = react_1.forwardRef(function (props, ref) {
-    var analysis_ref = props.analysis_ref;
     var form = antd_1.Form.useForm()[0];
     react_1.useEffect(function () {
         var formData = form.getFieldsValue();

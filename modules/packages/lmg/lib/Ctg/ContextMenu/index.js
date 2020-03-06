@@ -33,7 +33,7 @@ exports.default = (function (props) {
     }
     var a = { disableIfShiftIsPressed: true };
     return (react_1.default.createElement(Wrapper, null,
-        react_1.default.createElement(react_contextmenu_1.ContextMenuTrigger, __assign({ id: "some_unique_identifier" }, a), react_1.default.Children.map(props.children, function (_) {
+        react_1.default.createElement(react_contextmenu_1.ContextMenuTrigger, __assign({ id: "some_unique_identifier" }, a, { holdToDisplay: -1 }), react_1.default.Children.map(props.children, function (_) {
             return react_1.default.cloneElement(_, {
                 onContextMenu: function (e) {
                     console.log('menu', e);

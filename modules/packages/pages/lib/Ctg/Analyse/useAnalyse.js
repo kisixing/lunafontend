@@ -71,7 +71,8 @@ exports.default = (function (v, docid, fetal) {
     }, [fetalKey]);
     var analyse = function () {
         v && request_1.default.post("/ctg-exams-analyse", {
-            data: { docid: docid, mark: mark, start: startTime, end: startTime + interval * 240, fetal: fetal }
+            data: { docid: docid, mark: mark, start: startTime, end: startTime + interval * 240, fetal: fetal },
+            successText: docid + "\u5206\u6790\u5B8C\u6210",
         }).then(function (r) {
             var analysis = r.analysis, score = r.score;
             var f = score[mark.toLowerCase() + "data"];

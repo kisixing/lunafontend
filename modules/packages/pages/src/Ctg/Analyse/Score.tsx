@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useMemo } from 'react';
+import React, { useEffect,  useMemo } from 'react';
 import { Radio, Select } from 'antd';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 

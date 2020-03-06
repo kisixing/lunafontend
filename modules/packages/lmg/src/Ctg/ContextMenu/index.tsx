@@ -23,7 +23,7 @@ export default ((props: PropsWithChildren<{rightClickXy:React.MutableRefObject<{
     const a: any = { disableIfShiftIsPressed: true }
     return (
         <Wrapper >
-            <ContextMenuTrigger id="some_unique_identifier" {...a}>
+            <ContextMenuTrigger id="some_unique_identifier" {...a} holdToDisplay={-1}>
                 {/* {
                     props.children
                 } */}
