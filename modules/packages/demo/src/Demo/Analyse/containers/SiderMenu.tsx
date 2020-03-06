@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Menu } from 'antd';
-import styles from "./SiderMenu.module.css";
 import { obvuew } from '@lianmed/f_types';
 
 class SiderMenu extends Component<{ dataSource: obvuew.prenatal_visitspage[], setItem: any, selected: any }, any> {
@@ -24,19 +23,17 @@ class SiderMenu extends Component<{ dataSource: obvuew.prenatal_visitspage[], se
 
   render() {
     const { dataSource, selected } = this.props;
-    // console.log('555555555', selectedKeys, [selected.id]);
     return (
       <Menu
         mode="inline"
-        className={styles.wrapper}
         selectedKeys={selected.id && [selected.id.toString()]}
         onClick={this.handleClick}
-        style={{height: 'calc(100% - 150px)'}}
+        style={{ height: 'calc(100% - 200px)' }}
       >
         {dataSource.map((item) => {
           return (
-            <Menu.Item key={item.id} className={styles.item}>
-              <div>{item.ctgexam?item.ctgexam.note:item.visitDate}</div>
+            <Menu.Item key={item.id} >
+              <div>{item.ctgexam ? item.ctgexam.note : item.visitDate}</div>
             </Menu.Item>
           );
         })}

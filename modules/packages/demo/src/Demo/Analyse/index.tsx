@@ -1,11 +1,8 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { Layout, Modal, DatePicker, Divider, Pagination, Input, Button } from 'antd';
+import { Layout, Modal, DatePicker,  Pagination, Input, Button } from 'antd';
 import request from "@lianmed/request";
-// import { parse, stringify } from 'qs';
 import { obvuew } from "@lianmed/f_types";
-// import 'antd/dist/antd.css';
 import SiderMenu from "./containers/SiderMenu";
-import Content from './containers/Content';
 import moment from "moment";
 import { formatDate } from '@lianmed/utils';
 import { Ctg_Analyse } from "@lianmed/pages";
@@ -61,6 +58,7 @@ const App = (props: any) => {
                 .get(`/prenatal-visitspage`, { params })
                 .then(function (response) {
                     setDataSource(response)
+                    selected.id || setSelected(response[0])
                 }).finally(() => setLoading(false))
 
             request
@@ -78,25 +76,28 @@ const App = (props: any) => {
     return (
 
         <Layout style={{ height: '100%' }}>
-            <Layout.Sider style={{ background: '#fff' }} width={230} >
+            <Layout.Sider style={{ background: '#fff' }} width={250} >
                 <div style={{ marginBottom: 5 }}>
-                    <span>开始时间：</span><DatePicker size="small" value={moment(sDate)} onChange={e => setSDate(formatDate(e))} />
+                    <span style={{ marginRight: 14 }}>开始时间：</span><DatePicker size="small" value={moment(sDate)} onChange={e => setSDate(formatDate(e))} />
                 </div>
                 <div style={{ marginBottom: 5 }}>
-                    <span>结束时间：</span><DatePicker size="small" value={moment(eDate)} onChange={e => setEDate(formatDate(e))} />
+                    <span style={{ marginRight: 14 }}>结束时间：</span><DatePicker size="small" value={moment(eDate)} onChange={e => setEDate(formatDate(e))} />
                 </div>
                 <div style={{ marginBottom: 5 }}>
-                    <span style={{ marginRight: 14 }}>档案号：</span>
+                    <span style={{ marginRight: 28 }}>档案号：</span>
+                    <Input allowClear style={{ width: 136 }} size="small" onChange={e => docidRef.current = (e.target.value)} />
+                </div>
+                <div style={{ marginBottom: 5 }}>
+                    <span style={{ marginRight: 0 }}>已标记档案：</span>
                     <Input allowClear style={{ width: 136 }} size="small" onChange={e => docidRef.current = (e.target.value)} />
                 </div>
 
-                <Button loading={loading} type="primary" size="small" style={{ width: 206, marginBottom: 5 }} onClick={() => setParams({
+                <Button loading={loading} type="primary" size="small" style={{ width: 220, marginBottom: 5 }} onClick={() => setParams({
                     ...params, 'visitDate.greaterOrEqualThan': sDate,
                     'visitDate.lessOrEqualThan': eDate,
                 })}>搜索</Button>
-
                 <SiderMenu setItem={setSelected} selected={selected} dataSource={dataSource} />
-                <Pagination simple current={page} size="small" total={total} onChange={p => setPage(p)} />
+                <Pagination showLessItems current={page} size="small" total={total} onChange={p => setPage(p)} />
             </Layout.Sider>
             <Layout.Content style={{ padding: 12 }}>
                 <Ctg_Analyse docid={selected && selected.ctgexam && selected.ctgexam.note} />
