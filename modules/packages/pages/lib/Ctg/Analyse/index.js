@@ -80,7 +80,27 @@ function Analysis(_a) {
             diagnosis: JSON.stringify({ wave: wave, diagnosistxt: diagnosistxt, classification0: classification0, classification1: classification1 }),
             result: JSON.stringify(__assign(__assign(__assign({}, analyseData), curData), { isedit: isedit }))
         };
-        request_1.default.put("/ctg-exams-note", { data: data });
+        request_1.default.put("/ctg-exams-note", { data: data }).then(function (r) {
+            antd_1.message.success('保存成功！', 3);
+        });
+    };
+    var history = function () {
+        var data = {
+            'note.equals': docid
+        };
+        request_1.default.get("/ctg-exams-criteria", { params: data }).then(function (r) {
+            if (r.length > 0) {
+                var diagnosis = r[0].diagnosis;
+                info(diagnosis);
+            }
+        });
+    };
+    var info = function (message) {
+        antd_1.Modal.info({
+            title: '历史记录',
+            content: message,
+            onOk: function () { }
+        });
     };
     var btnDisabled = !docid || !disabled;
     return (react_1.default.createElement(Wrapper, null,
@@ -90,7 +110,7 @@ function Analysis(_a) {
             react_1.default.createElement(antd_1.Col, { span: 12 },
                 react_1.default.createElement(Score_1.default, __assign({ disabled: disabled }, d, { fetal: fetal, setFetal: setFetal, ctgData: ctgData, docid: docid, v: ref.current, className: "bordered" })),
                 react_1.default.createElement("div", { style: { position: 'absolute', right: 12, bottom: 0 } },
-                    react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, onClick: analyse, disabled: btnDisabled }, "\u5386\u53F2\u5206\u6790"),
+                    react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, onClick: history, disabled: btnDisabled }, "\u5386\u53F2\u5206\u6790"),
                     react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, disabled: !docid, onClick: function () { return setDisabled(!disabled); } }, disabled ? '修改' : '确认'),
                     react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, type: "primary", onClick: analyse, disabled: !docid }, "\u8BC4\u5206"))),
             react_1.default.createElement(antd_1.Col, { span: 12 },

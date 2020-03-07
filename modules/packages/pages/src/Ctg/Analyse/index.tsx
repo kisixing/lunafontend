@@ -1,7 +1,7 @@
 import { Ctg } from '@lianmed/lmg';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import request from "@lianmed/request";
-import { Button, Col, Row } from 'antd';
+import { Button, Col, Row, message, Modal } from 'antd';
 import 'antd/dist/antd.css';
 import React, { useRef, useState } from 'react';
 import styled from "styled-components";
@@ -9,6 +9,7 @@ import Analyse from './Analyse';
 import Score from './Score';
 import useAnalyse from './useAnalyse';
 import useCtgData from './useCtgData';
+import { obvuew } from '@lianmed/f_types/lib/obvue';
 
 const Wrapper = styled.div`
   height:100%;
@@ -81,8 +82,32 @@ function Analysis({
       })
     }
 
+    request.put(`/ctg-exams-note`, { data }).then((r:any) => {
+      //TODO: 结果判断
+      message.success('保存成功！',3);
+    })
+  }
 
-    request.put(`/ctg-exams-note`, { data })
+  const history = () => {
+    const data = {
+      'note.equals': docid
+    }
+
+    
+    request.get(`/ctg-exams-criteria`, {params:data }).then(function (r:obvuew.ctg_exams_data[]) {
+      if(r.length>0){
+        let diagnosis = r[0].diagnosis;
+        info(diagnosis);
+      }
+    })
+  }
+
+  const info = (message:any) =>{
+    Modal.info({
+      title:'历史记录',
+      content:message,
+      onOk(){}
+    });
   }
   const btnDisabled = !docid || !disabled
   return (
@@ -95,7 +120,7 @@ function Analysis({
         <Col span={12} >
           <Score disabled={disabled}  {...d} fetal={fetal} setFetal={setFetal} ctgData={ctgData} docid={docid} v={ref.current} className="bordered" />
           <div style={{ position: 'absolute', right: 12, bottom: 0 }}>
-            <Button size="small" style={{ marginBottom: 10 }} onClick={analyse} disabled={btnDisabled}>历史分析</Button>
+            <Button size="small" style={{ marginBottom: 10 }} onClick={history} disabled={btnDisabled}>历史分析</Button>
             <Button size="small" style={{ marginBottom: 10 }} disabled={!docid} onClick={() => setDisabled(!disabled)}>{disabled ? '修改' : '确认'}</Button>
             <Button size="small" style={{ marginBottom: 10 }} type="primary" onClick={analyse} disabled={!docid}>评分</Button>
           </div>

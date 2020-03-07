@@ -92,10 +92,10 @@ export class DrawAnalyse extends Draw {
         if (acc.indexOf(index) > -1 || acc.indexOf(index - 1) > -1) {
             const target = analyseData.acc.find(_ => [index, index - 1].includes(_.index))
 
-            txt = `+${(target.reliability || 0).toFixed(1)}`;
-            canvas.font = '25px arial';
+            txt = `${(target.reliability/10 || 0).toFixed(1)}`;
+            canvas.font = '15px arial';
             canvas.fillStyle = 'blue';
-            canvas.fillText(txt, x + 1, y - 1);
+            canvas.fillText(txt, x + 1, y + 10);
         } else if (dec.indexOf(index) > -1 || dec.indexOf(index - 1) > -1) {
             const target = analyseData.dec.find(_ => [index, index - 1].includes(_.index))
             txt = target ? target.type : '-';
