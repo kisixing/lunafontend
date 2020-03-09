@@ -9,7 +9,7 @@ import Analyse from './Analyse';
 import Score from './Score';
 import useAnalyse from './useAnalyse';
 import useCtgData from './useCtgData';
-import { obvuew } from '@lianmed/f_types/lib/obvue';
+import { obvue } from '@lianmed/f_types/lib/obvue';
 
 const Wrapper = styled.div`
   height:100%;
@@ -94,7 +94,7 @@ function Analysis({
     }
 
     
-    request.get(`/ctg-exams-criteria`, {params:data }).then(function (r:obvuew.ctg_exams_data[]) {
+    request.get(`/ctg-exams-criteria`, {params:data }).then(function (r:obvue.ctg_exams_data[]) {
       if(r.length>0){
         let diagnosis = r[0].diagnosis;
         info(diagnosis);
