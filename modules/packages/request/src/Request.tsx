@@ -32,10 +32,8 @@ export default class Request {
         } else if (request) {
           const { options, url } = request
           if (options && !(options as any).hideErr) {
-            let host = url.slice(url.indexOf('://') + 3)
-            host = host.slice(0, url.indexOf('/'))
             notification.error({
-              message: `${host} 未响应`,
+              message: `${url} 未响应`,
             });
           }
           return Promise.reject(`${url} no response`);

@@ -50,10 +50,8 @@ var Request = (function () {
                     else if (request) {
                         var options = request.options, url = request.url;
                         if (options && !options.hideErr) {
-                            var host = url.slice(url.indexOf('://') + 3);
-                            host = host.slice(0, url.indexOf('/'));
                             antd_2.notification.error({
-                                message: host + " \u672A\u54CD\u5E94",
+                                message: url + " \u672A\u54CD\u5E94",
                             });
                         }
                         return Promise.reject(url + " no response");
