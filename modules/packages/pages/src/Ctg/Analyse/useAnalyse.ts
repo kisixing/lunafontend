@@ -20,7 +20,6 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void) 
     const analysis_ref = useRef<FormInstance>()
     const old_ref = useRef<{ [x: string]: any }>({})
 
-    const fetalKey = `fhr${fetal}`
     const mapFormToMark = {
         Fischer_ref,
         Krebs_ref,

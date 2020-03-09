@@ -37,7 +37,6 @@ exports.default = (function (v, docid, fetal, setFhr) {
     var Nst_ref = react_1.useRef();
     var analysis_ref = react_1.useRef();
     var old_ref = react_1.useRef({});
-    var fetalKey = "fhr" + fetal;
     var mapFormToMark = {
         Fischer_ref: Fischer_ref,
         Krebs_ref: Krebs_ref,

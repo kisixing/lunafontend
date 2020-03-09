@@ -9,7 +9,6 @@ import Analyse from './Analyse';
 import Score from './Score';
 import useAnalyse from './useAnalyse';
 import useCtgData from './useCtgData';
-import { obvue } from '@lianmed/f_types/lib/obvue';
 
 const Wrapper = styled.div`
   height:100%;
