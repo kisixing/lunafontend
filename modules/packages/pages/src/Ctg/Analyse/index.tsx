@@ -31,10 +31,9 @@ function Analysis({
   docid = ''
 }) {
   // docid = '1_1112_160415144057'
-  const { ctgData, loading } = useCtgData(docid)
+  const { ctgData, loading, setFhr, fetal, setFetal } = useCtgData(docid)
   const [disabled, setDisabled] = useState(true)
 
-  const [fetal, setFetal] = useState(1)
 
   const ref = useRef<Suit>(null)
 
@@ -50,7 +49,8 @@ function Analysis({
     Krebs_ref,
     analysis_ref,
     old_ref,
-  } = useAnalyse(ref.current, docid, fetal)
+
+  } = useAnalyse(ref.current, docid, fetal, setFhr)
 
   const d = {
     responseData,
@@ -82,9 +82,9 @@ function Analysis({
       })
     }
 
-    request.put(`/ctg-exams-note`, { data }).then((r:any) => {
+    request.put(`/ctg-exams-note`, { data }).then((r: any) => {
       //TODO: 结果判断
-      message.success('保存成功！',3);
+      message.success('保存成功！', 3);
     })
   }
 
@@ -93,20 +93,20 @@ function Analysis({
       'note.equals': docid
     }
 
-    
-    request.get(`/ctg-exams-criteria`, {params:data }).then(function (r:obvue.ctg_exams_data[]) {
-      if(r.length>0){
+
+    request.get(`/ctg-exams-criteria`, { params: data }).then(function (r) {
+      if (r.length > 0) {
         let diagnosis = r[0].diagnosis;
         info(diagnosis);
       }
     })
   }
 
-  const info = (message:any) =>{
+  const info = (message: any) => {
     Modal.info({
-      title:'历史记录',
-      content:message,
-      onOk(){}
+      title: '历史记录',
+      content: message,
+      onOk() { }
     });
   }
   const btnDisabled = !docid || !disabled
@@ -128,8 +128,8 @@ function Analysis({
         <Col span={12}  >
           <Analyse ref={analysis_ref} />
           <div style={{ position: 'absolute', right: 12, bottom: 0 }}>
-            <Button size="small" style={{ marginBottom: 10 }} disabled={btnDisabled }>打印</Button>
-            <Button size="small" type="primary" onClick={submit} disabled={btnDisabled }>保存</Button>
+            <Button size="small" style={{ marginBottom: 10 }} disabled={btnDisabled}>打印</Button>
+            <Button size="small" type="primary" onClick={submit} disabled={btnDisabled}>保存</Button>
           </div>
 
         </Col>

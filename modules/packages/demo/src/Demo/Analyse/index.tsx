@@ -12,10 +12,10 @@ import { RadioChangeEvent } from 'antd/lib/radio';
 const App = (props: any) => {
 
     const [dataSource, setDataSource] = useState<obvue.prenatal_visitspage[]>([])
-    const [dataSource1, setDataSource1] = useState<obvue.ctg_exams_data[]>([])
+    const [dataSource1, setDataSource1] = useState<any[]>([])
     const [pregnancy, setPregnancy] = useState({})
     const [selected, setSelected] = useState<obvue.prenatal_visitspage>()
-    const [selected1, setSelected1] = useState<obvue.ctg_exams_data>()
+    const [selected1, setSelected1] = useState<any>()
     const [sDate, setSDate] = useState(formatDate(new Date('2020-03-1')))
     const [eDate, setEDate] = useState(formatDate())
     const [total, setTotal] = useState(0)

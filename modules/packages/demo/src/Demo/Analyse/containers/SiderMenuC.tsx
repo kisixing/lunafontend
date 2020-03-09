@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Menu } from 'antd';
 import { obvue } from '@lianmed/f_types';
 
-class SiderMenuC extends Component<{ dataSource: obvue.ctg_exams_data[], setItem: any, selected: any }, any> {
+class SiderMenuC extends Component<{ dataSource: { id?: number, note?: string }[], setItem: any, selected: any }, any> {
   constructor(props: any) {
     super(props);
     this.state = {

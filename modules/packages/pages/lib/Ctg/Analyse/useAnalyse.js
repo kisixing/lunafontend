@@ -27,8 +27,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = require("react");
 var request_1 = __importDefault(require("@lianmed/request"));
-var utils_1 = require("@lianmed/utils");
-exports.default = (function (v, docid, fetal) {
+exports.default = (function (v, docid, fetal, setFhr) {
     var resultData = react_1.useMemo(function () { return {}; }, []);
     var _a = react_1.useState(MARKS[0]), mark = _a[0], setMark = _a[1];
     var _b = react_1.useState(20), interval = _b[0], setInterval = _b[1];
@@ -82,11 +81,8 @@ exports.default = (function (v, docid, fetal) {
     }, [docid]);
     react_1.useEffect(function () { setMarkAndItems(MARKS[0]); }, []);
     react_1.useEffect(function () {
-        var defaultMark = MARKS[0];
-        var keys = mapItemsToMarks[defaultMark];
-        var value = resultData[fetalKey] = resultData[fetalKey] || { result: JSON.stringify(utils_1._R.zipObj(keys, keys.map(function () { return null; }))), mark: defaultMark };
-        setMark(value.mark);
-    }, [fetalKey]);
+        setFhr(fetal);
+    }, [fetal]);
     var setMarkAndItems = function (mark) {
         setMark(mark);
     };

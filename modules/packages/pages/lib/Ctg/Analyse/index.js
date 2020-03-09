@@ -49,11 +49,10 @@ var useCtgData_1 = __importDefault(require("./useCtgData"));
 var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  height:100%;\n  .divider {\n    border-radius:2px;\n    background:linear-gradient(45deg, #e0e0e0, transparent) !important;\n    padding-left:20px;\n    margin: 8px 0;\n  }\n  button {\n    margin:0 6px 6px 0\n  }\n  .bordered {\n    border: 1px solid #ddd;\n  }\n"], ["\n  height:100%;\n  .divider {\n    border-radius:2px;\n    background:linear-gradient(45deg, #e0e0e0, transparent) !important;\n    padding-left:20px;\n    margin: 8px 0;\n  }\n  button {\n    margin:0 6px 6px 0\n  }\n  .bordered {\n    border: 1px solid #ddd;\n  }\n"])));
 function Analysis(_a) {
     var _b = _a.docid, docid = _b === void 0 ? '' : _b;
-    var _c = useCtgData_1.default(docid), ctgData = _c.ctgData, loading = _c.loading;
+    var _c = useCtgData_1.default(docid), ctgData = _c.ctgData, loading = _c.loading, setFhr = _c.setFhr, fetal = _c.fetal, setFetal = _c.setFetal;
     var _d = react_1.useState(true), disabled = _d[0], setDisabled = _d[1];
-    var _e = react_1.useState(1), fetal = _e[0], setFetal = _e[1];
     var ref = react_1.useRef(null);
-    var _f = useAnalyse_1.default(ref.current, docid, fetal), responseData = _f.responseData, MARKS = _f.MARKS, analyse = _f.analyse, startTime = _f.startTime, mark = _f.mark, setMark = _f.setMark, interval = _f.interval, setInterval = _f.setInterval, Fischer_ref = _f.Fischer_ref, Nst_ref = _f.Nst_ref, Krebs_ref = _f.Krebs_ref, analysis_ref = _f.analysis_ref, old_ref = _f.old_ref;
+    var _e = useAnalyse_1.default(ref.current, docid, fetal, setFhr), responseData = _e.responseData, MARKS = _e.MARKS, analyse = _e.analyse, startTime = _e.startTime, mark = _e.mark, setMark = _e.setMark, interval = _e.interval, setInterval = _e.setInterval, Fischer_ref = _e.Fischer_ref, Nst_ref = _e.Nst_ref, Krebs_ref = _e.Krebs_ref, analysis_ref = _e.analysis_ref, old_ref = _e.old_ref;
     var d = {
         responseData: responseData,
         MARKS: MARKS,

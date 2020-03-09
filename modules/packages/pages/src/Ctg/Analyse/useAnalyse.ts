@@ -7,7 +7,7 @@ import { obvue } from "@lianmed/f_types";
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 
 
-export default (v: Suit, docid, fetal: any) => {
+export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void) => {
     const resultData = useMemo<{ [x: string]: IResponseData }>(() => { return {} }, [])
 
     const [mark, setMark] = useState(MARKS[0])
@@ -77,11 +77,8 @@ export default (v: Suit, docid, fetal: any) => {
     useEffect(() => { setMarkAndItems(MARKS[0]) }, [])
 
     useEffect(() => {
-        const defaultMark = MARKS[0]
-        const keys = mapItemsToMarks[defaultMark]
-        const value = resultData[fetalKey] = resultData[fetalKey] || { result: JSON.stringify(_R.zipObj(keys, keys.map(() => null))), mark: defaultMark }
-        setMark(value.mark)
-    }, [fetalKey])
+        setFhr(fetal)
+    }, [fetal])
 
 
     const setMarkAndItems = (mark: string) => {
