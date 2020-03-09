@@ -96,8 +96,13 @@ function Analysis({
 
     request.get(`/ctg-exams-criteria`, { params: data }).then(function (r) {
       if (r.length > 0) {
-        let diagnosis = r[0].diagnosis;
-        info(diagnosis);
+        const diagnosis = r[0].diagnosis;
+        let t;
+        try {
+          t = JSON.parse(diagnosis).diagnosistxt
+        } catch (error) {
+        }
+        info(t || '暂无记录');
       }
     })
   }
