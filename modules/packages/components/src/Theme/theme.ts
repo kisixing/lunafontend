@@ -78,6 +78,14 @@ export default `
   .ant-select-dropdown-menu-item-active:not(.ant-select-dropdown-menu-item-disabled) {
     background-color: var(--theme-shadow-color);
   }
+  .ant-select:not(.ant-select-disabled):hover .ant-select-selector {
+    border-color: var(--theme-hover-color);
+  }
+  .ant-select-focused.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+    border-color: var(--theme-hover-color);
+    -webkit-box-shadow: 0 0 0 2px var(--theme-shadow-color);
+    box-shadow: 0 0 0 2px var(--theme-shadow-color);
+  }
   .ant-input:hover {
     border-color: var(--theme-hover-color);
   }
