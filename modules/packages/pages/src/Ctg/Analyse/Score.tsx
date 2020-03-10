@@ -108,7 +108,7 @@ const ScoringMethod = (props: IProps) => {
   )
   return (
     <div  {...others} style={{ height: '100%',background:'#fff' }} className="bordered">
-      <div style={{ padding: '12px 24px', background: '#ddd' }}>
+      <div className="divider" style={{ padding: '12px 24px',margin:0 }}>
         <>
           {
             IntervalRadio

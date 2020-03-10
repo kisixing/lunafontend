@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Menu } from 'antd';
 import { obvue } from '@lianmed/f_types';
 
-class SiderMenu extends Component<{ dataSource: obvue.prenatal_visitspage[], setItem: any, selected: any }, any> {
+class SiderMenuC extends Component<{ dataSource: { id?: number, note?: string }[], setItem: any, selected: any }, any> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -33,7 +33,7 @@ class SiderMenu extends Component<{ dataSource: obvue.prenatal_visitspage[], set
         {dataSource.map((item) => {
           return (
             <Menu.Item key={item.id} >
-              <div>{item.ctgexam ? item.ctgexam.note : item.visitDate}</div>
+              <div>{item ? item.note : ''}</div>
             </Menu.Item>
           );
         })}
@@ -42,4 +42,4 @@ class SiderMenu extends Component<{ dataSource: obvue.prenatal_visitspage[], set
   }
 }
 
-export default SiderMenu;
+export default SiderMenuC;

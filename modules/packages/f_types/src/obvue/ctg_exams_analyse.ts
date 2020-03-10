@@ -1,3 +1,21 @@
+export interface AccPoint {
+    index: number;
+    start: number;
+    end: number;
+    peak: number;
+    duration: number;
+    ampl: number;
+    reliability: number
+}
+export interface DecPoint {
+    index: number;
+    start: number;
+    end: number;
+    peak: number;
+    duration: number;
+    ampl: number;
+    type: string
+}
 export interface _ctg_exams_analyse {
 
     analysis: {
@@ -7,15 +25,8 @@ export interface _ctg_exams_analyse {
         edtimes: number
         ldtimes: number
         vdtimes: number
-        acc: {
-            index: number
-            start: number
-            end: number
-            peak: number
-            duration: number
-            ampl: number
-        }[]
-        dec: []
+        acc: AccPoint[]
+        dec: DecPoint[]
         fm: null,
         fhrbaselineMinute: number[],
         ucdata: {

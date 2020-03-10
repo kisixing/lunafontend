@@ -84,7 +84,7 @@ var ScoringMethod = function (props) {
             "\u5206\u6790\u6CD5")); })));
     }, [mark, docid]);
     return (react_1.default.createElement("div", __assign({}, others, { style: { height: '100%', background: '#fff' }, className: "bordered" }),
-        react_1.default.createElement("div", { style: { padding: '12px 24px', background: '#ddd' } },
+        react_1.default.createElement("div", { className: "divider", style: { padding: '12px 24px', margin: 0 } },
             react_1.default.createElement(react_1.default.Fragment, null,
                 IntervalRadio,
                 FetalSelect,

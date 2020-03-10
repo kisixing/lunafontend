@@ -243,6 +243,7 @@ var Suit = (function (_super) {
             _this.drawSelect.showselect();
             _this.drawobj.drawdot(_this.rightViewPosition, false);
         });
+        this.emit('afterInit');
     };
     Suit.prototype.createLine = function () {
         if (this.rowline)
@@ -283,7 +284,8 @@ var Suit = (function (_super) {
     };
     Suit.prototype.analyse = function (data) {
         this.drawAnalyse.setData(data);
-        this.emit('selectForward', data.end - data.start);
+        this.drawSelect.$selectrpend = data.end;
+        this.drawSelect.$selectrpstart = data.start;
         this.drawobj.drawdot(this.rightViewPosition, false);
     };
     Suit.prototype.alarmOn = function (alarmType) {

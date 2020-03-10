@@ -46,14 +46,13 @@ var Analyse_1 = __importDefault(require("./Analyse"));
 var Score_1 = __importDefault(require("./Score"));
 var useAnalyse_1 = __importDefault(require("./useAnalyse"));
 var useCtgData_1 = __importDefault(require("./useCtgData"));
-var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  height:100%;\n  .ant-divider {\n    margin:10px 0 2px !important;\n    border-radius:2px;\n  }\n  button {\n    margin:0 6px 6px 0\n  }\n  .bordered {\n    border: 1px solid #ddd;\n  }\n"], ["\n  height:100%;\n  .ant-divider {\n    margin:10px 0 2px !important;\n    border-radius:2px;\n  }\n  button {\n    margin:0 6px 6px 0\n  }\n  .bordered {\n    border: 1px solid #ddd;\n  }\n"])));
+var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  height:100%;\n  .divider {\n    border-radius:2px;\n    background:linear-gradient(45deg, #e0e0e0, transparent) !important;\n    padding-left:20px;\n    margin: 8px 0;\n  }\n  button {\n    margin:0 6px 6px 0\n  }\n  .bordered {\n    border: 1px solid #ddd;\n  }\n"], ["\n  height:100%;\n  .divider {\n    border-radius:2px;\n    background:linear-gradient(45deg, #e0e0e0, transparent) !important;\n    padding-left:20px;\n    margin: 8px 0;\n  }\n  button {\n    margin:0 6px 6px 0\n  }\n  .bordered {\n    border: 1px solid #ddd;\n  }\n"])));
 function Analysis(_a) {
     var _b = _a.docid, docid = _b === void 0 ? '' : _b;
-    var _c = useCtgData_1.default(docid), ctgData = _c.ctgData, loading = _c.loading;
+    var _c = useCtgData_1.default(docid), ctgData = _c.ctgData, loading = _c.loading, setFhr = _c.setFhr, fetal = _c.fetal, setFetal = _c.setFetal;
     var _d = react_1.useState(true), disabled = _d[0], setDisabled = _d[1];
-    var _e = react_1.useState(1), fetal = _e[0], setFetal = _e[1];
     var ref = react_1.useRef(null);
-    var _f = useAnalyse_1.default(ref.current, docid, fetal), responseData = _f.responseData, MARKS = _f.MARKS, analyse = _f.analyse, startTime = _f.startTime, mark = _f.mark, setMark = _f.setMark, interval = _f.interval, setInterval = _f.setInterval, Fischer_ref = _f.Fischer_ref, Nst_ref = _f.Nst_ref, Krebs_ref = _f.Krebs_ref, analysis_ref = _f.analysis_ref, old_ref = _f.old_ref;
+    var _e = useAnalyse_1.default(ref.current, docid, fetal, setFhr), responseData = _e.responseData, MARKS = _e.MARKS, analyse = _e.analyse, startTime = _e.startTime, mark = _e.mark, setMark = _e.setMark, interval = _e.interval, setInterval = _e.setInterval, Fischer_ref = _e.Fischer_ref, Nst_ref = _e.Nst_ref, Krebs_ref = _e.Krebs_ref, analysis_ref = _e.analysis_ref, old_ref = _e.old_ref;
     var d = {
         responseData: responseData,
         MARKS: MARKS,
@@ -77,10 +76,36 @@ function Analysis(_a) {
         }) ? true : false;
         var data = {
             note: docid,
-            diagnosis: { wave: wave, diagnosistxt: diagnosistxt, classification0: classification0, classification1: classification1 },
-            result: __assign(__assign(__assign({}, analyseData), curData), { isedit: isedit })
+            diagnosis: JSON.stringify({ wave: wave, diagnosistxt: diagnosistxt, classification0: classification0, classification1: classification1 }),
+            result: JSON.stringify(__assign(__assign(__assign({}, analyseData), curData), { isedit: isedit }))
         };
-        request_1.default.put("/ctg-exams-note", { data: data });
+        request_1.default.put("/ctg-exams-note", { data: data }).then(function (r) {
+            antd_1.message.success('保存成功！', 3);
+        });
+    };
+    var history = function () {
+        var data = {
+            'note.equals': docid
+        };
+        request_1.default.get("/ctg-exams-criteria", { params: data }).then(function (r) {
+            if (r.length > 0) {
+                var diagnosis = r[0].diagnosis;
+                var t = void 0;
+                try {
+                    t = JSON.parse(diagnosis).diagnosistxt;
+                }
+                catch (error) {
+                }
+                info(t || '暂无记录');
+            }
+        });
+    };
+    var info = function (message) {
+        antd_1.Modal.info({
+            title: '历史记录',
+            content: message,
+            onOk: function () { }
+        });
     };
     var btnDisabled = !docid || !disabled;
     return (react_1.default.createElement(Wrapper, null,
@@ -90,9 +115,9 @@ function Analysis(_a) {
             react_1.default.createElement(antd_1.Col, { span: 12 },
                 react_1.default.createElement(Score_1.default, __assign({ disabled: disabled }, d, { fetal: fetal, setFetal: setFetal, ctgData: ctgData, docid: docid, v: ref.current, className: "bordered" })),
                 react_1.default.createElement("div", { style: { position: 'absolute', right: 12, bottom: 0 } },
-                    react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, onClick: analyse, disabled: btnDisabled }, "\u5386\u53F2\u5206\u6790"),
+                    react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, onClick: history, disabled: btnDisabled }, "\u5386\u53F2\u5206\u6790"),
                     react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, disabled: !docid, onClick: function () { return setDisabled(!disabled); } }, disabled ? '修改' : '确认'),
-                    react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, type: "primary", onClick: analyse, disabled: !docid }, "\u5206\u6790"))),
+                    react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, type: "primary", onClick: analyse, disabled: !docid }, "\u8BC4\u5206"))),
             react_1.default.createElement(antd_1.Col, { span: 12 },
                 react_1.default.createElement(Analyse_1.default, { ref: analysis_ref }),
                 react_1.default.createElement("div", { style: { position: 'absolute', right: 12, bottom: 0 } },

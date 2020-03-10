@@ -1,7 +1,7 @@
 import { Ctg } from '@lianmed/lmg';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import request from "@lianmed/request";
-import { Button, Col, Row } from 'antd';
+import { Button, Col, Row, message, Modal } from 'antd';
 import 'antd/dist/antd.css';
 import React, { useRef, useState } from 'react';
 import styled from "styled-components";
@@ -12,9 +12,11 @@ import useCtgData from './useCtgData';
 
 const Wrapper = styled.div`
   height:100%;
-  .ant-divider {
-    margin:10px 0 2px !important;
+  .divider {
     border-radius:2px;
+    background:linear-gradient(45deg, #e0e0e0, transparent) !important;
+    padding-left:20px;
+    margin: 8px 0;
   }
   button {
     margin:0 6px 6px 0
@@ -28,10 +30,9 @@ function Analysis({
   docid = ''
 }) {
   // docid = '1_1112_160415144057'
-  const { ctgData, loading } = useCtgData(docid)
+  const { ctgData, loading, setFhr, fetal, setFetal } = useCtgData(docid)
   const [disabled, setDisabled] = useState(true)
 
-  const [fetal, setFetal] = useState(1)
 
   const ref = useRef<Suit>(null)
 
@@ -47,7 +48,8 @@ function Analysis({
     Krebs_ref,
     analysis_ref,
     old_ref,
-  } = useAnalyse(ref.current, docid, fetal)
+
+  } = useAnalyse(ref.current, docid, fetal, setFhr)
 
   const d = {
     responseData,
@@ -71,16 +73,45 @@ function Analysis({
     const isedit = Object.entries(curData).find(([k, v]) => oldData[k] !== v) ? true : false
     const data = {
       note: docid,
-      diagnosis: { wave, diagnosistxt, classification0, classification1 },
-      result: {
+      diagnosis: JSON.stringify({ wave, diagnosistxt, classification0, classification1 }),
+      result: JSON.stringify({
         ...analyseData,
         ...curData,
         isedit
-      }
+      })
+    }
+
+    request.put(`/ctg-exams-note`, { data }).then((r: any) => {
+      //TODO: 结果判断
+      message.success('保存成功！', 3);
+    })
+  }
+
+  const history = () => {
+    const data = {
+      'note.equals': docid
     }
 
 
-    request.put(`/ctg-exams-note`, { data })
+    request.get(`/ctg-exams-criteria`, { params: data }).then(function (r) {
+      if (r.length > 0) {
+        const diagnosis = r[0].diagnosis;
+        let t;
+        try {
+          t = JSON.parse(diagnosis).diagnosistxt
+        } catch (error) {
+        }
+        info(t || '暂无记录');
+      }
+    })
+  }
+
+  const info = (message: any) => {
+    Modal.info({
+      title: '历史记录',
+      content: message,
+      onOk() { }
+    });
   }
   const btnDisabled = !docid || !disabled
   return (
@@ -93,9 +124,9 @@ function Analysis({
         <Col span={12} >
           <Score disabled={disabled}  {...d} fetal={fetal} setFetal={setFetal} ctgData={ctgData} docid={docid} v={ref.current} className="bordered" />
           <div style={{ position: 'absolute', right: 12, bottom: 0 }}>
-            <Button size="small" style={{ marginBottom: 10 }} onClick={analyse} disabled={btnDisabled}>历史分析</Button>
+            <Button size="small" style={{ marginBottom: 10 }} onClick={history} disabled={btnDisabled}>历史分析</Button>
             <Button size="small" style={{ marginBottom: 10 }} disabled={!docid} onClick={() => setDisabled(!disabled)}>{disabled ? '修改' : '确认'}</Button>
-            <Button size="small" style={{ marginBottom: 10 }} type="primary" onClick={analyse} disabled={!docid}>分析</Button>
+            <Button size="small" style={{ marginBottom: 10 }} type="primary" onClick={analyse} disabled={!docid}>评分</Button>
           </div>
         </Col>
         <Col span={12}  >

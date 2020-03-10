@@ -265,7 +265,7 @@ export class Suit extends Draw {
       this.drawobj.drawdot(this.rightViewPosition, false);
 
     });
-
+    this.emit('afterInit')
   }
   createLine() {
     if (this.rowline) return;
@@ -318,7 +318,9 @@ export class Suit extends Draw {
   }
   analyse(data: AnalyseData) {
     this.drawAnalyse.setData(data)
-    this.emit('selectForward', data.end - data.start)
+    this.drawSelect.$selectrpend = data.end
+    this.drawSelect.$selectrpstart = data.start
+    // this.emit('selectForward', data.end - data.start)
     //this.drawobj.drawdot(this.canvasline.width * 2, false);
     //kisi 2020-03-05 
     this.drawobj.drawdot(this.rightViewPosition, false);

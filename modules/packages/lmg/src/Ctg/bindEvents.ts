@@ -69,24 +69,9 @@ export default function (this: Suit) {
             this.drawSelect.$selectrpstart = 0
         })
         .on('selectForward', () => {
-            const { selectingBar } = this.drawSelect
-            const hasMoved = selectingBar.hasMoved
-            console.log('hasMoved', hasMoved)
-            // if (selectrpstart - baseViewposition < ctgconfig.print_interval * 240) {
-            //     this.selectrpstart = baseViewposition + ctgconfig.print_interval * 240
-            // }
             this.drawSelect.selectBasedOnStartingBar(false)
-
-
-
         })
         .on('selectBackward', () => {
-            const { selectingBar } = this.drawSelect
-            const hasMoved = selectingBar.hasMoved
-            console.log('hasMoved', hasMoved)
-            // if (selectrpstart - baseViewposition < ctgconfig.print_interval * 240) {
-            //     this.selectrpstart = baseViewposition + ctgconfig.print_interval * 240
-            // }
             this.drawSelect.selectBasedOnStartingBar()
         })
     this.log(this)

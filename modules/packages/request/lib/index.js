@@ -42,25 +42,28 @@ var R = (function (_super) {
             _this._request.interceptors.response.use(function (response, options) {
                 var successText = options.successText, hideErr = options.hideErr;
                 var errorData = getErrData_1.default(response);
-                var status = errorData.status, errortext = errorData.errortext, url = errorData.url;
+                var status = errorData.status, errortext = errorData.errortext, url = errorData.url, data = errorData.data;
                 if ([200, 201, 304].includes(status)) {
                     successText && antd_1.message.success(successText);
                 }
                 else {
-                    if (status === 401) {
-                        antd_1.notification.error({
-                            message: '未登录或登录已过期，请重新登录。',
-                        });
-                    }
-                    if (!hideErr) {
-                        antd_1.notification.error({
-                            message: "\u8BF7\u6C42\u9519\u8BEF " + status + ": " + url,
-                            description: errortext,
-                        });
-                    }
-                    else {
-                        console.error('Network Error', "\u8BF7\u6C42\u9519\u8BEF " + status + ": " + url + ": " + errortext);
-                    }
+                    data.then(function (_a) {
+                        var title = _a.title;
+                        if (status === 401) {
+                            antd_1.notification.error({
+                                message: '未登录或登录已过期，请重新登录。',
+                            });
+                        }
+                        if (!hideErr) {
+                            antd_1.notification.error({
+                                message: "\u8BF7\u6C42\u9519\u8BEF " + status + ": " + url,
+                                description: "\u539F\u56E0\uFF1A" + title,
+                            });
+                        }
+                        else {
+                            console.error('Network Error', "\u8BF7\u6C42\u9519\u8BEF " + status + ": " + url + ": " + errortext);
+                        }
+                    });
                 }
                 return response;
             });

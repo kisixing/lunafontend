@@ -149,7 +149,7 @@ var DrawSelect = (function (_super) {
                 suit.rightViewPosition = data.index;
             }
             endPosition = this.selectingBarPoint - len;
-            this.$selectrpstart = endPosition < 0 ? 0 : endPosition;
+            this.$selectrpstart = Math.max(endPosition, 0);
             this.$selectrpend = this.selectingBarPoint;
         }
         else {
@@ -158,10 +158,9 @@ var DrawSelect = (function (_super) {
                 this.selectingBar.setLeft(0);
             }
             endPosition = this.selectingBarPoint + len;
-            this.$selectrpend = endPosition > data.index ? data.index : endPosition;
+            this.$selectrpend = Math.min(endPosition, data.index);
             this.$selectrpstart = this.selectingBarPoint;
         }
-        this.showselect();
         this.suit.updateBarTool();
     };
     DrawSelect.prototype.updateSelectCur = function () {

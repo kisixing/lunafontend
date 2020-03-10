@@ -27,8 +27,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = require("react");
 var request_1 = __importDefault(require("@lianmed/request"));
-var utils_1 = require("@lianmed/utils");
-exports.default = (function (v, docid, fetal) {
+exports.default = (function (v, docid, fetal, setFhr) {
     var resultData = react_1.useMemo(function () { return {}; }, []);
     var _a = react_1.useState(MARKS[0]), mark = _a[0], setMark = _a[1];
     var _b = react_1.useState(20), interval = _b[0], setInterval = _b[1];
@@ -38,41 +37,15 @@ exports.default = (function (v, docid, fetal) {
     var Nst_ref = react_1.useRef();
     var analysis_ref = react_1.useRef();
     var old_ref = react_1.useRef({});
-    var fetalKey = "fhr" + fetal;
     var mapFormToMark = {
         Fischer_ref: Fischer_ref,
         Krebs_ref: Krebs_ref,
         Nst_ref: Nst_ref,
         analysis_ref: analysis_ref
     };
-    react_1.useEffect(function () {
-        var s = function (time) {
-            console.log('change', time, docid);
-            time = time + 4800 <= v.data.index ? time : v.data.index - 4800;
-            docid && setStartTime(time);
-        };
-        v && v.on('change:selectPoint', s);
-        return function () {
-            v && v.off('change:selectPoint', s);
-        };
-    }, [interval, v, docid]);
-    react_1.useEffect(function () {
-        Object.values(mapFormToMark).forEach(function (f) { return f.current && f.current.resetFields(); });
-    }, [docid]);
-    react_1.useEffect(function () { setMarkAndItems(MARKS[0]); }, []);
-    react_1.useEffect(function () {
-        console.log('mark', mark);
-    }, [mark]);
-    react_1.useEffect(function () {
-        var defaultMark = MARKS[0];
-        var keys = mapItemsToMarks[defaultMark];
-        var value = resultData[fetalKey] = resultData[fetalKey] || { result: JSON.stringify(utils_1._R.zipObj(keys, keys.map(function () { return null; }))), mark: defaultMark };
-        setMark(value.mark);
-    }, [fetalKey]);
     var analyse = function () {
         v && request_1.default.post("/ctg-exams-analyse", {
             data: { docid: docid, mark: mark, start: startTime, end: startTime + interval * 240, fetal: fetal },
-            successText: docid + "\u5206\u6790\u5B8C\u6210",
         }).then(function (r) {
             var analysis = r.analysis, score = r.score;
             var f = score[mark.toLowerCase() + "data"];
@@ -90,6 +63,25 @@ exports.default = (function (v, docid, fetal) {
             });
         });
     };
+    react_1.useEffect(function () {
+        var s = function (time) {
+            console.log('change', time, docid);
+            time = time + 4800 <= v.data.index ? time : v.data.index - 4800;
+            docid && setStartTime(time);
+        };
+        v && v.on('change:selectPoint', s).on('afterInit', analyse);
+        return function () {
+            v && v.off('change:selectPoint', s).off('afterInit', analyse);
+        };
+    }, [interval, v, docid, analyse]);
+    react_1.useEffect(function () {
+        Object.values(mapFormToMark).forEach(function (f) { return f.current && f.current.resetFields(); });
+        setStartTime(0);
+    }, [docid]);
+    react_1.useEffect(function () { setMarkAndItems(MARKS[0]); }, []);
+    react_1.useEffect(function () {
+        setFhr(fetal);
+    }, [fetal]);
     var setMarkAndItems = function (mark) {
         setMark(mark);
     };
@@ -101,7 +93,7 @@ exports.default = (function (v, docid, fetal) {
         Nst_ref: Nst_ref,
         Krebs_ref: Krebs_ref,
         analysis_ref: analysis_ref,
-        old_ref: old_ref
+        old_ref: old_ref,
     };
 });
 var mapItemsToMarks = {

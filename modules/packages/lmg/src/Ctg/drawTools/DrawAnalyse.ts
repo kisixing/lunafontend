@@ -1,25 +1,10 @@
 import Draw from "../../Draw";
+import { } from "@lianmed/f_types";
+import { AccPoint, DecPoint } from "@lianmed/f_types/lib/obvue/ctg_exams_analyse";
 
-interface accPoint {
-    index: number;
-    start: number;
-    end: number;
-    peak: number;
-    duration: number;
-    ampl: number;
-}
-interface decPoint {
-    index: number;
-    start: number;
-    end: number;
-    peak: number;
-    duration: number;
-    ampl: number;
-    type: string
-}
 export interface AnalyseData {
-    acc?: accPoint[]
-    dec?: decPoint[]
+    acc?: AccPoint[]
+    dec?: DecPoint[]
     baseline?: number[]
     start?: number
     end?: number
@@ -105,10 +90,12 @@ export class DrawAnalyse extends Draw {
         context2D.textBaseline = 'top';
         let txt = '';
         if (acc.indexOf(index) > -1 || acc.indexOf(index - 1) > -1) {
-            txt = '+';
-            canvas.font = '25px arial';
+            const target = analyseData.acc.find(_ => [index, index - 1].includes(_.index))
+
+            txt = `${(target.reliability/10 || 0).toFixed(1)}`;
+            canvas.font = '15px arial';
             canvas.fillStyle = 'blue';
-            canvas.fillText(txt, x + 1, y - 1);
+            canvas.fillText(txt, x + 1, y + 10);
         } else if (dec.indexOf(index) > -1 || dec.indexOf(index - 1) > -1) {
             const target = analyseData.dec.find(_ => [index, index - 1].includes(_.index))
             txt = target ? target.type : '-';

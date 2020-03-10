@@ -1,7 +1,7 @@
 import { MutableRefObject } from 'react';
 import { FormInstance } from 'antd/lib/form';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
-declare const _default: (v: Suit, docid: any, fetal: any) => {
+declare const _default: (v: Suit, docid: any, fetal: any, setFhr: (index: 2 | 1 | 3) => void) => {
     setMark: (mark: string) => void;
     mark: string;
     responseData: {

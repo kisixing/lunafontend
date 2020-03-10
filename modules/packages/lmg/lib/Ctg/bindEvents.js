@@ -46,15 +46,9 @@ function default_1() {
         _this.drawSelect.$selectrpstart = 0;
     })
         .on('selectForward', function () {
-        var selectingBar = _this.drawSelect.selectingBar;
-        var hasMoved = selectingBar.hasMoved;
-        console.log('hasMoved', hasMoved);
         _this.drawSelect.selectBasedOnStartingBar(false);
     })
         .on('selectBackward', function () {
-        var selectingBar = _this.drawSelect.selectingBar;
-        var hasMoved = selectingBar.hasMoved;
-        console.log('hasMoved', hasMoved);
         _this.drawSelect.selectBasedOnStartingBar();
     });
     this.log(this);

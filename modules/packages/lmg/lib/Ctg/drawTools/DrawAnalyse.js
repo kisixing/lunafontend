@@ -33,10 +33,11 @@ var DrawAnalyse = (function (_super) {
             context2D.textBaseline = 'top';
             var txt = '';
             if (acc.indexOf(index) > -1 || acc.indexOf(index - 1) > -1) {
-                txt = '+';
-                canvas.font = '25px arial';
+                var target = analyseData.acc.find(function (_) { return [index, index - 1].includes(_.index); });
+                txt = "" + (target.reliability / 10 || 0).toFixed(1);
+                canvas.font = '15px arial';
                 canvas.fillStyle = 'blue';
-                canvas.fillText(txt, x + 1, y - 1);
+                canvas.fillText(txt, x + 1, y + 10);
             }
             else if (dec.indexOf(index) > -1 || dec.indexOf(index - 1) > -1) {
                 var target = analyseData.dec.find(function (_) { return [index, index - 1].includes(_.index); });

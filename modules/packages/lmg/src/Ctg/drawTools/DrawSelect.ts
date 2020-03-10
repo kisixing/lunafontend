@@ -52,7 +52,7 @@ export class DrawSelect extends Draw {
         this.createBar();
     }
     //2020-03-05 add clear
-    clearselect = ()=>{
+    clearselect = () => {
         const { suit, context2D } = this;
         const selectcontext = context2D
         selectcontext.clearRect(0, 0, suit.width, suit.height);
@@ -142,7 +142,7 @@ export class DrawSelect extends Draw {
                 suit.rightViewPosition = data.index;
             }
             endPosition = this.selectingBarPoint - len;
-            this.$selectrpstart = endPosition < 0 ? 0 : endPosition;
+            this.$selectrpstart = Math.max(endPosition, 0);
             this.$selectrpend = this.selectingBarPoint;
         } else {
             if (this.selectingBarPoint + 10 >= data.index) {
@@ -151,10 +151,10 @@ export class DrawSelect extends Draw {
             }
 
             endPosition = this.selectingBarPoint + len;
-            this.$selectrpend = endPosition > data.index ? data.index : endPosition;
+            this.$selectrpend = Math.min(endPosition, data.index)
             this.$selectrpstart = this.selectingBarPoint;
         }
-        this.showselect()
+        // this.showselect()
         this.suit.updateBarTool()
 
     }

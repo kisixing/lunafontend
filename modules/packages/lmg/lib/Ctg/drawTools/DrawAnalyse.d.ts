@@ -1,24 +1,8 @@
 import Draw from "../../Draw";
-interface accPoint {
-    index: number;
-    start: number;
-    end: number;
-    peak: number;
-    duration: number;
-    ampl: number;
-}
-interface decPoint {
-    index: number;
-    start: number;
-    end: number;
-    peak: number;
-    duration: number;
-    ampl: number;
-    type: string;
-}
+import { AccPoint, DecPoint } from "@lianmed/f_types/lib/obvue/ctg_exams_analyse";
 export interface AnalyseData {
-    acc?: accPoint[];
-    dec?: decPoint[];
+    acc?: AccPoint[];
+    dec?: DecPoint[];
     baseline?: number[];
     start?: number;
     end?: number;
@@ -31,4 +15,3 @@ export declare class DrawAnalyse extends Draw {
     drawBaseline(cur: any, color: any, yspan: any, xspan: any, max: any, basetop: any): void;
     drawflag: (canvas: any, x: any, y: any, index: number) => void;
 }
-export {};
