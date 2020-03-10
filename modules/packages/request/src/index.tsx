@@ -5,17 +5,15 @@ import Request from './Request';
 
 class R extends Request {
   private hasConfiged = false;
-  configure: { [x: string]: any } = {}
+  configure: { [x: string]: any } = {};
   public config = (configs: Iconfig = {}): Request => {
-
-
     const { hasConfiged } = this;
     if (hasConfiged) {
       console.warn("couldn't config twice");
       // return this;
     }
     this.hasConfiged = true;
-    Object.assign(this.configure, configs)
+    Object.assign(this.configure, configs);
     const { Authorization = '' } = configs;
 
     this.init(configs);
@@ -23,7 +21,9 @@ class R extends Request {
     this._request.interceptors.request.use((url, options) => {
       // eslint-disable-next-line no-param-reassign
 
-      Authorization && ((options.headers as any).Authorization = Authorization.indexOf('Bearer') < 0 ? `Bearer ${Authorization}` : Authorization)
+      Authorization &&
+        ((options.headers as any).Authorization =
+          Authorization.indexOf('Bearer') < 0 ? `Bearer ${Authorization}` : Authorization);
       return { url, options };
     });
 
@@ -33,7 +33,7 @@ class R extends Request {
       const { status, errortext, url, data } = errorData;
 
       // eslint-disable-next-line no-param-reassign
-      if ([200, 201, 304].includes(status)) {
+      if ([200, 201, 204, 304].includes(status)) {
         successText && message.success(successText);
       } else {
         data.then(({ title }) => {
@@ -48,9 +48,9 @@ class R extends Request {
               description: `原因：${title}`,
             });
           } else {
-            console.error('Network Error', `请求错误 ${status}: ${url}: ${errortext}`)
+            console.error('Network Error', `请求错误 ${status}: ${url}: ${errortext}`);
           }
-        })
+        });
       }
 
       return response;
