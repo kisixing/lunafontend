@@ -57,7 +57,7 @@ export default class DynamicForm extends React.Component {
       const config = get(formDescriptions, key) || {};
       const { label, rules } = config;
       return (
-        <Form.Item {...formItemLayout} label={label} name={key} rules={rules}>
+        <Form.Item {...formItemLayout} key={key} label={label} name={key} rules={rules}>
           {ReactNode}
         </Form.Item>
       );

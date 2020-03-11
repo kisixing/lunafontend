@@ -92,7 +92,7 @@ var DynamicForm = (function(_super) {
           rules = config.rules;
         return react_1.default.createElement(
           antd_1.Form.Item,
-          __assign({}, formItemLayout, { label: label, name: key, rules: rules }),
+          __assign({}, formItemLayout, { key: key, label: label, name: key, rules: rules }),
           ReactNode
         );
       };
@@ -103,10 +103,13 @@ var DynamicForm = (function(_super) {
     return _this;
   }
   DynamicForm.prototype.componentDidMount = function() {
-    this.form = this.formRef.current;
+    var _this = this;
+    setTimeout(function() {
+      _this.form = _this.formRef.current;
+    }, 100);
   };
   DynamicForm.prototype.render = function() {
-    return react_1.default.createElement('div', null, 'test');
+    return react_1.default.createElement('div', null);
   };
   return DynamicForm;
 })(react_1.default.Component);
