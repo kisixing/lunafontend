@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, PropsWithChildren, useRef } from 'react';
 import { Card, Tooltip } from 'antd';
 import moment from 'moment';
 import { Ctg as L } from '@lianmed/lmg';
 import { ICacheItem, BedStatus } from "@lianmed/lmg/lib/services/WsService";
 import { Drawer } from '@lianmed/lmg/lib/interface';
 import Extra from "./Extra";
+import styled from "styled-components";
+import Bar from "./Bar";
 import "antd/lib/card/style/index.css"
 import "antd/lib/tag/style/index.css"
-interface IProps {
+import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
+interface IProps extends PropsWithChildren<{}> {
     status?: BedStatus
     data: ICacheItem
     bedname: string
@@ -24,15 +27,29 @@ interface IProps {
     themeColor?: string
 }
 
+const Wrapper = styled.div`
+    height: 100%;
+    user-select: none;
 
+    .ant-card-body:hover .btn{
+        opacity:1
+    }
+    .btn {
+        opacity: 0;
+    }
+    .ant-modal-root {
+        visibility:visible;
+    }
+`
 const Item = (props: IProps) => {
+    console.log('zz', props.children)
     const { data, bedname, onClose, onDoubleClick, loading, onSuitRead, themeColor = 'rgb(74, 20, 140)' } = props;
     const status = props.status === undefined ? data && data.status : props.status
     const ismulti = data && data.ismulti
     let { bedNO, GP, gestationalWeek, name, age, startTime } = props;
     const [suit, setSuit] = useState(null)
 
-
+    const ref = useRef<Suit>()
 
 
     // 床位信息
@@ -58,24 +75,31 @@ const Item = (props: IProps) => {
     };
 
     return (
+        <Wrapper>
+            <Card
+                size="small"
+                title={<RenderTilte />}
+                style={{ height: '100%', userSelect: 'none' }}
+                extra={<Extra bedname={bedname} onClose={onClose} status={status} suit={suit} />}
+                headStyle={{ background: themeColor, color: '#fff' }}
+                bodyStyle={{ padding: 0, height: 'calc(100% - 38px)' }}
+            >
+                <L
+                    ref={ref}
+                    data={data}
+                    onReady={suit => { setSuit(suit); onSuitRead && onSuitRead(suit) }}
+                    onDoubleClick={onDoubleClick}
+                    loading={loading}
+                    showEcg={ismulti}
+                ></L>
+                <Bar mutableSuit={ref}>
 
-        <Card
-            size="small"
-            title={<RenderTilte />}
-            style={{ height: '100%', overflow: 'hidden', userSelect: 'none' }}
-            extra={<Extra bedname={bedname} onClose={onClose} status={status} suit={suit} />}
-            headStyle={{ background: themeColor, color: '#fff' }}
-            bodyStyle={{ padding: 0, height: 'calc(100% - 38px)' }}
-        >
-            <L
-                data={data}
-                onReady={suit => { setSuit(suit); onSuitRead && onSuitRead(suit) }}
-                onDoubleClick={onDoubleClick}
-                loading={loading}
-                showEcg={ismulti}
-            ></L>
-        </Card>
-
+                    {
+                        props.children
+                    }
+                </Bar>
+            </Card>
+        </Wrapper>
     );
 }
 export default Item;

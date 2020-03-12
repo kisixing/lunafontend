@@ -1,4 +1,8 @@
 "use strict";
+var __makeTemplateObject = (this && this.__makeTemplateObject) || function (cooked, raw) {
+    if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
+    return cooked;
+};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -15,14 +19,19 @@ var antd_1 = require("antd");
 var moment_1 = __importDefault(require("moment"));
 var lmg_1 = require("@lianmed/lmg");
 var Extra_1 = __importDefault(require("./Extra"));
+var styled_components_1 = __importDefault(require("styled-components"));
+var Bar_1 = __importDefault(require("./Bar"));
 require("antd/lib/card/style/index.css");
 require("antd/lib/tag/style/index.css");
+var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n    height: 100%;\n    user-select: none;\n\n    .ant-card-body:hover .btn{\n        opacity:1\n    }\n    .btn {\n        opacity: 0;\n    }\n    .ant-modal-root {\n        visibility:visible;\n    }\n"], ["\n    height: 100%;\n    user-select: none;\n\n    .ant-card-body:hover .btn{\n        opacity:1\n    }\n    .btn {\n        opacity: 0;\n    }\n    .ant-modal-root {\n        visibility:visible;\n    }\n"])));
 var Item = function (props) {
+    console.log('zz', props.children);
     var data = props.data, bedname = props.bedname, onClose = props.onClose, onDoubleClick = props.onDoubleClick, loading = props.loading, onSuitRead = props.onSuitRead, _a = props.themeColor, themeColor = _a === void 0 ? 'rgb(74, 20, 140)' : _a;
     var status = props.status === undefined ? data && data.status : props.status;
     var ismulti = data && data.ismulti;
     var bedNO = props.bedNO, GP = props.GP, gestationalWeek = props.gestationalWeek, name = props.name, age = props.age, startTime = props.startTime;
     var _b = react_1.useState(null), suit = _b[0], setSuit = _b[1];
+    var ref = react_1.useRef();
     var RenderTilte = function () {
         var text = (react_1.default.createElement("span", null, [
             ['姓名', name],
@@ -42,7 +51,10 @@ var Item = function (props) {
         })));
         return (react_1.default.createElement(antd_1.Tooltip, { title: text }, text));
     };
-    return (react_1.default.createElement(antd_1.Card, { size: "small", title: react_1.default.createElement(RenderTilte, null), style: { height: '100%', overflow: 'hidden', userSelect: 'none' }, extra: react_1.default.createElement(Extra_1.default, { bedname: bedname, onClose: onClose, status: status, suit: suit }), headStyle: { background: themeColor, color: '#fff' }, bodyStyle: { padding: 0, height: 'calc(100% - 38px)' } },
-        react_1.default.createElement(lmg_1.Ctg, { data: data, onReady: function (suit) { setSuit(suit); onSuitRead && onSuitRead(suit); }, onDoubleClick: onDoubleClick, loading: loading, showEcg: ismulti })));
+    return (react_1.default.createElement(Wrapper, null,
+        react_1.default.createElement(antd_1.Card, { size: "small", title: react_1.default.createElement(RenderTilte, null), style: { height: '100%', userSelect: 'none' }, extra: react_1.default.createElement(Extra_1.default, { bedname: bedname, onClose: onClose, status: status, suit: suit }), headStyle: { background: themeColor, color: '#fff' }, bodyStyle: { padding: 0, height: 'calc(100% - 38px)' } },
+            react_1.default.createElement(lmg_1.Ctg, { ref: ref, data: data, onReady: function (suit) { setSuit(suit); onSuitRead && onSuitRead(suit); }, onDoubleClick: onDoubleClick, loading: loading, showEcg: ismulti }),
+            react_1.default.createElement(Bar_1.default, { mutableSuit: ref }, props.children))));
 };
 exports.default = Item;
+var templateObject_1;
