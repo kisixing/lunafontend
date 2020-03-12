@@ -4,6 +4,7 @@ import { Iconfig, RequestOptions } from './types';
 import getErrData from './getErrData';
 import { notification } from 'antd';
 import store from 'store'
+
 type RequestType = (url: string, options?: RequestOptions) => Promise<any>;
 
 const intervalSet: Set<string> = new Set();
