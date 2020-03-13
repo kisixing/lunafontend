@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { Row, Empty } from 'antd';
 import Item from './Item';
+import { IPrenatalVisit, IPregnancy } from '@lianmed/f_types/lib/m';
 
 export interface IItemData {
   data: {
@@ -20,6 +21,8 @@ export interface IItemData {
   bedname: string
   unitId: string
   id: any
+  prenatalvisit?: IPrenatalVisit
+  pregnancy?: IPregnancy
 }
 
 interface IProps {

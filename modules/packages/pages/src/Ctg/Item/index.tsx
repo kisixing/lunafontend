@@ -39,6 +39,7 @@ const Wrapper = styled.div`
     }
     .ant-modal-root {
         visibility:visible;
+        float:left;
     }
 `
 const Item = (props: IProps) => {

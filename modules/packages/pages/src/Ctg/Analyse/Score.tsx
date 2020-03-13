@@ -1,4 +1,4 @@
-import React, { useEffect,  useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Radio, Select } from 'antd';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 
@@ -23,7 +23,7 @@ interface IProps {
 }
 
 const ScoringMethod = (props: IProps) => {
-  const { docid, v, ctgData, fetal, setFetal, disabled, ...others } = props;
+  const { docid, ctgData, fetal, setFetal, disabled } = props;
 
 
   const {
@@ -107,8 +107,8 @@ const ScoringMethod = (props: IProps) => {
     [mark, docid],
   )
   return (
-    <div  {...others} style={{ height: '100%',background:'#fff' }} className="bordered">
-      <div className="divider" style={{ padding: '12px 24px',margin:0 }}>
+    <div style={{ height: '100%', background: '#fff' }} className="bordered">
+      <div className="divider" style={{ padding: '12px 24px', margin: 0 }}>
         <>
           {
             IntervalRadio
