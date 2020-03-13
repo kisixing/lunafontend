@@ -25,7 +25,6 @@ require("antd/lib/card/style/index.css");
 require("antd/lib/tag/style/index.css");
 var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n    height: 100%;\n    user-select: none;\n\n    .ant-card-body:hover .btn{\n        opacity:1\n    }\n    .btn {\n        opacity: 0;\n    }\n    .ant-modal-root {\n        visibility:visible;\n    }\n"], ["\n    height: 100%;\n    user-select: none;\n\n    .ant-card-body:hover .btn{\n        opacity:1\n    }\n    .btn {\n        opacity: 0;\n    }\n    .ant-modal-root {\n        visibility:visible;\n    }\n"])));
 var Item = function (props) {
-    console.log('zz', props.children);
     var data = props.data, bedname = props.bedname, onClose = props.onClose, onDoubleClick = props.onDoubleClick, loading = props.loading, onSuitRead = props.onSuitRead, _a = props.themeColor, themeColor = _a === void 0 ? 'rgb(74, 20, 140)' : _a;
     var status = props.status === undefined ? data && data.status : props.status;
     var ismulti = data && data.ismulti;

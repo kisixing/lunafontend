@@ -1,6 +1,6 @@
 import Queue from "../Ecg/Queue";
 
-type TDeviceType = 'SR_K9' | 'SR_B5_B6'
+type TDeviceType = ('SR_K9' | 'SR_B5_B6')
 
 type TF = 0 | 1
 

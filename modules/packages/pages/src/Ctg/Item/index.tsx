@@ -42,7 +42,6 @@ const Wrapper = styled.div`
     }
 `
 const Item = (props: IProps) => {
-    console.log('zz', props.children)
     const { data, bedname, onClose, onDoubleClick, loading, onSuitRead, themeColor = 'rgb(74, 20, 140)' } = props;
     const status = props.status === undefined ? data && data.status : props.status
     const ismulti = data && data.ismulti

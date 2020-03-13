@@ -22,3 +22,4 @@ __export(require("./Event"));
 var request_1 = require("@lianmed/request");
 exports.request = request_1.default;
 __export(require("./fn"));
+__export(require("rxjs"));
