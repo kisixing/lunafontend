@@ -60,3 +60,4 @@ var WorkbenchItem = function (props) {
         react_1.default.createElement(index_1.default, { themeColor: themeColor, startTime: startTime, bedname: bedname, status: status, data: data, onDoubleClick: fullScreen, loading: loading, onClose: onClose && (function () { return onClose(itemData); }), name: pregnancy.name, age: pregnancy.age, bedNO: pregnancy.bedNO, GP: pregnancy.GP, gestationalWeek: pregnancy.gestationalWeek }, props.children)));
 };
 exports.default = WorkbenchItem;
+//# sourceMappingURL=Item.js.map

@@ -14,3 +14,4 @@ var Methods = function (props) {
     })));
 };
 exports.default = Methods;
+//# sourceMappingURL=index.js.map

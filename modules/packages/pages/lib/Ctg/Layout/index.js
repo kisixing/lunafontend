@@ -30,3 +30,4 @@ var Home = function (props) {
         react_1.default.createElement(antd_1.Empty, { description: "\u80CE\u76D1\u5DE5\u4F5C\u7AD9" }))))));
 };
 exports.default = Home;
+//# sourceMappingURL=index.js.map

@@ -48,3 +48,4 @@ var Preview = function (props) {
         react_1.default.createElement(TimeSelect_1.default, __assign({ diagnosis: diagnosis, onTotalChange: setT, pdfBase64: pdfBase64, setPdfBase64: setPdfBase64 }, others))));
 };
 exports.default = Preview;
+//# sourceMappingURL=index.js.map

@@ -33,3 +33,4 @@ var Preview = function (props) {
         }))));
 };
 exports.default = Preview;
+//# sourceMappingURL=Diagnosis.js.map

@@ -48,3 +48,4 @@ var Bar = function (props) {
             react_1.default.createElement(antd_1.Button, { icon: showBar ? react_1.default.createElement(icons_1.LeftOutlined, null) : react_1.default.createElement(icons_1.RightOutlined, null), shape: showBar ? 'circle' : null, style: { boxShadow: '#aaa 3px 3px 5px 1px' }, className: "btn", type: "primary", onClick: toggleTool })));
 };
 exports.default = Bar;
+//# sourceMappingURL=Bar.js.map

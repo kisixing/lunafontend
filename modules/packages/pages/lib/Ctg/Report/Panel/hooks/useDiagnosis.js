@@ -24,3 +24,4 @@ exports.default = (function () {
         fn: fn
     };
 });
+//# sourceMappingURL=useDiagnosis.js.map

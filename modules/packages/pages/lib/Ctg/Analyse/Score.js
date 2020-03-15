@@ -84,3 +84,4 @@ var ScoringMethod = function (props) {
             react_1.default.createElement(methods_1.default, __assign({}, props, { disabled: disabled })))));
 };
 exports.default = ScoringMethod;
+//# sourceMappingURL=Score.js.map

@@ -9,7 +9,7 @@
     "noUnusedLocals": true,
     "removeComments": true,
     "preserveConstEnums": true,
-    "sourceMap": false,
+    "sourceMap": true,
     "declaration": true,
     "baseUrl": ".",
     "declarationMap": false,

@@ -91,3 +91,4 @@ var Setting = react_1.forwardRef(function (props, ref) {
                     react_1.default.createElement(antd_1.Input.TextArea, null))))));
 });
 exports.default = react_1.memo(Setting);
+//# sourceMappingURL=Analyse.js.map

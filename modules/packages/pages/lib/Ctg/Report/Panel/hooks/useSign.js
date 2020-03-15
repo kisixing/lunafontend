@@ -52,3 +52,4 @@ exports.default = (function (bizSn, setPdfBase64, setBizSn) {
         fetchQrCode: fetchQrCode, qrCodeBase64: qrCodeBase64, modalVisible: modalVisible, setModalVisible: setModalVisible, qrCodeBase64Loading: qrCodeBase64Loading, signed: signed
     };
 });
+//# sourceMappingURL=useSign.js.map

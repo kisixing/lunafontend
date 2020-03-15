@@ -12,3 +12,4 @@ var Setting = function (props) {
     return (react_1.default.createElement(index_1.Context.Consumer, null, function (value) { return (react_1.default.createElement(lmg_1.Ctg, { suitType: 2, loading: loading, data: ctgData, ref: value })); }));
 };
 exports.default = Setting;
+//# sourceMappingURL=Ctg.js.map

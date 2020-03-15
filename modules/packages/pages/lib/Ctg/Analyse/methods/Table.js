@@ -78,3 +78,4 @@ var T = react_1.forwardRef(function (props, ref) {
         react_1.default.createElement(antd_1.Table, { bordered: true, size: "small", pagination: false, columns: columns, dataSource: dataSource })));
 });
 exports.default = react_1.memo(T);
+//# sourceMappingURL=Table.js.map
