@@ -54,3 +54,4 @@ function default_1() {
     this.log(this);
 }
 exports.default = default_1;
+//# sourceMappingURL=bindEvents.js.map

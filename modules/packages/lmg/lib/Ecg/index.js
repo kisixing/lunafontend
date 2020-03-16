@@ -45,3 +45,4 @@ exports.default = (function (props) {
         react_1.default.createElement("canvas", { ref: canvasline, id: "line", style: canvasStyles }),
         react_1.default.createElement("canvas", { ref: canvasmonitor, id: "monitor", style: canvasStyles })));
 });
+//# sourceMappingURL=index.js.map

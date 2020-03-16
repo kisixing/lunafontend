@@ -37,3 +37,4 @@ function getStrategies(context) {
     }, {});
 }
 exports.getStrategies = getStrategies;
+//# sourceMappingURL=index.js.map

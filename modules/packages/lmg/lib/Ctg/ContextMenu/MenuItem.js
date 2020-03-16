@@ -42,3 +42,4 @@ var M = (function (props) {
 });
 exports.default = M;
 var templateObject_1;
+//# sourceMappingURL=MenuItem.js.map

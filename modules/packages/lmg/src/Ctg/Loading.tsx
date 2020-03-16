@@ -21,7 +21,7 @@ export const Loading = (props: IProps) => {
                     <path d="M81.3,58.7H18.7c-4.8,0-8.7-3.9-8.7-8.7v0c0-4.8,3.9-8.7,8.7-8.7h62.7c4.8,0,8.7,3.9,8.7,8.7v0C90,54.8,86.1,58.7,81.3,58.7z"></path>
                 </clipPath>
             </defs>
-            <path fill="none" stroke="#0051a2" stroke-width="2.7928" d="M82 63H18c-7.2,0-13-5.8-13-13v0c0-7.2,5.8-13,13-13h64c7.2,0,13,5.8,13,13v0C95,57.2,89.2,63,82,63z"></path>
+            <path fill="none" stroke="#0051a2" strokeWidth="2.7928" d="M82 63H18c-7.2,0-13-5.8-13-13v0c0-7.2,5.8-13,13-13h64c7.2,0,13,5.8,13,13v0C95,57.2,89.2,63,82,63z"></path>
             <g clip-path="url(#ldio-ohgzj8fs6z-cp)">
                 <g transform="translate(36.4342 0)">
                     <rect x="-100" y="0" width="25" height="100" fill="#1b75be"></rect>

@@ -92,6 +92,7 @@ exports.makeStompService = (function () {
         return {
             subscribe: function (path) {
                 connection.then(function () {
+                    console.log('sssssssssss');
                     stompSubscriber = stompClient.subscribe("" + path, function (data) {
                         rxSubscriber.next(JSON.parse(data.body));
                     });
@@ -104,9 +105,12 @@ exports.makeStompService = (function () {
                     stompClient.send("" + path, JSON.stringify(body), head);
                 });
             },
-            receive: function () {
-                return connection.then(receive);
+            receive: function (fn) {
+                connection.then(function () {
+                    rxObservable.subscribe(fn);
+                });
             }
         };
     };
 })();
+//# sourceMappingURL=index.js.map

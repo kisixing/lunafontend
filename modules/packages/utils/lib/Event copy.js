@@ -87,3 +87,4 @@ var EventEmitter = (function () {
 }());
 exports.EventEmitter = EventEmitter;
 exports.event = new EventEmitter();
+//# sourceMappingURL=Event copy.js.map

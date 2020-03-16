@@ -330,3 +330,4 @@ var DrawEcg = (function (_super) {
     return DrawEcg;
 }(Draw_1.default));
 exports.DrawEcg = DrawEcg;
+//# sourceMappingURL=DrawEcg.js.map

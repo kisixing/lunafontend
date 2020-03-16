@@ -53,3 +53,4 @@ var StompService = (function (_super) {
     return StompService;
 }(Event_1.EventEmitter));
 exports.StompService = StompService;
+//# sourceMappingURL=StompService.js.map

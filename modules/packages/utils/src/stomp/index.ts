@@ -112,6 +112,7 @@ export const makeStompService = (() => {
     return {
       subscribe: (path) => {
         connection.then(() => {
+          console.log('sssssssssss')
           stompSubscriber = stompClient.subscribe(`${path}`, data => {
             rxSubscriber.next(JSON.parse(data.body));
           });
@@ -126,8 +127,10 @@ export const makeStompService = (() => {
           );
         });
       },
-      receive(){
-        return connection.then(receive)
+      receive(fn) {
+        connection.then(() => {
+          rxObservable.subscribe(fn)
+        })
       }
     }
   };

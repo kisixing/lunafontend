@@ -35,3 +35,4 @@ function push_data_ecg(received_msg) {
     }
 }
 exports.push_data_ecg = push_data_ecg;
+//# sourceMappingURL=push_data_ecg.js.map

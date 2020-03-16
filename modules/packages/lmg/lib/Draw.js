@@ -67,3 +67,4 @@ var Draw = (function (_super) {
     return Draw;
 }(utils_1.EventEmitter));
 exports.default = Draw;
+//# sourceMappingURL=Draw.js.map

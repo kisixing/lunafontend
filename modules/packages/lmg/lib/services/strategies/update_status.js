@@ -28,3 +28,4 @@ function update_status(received_msg) {
     this.refresh('update_status');
 }
 exports.update_status = update_status;
+//# sourceMappingURL=update_status.js.map

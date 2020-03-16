@@ -23,3 +23,4 @@ exports.default = (function (data, box, onReady, onResize) {
     }, [data]);
     return {};
 });
+//# sourceMappingURL=useDraw.js.map

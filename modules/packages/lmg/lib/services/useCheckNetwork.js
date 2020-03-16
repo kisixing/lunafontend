@@ -18,3 +18,4 @@ function useCheckNetwork(fn) {
     return [v];
 }
 exports.useCheckNetwork = useCheckNetwork;
+//# sourceMappingURL=useCheckNetwork.js.map

@@ -24,3 +24,4 @@ function start_work(received_msg) {
     this.refresh('start_work');
 }
 exports.start_work = start_work;
+//# sourceMappingURL=start_work.js.map

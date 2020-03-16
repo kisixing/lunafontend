@@ -10,3 +10,4 @@ function getVolume(received_msg) {
     this.refresh('getVolume');
 }
 exports.getVolume = getVolume;
+//# sourceMappingURL=getVolume.js.map

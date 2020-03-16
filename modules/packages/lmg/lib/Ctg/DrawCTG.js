@@ -584,3 +584,4 @@ var DrawCTG = (function () {
     return DrawCTG;
 }());
 exports.default = DrawCTG;
+//# sourceMappingURL=DrawCTG.js.map
