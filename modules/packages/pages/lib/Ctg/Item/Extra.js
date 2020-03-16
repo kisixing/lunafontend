@@ -15,10 +15,10 @@ var WsService_1 = require("@lianmed/lmg/lib/services/WsService");
 var styled_components_1 = __importDefault(require("styled-components"));
 require("antd/lib/card/style/index.css");
 require("antd/lib/tag/style/index.css");
+var SB = styled_components_1.default(antd_1.Button)(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n:hover {\n    background: rgba(255,255,255,.2)\n}\n"], ["\n:hover {\n    background: rgba(255,255,255,.2)\n}\n"])));
 var C = function (props) {
     var status = props.status, suit = props.suit, onClose = props.onClose, bedname = props.bedname;
     var alarmStatus = useItemAlarm_1.default(suit)[0];
-    var SB = styled_components_1.default(antd_1.Button)(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n    :hover {\n        background: rgba(255,255,255,.2)\n    }\n"], ["\n    :hover {\n        background: rgba(255,255,255,.2)\n    }\n"])));
     return (react_1.default.createElement(react_1.default.Fragment, null,
         react_1.default.createElement("span", { style: { marginRight: '8px', color: '#fff' } },
             bedname,

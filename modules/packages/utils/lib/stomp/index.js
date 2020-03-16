@@ -34,14 +34,14 @@ exports.makeStompService = (function () {
             });
         });
     };
-    var connect = function () {
+    var connect = function (url) {
+        if (url === void 0) { url = "http://transfer.lian-med.com:9987/ws/stomp?access_token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOIiwiZXhwIjoxNTg2MTYyNTM0fQ.QasLwM0f0rJvHuSZrNVuVIFK4NRNC8eHTDDy8ZcIdHRxAKtS_qoOOrezV8d0lvevOYtZLct9oZ485OkIE-q1vg"; }
         if (connectedPromise !== null || stompService) {
             return;
         }
         connection = createConnection();
         rxObservable = createListener();
         var headers = {};
-        var url = "http://transfer.lian-med.com:9987/ws/stomp?access_token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOIiwiZXhwIjoxNTg2MTYyNTM0fQ.QasLwM0f0rJvHuSZrNVuVIFK4NRNC8eHTDDy8ZcIdHRxAKtS_qoOOrezV8d0lvevOYtZLct9oZ485OkIE-q1vg";
         var authToken = store_1.default.get('jhi-authenticationToken');
         if (authToken) {
             url += '?access_token=' + authToken;
@@ -76,7 +76,7 @@ exports.makeStompService = (function () {
         }
         rxObservable = createListener();
     };
-    return function () {
+    return function (url) {
         if (true) {
             connect();
             if (!stompService) {
@@ -92,7 +92,6 @@ exports.makeStompService = (function () {
         return {
             subscribe: function (path) {
                 connection.then(function () {
-                    console.log('sssssssssss');
                     stompSubscriber = stompClient.subscribe("" + path, function (data) {
                         rxSubscriber.next(JSON.parse(data.body));
                     });

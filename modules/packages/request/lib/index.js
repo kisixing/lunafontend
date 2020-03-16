@@ -20,12 +20,12 @@ var antd_1 = require("antd");
 var getErrData_1 = __importDefault(require("./getErrData"));
 var Request_1 = __importDefault(require("./Request"));
 var store_1 = __importDefault(require("store"));
-var TOKEN_KEY = 'Lian-Med-Access-Token';
+var utils_1 = require("@lianmed/utils");
 var R = (function (_super) {
     __extends(R, _super);
     function R() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.TOKEN_KEY = TOKEN_KEY;
+        _this.TOKEN_KEY = utils_1.TOKEN_KEY;
         _this.hasConfiged = false;
         _this.configure = {};
         _this.config = function (configs) {
@@ -35,7 +35,7 @@ var R = (function (_super) {
                 console.warn("couldn't config twice");
             }
             _this.hasConfiged = true;
-            var _a = configs.Authorization, Authorization = _a === void 0 ? store_1.default.get(TOKEN_KEY) || '' : _a;
+            var _a = configs.Authorization, Authorization = _a === void 0 ? store_1.default.get(utils_1.TOKEN_KEY) || '' : _a;
             Object.assign(_this.configure, configs, { Authorization: Authorization });
             _this.init(_this.configure);
             _this._request.interceptors.request.use(function (url, options) {
@@ -81,7 +81,7 @@ var R = (function (_super) {
                 if (r && r.id_token) {
                     var Authorization = "Bearer " + r.id_token;
                     _this.config({ Authorization: Authorization });
-                    store_1.default.set(TOKEN_KEY, Authorization);
+                    store_1.default.set(utils_1.TOKEN_KEY, Authorization);
                     return true;
                 }
                 else {
@@ -100,3 +100,4 @@ exports.post = post;
 exports.put = put;
 exports.config = config;
 exports.default = r;
+//# sourceMappingURL=index.js.map

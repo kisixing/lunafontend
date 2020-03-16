@@ -45,7 +45,8 @@ export const makeStompService = (() => {
     });
   };
 
-  const connect = () => {
+
+  const connect = (url = "http://transfer.lian-med.com:9987/ws/stomp?access_token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOIiwiZXhwIjoxNTg2MTYyNTM0fQ.QasLwM0f0rJvHuSZrNVuVIFK4NRNC8eHTDDy8ZcIdHRxAKtS_qoOOrezV8d0lvevOYtZLct9oZ485OkIE-q1vg") => {
     if (connectedPromise !== null || stompService) {
       // the connection is already being established
       return;
@@ -56,7 +57,6 @@ export const makeStompService = (() => {
     // building absolute path so that websocket doesn't fail when deploying with a context path
 
     const headers = {};
-    let url = "http://transfer.lian-med.com:9987/ws/stomp?access_token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOIiwiZXhwIjoxNTg2MTYyNTM0fQ.QasLwM0f0rJvHuSZrNVuVIFK4NRNC8eHTDDy8ZcIdHRxAKtS_qoOOrezV8d0lvevOYtZLct9oZ485OkIE-q1vg";
     const authToken = Storage.get('jhi-authenticationToken')
     if (authToken) {
       url += '?access_token=' + authToken;
@@ -97,7 +97,7 @@ export const makeStompService = (() => {
     rxObservable = createListener();
   };
 
-  return () => {
+  return (url: string) => {
     if (true) {
       connect();
       if (!stompService) {
@@ -111,8 +111,8 @@ export const makeStompService = (() => {
     }
     return {
       subscribe: (path) => {
+
         connection.then(() => {
-          console.log('sssssssssss')
           stompSubscriber = stompClient.subscribe(`${path}`, data => {
             rxSubscriber.next(JSON.parse(data.body));
           });

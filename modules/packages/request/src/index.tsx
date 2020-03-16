@@ -3,7 +3,7 @@ import { message, notification } from 'antd';
 import getErrData from './getErrData';
 import Request from './Request';
 import store from "store";
-const TOKEN_KEY = 'Lian-Med-Access-Token'
+import { TOKEN_KEY } from "@lianmed/utils";
 
 
 class R extends Request {
