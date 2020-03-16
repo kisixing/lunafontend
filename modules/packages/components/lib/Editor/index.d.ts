@@ -3,20 +3,38 @@ import { BraftEditorProps, EditorState } from 'braft-editor';
 export { ContentUtils } from 'braft-utils';
 import 'braft-editor/dist/index.css';
 interface IProps extends BraftEditorProps {
-    bordered?: boolean;
+  bordered?: boolean;
 }
 interface IState {
-    value: EditorState;
+  value: EditorState;
 }
 declare class C extends React.Component<IProps, IState> {
-    state: {
-        value: EditorState;
-    };
-    static getDerivedStateFromProps(p: IProps, s: IState): {
+  state: {
+    value: EditorState;
+  };
+  static getDerivedStateFromProps(
+    p: IProps,
+    s: IState
+  ):
+    | {
         value?: undefined;
-    } | {
+      }
+    | {
         value: any;
-    };
-    render(): JSX.Element;
+      };
+  handleUpload: ({
+    file,
+    progress,
+    libraryId,
+    success,
+    error,
+  }: {
+    file: any;
+    progress: any;
+    libraryId: any;
+    success: any;
+    error: any;
+  }) => void;
+  render(): JSX.Element;
 }
 export default C;
