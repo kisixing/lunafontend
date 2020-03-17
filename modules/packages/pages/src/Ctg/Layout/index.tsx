@@ -49,7 +49,7 @@ const Home = (props: IProps) => {
   return (
     <div style={{ height: '100%' }} ref={wrap}>
       {
-        <Row justify="start" align="top" style={{ padding: outPadding, maxHeight: contentHeight, overflow: 'hidden' }} >
+        <Row justify="start" align="top" style={{ padding: outPadding, maxHeight: contentHeight, overflowY: items.length>(listLayout[0]*listLayout[1])?'scroll':'hidden' }} >
           {items.length ? items.map((item: any) => {
             const { data, bedname, unitId, id } = item;
             const { pregnancy, docid, starttime, status, ismulti } = data

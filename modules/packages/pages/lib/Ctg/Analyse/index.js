@@ -68,7 +68,7 @@ var Analysis = function (_a) {
     };
     var submit = function () {
         var curData = d[mark + "_ref"].current.getFieldsValue();
-        var oldData = old_ref.current[mark];
+        var oldData = old_ref.current[mark] || {};
         var rightData = analysis_ref.current.getFieldsValue();
         var wave = rightData.wave, diagnosistxt = rightData.diagnosistxt, classification0 = rightData.classification0, classification1 = rightData.classification1, analyseData = __rest(rightData, ["wave", "diagnosistxt", "classification0", "classification1"]);
         var isedit = Object.entries(curData).find(function (_a) {

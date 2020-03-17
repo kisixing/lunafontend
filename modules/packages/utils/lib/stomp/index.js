@@ -8,8 +8,10 @@ var webstomp_client_1 = __importDefault(require("webstomp-client"));
 var rxjs_1 = require("rxjs");
 var store_1 = __importDefault(require("store"));
 var StompService_1 = require("./StompService");
+var constant_1 = require("../constant");
 exports.makeStompService = (function () {
     var stompClient = null;
+    var s = [];
     var stompSubscriber = null;
     var connection;
     var connectedPromise = null;
@@ -22,27 +24,16 @@ exports.makeStompService = (function () {
             rxSubscriber = _subscriber;
         });
     };
-    var sendActivity = function () {
-        connection.then(function () {
-            stompClient.send('/topic/activity', JSON.stringify({ page: window.location.hash }), {});
-        });
-    };
-    var subscribe = function () {
-        connection.then(function () {
-            stompSubscriber = stompClient.subscribe('/topic/tracker', function (data) {
-                rxSubscriber.next(JSON.parse(data.body));
-            });
-        });
-    };
+    var t = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOIiwiZXhwIjoxNTg2MTYyNTM0fQ.QasLwM0f0rJvHuSZrNVuVIFK4NRNC8eHTDDy8ZcIdHRxAKtS_qoOOrezV8d0lvevOYtZLct9oZ485OkIE-q1vg';
     var connect = function (url) {
-        if (url === void 0) { url = "http://transfer.lian-med.com:9987/ws/stomp?access_token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOIiwiZXhwIjoxNTg2MTYyNTM0fQ.QasLwM0f0rJvHuSZrNVuVIFK4NRNC8eHTDDy8ZcIdHRxAKtS_qoOOrezV8d0lvevOYtZLct9oZ485OkIE-q1vg"; }
+        if (url === void 0) { url = "http://transfer.lian-med.com:9987/ws/stomp"; }
         if (connectedPromise !== null || stompService) {
             return;
         }
         connection = createConnection();
         rxObservable = createListener();
         var headers = {};
-        var authToken = store_1.default.get('jhi-authenticationToken');
+        var authToken = t || store_1.default.get(constant_1.TOKEN_KEY);
         if (authToken) {
             url += '?access_token=' + authToken;
         }
@@ -51,12 +42,7 @@ exports.makeStompService = (function () {
         stompClient.connect(headers, function () {
             connectedPromise('success');
             connectedPromise = null;
-            subscribe();
-            sendActivity();
             if (!stompService) {
-                window.onhashchange = function () {
-                    sendActivity();
-                };
                 stompService = new StompService_1.StompService(stompClient, connection, rxSubscriber);
             }
         });
@@ -69,32 +55,29 @@ exports.makeStompService = (function () {
         window.onhashchange = function () { };
         stompService = null;
     };
-    var receive = function () { return rxObservable; };
     var unsubscribe = function () {
-        if (stompSubscriber !== null) {
-            stompSubscriber.unsubscribe();
-        }
+        s.forEach(function (_) { return _.unsubscribe(); });
+        s = [];
         rxObservable = createListener();
     };
     return function (url) {
-        if (true) {
+        if (!stompService) {
             connect();
-            if (!stompService) {
-                receive().subscribe(function (activity) {
-                    console.log('stomp receive', activity);
-                });
-            }
-        }
-        else {
-            unsubscribe();
-            disconnect();
         }
         return {
-            subscribe: function (path) {
-                connection.then(function () {
-                    stompSubscriber = stompClient.subscribe("" + path, function (data) {
-                        rxSubscriber.next(JSON.parse(data.body));
+            subscribe: function (type) {
+                return connection.then(function () {
+                    stompSubscriber = stompClient.subscribe("" + type, function (res) {
+                        var data;
+                        try {
+                            data = JSON.parse(res.body);
+                        }
+                        catch (error) {
+                            data = {};
+                        }
+                        rxSubscriber.next({ data: data, type: type });
                     });
+                    s.push(stompSubscriber);
                 });
             },
             send: function (path, body, head) {
@@ -108,7 +91,9 @@ exports.makeStompService = (function () {
                 connection.then(function () {
                     rxObservable.subscribe(fn);
                 });
-            }
+            },
+            unsubscribe: unsubscribe,
+            disconnect: disconnect
         };
     };
 })();

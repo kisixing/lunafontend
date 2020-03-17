@@ -20,7 +20,7 @@ var Home = function (props) {
     var itemSpan = 24 / listLayout[1];
     var outPadding = 6;
     var itemHeight = (contentHeight - outPadding * 2) / listLayout[0];
-    return (react_1.default.createElement("div", { style: { height: '100%' }, ref: wrap }, react_1.default.createElement(antd_1.Row, { justify: "start", align: "top", style: { padding: outPadding, maxHeight: contentHeight, overflow: 'hidden' } }, items.length ? items.map(function (item) {
+    return (react_1.default.createElement("div", { style: { height: '100%' }, ref: wrap }, react_1.default.createElement(antd_1.Row, { justify: "start", align: "top", style: { padding: outPadding, maxHeight: contentHeight, overflowY: items.length > (listLayout[0] * listLayout[1]) ? 'scroll' : 'hidden' } }, items.length ? items.map(function (item) {
         var data = item.data, bedname = item.bedname, unitId = item.unitId, id = item.id;
         var pregnancy = data.pregnancy, docid = data.docid, starttime = data.starttime, status = data.status, ismulti = data.ismulti;
         var safePregnancy = pregnancy || { age: null, name: null, bedNO: null, GP: null, gestationalWeek: null };

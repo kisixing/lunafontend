@@ -63,7 +63,7 @@ const Analysis: FC<{ docid?: string, note?: string, id?: string, type?: 'default
   }
   const submit = () => {
     const curData: { [x: string]: number } = d[`${mark}_ref`].current.getFieldsValue()
-    const oldData: { [x: string]: number } = old_ref.current[mark]
+    const oldData: { [x: string]: number } = old_ref.current[mark] || {}
     const rightData = analysis_ref.current.getFieldsValue()
     const { wave, diagnosistxt, classification0, classification1, ...analyseData } = rightData
 

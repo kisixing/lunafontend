@@ -12,14 +12,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var _R = __importStar(require("ramda"));
 exports._R = _R;
-var hooks_1 = require("./hooks");
-exports.Hooks = hooks_1.Hooks;
-var resize_observer_polyfill_1 = require("resize-observer-polyfill");
-exports.ResizeObserver = resize_observer_polyfill_1.default;
 var qrcode = __importStar(require("qrcode"));
 exports.qrcode = qrcode;
 __export(require("./Event"));
 __export(require("./fn"));
 __export(require("rxjs"));
 __export(require("./constant"));
+__export(require("./stomp"));
+var hooks_1 = require("./hooks");
+exports.Hooks = hooks_1.Hooks;
+var resize_observer_polyfill_1 = require("resize-observer-polyfill");
+exports.ResizeObserver = resize_observer_polyfill_1.default;
 //# sourceMappingURL=index.js.map
