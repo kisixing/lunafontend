@@ -221,7 +221,8 @@ export class Suit extends Draw {
           this.getoffline(this.data.docid, this.data.past);
         }
       }
-      console.log('ddd----------------data----',this.data.index,this.width*2)
+      console.log('ddd----------------this.data.index',this.data.index)
+      console.log('ddd----------------this.width*2',this.width*2)
 
       if (this.data.index < this.canvasline.width * 2) {
         return;

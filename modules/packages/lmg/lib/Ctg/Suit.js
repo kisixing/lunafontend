@@ -212,7 +212,8 @@ var Suit = (function (_super) {
                     _this.getoffline(_this.data.docid, _this.data.past);
                 }
             }
-            console.log('ddd----------------data----', _this.data.index, _this.width * 2);
+            console.log('ddd----------------this.data.index', _this.data.index);
+            console.log('ddd----------------this.width*2', _this.width * 2);
             if (_this.data.index < _this.canvasline.width * 2) {
                 return;
             }
