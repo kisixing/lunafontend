@@ -25,3 +25,4 @@ exports.default = (function (docid) {
         setBizSn: setBizSn, bizSn: bizSn, archive: archive, archiveLoading: archiveLoading, archived: archived
     };
 });
+//# sourceMappingURL=useArchive.js.map

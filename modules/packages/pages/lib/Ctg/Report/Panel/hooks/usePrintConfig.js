@@ -70,3 +70,4 @@ exports.default = (function (value, print_interval) {
         setOutputType: setOutputType
     };
 });
+//# sourceMappingURL=usePrintConfig.js.map

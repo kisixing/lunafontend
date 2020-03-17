@@ -3,7 +3,7 @@ import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import request from "@lianmed/request";
 import { Button, Col, Row, message, Modal } from 'antd';
 import 'antd/dist/antd.css';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, FC } from 'react';
 import styled from "styled-components";
 import Analyse from './Analyse';
 import Score from './Score';
@@ -26,11 +26,9 @@ const Wrapper = styled.div`
   }
 `
 
-function Analysis({
-  docid = ''
-}) {
-  // docid = '1_1112_160415144057'
-  const { ctgData, loading, setFhr, fetal, setFetal } = useCtgData(docid)
+const Analysis: FC<{ docid?: string, note?: string, id?: string, type?: 'default' | 'remote' }> = function ({ docid, type = "default", id, note }) {
+  note = note ? note : docid
+  const { ctgData, loading, setFhr, fetal, setFetal } = useCtgData(note)
   const [disabled, setDisabled] = useState(true)
 
 
@@ -49,7 +47,7 @@ function Analysis({
     analysis_ref,
     old_ref,
 
-  } = useAnalyse(ref.current, docid, fetal, setFhr)
+  } = useAnalyse(ref.current, note, fetal, setFhr)
 
   const d = {
     responseData,
@@ -71,8 +69,9 @@ function Analysis({
 
 
     const isedit = Object.entries(curData).find(([k, v]) => oldData[k] !== v) ? true : false
+    const identify = type === 'default' ? { note } : { id }
     const data = {
-      note: docid,
+      ...identify,
       diagnosis: JSON.stringify({ wave, diagnosistxt, classification0, classification1 }),
       result: JSON.stringify({
         ...analyseData,
@@ -81,7 +80,7 @@ function Analysis({
       })
     }
 
-    request.put(`/ctg-exams-note`, { data }).then((r: any) => {
+    request.put(type === "default" ? '/ctg-exams-note' : '/serviceorders', { data }).then((r: any) => {
       //TODO: 结果判断
       message.success('保存成功！', 3);
     })
@@ -89,7 +88,7 @@ function Analysis({
 
   const history = () => {
     const data = {
-      'note.equals': docid
+      'note.equals': note
     }
 
 
@@ -113,7 +112,7 @@ function Analysis({
       onOk() { }
     });
   }
-  const btnDisabled = !docid || !disabled
+  const btnDisabled = !note || !disabled
   return (
     <Wrapper >
       <div style={{ height: `calc(100% - 420px - 12px)`, marginBottom: 12, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px', overflow: 'hidden' }}>
@@ -122,11 +121,11 @@ function Analysis({
       </div>
       <Row gutter={12} style={{ height: 420 }}>
         <Col span={12} >
-          <Score disabled={disabled}  {...d} fetal={fetal} setFetal={setFetal} ctgData={ctgData} docid={docid} v={ref.current} className="bordered" />
+          <Score disabled={disabled}  {...d} fetal={fetal} setFetal={setFetal} ctgData={ctgData} docid={note} v={ref.current} className="bordered" />
           <div style={{ position: 'absolute', right: 12, bottom: 0 }}>
             <Button size="small" style={{ marginBottom: 10 }} onClick={history} disabled={btnDisabled}>历史分析</Button>
-            <Button size="small" style={{ marginBottom: 10 }} disabled={!docid} onClick={() => setDisabled(!disabled)}>{disabled ? '修改' : '确认'}</Button>
-            <Button size="small" style={{ marginBottom: 10 }} type="primary" onClick={analyse} disabled={!docid}>评分</Button>
+            <Button size="small" style={{ marginBottom: 10 }} disabled={!note} onClick={() => setDisabled(!disabled)}>{disabled ? '修改' : '确认'}</Button>
+            <Button size="small" style={{ marginBottom: 10 }} type="primary" onClick={analyse} disabled={!note}>评分</Button>
           </div>
         </Col>
         <Col span={12}  >

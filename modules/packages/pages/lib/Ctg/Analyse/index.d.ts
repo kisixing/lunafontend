@@ -1,6 +1,9 @@
-/// <reference types="react" />
 import 'antd/dist/antd.css';
-declare function Analysis({ docid }: {
+import { FC } from 'react';
+declare const Analysis: FC<{
     docid?: string;
-}): JSX.Element;
+    note?: string;
+    id?: string;
+    type?: 'default' | 'remote';
+}>;
 export default Analysis;

@@ -15,15 +15,16 @@ interface IProps {
     bedname: string
 }
 
+const SB = styled(Button)`
+:hover {
+    background: rgba(255,255,255,.2)
+}
+`
 
 const C = (props: IProps) => {
     const { status, suit, onClose, bedname } = props;
     const [alarmStatus] = useItemAlarm(suit)
-    const SB = styled(Button)`
-    :hover {
-        background: rgba(255,255,255,.2)
-    }
-`
+
 
     return (
         <>

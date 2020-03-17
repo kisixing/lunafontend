@@ -40,3 +40,4 @@ exports.FancyCanvas = function (props) {
         react_1.default.createElement("canvas", __assign({ ref: canvas }, props)),
         c && children));
 };
+//# sourceMappingURL=index.js.map

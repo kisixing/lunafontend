@@ -19,6 +19,7 @@ exports.ResizeObserver = resize_observer_polyfill_1.default;
 var qrcode = __importStar(require("qrcode"));
 exports.qrcode = qrcode;
 __export(require("./Event"));
-var request_1 = require("@lianmed/request");
-exports.request = request_1.default;
 __export(require("./fn"));
+__export(require("rxjs"));
+__export(require("./constant"));
+//# sourceMappingURL=index.js.map

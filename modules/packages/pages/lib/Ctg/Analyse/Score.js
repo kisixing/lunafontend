@@ -10,17 +10,6 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-var __rest = (this && this.__rest) || function (s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
-        }
-    return t;
-};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -38,7 +27,7 @@ var methods_1 = __importDefault(require("./methods"));
 var utils_1 = require("@lianmed/utils");
 var intervals = [20, 40];
 var ScoringMethod = function (props) {
-    var docid = props.docid, v = props.v, ctgData = props.ctgData, fetal = props.fetal, setFetal = props.setFetal, disabled = props.disabled, others = __rest(props, ["docid", "v", "ctgData", "fetal", "setFetal", "disabled"]);
+    var docid = props.docid, ctgData = props.ctgData, fetal = props.fetal, setFetal = props.setFetal, disabled = props.disabled;
     var responseData = props.responseData, MARKS = props.MARKS, startTime = props.startTime, mark = props.mark, setMark = props.setMark, interval = props.interval, setInterval = props.setInterval;
     var onChange = function (e) {
         var mark = e.target.value;
@@ -83,7 +72,7 @@ var ScoringMethod = function (props) {
             _,
             "\u5206\u6790\u6CD5")); })));
     }, [mark, docid]);
-    return (react_1.default.createElement("div", __assign({}, others, { style: { height: '100%', background: '#fff' }, className: "bordered" }),
+    return (react_1.default.createElement("div", { style: { height: '100%', background: '#fff' }, className: "bordered" },
         react_1.default.createElement("div", { className: "divider", style: { padding: '12px 24px', margin: 0 } },
             react_1.default.createElement(react_1.default.Fragment, null,
                 IntervalRadio,
@@ -95,3 +84,4 @@ var ScoringMethod = function (props) {
             react_1.default.createElement(methods_1.default, __assign({}, props, { disabled: disabled })))));
 };
 exports.default = ScoringMethod;
+//# sourceMappingURL=Score.js.map

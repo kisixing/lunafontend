@@ -259,10 +259,10 @@ export default class DrawCTG {
             }
             this.linecontext.lineTo(lastx, (max - lasty - curfhroffset) * this.yspan + this.basetop);
           }
-          //kisi 2019-10-29
-          //绘制加减速标记
-          this.suit.drawAnalyse.drawflag(this.linecontext,lastx, (max - lasty - curfhroffset) * this.yspan, i);
         }
+        //kisi 2019-10-29
+        //绘制加减速标记
+        this.suit.drawAnalyse.drawflag(this.linecontext, lastx, (max - lasty - curfhroffset) * this.yspan, i);
       }
       this.linecontext.stroke();
     }

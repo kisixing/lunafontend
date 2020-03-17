@@ -9,11 +9,12 @@
     "noUnusedLocals": true,
     "removeComments": true,
     "preserveConstEnums": true,
-    "sourceMap": false,
+    "sourceMap": true,
     "declaration": true,
     "baseUrl": ".",
     "declarationMap": false,
     "paths": {
+      "exclude": ["./node_modules"],
       "rxjs/*": ["./node_modules/rxjs/*"]
     }
   },

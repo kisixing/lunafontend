@@ -96,3 +96,4 @@ exports.default = react_1.forwardRef(function (props, ref) {
             react_1.default.createElement(ScrollBar_1.default, { box: box, getBarTool: function (tool) { barTool.current = tool; } })),
         suitType > 100 && react_1.default.createElement(ButtonTools_1.ButtonTools, { ctg: ctg, visible: showBtns && staticType })));
 });
+//# sourceMappingURL=index.js.map

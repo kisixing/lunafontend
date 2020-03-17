@@ -48,3 +48,4 @@ var PrintPreview = function (props) {
                 react_1.default.createElement(Ctg_1.default, { docid: docid })))));
 };
 exports.default = PrintPreview;
+//# sourceMappingURL=index.js.map

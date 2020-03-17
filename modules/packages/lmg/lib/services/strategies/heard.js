@@ -7,3 +7,4 @@ function heard(received_msg) {
     this.span = Math.floor(new Date(servertime).getTime() / 1000 - new Date().getTime() / 1000) * 4 - 12;
 }
 exports.heard = heard;
+//# sourceMappingURL=heard.js.map

@@ -148,3 +148,4 @@ function getCoordInDocument(e) {
     return { x: x, y: y };
 }
 exports.getCoordInDocument = getCoordInDocument;
+//# sourceMappingURL=ScrollEl.js.map

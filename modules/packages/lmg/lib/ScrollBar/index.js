@@ -24,3 +24,4 @@ exports.default = (function (props) {
             console.log('menu', e);
         } }));
 });
+//# sourceMappingURL=index.js.map

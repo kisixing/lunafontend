@@ -90,3 +90,4 @@ var EventEmitter = (function () {
 }());
 exports.EventEmitter = EventEmitter;
 exports.event = new EventEmitter();
+//# sourceMappingURL=Event.js.map

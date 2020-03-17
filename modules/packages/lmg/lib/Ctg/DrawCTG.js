@@ -523,8 +523,8 @@ var DrawCTG = (function () {
                         }
                         this.linecontext.lineTo(lastx, (max - lasty - curfhroffset) * this.yspan + this.basetop);
                     }
-                    this.suit.drawAnalyse.drawflag(this.linecontext, lastx, (max - lasty - curfhroffset) * this.yspan, i_1);
                 }
+                this.suit.drawAnalyse.drawflag(this.linecontext, lastx, (max - lasty - curfhroffset) * this.yspan, i_1);
             }
             this.linecontext.stroke();
         }
@@ -584,3 +584,4 @@ var DrawCTG = (function () {
     return DrawCTG;
 }());
 exports.default = DrawCTG;
+//# sourceMappingURL=DrawCTG.js.map

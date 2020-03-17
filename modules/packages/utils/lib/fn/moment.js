@@ -17,3 +17,4 @@ function formatDate(s) {
     return moment_1.default(d).format('YYYY-MM-DD');
 }
 exports.formatDate = formatDate;
+//# sourceMappingURL=moment.js.map

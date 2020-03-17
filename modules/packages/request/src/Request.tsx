@@ -4,6 +4,7 @@ import { Iconfig, RequestOptions } from './types';
 import getErrData from './getErrData';
 import { notification } from 'antd';
 import store from 'store'
+
 type RequestType = (url: string, options?: RequestOptions) => Promise<any>;
 
 const intervalSet: Set<string> = new Set();
@@ -13,10 +14,11 @@ export default class Request {
     this.init();
   }
   public init = (configs: Iconfig = {}) => {
-    const { errHandler, ...others } = configs;
+    const { errHandler, prefix = '', ...others } = configs;
 
 
     this._request = extend({
+      prefix: prefix.includes('://') ? prefix : `http://${prefix}`,
       timeout: 10000,
       credentials: 'include', // 默认请求是否带上cookie
       headers: {

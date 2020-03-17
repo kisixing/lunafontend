@@ -19,3 +19,4 @@ var EWsEvents;
     EWsEvents["explode"] = "explode";
     EWsEvents["updateSubscriptionIfNecessary"] = "updateSubscriptionIfNecessary";
 })(EWsEvents = exports.EWsEvents || (exports.EWsEvents = {}));
+//# sourceMappingURL=types.js.map

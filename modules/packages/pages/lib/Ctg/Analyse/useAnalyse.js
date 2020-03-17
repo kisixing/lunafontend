@@ -121,3 +121,4 @@ var mapItemsToMarks = {
     ]
 };
 var MARKS = Object.keys(mapItemsToMarks);
+//# sourceMappingURL=useAnalyse.js.map

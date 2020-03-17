@@ -27,3 +27,4 @@ exports.default = (function (suit) {
     }, [suit]);
     return [alarmStatus];
 });
+//# sourceMappingURL=useItemAlarm.js.map

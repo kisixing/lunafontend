@@ -2,8 +2,12 @@ import { Iconfig, RequestOptions } from './types';
 import { message, notification } from 'antd';
 import getErrData from './getErrData';
 import Request from './Request';
+import store from "store";
+import { TOKEN_KEY } from "@lianmed/utils";
+
 
 class R extends Request {
+  TOKEN_KEY = TOKEN_KEY
   private hasConfiged = false;
   configure: { [x: string]: any } = {};
   public config = (configs: Iconfig = {}): Request => {
@@ -13,10 +17,10 @@ class R extends Request {
       // return this;
     }
     this.hasConfiged = true;
-    Object.assign(this.configure, configs);
-    const { Authorization = '' } = configs;
+    const { Authorization = store.get(TOKEN_KEY) || '' } = configs;
+    Object.assign(this.configure, configs, { Authorization });
 
-    this.init(configs);
+    this.init(this.configure);
     // request拦截器, 改变url 或 options.
     this._request.interceptors.request.use((url, options) => {
       // eslint-disable-next-line no-param-reassign
@@ -36,7 +40,7 @@ class R extends Request {
       if ([200, 201, 204, 304].includes(status)) {
         successText && message.success(successText);
       } else {
-        data.then(({ title }) => {
+        data.then(({ title = 'no title' } = { title: 'no title' }) => {
           if (status === 401) {
             notification.error({
               message: '未登录或登录已过期，请重新登录。',
@@ -57,6 +61,21 @@ class R extends Request {
     });
     return this;
   };
+  authenticate = (params) => {
+    return this._request.post(`/authenticate`, {
+      data: params,
+    }).then(r => {
+      if (r && r.id_token) {
+        const Authorization = `Bearer ${r.id_token}`
+        this.config({ Authorization })
+        store.set(TOKEN_KEY, Authorization);
+
+        return true
+      } else {
+        throw '非标准登陆'
+      }
+    })
+  }
 }
 
 const r = new R();

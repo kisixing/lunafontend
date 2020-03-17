@@ -34,3 +34,4 @@ exports.default = (function (response) {
     var mes = { status: status, errortext: errortext, url: url, data: data };
     return mes;
 });
+//# sourceMappingURL=getErrData.js.map

@@ -28,3 +28,4 @@ function get_data_ctg(received_msg) {
     }
 }
 exports.get_data_ctg = get_data_ctg;
+//# sourceMappingURL=get_data_ctg.js.map

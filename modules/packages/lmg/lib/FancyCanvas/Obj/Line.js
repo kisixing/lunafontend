@@ -17,3 +17,4 @@ var FancyCanvas = function (props) {
     return null;
 };
 exports.default = FancyCanvas;
+//# sourceMappingURL=Line.js.map

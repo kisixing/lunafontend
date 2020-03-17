@@ -47,3 +47,4 @@ var Queue = (function () {
     return Queue;
 }());
 exports.default = Queue;
+//# sourceMappingURL=Queue.js.map

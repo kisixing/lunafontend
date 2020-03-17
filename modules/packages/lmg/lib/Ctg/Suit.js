@@ -481,3 +481,4 @@ var Suit = (function (_super) {
     return Suit;
 }(Draw_1.default));
 exports.Suit = Suit;
+//# sourceMappingURL=Suit.js.map

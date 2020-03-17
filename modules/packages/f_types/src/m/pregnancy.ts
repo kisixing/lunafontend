@@ -1,0 +1,29 @@
+export interface IPregnancy {
+    GP?: string
+    gestationalWeek?: string
+    adminDate: any;
+    age: string;
+    areaNO: string;
+    bedNO: string;
+    dob: string;
+    doctor: any;
+    edd: any;
+    ethnic: any;
+    gender: any;
+    gravidity: number;
+    id: number;
+    idNO: any;
+    idType: any;
+    inpatientNO: string;
+    insuranceType: any;
+    lmp: any;
+    name: string;
+    organization: any;
+    outpatientNO: string;
+    parity: number;
+    prenatalscreens: any;
+    riskRecords: any[];
+    roomNO: any;
+    sureEdd: any;
+    telephone: any;
+}

@@ -41,7 +41,6 @@ const CTGChart = (docid: string) => {
         const key = `fhr${index}`
         const data = { ...ctgData, fhr1: fhr1 && fhr1.replace(regex, '0'), fhr2: fhr2 && fhr2.replace(regex, '0'), fhr3: fhr3 && fhr3.replace(regex, '0'), [key]: ctgData[`_${key}`] }
         setCtgData(data)
-        console.log('data', data)
     }
     return {
         ctgData, loading, setFhr, fetal, setFetal
