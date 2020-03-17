@@ -4,6 +4,7 @@ export { ContentUtils } from 'braft-utils';
 import 'braft-editor/dist/index.css';
 interface IProps extends BraftEditorProps {
   bordered?: boolean;
+  onUpload: any;
 }
 // function C(props: IProps) {
 //   const { bordered, style = {} } = props
@@ -23,16 +24,16 @@ class C extends React.Component<IProps, IState> {
     };
   }
 
-  handleUpload = ({ file, progress, libraryId, success, error }) => {
-    // TODO: 上传图片
-    // console.log(file, progress, libraryId);
-    // success({
-    //   url: 'https://i.imgur.com/o4mZDai.jpg',
-    // });
-  };
+  // handleUpload = ({ file, progress, libraryId, success, error }) => {
+  // console.log(file, progress, libraryId);
+  // success({
+  //   url: 'https://i.imgur.com/o4mZDai.jpg',
+  // });
+  // };
 
   render() {
-    const { bordered, style = {}, onChange } = this.props;
+    // TODO: 上传图片，由于上传图片至 OSS，需要验证 token，所以不在组件库中执行上传操作。
+    const { bordered, style = {}, onChange, onUpload } = this.props;
     return (
       <BraftEditor
         {...this.props}
@@ -43,7 +44,7 @@ class C extends React.Component<IProps, IState> {
         }}
         value={this.state.value}
         media={{
-          uploadFn: this.handleUpload,
+          uploadFn: onUpload,
         }}
       />
     );

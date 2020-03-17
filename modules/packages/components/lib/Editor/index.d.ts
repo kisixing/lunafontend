@@ -4,6 +4,7 @@ export { ContentUtils } from 'braft-utils';
 import 'braft-editor/dist/index.css';
 interface IProps extends BraftEditorProps {
   bordered?: boolean;
+  onUpload: any;
 }
 interface IState {
   value: EditorState;
@@ -22,19 +23,6 @@ declare class C extends React.Component<IProps, IState> {
     | {
         value: any;
       };
-  handleUpload: ({
-    file,
-    progress,
-    libraryId,
-    success,
-    error,
-  }: {
-    file: any;
-    progress: any;
-    libraryId: any;
-    success: any;
-    error: any;
-  }) => void;
   render(): JSX.Element;
 }
 export default C;

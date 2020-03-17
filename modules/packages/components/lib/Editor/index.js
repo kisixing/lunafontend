@@ -52,17 +52,6 @@ var C = (function(_super) {
   function C() {
     var _this = (_super !== null && _super.apply(this, arguments)) || this;
     _this.state = { value: null };
-    _this.handleUpload = function(_a) {
-      var file = _a.file,
-        progress = _a.progress,
-        libraryId = _a.libraryId,
-        success = _a.success,
-        error = _a.error;
-      console.log(file, progress, libraryId);
-      success({
-        url: 'https://i.imgur.com/o4mZDai.jpg',
-      });
-    };
     return _this;
   }
   C.getDerivedStateFromProps = function(p, s) {
@@ -78,7 +67,8 @@ var C = (function(_super) {
       bordered = _a.bordered,
       _b = _a.style,
       style = _b === void 0 ? {} : _b,
-      onChange = _a.onChange;
+      onChange = _a.onChange,
+      onUpload = _a.onUpload;
     return react_1.default.createElement(
       braft_editor_1.default,
       __assign({}, this.props, {
@@ -89,7 +79,7 @@ var C = (function(_super) {
         },
         value: this.state.value,
         media: {
-          uploadFn: this.handleUpload,
+          uploadFn: onUpload,
         },
       })
     );
@@ -97,3 +87,4 @@ var C = (function(_super) {
   return C;
 })(react_1.default.Component);
 exports.default = C;
+//# sourceMappingURL=index.js.map
