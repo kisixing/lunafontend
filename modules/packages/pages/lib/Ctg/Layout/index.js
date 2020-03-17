@@ -14,13 +14,13 @@ var react_1 = __importStar(require("react"));
 var antd_1 = require("antd");
 var Item_1 = __importDefault(require("./Item"));
 var Home = function (props) {
-    var _a = props.listLayout, listLayout = _a === void 0 ? [] : _a, fullScreenId = props.fullScreenId, contentHeight = props.contentHeight, RenderIn = props.RenderIn, items = props.items, onClose = props.onClose, _b = props.themeColor, themeColor = _b === void 0 ? 'skyblue' : _b;
+    var loading = props.loading, _a = props.listLayout, listLayout = _a === void 0 ? [] : _a, fullScreenId = props.fullScreenId, contentHeight = props.contentHeight, RenderIn = props.RenderIn, items = props.items, onClose = props.onClose, _b = props.themeColor, themeColor = _b === void 0 ? 'skyblue' : _b;
     var wrap = react_1.useRef(null);
     var empty = react_1.useRef(null);
     var itemSpan = 24 / listLayout[1];
     var outPadding = 6;
     var itemHeight = (contentHeight - outPadding * 2) / listLayout[0];
-    return (react_1.default.createElement("div", { style: { height: '100%' }, ref: wrap }, react_1.default.createElement(antd_1.Row, { justify: "start", align: "top", style: { padding: outPadding, maxHeight: contentHeight, overflowY: items.length > (listLayout[0] * listLayout[1]) ? 'scroll' : 'hidden' } }, items.length ? items.map(function (item) {
+    return (react_1.default.createElement("div", { style: { height: '100%' }, ref: wrap }, loading ? (react_1.default.createElement(antd_1.Spin, { spinning: loading, size: "large", style: { paddingTop: 100, width: '100%' } })) : react_1.default.createElement(antd_1.Row, { justify: "start", align: "top", style: { padding: outPadding, maxHeight: contentHeight, overflowY: items.length > (listLayout[0] * listLayout[1]) ? 'scroll' : 'hidden' } }, items.length ? items.map(function (item) {
         var data = item.data, bedname = item.bedname, unitId = item.unitId, id = item.id;
         var pregnancy = data.pregnancy, docid = data.docid, starttime = data.starttime, status = data.status, ismulti = data.ismulti;
         var safePregnancy = pregnancy || { age: null, name: null, bedNO: null, GP: null, gestationalWeek: null };

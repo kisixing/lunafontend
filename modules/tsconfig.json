@@ -18,5 +18,5 @@
       "rxjs/*": ["./node_modules/rxjs/*"]
     }
   },
-  "exclude": ["./node_modules/**/*"]
+  "exclude": ["node_modules"]
 }

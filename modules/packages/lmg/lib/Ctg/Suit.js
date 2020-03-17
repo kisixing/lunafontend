@@ -203,6 +203,7 @@ var Suit = (function (_super) {
             _this.drawobj.drawdot(_this.rightViewPosition, false);
         });
         this.barTool.watchGrab(function (value) {
+            console.log('ddd--------------------', value);
             var _viewposition;
             value = ~~value * 2;
             if (_this.type == 0 && _this.data.past > 0) {
@@ -211,9 +212,11 @@ var Suit = (function (_super) {
                     _this.getoffline(_this.data.docid, _this.data.past);
                 }
             }
+            console.log('ddd----------------data----', _this.data.index, _this.width * 2);
             if (_this.data.index < _this.canvasline.width * 2) {
                 return;
             }
+            console.log('ddd-----------width---------', _this.width);
             _this.dragtimestamp = new Date().getTime();
             if (_this.rightViewPosition - value < _this.canvasline.width * 2) {
                 _viewposition = _this.canvasline.width * 2;

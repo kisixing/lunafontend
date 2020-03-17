@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Row, Empty } from 'antd';
+import { Row, Empty, Spin } from 'antd';
 import Item from './Item';
 import { IPrenatalVisit, IPregnancy } from '@lianmed/f_types/lib/m';
 
@@ -33,9 +33,10 @@ interface IProps {
   onClose?: (data: any) => void
   contentHeight: number
   themeColor?: string
+  loading?: boolean
 }
 const Home = (props: IProps) => {
-  const { listLayout = [], fullScreenId, contentHeight, RenderIn, items, onClose, themeColor = 'skyblue' } = props;
+  const { loading, listLayout = [], fullScreenId, contentHeight, RenderIn, items, onClose, themeColor = 'skyblue' } = props;
   const wrap = useRef(null);
   const empty = useRef(null)
 
@@ -47,54 +48,56 @@ const Home = (props: IProps) => {
 
 
   return (
-    <div style={{ height: '100%' }} ref={wrap}>
+    <div style={{ height: '100%'}} ref={wrap}>
       {
-        <Row justify="start" align="top" style={{ padding: outPadding, maxHeight: contentHeight, overflowY: items.length>(listLayout[0]*listLayout[1])?'scroll':'hidden' }} >
-          {items.length ? items.map((item: any) => {
-            const { data, bedname, unitId, id } = item;
-            const { pregnancy, docid, starttime, status, ismulti } = data
-            const safePregnancy = pregnancy || { age: null, name: null, bedNO: null, GP: null, gestationalWeek: null }
-            const startTime = starttime
-            return (
-              <Item
-                onClose={onClose}
-                themeColor={themeColor}
-                itemData={item}
-                bedname={bedname}
-                unitId={unitId}
-                key={id}
+        loading ? (
+          <Spin spinning={loading} size="large" style={{ paddingTop: 100, width: '100%' }} />
+        ) : <Row justify="start" align="top" style={{ padding: outPadding, maxHeight: contentHeight, overflowY: items.length > (listLayout[0] * listLayout[1]) ? 'scroll' : 'hidden' }} >
+            {items.length ? items.map((item: any) => {
+              const { data, bedname, unitId, id } = item;
+              const { pregnancy, docid, starttime, status, ismulti } = data
+              const safePregnancy = pregnancy || { age: null, name: null, bedNO: null, GP: null, gestationalWeek: null }
+              const startTime = starttime
+              return (
+                <Item
+                  onClose={onClose}
+                  themeColor={themeColor}
+                  itemData={item}
+                  bedname={bedname}
+                  unitId={unitId}
+                  key={id}
 
-                data={data}
+                  data={data}
 
-                ismulti={ismulti}
-                docid={docid}
-                status={status}
-                loading={false}
-                pregnancy={safePregnancy}
-                startTime={startTime}
+                  ismulti={ismulti}
+                  docid={docid}
+                  status={status}
+                  loading={false}
+                  pregnancy={safePregnancy}
+                  startTime={startTime}
 
-                itemHeight={itemHeight}
-                itemSpan={itemSpan}
-                outPadding={outPadding}
-                fullScreenId={fullScreenId}
+                  itemHeight={itemHeight}
+                  itemSpan={itemSpan}
+                  outPadding={outPadding}
+                  fullScreenId={fullScreenId}
 
-              >
+                >
 
-                {
-                  RenderIn && <RenderIn itemData={item} />
-                }
+                  {
+                    RenderIn && <RenderIn itemData={item} />
+                  }
 
-              </Item>
-            );
-          }) : (
-              <div ref={empty} style={{ marginTop: 200, display: 'flex', justifyContent: 'center', width: '100%' }}>
-                <Empty description="胎监工作站" />
-              </div>
-            )
-          }
-        </Row>
+                </Item>
+              );
+            }) : (
+                <div ref={empty} style={{ marginTop: 200, display: 'flex', justifyContent: 'center', width: '100%' }}>
+                  <Empty description="胎监工作站" />
+                </div>
+              )
+            }
+          </Row>
       }
-    </div>
+    </div >
   );
 };
 
