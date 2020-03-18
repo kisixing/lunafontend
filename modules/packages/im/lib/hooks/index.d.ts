@@ -6,3 +6,4 @@ export declare function useIm(): {
     setCurrent: import("react").Dispatch<import("react").SetStateAction<string>>;
     current: string;
 };
+export * from './new';

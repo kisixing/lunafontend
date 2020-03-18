@@ -4,3 +4,4 @@ var EEvents;
 (function (EEvents) {
     EEvents["chatMessage"] = "chatMessage";
 })(EEvents = exports.EEvents || (exports.EEvents = {}));
+//# sourceMappingURL=event.js.map

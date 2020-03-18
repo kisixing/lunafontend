@@ -54,3 +54,4 @@ exports.open = function (userConfig) {
         res(WebIM);
     });
 };
+//# sourceMappingURL=index.js.map

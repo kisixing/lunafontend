@@ -31,3 +31,4 @@ function parse(message, username) {
     return _message;
 }
 exports.parse = parse;
+//# sourceMappingURL=msgParse.js.map
