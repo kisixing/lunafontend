@@ -37,7 +37,6 @@ var Ecg_1 = __importDefault(require("../Ecg"));
 var ScrollBar_1 = __importDefault(require("../ScrollBar"));
 var WsService_1 = require("../services/WsService");
 var useDraw_1 = __importDefault(require("../useDraw"));
-var ButtonTools_1 = require("./ButtonTools");
 var ContextMenu_1 = __importDefault(require("./ContextMenu"));
 var Loading_1 = require("./Loading");
 var Suit_1 = require("./Suit");
@@ -54,11 +53,11 @@ exports.default = react_1.forwardRef(function (props, ref) {
     var ctg = react_1.useRef(null);
     var ecg = react_1.useRef(null);
     var _f = react_1.useState(0), ecgHeight = _f[0], setEcgHeight = _f[1];
-    var _g = react_1.useState(false), showBtns = _g[0], setShowBtns = _g[1];
-    var staticType = suitType > 0;
     var rightClickXy = react_1.useRef({ x: 0, y: 0 });
+    console.log('yyyyyyyyyyyyyyyyyy 画');
     useDraw_1.default(data, ctgBox, function () {
         var instance = ctg.current = new Suit_1.Suit(canvasgrid.current, canvasdata.current, canvasline.current, canvasselect.current, canvasanalyse.current, ctgBox.current, barTool.current, suitType);
+        console.log('yyyyyyyyyyyy--------new', instance);
         onReady(instance);
         mutableSuitObject.suit = instance;
         return instance;
@@ -69,7 +68,10 @@ exports.default = react_1.forwardRef(function (props, ref) {
         setTimeout(function () { return setEcgHeight(t); }, 100);
     });
     WsService_1.useCheckNetwork(function (isOn) { return ctg.current && (ctg.current.isOn = isOn); });
-    react_1.useImperativeHandle(ref, function () { return ctg.current; });
+    react_1.useImperativeHandle(ref, function () {
+        console.log('yyyyyyyyyyyy--------useImperativeHandle', ctg.current);
+        return ctg.current;
+    });
     var canvasStyles = { position: 'absolute' };
     return (react_1.default.createElement("div", __assign({ style: { width: '100%', height: '100%' }, ref: box }, others, { onContextMenu: function (e) {
             console.log('menu', e);
@@ -81,7 +83,7 @@ exports.default = react_1.forwardRef(function (props, ref) {
                 rightClickXy.current.x = x;
                 rightClickXy.current.y = y;
             }
-        }, onMouseEnter: function () { return staticType && setShowBtns(true); }, onMouseLeave: function () { return staticType && setShowBtns(false); } }),
+        } }),
         loading && (react_1.default.createElement("div", { style: { position: 'absolute', width: '100%', height: '100%', background: '#fff', zIndex: 1, opacity: .9 } },
             react_1.default.createElement(Loading_1.Loading, { style: { margin: 'auto', position: 'absolute', left: 0, right: 0, bottom: 0, top: 0 } }))),
         react_1.default.createElement("div", { style: { height: ecgHeight && showEcg ? "calc(100% - " + ecgHeight + "px)" : "100%", position: 'relative' }, ref: ctgBox },
@@ -93,7 +95,6 @@ exports.default = react_1.forwardRef(function (props, ref) {
         ecgHeight && showEcg && (react_1.default.createElement("div", { style: { height: ecgHeight, overflow: 'hidden' } },
             react_1.default.createElement(Ecg_1.default, { data: data, onReady: function (e) { return ecg.current = e; } }))),
         react_1.default.createElement(ContextMenu_1.default, { rightClickXy: rightClickXy },
-            react_1.default.createElement(ScrollBar_1.default, { box: box, getBarTool: function (tool) { barTool.current = tool; } })),
-        suitType > 100 && react_1.default.createElement(ButtonTools_1.ButtonTools, { ctg: ctg, visible: showBtns && staticType })));
+            react_1.default.createElement(ScrollBar_1.default, { box: box, getBarTool: function (tool) { barTool.current = tool; } }))));
 });
 //# sourceMappingURL=index.js.map

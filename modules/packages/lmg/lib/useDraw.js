@@ -19,6 +19,7 @@ exports.default = (function (data, box, onReady, onResize) {
     }, []);
     react_1.useEffect(function () {
         var current = suit.current;
+        console.log('yyyyyyyyyyyyyyyyy init', current);
         current && current.init(data);
     }, [data]);
     return {};

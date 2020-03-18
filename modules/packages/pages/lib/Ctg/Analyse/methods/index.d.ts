@@ -1,4 +1,4 @@
-/// <reference types="react" />
+import React from 'react';
 interface IProps {
     mark: any;
     Fischer_ref: any;
@@ -6,5 +6,5 @@ interface IProps {
     Krebs_ref: any;
     disabled: boolean;
 }
-declare const Methods: (props: IProps) => JSX.Element;
-export default Methods;
+declare const _default: React.MemoExoticComponent<(props: IProps) => JSX.Element>;
+export default _default;

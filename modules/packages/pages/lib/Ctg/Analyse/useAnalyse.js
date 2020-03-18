@@ -44,12 +44,14 @@ exports.default = (function (v, docid, fetal, setFhr) {
         analysis_ref: analysis_ref
     };
     var analyse = function () {
+        console.log('yyyyyyyyyyyy--------analyse', v);
         v && request_1.default.post("/ctg-exams-analyse", {
             data: { docid: docid, mark: mark, start: startTime, end: startTime + interval * 240, fetal: fetal },
         }).then(function (r) {
             var analysis = r.analysis, score = r.score;
             var f = score[mark.toLowerCase() + "data"];
             var cur = mapFormToMark[mark + "_ref"];
+            console.log('yyyyyyyyyyyy--------cur', cur.current);
             cur.current.setFieldsValue(f);
             old_ref.current[mark] = f;
             var stv = analysis.stv, ucdata = analysis.ucdata, acc = analysis.acc, dec = analysis.dec, fhrbaselineMinute = analysis.fhrbaselineMinute, others = __rest(analysis, ["stv", "ucdata", "acc", "dec", "fhrbaselineMinute"]);
@@ -69,8 +71,10 @@ exports.default = (function (v, docid, fetal, setFhr) {
             time = time + 4800 <= v.data.index ? time : v.data.index - 4800;
             docid && setStartTime(time);
         };
+        console.log('yyyyyyyyyyyy--------on', v);
         v && v.on('change:selectPoint', s).on('afterInit', analyse);
         return function () {
+            console.log('yyyyyyyyyyyy--------off', v);
             v && v.off('change:selectPoint', s).off('afterInit', analyse);
         };
     }, [interval, v, docid, analyse]);

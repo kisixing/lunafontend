@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 import Table from './Table'
 import { tableData } from "./tableData";
@@ -26,4 +26,4 @@ const Methods = (props: IProps) => {
     );
 }
 
-export default Methods
+export default memo(Methods)

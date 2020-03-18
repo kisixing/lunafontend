@@ -273,6 +273,8 @@ export class Suit extends Draw {
       this.drawobj.drawdot(this.rightViewPosition, false);
 
     });
+    console.log('yyyyyyyyyyyy--------emit')
+
     this.emit('afterInit')
   }
   createLine() {

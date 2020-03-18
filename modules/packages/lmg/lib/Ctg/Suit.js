@@ -247,6 +247,7 @@ var Suit = (function (_super) {
             _this.drawSelect.showselect();
             _this.drawobj.drawdot(_this.rightViewPosition, false);
         });
+        console.log('yyyyyyyyyyyy--------emit');
         this.emit('afterInit');
     };
     Suit.prototype.createLine = function () {
