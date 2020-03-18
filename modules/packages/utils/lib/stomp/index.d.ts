@@ -1,3 +1,5 @@
+import { StompService } from './StompService';
+export { StompService };
 export declare const makeStompService: (url: string) => {
     subscribe: (type: string) => Promise<void>;
     send(path: string, body?: {}, head?: {}): void;

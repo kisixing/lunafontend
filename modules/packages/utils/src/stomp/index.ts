@@ -8,7 +8,7 @@ import Storage from 'store';
 import { StompService } from './StompService';
 import { TOKEN_KEY } from "../constant";
 
-
+export { StompService }
 export const makeStompService = (() => {
 
   let stompClient: Client = null;
@@ -53,7 +53,7 @@ export const makeStompService = (() => {
       connectedPromise('success');
       connectedPromise = null;
       if (!stompService) {
-        stompService = new StompService(stompClient, connection, rxSubscriber);
+        stompService = new StompService();
       }
     });
   };

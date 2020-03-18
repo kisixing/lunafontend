@@ -8,6 +8,7 @@ var webstomp_client_1 = __importDefault(require("webstomp-client"));
 var rxjs_1 = require("rxjs");
 var store_1 = __importDefault(require("store"));
 var StompService_1 = require("./StompService");
+exports.StompService = StompService_1.StompService;
 var constant_1 = require("../constant");
 exports.makeStompService = (function () {
     var stompClient = null;
@@ -43,7 +44,7 @@ exports.makeStompService = (function () {
             connectedPromise('success');
             connectedPromise = null;
             if (!stompService) {
-                stompService = new StompService_1.StompService(stompClient, connection, rxSubscriber);
+                stompService = new StompService_1.StompService();
             }
         });
     };
