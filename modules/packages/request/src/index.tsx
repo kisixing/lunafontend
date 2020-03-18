@@ -61,13 +61,15 @@ class R extends Request {
     });
     return this;
   };
-  authenticate = (params) => {
-    return this._request.post(`/authenticate`, {
+  authenticate = (params, c: Iconfig = {}) => {
+    const options = {
       data: params,
-    }).then(r => {
+      ...c
+    }
+    return this._request.post(`/authenticate`, options).then(r => {
       if (r && r.id_token) {
-        const Authorization = `Bearer ${r.id_token}`
-        this.config({ Authorization })
+        const Authorization = r.id_token
+        this.config({ Authorization, ...c })
         store.set(TOKEN_KEY, Authorization);
 
         return true
