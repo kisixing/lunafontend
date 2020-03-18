@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-import { MessageMap } from "./types";
-import {  post } from "@lianmed/request";
+import { MessageMap, Message, MessageType } from "./types";
+import { post } from "@lianmed/request";
 
 
 export const useUnread = () => {
@@ -15,11 +15,43 @@ export const useUnread = () => {
 
     const [chatUnread, setChatUnread] = useState<MessageMap>({})
     useEffect(() => {
-        setChatUnread({})
-        console.log('ppppp', '离线')
 
-        post('/pullUnreadMessage').then(r => {
-            console.log('ppppp', r)
+        post('/pullUnreadMessage').then((r: {
+            result: Message[]
+        }) => {
+            const result = r.result || [
+                {
+                    id: 2,
+                    receiver: 'admin',
+                    sender: 'zz',
+                    timestamp: '2019-01-01',
+                    msg: 'www',
+                    type: MessageType.text
+                },
+                {
+                    id: 2,
+                    receiver: 'admin',
+                    sender: 'ff',
+                    timestamp: '2019-01-01',
+                    msg: 'w d我第三方为夫士大夫；理解为人',
+                    type: MessageType.text
+                },
+                {
+                    id: 2,
+                    receiver: 'admin',
+                    sender: 'qq',
+                    timestamp: '2019-01-01',
+                    msg: 'www',
+                    type: MessageType.text
+                },
+            ]
+            const data = result.reduce((res, a) => {
+                const sender = a.sender
+                const old = res[sender] || []
+                old.push(a)
+                return Object.assign(res, { [sender]: old })
+            }, {})
+            setChatUnread(data)
         })
     }, [])
     // let history: any = window.history;

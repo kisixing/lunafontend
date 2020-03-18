@@ -6,7 +6,7 @@ import { Message, MessageMap } from "./types";
 
 
 
-export const useMessage = (s: StompService) => {
+export const useMessage = (s: StompService, chatUnread: MessageMap) => {
     // let collection = {
     //     'chat': {},
     //     'chatroom': {},
@@ -14,20 +14,32 @@ export const useMessage = (s: StompService) => {
     //     'stranger': {}
     // }
     const [chatMessage, setChatMessage] = useState<MessageMap>({})
-
+    const [chatReceived, setChatReceived] = useState<MessageMap>({})
     useEffect(() => {
         const event = s.getSessionId().then(s => `/user/${s}/chat`)
         const cb = (data: Message) => {
             const sender = data.sender
-            let old = chatMessage[sender] || []
+            let old = chatReceived[sender] || []
             old = [...old, data]
-            setChatMessage({ ...chatMessage, [sender]: old })
+            setChatReceived({ ...chatReceived, [sender]: old })
         }
         s.on(event, cb)
         return () => {
             s.off(event, cb)
         }
-    }, [chatMessage])
+    }, [chatReceived])
+
+    useEffect(() => {
+        const data = Object.entries(chatUnread).reduce((res, [k, v]) => {
+            let old = res[k] || []
+            const oldIds = old.map(_ => _.id)
+            v = v.filter(_ => !oldIds.includes(_.id))
+            old = [...v, ...old]
+            return Object.assign({}, res, { [k]: old })
+        }, chatReceived)
+        setChatMessage(data)
+        console.log('dd',data)
+    }, [chatReceived, chatUnread])
 
     return { chatMessage }
 

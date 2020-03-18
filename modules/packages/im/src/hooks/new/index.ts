@@ -16,7 +16,7 @@ export function useI() {
     const { stompService } = useInit()
     const s = stompService.current
     const { chatUnread } = useUnread()
-    const { chatMessage } = useMessage(s)
+    const { chatMessage } = useMessage(s, chatUnread)
     const { contacts } = useContact(chatMessage, chatUnread)
     // const { currentMessage, setCurrent, current } = useCurrent(chatMessage)
 

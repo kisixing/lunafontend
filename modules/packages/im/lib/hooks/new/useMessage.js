@@ -19,22 +19,36 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = require("react");
-exports.useMessage = function (s) {
+exports.useMessage = function (s, chatUnread) {
     var _a = react_1.useState({}), chatMessage = _a[0], setChatMessage = _a[1];
+    var _b = react_1.useState({}), chatReceived = _b[0], setChatReceived = _b[1];
     react_1.useEffect(function () {
         var event = s.getSessionId().then(function (s) { return "/user/" + s + "/chat"; });
         var cb = function (data) {
             var _a;
             var sender = data.sender;
-            var old = chatMessage[sender] || [];
+            var old = chatReceived[sender] || [];
             old = __spreadArrays(old, [data]);
-            setChatMessage(__assign(__assign({}, chatMessage), (_a = {}, _a[sender] = old, _a)));
+            setChatReceived(__assign(__assign({}, chatReceived), (_a = {}, _a[sender] = old, _a)));
         };
         s.on(event, cb);
         return function () {
             s.off(event, cb);
         };
-    }, [chatMessage]);
+    }, [chatReceived]);
+    react_1.useEffect(function () {
+        var data = Object.entries(chatUnread).reduce(function (res, _a) {
+            var _b;
+            var k = _a[0], v = _a[1];
+            var old = res[k] || [];
+            var oldIds = old.map(function (_) { return _.id; });
+            v = v.filter(function (_) { return !oldIds.includes(_.id); });
+            old = __spreadArrays(v, old);
+            return Object.assign({}, res, (_b = {}, _b[k] = old, _b));
+        }, chatReceived);
+        setChatMessage(data);
+        console.log('dd', data);
+    }, [chatReceived, chatUnread]);
     return { chatMessage: chatMessage };
 };
 //# sourceMappingURL=useMessage.js.map

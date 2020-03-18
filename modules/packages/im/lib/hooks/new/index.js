@@ -8,7 +8,7 @@ function useI() {
     var stompService = useInit_1.useInit().stompService;
     var s = stompService.current;
     var chatUnread = useUnread_1.useUnread().chatUnread;
-    var chatMessage = useMessage_1.useMessage(s).chatMessage;
+    var chatMessage = useMessage_1.useMessage(s, chatUnread).chatMessage;
     var contacts = useContact_1.useContact(chatMessage, chatUnread).contacts;
     return { chatMessage: chatMessage, contacts: contacts };
 }
