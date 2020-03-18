@@ -47,32 +47,26 @@ var antd_1 = require('antd');
 var lodash_1 = require('lodash');
 exports.horizontalFormItemLayout = {
   labelCol: {
-    xs: { span: 12 },
-    sm: { span: 12 },
+    span: 12,
   },
   wrapperCol: {
-    xs: { span: 12 },
-    sm: { span: 12 },
+    span: 12,
   },
 };
 exports.verticalFormItemLayout = {
   labelCol: {
-    xs: { span: 24 },
-    sm: { span: 24 },
+    span: 12,
   },
   wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 24 },
+    span: 12,
   },
 };
 exports.nonLabelLayout = {
   labelCol: {
-    xs: { span: 0 },
-    sm: { span: 0 },
+    span: 0,
   },
   wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 24 },
+    span: 24,
   },
 };
 var DynamicForm = (function(_super) {

@@ -5,34 +5,28 @@ import { FormInstance } from 'antd/lib/form/Form';
 
 export const horizontalFormItemLayout = {
   labelCol: {
-    xs: { span: 12 },
-    sm: { span: 12 },
+    span: 12,
   },
   wrapperCol: {
-    xs: { span: 12 },
-    sm: { span: 12 },
+    span: 12,
   },
 };
 
 export const verticalFormItemLayout = {
   labelCol: {
-    xs: { span: 24 },
-    sm: { span: 24 },
+    span: 12,
   },
   wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 24 },
+    span: 12,
   },
 };
 
 export const nonLabelLayout = {
   labelCol: {
-    xs: { span: 0 },
-    sm: { span: 0 },
+    span: 0,
   },
   wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 24 },
+    span: 24,
   },
 };
 
