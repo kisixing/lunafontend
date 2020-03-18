@@ -1,9 +1,16 @@
 "use strict";
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var react_1 = __importDefault(require("react"));
+var react_1 = __importStar(require("react"));
 var Table_1 = __importDefault(require("./Table"));
 var tableData_1 = require("./tableData");
 var Methods = function (props) {
@@ -13,5 +20,5 @@ var Methods = function (props) {
         return (react_1.default.createElement(Table_1.default, { disabled: disabled, key: k, hidden: k !== mark, dataSource: v, ref: props[k + "_ref"] }));
     })));
 };
-exports.default = Methods;
+exports.default = react_1.memo(Methods);
 //# sourceMappingURL=index.js.map

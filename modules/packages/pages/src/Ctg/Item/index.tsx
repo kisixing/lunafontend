@@ -30,7 +30,6 @@ interface IProps extends PropsWithChildren<{}> {
 const Wrapper = styled.div`
     height: 100%;
     user-select: none;
-
     .ant-card-body:hover .btn{
         opacity:1
     }
@@ -75,11 +74,11 @@ const Item = (props: IProps) => {
     };
 
     return (
-        <Wrapper>
+        <Wrapper >
             <Card
                 size="small"
                 title={<RenderTilte />}
-                style={{ height: '100%', userSelect: 'none' }}
+                style={{ height: '100%'}}
                 extra={<Extra bedname={bedname} onClose={onClose} status={status} suit={suit} />}
                 headStyle={{ background: themeColor, color: '#fff' }}
                 bodyStyle={{ padding: 0, height: 'calc(100% - 38px)' }}

@@ -5,7 +5,7 @@ import ScrollBar from '../ScrollBar';
 import { IBarTool } from '../ScrollBar/useScroll';
 import { useCheckNetwork } from '../services/WsService';
 import useDraw from "../useDraw";
-import { ButtonTools } from "./ButtonTools";
+// import { ButtonTools } from "./ButtonTools";
 import ContextMenu from "./ContextMenu";
 import { Loading } from './Loading';
 import { Suit } from './Suit';
@@ -31,11 +31,12 @@ export default forwardRef((props: IProps, ref: Ref<Suit>) => {
   const ctg = useRef<Suit>(null)
   const ecg = useRef<Drawer>(null)
   const [ecgHeight, setEcgHeight] = useState(0)
-  const [showBtns, setShowBtns] = useState(false)
-  const staticType = suitType > 0
+  // const [showBtns, setShowBtns] = useState(false)
+  // const staticType = suitType > 0
 
   const rightClickXy = useRef<{x:number,y:number}>({x:0,y:0});
 
+  console.log('yyyyyyyyyyyyyyyyyy 画')
 
   useDraw(data, ctgBox, () => {
     const instance = ctg.current = new Suit(
@@ -48,6 +49,8 @@ export default forwardRef((props: IProps, ref: Ref<Suit>) => {
       barTool.current,
       suitType
     )
+    console.log('yyyyyyyyyyyy--------new',instance)
+
     onReady(instance)
     mutableSuitObject.suit = instance;
     return instance
@@ -64,7 +67,11 @@ export default forwardRef((props: IProps, ref: Ref<Suit>) => {
   // }, [ecgHeight])
   useCheckNetwork(isOn => ctg.current && (ctg.current.isOn = isOn))
 
-  useImperativeHandle(ref, () => ctg.current)
+  useImperativeHandle(ref, () => {
+    console.log('yyyyyyyyyyyy--------useImperativeHandle',ctg.current)
+    
+    return ctg.current
+  })
   const canvasStyles: React.CSSProperties = { position: 'absolute' }
   return (
     <div style={{ width: '100%', height: '100%' }} ref={box} {...others} onContextMenu={e => {
@@ -82,8 +89,8 @@ export default forwardRef((props: IProps, ref: Ref<Suit>) => {
           rightClickXy.current.y = y
         }
       }}
-      onMouseEnter={() => staticType && setShowBtns(true)}
-      onMouseLeave={() => staticType && setShowBtns(false)}
+      // onMouseEnter={() => staticType && setShowBtns(true)}
+      // onMouseLeave={() => staticType && setShowBtns(false)}
     >
       {
         loading && (
@@ -120,9 +127,9 @@ export default forwardRef((props: IProps, ref: Ref<Suit>) => {
 
 
 
-      {
+      {/* {
         suitType > 100 && <ButtonTools ctg={ctg} visible={showBtns && staticType} />
-      }
+      } */}
     </div>
   );
 })

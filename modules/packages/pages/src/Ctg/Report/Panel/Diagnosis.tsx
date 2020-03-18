@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Input, Select } from 'antd';
-import { request } from '@lianmed/utils';
+import request from '@lianmed/request';
 // import { Editor } from "@lianmed/components";
 
 

@@ -9,6 +9,8 @@ import Analyse from './Analyse';
 import Score from './Score';
 import useAnalyse from './useAnalyse';
 import useCtgData from './useCtgData';
+import { event } from '@lianmed/utils';
+export const ANALYSE_SUCCESS_TYPE = "(●'◡'●)"
 
 const Wrapper = styled.div`
   height:100%;
@@ -26,7 +28,7 @@ const Wrapper = styled.div`
   }
 `
 
-const Analysis: FC<{ docid?: string, note?: string, id?: string, type?: 'default' | 'remote' }> = function ({ docid, type = "default", id, note }) {
+export const Ctg_Analyse: FC<{ docid?: string, note?: string, id?: string, type?: 'default' | 'remote' }> = function ({ docid, type = "default", id, note }) {
   note = note ? note : docid
   const { ctgData, loading, setFhr, fetal, setFetal } = useCtgData(note)
   const [disabled, setDisabled] = useState(true)
@@ -63,7 +65,7 @@ const Analysis: FC<{ docid?: string, note?: string, id?: string, type?: 'default
   }
   const submit = () => {
     const curData: { [x: string]: number } = d[`${mark}_ref`].current.getFieldsValue()
-    const oldData: { [x: string]: number } = old_ref.current[mark]
+    const oldData: { [x: string]: number } = old_ref.current[mark] || {}
     const rightData = analysis_ref.current.getFieldsValue()
     const { wave, diagnosistxt, classification0, classification1, ...analyseData } = rightData
 
@@ -83,6 +85,7 @@ const Analysis: FC<{ docid?: string, note?: string, id?: string, type?: 'default
     request.put(type === "default" ? '/ctg-exams-note' : '/serviceorders', { data }).then((r: any) => {
       //TODO: 结果判断
       message.success('保存成功！', 3);
+      event.emit(ANALYSE_SUCCESS_TYPE, type == "default" ? note : id)
     })
   }
 
@@ -140,5 +143,4 @@ const Analysis: FC<{ docid?: string, note?: string, id?: string, type?: 'default
     </Wrapper>
   );
 }
-
-export default Analysis;
+export default Ctg_Analyse;

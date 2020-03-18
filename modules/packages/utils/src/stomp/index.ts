@@ -6,14 +6,14 @@ import { Observable } from 'rxjs'; // tslint:disable-line
 import { Observer } from 'rxjs/Observer'; // tslint:disable-line
 import Storage from 'store';
 import { StompService } from './StompService';
-
-
+import { TOKEN_KEY } from "../constant";
 
 
 export const makeStompService = (() => {
 
   let stompClient: Client = null;
 
+  let s: Subscription[] = []
   let stompSubscriber: Subscription = null;
   let connection: Promise<any>;
   let connectedPromise: any = null;
@@ -27,37 +27,22 @@ export const makeStompService = (() => {
       rxSubscriber = _subscriber;
     });
 
-  const sendActivity = () => {
-    connection.then(() => {
-      stompClient.send(
-        '/topic/activity', // destination
-        JSON.stringify({ page: window.location.hash }), // body
-        {} // header
-      );
-    });
-  };
-
-  const subscribe = () => {
-    connection.then(() => {
-      stompSubscriber = stompClient.subscribe('/topic/tracker', data => {
-        rxSubscriber.next(JSON.parse(data.body));
-      });
-    });
-  };
 
 
-  const connect = (url = "http://transfer.lian-med.com:9987/ws/stomp?access_token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOIiwiZXhwIjoxNTg2MTYyNTM0fQ.QasLwM0f0rJvHuSZrNVuVIFK4NRNC8eHTDDy8ZcIdHRxAKtS_qoOOrezV8d0lvevOYtZLct9oZ485OkIE-q1vg") => {
+
+
+  const t = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOIiwiZXhwIjoxNTg2MTYyNTM0fQ.QasLwM0f0rJvHuSZrNVuVIFK4NRNC8eHTDDy8ZcIdHRxAKtS_qoOOrezV8d0lvevOYtZLct9oZ485OkIE-q1vg'
+
+  const connect = (url = "http://transfer.lian-med.com:9987/ws/stomp") => {
     if (connectedPromise !== null || stompService) {
-      // the connection is already being established
       return;
     }
     connection = createConnection();
     rxObservable = createListener();
 
-    // building absolute path so that websocket doesn't fail when deploying with a context path
 
     const headers = {};
-    const authToken = Storage.get('jhi-authenticationToken')
+    const authToken = t || Storage.get(TOKEN_KEY)
     if (authToken) {
       url += '?access_token=' + authToken;
     }
@@ -67,12 +52,7 @@ export const makeStompService = (() => {
     stompClient.connect(headers, () => {
       connectedPromise('success');
       connectedPromise = null;
-      subscribe();
-      sendActivity();
       if (!stompService) {
-        window.onhashchange = () => {
-          sendActivity();
-        };
         stompService = new StompService(stompClient, connection, rxSubscriber);
       }
     });
@@ -87,35 +67,31 @@ export const makeStompService = (() => {
     stompService = null;
   };
 
-  const receive = () => rxObservable;
 
 
   const unsubscribe = () => {
-    if (stompSubscriber !== null) {
-      stompSubscriber.unsubscribe();
-    }
+    s.forEach(_ => _.unsubscribe());
+    s = []
     rxObservable = createListener();
   };
 
   return (url: string) => {
-    if (true) {
+    if (!stompService) {
       connect();
-      if (!stompService) {
-        receive().subscribe(activity => {
-          console.log('stomp receive', activity)
-        });
-      }
-    } else {
-      unsubscribe();
-      disconnect();
     }
     return {
-      subscribe: (path) => {
-
-        connection.then(() => {
-          stompSubscriber = stompClient.subscribe(`${path}`, data => {
-            rxSubscriber.next(JSON.parse(data.body));
+      subscribe: (type: string) => {
+        return connection.then(() => {
+          stompSubscriber = stompClient.subscribe(`${type}`, res => {
+            let data
+            try {
+              data = JSON.parse(res.body)
+            } catch (error) {
+              data = {}
+            }
+            rxSubscriber.next({ data, type });
           });
+          s.push(stompSubscriber)
         });
       },
       send(path: string, body = {}, head = {}) {
@@ -127,11 +103,13 @@ export const makeStompService = (() => {
           );
         });
       },
-      receive(fn) {
+      receive(fn: ({ data: any, type: string }) => void) {
         connection.then(() => {
           rxObservable.subscribe(fn)
         })
-      }
+      },
+      unsubscribe,
+      disconnect
     }
   };
 

@@ -28,6 +28,8 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void) 
     }
 
     const analyse = () => {
+        console.log('yyyyyyyyyyyy--------analyse',v)
+
         v && request.post(`/ctg-exams-analyse`, {
             data: { docid, mark, start: startTime, end: startTime + interval * 240, fetal },
         }).then((r: obvue.ctg_exams_analyse) => {
@@ -36,6 +38,8 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void) 
             const { analysis, score } = r
             const f = score[`${mark.toLowerCase()}data`]
             const cur: MutableRefObject<FormInstance> = mapFormToMark[`${mark}_ref`]
+            console.log('yyyyyyyyyyyy--------cur',cur.current)
+
             cur.current.setFieldsValue(f);
             old_ref.current[mark] = f
 
@@ -62,8 +66,12 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void) 
             time = time + 4800 <= v.data.index ? time : v.data.index - 4800
             docid && setStartTime(time)
         }
+        console.log('yyyyyyyyyyyy--------on',v)
+
         v && v.on('change:selectPoint', s).on('afterInit', analyse)
         return () => {
+            console.log('yyyyyyyyyyyy--------off',v)
+
             v && v.off('change:selectPoint', s).off('afterInit', analyse)
 
         };

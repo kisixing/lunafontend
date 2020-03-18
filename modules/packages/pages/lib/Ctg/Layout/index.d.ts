@@ -28,6 +28,7 @@ interface IProps {
     onClose?: (data: any) => void;
     contentHeight: number;
     themeColor?: string;
+    loading?: boolean;
 }
 declare const Home: (props: IProps) => JSX.Element;
 export default Home;

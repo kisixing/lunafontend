@@ -27,6 +27,7 @@ export default (data: any, box: any, onReady: () => Drawer, onResize?: () => voi
 
     useEffect(() => {
         const current = suit.current
+        console.log('yyyyyyyyyyyyyyyyy init',current)
         current && current.init(data)
     }, [data])
 

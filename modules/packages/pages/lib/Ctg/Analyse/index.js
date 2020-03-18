@@ -46,8 +46,10 @@ var Analyse_1 = __importDefault(require("./Analyse"));
 var Score_1 = __importDefault(require("./Score"));
 var useAnalyse_1 = __importDefault(require("./useAnalyse"));
 var useCtgData_1 = __importDefault(require("./useCtgData"));
+var utils_1 = require("@lianmed/utils");
+exports.ANALYSE_SUCCESS_TYPE = "(●'◡'●)";
 var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  height:100%;\n  .divider {\n    border-radius:2px;\n    background:linear-gradient(45deg, #e0e0e0, transparent) !important;\n    padding-left:20px;\n    margin: 8px 0;\n  }\n  button {\n    margin:0 6px 6px 0\n  }\n  .bordered {\n    border: 1px solid #ddd;\n  }\n"], ["\n  height:100%;\n  .divider {\n    border-radius:2px;\n    background:linear-gradient(45deg, #e0e0e0, transparent) !important;\n    padding-left:20px;\n    margin: 8px 0;\n  }\n  button {\n    margin:0 6px 6px 0\n  }\n  .bordered {\n    border: 1px solid #ddd;\n  }\n"])));
-var Analysis = function (_a) {
+exports.Ctg_Analyse = function (_a) {
     var docid = _a.docid, _b = _a.type, type = _b === void 0 ? "default" : _b, id = _a.id, note = _a.note;
     note = note ? note : docid;
     var _c = useCtgData_1.default(note), ctgData = _c.ctgData, loading = _c.loading, setFhr = _c.setFhr, fetal = _c.fetal, setFetal = _c.setFetal;
@@ -68,7 +70,7 @@ var Analysis = function (_a) {
     };
     var submit = function () {
         var curData = d[mark + "_ref"].current.getFieldsValue();
-        var oldData = old_ref.current[mark];
+        var oldData = old_ref.current[mark] || {};
         var rightData = analysis_ref.current.getFieldsValue();
         var wave = rightData.wave, diagnosistxt = rightData.diagnosistxt, classification0 = rightData.classification0, classification1 = rightData.classification1, analyseData = __rest(rightData, ["wave", "diagnosistxt", "classification0", "classification1"]);
         var isedit = Object.entries(curData).find(function (_a) {
@@ -79,6 +81,7 @@ var Analysis = function (_a) {
         var data = __assign(__assign({}, identify), { diagnosis: JSON.stringify({ wave: wave, diagnosistxt: diagnosistxt, classification0: classification0, classification1: classification1 }), result: JSON.stringify(__assign(__assign(__assign({}, analyseData), curData), { isedit: isedit })) });
         request_1.default.put(type === "default" ? '/ctg-exams-note' : '/serviceorders', { data: data }).then(function (r) {
             antd_1.message.success('保存成功！', 3);
+            utils_1.event.emit(exports.ANALYSE_SUCCESS_TYPE, type == "default" ? note : id);
         });
     };
     var history = function () {
@@ -122,6 +125,6 @@ var Analysis = function (_a) {
                     react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, disabled: btnDisabled }, "\u6253\u5370"),
                     react_1.default.createElement(antd_1.Button, { size: "small", type: "primary", onClick: submit, disabled: btnDisabled }, "\u4FDD\u5B58"))))));
 };
-exports.default = Analysis;
+exports.default = exports.Ctg_Analyse;
 var templateObject_1;
 //# sourceMappingURL=index.js.map

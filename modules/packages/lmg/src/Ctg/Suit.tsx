@@ -185,6 +185,7 @@ export class Suit extends Draw {
       this.timerCtg(defaultinterval);
     }
     this.barTool.watch(value => {
+      
       //显示历史数据
       //kisi 优化拖动赋值
       this.toolbarposition = value;
@@ -208,6 +209,9 @@ export class Suit extends Draw {
       this.drawobj.drawdot(this.rightViewPosition, false);
     });
     this.barTool.watchGrab(value => {
+      console.log('ddd--------------------',value)
+ 
+
       let _viewposition;
       value = ~~value * 2;
       if (this.type == 0 && this.data.past > 0) {
@@ -217,9 +221,13 @@ export class Suit extends Draw {
           this.getoffline(this.data.docid, this.data.past);
         }
       }
+      console.log('ddd----------------this.data.index',this.data.index)
+      console.log('ddd----------------this.width*2',this.width*2)
+
       if (this.data.index < this.canvasline.width * 2) {
         return;
       }
+      console.log('ddd-----------width---------',this.width)
       this.dragtimestamp = new Date().getTime();
       //判断开始点
       if (this.rightViewPosition - value < this.canvasline.width * 2) {
@@ -265,6 +273,8 @@ export class Suit extends Draw {
       this.drawobj.drawdot(this.rightViewPosition, false);
 
     });
+    console.log('yyyyyyyyyyyy--------emit')
+
     this.emit('afterInit')
   }
   createLine() {
