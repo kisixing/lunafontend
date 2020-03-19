@@ -49,10 +49,11 @@ export const useUnread = () => {
                 .map(_ => ({ ..._, unread: true }))
                 .reduce((res, a) => {
                     const sender = a.sender
+                    const receiver = a.receiver
                     const old = res[sender] || []
-                    old.push(a)
+                    old.push({ ...a, bySelf: sender === receiver })
                     return Object.assign(res, { [sender]: old })
-                }, {})
+                }, {} as IMessageMap)
             setChatUnread(data)
         })
     }, [])

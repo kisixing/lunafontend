@@ -49,8 +49,9 @@ exports.useUnread = function () {
                 .reduce(function (res, a) {
                 var _a;
                 var sender = a.sender;
+                var receiver = a.receiver;
                 var old = res[sender] || [];
-                old.push(a);
+                old.push(__assign(__assign({}, a), { bySelf: sender === receiver }));
                 return Object.assign(res, (_a = {}, _a[sender] = old, _a));
             }, {});
             setChatUnread(data);

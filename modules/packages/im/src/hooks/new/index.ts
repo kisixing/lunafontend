@@ -6,7 +6,9 @@ import { useInit } from "./useInit";
 import { useUnread } from "./useUnread";
 import { useMessage } from "./useMessage";
 import { useContact } from "./useContact";
-// import { useCurrent } from "./useCurrent";
+import { useCurrent } from "./useCurrent";
+import { useCallback } from "react";
+import { IMessage, MessageType } from "./types";
 // export { sendTxtMessage } from '../../utils/msgTool'
 export function useI() {
     // const { conn } = useInit()
@@ -17,9 +19,19 @@ export function useI() {
     const { chatUnread, setChatUnread } = useUnread()
     const { chatMessage } = useMessage(stompService, chatUnread, setChatUnread)
     const { contacts } = useContact(chatMessage)
-    // const { currentMessage, setCurrent, current } = useCurrent(chatMessage)
+    const { current, currentMessage, setCurrentId } = useCurrent(chatMessage, contacts)
 
-    return { chatMessage, contacts }
+
+    const sendTextMessage = useCallback(
+        (receiver: string, msg: string) => {
+            const msgData: IMessage = { type: MessageType.text, receiver, msg }
+            stompService.send('/app/sendPrivateMessage', msgData)
+        },
+        [],
+    )
+
+
+    return { chatMessage, contacts, current, currentMessage, setCurrentId, sendTextMessage }
 }
 
 

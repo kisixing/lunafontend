@@ -8,13 +8,15 @@ export interface IContact {
     latestTime?: string
 }
 export interface IMessage {
-    id: number
+    id?: number
     type: string
     msg: string
-    sender: string
+    sender?: string
     receiver: string
-    timestamp: string
+    timestamp?: string
+    isHead?: boolean
     unread?: boolean
+    bySelf?: boolean
 }
 
 export interface IMessageMap {

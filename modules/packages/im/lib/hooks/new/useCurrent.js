@@ -1,22 +1,28 @@
 "use strict";
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = require("react");
-function useCurrent(chatMessage) {
+function useCurrent(chatMessage, contacts) {
     var _a = react_1.useState(null), current = _a[0], setCurrent = _a[1];
     var _b = react_1.useState([]), currentMessage = _b[0], setCurrentMessage = _b[1];
     react_1.useEffect(function () {
-        console.log('current change', current, currentMessage);
-        var mesgArr = chatMessage[current] || [];
-        setCurrentMessage(__spreadArrays(currentMessage, mesgArr));
-    }, [chatMessage, current, setCurrentMessage]);
-    return { currentMessage: currentMessage, setCurrent: setCurrent, current: current };
+        if (current) {
+            var mesgArr = chatMessage[current.name] || [];
+            mesgArr = mesgArr.sort(function (a, b) { return +new Date(a.timestamp) - +new Date(b.timestamp); })
+                .reduce(function (res, _) {
+                var preIndex = (res.length - 1) < 0 ? 0 : (res.length - 1);
+                var pre = res[preIndex] || { timestamp: new Date().toUTCString() };
+                var isHead = (+new Date(_.timestamp) - +new Date(pre.timestamp)) > 1000 * 10;
+                _.isHead = isHead;
+                return res.concat(_);
+            }, []);
+            setCurrentMessage(mesgArr);
+        }
+    }, [chatMessage, current]);
+    var setCurrentId = react_1.useCallback(function (id) {
+        var target = contacts.find(function (_) { return _.name === id; });
+        setCurrent(target);
+    }, [contacts]);
+    return { currentMessage: currentMessage, setCurrentId: setCurrentId, current: current };
 }
 exports.useCurrent = useCurrent;
 //# sourceMappingURL=useCurrent.js.map

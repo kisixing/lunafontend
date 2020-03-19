@@ -24,20 +24,20 @@ export const useMessage = (s: StompService, chatUnread: IMessageMap, setChatUnre
     }, [])
     useEffect(() => {
         const cb = (data: IMessage) => {
-            console.log('zzzz cb');
 
-            data.unread = true
             const sender = data.sender
+            const receiver = data.receiver
+            data.unread = true
+            data.bySelf = sender === receiver
+
             let old = chatMessage[sender] || []
             old = [...old, data]
             setChatMessage({ ...chatMessage, [sender]: old })
             dirty.current = true
         }
-        console.log('zzzz on');
 
         sessionId && s.on(sessionId, cb)
         return () => {
-            console.log('zzzz off');
 
             sessionId && s.off(sessionId, cb)
         }
@@ -55,8 +55,8 @@ export const useMessage = (s: StompService, chatUnread: IMessageMap, setChatUnre
             setChatMessage(data)
             setChatUnread({})
             dirty.current = false
+
         }
-        console.log('zzzz');
 
 
     }, [chatMessage, chatUnread])

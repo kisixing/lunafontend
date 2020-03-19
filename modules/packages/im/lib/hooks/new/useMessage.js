@@ -32,18 +32,17 @@ exports.useMessage = function (s, chatUnread, setChatUnread) {
     react_1.useEffect(function () {
         var cb = function (data) {
             var _a;
-            console.log('zzzz cb');
-            data.unread = true;
             var sender = data.sender;
+            var receiver = data.receiver;
+            data.unread = true;
+            data.bySelf = sender === receiver;
             var old = chatMessage[sender] || [];
             old = __spreadArrays(old, [data]);
             setChatMessage(__assign(__assign({}, chatMessage), (_a = {}, _a[sender] = old, _a)));
             dirty.current = true;
         };
-        console.log('zzzz on');
         sessionId && s.on(sessionId, cb);
         return function () {
-            console.log('zzzz off');
             sessionId && s.off(sessionId, cb);
         };
     }, [chatMessage, sessionId]);
@@ -62,7 +61,6 @@ exports.useMessage = function (s, chatUnread, setChatUnread) {
             setChatUnread({});
             dirty.current = false;
         }
-        console.log('zzzz');
     }, [chatMessage, chatUnread]);
     return { chatMessage: chatMessage };
 };
