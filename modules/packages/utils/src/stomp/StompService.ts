@@ -7,6 +7,7 @@ import { Observer } from 'rxjs/Observer'; // tslint:disable-line
 import Storage from 'store';
 import { EventEmitter } from "../Event";
 import { TOKEN_KEY } from "../constant";
+import { message } from "antd";
 const t_key = 'access_token'
 
 const t = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOIiwiZXhwIjoxNTg2MTYyNTM0fQ.QasLwM0f0rJvHuSZrNVuVIFK4NRNC8eHTDDy8ZcIdHRxAKtS_qoOOrezV8d0lvevOYtZLct9oZ485OkIE-q1vg'
@@ -35,8 +36,7 @@ export class StompService extends EventEmitter {
 
 
     config(url: string) {
-        console.log('stomp base', url);
-
+        if (!url) return
         if (!url.includes('http://')) {
             url = `http://${url}`
         }
@@ -62,6 +62,8 @@ export class StompService extends EventEmitter {
         if (StompService.s) {
             return StompService.s
         }
+        console.log('new stomservice', url, this);
+
         // this.stompClient = stompClient
         // this.connection = connection
         // this.rxSubscriber = rxSubscriber
@@ -85,7 +87,6 @@ export class StompService extends EventEmitter {
 
     connect = () => {
         const { url } = this
-        console.log(`stomp:`, url);
 
         if (this.connectedPromise !== null || this.stompService) {
             return;
@@ -95,7 +96,7 @@ export class StompService extends EventEmitter {
 
 
         const headers = {};
-
+        if (!url) return message.warning('未设置stomp url')
         const socket = new SockJS(url);
         this.stompClient = Stomp.over(socket);
 
@@ -127,6 +128,8 @@ export class StompService extends EventEmitter {
         this.rxObservable = this.createListener();
     };
     on(event: string | Promise<string>, listener: ((...args: any[]) => void) & { id?: string }) {
+        console.log('stomservice on');
+
         if (typeof event === 'string') {
             this._on(event, listener)
         } else {
@@ -138,6 +141,7 @@ export class StompService extends EventEmitter {
     }
 
     _on(event: string, listener: ((...args: any[]) => void) & { id?: string }) {
+
         super.on(event, listener)
         this.connection.then(() => {
             const stompSubscriber = this.stompClient.subscribe(event, res => {
@@ -150,13 +154,16 @@ export class StompService extends EventEmitter {
                 this.rxSubscriber.next({ data, event });
             });
             listener.id = stompSubscriber.id
+            console.log('stomservice _on', event, stompSubscriber.id);
+
             const old = this.stompSubscribers[event] || (this.stompSubscribers[event] = [])
-            old.push(stompSubscriber)
+            old.includes(stompSubscriber) || old.push(stompSubscriber)
         });
         return this
     }
 
     off(event: string | Promise<string>, listener: ((...args: any[]) => void) & { id?: string }) {
+        console.log('stomservice off', event);
         if (typeof event === 'string') {
             this._off(event, listener)
         } else {
@@ -167,9 +174,12 @@ export class StompService extends EventEmitter {
         return this
     }
     _off(event: string, listener: ((...args: any[]) => void) & { id?: string }) {
+
         super.off(event, listener)
         const old = this.stompSubscribers[event] || []
         const index = old.findIndex(_ => _.id === listener.id)
+        console.log('stomservice off__', event, listener.id, index > -1);
+
         if (index > -1) {
             const t = old.splice(index, 1)[0]
             t.unsubscribe()

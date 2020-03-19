@@ -1,4 +1,4 @@
 export declare function useI(): {
-    chatMessage: import("./types").MessageMap;
-    contacts: import("./types").Contact[];
+    chatMessage: import("./types").IMessageMap;
+    contacts: import("./types").IContact[];
 };

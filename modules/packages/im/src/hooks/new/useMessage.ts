@@ -1,45 +1,65 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import { StompService } from "@lianmed/utils";
-import { Message, MessageMap } from "./types";
+import { IMessage, IMessageMap } from "./types";
 
 
 
+const m1 = {}
 
-export const useMessage = (s: StompService, chatUnread: MessageMap) => {
+export const useMessage = (s: StompService, chatUnread: IMessageMap, setChatUnread: any) => {
     // let collection = {
     //     'chat': {},
     //     'chatroom': {},
     //     'groupchat': {},
     //     'stranger': {}
     // }
-    const [chatMessage, setChatMessage] = useState<MessageMap>({})
-    const [chatReceived, setChatReceived] = useState<MessageMap>({})
+    const [sessionId, setSessionId] = useState(null)
+    const dirty = useRef(false)
+    const [chatMessage, setChatMessage] = useState<IMessageMap>(m1)
     useEffect(() => {
-        const event = s.getSessionId().then(s => `/user/${s}/chat`)
-        const cb = (data: Message) => {
+        s.getSessionId().then(s => {
+            setSessionId(`/user/${s}/chat`)
+        })
+    }, [])
+    useEffect(() => {
+        const cb = (data: IMessage) => {
+            console.log('zzzz cb');
+
+            data.unread = true
             const sender = data.sender
-            let old = chatReceived[sender] || []
+            let old = chatMessage[sender] || []
             old = [...old, data]
-            setChatReceived({ ...chatReceived, [sender]: old })
+            setChatMessage({ ...chatMessage, [sender]: old })
+            dirty.current = true
         }
-        s.on(event, cb)
+        console.log('zzzz on');
+
+        sessionId && s.on(sessionId, cb)
         return () => {
-            s.off(event, cb)
+            console.log('zzzz off');
+
+            sessionId && s.off(sessionId, cb)
         }
-    }, [chatReceived])
+    }, [chatMessage, sessionId])
 
     useEffect(() => {
-        const data = Object.entries(chatUnread).reduce((res, [k, v]) => {
-            let old = res[k] || []
-            const oldIds = old.map(_ => _.id)
-            v = v.filter(_ => !oldIds.includes(_.id))
-            old = [...v, ...old]
-            return Object.assign({}, res, { [k]: old })
-        }, chatReceived)
-        setChatMessage(data)
-        console.log('dd',data)
-    }, [chatReceived, chatUnread])
+        if (dirty.current === true || Object.entries(chatUnread).length > 0) {
+            const data = Object.entries(chatUnread).reduce((res, [k, v]) => {
+                let old = res[k] || []
+                const oldIds = old.map(_ => _.id)
+                v = v.filter(_ => !oldIds.includes(_.id))
+                old = [...v, ...old]
+                return Object.assign({}, res, { [k]: old })
+            }, chatMessage)
+            setChatMessage(data)
+            setChatUnread({})
+            dirty.current = false
+        }
+        console.log('zzzz');
+
+
+    }, [chatMessage, chatUnread])
 
     return { chatMessage }
 

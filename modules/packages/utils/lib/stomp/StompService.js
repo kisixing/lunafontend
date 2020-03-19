@@ -22,6 +22,7 @@ var rxjs_1 = require("rxjs");
 var store_1 = __importDefault(require("store"));
 var Event_1 = require("../Event");
 var constant_1 = require("../constant");
+var antd_1 = require("antd");
 var t_key = 'access_token';
 var t = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOIiwiZXhwIjoxNTg2MTYyNTM0fQ.QasLwM0f0rJvHuSZrNVuVIFK4NRNC8eHTDDy8ZcIdHRxAKtS_qoOOrezV8d0lvevOYtZLct9oZ485OkIE-q1vg';
 var StompService = (function (_super) {
@@ -39,13 +40,14 @@ var StompService = (function (_super) {
         }); };
         _this.connect = function () {
             var url = _this.url;
-            console.log("stomp:", url);
             if (_this.connectedPromise !== null || _this.stompService) {
                 return;
             }
             _this.connection = _this.createConnection();
             _this.rxObservable = _this.createListener();
             var headers = {};
+            if (!url)
+                return antd_1.message.warning('未设置stomp url');
             var socket = new sockjs_client_1.default(url);
             _this.stompClient = webstomp_client_1.default.over(socket);
             _this.stompClient.connect(headers, function () {
@@ -73,6 +75,7 @@ var StompService = (function (_super) {
         if (StompService.s) {
             return StompService.s;
         }
+        console.log('new stomservice', url, _this);
         StompService.s = _this;
         _this.config(url);
         _this.connect();
@@ -92,7 +95,8 @@ var StompService = (function (_super) {
         return this.connection.then(function () { return _this._sessionId; });
     };
     StompService.prototype.config = function (url) {
-        console.log('stomp base', url);
+        if (!url)
+            return;
         if (!url.includes('http://')) {
             url = "http://" + url;
         }
@@ -103,10 +107,10 @@ var StompService = (function (_super) {
             u.searchParams.append(t_key, store_1.default.get(constant_1.TOKEN_KEY));
         }
         this.url = u.href;
-        console.log('url', this.url);
     };
     StompService.prototype.on = function (event, listener) {
         var _this = this;
+        console.log('stomservice on');
         if (typeof event === 'string') {
             this._on(event, listener);
         }
@@ -132,13 +136,15 @@ var StompService = (function (_super) {
                 _this.rxSubscriber.next({ data: data, event: event });
             });
             listener.id = stompSubscriber.id;
+            console.log('stomservice _on', event, stompSubscriber.id);
             var old = _this.stompSubscribers[event] || (_this.stompSubscribers[event] = []);
-            old.push(stompSubscriber);
+            old.includes(stompSubscriber) || old.push(stompSubscriber);
         });
         return this;
     };
     StompService.prototype.off = function (event, listener) {
         var _this = this;
+        console.log('stomservice off', event);
         if (typeof event === 'string') {
             this._off(event, listener);
         }
@@ -153,6 +159,7 @@ var StompService = (function (_super) {
         _super.prototype.off.call(this, event, listener);
         var old = this.stompSubscribers[event] || [];
         var index = old.findIndex(function (_) { return _.id === listener.id; });
+        console.log('stomservice off__', event, listener.id, index > -1);
         if (index > -1) {
             var t_1 = old.splice(index, 1)[0];
             t_1.unsubscribe();

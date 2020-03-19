@@ -6,10 +6,9 @@ var useMessage_1 = require("./useMessage");
 var useContact_1 = require("./useContact");
 function useI() {
     var stompService = useInit_1.useInit().stompService;
-    var s = stompService.current;
-    var chatUnread = useUnread_1.useUnread().chatUnread;
-    var chatMessage = useMessage_1.useMessage(s, chatUnread).chatMessage;
-    var contacts = useContact_1.useContact(chatMessage, chatUnread).contacts;
+    var _a = useUnread_1.useUnread(), chatUnread = _a.chatUnread, setChatUnread = _a.setChatUnread;
+    var chatMessage = useMessage_1.useMessage(stompService, chatUnread, setChatUnread).chatMessage;
+    var contacts = useContact_1.useContact(chatMessage).contacts;
     return { chatMessage: chatMessage, contacts: contacts };
 }
 exports.useI = useI;

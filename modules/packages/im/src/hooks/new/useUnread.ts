@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { MessageMap, Message, MessageType } from "./types";
+import { IMessageMap, IMessage, MessageType } from "./types";
 import { post } from "@lianmed/request";
 
 
@@ -13,11 +13,11 @@ export const useUnread = () => {
     // }
 
 
-    const [chatUnread, setChatUnread] = useState<MessageMap>({})
+    const [chatUnread, setChatUnread] = useState<IMessageMap>({})
     useEffect(() => {
 
         post('/pullUnreadMessage').then((r: {
-            result: Message[]
+            result: IMessage[]
         }) => {
             const result = r.result || [
                 {
@@ -45,17 +45,19 @@ export const useUnread = () => {
                     type: MessageType.text
                 },
             ]
-            const data = result.reduce((res, a) => {
-                const sender = a.sender
-                const old = res[sender] || []
-                old.push(a)
-                return Object.assign(res, { [sender]: old })
-            }, {})
+            const data = result
+                .map(_ => ({ ..._, unread: true }))
+                .reduce((res, a) => {
+                    const sender = a.sender
+                    const old = res[sender] || []
+                    old.push(a)
+                    return Object.assign(res, { [sender]: old })
+                }, {})
             setChatUnread(data)
         })
     }, [])
     // let history: any = window.history;
 
-    return { chatUnread }
+    return { chatUnread, setChatUnread }
 
 }

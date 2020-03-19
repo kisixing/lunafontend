@@ -1,4 +1,4 @@
-import { MessageMap, Contact } from "./types";
-export declare function useContact(chatMessage: MessageMap, chatUnread: MessageMap): {
-    contacts: Contact[];
+import { IMessageMap, IContact } from "./types";
+export declare function useContact(chatMessage: IMessageMap): {
+    contacts: IContact[];
 };

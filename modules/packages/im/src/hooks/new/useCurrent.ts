@@ -1,12 +1,12 @@
 
 import { useEffect, useState } from "react";
 
-import { MessageMap, Message } from "./types";
+import { IMessageMap, IMessage } from "./types";
 
 
-export function useCurrent(chatMessage: MessageMap) {
+export function useCurrent(chatMessage: IMessageMap) {
     const [current, setCurrent] = useState<string>(null)
-    const [currentMessage, setCurrentMessage] = useState<Message[]>([])
+    const [currentMessage, setCurrentMessage] = useState<IMessage[]>([])
     useEffect(() => {
         console.log('current change', current, currentMessage)
         const mesgArr = chatMessage[current] || []

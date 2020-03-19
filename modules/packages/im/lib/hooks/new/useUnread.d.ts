@@ -1,4 +1,6 @@
-import { MessageMap } from "./types";
+/// <reference types="react" />
+import { IMessageMap } from "./types";
 export declare const useUnread: () => {
-    chatUnread: MessageMap;
+    chatUnread: IMessageMap;
+    setChatUnread: import("react").Dispatch<import("react").SetStateAction<IMessageMap>>;
 };

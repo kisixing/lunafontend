@@ -1,7 +1,7 @@
 /// <reference types="react" />
-import { MessageMap, Message } from "./types";
-export declare function useCurrent(chatMessage: MessageMap): {
-    currentMessage: Message[];
+import { IMessageMap, IMessage } from "./types";
+export declare function useCurrent(chatMessage: IMessageMap): {
+    currentMessage: IMessage[];
     setCurrent: import("react").Dispatch<import("react").SetStateAction<string>>;
     current: string;
 };

@@ -7,12 +7,12 @@ export class EventEmitter {
     if (!existing) {
       this.events[event] = existing = [];
     }
-    existing.push(listener);
+    existing.includes(listener) || existing.push(listener);
 
     return this;
   }
   on(event: string, listener: (...args: any[]) => void): this {
-    this.off(event, listener)
+    // this.off(event, listener)
     return this.addListener(event, listener);
   }
   emit(event: string, ...args: any[]): boolean {

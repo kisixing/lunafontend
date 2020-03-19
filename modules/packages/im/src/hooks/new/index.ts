@@ -14,12 +14,10 @@ export function useI() {
     // const { friends } = useRoster(conn)
     // const { chatMessage } = useMessage(conn)
     const { stompService } = useInit()
-    const s = stompService.current
-    const { chatUnread } = useUnread()
-    const { chatMessage } = useMessage(s, chatUnread)
-    const { contacts } = useContact(chatMessage, chatUnread)
+    const { chatUnread, setChatUnread } = useUnread()
+    const { chatMessage } = useMessage(stompService, chatUnread, setChatUnread)
+    const { contacts } = useContact(chatMessage)
     // const { currentMessage, setCurrent, current } = useCurrent(chatMessage)
-
 
     return { chatMessage, contacts }
 }

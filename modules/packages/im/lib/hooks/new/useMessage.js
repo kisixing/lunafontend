@@ -19,36 +19,51 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = require("react");
-exports.useMessage = function (s, chatUnread) {
-    var _a = react_1.useState({}), chatMessage = _a[0], setChatMessage = _a[1];
-    var _b = react_1.useState({}), chatReceived = _b[0], setChatReceived = _b[1];
+var m1 = {};
+exports.useMessage = function (s, chatUnread, setChatUnread) {
+    var _a = react_1.useState(null), sessionId = _a[0], setSessionId = _a[1];
+    var dirty = react_1.useRef(false);
+    var _b = react_1.useState(m1), chatMessage = _b[0], setChatMessage = _b[1];
     react_1.useEffect(function () {
-        var event = s.getSessionId().then(function (s) { return "/user/" + s + "/chat"; });
+        s.getSessionId().then(function (s) {
+            setSessionId("/user/" + s + "/chat");
+        });
+    }, []);
+    react_1.useEffect(function () {
         var cb = function (data) {
             var _a;
+            console.log('zzzz cb');
+            data.unread = true;
             var sender = data.sender;
-            var old = chatReceived[sender] || [];
+            var old = chatMessage[sender] || [];
             old = __spreadArrays(old, [data]);
-            setChatReceived(__assign(__assign({}, chatReceived), (_a = {}, _a[sender] = old, _a)));
+            setChatMessage(__assign(__assign({}, chatMessage), (_a = {}, _a[sender] = old, _a)));
+            dirty.current = true;
         };
-        s.on(event, cb);
+        console.log('zzzz on');
+        sessionId && s.on(sessionId, cb);
         return function () {
-            s.off(event, cb);
+            console.log('zzzz off');
+            sessionId && s.off(sessionId, cb);
         };
-    }, [chatReceived]);
+    }, [chatMessage, sessionId]);
     react_1.useEffect(function () {
-        var data = Object.entries(chatUnread).reduce(function (res, _a) {
-            var _b;
-            var k = _a[0], v = _a[1];
-            var old = res[k] || [];
-            var oldIds = old.map(function (_) { return _.id; });
-            v = v.filter(function (_) { return !oldIds.includes(_.id); });
-            old = __spreadArrays(v, old);
-            return Object.assign({}, res, (_b = {}, _b[k] = old, _b));
-        }, chatReceived);
-        setChatMessage(data);
-        console.log('dd', data);
-    }, [chatReceived, chatUnread]);
+        if (dirty.current === true || Object.entries(chatUnread).length > 0) {
+            var data = Object.entries(chatUnread).reduce(function (res, _a) {
+                var _b;
+                var k = _a[0], v = _a[1];
+                var old = res[k] || [];
+                var oldIds = old.map(function (_) { return _.id; });
+                v = v.filter(function (_) { return !oldIds.includes(_.id); });
+                old = __spreadArrays(v, old);
+                return Object.assign({}, res, (_b = {}, _b[k] = old, _b));
+            }, chatMessage);
+            setChatMessage(data);
+            setChatUnread({});
+            dirty.current = false;
+        }
+        console.log('zzzz');
+    }, [chatMessage, chatUnread]);
     return { chatMessage: chatMessage };
 };
 //# sourceMappingURL=useMessage.js.map

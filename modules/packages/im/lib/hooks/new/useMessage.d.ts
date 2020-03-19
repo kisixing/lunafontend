@@ -1,5 +1,5 @@
 import { StompService } from "@lianmed/utils";
-import { MessageMap } from "./types";
-export declare const useMessage: (s: StompService, chatUnread: MessageMap) => {
-    chatMessage: MessageMap;
+import { IMessageMap } from "./types";
+export declare const useMessage: (s: StompService, chatUnread: IMessageMap, setChatUnread: any) => {
+    chatMessage: IMessageMap;
 };
