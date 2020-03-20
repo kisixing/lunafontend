@@ -16,6 +16,7 @@ interface IData {
 }
 
 export function update_status(this: WsService, received_msg: IData) {
+    console.log('----update_status---- \n', received_msg)
     const { datacache, BedStatus } = this
     const { Working, Stopped, Offline, OfflineStopped } = BedStatus
     // 状态机处理

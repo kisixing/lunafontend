@@ -407,7 +407,6 @@ var DrawCTG = (function () {
     };
     DrawCTG.prototype.drawdot = function (cur, isemit) {
         if (isemit === void 0) { isemit = false; }
-        this.suit.log('drawdot', cur, isemit, this.suit.data.index, this.suit.width * 2);
         var _a = this, suit = _a.suit, linecontext = _a.linecontext, max = _a.max;
         var drawAnalyse = suit.drawAnalyse;
         var _b = suit.data, fhr = _b.fhr, toco = _b.toco, fm = _b.fm;

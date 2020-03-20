@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var utils_1 = require("../utils");
 function update_status(received_msg) {
+    console.log('----update_status---- \n', received_msg);
     var _a = this, datacache = _a.datacache, BedStatus = _a.BedStatus;
     var Working = BedStatus.Working, Stopped = BedStatus.Stopped, Offline = BedStatus.Offline, OfflineStopped = BedStatus.OfflineStopped;
     var statusdata = received_msg.data;

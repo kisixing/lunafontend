@@ -147,7 +147,7 @@ export default class DrawCTG {
     // linecontext.stroke();
   }
   drawdot(cur, isemit = false) {
-    this.suit.log('drawdot', cur, isemit, this.suit.data.index, this.suit.width * 2)
+    // this.suit.log('drawdot', cur, isemit, this.suit.data.index, this.suit.width * 2)
     const { suit, linecontext, max } = this;
     const { drawAnalyse } = suit
     const { fhr, toco, fm } = suit.data;
