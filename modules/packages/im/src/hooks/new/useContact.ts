@@ -11,7 +11,7 @@ export function useContact(chatMessage: IMessageMap) {
         const data = Object.keys(chatMessage).map(chatId => {
             const msgArr = chatMessage[chatId]
             const c: IContact = { name: chatId }
-            if (msgArr) {
+            if (msgArr.length) {
                 const latestMsg = msgArr[msgArr.length - 1]
                 c.latestMessage = latestMsg.type === MessageType.text ? latestMsg.msg : '[media]';
                 c.unread = msgArr.filter(_ => _.unread).length

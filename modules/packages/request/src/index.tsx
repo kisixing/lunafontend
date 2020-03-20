@@ -4,7 +4,7 @@ import getErrData from './getErrData';
 import Request from './Request';
 import store from "store";
 import { TOKEN_KEY } from "@lianmed/utils";
-
+import reasons from './reasons'
 
 class R extends Request {
   TOKEN_KEY = TOKEN_KEY
@@ -23,7 +23,6 @@ class R extends Request {
     this.init(this.configure);
     // request拦截器, 改变url 或 options.
     this._request.interceptors.request.use((url, options) => {
-      // eslint-disable-next-line no-param-reassign
 
       Authorization &&
         ((options.headers as any).Authorization =
@@ -36,11 +35,11 @@ class R extends Request {
       const errorData = getErrData(response);
       const { status, errortext, url, data } = errorData;
 
-      // eslint-disable-next-line no-param-reassign
       if ([200, 201, 204, 304].includes(status)) {
         successText && message.success(successText);
       } else {
-        data.then(({ title = 'no title' } = { title: 'no title' }) => {
+        const r = reasons[Math.floor(Math.random() * reasons.length)]
+        data.then(({ title = r } = { title: r }) => {
           if (status === 401) {
             notification.error({
               message: '未登录或登录已过期，请重新登录。',

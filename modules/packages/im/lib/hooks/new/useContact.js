@@ -8,7 +8,7 @@ function useContact(chatMessage) {
         var data = Object.keys(chatMessage).map(function (chatId) {
             var msgArr = chatMessage[chatId];
             var c = { name: chatId };
-            if (msgArr) {
+            if (msgArr.length) {
                 var latestMsg = msgArr[msgArr.length - 1];
                 c.latestMessage = latestMsg.type === types_1.MessageType.text ? latestMsg.msg : '[media]';
                 c.unread = msgArr.filter(function (_) { return _.unread; }).length;

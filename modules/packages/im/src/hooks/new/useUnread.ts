@@ -23,35 +23,28 @@ export const useUnread = () => {
                 {
                     id: 2,
                     receiver: 'admin',
-                    sender: 'zz',
+                    sender: 'admin',
                     timestamp: '2019-01-01',
-                    msg: 'www',
+                    msg: '你好:D',
                     type: MessageType.text
                 },
                 {
-                    id: 2,
+                    id: 3,
                     receiver: 'admin',
-                    sender: 'ff',
+                    sender: 'admin',
                     timestamp: '2019-01-01',
-                    msg: 'w d我第三方为夫士大夫；理解为人',
-                    type: MessageType.text
-                },
-                {
-                    id: 2,
-                    receiver: 'admin',
-                    sender: 'qq',
-                    timestamp: '2019-01-01',
-                    msg: 'www',
-                    type: MessageType.text
+                    msg: '你好:D',
+                    type: MessageType.text,
+                    bySelf: true
                 },
             ]
             const data = result
                 .map(_ => ({ ..._, unread: true }))
                 .reduce((res, a) => {
                     const sender = a.sender
-                    const receiver = a.receiver
+                    // const receiver = a.receiver
                     const old = res[sender] || []
-                    old.push({ ...a, bySelf: sender === receiver })
+                    old.push({ ...a })
                     return Object.assign(res, { [sender]: old })
                 }, {} as IMessageMap)
             setChatUnread(data)

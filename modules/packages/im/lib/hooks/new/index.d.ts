@@ -1,8 +1,8 @@
-import { IMessage } from "./types";
+import { IMessage, IContact } from "./types";
 export declare function useI(): {
     chatMessage: import("./types").IMessageMap;
-    contacts: import("./types").IContact[];
-    current: import("./types").IContact;
+    contacts: IContact[];
+    current: IContact;
     currentMessage: IMessage[];
     setCurrentId: (id: string) => void;
     sendTextMessage: (receiver: string, msg: string) => void;

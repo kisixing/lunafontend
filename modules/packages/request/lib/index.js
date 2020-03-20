@@ -32,6 +32,7 @@ var getErrData_1 = __importDefault(require("./getErrData"));
 var Request_1 = __importDefault(require("./Request"));
 var store_1 = __importDefault(require("store"));
 var utils_1 = require("@lianmed/utils");
+var reasons_1 = __importDefault(require("./reasons"));
 var R = (function (_super) {
     __extends(R, _super);
     function R() {
@@ -63,8 +64,9 @@ var R = (function (_super) {
                     successText && antd_1.message.success(successText);
                 }
                 else {
+                    var r_1 = reasons_1.default[Math.floor(Math.random() * reasons_1.default.length)];
                     data.then(function (_a) {
-                        var _b = (_a === void 0 ? { title: 'no title' } : _a).title, title = _b === void 0 ? 'no title' : _b;
+                        var _b = (_a === void 0 ? { title: r_1 } : _a).title, title = _b === void 0 ? r_1 : _b;
                         if (status === 401) {
                             antd_1.notification.error({
                                 message: '未登录或登录已过期，请重新登录。',

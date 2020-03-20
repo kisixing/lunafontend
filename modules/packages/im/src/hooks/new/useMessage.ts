@@ -2,12 +2,13 @@ import { useEffect, useState, useRef } from "react";
 
 import { StompService } from "@lianmed/utils";
 import { IMessage, IMessageMap } from "./types";
+import { IContact } from "../../types";
 
 
 
 const m1 = {}
 
-export const useMessage = (s: StompService, chatUnread: IMessageMap, setChatUnread: any) => {
+export const useMessage = (s: StompService, chatUnread: IMessageMap, setChatUnread: any, current: IContact) => {
     // let collection = {
     //     'chat': {},
     //     'chatroom': {},
@@ -24,15 +25,16 @@ export const useMessage = (s: StompService, chatUnread: IMessageMap, setChatUnre
     }, [])
     useEffect(() => {
         const cb = (data: IMessage) => {
-
             const sender = data.sender
             const receiver = data.receiver
-            data.unread = true
-            data.bySelf = sender === receiver
+            const bySelf = sender === ''
+
+            data.unread = (current && current.name) !== (bySelf ? receiver : sender)
+            data.bySelf = bySelf
 
             let old = chatMessage[sender] || []
             old = [...old, data]
-            setChatMessage({ ...chatMessage, [sender]: old })
+            setChatMessage({ ...chatMessage, [bySelf ? receiver : sender]: old })
             dirty.current = true
         }
 
@@ -61,6 +63,8 @@ export const useMessage = (s: StompService, chatUnread: IMessageMap, setChatUnre
 
     }, [chatMessage, chatUnread])
 
-    return { chatMessage }
+
+
+    return { chatMessage, setChatMessage }
 
 }

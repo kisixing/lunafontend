@@ -22,26 +22,19 @@ exports.useUnread = function () {
                 {
                     id: 2,
                     receiver: 'admin',
-                    sender: 'zz',
+                    sender: 'admin',
                     timestamp: '2019-01-01',
-                    msg: 'www',
+                    msg: '你好:D',
                     type: types_1.MessageType.text
                 },
                 {
-                    id: 2,
+                    id: 3,
                     receiver: 'admin',
-                    sender: 'ff',
+                    sender: 'admin',
                     timestamp: '2019-01-01',
-                    msg: 'w d我第三方为夫士大夫；理解为人',
-                    type: types_1.MessageType.text
-                },
-                {
-                    id: 2,
-                    receiver: 'admin',
-                    sender: 'qq',
-                    timestamp: '2019-01-01',
-                    msg: 'www',
-                    type: types_1.MessageType.text
+                    msg: '你好:D',
+                    type: types_1.MessageType.text,
+                    bySelf: true
                 },
             ];
             var data = result
@@ -49,9 +42,8 @@ exports.useUnread = function () {
                 .reduce(function (res, a) {
                 var _a;
                 var sender = a.sender;
-                var receiver = a.receiver;
                 var old = res[sender] || [];
-                old.push(__assign(__assign({}, a), { bySelf: sender === receiver }));
+                old.push(__assign({}, a));
                 return Object.assign(res, (_a = {}, _a[sender] = old, _a));
             }, {});
             setChatUnread(data);

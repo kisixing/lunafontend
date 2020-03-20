@@ -20,7 +20,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = require("react");
 var m1 = {};
-exports.useMessage = function (s, chatUnread, setChatUnread) {
+exports.useMessage = function (s, chatUnread, setChatUnread, current) {
     var _a = react_1.useState(null), sessionId = _a[0], setSessionId = _a[1];
     var dirty = react_1.useRef(false);
     var _b = react_1.useState(m1), chatMessage = _b[0], setChatMessage = _b[1];
@@ -34,11 +34,12 @@ exports.useMessage = function (s, chatUnread, setChatUnread) {
             var _a;
             var sender = data.sender;
             var receiver = data.receiver;
-            data.unread = true;
-            data.bySelf = sender === receiver;
+            var bySelf = sender === '';
+            data.unread = (current && current.name) !== (bySelf ? receiver : sender);
+            data.bySelf = bySelf;
             var old = chatMessage[sender] || [];
             old = __spreadArrays(old, [data]);
-            setChatMessage(__assign(__assign({}, chatMessage), (_a = {}, _a[sender] = old, _a)));
+            setChatMessage(__assign(__assign({}, chatMessage), (_a = {}, _a[bySelf ? receiver : sender] = old, _a)));
             dirty.current = true;
         };
         sessionId && s.on(sessionId, cb);
@@ -62,6 +63,6 @@ exports.useMessage = function (s, chatUnread, setChatUnread) {
             dirty.current = false;
         }
     }, [chatMessage, chatUnread]);
-    return { chatMessage: chatMessage };
+    return { chatMessage: chatMessage, setChatMessage: setChatMessage };
 };
 //# sourceMappingURL=useMessage.js.map
