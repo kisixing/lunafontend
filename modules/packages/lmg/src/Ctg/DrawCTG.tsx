@@ -523,15 +523,20 @@ export default class DrawCTG {
     }
     gridcontext.stroke();
   };
+
+
+
+
   showcur = (x: number, eventemit = false) => {
     const { suit, datacontext } = this;
     const { fhr, toco } = suit.data;
     let curpostion = 10;
-    let curvalue = '-- --';
+    const EMPTY_SYMBOL = '-- --'
+    let curvalue = EMPTY_SYMBOL;
     let startx = x;
-    let fontsize = Math.floor(suit.canvasline.height / 20);
-    if (fontsize < 16)
-      fontsize = 16;
+    let fontsize = Math.floor(suit.height / 20);
+    fontsize = fontsize < 16 ? 16 : fontsize
+  
     datacontext.clearRect(0, 0, fontsize * 10, fontsize * 5);
     datacontext.textAlign = 'left';
     datacontext.textBaseline = 'top';
@@ -557,37 +562,34 @@ export default class DrawCTG {
       label = '';
       offsetfhr = '';
       span = '';
-      curvalue = '-- --';
+      curvalue = EMPTY_SYMBOL;
       datacontext.font = 'bold ' + fontsize + 'px arial';
       datacontext.fillStyle = suit.ctgconfig.fhrcolor[i];
-      if (typeof (fhr[i]) == "undefined") {
-        return;
+      let cv = fhr[i] && fhr[i][x]
+      if (typeof cv !== 'number') {
+        return
       }
-      if (typeof (fhr[i][x]) != "undefined") {
-        curvalue = fhr[i][x] as any;
-        if (curvalue == "0") {
-          curvalue = '-- --';
-        } else {
-          datacontext.fillStyle = suit.ctgconfig.alarmcolor;
-          if (suit.ctgconfig.alarm_enable && fhr[i][x] > suit.ctgconfig.alarm_high) {
-            if (eventemit) {
-              console.log('心率过高', fhr[i][x]);
-              this.suit.alarmOn('心率过高');
-            }
-            alarm = 1;
-            this.suit.alarm = alarm;
-          } else if (suit.ctgconfig.alarm_enable && fhr[i][x] < suit.ctgconfig.alarm_low) {
-            if (eventemit) {
-              console.log('心率过低', fhr[i][x]);
-              this.suit.alarmOn('心率过低');
-            }
-            alarm = 1;
-            this.suit.alarm = alarm;
-          }
-          else {
-            datacontext.fillStyle = suit.ctgconfig.fhrcolor[i];
-          }
+
+      curvalue = cv < 1 ? EMPTY_SYMBOL : fhr[i][x].toString()
+
+      datacontext.fillStyle = suit.ctgconfig.alarmcolor;
+      if (suit.ctgconfig.alarm_enable && fhr[i][x] > suit.ctgconfig.alarm_high) {
+        if (eventemit) {
+          console.log('心率过高', fhr[i][x]);
+          this.suit.alarmOn('心率过高');
         }
+        alarm = 1;
+        this.suit.alarm = alarm;
+      } else if (suit.ctgconfig.alarm_enable && fhr[i][x] < suit.ctgconfig.alarm_low) {
+        if (eventemit) {
+          console.log('心率过低', fhr[i][x]);
+          this.suit.alarmOn('心率过低');
+        }
+        alarm = 1;
+        this.suit.alarm = alarm;
+      }
+      else {
+        datacontext.fillStyle = suit.ctgconfig.fhrcolor[i];
       }
       if (alarm == 0 && suit.ctgconfig.alarm_enable && this.suit.alarm == 1) {
 
@@ -630,14 +632,17 @@ export default class DrawCTG {
       curpostion += fontsize;
     }
     datacontext.fillStyle = suit.ctgconfig.tococolor;
-    if (typeof (toco[x]) != "undefined") {
-      curvalue = toco[x] as any;
-    } else {
-      curvalue = '-- --';
-    }
-    datacontext.font = 'bold ' + fontsize + 'px arial';
-    datacontext.fillText('TOCO: ' + curvalue, 10, curpostion);
+
+    // toco cur
+    const tocoCurValue = (typeof toco[x] === 'number' && toco[x] < 1) ? EMPTY_SYMBOL : toco[x].toString()
+    datacontext.font = `bold ${fontsize}px arial`;
+    datacontext.fillText(`TOCO: ${tocoCurValue}`, 10, curpostion);
   };
+
+
+
+
+
   showfm = postion => {
     const { gridcontext, max, min } = this;
     let yposition = this.yspan * (max - min) + this.basetop + 18;
