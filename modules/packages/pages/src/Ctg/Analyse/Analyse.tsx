@@ -1,5 +1,5 @@
 import React, { useEffect, forwardRef, memo } from 'react';
-import { Form, Radio, Input,  InputNumber, Row, Col } from 'antd';
+import { Form, Radio, Input, InputNumber, Row, Col } from 'antd';
 import { event } from '@lianmed/utils';
 import { FormInstance } from 'antd/lib/form';
 
@@ -93,31 +93,30 @@ const Setting = forwardRef<FormInstance, { [x: string]: any }>((props, ref) => {
           </Row>
 
           <div className="divider" >类型</div>
-          <Form.Item label="NST" labelCol={{ xs: 4 }} wrapperCol={{ xs: 18 }} style={{ marginBottom: 0 }}  name='classification0'>
+          <Form.Item label="NST" labelCol={{ xs: 4 }} wrapperCol={{ xs: 18 }} style={{ marginBottom: 0 }} name='NST'>
             <Radio.Group>
-              <Radio value={1}>有反应</Radio>
-              <Radio value={2}>无反应</Radio>
-              <Radio value={3}>可疑</Radio>
-              <Radio value={4}>不满意</Radio>
+              <Radio value={'有反应'}>有反应</Radio>
+              <Radio value={'无反应'}>无反应</Radio>
+              <Radio value={'可疑'}>可疑</Radio>
+              <Radio value={'不满意'}>不满意</Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item label="CST/OCT" style={{ marginBottom: 0 }} labelCol={{ xs: 4 }} wrapperCol={{ xs: 18 }} name='classification1'>
+          <Form.Item label="CST/OCT" style={{ marginBottom: 0 }} labelCol={{ xs: 4 }} wrapperCol={{ xs: 18 }} name='CST_OCT'>
             <Radio.Group>
-              <Radio value={1}>阴性</Radio>
-              <Radio value={2}>阳性</Radio>
-              <Radio value={3}>可疑</Radio>
-              <Radio value={4}>不满意</Radio>
+              <Radio value={'阴性'}>阴性</Radio>
+              <Radio value={'阳性'}>阳性</Radio>
+              <Radio value={'可疑'}>可疑</Radio>
+              <Radio value={'不满意'}>不满意</Radio>
             </Radio.Group>
           </Form.Item>
           <div className="divider" >波形</div>
           <Form.Item label="" style={{ marginBottom: 0 }} name="wave">
-
             <Radio.Group>
-              <Radio value={1}>平滑</Radio>
-              <Radio value={2}>小波浪</Radio>
-              <Radio value={3}>中波浪</Radio>
-              <Radio value={4}>大波浪</Radio>
-              <Radio value={5}>正弦型</Radio>
+              <Radio value={'平滑'}>平滑</Radio>
+              <Radio value={'小波浪'}>小波浪</Radio>
+              <Radio value={'中波浪'}>中波浪</Radio>
+              <Radio value={'大波浪'}>大波浪</Radio>
+              <Radio value={'正弦型'}>正弦型</Radio>
             </Radio.Group>
           </Form.Item>
           <div className="divider" >诊断</div>
