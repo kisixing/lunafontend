@@ -10,7 +10,6 @@ import { TOKEN_KEY } from "../constant";
 import { message } from "antd";
 const t_key = 'access_token'
 
-const t = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOIiwiZXhwIjoxNTg2MTYyNTM0fQ.QasLwM0f0rJvHuSZrNVuVIFK4NRNC8eHTDDy8ZcIdHRxAKtS_qoOOrezV8d0lvevOYtZLct9oZ485OkIE-q1vg'
 
 export class StompService extends EventEmitter {
     static s: StompService
@@ -40,14 +39,19 @@ export class StompService extends EventEmitter {
         if (!url.includes('http://')) {
             url = `http://${url}`
         }
-        const u = new URL(url)
-        u.pathname = '/ws/stomp'
-        const t = u.searchParams.get(t_key)
-        if (!t) {
-            u.searchParams.append(t_key, Storage.get(TOKEN_KEY))
-        }
+        try {
+            const u = new URL(url)
+            u.pathname = '/ws/stomp'
+            const t = u.searchParams.get(t_key)
+            if (!t) {
+                const localT: string = Storage.get(TOKEN_KEY) || ''
+                u.searchParams.append(t_key, localT.startsWith('Bearer ') ? localT.slice(7) : localT)
+            }
 
-        this.url = u.href
+            this.url = u.href
+        } catch (e) {
+            console.log(e)
+        }
     }
 
 
@@ -55,7 +59,7 @@ export class StompService extends EventEmitter {
 
 
 
-    constructor(url: string = `http://transfer.lian-med.com:9987/ws/stomp?access_token=${t}`) {
+    constructor(url: string = location.host) {
         super()
 
 
@@ -97,8 +101,12 @@ export class StompService extends EventEmitter {
 
         const headers = {};
         if (!url) return message.warning('未设置stomp url')
-        const socket = new SockJS(url);
-        this.stompClient = Stomp.over(socket);
+        try {
+            const socket = new SockJS(url);
+            this.stompClient = Stomp.over(socket);
+        } catch (e) {
+            console.log(e, url)
+        }
 
         this.stompClient.connect(headers, () => {
             this.connectedPromise('success');

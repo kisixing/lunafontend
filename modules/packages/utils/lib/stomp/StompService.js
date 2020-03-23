@@ -24,11 +24,10 @@ var Event_1 = require("../Event");
 var constant_1 = require("../constant");
 var antd_1 = require("antd");
 var t_key = 'access_token';
-var t = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOIiwiZXhwIjoxNTg2MTYyNTM0fQ.QasLwM0f0rJvHuSZrNVuVIFK4NRNC8eHTDDy8ZcIdHRxAKtS_qoOOrezV8d0lvevOYtZLct9oZ485OkIE-q1vg';
 var StompService = (function (_super) {
     __extends(StompService, _super);
     function StompService(url) {
-        if (url === void 0) { url = "http://transfer.lian-med.com:9987/ws/stomp?access_token=" + t; }
+        if (url === void 0) { url = location.host; }
         var _this = _super.call(this) || this;
         _this.stompClient = null;
         _this.stompSubscribers = {};
@@ -48,8 +47,13 @@ var StompService = (function (_super) {
             var headers = {};
             if (!url)
                 return antd_1.message.warning('未设置stomp url');
-            var socket = new sockjs_client_1.default(url);
-            _this.stompClient = webstomp_client_1.default.over(socket);
+            try {
+                var socket = new sockjs_client_1.default(url);
+                _this.stompClient = webstomp_client_1.default.over(socket);
+            }
+            catch (e) {
+                console.log(e, url);
+            }
             _this.stompClient.connect(headers, function () {
                 _this.connectedPromise('success');
                 _this.connectedPromise = null;
@@ -100,13 +104,19 @@ var StompService = (function (_super) {
         if (!url.includes('http://')) {
             url = "http://" + url;
         }
-        var u = new URL(url);
-        u.pathname = '/ws/stomp';
-        var t = u.searchParams.get(t_key);
-        if (!t) {
-            u.searchParams.append(t_key, store_1.default.get(constant_1.TOKEN_KEY));
+        try {
+            var u = new URL(url);
+            u.pathname = '/ws/stomp';
+            var t = u.searchParams.get(t_key);
+            if (!t) {
+                var localT = store_1.default.get(constant_1.TOKEN_KEY) || '';
+                u.searchParams.append(t_key, localT.startsWith('Bearer ') ? localT.slice(7) : localT);
+            }
+            this.url = u.href;
         }
-        this.url = u.href;
+        catch (e) {
+            console.log(e);
+        }
     };
     StompService.prototype.on = function (event, listener) {
         var _this = this;
@@ -161,8 +171,8 @@ var StompService = (function (_super) {
         var index = old.findIndex(function (_) { return _.id === listener.id; });
         console.log('stomservice off__', event, listener.id, index > -1);
         if (index > -1) {
-            var t_1 = old.splice(index, 1)[0];
-            t_1.unsubscribe();
+            var t = old.splice(index, 1)[0];
+            t.unsubscribe();
         }
         return this;
     };

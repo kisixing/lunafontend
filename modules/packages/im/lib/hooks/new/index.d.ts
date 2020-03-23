@@ -1,5 +1,5 @@
 import { IMessage, IContact } from "./types";
-export declare function useI(): {
+export declare function useI(url?: string): {
     chatMessage: import("./types").IMessageMap;
     contacts: IContact[];
     current: IContact;

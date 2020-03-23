@@ -18,9 +18,9 @@ var useContact_1 = require("./useContact");
 var useCurrentMessage_1 = require("./useCurrentMessage");
 var react_1 = require("react");
 var types_1 = require("./types");
-function useI() {
+function useI(url) {
     var _a = react_1.useState(null), current = _a[0], setCurrent = _a[1];
-    var stompService = useInit_1.useInit().stompService;
+    var stompService = useInit_1.useInit(url).stompService;
     var _b = useUnread_1.useUnread(), chatUnread = _b.chatUnread, setChatUnread = _b.setChatUnread;
     var _c = useMessage_1.useMessage(stompService, chatUnread, setChatUnread, current), chatMessage = _c.chatMessage, setChatMessage = _c.setChatMessage;
     var contacts = useContact_1.useContact(chatMessage).contacts;

@@ -35,11 +35,12 @@ exports.useMessage = function (s, chatUnread, setChatUnread, current) {
             var sender = data.sender;
             var receiver = data.receiver;
             var bySelf = sender === '';
-            data.unread = (current && current.name) !== (bySelf ? receiver : sender);
+            var targetKey = bySelf ? receiver : sender;
+            data.unread = (current && current.name) !== (targetKey);
             data.bySelf = bySelf;
-            var old = chatMessage[sender] || [];
+            var old = chatMessage[targetKey] || [];
             old = __spreadArrays(old, [data]);
-            setChatMessage(__assign(__assign({}, chatMessage), (_a = {}, _a[bySelf ? receiver : sender] = old, _a)));
+            setChatMessage(__assign(__assign({}, chatMessage), (_a = {}, _a[targetKey] = old, _a)));
             dirty.current = true;
         };
         sessionId && s.on(sessionId, cb);

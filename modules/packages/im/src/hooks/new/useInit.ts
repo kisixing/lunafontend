@@ -6,10 +6,9 @@ import _ from 'lodash'
 // const remote_url = ''
 // const stomp_url = 'transfer.lian-med.com:9987'
 // const s = 'transfer.lian-med.com'
-const s = '192.168.123.56:9987'
-export const useInit = () => {
+export const useInit = (url?:string) => {
 
-    const stompService = useMemo(() => new StompService(s), [])
+    const stompService = useMemo(() => new StompService(url), [])
 
     return { stompService }
 }

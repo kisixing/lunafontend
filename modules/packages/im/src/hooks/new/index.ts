@@ -10,14 +10,13 @@ import { useCurrentMessage } from "./useCurrentMessage";
 import { useCallback, useState } from "react";
 import { IMessage, MessageType, IContact } from "./types";
 // export { sendTxtMessage } from '../../utils/msgTool'
-export function useI() {
+export function useI(url?: string) {
     // const { conn } = useInit()
 
     // const { friends } = useRoster(conn)
     // const { chatMessage } = useMessage(conn)
     const [current, setCurrent] = useState<IContact>(null)
-
-    const { stompService } = useInit()
+    const { stompService } = useInit(url)
     const { chatUnread, setChatUnread } = useUnread()
     const { chatMessage, setChatMessage } = useMessage(stompService, chatUnread, setChatUnread, current)
     const { contacts } = useContact(chatMessage)

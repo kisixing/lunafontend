@@ -17,16 +17,15 @@ class R extends Request {
       // return this;
     }
     this.hasConfiged = true;
-    const { Authorization = store.get(TOKEN_KEY) || '' } = configs;
+    let { Authorization = store.get(TOKEN_KEY) as string || '' } = configs;
+    Authorization && (Authorization = Authorization.includes('Bearer') ? Authorization : `Bearer ${Authorization}`)
+
     Object.assign(this.configure, configs, { Authorization });
 
     this.init(this.configure);
     // request拦截器, 改变url 或 options.
     this._request.interceptors.request.use((url, options) => {
-
-      Authorization &&
-        ((options.headers as any).Authorization =
-          Authorization.indexOf('Bearer') < 0 ? `Bearer ${Authorization}` : Authorization);
+     (options.headers as any).Authorization = Authorization 
       return { url, options };
     });
 
@@ -67,11 +66,12 @@ class R extends Request {
     }
     return this._request.post(`/authenticate`, options).then(r => {
       if (r && r.id_token) {
-        const Authorization = r.id_token
+        let Authorization = r.id_token
+        Authorization = Authorization.includes('Bearer') ? Authorization : `Bearer ${Authorization}`
         this.config({ Authorization, ...c })
         store.set(TOKEN_KEY, Authorization);
 
-        return true
+        return Authorization
       } else {
         throw '非标准登陆'
       }

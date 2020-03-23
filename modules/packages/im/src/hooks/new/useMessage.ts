@@ -28,13 +28,13 @@ export const useMessage = (s: StompService, chatUnread: IMessageMap, setChatUnre
             const sender = data.sender
             const receiver = data.receiver
             const bySelf = sender === ''
-
-            data.unread = (current && current.name) !== (bySelf ? receiver : sender)
+            const targetKey = bySelf ? receiver : sender
+            data.unread = (current && current.name) !== (targetKey)
             data.bySelf = bySelf
 
-            let old = chatMessage[sender] || []
+            let old = chatMessage[targetKey] || []
             old = [...old, data]
-            setChatMessage({ ...chatMessage, [bySelf ? receiver : sender]: old })
+            setChatMessage({ ...chatMessage, [targetKey]: old })
             dirty.current = true
         }
 

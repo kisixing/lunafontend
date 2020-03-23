@@ -48,12 +48,11 @@ var R = (function (_super) {
             }
             _this.hasConfiged = true;
             var _a = configs.Authorization, Authorization = _a === void 0 ? store_1.default.get(utils_1.TOKEN_KEY) || '' : _a;
+            Authorization && (Authorization = Authorization.includes('Bearer') ? Authorization : "Bearer " + Authorization);
             Object.assign(_this.configure, configs, { Authorization: Authorization });
             _this.init(_this.configure);
             _this._request.interceptors.request.use(function (url, options) {
-                Authorization &&
-                    (options.headers.Authorization =
-                        Authorization.indexOf('Bearer') < 0 ? "Bearer " + Authorization : Authorization);
+                options.headers.Authorization = Authorization;
                 return { url: url, options: options };
             });
             _this._request.interceptors.response.use(function (response, options) {
@@ -93,9 +92,10 @@ var R = (function (_super) {
             return _this._request.post("/authenticate", options).then(function (r) {
                 if (r && r.id_token) {
                     var Authorization = r.id_token;
+                    Authorization = Authorization.includes('Bearer') ? Authorization : "Bearer " + Authorization;
                     _this.config(__assign({ Authorization: Authorization }, c));
                     store_1.default.set(utils_1.TOKEN_KEY, Authorization);
-                    return true;
+                    return Authorization;
                 }
                 else {
                     throw '非标准登陆';
