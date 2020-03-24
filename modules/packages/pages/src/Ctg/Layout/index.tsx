@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, memo } from 'react';
 import { Row, Empty, Spin } from 'antd';
 import Item from './Item';
 import { IPrenatalVisit, IPregnancy } from '@lianmed/f_types/lib/m';
@@ -36,6 +36,7 @@ interface IProps {
   loading?: boolean
 }
 const Home = (props: IProps) => {
+  console.log('zzz 1')
   const { loading, listLayout = [], fullScreenId, contentHeight, RenderIn, items, onClose, themeColor = 'skyblue' } = props;
   const wrap = useRef(null);
   const empty = useRef(null)
@@ -48,7 +49,7 @@ const Home = (props: IProps) => {
 
 
   return (
-    <div style={{ height: '100%'}} ref={wrap}>
+    <div style={{ height: '100%' }} ref={wrap}>
       {
         loading ? (
           <Spin spinning={loading} size="large" style={{ paddingTop: 100, width: '100%' }} />
@@ -101,4 +102,4 @@ const Home = (props: IProps) => {
   );
 };
 
-export default Home;
+export default memo(Home);

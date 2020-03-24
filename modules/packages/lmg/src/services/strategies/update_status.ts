@@ -25,7 +25,9 @@ export function update_status(this: WsService, received_msg: IData) {
     const { datacache, BedStatus } = this
     const { Working, Stopped, Offline, OfflineStopped } = BedStatus
     // 状态机处理
-    const { pregnancy, fetalposition, status, device_no, bed_no, is_include_mother, is_include_tocozero, is_include_volume, fetal_num } = received_msg.data
+    const { pregnancy, fetalposition, status, device_no, bed_no,
+        // is_include_mother, is_include_tocozero, is_include_volume, fetal_num
+    } = received_msg.data
 
     var unitId = this.getUnitId(device_no, bed_no);
 
@@ -36,11 +38,11 @@ export function update_status(this: WsService, received_msg: IData) {
 
     const target = datacache.get(unitId)
 
-    target.fetal_num = fetal_num
-    target.is_include_tocozero = is_include_tocozero
-    target.ismulti = is_include_mother
-    target.is_include_volume = is_include_volume
-    
+    // target.fetal_num = fetal_num
+    // target.is_include_tocozero = is_include_tocozero
+    // target.ismulti = is_include_mother
+    // target.is_include_volume = is_include_volume
+
     if (status == 0) {
         target.status = Working;
     } else if (status == 1) {

@@ -19,5 +19,5 @@ interface IProps {
     itemSpan: number;
     themeColor: string;
 }
-declare const WorkbenchItem: (props: IProps) => JSX.Element;
-export default WorkbenchItem;
+declare const _default: React.MemoExoticComponent<(props: IProps) => JSX.Element>;
+export default _default;

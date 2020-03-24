@@ -38,7 +38,7 @@ var Bar = function (props) {
                 transition: 'width 0.2s ease-out',
                 visibility: showBar ? 'visible' : 'hidden'
             } }, react_1.default.Children.map(props.children, function (_) {
-            return react_1.default.cloneElement(_, { mutableSuit: mutableSuit, showBar: showBar, menusStyle: { opacity: showBar ? 1 : 0, display: showBar ? 'block' : 'none' } });
+            return react_1.default.cloneElement(_, { mutableSuit: mutableSuit });
         })),
         react_1.default.createElement("div", { style: {
                 position: 'absolute',
@@ -47,5 +47,5 @@ var Bar = function (props) {
             } },
             react_1.default.createElement(antd_1.Button, { icon: showBar ? react_1.default.createElement(icons_1.LeftOutlined, null) : react_1.default.createElement(icons_1.RightOutlined, null), shape: showBar ? 'circle' : null, style: { boxShadow: '#aaa 3px 3px 5px 1px' }, className: "btn", type: "primary", onClick: toggleTool })));
 };
-exports.default = Bar;
+exports.default = react_1.memo(Bar);
 //# sourceMappingURL=Bar.js.map

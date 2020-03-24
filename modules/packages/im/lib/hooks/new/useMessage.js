@@ -39,7 +39,14 @@ exports.useMessage = function (s, chatUnread, setChatUnread, current) {
             data.unread = (current && current.name) !== (targetKey);
             data.bySelf = bySelf;
             var old = chatMessage[targetKey] || [];
-            old = __spreadArrays(old, [data]);
+            old = __spreadArrays(old, [data]).sort(function (a, b) { return +new Date(a.timestamp) - +new Date(b.timestamp); })
+                .reduce(function (res, _) {
+                var preIndex = (res.length - 1) < 0 ? 0 : (res.length - 1);
+                var pre = res[preIndex] || { timestamp: new Date(0).toUTCString() };
+                var isHead = (+new Date(_.timestamp) - +new Date(pre.timestamp)) > 1000 * 10;
+                _.isHead = isHead;
+                return res.concat(_);
+            }, []);
             setChatMessage(__assign(__assign({}, chatMessage), (_a = {}, _a[targetKey] = old, _a)));
             dirty.current = true;
         };

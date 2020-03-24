@@ -1,4 +1,4 @@
-import React, { useState, useRef, FunctionComponent } from 'react';
+import React, { useState, useRef, FunctionComponent, memo } from 'react';
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { Button } from 'antd';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
@@ -51,7 +51,7 @@ const Bar: FunctionComponent<{ mutableSuit: React.MutableRefObject<Suit> }> = fu
     >
       {
         React.Children.map(props.children, _ => {
-          return React.cloneElement(_ as any, { mutableSuit, showBar, menusStyle: { opacity: showBar ? 1 : 0, display: showBar ? 'block' : 'none' } })
+          return React.cloneElement(_ as any, { mutableSuit })
         })
       }
     </div>
@@ -75,4 +75,4 @@ const Bar: FunctionComponent<{ mutableSuit: React.MutableRefObject<Suit> }> = fu
   </>;
 }
 
-export default Bar
+export default memo<any>(Bar)

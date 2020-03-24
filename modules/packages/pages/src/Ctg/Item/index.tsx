@@ -1,4 +1,4 @@
-import React, { useState, PropsWithChildren, useRef } from 'react';
+import React, { useState, PropsWithChildren, useRef, useCallback } from 'react';
 import { Card, Tooltip } from 'antd';
 import moment from 'moment';
 import { Ctg as L } from '@lianmed/lmg';
@@ -72,13 +72,16 @@ const Item = (props: IProps) => {
         // 是否已经建档绑定孕册
         return (<Tooltip title={text}>{text}</Tooltip>);
     };
-
+    const onReady = useCallback(
+        suit => { setSuit(suit); onSuitRead && onSuitRead(suit) },
+        [],
+    )
     return (
         <Wrapper >
             <Card
                 size="small"
                 title={<RenderTilte />}
-                style={{ height: '100%'}}
+                style={{ height: '100%' }}
                 extra={<Extra bedname={bedname} onClose={onClose} status={status} suit={suit} />}
                 headStyle={{ background: themeColor, color: '#fff' }}
                 bodyStyle={{ padding: 0, height: 'calc(100% - 38px)' }}
@@ -86,7 +89,7 @@ const Item = (props: IProps) => {
                 <L
                     ref={ref}
                     data={data}
-                    onReady={suit => { setSuit(suit); onSuitRead && onSuitRead(suit) }}
+                    onReady={onReady}
                     onDoubleClick={onDoubleClick}
                     loading={loading}
                     showEcg={ismulti}

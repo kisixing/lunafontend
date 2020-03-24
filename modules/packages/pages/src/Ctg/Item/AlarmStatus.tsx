@@ -1,4 +1,4 @@
-import React, { } from 'react';
+import React, { memo } from 'react';
 import { Tag, Button } from 'antd';
 
 import useItemAlarm from "./useItemAlarm";
@@ -52,4 +52,4 @@ const C = (props: IProps) => {
 
 
 }
-export default C;
+export default memo(C);
