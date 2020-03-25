@@ -36,7 +36,6 @@ interface IProps {
   loading?: boolean
 }
 const Home = (props: IProps) => {
-  console.log('zzz 1')
   const { loading, listLayout = [], fullScreenId, contentHeight, RenderIn, items, onClose, themeColor = 'skyblue' } = props;
   const wrap = useRef(null);
   const empty = useRef(null)

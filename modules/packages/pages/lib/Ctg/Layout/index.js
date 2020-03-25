@@ -14,7 +14,6 @@ var react_1 = __importStar(require("react"));
 var antd_1 = require("antd");
 var Item_1 = __importDefault(require("./Item"));
 var Home = function (props) {
-    console.log('zzz 1');
     var loading = props.loading, _a = props.listLayout, listLayout = _a === void 0 ? [] : _a, fullScreenId = props.fullScreenId, contentHeight = props.contentHeight, RenderIn = props.RenderIn, items = props.items, onClose = props.onClose, _b = props.themeColor, themeColor = _b === void 0 ? 'skyblue' : _b;
     var wrap = react_1.useRef(null);
     var empty = react_1.useRef(null);

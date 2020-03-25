@@ -16,7 +16,7 @@ export declare class StompService extends EventEmitter {
     constructor(url?: string);
     createConnection: () => Promise<any>;
     createListener: () => Observable<unknown>;
-    connect: () => import("antd/lib/message").MessageType;
+    connect: () => void;
     disconnect: () => void;
     unsubscribe: (event: string) => void;
     on(event: string | Promise<string>, listener: ((...args: any[]) => void) & {

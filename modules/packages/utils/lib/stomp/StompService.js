@@ -22,7 +22,6 @@ var rxjs_1 = require("rxjs");
 var store_1 = __importDefault(require("store"));
 var Event_1 = require("../Event");
 var constant_1 = require("../constant");
-var antd_1 = require("antd");
 var t_key = 'access_token';
 var StompService = (function (_super) {
     __extends(StompService, _super);
@@ -45,8 +44,9 @@ var StompService = (function (_super) {
             _this.connection = _this.createConnection();
             _this.rxObservable = _this.createListener();
             var headers = {};
-            if (!url)
-                return antd_1.message.warning('未设置stomp url');
+            if (!url) {
+                return;
+            }
             try {
                 var socket = new sockjs_client_1.default(url);
                 _this.stompClient = webstomp_client_1.default.over(socket);

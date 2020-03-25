@@ -25,6 +25,7 @@
     "@uform/next": "^1.0.5",
     "@uform/printer": "^1.0.5",
     "antd": "^4.0.0",
+    "crypto-js": "^4.0.0",
     "doc-scripts": "^1.7.29",
     "fs-extra": "^8.1.0",
     "lerna": "^3.16.4",
@@ -36,6 +37,7 @@
     "tsconfig-paths-webpack-plugin": "^3.2.0"
   },
   "devDependencies": {
+    "@types/crypto-js": "^3.1.43",
     "@types/react": "^16.9.23",
     "@types/react-dom": "^16.9.5",
     "concurrently": "^4.1.2",

@@ -33,6 +33,9 @@ var Request_1 = __importDefault(require("./Request"));
 var store_1 = __importDefault(require("store"));
 var utils_1 = require("@lianmed/utils");
 var reasons_1 = __importDefault(require("./reasons"));
+var aes_1 = __importDefault(require("crypto-js/aes"));
+var encrypt = aes_1.default.encrypt;
+var SEARCH_KEY = 0x21ac.toString();
 var R = (function (_super) {
     __extends(R, _super);
     function R() {
@@ -64,8 +67,10 @@ var R = (function (_super) {
                 }
                 else {
                     var r_1 = reasons_1.default[Math.floor(Math.random() * reasons_1.default.length)];
-                    data.then(function (_a) {
-                        var _b = (_a === void 0 ? { title: r_1 } : _a).title, title = _b === void 0 ? r_1 : _b;
+                    data.then(function (d) {
+                        if (d === void 0) { d = { title: r_1 }; }
+                        var _a = d.title, title = _a === void 0 ? r_1 : _a;
+                        console.log('dddd', d);
                         if (status === 401) {
                             antd_1.notification.error({
                                 message: '未登录或登录已过期，请重新登录。',
@@ -104,6 +109,17 @@ var R = (function (_super) {
         };
         return _this;
     }
+    R.prototype.configFromLocation = function () {
+        var url = new URL(location.href);
+        var key = url.searchParams.get(SEARCH_KEY);
+        if (key) {
+        }
+    };
+    R.prototype.configToLocation = function () {
+        var c = this.configure;
+        var enc = encrypt(JSON.stringify(c), SEARCH_KEY);
+        console.log('enc', enc);
+    };
     return R;
 }(Request_1.default));
 var r = new R();

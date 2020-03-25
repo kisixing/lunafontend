@@ -7,7 +7,7 @@ import { Observer } from 'rxjs/Observer'; // tslint:disable-line
 import Storage from 'store';
 import { EventEmitter } from "../Event";
 import { TOKEN_KEY } from "../constant";
-import { message } from "antd";
+// import { message } from "antd";
 const t_key = 'access_token'
 
 
@@ -100,7 +100,10 @@ export class StompService extends EventEmitter {
 
 
         const headers = {};
-        if (!url) return message.warning('未设置stomp url')
+        if (!url) {
+            // message.warning('未设置stomp url')
+            return
+        }
         try {
             const socket = new SockJS(url);
             this.stompClient = Stomp.over(socket);

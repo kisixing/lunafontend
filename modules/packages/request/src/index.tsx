@@ -5,7 +5,9 @@ import Request from './Request';
 import store from "store";
 import { TOKEN_KEY } from "@lianmed/utils";
 import reasons from './reasons'
-
+import C from "crypto-js/aes";
+const { encrypt } = C
+const SEARCH_KEY = 0x21ac.toString()
 class R extends Request {
   TOKEN_KEY = TOKEN_KEY
   private hasConfiged = false;
@@ -25,7 +27,7 @@ class R extends Request {
     this.init(this.configure);
     // request拦截器, 改变url 或 options.
     this._request.interceptors.request.use((url, options) => {
-     (options.headers as any).Authorization = Authorization 
+      (options.headers as any).Authorization = Authorization
       return { url, options };
     });
 
@@ -38,7 +40,9 @@ class R extends Request {
         successText && message.success(successText);
       } else {
         const r = reasons[Math.floor(Math.random() * reasons.length)]
-        data.then(({ title = r } = { title: r }) => {
+        data.then((d = { title: r }) => {
+          const { title = r } = d
+          console.log('dddd',d)
           if (status === 401) {
             notification.error({
               message: '未登录或登录已过期，请重新登录。',
@@ -76,6 +80,18 @@ class R extends Request {
         throw '非标准登陆'
       }
     })
+  }
+  configFromLocation() {
+    const url = new URL(location.href)
+    const key = url.searchParams.get(SEARCH_KEY)
+    if (key) {
+
+    }
+  }
+  configToLocation() {
+    const c = this.configure
+    const enc = encrypt(JSON.stringify(c), SEARCH_KEY)
+    console.log('enc', enc)
   }
 }
 

@@ -274,7 +274,6 @@ var DrawCTG = (function () {
                 datacontext.fillStyle = suit.ctgconfig.alarmcolor;
                 if (suit.ctgconfig.alarm_enable && fhr[i][x] > suit.ctgconfig.alarm_high) {
                     if (eventemit) {
-                        console.log('心率过高', fhr[i][x]);
                         _this.suit.alarmOn('心率过高');
                     }
                     alarm = 1;
@@ -282,7 +281,6 @@ var DrawCTG = (function () {
                 }
                 else if (suit.ctgconfig.alarm_enable && fhr[i][x] < suit.ctgconfig.alarm_low) {
                     if (eventemit) {
-                        console.log('心率过低', fhr[i][x]);
                         _this.suit.alarmOn('心率过低');
                     }
                     alarm = 1;
