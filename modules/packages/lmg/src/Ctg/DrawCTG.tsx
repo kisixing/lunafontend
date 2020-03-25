@@ -536,7 +536,7 @@ export default class DrawCTG {
     let startx = x;
     let fontsize = Math.floor(suit.height / 20);
     fontsize = fontsize < 16 ? 16 : fontsize
-  
+
     datacontext.clearRect(0, 0, fontsize * 10, fontsize * 5);
     datacontext.textAlign = 'left';
     datacontext.textBaseline = 'top';
@@ -566,11 +566,9 @@ export default class DrawCTG {
       datacontext.font = 'bold ' + fontsize + 'px arial';
       datacontext.fillStyle = suit.ctgconfig.fhrcolor[i];
       let cv = fhr[i] && fhr[i][x]
-      if (typeof cv !== 'number') {
-        return
-      }
 
-      curvalue = cv < 1 ? EMPTY_SYMBOL : fhr[i][x].toString()
+
+      curvalue = (typeof cv !== 'number' ||cv < 1) ? EMPTY_SYMBOL : fhr[i][x].toString()
 
       datacontext.fillStyle = suit.ctgconfig.alarmcolor;
       if (suit.ctgconfig.alarm_enable && fhr[i][x] > suit.ctgconfig.alarm_high) {
@@ -634,7 +632,7 @@ export default class DrawCTG {
     datacontext.fillStyle = suit.ctgconfig.tococolor;
 
     // toco cur
-    const tocoCurValue = (typeof toco[x] === 'number' && toco[x] < 1) ? EMPTY_SYMBOL : toco[x].toString()
+    const tocoCurValue = (typeof toco[x] !== 'number' || toco[x] === -1) ? EMPTY_SYMBOL : toco[x].toString()
     datacontext.font = `bold ${fontsize}px arial`;
     datacontext.fillText(`TOCO: ${tocoCurValue}`, 10, curpostion);
   };

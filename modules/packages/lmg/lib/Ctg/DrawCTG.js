@@ -267,13 +267,11 @@ var DrawCTG = (function () {
                 datacontext.font = 'bold ' + fontsize + 'px arial';
                 datacontext.fillStyle = suit.ctgconfig.fhrcolor[i];
                 var cv = fhr[i] && fhr[i][x];
-                if (typeof cv !== 'number') {
-                    return;
-                }
-                curvalue = cv < 1 ? EMPTY_SYMBOL : fhr[i][x].toString();
+                curvalue = (typeof cv !== 'number' || cv < 1) ? EMPTY_SYMBOL : fhr[i][x].toString();
                 datacontext.fillStyle = suit.ctgconfig.alarmcolor;
                 if (suit.ctgconfig.alarm_enable && fhr[i][x] > suit.ctgconfig.alarm_high) {
                     if (eventemit) {
+                        console.log('心率过高', fhr[i][x]);
                         _this.suit.alarmOn('心率过高');
                     }
                     alarm = 1;
@@ -281,6 +279,7 @@ var DrawCTG = (function () {
                 }
                 else if (suit.ctgconfig.alarm_enable && fhr[i][x] < suit.ctgconfig.alarm_low) {
                     if (eventemit) {
+                        console.log('心率过低', fhr[i][x]);
                         _this.suit.alarmOn('心率过低');
                     }
                     alarm = 1;
@@ -329,7 +328,7 @@ var DrawCTG = (function () {
                 curpostion += fontsize;
             }
             datacontext.fillStyle = suit.ctgconfig.tococolor;
-            var tocoCurValue = (typeof toco[x] === 'number' && toco[x] < 1) ? EMPTY_SYMBOL : toco[x].toString();
+            var tocoCurValue = (typeof toco[x] !== 'number' || toco[x] === -1) ? EMPTY_SYMBOL : toco[x].toString();
             datacontext.font = "bold " + fontsize + "px arial";
             datacontext.fillText("TOCO: " + tocoCurValue, 10, curpostion);
         };
