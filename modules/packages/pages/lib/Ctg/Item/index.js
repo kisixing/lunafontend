@@ -50,9 +50,10 @@ var Item = function (props) {
         })));
         return (react_1.default.createElement(antd_1.Tooltip, { title: text }, text));
     };
+    var onReady = react_1.useCallback(function (suit) { setSuit(suit); onSuitRead && onSuitRead(suit); }, []);
     return (react_1.default.createElement(Wrapper, null,
         react_1.default.createElement(antd_1.Card, { size: "small", title: react_1.default.createElement(RenderTilte, null), style: { height: '100%' }, extra: react_1.default.createElement(Extra_1.default, { bedname: bedname, onClose: onClose, status: status, suit: suit }), headStyle: { background: themeColor, color: '#fff' }, bodyStyle: { padding: 0, height: 'calc(100% - 38px)' } },
-            react_1.default.createElement(lmg_1.Ctg, { ref: ref, data: data, onReady: function (suit) { setSuit(suit); onSuitRead && onSuitRead(suit); }, onDoubleClick: onDoubleClick, loading: loading, showEcg: ismulti }),
+            react_1.default.createElement(lmg_1.Ctg, { ref: ref, data: data, onReady: onReady, onDoubleClick: onDoubleClick, loading: loading, showEcg: ismulti }),
             react_1.default.createElement(Bar_1.default, { mutableSuit: ref }, props.children))));
 };
 exports.default = Item;

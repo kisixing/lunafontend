@@ -11,11 +11,12 @@ import { push_event_alarm } from "./push_event_alarm";
 import { push_data_ctg } from "./push_data_ctg";
 import { push_data_ecg } from "./push_data_ecg";
 import { push_offline_data_ctg } from "./push_offline_data_ctg";
+import { endpoint_user_confirm_msg } from "./endpoint_user_confirm_msg";
 import { WsService } from "../WsService";
 export const strategies: { [x: string]: Function } = {
     start_work,
     end_work,
-    
+
     heard,
 
     update_status,
@@ -24,12 +25,14 @@ export const strategies: { [x: string]: Function } = {
     getVolume,
     get_data_ctg,
     get_devices,
-    
+
     push_devices,
     push_event_alarm,
     push_data_ctg,
     push_data_ecg,
     push_offline_data_ctg,
+
+    endpoint_user_confirm_msg,
 }
 
 export function getStrategies(context: WsService): { [x: string]: Function } {

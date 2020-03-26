@@ -4,8 +4,11 @@ import getErrData from './getErrData';
 import Request from './Request';
 import store from "store";
 import { TOKEN_KEY } from "@lianmed/utils";
-
-
+import reasons from './reasons'
+import C from "crypto-js/aes";
+import { enc } from "crypto-js";
+const { encrypt, decrypt } = C
+const SEARCH_KEY = 0x21ac.toString()
 class R extends Request {
   TOKEN_KEY = TOKEN_KEY
   private hasConfiged = false;
@@ -17,17 +20,15 @@ class R extends Request {
       // return this;
     }
     this.hasConfiged = true;
-    const { Authorization = store.get(TOKEN_KEY) || '' } = configs;
+    let { Authorization = store.get(TOKEN_KEY) as string || '' } = configs;
+    Authorization && (Authorization = Authorization.includes('Bearer') ? Authorization : `Bearer ${Authorization}`) && (store.set(TOKEN_KEY, Authorization))
+
     Object.assign(this.configure, configs, { Authorization });
 
     this.init(this.configure);
     // request拦截器, 改变url 或 options.
     this._request.interceptors.request.use((url, options) => {
-      // eslint-disable-next-line no-param-reassign
-
-      Authorization &&
-        ((options.headers as any).Authorization =
-          Authorization.indexOf('Bearer') < 0 ? `Bearer ${Authorization}` : Authorization);
+      (options.headers as any).Authorization = Authorization
       return { url, options };
     });
 
@@ -36,11 +37,13 @@ class R extends Request {
       const errorData = getErrData(response);
       const { status, errortext, url, data } = errorData;
 
-      // eslint-disable-next-line no-param-reassign
       if ([200, 201, 204, 304].includes(status)) {
         successText && message.success(successText);
       } else {
-        data.then(({ title = 'no title' } = { title: 'no title' }) => {
+        const r = reasons[Math.floor(Math.random() * reasons.length)]
+        data.then((d = { title: r }) => {
+          const { title = r } = d
+          console.log('dddd', d)
           if (status === 401) {
             notification.error({
               message: '未登录或登录已过期，请重新登录。',
@@ -61,20 +64,41 @@ class R extends Request {
     });
     return this;
   };
-  authenticate = (params) => {
-    return this._request.post(`/authenticate`, {
+  authenticate = (params, c: Iconfig = {}) => {
+    const options = {
       data: params,
-    }).then(r => {
+      ...c
+    }
+    return this._request.post(`/authenticate`, options).then(r => {
       if (r && r.id_token) {
-        const Authorization = `Bearer ${r.id_token}`
-        this.config({ Authorization })
+        let Authorization = r.id_token
+        Authorization = Authorization.includes('Bearer') ? Authorization : `Bearer ${Authorization}`
+        this.config({ Authorization, ...c })
         store.set(TOKEN_KEY, Authorization);
 
-        return true
+        return Authorization
       } else {
         throw '非标准登陆'
       }
     })
+  }
+  configFromLocation(url = location.href) {
+    const _ = new URL(url)
+    const key = _.searchParams.get(SEARCH_KEY)
+    let c
+    if (key) {
+      const jsonStr = decrypt(key, SEARCH_KEY).toString(enc.Utf8)
+      c = JSON.parse(jsonStr)
+      this.config(c)
+    }
+    return c
+  }
+  configToLocation(url = location.href, attachment: { [x: string]: any } & Iconfig = {}) {
+    const c = Object.assign({}, this.configure, attachment)
+    const enc = encrypt(JSON.stringify(c), SEARCH_KEY).toString()
+    const _ = new URL(url)
+    _.searchParams.append(SEARCH_KEY, enc)
+    return _.href
   }
 }
 

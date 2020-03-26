@@ -19,3 +19,4 @@ function useCurrent(chatMessage) {
     return { currentMessage: currentMessage, setCurrent: setCurrent, current: current };
 }
 exports.useCurrent = useCurrent;
+//# sourceMappingURL=useCurrent.js.map

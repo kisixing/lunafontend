@@ -82,7 +82,11 @@ export class WsService extends EventEmitter {
         }, MS)
     }
     pongFailed() {
+        // Array.from(this.datacache.values()).forEach(_=>{
+        //     _.status = null
+        // })
         this.emit(EWsEvents.pong, false)
+
         this.socket.close()
     }
     refreshInterval = 2000

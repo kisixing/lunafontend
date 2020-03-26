@@ -39,6 +39,7 @@ export interface ICacheItem {
     deviceType?: TDeviceType;
     is_include_volume: boolean;
     is_include_tocozero: boolean;
+    disableStartWork: boolean;
     analyse?: any;
     fhr: number[][];
     toco: number[];

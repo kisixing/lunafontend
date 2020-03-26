@@ -40,7 +40,7 @@ var useDraw_1 = __importDefault(require("../useDraw"));
 var ContextMenu_1 = __importDefault(require("./ContextMenu"));
 var Loading_1 = require("./Loading");
 var Suit_1 = require("./Suit");
-exports.default = react_1.forwardRef(function (props, ref) {
+exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
     var data = props.data, _a = props.mutableSuitObject, mutableSuitObject = _a === void 0 ? { suit: null } : _a, _b = props.suitType, suitType = _b === void 0 ? 0 : _b, _c = props.showEcg, showEcg = _c === void 0 ? false : _c, _d = props.loading, loading = _d === void 0 ? false : _d, _e = props.onReady, onReady = _e === void 0 ? function (s) { } : _e, others = __rest(props, ["data", "mutableSuitObject", "suitType", "showEcg", "loading", "onReady"]);
     var barTool = react_1.useRef(null);
     var canvasgrid = react_1.useRef(null);
@@ -96,5 +96,5 @@ exports.default = react_1.forwardRef(function (props, ref) {
             react_1.default.createElement(Ecg_1.default, { data: data, onReady: function (e) { return ecg.current = e; } }))),
         react_1.default.createElement(ContextMenu_1.default, { rightClickXy: rightClickXy },
             react_1.default.createElement(ScrollBar_1.default, { box: box, getBarTool: function (tool) { barTool.current = tool; } }))));
-});
+}));
 //# sourceMappingURL=index.js.map

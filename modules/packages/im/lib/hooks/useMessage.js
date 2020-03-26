@@ -42,3 +42,4 @@ exports.useMessage = function (conn) {
     }, [conn]);
     return { chatMessage: chatMessage };
 };
+//# sourceMappingURL=useMessage.js.map

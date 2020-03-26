@@ -67,14 +67,14 @@ export const Ctg_Analyse: FC<{ docid?: string, note?: string, id?: string, type?
     const curData: { [x: string]: number } = d[`${mark}_ref`].current.getFieldsValue()
     const oldData: { [x: string]: number } = old_ref.current[mark] || {}
     const rightData = analysis_ref.current.getFieldsValue()
-    const { wave, diagnosistxt, classification0, classification1, ...analyseData } = rightData
+    const { wave, diagnosistxt, NST, CST_OCT, ...analyseData } = rightData
 
 
     const isedit = Object.entries(curData).find(([k, v]) => oldData[k] !== v) ? true : false
     const identify = type === 'default' ? { note } : { id }
     const data = {
       ...identify,
-      diagnosis: JSON.stringify({ wave, diagnosistxt, classification0, classification1 }),
+      diagnosis: JSON.stringify({ wave, diagnosistxt, NST, CST_OCT }),
       result: JSON.stringify({
         ...analyseData,
         ...curData,
@@ -100,7 +100,14 @@ export const Ctg_Analyse: FC<{ docid?: string, note?: string, id?: string, type?
         const diagnosis = r[0].diagnosis;
         let t;
         try {
-          t = JSON.parse(diagnosis).diagnosistxt
+          const d = JSON.parse(diagnosis) || {}
+          t = (
+            <div>
+              <div>NST：<span>{d.NST}</span></div>
+              <div>CST/OCT：<span>{d.CST_OCT}</span></div>
+              <div>诊断：<span>{d.diagnosistxt}</span></div>
+            </div>
+          )
         } catch (error) {
         }
         info(t || '暂无记录');

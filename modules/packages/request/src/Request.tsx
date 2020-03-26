@@ -18,7 +18,7 @@ export default class Request {
 
 
     this._request = extend({
-      prefix: prefix.includes('://') ? prefix : `http://${prefix}`,
+      prefix: prefix.startsWith('/') ? prefix : (prefix.includes('://') ? prefix : `http://${prefix}`),
       timeout: 10000,
       credentials: 'include', // 默认请求是否带上cookie
       headers: {

@@ -1,4 +1,7 @@
 "use strict";
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
 Object.defineProperty(exports, "__esModule", { value: true });
 var useInit_1 = require("./useInit");
 var useRoster_1 = require("./useRoster");
@@ -18,3 +21,5 @@ function useIm() {
     return { contacts: contacts, currentMessage: currentMessage, setCurrent: setCurrent, current: current };
 }
 exports.useIm = useIm;
+__export(require("./new"));
+//# sourceMappingURL=index.js.map

@@ -21,3 +21,4 @@ function useContact(friends, chatMessage, chatUnread) {
     return { contacts: contacts };
 }
 exports.useContact = useContact;
+//# sourceMappingURL=useContact.js.map

@@ -1,4 +1,4 @@
-import React, { forwardRef, Ref, useImperativeHandle, useRef, useState } from 'react';
+import React, { forwardRef, Ref, useImperativeHandle, useRef, useState, memo } from 'react';
 import Ecg from "../Ecg";
 import { Canvas, Div, Drawer, IProps } from "../interface";
 import ScrollBar from '../ScrollBar';
@@ -10,7 +10,7 @@ import ContextMenu from "./ContextMenu";
 import { Loading } from './Loading';
 import { Suit } from './Suit';
 
-export default forwardRef((props: IProps, ref: Ref<Suit>) => {
+export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
   const {
     data,
     mutableSuitObject = { suit: null },
@@ -34,7 +34,7 @@ export default forwardRef((props: IProps, ref: Ref<Suit>) => {
   // const [showBtns, setShowBtns] = useState(false)
   // const staticType = suitType > 0
 
-  const rightClickXy = useRef<{x:number,y:number}>({x:0,y:0});
+  const rightClickXy = useRef<{ x: number, y: number }>({ x: 0, y: 0 });
 
   console.log('yyyyyyyyyyyyyyyyyy 画')
 
@@ -49,7 +49,7 @@ export default forwardRef((props: IProps, ref: Ref<Suit>) => {
       barTool.current,
       suitType
     )
-    console.log('yyyyyyyyyyyy--------new',instance)
+    console.log('yyyyyyyyyyyy--------new', instance)
 
     onReady(instance)
     mutableSuitObject.suit = instance;
@@ -68,8 +68,8 @@ export default forwardRef((props: IProps, ref: Ref<Suit>) => {
   useCheckNetwork(isOn => ctg.current && (ctg.current.isOn = isOn))
 
   useImperativeHandle(ref, () => {
-    console.log('yyyyyyyyyyyy--------useImperativeHandle',ctg.current)
-    
+    console.log('yyyyyyyyyyyy--------useImperativeHandle', ctg.current)
+
     return ctg.current
   })
   const canvasStyles: React.CSSProperties = { position: 'absolute' }
@@ -83,14 +83,14 @@ export default forwardRef((props: IProps, ref: Ref<Suit>) => {
       onMouseDownCapture={e => {
         const x = e.nativeEvent.offsetX
         const y = e.nativeEvent.offsetY
-        const which =  e.nativeEvent.which
-        if(which === 3){
+        const which = e.nativeEvent.which
+        if (which === 3) {
           rightClickXy.current.x = x
           rightClickXy.current.y = y
         }
       }}
-      // onMouseEnter={() => staticType && setShowBtns(true)}
-      // onMouseLeave={() => staticType && setShowBtns(false)}
+    // onMouseEnter={() => staticType && setShowBtns(true)}
+    // onMouseLeave={() => staticType && setShowBtns(false)}
     >
       {
         loading && (
@@ -133,3 +133,4 @@ export default forwardRef((props: IProps, ref: Ref<Suit>) => {
     </div>
   );
 })
+)

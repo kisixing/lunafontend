@@ -12,34 +12,174 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var sockjs_client_1 = __importDefault(require("sockjs-client"));
+var webstomp_client_1 = __importDefault(require("webstomp-client"));
+var rxjs_1 = require("rxjs");
+var store_1 = __importDefault(require("store"));
 var Event_1 = require("../Event");
+var constant_1 = require("../constant");
+var t_key = 'access_token';
 var StompService = (function (_super) {
     __extends(StompService, _super);
-    function StompService(stompClient, connection, rxSubscriber) {
+    function StompService(url) {
+        if (url === void 0) { url = location.host; }
         var _this = _super.call(this) || this;
         _this.stompClient = null;
         _this.stompSubscribers = {};
-        _this.stompClient = stompClient;
-        _this.connection = connection;
-        _this.rxSubscriber = rxSubscriber;
+        _this.connectedPromise = null;
+        _this.stompService = null;
+        _this.createConnection = function () { return new Promise(function (resolve, reject) { return (_this.connectedPromise = resolve); }); };
+        _this.createListener = function () { return new rxjs_1.Observable(function (_subscriber) {
+            _this.rxSubscriber = _subscriber;
+        }); };
+        _this.connect = function () {
+            var url = _this.url;
+            if (_this.connectedPromise !== null || _this.stompService) {
+                return;
+            }
+            _this.connection = _this.createConnection();
+            _this.rxObservable = _this.createListener();
+            var headers = {};
+            if (!url) {
+                return;
+            }
+            try {
+                var socket = new sockjs_client_1.default(url);
+                _this.stompClient = webstomp_client_1.default.over(socket);
+            }
+            catch (e) {
+                console.log(e, url);
+            }
+            _this.stompClient.connect(headers, function () {
+                _this.connectedPromise('success');
+                _this.connectedPromise = null;
+                _this.rxObservable.subscribe(function (_a) {
+                    var data = _a.data, event = _a.event;
+                    _this.emit(event, data);
+                });
+            });
+        };
+        _this.disconnect = function () {
+            if (_this.stompClient !== null) {
+                _this.stompClient.disconnect();
+                _this.stompClient = null;
+            }
+            window.onhashchange = function () { };
+            _this.stompService = null;
+        };
+        _this.unsubscribe = function (event) {
+            var old = _this.stompSubscribers[event] || [];
+            old.forEach(function (_) { return _.unsubscribe(); });
+            _this.rxObservable = _this.createListener();
+        };
+        if (StompService.s) {
+            return StompService.s;
+        }
+        console.log('new stomservice', url, _this);
+        StompService.s = _this;
+        _this.config(url);
+        _this.connect();
         return _this;
     }
+    Object.defineProperty(StompService.prototype, "_sessionId", {
+        get: function () {
+            var _transport = this.stompClient.ws._transport;
+            var url = _transport && _transport.url;
+            return url && /\/([^\/]+)\/websocket/.exec(url)[1];
+        },
+        enumerable: true,
+        configurable: true
+    });
+    StompService.prototype.getSessionId = function () {
+        var _this = this;
+        return this.connection.then(function () { return _this._sessionId; });
+    };
+    StompService.prototype.config = function (url) {
+        if (!url)
+            return;
+        if (!url.includes('http://')) {
+            url = "http://" + url;
+        }
+        try {
+            var u = new URL(url);
+            u.pathname = '/ws/stomp';
+            var t = u.searchParams.get(t_key);
+            if (!t) {
+                var localT = store_1.default.get(constant_1.TOKEN_KEY) || '';
+                u.searchParams.append(t_key, localT.startsWith('Bearer ') ? localT.slice(7) : localT);
+            }
+            this.url = u.href;
+        }
+        catch (e) {
+            console.log(e);
+        }
+    };
     StompService.prototype.on = function (event, listener) {
         var _this = this;
-        this.connection.then(function () {
-            var stompSubscriber = _this.stompClient.subscribe('/topic/tracker', function (data) {
-                _this.rxSubscriber.next(JSON.parse(data.body));
+        console.log('stomservice on');
+        if (typeof event === 'string') {
+            this._on(event, listener);
+        }
+        else {
+            event.then(function (str) {
+                _this._on(str, listener);
             });
+        }
+        return this;
+    };
+    StompService.prototype._on = function (event, listener) {
+        var _this = this;
+        _super.prototype.on.call(this, event, listener);
+        this.connection.then(function () {
+            var stompSubscriber = _this.stompClient.subscribe(event, function (res) {
+                var data;
+                try {
+                    data = JSON.parse(res.body);
+                }
+                catch (error) {
+                    data = {};
+                }
+                _this.rxSubscriber.next({ data: data, event: event });
+            });
+            listener.id = stompSubscriber.id;
+            console.log('stomservice _on', event, stompSubscriber.id);
             var old = _this.stompSubscribers[event] || (_this.stompSubscribers[event] = []);
-            old.push(stompSubscriber);
+            old.includes(stompSubscriber) || old.push(stompSubscriber);
         });
         return this;
     };
-    StompService.prototype.emit = function (event, body, head) {
+    StompService.prototype.off = function (event, listener) {
+        var _this = this;
+        console.log('stomservice off', event);
+        if (typeof event === 'string') {
+            this._off(event, listener);
+        }
+        else {
+            event.then(function (str) {
+                _this._off(str, listener);
+            });
+        }
+        return this;
+    };
+    StompService.prototype._off = function (event, listener) {
+        _super.prototype.off.call(this, event, listener);
+        var old = this.stompSubscribers[event] || [];
+        var index = old.findIndex(function (_) { return _.id === listener.id; });
+        console.log('stomservice off__', event, listener.id, index > -1);
+        if (index > -1) {
+            var t = old.splice(index, 1)[0];
+            t.unsubscribe();
+        }
+        return this;
+    };
+    StompService.prototype.send = function (event, body, head) {
         if (body === void 0) { body = {}; }
         if (head === void 0) { head = {}; }
-        this.stompClient.send(event, JSON.stringify(head), {});
+        this.stompClient.send(event, JSON.stringify(body), head);
         return true;
     };
     ;

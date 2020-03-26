@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useEffect } from 'react';
+import React, { useRef, useCallback, useEffect, memo } from 'react';
 import ReactDOM from 'react-dom';
 import { BedStatus, ICacheItem, ICacheItemPregnancy } from "@lianmed/lmg/lib/services/types";
 
@@ -95,4 +95,5 @@ const WorkbenchItem = (props: IProps) => {
     </Col >
   );
 }
-export default WorkbenchItem;
+export default memo(WorkbenchItem
+);;

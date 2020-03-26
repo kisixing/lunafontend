@@ -1,4 +1,4 @@
-import { EMsgBodyType, IMessage, TRawMsgType, PartialRawMsg, TAnyMsgType } from "../types/msg";
+import { EMsgBodyType, IMessage, TRawMsgType, PartialRawMsg, TAnyMsgType } from '../types/msg';
 export declare const msgTpl: {
     txt: {
         type: EMsgBodyType;

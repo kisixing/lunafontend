@@ -72,13 +72,13 @@ exports.Ctg_Analyse = function (_a) {
         var curData = d[mark + "_ref"].current.getFieldsValue();
         var oldData = old_ref.current[mark] || {};
         var rightData = analysis_ref.current.getFieldsValue();
-        var wave = rightData.wave, diagnosistxt = rightData.diagnosistxt, classification0 = rightData.classification0, classification1 = rightData.classification1, analyseData = __rest(rightData, ["wave", "diagnosistxt", "classification0", "classification1"]);
+        var wave = rightData.wave, diagnosistxt = rightData.diagnosistxt, NST = rightData.NST, CST_OCT = rightData.CST_OCT, analyseData = __rest(rightData, ["wave", "diagnosistxt", "NST", "CST_OCT"]);
         var isedit = Object.entries(curData).find(function (_a) {
             var k = _a[0], v = _a[1];
             return oldData[k] !== v;
         }) ? true : false;
         var identify = type === 'default' ? { note: note } : { id: id };
-        var data = __assign(__assign({}, identify), { diagnosis: JSON.stringify({ wave: wave, diagnosistxt: diagnosistxt, classification0: classification0, classification1: classification1 }), result: JSON.stringify(__assign(__assign(__assign({}, analyseData), curData), { isedit: isedit })) });
+        var data = __assign(__assign({}, identify), { diagnosis: JSON.stringify({ wave: wave, diagnosistxt: diagnosistxt, NST: NST, CST_OCT: CST_OCT }), result: JSON.stringify(__assign(__assign(__assign({}, analyseData), curData), { isedit: isedit })) });
         request_1.default.put(type === "default" ? '/ctg-exams-note' : '/serviceorders', { data: data }).then(function (r) {
             antd_1.message.success('保存成功！', 3);
             utils_1.event.emit(exports.ANALYSE_SUCCESS_TYPE, type == "default" ? note : id);
@@ -93,7 +93,17 @@ exports.Ctg_Analyse = function (_a) {
                 var diagnosis = r[0].diagnosis;
                 var t = void 0;
                 try {
-                    t = JSON.parse(diagnosis).diagnosistxt;
+                    var d_1 = JSON.parse(diagnosis) || {};
+                    t = (react_1.default.createElement("div", null,
+                        react_1.default.createElement("div", null,
+                            "NST\uFF1A",
+                            react_1.default.createElement("span", null, d_1.NST)),
+                        react_1.default.createElement("div", null,
+                            "CST/OCT\uFF1A",
+                            react_1.default.createElement("span", null, d_1.CST_OCT)),
+                        react_1.default.createElement("div", null,
+                            "\u8BCA\u65AD\uFF1A",
+                            react_1.default.createElement("span", null, d_1.diagnosistxt))));
                 }
                 catch (error) {
                 }

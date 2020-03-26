@@ -9,5 +9,5 @@ interface IProps {
     onClose?: (e: React.MouseEvent) => void;
     bedname: string;
 }
-declare const C: (props: IProps) => JSX.Element;
-export default C;
+declare const _default: React.MemoExoticComponent<(props: IProps) => JSX.Element>;
+export default _default;

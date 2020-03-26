@@ -1,4 +1,4 @@
-/// <reference types="react" />
+import React from 'react';
 import { IPrenatalVisit, IPregnancy } from '@lianmed/f_types/lib/m';
 export interface IItemData {
     data: {
@@ -30,5 +30,5 @@ interface IProps {
     themeColor?: string;
     loading?: boolean;
 }
-declare const Home: (props: IProps) => JSX.Element;
-export default Home;
+declare const _default: React.MemoExoticComponent<(props: IProps) => JSX.Element>;
+export default _default;

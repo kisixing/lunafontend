@@ -9,11 +9,10 @@ var EventEmitter = (function () {
         if (!existing) {
             this.events[event] = existing = [];
         }
-        existing.push(listener);
+        existing.includes(listener) || existing.push(listener);
         return this;
     };
     EventEmitter.prototype.on = function (event, listener) {
-        this.off(event, listener);
         return this.addListener(event, listener);
     };
     EventEmitter.prototype.emit = function (event) {

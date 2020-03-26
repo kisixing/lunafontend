@@ -1,0 +1,1 @@
+{"version":3,"file":"useInit.js","sourceRoot":"","sources":["../../../src/hooks/new/useInit.ts"],"names":[],"mappings":";;AAAA,+BAAgC;AAEhC,wCAA8C;AAMjC,QAAA,OAAO,GAAG,UAAC,GAAW;IAE/B,IAAM,YAAY,GAAG,eAAO,CAAC,cAAM,OAAA,IAAI,oBAAY,CAAC,GAAG,CAAC,EAArB,CAAqB,EAAE,EAAE,CAAC,CAAA;IAE7D,OAAO,EAAE,YAAY,cAAA,EAAE,CAAA;AAC3B,CAAC,CAAA"}

@@ -46,3 +46,4 @@ exports.defaultConfig = {
     loglevel: 'ERROR',
     enableLocalStorage: true
 };
+//# sourceMappingURL=config.js.map

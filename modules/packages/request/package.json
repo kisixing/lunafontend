@@ -15,7 +15,8 @@
   ],
   "dependencies": {
     "umi-request": "^1.2.5",
-    "store": "^2.0.12"
+    "store": "^2.0.12",
+    "crypto-js":"^4.0.0"
   },
   "repository": {
     "type": "git",

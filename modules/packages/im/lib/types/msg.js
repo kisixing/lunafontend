@@ -8,3 +8,4 @@ var EMsgBodyType;
     EMsgBodyType["video"] = "video";
     EMsgBodyType["audio"] = "audio";
 })(EMsgBodyType = exports.EMsgBodyType || (exports.EMsgBodyType = {}));
+//# sourceMappingURL=msg.js.map
