@@ -40,7 +40,7 @@ export default class DynamicForm extends React.Component {
         };
       };
     }
-  ) => (key: any, ReactNode: any) => JSX.Element;
+  ) => (key: any, ReactNode: any, options?: {}) => JSX.Element;
   generateRenderViewItem: () => () => void;
   render(): JSX.Element;
 }

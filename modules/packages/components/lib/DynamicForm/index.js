@@ -80,13 +80,22 @@ var DynamicForm = (function(_super) {
         options = { formItemLayout: exports.horizontalFormItemLayout };
       }
       var formItemLayout = options.formItemLayout;
-      return function(key, ReactNode) {
+      return function(key, ReactNode, options) {
+        if (options === void 0) {
+          options = {};
+        }
         var config = lodash_1.get(formDescriptions, key) || {};
         var label = config.label,
           rules = config.rules;
         return react_1.default.createElement(
           antd_1.Form.Item,
-          __assign({}, formItemLayout, { key: key, label: label, name: key, rules: rules }),
+          __assign({}, formItemLayout, lodash_1.get(options, 'customFormItemLayout'), {
+            style: __assign({}, lodash_1.get(options, 'styles')),
+            key: key,
+            label: label,
+            name: key,
+            rules: rules,
+          }),
           ReactNode
         );
       };
