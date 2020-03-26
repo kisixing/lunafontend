@@ -13,6 +13,7 @@ interface IData {
     is_include_mother: boolean
     is_include_tocozero: boolean
     is_include_volume: boolean
+    disableStartWork: boolean
 }
 
 interface IData {
@@ -26,7 +27,7 @@ export function update_status(this: WsService, received_msg: IData) {
     const { Working, Stopped, Offline, OfflineStopped } = BedStatus
     // 状态机处理
     const { pregnancy, fetalposition, status, device_no, bed_no,
-        // is_include_mother, is_include_tocozero, is_include_volume, fetal_num
+        is_include_mother, is_include_tocozero, is_include_volume, fetal_num, disableStartWork
     } = received_msg.data
 
     var unitId = this.getUnitId(device_no, bed_no);
@@ -38,11 +39,11 @@ export function update_status(this: WsService, received_msg: IData) {
 
     const target = datacache.get(unitId)
 
-    // target.fetal_num = fetal_num
-    // target.is_include_tocozero = is_include_tocozero
-    // target.ismulti = is_include_mother
-    // target.is_include_volume = is_include_volume
-
+    target.fetal_num = fetal_num
+    target.is_include_tocozero = is_include_tocozero
+    target.ismulti = is_include_mother
+    target.is_include_volume = is_include_volume
+    target.disableStartWork = disableStartWork
     if (status == 0) {
         target.status = Working;
     } else if (status == 1) {

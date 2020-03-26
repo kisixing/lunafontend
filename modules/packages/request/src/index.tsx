@@ -6,7 +6,8 @@ import store from "store";
 import { TOKEN_KEY } from "@lianmed/utils";
 import reasons from './reasons'
 import C from "crypto-js/aes";
-const { encrypt } = C
+import { enc } from "crypto-js";
+const { encrypt, decrypt } = C
 const SEARCH_KEY = 0x21ac.toString()
 class R extends Request {
   TOKEN_KEY = TOKEN_KEY
@@ -20,7 +21,7 @@ class R extends Request {
     }
     this.hasConfiged = true;
     let { Authorization = store.get(TOKEN_KEY) as string || '' } = configs;
-    Authorization && (Authorization = Authorization.includes('Bearer') ? Authorization : `Bearer ${Authorization}`)
+    Authorization && (Authorization = Authorization.includes('Bearer') ? Authorization : `Bearer ${Authorization}`) && (store.set(TOKEN_KEY, Authorization))
 
     Object.assign(this.configure, configs, { Authorization });
 
@@ -42,7 +43,7 @@ class R extends Request {
         const r = reasons[Math.floor(Math.random() * reasons.length)]
         data.then((d = { title: r }) => {
           const { title = r } = d
-          console.log('dddd',d)
+          console.log('dddd', d)
           if (status === 401) {
             notification.error({
               message: '未登录或登录已过期，请重新登录。',
@@ -81,17 +82,23 @@ class R extends Request {
       }
     })
   }
-  configFromLocation() {
-    const url = new URL(location.href)
-    const key = url.searchParams.get(SEARCH_KEY)
+  configFromLocation(url = location.href) {
+    const _ = new URL(url)
+    const key = _.searchParams.get(SEARCH_KEY)
+    let c
     if (key) {
-
+      const jsonStr = decrypt(key, SEARCH_KEY).toString(enc.Utf8)
+      c = JSON.parse(jsonStr)
+      this.config(c)
     }
+    return c
   }
-  configToLocation() {
-    const c = this.configure
-    const enc = encrypt(JSON.stringify(c), SEARCH_KEY)
-    console.log('enc', enc)
+  configToLocation(url = location.href, attachment: { [x: string]: any } & Iconfig = {}) {
+    const c = Object.assign({}, this.configure, attachment)
+    const enc = encrypt(JSON.stringify(c), SEARCH_KEY).toString()
+    const _ = new URL(url)
+    _.searchParams.append(SEARCH_KEY, enc)
+    return _.href
   }
 }
 

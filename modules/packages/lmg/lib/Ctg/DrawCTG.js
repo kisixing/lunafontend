@@ -237,7 +237,6 @@ var DrawCTG = (function () {
             var _b = suit.data, fhr = _b.fhr, toco = _b.toco;
             var curpostion = 10;
             var EMPTY_SYMBOL = '-- --';
-            var curvalue = EMPTY_SYMBOL;
             var startx = x;
             var fontsize = Math.floor(suit.height / 20);
             fontsize = fontsize < 16 ? 16 : fontsize;
@@ -263,11 +262,10 @@ var DrawCTG = (function () {
                 label = '';
                 offsetfhr = '';
                 span = '';
-                curvalue = EMPTY_SYMBOL;
                 datacontext.font = 'bold ' + fontsize + 'px arial';
                 datacontext.fillStyle = suit.ctgconfig.fhrcolor[i];
                 var cv = fhr[i] && fhr[i][x];
-                curvalue = (typeof cv !== 'number' || cv < 1) ? EMPTY_SYMBOL : fhr[i][x].toString();
+                var curvalue = (typeof cv !== 'number' || cv < 1 || cv > 240) ? EMPTY_SYMBOL : fhr[i][x].toString();
                 datacontext.fillStyle = suit.ctgconfig.alarmcolor;
                 if (suit.ctgconfig.alarm_enable && fhr[i][x] > suit.ctgconfig.alarm_high) {
                     if (eventemit) {
@@ -328,7 +326,8 @@ var DrawCTG = (function () {
                 curpostion += fontsize;
             }
             datacontext.fillStyle = suit.ctgconfig.tococolor;
-            var tocoCurValue = (typeof toco[x] !== 'number' || toco[x] === -1) ? EMPTY_SYMBOL : toco[x].toString();
+            var tocoCv = toco[x];
+            var tocoCurValue = (typeof tocoCv !== 'number' || tocoCv === -1 || tocoCv > 100) ? EMPTY_SYMBOL : tocoCv.toString();
             datacontext.font = "bold " + fontsize + "px arial";
             datacontext.fillText("TOCO: " + tocoCurValue, 10, curpostion);
         };

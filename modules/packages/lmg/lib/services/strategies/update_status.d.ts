@@ -10,6 +10,7 @@ interface IData {
     is_include_mother: boolean;
     is_include_tocozero: boolean;
     is_include_volume: boolean;
+    disableStartWork: boolean;
 }
 interface IData {
     name: "update_status";

@@ -34,7 +34,8 @@ var store_1 = __importDefault(require("store"));
 var utils_1 = require("@lianmed/utils");
 var reasons_1 = __importDefault(require("./reasons"));
 var aes_1 = __importDefault(require("crypto-js/aes"));
-var encrypt = aes_1.default.encrypt;
+var crypto_js_1 = require("crypto-js");
+var encrypt = aes_1.default.encrypt, decrypt = aes_1.default.decrypt;
 var SEARCH_KEY = 0x21ac.toString();
 var R = (function (_super) {
     __extends(R, _super);
@@ -51,7 +52,7 @@ var R = (function (_super) {
             }
             _this.hasConfiged = true;
             var _a = configs.Authorization, Authorization = _a === void 0 ? store_1.default.get(utils_1.TOKEN_KEY) || '' : _a;
-            Authorization && (Authorization = Authorization.includes('Bearer') ? Authorization : "Bearer " + Authorization);
+            Authorization && (Authorization = Authorization.includes('Bearer') ? Authorization : "Bearer " + Authorization) && (store_1.default.set(utils_1.TOKEN_KEY, Authorization));
             Object.assign(_this.configure, configs, { Authorization: Authorization });
             _this.init(_this.configure);
             _this._request.interceptors.request.use(function (url, options) {
@@ -109,16 +110,26 @@ var R = (function (_super) {
         };
         return _this;
     }
-    R.prototype.configFromLocation = function () {
-        var url = new URL(location.href);
-        var key = url.searchParams.get(SEARCH_KEY);
+    R.prototype.configFromLocation = function (url) {
+        if (url === void 0) { url = location.href; }
+        var _ = new URL(url);
+        var key = _.searchParams.get(SEARCH_KEY);
+        var c;
         if (key) {
+            var jsonStr = decrypt(key, SEARCH_KEY).toString(crypto_js_1.enc.Utf8);
+            c = JSON.parse(jsonStr);
+            this.config(c);
         }
+        return c;
     };
-    R.prototype.configToLocation = function () {
-        var c = this.configure;
-        var enc = encrypt(JSON.stringify(c), SEARCH_KEY);
-        console.log('enc', enc);
+    R.prototype.configToLocation = function (url, attachment) {
+        if (url === void 0) { url = location.href; }
+        if (attachment === void 0) { attachment = {}; }
+        var c = Object.assign({}, this.configure, attachment);
+        var enc = encrypt(JSON.stringify(c), SEARCH_KEY).toString();
+        var _ = new URL(url);
+        _.searchParams.append(SEARCH_KEY, enc);
+        return _.href;
     };
     return R;
 }(Request_1.default));
