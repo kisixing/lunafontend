@@ -265,19 +265,19 @@ var DrawCTG = (function () {
                 datacontext.font = 'bold ' + fontsize + 'px arial';
                 datacontext.fillStyle = suit.ctgconfig.fhrcolor[i];
                 var cv = fhr[i] && fhr[i][x];
-                var curvalue = (typeof cv !== 'number' || cv < 1 || cv > 240) ? EMPTY_SYMBOL : fhr[i][x].toString();
+                var curvalue = (typeof cv !== 'number' || cv < 1 || cv > 240) ? EMPTY_SYMBOL : cv.toString();
                 datacontext.fillStyle = suit.ctgconfig.alarmcolor;
-                if (suit.ctgconfig.alarm_enable && fhr[i][x] > suit.ctgconfig.alarm_high) {
+                if (suit.ctgconfig.alarm_enable && cv > suit.ctgconfig.alarm_high) {
                     if (eventemit) {
-                        console.log('心率过高', fhr[i][x]);
+                        console.log('心率过高', cv);
                         _this.suit.alarmOn('心率过高');
                     }
                     alarm = 1;
                     _this.suit.alarm = alarm;
                 }
-                else if (suit.ctgconfig.alarm_enable && fhr[i][x] < suit.ctgconfig.alarm_low) {
+                else if (suit.ctgconfig.alarm_enable && cv < suit.ctgconfig.alarm_low) {
                     if (eventemit) {
-                        console.log('心率过低', fhr[i][x]);
+                        console.log('心率过低', cv);
                         _this.suit.alarmOn('心率过低');
                     }
                     alarm = 1;
@@ -287,7 +287,7 @@ var DrawCTG = (function () {
                     datacontext.fillStyle = suit.ctgconfig.fhrcolor[i];
                 }
                 if (alarm == 0 && suit.ctgconfig.alarm_enable && _this.suit.alarm == 1) {
-                    console.log('恢复', fhr[i][x], alarm, _this.suit.alarm);
+                    console.log('恢复', cv, alarm, _this.suit.alarm);
                     _this.suit.alarmOff('');
                     _this.suit.alarm = alarm;
                 }
@@ -525,6 +525,14 @@ var DrawCTG = (function () {
             }
             else {
                 lastx = Math.floor((i - start) / 2);
+            }
+            if (toco[i] && toco[i] === -1) {
+                continue;
+            }
+            if (toco[i - 2] === -1) {
+                console.log('sd', suit.canvasline.height - toco[i] * this.yspan);
+                linecontext.moveTo(lastx, suit.canvasline.height - toco[i] * this.yspan);
+                continue;
             }
             if (i > 2 && typeof (toco[i]) != "undefined" && typeof (toco[i - 2]) != "undefined" && toco[i] != 255) {
                 linecontext.lineTo(lastx, suit.canvasline.height - toco[i] * this.yspan);

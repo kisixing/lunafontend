@@ -203,8 +203,7 @@ export default class DrawCTG {
         if (i > 1 && (typeof (fhr[fetal][inneri - 2]) == "undefined" || fhr[fetal][inneri - 2] == 0 || (lasty - fhr[fetal][inneri - 2]) > 30 || (fhr[fetal][inneri - 2] - lasty) > 30)) {
           //kisi 2019-10-20 add 划线规则
           linecontext.moveTo(lastx, (max - fhr[fetal][inneri] - curfhroffset) * this.yspan + this.basetop);
-        }
-        else {
+        } else {
           // 增加 报警颜色处理
           //kisi 2019-11-08
           //修复连线间变化
@@ -279,6 +278,17 @@ export default class DrawCTG {
       } else {
         lastx = Math.floor((i - start) / 2);
       }
+      if (toco[i] && toco[i] === -1) {
+        continue
+      }
+
+      if (toco[i - 2] === -1) {
+        console.log('sd', suit.canvasline.height - toco[i] * this.yspan)
+        linecontext.moveTo(lastx, suit.canvasline.height - toco[i] * this.yspan);
+        continue
+
+      }
+
       if (i > 2 && typeof (toco[i]) != "undefined" && typeof (toco[i - 2]) != "undefined" && toco[i] != 255) {
         linecontext.lineTo(lastx, suit.canvasline.height - toco[i] * this.yspan);
       } else {
@@ -286,8 +296,7 @@ export default class DrawCTG {
           linecontext.moveTo(lastx, suit.canvasline.height - toco[i] * this.yspan);
         } else if (typeof (toco[i - 2]) != "undefined" && toco[i] != 255) {
           linecontext.moveTo(lastx, suit.canvasline.height - toco[i - 2] * this.yspan);
-        }
-        else {
+        } else {
           linecontext.moveTo(lastx, suit.canvasline.height);
         }
       }
@@ -566,19 +575,19 @@ export default class DrawCTG {
       let cv = fhr[i] && fhr[i][x]
 
 
-      let curvalue = (typeof cv !== 'number' || cv < 1 || cv > 240) ? EMPTY_SYMBOL : fhr[i][x].toString()
+      let curvalue = (typeof cv !== 'number' || cv < 1 || cv > 240) ? EMPTY_SYMBOL : cv.toString()
 
       datacontext.fillStyle = suit.ctgconfig.alarmcolor;
-      if (suit.ctgconfig.alarm_enable && fhr[i][x] > suit.ctgconfig.alarm_high) {
+      if (suit.ctgconfig.alarm_enable && cv > suit.ctgconfig.alarm_high) {
         if (eventemit) {
-          console.log('心率过高', fhr[i][x]);
+          console.log('心率过高', cv);
           this.suit.alarmOn('心率过高');
         }
         alarm = 1;
         this.suit.alarm = alarm;
-      } else if (suit.ctgconfig.alarm_enable && fhr[i][x] < suit.ctgconfig.alarm_low) {
+      } else if (suit.ctgconfig.alarm_enable && cv < suit.ctgconfig.alarm_low) {
         if (eventemit) {
-          console.log('心率过低', fhr[i][x]);
+          console.log('心率过低', cv);
           this.suit.alarmOn('心率过低');
         }
         alarm = 1;
@@ -589,7 +598,7 @@ export default class DrawCTG {
       }
       if (alarm == 0 && suit.ctgconfig.alarm_enable && this.suit.alarm == 1) {
 
-        console.log('恢复', fhr[i][x], alarm, this.suit.alarm);
+        console.log('恢复', cv, alarm, this.suit.alarm);
         this.suit.alarmOff('');
         this.suit.alarm = alarm;
       }

@@ -22,13 +22,13 @@ interface IData {
 }
 
 export function update_status(this: WsService, received_msg: IData) {
-    console.log('----update_status---- \n', received_msg)
     const { datacache, BedStatus } = this
     const { Working, Stopped, Offline, OfflineStopped } = BedStatus
     // 状态机处理
     const { pregnancy, fetalposition, status, device_no, bed_no,
         is_include_mother, is_include_tocozero, is_include_volume, fetal_num, disableStartWork
     } = received_msg.data
+    console.log('----update_status---- \n', received_msg, device_no, bed_no)
 
     var unitId = this.getUnitId(device_no, bed_no);
 
@@ -44,6 +44,9 @@ export function update_status(this: WsService, received_msg: IData) {
     target.ismulti = is_include_mother
     target.is_include_volume = is_include_volume
     target.disableStartWork = disableStartWork
+    target.fhr = Array(fetal_num || 1).fill(0).map((_, i) => {
+        return target.fhr[i] || []
+    })
     if (status == 0) {
         target.status = Working;
     } else if (status == 1) {
