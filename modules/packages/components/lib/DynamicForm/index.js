@@ -47,32 +47,26 @@ var antd_1 = require('antd');
 var lodash_1 = require('lodash');
 exports.horizontalFormItemLayout = {
   labelCol: {
-    xs: { span: 12 },
-    sm: { span: 12 },
+    span: 12,
   },
   wrapperCol: {
-    xs: { span: 12 },
-    sm: { span: 12 },
+    span: 12,
   },
 };
 exports.verticalFormItemLayout = {
   labelCol: {
-    xs: { span: 24 },
-    sm: { span: 24 },
+    span: 12,
   },
   wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 24 },
+    span: 12,
   },
 };
 exports.nonLabelLayout = {
   labelCol: {
-    xs: { span: 0 },
-    sm: { span: 0 },
+    span: 0,
   },
   wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 24 },
+    span: 24,
   },
 };
 var DynamicForm = (function(_super) {
@@ -86,13 +80,22 @@ var DynamicForm = (function(_super) {
         options = { formItemLayout: exports.horizontalFormItemLayout };
       }
       var formItemLayout = options.formItemLayout;
-      return function(key, ReactNode) {
+      return function(key, ReactNode, options) {
+        if (options === void 0) {
+          options = {};
+        }
         var config = lodash_1.get(formDescriptions, key) || {};
         var label = config.label,
           rules = config.rules;
         return react_1.default.createElement(
           antd_1.Form.Item,
-          __assign({}, formItemLayout, { key: key, label: label, name: key, rules: rules }),
+          __assign({}, formItemLayout, lodash_1.get(options, 'customFormItemLayout'), {
+            style: __assign({}, lodash_1.get(options, 'styles')),
+            key: key,
+            label: label,
+            name: key,
+            rules: rules,
+          }),
           ReactNode
         );
       };
@@ -114,3 +117,4 @@ var DynamicForm = (function(_super) {
   return DynamicForm;
 })(react_1.default.Component);
 exports.default = DynamicForm;
+//# sourceMappingURL=index.js.map

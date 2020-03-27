@@ -34,3 +34,4 @@ exports.configs = {};
 exports.config = function(data) {
   exports.configs = __assign({}, data);
 };
+//# sourceMappingURL=index.js.map

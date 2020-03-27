@@ -2,56 +2,26 @@ import React from 'react';
 import { FormInstance } from 'antd/lib/form/Form';
 export declare const horizontalFormItemLayout: {
   labelCol: {
-    xs: {
-      span: number;
-    };
-    sm: {
-      span: number;
-    };
+    span: number;
   };
   wrapperCol: {
-    xs: {
-      span: number;
-    };
-    sm: {
-      span: number;
-    };
+    span: number;
   };
 };
 export declare const verticalFormItemLayout: {
   labelCol: {
-    xs: {
-      span: number;
-    };
-    sm: {
-      span: number;
-    };
+    span: number;
   };
   wrapperCol: {
-    xs: {
-      span: number;
-    };
-    sm: {
-      span: number;
-    };
+    span: number;
   };
 };
 export declare const nonLabelLayout: {
   labelCol: {
-    xs: {
-      span: number;
-    };
-    sm: {
-      span: number;
-    };
+    span: number;
   };
   wrapperCol: {
-    xs: {
-      span: number;
-    };
-    sm: {
-      span: number;
-    };
+    span: number;
   };
 };
 export default class DynamicForm extends React.Component {
@@ -63,24 +33,14 @@ export default class DynamicForm extends React.Component {
     options?: {
       formItemLayout: {
         labelCol: {
-          xs: {
-            span: number;
-          };
-          sm: {
-            span: number;
-          };
+          span: number;
         };
         wrapperCol: {
-          xs: {
-            span: number;
-          };
-          sm: {
-            span: number;
-          };
+          span: number;
         };
       };
     }
-  ) => (key: any, ReactNode: any) => JSX.Element;
+  ) => (key: any, ReactNode: any, options?: {}) => JSX.Element;
   generateRenderViewItem: () => () => void;
   render(): JSX.Element;
 }
