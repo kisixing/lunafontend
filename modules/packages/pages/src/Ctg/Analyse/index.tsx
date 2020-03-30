@@ -10,6 +10,7 @@ import Score from './Score';
 import useAnalyse from './useAnalyse';
 import useCtgData from './useCtgData';
 import { event } from '@lianmed/utils';
+import { fetchCtgExamsPdf } from '../services';
 export const ANALYSE_SUCCESS_TYPE = "(●'◡'●)"
 
 const Wrapper = styled.div`
@@ -28,126 +29,161 @@ const Wrapper = styled.div`
   }
 `
 
-export const Ctg_Analyse: FC<{ docid?: string, note?: string, id?: string, type?: 'default' | 'remote' }> = function ({ docid, type = "default", id, note }) {
-  note = note ? note : docid
-  const { ctgData, loading, setFhr, fetal, setFetal } = useCtgData(note)
-  const [disabled, setDisabled] = useState(true)
+
+export const Ctg_Analyse: FC<{
+  onDownload: () => void, docid?: string, note?: string, id?: string, type?: 'default' | 'remote'
+  fetalcount?: number,
+  gestationalWeek?: string,
+  inpatientNO?: string,
+  name?: string,
+  startdate?: string,
+  age?: any
+}> = function ({ docid, type = "default", id, note, onDownload = () => { },
+  age = 0,
+  fetalcount = 0,
+  gestationalWeek = '',
+  inpatientNO = '',
+  name = '',
+  startdate = '',
+}) {
+    note = note ? note : docid
+    const { ctgData, loading, setFhr, fetal, setFetal } = useCtgData(note)
+    const [disabled, setDisabled] = useState(true)
 
 
-  const ref = useRef<Suit>(null)
+    const ref = useRef<Suit>(null)
 
-  const {
-    responseData,
-    MARKS,
-    analyse,
-    startTime,
-    mark, setMark,
-    interval, setInterval,
-    Fischer_ref,
-    Nst_ref,
-    Krebs_ref,
-    analysis_ref,
-    old_ref,
+    const {
+      responseData,
+      MARKS,
+      analyse,
+      startTime,
+      endTime,
+      mark, setMark,
+      interval, setInterval,
+      Fischer_ref,
+      Nst_ref,
+      Krebs_ref,
+      analysis_ref,
+      old_ref,
 
-  } = useAnalyse(ref.current, note, fetal, setFhr)
+    } = useAnalyse(ref.current, note, fetal, setFhr)
 
-  const d = {
-    responseData,
-    MARKS,
-    analyse,
-    startTime,
-    mark, setMark,
-    interval, setInterval,
-    Fischer_ref,
-    Nst_ref,
-    Krebs_ref,
-    old_ref
-  }
-  const submit = () => {
-    const curData: { [x: string]: number } = d[`${mark}_ref`].current.getFieldsValue()
-    const oldData: { [x: string]: number } = old_ref.current[mark] || {}
-    const rightData = analysis_ref.current.getFieldsValue()
-    const { wave, diagnosistxt, NST, CST_OCT, ...analyseData } = rightData
+    const d = {
+      responseData,
+      MARKS,
+      analyse,
+      startTime,
+      mark, setMark,
+      interval, setInterval,
+      Fischer_ref,
+      Nst_ref,
+      Krebs_ref,
+      old_ref
+    }
 
 
-    const isedit = Object.entries(curData).find(([k, v]) => oldData[k] !== v) ? true : false
-    const identify = type === 'default' ? { note } : { id }
-    const data = {
-      ...identify,
-      diagnosis: JSON.stringify({ wave, diagnosistxt, NST, CST_OCT }),
-      result: JSON.stringify({
-        ...analyseData,
-        ...curData,
-        isedit
+    const submit = () => {
+      const rightData = analysis_ref.current.getFieldsValue()
+      const { wave, diagnosistxt, NST, CST_OCT, ...analyseData } = rightData
+      const curData: { [x: string]: number } = d[`${mark}_ref`].current.getFieldsValue()
+      const oldData: { [x: string]: number } = old_ref.current[mark] || {}
+
+
+
+      const isedit = Object.entries(curData).find(([k, v]) => oldData[k] !== v) ? true : false
+      const identify = type === 'default' ? { note } : { id }
+      const data = {
+        ...identify,
+        diagnosis: JSON.stringify({ wave, diagnosistxt, NST, CST_OCT }),
+        result: JSON.stringify({
+          ...analyseData,
+          ...curData,
+          isedit
+        })
+      }
+
+      request.put(type === "default" ? '/ctg-exams-note' : '/serviceorders', { data }).then((r: any) => {
+        //TODO: 结果判断
+        message.success('保存成功！', 3);
+        event.emit(ANALYSE_SUCCESS_TYPE, type == "default" ? note : id)
       })
     }
 
-    request.put(type === "default" ? '/ctg-exams-note' : '/serviceorders', { data }).then((r: any) => {
-      //TODO: 结果判断
-      message.success('保存成功！', 3);
-      event.emit(ANALYSE_SUCCESS_TYPE, type == "default" ? note : id)
-    })
-  }
+    const history = () => {
+      const data = {
+        'note.equals': note
+      }
 
-  const history = () => {
-    const data = {
-      'note.equals': note
+
+      request.get(`/ctg-exams-criteria`, { params: data }).then(function (r) {
+        if (r.length > 0) {
+          const diagnosis = r[0].diagnosis;
+          let t;
+          try {
+            const d = JSON.parse(diagnosis) || {}
+            t = (
+              <div>
+                <div>NST：<span>{d.NST}</span></div>
+                <div>CST/OCT：<span>{d.CST_OCT}</span></div>
+                <div>诊断：<span>{d.diagnosistxt}</span></div>
+              </div>
+            )
+          } catch (error) {
+          }
+          info(t || '暂无记录');
+        }
+      })
     }
 
+    const info = (message: any) => {
+      Modal.info({
+        title: '历史记录',
+        content: message,
+        onOk() { }
+      });
+    }
+    const btnDisabled = !note || !disabled
+    return (
+      <Wrapper >
+        <div style={{ height: `calc(100% - 420px - 12px)`, marginBottom: 12, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px', overflow: 'hidden' }}>
+          <Ctg suitType={1} ref={ref} loading={loading} data={ctgData} />
 
-    request.get(`/ctg-exams-criteria`, { params: data }).then(function (r) {
-      if (r.length > 0) {
-        const diagnosis = r[0].diagnosis;
-        let t;
-        try {
-          const d = JSON.parse(diagnosis) || {}
-          t = (
-            <div>
-              <div>NST：<span>{d.NST}</span></div>
-              <div>CST/OCT：<span>{d.CST_OCT}</span></div>
-              <div>诊断：<span>{d.diagnosistxt}</span></div>
+        </div>
+        <Row gutter={12} style={{ height: 420 }}>
+          <Col span={12} >
+            <Score disabled={disabled}  {...d} fetal={fetal} setFetal={setFetal} ctgData={ctgData} docid={note} v={ref.current} className="bordered" />
+            <div style={{ position: 'absolute', right: 12, bottom: 0 }}>
+              <Button size="small" style={{ marginBottom: 10 }} onClick={history} disabled={btnDisabled}>历史分析</Button>
+              <Button size="small" style={{ marginBottom: 10 }} disabled={!note} onClick={() => setDisabled(!disabled)}>{disabled ? '修改' : '确认'}</Button>
+              <Button size="small" style={{ marginBottom: 10 }} type="primary" onClick={analyse} disabled={!note}>评分</Button>
             </div>
-          )
-        } catch (error) {
-        }
-        info(t || '暂无记录');
-      }
-    })
+          </Col>
+          <Col span={12}  >
+            <Analyse ref={analysis_ref} />
+            <div style={{ position: 'absolute', right: 12, bottom: 0 }}>
+              <Button size="small" onClick={() => {
+                const rightData = analysis_ref.current.getFieldsValue()
+                const { diagnosistxt } = rightData
+                fetchCtgExamsPdf({
+                  diagnosis: diagnosistxt,
+                  docid,
+                  end: endTime,
+                  start: startTime,
+                  age,
+                  fetalcount,
+                  gestationalWeek,
+                  inpatientNO,
+                  name,
+                  startdate,
+                }).then(onDownload)
+              }} style={{ marginBottom: 10 }} disabled={btnDisabled}>打印</Button>
+              <Button size="small" type="primary" onClick={submit} disabled={btnDisabled}>保存</Button>
+            </div>
+
+          </Col>
+        </Row>
+      </Wrapper>
+    );
   }
-
-  const info = (message: any) => {
-    Modal.info({
-      title: '历史记录',
-      content: message,
-      onOk() { }
-    });
-  }
-  const btnDisabled = !note || !disabled
-  return (
-    <Wrapper >
-      <div style={{ height: `calc(100% - 420px - 12px)`, marginBottom: 12, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px', overflow: 'hidden' }}>
-        <Ctg suitType={1} ref={ref} loading={loading} data={ctgData} />
-
-      </div>
-      <Row gutter={12} style={{ height: 420 }}>
-        <Col span={12} >
-          <Score disabled={disabled}  {...d} fetal={fetal} setFetal={setFetal} ctgData={ctgData} docid={note} v={ref.current} className="bordered" />
-          <div style={{ position: 'absolute', right: 12, bottom: 0 }}>
-            <Button size="small" style={{ marginBottom: 10 }} onClick={history} disabled={btnDisabled}>历史分析</Button>
-            <Button size="small" style={{ marginBottom: 10 }} disabled={!note} onClick={() => setDisabled(!disabled)}>{disabled ? '修改' : '确认'}</Button>
-            <Button size="small" style={{ marginBottom: 10 }} type="primary" onClick={analyse} disabled={!note}>评分</Button>
-          </div>
-        </Col>
-        <Col span={12}  >
-          <Analyse ref={analysis_ref} />
-          <div style={{ position: 'absolute', right: 12, bottom: 0 }}>
-            <Button size="small" style={{ marginBottom: 10 }} disabled={btnDisabled}>打印</Button>
-            <Button size="small" type="primary" onClick={submit} disabled={btnDisabled}>保存</Button>
-          </div>
-
-        </Col>
-      </Row>
-    </Wrapper>
-  );
-}
 export default Ctg_Analyse;

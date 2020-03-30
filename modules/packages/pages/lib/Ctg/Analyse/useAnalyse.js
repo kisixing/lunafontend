@@ -92,7 +92,7 @@ exports.default = (function (v, docid, fetal, setFhr) {
     return {
         setMark: setMarkAndItems, mark: mark,
         responseData: resultData,
-        MARKS: MARKS, analyse: analyse, startTime: startTime, setStartTime: setStartTime, interval: interval, setInterval: setInterval,
+        MARKS: MARKS, analyse: analyse, startTime: startTime, endTime: startTime + 240 * interval, setStartTime: setStartTime, interval: interval, setInterval: setInterval,
         Fischer_ref: Fischer_ref,
         Nst_ref: Nst_ref,
         Krebs_ref: Krebs_ref,

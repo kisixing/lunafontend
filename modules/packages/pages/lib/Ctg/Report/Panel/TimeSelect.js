@@ -42,9 +42,9 @@ var usePrintConfig_1 = __importDefault(require("./hooks/usePrintConfig"));
 var useSign_1 = __importDefault(require("./hooks/useSign"));
 var useSave_1 = __importDefault(require("./hooks/useSave"));
 var useArchive_1 = __importDefault(require("./hooks/useArchive"));
-var request_1 = __importDefault(require("@lianmed/request"));
 var index_1 = require("../index");
 var styled_components_1 = __importDefault(require("styled-components"));
+var services_1 = require("../../services");
 var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n    .bottomBtns button {\n        margin-right: 10px \n    }\n    .bottomBtns button:last-child {\n        margin-right: 0px \n    }\n"], ["\n    .bottomBtns button {\n        margin-right: 10px \n    }\n    .bottomBtns button:last-child {\n        margin-right: 0px \n    }\n"])));
 var COEFFICIENT = 240;
 var Preview = function (props) {
@@ -52,13 +52,10 @@ var Preview = function (props) {
     var _a = react_1.useState(false), pdfBase64Loading = _a[0], setPdfBase64Loading = _a[1];
     var handlePreview = function () {
         setPdfBase64Loading(true);
-        request_1.default.post("/ctg-exams-pdf", {
-            data: __assign({ docid: docid,
-                diagnosis: diagnosis, start: startingTime, end: endingTime, outputType: outputType }, args),
-        }).then(function (res) {
+        services_1.fetchCtgExamsPdf(__assign({ docid: docid,
+            diagnosis: diagnosis, start: startingTime, end: endingTime, outputType: outputType }, args)).then(function (r) {
             setPdfBase64Loading(false);
-            var pdfData = res.pdfdata && "data:application/pdf;base64," + res.pdfdata;
-            setPdfBase64(pdfData);
+            setPdfBase64(r);
         });
     };
     var _b = react_1.useState({ suit: null }), value = _b[0], setValue = _b[1];

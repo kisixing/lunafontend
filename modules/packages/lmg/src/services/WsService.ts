@@ -225,18 +225,18 @@ export class WsService extends EventEmitter {
         request.get(`/bedinfos?documentno.equals=${doc_id}`).then(responseData => {
             let vt = doc_id.split('_');
             let curid = vt[0] + '-' + vt[1];
-            if (responseData) {
+            const target = datacache.get(curid)
+            if (responseData && target) {
                 if (responseData['pregnancy'] == null) {
-                    datacache.get(curid) && cleardata(datacache, curid, datacache.get(curid).fetal_num);
+                    cleardata(datacache, curid, target.fetal_num);
                 }
                 if (is_working == 0) {
-                    datacache.get(curid).status = Working;
+                    target.status = Working;
                 } else if (is_working === 3) {
-                    datacache.get(curid).status = OfflineStopped;
+                    target.status = OfflineStopped;
 
                 } else {
-                    datacache.get(curid).status = Stopped;
-
+                    target.status = Stopped;
                 }
                 //this.refresh('end_work');
             }

@@ -280,18 +280,19 @@ var WsService = (function (_super) {
         request_1.default.get("/bedinfos?documentno.equals=" + doc_id).then(function (responseData) {
             var vt = doc_id.split('_');
             var curid = vt[0] + '-' + vt[1];
-            if (responseData) {
+            var target = datacache.get(curid);
+            if (responseData && target) {
                 if (responseData['pregnancy'] == null) {
-                    datacache.get(curid) && utils_2.cleardata(datacache, curid, datacache.get(curid).fetal_num);
+                    utils_2.cleardata(datacache, curid, target.fetal_num);
                 }
                 if (is_working == 0) {
-                    datacache.get(curid).status = Working;
+                    target.status = Working;
                 }
                 else if (is_working === 3) {
-                    datacache.get(curid).status = OfflineStopped;
+                    target.status = OfflineStopped;
                 }
                 else {
-                    datacache.get(curid).status = Stopped;
+                    target.status = Stopped;
                 }
             }
         });

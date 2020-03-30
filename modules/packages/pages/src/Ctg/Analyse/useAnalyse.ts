@@ -28,7 +28,7 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void) 
     }
 
     const analyse = () => {
-        console.log('yyyyyyyyyyyy--------analyse',v)
+        console.log('yyyyyyyyyyyy--------analyse', v)
 
         v && request.post(`/ctg-exams-analyse`, {
             data: { docid, mark, start: startTime, end: startTime + interval * 240, fetal },
@@ -38,7 +38,7 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void) 
             const { analysis, score } = r
             const f = score[`${mark.toLowerCase()}data`]
             const cur: MutableRefObject<FormInstance> = mapFormToMark[`${mark}_ref`]
-            console.log('yyyyyyyyyyyy--------cur',cur.current)
+            console.log('yyyyyyyyyyyy--------cur', cur.current)
 
             cur.current.setFieldsValue(f);
             old_ref.current[mark] = f
@@ -66,11 +66,11 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void) 
             time = time + 4800 <= v.data.index ? time : v.data.index - 4800
             docid && setStartTime(time)
         }
-        console.log('yyyyyyyyyyyy--------on',v)
+        console.log('yyyyyyyyyyyy--------on', v)
 
         v && v.on('change:selectPoint', s).on('afterInit', analyse)
         return () => {
-            console.log('yyyyyyyyyyyy--------off',v)
+            console.log('yyyyyyyyyyyy--------off', v)
 
             v && v.off('change:selectPoint', s).off('afterInit', analyse)
 
@@ -96,7 +96,7 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void) 
     return {
         setMark: setMarkAndItems, mark,
         responseData: resultData,
-        MARKS, analyse, startTime, setStartTime, interval, setInterval,
+        MARKS, analyse, startTime, endTime: startTime + 240 * interval, setStartTime, interval, setInterval,
         Fischer_ref,
         Nst_ref,
         Krebs_ref,

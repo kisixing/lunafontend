@@ -10,6 +10,7 @@ declare const _default: (v: Suit, docid: any, fetal: any, setFhr: (index: 2 | 1 
     MARKS: string[];
     analyse: () => void;
     startTime: number;
+    endTime: number;
     setStartTime: import("react").Dispatch<import("react").SetStateAction<number>>;
     interval: number;
     setInterval: import("react").Dispatch<import("react").SetStateAction<number>>;

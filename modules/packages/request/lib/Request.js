@@ -25,10 +25,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var antd_1 = require("antd");
 var umi_request_1 = require("umi-request");
 var getErrData_1 = __importDefault(require("./getErrData"));
-var antd_2 = require("antd");
+var notification = require('antd/lib/notification').default;
+var message = require('antd/lib/message').default;
 var store_1 = __importDefault(require("store"));
 var intervalSet = new Set();
 var Request = (function () {
@@ -50,7 +50,7 @@ var Request = (function () {
                     else if (request) {
                         var options = request.options, url = request.url;
                         if (options && !options.hideErr) {
-                            antd_2.notification.error({
+                            notification.error({
                                 message: url + " \u672A\u54CD\u5E94",
                             });
                         }
@@ -80,7 +80,7 @@ var Request = (function () {
                 }
                 var promise = _this._request[_](url, options);
                 if (loading !== undefined) {
-                    var hide_1 = antd_1.message.loading(loading, 0);
+                    var hide_1 = message.loading(loading, 0);
                     return promise.finally(function () {
                         hide_1();
                     });

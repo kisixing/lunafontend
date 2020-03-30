@@ -27,7 +27,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var antd_1 = require("antd");
 var getErrData_1 = __importDefault(require("./getErrData"));
 var Request_1 = __importDefault(require("./Request"));
 var store_1 = __importDefault(require("store"));
@@ -35,6 +34,8 @@ var utils_1 = require("@lianmed/utils");
 var reasons_1 = __importDefault(require("./reasons"));
 var aes_1 = __importDefault(require("crypto-js/aes"));
 var crypto_js_1 = require("crypto-js");
+var notification = require('antd/lib/notification').default;
+var message = require('antd/lib/message').default;
 var encrypt = aes_1.default.encrypt, decrypt = aes_1.default.decrypt;
 var SEARCH_KEY = 0x21ac.toString();
 var R = (function (_super) {
@@ -64,7 +65,7 @@ var R = (function (_super) {
                 var errorData = getErrData_1.default(response);
                 var status = errorData.status, errortext = errorData.errortext, url = errorData.url, data = errorData.data;
                 if ([200, 201, 204, 304].includes(status)) {
-                    successText && antd_1.message.success(successText);
+                    successText && message.success(successText);
                 }
                 else {
                     var r_1 = reasons_1.default[Math.floor(Math.random() * reasons_1.default.length)];
@@ -73,12 +74,12 @@ var R = (function (_super) {
                         var _a = d.title, title = _a === void 0 ? r_1 : _a;
                         console.log('dddd', d);
                         if (status === 401) {
-                            antd_1.notification.error({
+                            notification.error({
                                 message: '未登录或登录已过期，请重新登录。',
                             });
                         }
                         if (!hideErr) {
-                            antd_1.notification.error({
+                            notification.error({
                                 message: "\u8BF7\u6C42\u9519\u8BEF " + status + ": " + url,
                                 description: "\u539F\u56E0\uFF1A" + title,
                             });

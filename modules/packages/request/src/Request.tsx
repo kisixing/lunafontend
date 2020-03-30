@@ -1,8 +1,11 @@
-import { message } from 'antd';
+// import { message } from 'antd';
 import { extend, RequestMethod } from 'umi-request';
 import { Iconfig, RequestOptions } from './types';
 import getErrData from './getErrData';
-import { notification } from 'antd';
+// import { notification } from 'antd';
+
+const notification = require('antd/lib/notification').default
+const message = require('antd/lib/message').default
 import store from 'store'
 
 type RequestType = (url: string, options?: RequestOptions) => Promise<any>;

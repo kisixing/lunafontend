@@ -4,9 +4,9 @@ import usePrintConfig from "./hooks/usePrintConfig";
 import useSign from "./hooks/useSign";
 import useSave from "./hooks/useSave";
 import useArchive from "./hooks/useArchive";
-import request from "@lianmed/request";
 import { IProps as IP, Context } from "../index";
 import styled from 'styled-components';
+import { fetchCtgExamsPdf } from '../../services';
 const Wrapper = styled.div`
     .bottomBtns button {
         margin-right: 10px 
@@ -28,19 +28,16 @@ const Preview = (props: IProps) => {
     const [pdfBase64Loading, setPdfBase64Loading] = useState(false)
     const handlePreview = () => {
         setPdfBase64Loading(true)
-        request.post(`/ctg-exams-pdf`, {
-            data: {
-                docid,
-                diagnosis,
-                start: startingTime,
-                end: endingTime,
-                outputType,
-                ...args
-            },
-        }).then(res => {
+        fetchCtgExamsPdf({
+            docid,
+            diagnosis,
+            start: startingTime,
+            end: endingTime,
+            outputType,
+            ...args
+        }).then(r => {
             setPdfBase64Loading(false)
-            const pdfData = res.pdfdata && `data:application/pdf;base64,${res.pdfdata}`;
-            setPdfBase64(pdfData)
+            setPdfBase64(r)
         })
     }
 

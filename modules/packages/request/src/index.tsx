@@ -1,5 +1,5 @@
 import { Iconfig, RequestOptions } from './types';
-import { message, notification } from 'antd';
+// import { message, notification } from 'antd';
 import getErrData from './getErrData';
 import Request from './Request';
 import store from "store";
@@ -7,6 +7,8 @@ import { TOKEN_KEY } from "@lianmed/utils";
 import reasons from './reasons'
 import C from "crypto-js/aes";
 import { enc } from "crypto-js";
+const notification = require('antd/lib/notification').default
+const message = require('antd/lib/message').default
 const { encrypt, decrypt } = C
 const SEARCH_KEY = 0x21ac.toString()
 class R extends Request {
