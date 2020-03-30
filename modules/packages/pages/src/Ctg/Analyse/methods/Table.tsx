@@ -18,7 +18,12 @@ const T =  forwardRef<FormInstance, IProps>((props, ref) => {
     const columns: any = [
         {
             title: '项目',
-            dataIndex: 'name'
+            dataIndex: 'name',
+            render(a:any) {
+                return (
+                    <span style={{whiteSpace:'nowrap',}}>{a}</span>
+                )
+            }
         },
         {
             title: '0分',

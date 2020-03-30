@@ -146,7 +146,7 @@ export const Ctg_Analyse: FC<{
     const btnDisabled = !note || !disabled
     return (
       <Wrapper >
-        <div style={{ height: `calc(100% - 420px - 12px)`, marginBottom: 12, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px', overflow: 'hidden' }}>
+        <div style={{ height: `calc(100% - 420px - 12px)`,minHeight:200, marginBottom: 12, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px', overflow: 'hidden' }}>
           <Ctg suitType={1} ref={ref} loading={loading} data={ctgData} />
 
         </div>

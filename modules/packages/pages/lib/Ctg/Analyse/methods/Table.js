@@ -25,7 +25,10 @@ var T = react_1.forwardRef(function (props, ref) {
     var columns = [
         {
             title: '项目',
-            dataIndex: 'name'
+            dataIndex: 'name',
+            render: function (a) {
+                return (react_1.default.createElement("span", { style: { whiteSpace: 'nowrap', } }, a));
+            }
         },
         {
             title: '0分',
