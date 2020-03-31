@@ -538,6 +538,7 @@ export default class DrawCTG {
 
   showcur = (x: number, eventemit = false) => {
     const { suit, datacontext } = this;
+    if (!suit.data) return
     const { fhr, toco } = suit.data;
     let curpostion = 10;
     const EMPTY_SYMBOL = '-- --'

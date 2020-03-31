@@ -13,9 +13,6 @@
   "files": [
     "lib"
   ],
-  "peerDependencies": {
-    "@lianmed/request": "^1.0.0"
-  },
   "dependencies": {
     "ramda": "^0.26.1",
     "resize-observer-polyfill": "^1.5.1",
@@ -23,8 +20,8 @@
   },
   "devDependencies": {
     "@types/ramda": "^0.26.33",
-    "webstomp-client":"^1.2.6",
-    "rxjs":"^6.5.4"
+    "webstomp-client": "^1.2.6",
+    "rxjs": "^6.5.4"
   },
   "repository": {
     "type": "git",

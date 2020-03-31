@@ -16,7 +16,7 @@
   "dependencies": {
     "lodash": "^4.17.15",
     "fabric": "^3.5.1",
-    "react-contextmenu":"^2.13.0"
+    "react-contextmenu": "^2.13.0"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.108",
@@ -35,7 +35,6 @@
   },
   "peerDependencies": {
     "react": "^16.9.0",
-    "@lianmed/schema-form": "^1.0.0",
     "@lianmed/utils": "^1.0.0",
     "@lianmed/request": "^1.0.0"
   },

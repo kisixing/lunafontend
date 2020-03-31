@@ -29,7 +29,9 @@
   },
   "dependencies": {
     "easemob-websdk": "^3.0.7",
-    "dexie":"^2.0.4",
-    "@lianmed/utils":"^1.0.0"
+    "dexie": "^2.0.4"
+  },
+  "peerDependencies": {
+    "@lianmed/utils": "^1.0.0"
   }
 }
