@@ -92,7 +92,7 @@ export class Suit extends Draw {
     this.emit('change:selectPoint', this.drawSelect.selectingBarPoint)
 
     this.updateBarTool();
-    this.drawobj.drawdot(this.viewposition);
+    this.drawobj.drawdot(this.viewposition < this.width * 2 ? this.width * 2 : this.viewposition);
   }
 
   constructor(
@@ -137,7 +137,7 @@ export class Suit extends Draw {
   }
 
   init(data: ICacheItem) {
-    this.log('init',this)
+    this.log('init', this)
     this.drawAnalyse.init()
     this.drawSelect.init()
     if (!data) {
@@ -185,7 +185,7 @@ export class Suit extends Draw {
       this.timerCtg(defaultinterval);
     }
     this.barTool.watch(value => {
-      
+
       //显示历史数据
       //kisi 优化拖动赋值
       this.toolbarposition = value;
@@ -209,7 +209,7 @@ export class Suit extends Draw {
       this.drawobj.drawdot(this.rightViewPosition, false);
     });
     this.barTool.watchGrab(value => {
- 
+
 
       let _viewposition;
       value = ~~value * 2;

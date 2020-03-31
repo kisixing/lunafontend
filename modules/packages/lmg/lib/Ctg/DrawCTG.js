@@ -234,6 +234,8 @@ var DrawCTG = (function () {
         this.showcur = function (x, eventemit) {
             if (eventemit === void 0) { eventemit = false; }
             var _a = _this, suit = _a.suit, datacontext = _a.datacontext;
+            if (!suit.data)
+                return;
             var _b = suit.data, fhr = _b.fhr, toco = _b.toco;
             var curpostion = 10;
             var EMPTY_SYMBOL = '-- --';
@@ -403,6 +405,7 @@ var DrawCTG = (function () {
     };
     DrawCTG.prototype.drawdot = function (cur, isemit) {
         if (isemit === void 0) { isemit = false; }
+        this.suit.log('drawdot: cur is', cur);
         var _a = this, suit = _a.suit, linecontext = _a.linecontext, max = _a.max;
         var drawAnalyse = suit.drawAnalyse;
         var _b = suit.data, fhr = _b.fhr, toco = _b.toco, fm = _b.fm;

@@ -19,7 +19,6 @@
     "qrcode": "^1.4.4"
   },
   "devDependencies": {
-    "@types/ramda": "^0.26.33",
     "webstomp-client": "^1.2.6",
     "rxjs": "^6.5.4"
   },

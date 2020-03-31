@@ -131,7 +131,7 @@ var Suit = (function (_super) {
             this.viewposition = value;
             this.emit('change:selectPoint', this.drawSelect.selectingBarPoint);
             this.updateBarTool();
-            this.drawobj.drawdot(this.viewposition);
+            this.drawobj.drawdot(this.viewposition < this.width * 2 ? this.width * 2 : this.viewposition);
         },
         enumerable: true,
         configurable: true
