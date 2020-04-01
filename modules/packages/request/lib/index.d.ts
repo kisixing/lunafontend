@@ -8,7 +8,7 @@ declare class R extends Request {
     };
     config: (configs?: Iconfig) => Request;
     authenticate: (params: any, c?: Iconfig) => Promise<any>;
-    configFromLocation(url?: string): any;
+    configFromLocation(url?: string): Iconfig;
     configToLocation(url?: string, attachment?: {
         [x: string]: any;
     } & Iconfig): string;

@@ -93,7 +93,7 @@ class R extends Request {
       c = JSON.parse(jsonStr)
       this.config(c)
     }
-    return c
+    return c as Iconfig
   }
   configToLocation(url = location.href, attachment: { [x: string]: any } & Iconfig = {}) {
     const c = Object.assign({}, this.configure, attachment)
