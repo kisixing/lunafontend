@@ -8,7 +8,7 @@ const info = message.info
 
 
 
-export default (bizSn: string, setPdfBase64: any, setBizSn: React.Dispatch<React.SetStateAction<string>>) => {
+export default (bizSn: string, setPdfBase64: any, setBizSn: React.Dispatch<React.SetStateAction<string>>, empId: string = null, ) => {
 
 
 
@@ -30,7 +30,7 @@ export default (bizSn: string, setPdfBase64: any, setBizSn: React.Dispatch<React
 
     const fetchQrCode = () => {
         setQrCodeBase64Loading(true)
-        request.post('/ca/signreq', { data: { action: "sign", docid: bizSn, } })
+        request.post('/ca/signreq', { data: { action: "sign", docid: bizSn, msg: empId } })
             .then(r => {
                 if (r && r.sn) {
                     setBizSn(r.sn)

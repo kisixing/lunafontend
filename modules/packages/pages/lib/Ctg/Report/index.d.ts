@@ -10,6 +10,7 @@ export interface IProps {
     print_interval: number;
     onDownload: () => void;
     gestationalWeek?: any;
+    empId?: string;
 }
 declare const PrintPreview: (props: IProps) => JSX.Element;
 export default PrintPreview;

@@ -15,10 +15,12 @@ export interface IProps {
     print_interval: number
     onDownload: () => void
     gestationalWeek?: any
+    empId?: string
+
 }
 
 const PrintPreview = (props: IProps) => {
-    const { docid } = props;
+    const { docid, empId = null } = props;
     const [wh, setWh] = useState({ w: 0, h: 0 })
     useLayoutEffect(() => {
         const { clientHeight, clientWidth } = inputEl.current;
@@ -39,7 +41,7 @@ const PrintPreview = (props: IProps) => {
         <Context.Provider value={v}>
             <div style={{ height: '100%' }} ref={inputEl}>
                 <div style={{ height: 240, textAlign: 'center' }}>
-                    <Panel wh={wh} {...props} />
+                    <Panel wh={wh} {...props} empId={empId} />
                 </div>
                 <div style={{
                     height: `calc(100% - 250px)`,

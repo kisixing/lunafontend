@@ -8,7 +8,8 @@ var request_1 = __importDefault(require("@lianmed/request"));
 var antd_1 = require("antd");
 var utils_1 = require("@lianmed/utils");
 var info = antd_1.message.info;
-exports.default = (function (bizSn, setPdfBase64, setBizSn) {
+exports.default = (function (bizSn, setPdfBase64, setBizSn, empId) {
+    if (empId === void 0) { empId = null; }
     var _a = react_1.useState(''), qrCodeBase64 = _a[0], setQrCodeBase64 = _a[1];
     var _b = react_1.useState(false), qrCodeBase64Loading = _b[0], setQrCodeBase64Loading = _b[1];
     var _c = react_1.useState(false), modalVisible = _c[0], setModalVisible = _c[1];
@@ -21,7 +22,7 @@ exports.default = (function (bizSn, setPdfBase64, setBizSn) {
     }, [modalVisible]);
     var fetchQrCode = function () {
         setQrCodeBase64Loading(true);
-        request_1.default.post('/ca/signreq', { data: { action: "sign", docid: bizSn, } })
+        request_1.default.post('/ca/signreq', { data: { action: "sign", docid: bizSn, msg: empId } })
             .then(function (r) {
             if (r && r.sn) {
                 setBizSn(r.sn);

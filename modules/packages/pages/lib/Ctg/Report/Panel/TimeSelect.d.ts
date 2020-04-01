@@ -5,6 +5,7 @@ interface IProps extends IP {
     onTotalChange: (total: number) => void;
     pdfBase64: string;
     setPdfBase64: (s: string) => void;
+    empId?: string;
 }
 declare const Preview: (props: IProps) => JSX.Element;
 export default Preview;

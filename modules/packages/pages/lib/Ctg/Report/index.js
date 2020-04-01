@@ -26,8 +26,8 @@ var Ctg_1 = __importDefault(require("./Ctg"));
 var Panel_1 = __importDefault(require("./Panel"));
 exports.Context = react_1.default.createContext({});
 var PrintPreview = function (props) {
-    var docid = props.docid;
-    var _a = react_1.useState({ w: 0, h: 0 }), wh = _a[0], setWh = _a[1];
+    var docid = props.docid, _a = props.empId, empId = _a === void 0 ? null : _a;
+    var _b = react_1.useState({ w: 0, h: 0 }), wh = _b[0], setWh = _b[1];
     react_1.useLayoutEffect(function () {
         var _a = inputEl.current, clientHeight = _a.clientHeight, clientWidth = _a.clientWidth;
         setWh({ h: clientHeight, w: clientWidth });
@@ -37,7 +37,7 @@ var PrintPreview = function (props) {
     return (react_1.default.createElement(exports.Context.Provider, { value: v },
         react_1.default.createElement("div", { style: { height: '100%' }, ref: inputEl },
             react_1.default.createElement("div", { style: { height: 240, textAlign: 'center' } },
-                react_1.default.createElement(Panel_1.default, __assign({ wh: wh }, props))),
+                react_1.default.createElement(Panel_1.default, __assign({ wh: wh }, props, { empId: empId }))),
             react_1.default.createElement("div", { style: {
                     height: "calc(100% - 250px)",
                     padding: 24,

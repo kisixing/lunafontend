@@ -48,8 +48,8 @@ var services_1 = require("../../services");
 var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n    .bottomBtns button {\n        margin-right: 10px \n    }\n    .bottomBtns button:last-child {\n        margin-right: 0px \n    }\n"], ["\n    .bottomBtns button {\n        margin-right: 10px \n    }\n    .bottomBtns button:last-child {\n        margin-right: 0px \n    }\n"])));
 var COEFFICIENT = 240;
 var Preview = function (props) {
-    var onDownload = props.onDownload, docid = props.docid, print_interval = props.print_interval, diagnosis = props.diagnosis, onTotalChange = props.onTotalChange, pdfBase64 = props.pdfBase64, setPdfBase64 = props.setPdfBase64, args = __rest(props, ["onDownload", "docid", "print_interval", "diagnosis", "onTotalChange", "pdfBase64", "setPdfBase64"]);
-    var _a = react_1.useState(false), pdfBase64Loading = _a[0], setPdfBase64Loading = _a[1];
+    var onDownload = props.onDownload, docid = props.docid, print_interval = props.print_interval, diagnosis = props.diagnosis, onTotalChange = props.onTotalChange, pdfBase64 = props.pdfBase64, setPdfBase64 = props.setPdfBase64, _a = props.empId, empId = _a === void 0 ? null : _a, args = __rest(props, ["onDownload", "docid", "print_interval", "diagnosis", "onTotalChange", "pdfBase64", "setPdfBase64", "empId"]);
+    var _b = react_1.useState(false), pdfBase64Loading = _b[0], setPdfBase64Loading = _b[1];
     var handlePreview = function () {
         setPdfBase64Loading(true);
         services_1.fetchCtgExamsPdf(__assign({ docid: docid,
@@ -58,11 +58,11 @@ var Preview = function (props) {
             setPdfBase64(r);
         });
     };
-    var _b = react_1.useState({ suit: null }), value = _b[0], setValue = _b[1];
-    var _c = usePrintConfig_1.default(value, print_interval), startingTime = _c.startingTime, endingTime = _c.endingTime, locking = _c.locking, total = _c.total, backward = _c.backward, forward = _c.forward, toggleLocking = _c.toggleLocking, selectAll = _c.selectAll, editable = _c.editable, outputType = _c.outputType, setOutputType = _c.setOutputType;
-    var _d = useArchive_1.default(docid), setBizSn = _d.setBizSn, bizSn = _d.bizSn, archive = _d.archive, archiveLoading = _d.archiveLoading, archived = _d.archived;
-    var _e = useSign_1.default(bizSn, setPdfBase64, setBizSn), fetchQrCode = _e.fetchQrCode, qrCodeBase64 = _e.qrCodeBase64, modalVisible = _e.modalVisible, qrCodeBase64Loading = _e.qrCodeBase64Loading, setModalVisible = _e.setModalVisible, signed = _e.signed;
-    var _f = useSave_1.default(bizSn, setBizSn), caEnable = _f.caEnable, save = _f.save, saveLoading = _f.saveLoading, saved = _f.saved;
+    var _c = react_1.useState({ suit: null }), value = _c[0], setValue = _c[1];
+    var _d = usePrintConfig_1.default(value, print_interval), startingTime = _d.startingTime, endingTime = _d.endingTime, locking = _d.locking, total = _d.total, backward = _d.backward, forward = _d.forward, toggleLocking = _d.toggleLocking, selectAll = _d.selectAll, editable = _d.editable, outputType = _d.outputType, setOutputType = _d.setOutputType;
+    var _e = useArchive_1.default(docid), setBizSn = _e.setBizSn, bizSn = _e.bizSn, archive = _e.archive, archiveLoading = _e.archiveLoading, archived = _e.archived;
+    var _f = useSign_1.default(bizSn, setPdfBase64, setBizSn, empId), fetchQrCode = _f.fetchQrCode, qrCodeBase64 = _f.qrCodeBase64, modalVisible = _f.modalVisible, qrCodeBase64Loading = _f.qrCodeBase64Loading, setModalVisible = _f.setModalVisible, signed = _f.signed;
+    var _g = useSave_1.default(bizSn, setBizSn), caEnable = _g.caEnable, save = _g.save, saveLoading = _g.saveLoading, saved = _g.saved;
     react_1.useEffect(function () {
         onTotalChange(total);
     }, [total]);

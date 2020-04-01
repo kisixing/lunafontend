@@ -22,9 +22,10 @@ interface IProps extends IP {
     onTotalChange: (total: number) => void
     pdfBase64: string
     setPdfBase64: (s: string) => void
+    empId?: string
 }
 const Preview = (props: IProps) => {
-    const { onDownload, docid, print_interval, diagnosis, onTotalChange, pdfBase64, setPdfBase64, ...args } = props;
+    const { onDownload, docid, print_interval, diagnosis, onTotalChange, pdfBase64, setPdfBase64, empId = null, ...args } = props;
     const [pdfBase64Loading, setPdfBase64Loading] = useState(false)
     const handlePreview = () => {
         setPdfBase64Loading(true)
@@ -66,7 +67,7 @@ const Preview = (props: IProps) => {
 
     const { setBizSn, bizSn, archive, archiveLoading, archived } = useArchive(docid)
 
-    const { fetchQrCode, qrCodeBase64, modalVisible, qrCodeBase64Loading, setModalVisible, signed } = useSign(bizSn, setPdfBase64, setBizSn)
+    const { fetchQrCode, qrCodeBase64, modalVisible, qrCodeBase64Loading, setModalVisible, signed } = useSign(bizSn, setPdfBase64, setBizSn, empId)
     const { caEnable, save, saveLoading, saved } = useSave(bizSn, setBizSn)
 
 
