@@ -50,18 +50,18 @@ var StompService = (function (_super) {
             try {
                 var socket = new sockjs_client_1.default(url);
                 _this.stompClient = webstomp_client_1.default.over(socket);
+                _this.stompClient.connect(headers, function () {
+                    _this.connectedPromise('success');
+                    _this.connectedPromise = null;
+                    _this.rxObservable.subscribe(function (_a) {
+                        var data = _a.data, event = _a.event;
+                        _this.emit(event, data);
+                    });
+                });
             }
             catch (e) {
                 console.log(e, url);
             }
-            _this.stompClient.connect(headers, function () {
-                _this.connectedPromise('success');
-                _this.connectedPromise = null;
-                _this.rxObservable.subscribe(function (_a) {
-                    var data = _a.data, event = _a.event;
-                    _this.emit(event, data);
-                });
-            });
         };
         _this.disconnect = function () {
             if (_this.stompClient !== null) {

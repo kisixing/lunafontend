@@ -3,9 +3,7 @@ import Request from './Request';
 declare class R extends Request {
     TOKEN_KEY: string;
     private hasConfiged;
-    configure: {
-        [x: string]: any;
-    };
+    configure: Iconfig;
     config: (configs?: Iconfig) => Request;
     authenticate: (params: any, c?: Iconfig) => Promise<any>;
     configFromLocation(url?: string): Iconfig;

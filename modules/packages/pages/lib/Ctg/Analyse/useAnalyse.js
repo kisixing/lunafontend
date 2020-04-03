@@ -68,7 +68,7 @@ exports.default = (function (v, docid, fetal, setFhr) {
     react_1.useEffect(function () {
         var s = function (time) {
             console.log('change', time, docid);
-            time = time + 4800 <= v.data.index ? time : v.data.index - 4800;
+            time = time + 4800 <= v.data.index ? time : ((v.data.index - 4800) > 0 ? (v.data.index - 4800) : 0);
             docid && setStartTime(time);
         };
         console.log('yyyyyyyyyyyy--------on', v);

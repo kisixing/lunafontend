@@ -44,7 +44,7 @@ var R = (function (_super) {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.TOKEN_KEY = utils_1.TOKEN_KEY;
         _this.hasConfiged = false;
-        _this.configure = {};
+        _this.configure = { Authorization: store_1.default.get(utils_1.TOKEN_KEY) };
         _this.config = function (configs) {
             if (configs === void 0) { configs = {}; }
             var hasConfiged = _this.hasConfiged;

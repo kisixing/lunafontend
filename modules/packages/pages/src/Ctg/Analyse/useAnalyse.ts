@@ -63,7 +63,7 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void) 
         const s = (time) => {
             console.log('change', time, docid)
 
-            time = time + 4800 <= v.data.index ? time : v.data.index - 4800
+            time = time + 4800 <= v.data.index ? time : ((v.data.index - 4800) > 0 ? (v.data.index - 4800) : 0)
             docid && setStartTime(time)
         }
         console.log('yyyyyyyyyyyy--------on', v)

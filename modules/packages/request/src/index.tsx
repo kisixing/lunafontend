@@ -14,7 +14,7 @@ const SEARCH_KEY = 0x21ac.toString()
 class R extends Request {
   TOKEN_KEY = TOKEN_KEY
   private hasConfiged = false;
-  configure: { [x: string]: any } = {};
+  configure: Iconfig = { Authorization: store.get(TOKEN_KEY) };
   public config = (configs: Iconfig = {}): Request => {
     const { hasConfiged } = this;
     if (hasConfiged) {

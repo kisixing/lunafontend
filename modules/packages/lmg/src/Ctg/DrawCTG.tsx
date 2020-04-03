@@ -85,8 +85,9 @@ export default class DrawCTG {
           this.suit.barTool.setBarWidth(100);
         }
         this.suit.barTool.setBarLeft(Math.floor(this.suit.toolbarposition * width / oldwidth), false);
+      }else{
+        this.drawdot(width*2)
       }
-      this.drawdot(this.suit.rightViewPosition, false);
     } else {
       this.drawgrid(width * 2, false);
     }
@@ -147,7 +148,8 @@ export default class DrawCTG {
     // linecontext.stroke();
   }
   drawdot(cur, isemit = false) {
-    this.suit.log('drawdot: cur is', cur)
+    cur = Math.round(cur)
+    this.suit.log('drawdot: cur is', cur,this.suit.width*2,this)
 
     const { suit, linecontext, max } = this;
     const { drawAnalyse } = suit

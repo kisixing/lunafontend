@@ -107,17 +107,19 @@ export class StompService extends EventEmitter {
         try {
             const socket = new SockJS(url);
             this.stompClient = Stomp.over(socket);
+
+            this.stompClient.connect(headers, () => {
+                this.connectedPromise('success');
+                this.connectedPromise = null;
+                this.rxObservable.subscribe(({ data, event }) => {
+                    this.emit(event, data)
+                })
+            });
         } catch (e) {
             console.log(e, url)
         }
 
-        this.stompClient.connect(headers, () => {
-            this.connectedPromise('success');
-            this.connectedPromise = null;
-            this.rxObservable.subscribe(({ data, event }) => {
-                this.emit(event, data)
-            })
-        });
+
     };
 
     disconnect = () => {
