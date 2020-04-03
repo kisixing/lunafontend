@@ -41,10 +41,12 @@ exports.onOpen = (function () {
             var target_1 = wins[name] = window.open(url);
             console.log('e', wins[name]);
             target_1.addEventListener('load', function (e) {
-                target_1.postMessage(JSON.stringify({
-                    type: 'config',
-                    data: request_1.default.configure
-                }), null);
+                setTimeout(function () {
+                    target_1.postMessage(JSON.stringify({
+                        type: 'config',
+                        data: request_1.default.configure
+                    }), url);
+                }, 10000);
             });
         }
     };

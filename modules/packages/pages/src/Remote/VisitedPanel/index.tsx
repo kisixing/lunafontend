@@ -39,8 +39,11 @@ export default (props: IProps) => {
 
     useEffect(() => {
         const fn = e => {
-            const r = remote && remote.getGlobal('windows').remote
-            r && r.send('message', { ...request.configure, prefix: `/api` })
+            setTimeout(() => {
+                const r = remote && remote.getGlobal('windows').remote
+                r && r.send('message', { data: { ...request.configure, prefix: `/api` } })
+                console.log('mess',r)
+            }, 10000)
         }
         ipcRenderer && ipcRenderer.on('load', fn)
 

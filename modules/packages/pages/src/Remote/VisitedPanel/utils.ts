@@ -17,10 +17,12 @@ export const onOpen = (
                 console.log('e', wins[name])
 
                 target.addEventListener('load', e => {
-                    target.postMessage(JSON.stringify({
-                        type: 'config',
-                        data: request.configure
-                    }), null)
+                    setTimeout(() => {
+                        target.postMessage(JSON.stringify({
+                            type: 'config',
+                            data: request.configure
+                        }), url)
+                    }, 10000)
                 })
 
             }

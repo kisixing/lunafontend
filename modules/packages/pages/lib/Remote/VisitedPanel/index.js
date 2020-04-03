@@ -46,8 +46,11 @@ exports.default = (function (props) {
     useStomp_1.useStomp(visitedData, remote_url);
     react_1.useEffect(function () {
         var fn = function (e) {
-            var r = remote && remote.getGlobal('windows').remote;
-            r && r.send('message', __assign(__assign({}, request_1.default.configure), { prefix: "/api" }));
+            setTimeout(function () {
+                var r = remote && remote.getGlobal('windows').remote;
+                r && r.send('message', { data: __assign(__assign({}, request_1.default.configure), { prefix: "/api" }) });
+                console.log('mess', r);
+            }, 10000);
         };
         ipcRenderer && ipcRenderer.on('load', fn);
         return function () {
