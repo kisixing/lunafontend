@@ -1,10 +1,10 @@
 import { useEffect, useState, useRef } from "react";
-
+import store from 'store'
 import { StompService } from "@lianmed/utils";
 import { IMessage, IMessageMap } from "./types";
 import { IContact } from "../../types";
 
-
+const MESSAGE_KEY = 'message_storage'
 
 const m1 = {}
 
@@ -17,7 +17,11 @@ export const useMessage = (s: StompService, chatUnread: IMessageMap, setChatUnre
     // }
     const [sessionId, setSessionId] = useState(null)
     const dirty = useRef(false)
-    const [chatMessage, setChatMessage] = useState<IMessageMap>(m1)
+    const [chatMessage, _setChatMessage] = useState<IMessageMap>(store.get(MESSAGE_KEY) || m1)
+    function setChatMessage(data: IMessageMap) {
+        _setChatMessage(data)
+        store.set(MESSAGE_KEY, data)
+    }
     useEffect(() => {
         s.getSessionId().then(s => {
             setSessionId(`/user/${s}/chat`)
@@ -34,13 +38,13 @@ export const useMessage = (s: StompService, chatUnread: IMessageMap, setChatUnre
 
             let old = chatMessage[targetKey] || []
             old = [...old, data].sort((a, b) => +new Date(a.timestamp) - +new Date(b.timestamp))
-            .reduce((res, _) => {
-                const preIndex = (res.length - 1) < 0 ? 0 : (res.length - 1)
-                const pre = res[preIndex] || { timestamp: new Date(0).toUTCString() }
-                const isHead = (+new Date(_.timestamp) - +new Date(pre.timestamp)) > 1000 * 10
-                _.isHead = isHead
-                return res.concat(_)
-            }, [] as IMessage[])
+                .reduce((res, _) => {
+                    const preIndex = (res.length - 1) < 0 ? 0 : (res.length - 1)
+                    const pre = res[preIndex] || { timestamp: new Date(0).toUTCString() }
+                    const isHead = (+new Date(_.timestamp) - +new Date(pre.timestamp)) > 1000 * 10
+                    _.isHead = isHead
+                    return res.concat(_)
+                }, [] as IMessage[])
             setChatMessage({ ...chatMessage, [targetKey]: old })
             dirty.current = true
         }

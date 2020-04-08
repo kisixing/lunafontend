@@ -66,7 +66,7 @@ export class StompService extends EventEmitter {
         if (StompService.s) {
             return StompService.s
         }
-        console.log('new stomservice', url, this);
+        console.log('new stomservice', url);
 
         // this.stompClient = stompClient
         // this.connection = connection

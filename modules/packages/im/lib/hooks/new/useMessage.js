@@ -17,13 +17,22 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
             r[k] = a[j];
     return r;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = require("react");
+var store_1 = __importDefault(require("store"));
+var MESSAGE_KEY = 'message_storage';
 var m1 = {};
 exports.useMessage = function (s, chatUnread, setChatUnread, current) {
     var _a = react_1.useState(null), sessionId = _a[0], setSessionId = _a[1];
     var dirty = react_1.useRef(false);
-    var _b = react_1.useState(m1), chatMessage = _b[0], setChatMessage = _b[1];
+    var _b = react_1.useState(store_1.default.get(MESSAGE_KEY) || m1), chatMessage = _b[0], _setChatMessage = _b[1];
+    function setChatMessage(data) {
+        _setChatMessage(data);
+        store_1.default.set(MESSAGE_KEY, data);
+    }
     react_1.useEffect(function () {
         s.getSessionId().then(function (s) {
             setSessionId("/user/" + s + "/chat");
