@@ -109,11 +109,11 @@ var DrawAnalyse = (function (_super) {
     DrawAnalyse.prototype.revice = function (x, y) {
         if (!this.analyseData)
             return;
-        var edge = 10;
+        var edge = 20;
         var _a = this.analyseData, acc = _a.acc, dec = _a.dec;
-        var target = acc.find(function (_) { return x < _.x + edge || x > _.x - edge; }) || dec.find(function (_) { return x < _.x + edge || x > _.x - edge; });
-        if (target && (y < target.y + edge || y > target.y - edge)) {
-            console.log(target);
+        var target = acc.find(function (_) { return (x < _.x + edge) && (x > _.x - edge); }) || dec.find(function (_) { return (x < _.x + edge) && (x > _.x - edge); });
+        if (target && (y < (target.y + edge) && y > (target.y - edge))) {
+            console.log(x, y, target);
         }
     };
     return DrawAnalyse;

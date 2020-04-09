@@ -73,9 +73,7 @@ exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
         return ctg.current;
     });
     var canvasStyles = { position: 'absolute' };
-    return (react_1.default.createElement("div", __assign({ style: { width: '100%', height: '100%' }, ref: box }, others, { onContextMenu: function (e) {
-            console.log('menu', e);
-        }, onMouseDownCapture: function (e) {
+    return (react_1.default.createElement("div", __assign({ style: { width: '100%', height: '100%' }, ref: box }, others, { onMouseDownCapture: function (e) {
             var x = e.nativeEvent.offsetX;
             var y = e.nativeEvent.offsetY;
             var which = e.nativeEvent.which;
@@ -94,7 +92,7 @@ exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
             react_1.default.createElement("canvas", { style: canvasStyles, ref: canvasanalyse })),
         ecgHeight && showEcg && (react_1.default.createElement("div", { style: { height: ecgHeight, overflow: 'hidden' } },
             react_1.default.createElement(Ecg_1.default, { data: data, onReady: function (e) { return ecg.current = e; } }))),
-        react_1.default.createElement(ContextMenu_1.default, { rightClickXy: rightClickXy },
+        react_1.default.createElement(ContextMenu_1.default, { s: ctg },
             react_1.default.createElement(ScrollBar_1.default, { box: box, getBarTool: function (tool) { barTool.current = tool; } }))));
 }));
 //# sourceMappingURL=index.js.map

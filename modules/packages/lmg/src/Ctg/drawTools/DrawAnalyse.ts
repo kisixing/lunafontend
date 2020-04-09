@@ -109,11 +109,12 @@ export class DrawAnalyse extends Draw {
     }
     revice(x: number, y: number) {
         if (!this.analyseData) return
-        const edge = 10;
+        const edge = 20; 
         const { acc, dec } = this.analyseData
-        const target = acc.find(_ => x < _.x + edge || x > _.x - edge) || dec.find(_ => x < _.x + edge || x > _.x - edge)
-        if (target && (y < target.y + edge || y > target.y - edge)) {
-            console.log(target)
+
+        const target = acc.find(_ => (x < _.x + edge) && (x > _.x - edge)) || dec.find(_ => (x < _.x + edge) && (x > _.x - edge))
+        if (target && (y < (target.y + edge) && y > (target.y - edge))) {
+            console.log(x, y, target)
         }
     }
 }
