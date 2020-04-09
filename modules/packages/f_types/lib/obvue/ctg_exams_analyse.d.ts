@@ -26,7 +26,7 @@ export interface _ctg_exams_analyse {
         vdtimes: number;
         acc: AccPoint[];
         dec: DecPoint[];
-        fm: null;
+        fm: number[];
         fhrbaselineMinute: number[];
         ucdata: {
             ucIndex: number[];

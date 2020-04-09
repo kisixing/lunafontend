@@ -1,6 +1,7 @@
 import Draw from "../../Draw";
 import { } from "@lianmed/f_types";
-import { AccPoint, DecPoint } from "@lianmed/f_types/lib/obvue/ctg_exams_analyse";
+import { AccPoint, DecPoint,_ctg_exams_analyse } from "@lianmed/f_types/lib/obvue/ctg_exams_analyse";
+import { bool } from "prop-types";
 
 export interface AnalyseData {
     acc?: AccPoint[]
@@ -104,5 +105,73 @@ export class DrawAnalyse extends Draw {
             canvas.fillText(txt, x + 1, y - 1);
         }
     }
+    // kisi 2020-04-08 增加本地分数统计
+    inRange = (value:number, min:number, max:number) =>{
+		let result = false;
+		if (value >= min && value <= max)
+			result = true;
+		return result;
+	}
+    // TODO：analysis 结构最好与score结构分开
+    // 评分类型最好枚举实现
+    ctgscore = (analysis:_ctg_exams_analyse,type:number,start:number,end:number) =>{
+        let timeframe = end-start/4*60;
+        //NST(国内) 20分钟
+        if(type==0){
+            // 基线选项
+            analysis.score.nstdata.bhrvalue= analysis.analysis.bhr;
+            if(analysis.analysis.bhr<100)
+                analysis.score.nstdata.bhrscore= 0;
+            else if(this.inRange(analysis.analysis.bhr, 100, 109) || analysis.analysis.bhr > 160)
+                analysis.score.nstdata.bhrscore= 1;
+            else if(this.inRange(analysis.analysis.bhr, 120, 160)){
+                analysis.score.nstdata.bhrscore= 2;		
+            }
+            // 振幅
+            analysis.score.nstdata.ltvvalue = analysis.analysis.ltv;
+            if (analysis.analysis.ltv < 5) {
+                analysis.score.nstdata.ltvscore = 0;
+            } else if (this.inRange(analysis.analysis.ltv, 5, 9) || analysis.analysis.ltv > 30) {
+                analysis.score.nstdata.ltvscore = 1;
+            } else if (this.inRange(analysis.analysis.ltv, 10, 30)) {
+                analysis.score.nstdata.ltvscore = 2;
+            }
 
+            let fhr_uptime = analysis.analysis.ltv;
+            // 胎动fhr上升时间
+            analysis.score.nstdata.ltvvalue =fhr_uptime;
+            if (fhr_uptime < 10) {
+                analysis.score.nstdata.ltvscore = 0;
+            } else if (this.inRange(fhr_uptime, 10, 14)) {
+                analysis.score.nstdata.ltvscore = 1;
+            } else if (fhr_uptime > 15) {
+                analysis.score.nstdata.ltvscore = 2;
+            }
+            // 胎动fhr变化幅度
+            let fhr_ampl = 10;
+            analysis.score.nstdata.accamplvalue = fhr_ampl;
+            if (fhr_ampl < 10) {
+                analysis.score.nstdata.accamplscore = 0;
+            } else if (this.inRange(fhr_ampl, 10, 14)) {
+                analysis.score.nstdata.accamplscore = 1;
+            } else if (fhr_ampl > 15) {
+                analysis.score.nstdata.accamplscore = 2;
+            }
+            // 胎动
+            let fmnum = analysis.analysis.fm.length;
+            analysis.score.nstdata.fmvalue = fmnum;
+            if (fmnum==0) {
+                analysis.score.nstdata.fmscore = 0;
+            } else if (this.inRange(fmnum, 1, 2)) {
+                analysis.score.nstdata.fmscore = 1;
+            } else if(fmnum>2){
+                analysis.score.nstdata.fmscore = 2;
+            }
+            analysis.score.nstdata.totalscore = analysis.score.nstdata.accamplscore+analysis.score.nstdata.accdurationscore+analysis.score.nstdata.bhrscore+analysis.score.nstdata.fmscore+analysis.score.nstdata.ltvscore;           
+        }
+        //CST
+        //Krebs 30分钟
+        //Fischer 20分钟
+        //NST-sogc 30分钟
+    }
 }
