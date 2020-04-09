@@ -81,7 +81,7 @@ export class DrawAnalyse extends Draw {
     }
     //kisi 2019-10-28 绘制 acc dec
     //2020-03-04 用 linecanvas 绘制标记
-    drawflag = (canvas, x, y, index: number) => {
+    drawflag = (canvas, x: number, y: number, index: number) => {
         const { context2D, analyseData } = this;
         if (!context2D || !analyseData) return
         const acc = analyseData.acc.map(_ => _.index)
@@ -91,18 +91,29 @@ export class DrawAnalyse extends Draw {
         let txt = '';
         if (acc.indexOf(index) > -1 || acc.indexOf(index - 1) > -1) {
             const target = analyseData.acc.find(_ => [index, index - 1].includes(_.index))
-
-            txt = `${(target.reliability/10 || 0).toFixed(1)}`;
+            target.x = x
+            target.y = y
+            txt = `${(target.reliability / 10 || 0).toFixed(1)}`;
             canvas.font = '15px arial';
             canvas.fillStyle = 'blue';
             canvas.fillText(txt, x + 1, y + 10);
         } else if (dec.indexOf(index) > -1 || dec.indexOf(index - 1) > -1) {
             const target = analyseData.dec.find(_ => [index, index - 1].includes(_.index))
+            target.x = x
+            target.y = y
             txt = target ? target.type : '-';
             canvas.font = 'bold 15px arial';
             canvas.fillStyle = 'red';
             canvas.fillText(txt, x + 1, y - 1);
         }
     }
-
+    revice(x: number, y: number) {
+        if (!this.analyseData) return
+        const edge = 10;
+        const { acc, dec } = this.analyseData
+        const target = acc.find(_ => x < _.x + edge || x > _.x - edge) || dec.find(_ => x < _.x + edge || x > _.x - edge)
+        if (target && (y < target.y + edge || y > target.y - edge)) {
+            console.log(target)
+        }
+    }
 }

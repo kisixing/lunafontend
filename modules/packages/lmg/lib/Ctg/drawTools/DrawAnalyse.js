@@ -34,6 +34,8 @@ var DrawAnalyse = (function (_super) {
             var txt = '';
             if (acc.indexOf(index) > -1 || acc.indexOf(index - 1) > -1) {
                 var target = analyseData.acc.find(function (_) { return [index, index - 1].includes(_.index); });
+                target.x = x;
+                target.y = y;
                 txt = "" + (target.reliability / 10 || 0).toFixed(1);
                 canvas.font = '15px arial';
                 canvas.fillStyle = 'blue';
@@ -41,6 +43,8 @@ var DrawAnalyse = (function (_super) {
             }
             else if (dec.indexOf(index) > -1 || dec.indexOf(index - 1) > -1) {
                 var target = analyseData.dec.find(function (_) { return [index, index - 1].includes(_.index); });
+                target.x = x;
+                target.y = y;
                 txt = target ? target.type : '-';
                 canvas.font = 'bold 15px arial';
                 canvas.fillStyle = 'red';
@@ -100,6 +104,16 @@ var DrawAnalyse = (function (_super) {
             }
             context2D.lineTo((analyseData.end - leftViewposition) / 2, (max - curfhroffset - analyseData.baseline[baselineoff]) * yspan + basetop);
             context2D.stroke();
+        }
+    };
+    DrawAnalyse.prototype.revice = function (x, y) {
+        if (!this.analyseData)
+            return;
+        var edge = 10;
+        var _a = this.analyseData, acc = _a.acc, dec = _a.dec;
+        var target = acc.find(function (_) { return x < _.x + edge || x > _.x - edge; }) || dec.find(function (_) { return x < _.x + edge || x > _.x - edge; });
+        if (target && (y < target.y + edge || y > target.y - edge)) {
+            console.log(target);
         }
     };
     return DrawAnalyse;

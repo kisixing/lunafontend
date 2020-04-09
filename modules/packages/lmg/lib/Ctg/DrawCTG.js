@@ -271,7 +271,6 @@ var DrawCTG = (function () {
                 datacontext.fillStyle = suit.ctgconfig.alarmcolor;
                 if (suit.ctgconfig.alarm_enable && cv > suit.ctgconfig.alarm_high) {
                     if (eventemit) {
-                        console.log('心率过高', cv);
                         _this.suit.alarmOn('心率过高');
                     }
                     alarm = 1;
@@ -279,7 +278,6 @@ var DrawCTG = (function () {
                 }
                 else if (suit.ctgconfig.alarm_enable && cv < suit.ctgconfig.alarm_low) {
                     if (eventemit) {
-                        console.log('心率过低', cv);
                         _this.suit.alarmOn('心率过低');
                     }
                     alarm = 1;
@@ -289,7 +287,6 @@ var DrawCTG = (function () {
                     datacontext.fillStyle = suit.ctgconfig.fhrcolor[i];
                 }
                 if (alarm == 0 && suit.ctgconfig.alarm_enable && _this.suit.alarm == 1) {
-                    console.log('恢复', cv, alarm, _this.suit.alarm);
                     _this.suit.alarmOff('');
                     _this.suit.alarm = alarm;
                 }
@@ -408,7 +405,6 @@ var DrawCTG = (function () {
     DrawCTG.prototype.drawdot = function (cur, isemit) {
         if (isemit === void 0) { isemit = false; }
         cur = Math.round(cur);
-        this.suit.log('drawdot: cur is', cur, this.suit.width * 2, this);
         var _a = this, suit = _a.suit, linecontext = _a.linecontext, max = _a.max;
         var drawAnalyse = suit.drawAnalyse;
         var _b = suit.data, fhr = _b.fhr, toco = _b.toco, fm = _b.fm;

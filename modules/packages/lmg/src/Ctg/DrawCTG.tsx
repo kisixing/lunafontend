@@ -149,7 +149,7 @@ export default class DrawCTG {
   }
   drawdot(cur, isemit = false) {
     cur = Math.round(cur)
-    this.suit.log('drawdot: cur is', cur,this.suit.width*2,this)
+    // this.suit.log('drawdot: cur is', cur,this.suit.width*2,this)
 
     const { suit, linecontext, max } = this;
     const { drawAnalyse } = suit
@@ -584,14 +584,14 @@ export default class DrawCTG {
       datacontext.fillStyle = suit.ctgconfig.alarmcolor;
       if (suit.ctgconfig.alarm_enable && cv > suit.ctgconfig.alarm_high) {
         if (eventemit) {
-          console.log('心率过高', cv);
+          // console.log('心率过高', cv);
           this.suit.alarmOn('心率过高');
         }
         alarm = 1;
         this.suit.alarm = alarm;
       } else if (suit.ctgconfig.alarm_enable && cv < suit.ctgconfig.alarm_low) {
         if (eventemit) {
-          console.log('心率过低', cv);
+          // console.log('心率过低', cv);
           this.suit.alarmOn('心率过低');
         }
         alarm = 1;
@@ -602,7 +602,7 @@ export default class DrawCTG {
       }
       if (alarm == 0 && suit.ctgconfig.alarm_enable && this.suit.alarm == 1) {
 
-        console.log('恢复', cv, alarm, this.suit.alarm);
+        // console.log('恢复', cv, alarm, this.suit.alarm);
         this.suit.alarmOff('');
         this.suit.alarm = alarm;
       }

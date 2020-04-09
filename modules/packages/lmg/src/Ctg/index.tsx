@@ -120,6 +120,7 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
 
       <ContextMenu rightClickXy={rightClickXy}>
         <ScrollBar box={box} getBarTool={tool => { barTool.current = tool }} />
+
       </ContextMenu>
 
 

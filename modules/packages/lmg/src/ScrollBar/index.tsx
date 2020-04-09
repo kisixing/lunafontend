@@ -1,4 +1,4 @@
-import React, { useEffect, MutableRefObject,useRef } from 'react';
+import React, { useEffect, MutableRefObject, useRef } from 'react';
 import useScroll, { IBarTool } from './useScroll';
 export default (props: {
   box: MutableRefObject<HTMLElement>;
@@ -7,19 +7,14 @@ export default (props: {
   const wrapper = useRef(null)
 
   const { box, getBarTool = () => { } } = props;
-  const [ _getBarTool] = useScroll(box,wrapper);
+  const [_getBarTool] = useScroll(box, wrapper);
   useEffect(() => {
     getBarTool(_getBarTool());
     box.current.style.position = 'relative';
     // box.current.style.cursor = 'pointer';grab
   }, []);
   return (
-    <div style={{ position: 'absolute', width: '100%', height: '100%', bottom: 0 }} ref={wrapper}onContextMenu={e => {
-      // e.preventDefault()
-      // e.stopPropagation()
-      console.log('menu', e)
-      // return false
-    }}>
+    <div style={{ position: 'absolute', width: '100%', height: '100%', bottom: 0 }} ref={wrapper}>
 
     </div>
   );

@@ -37,6 +37,8 @@ function useScroll(
 
     const boxGrabCb = (e: MouseEvent) => {
       // alert('box click')
+      console.log('down fa');
+
       let { x: x1 } = getCoordInDocument(e);
       let temp = x1;
       boxEl.style.cursor = 'grab';

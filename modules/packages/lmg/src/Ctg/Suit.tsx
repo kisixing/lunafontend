@@ -554,7 +554,9 @@ export class Suit extends Draw {
       }
     });
   }
-
+  reviceAnalyse(x: number, y: number) {
+    this.drawAnalyse.revice(x, y)
+  }
 }
 
 // function formatAnalyseData(obj: { [x: string]: string }) {

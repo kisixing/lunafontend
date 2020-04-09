@@ -34,6 +34,7 @@ var ScrollEl = (function (_super) {
         };
         _this.mousedownCb = function (e) {
             _this.emit('mousedown');
+            console.log('down son');
             _this.matesOldRect = _this.mates.map(function (_) { return _.getRect(); });
             _this.oldRect = _this.getRect();
             e.stopPropagation();

@@ -479,6 +479,9 @@ var Suit = (function (_super) {
             }
         });
     };
+    Suit.prototype.reviceAnalyse = function (x, y) {
+        this.drawAnalyse.revice(x, y);
+    };
     return Suit;
 }(Draw_1.default));
 exports.Suit = Suit;

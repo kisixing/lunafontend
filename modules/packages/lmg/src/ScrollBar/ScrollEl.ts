@@ -68,6 +68,8 @@ export default class ScrollEl extends EventEmitter {
     };
     mousedownCb = (e) => {
         this.emit('mousedown')
+        console.log('down son');
+        
         this.matesOldRect = this.mates.map(_ => _.getRect())
         this.oldRect = this.getRect()
         e.stopPropagation();
