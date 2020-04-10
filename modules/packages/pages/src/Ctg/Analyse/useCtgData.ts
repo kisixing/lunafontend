@@ -39,14 +39,11 @@ const CTGChart = (docid: string) => {
         const { fhr1, fhr2, fhr3 } = ctgData
         const regex = /./g
         const key = `fhr${index}`
-        const data = { ...ctgData, fhr1: fhr1 && fhr1.replace(regex, '0'), fhr2: fhr2 && fhr2.replace(regex, '0'), fhr3: fhr3 && fhr3.replace(regex, '0'), [key]: ctgData[`_${key}`] }
+        const value = ctgData[`_${key}`]
+        const data = { ...ctgData, fhr1: fhr1 && fhr1.replace(regex, '0'), fhr2: fhr2 && fhr2.replace(regex, '0'), fhr3: fhr3 && fhr3.replace(regex, '0'), [key]: value }
         setCtgData(data)
     }
-    return {
-        ctgData, loading, setFhr, fetal, setFetal
-
-
-    };
+    return { ctgData, loading, setFhr, fetal, setFetal };
 }
 
 export default CTGChart

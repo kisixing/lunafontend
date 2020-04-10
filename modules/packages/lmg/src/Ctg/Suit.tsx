@@ -1,15 +1,16 @@
-import DrawCTG from './DrawCTG';
-import { DrawAnalyse, AnalyseData } from './drawTools/DrawAnalyse';
-import { DrawSelect } from './drawTools/DrawSelect';
+import request from '@lianmed/request';
+import { throttle } from 'lodash';
+import Draw from '../Draw';
+import ScrollEl from '../ScrollBar/ScrollEl';
 //var rulercolor = 'rgb(67,205,128)';
 import { IBarTool, TLineTool } from '../ScrollBar/useScroll';
-import ScrollEl from '../ScrollBar/ScrollEl';
-import request from '@lianmed/request';
 import { convertstarttime } from '../services/utils';
-import { throttle } from 'lodash';
 import { ICacheItem } from '../services/WsService';
-import Draw from '../Draw';
 import bindEvents from './bindEvents';
+import DrawCTG from './DrawCTG';
+import { DrawAnalyse } from './drawTools/DrawAnalyse';
+import { DrawSelect } from './drawTools/DrawSelect';
+import { obvue } from '@lianmed/f_types';
 let sid = 0;
 type Canvas = HTMLCanvasElement;
 type Context = CanvasRenderingContext2D;
@@ -322,10 +323,10 @@ export class Suit extends Draw {
     );
     this.barTool.setBarLeft(this.toolbarposition, false);
   }
-  analyse(data: AnalyseData) {
+  analyse(data: obvue.ctg_exams_analyse) {
     this.drawAnalyse.setData(data)
-    this.drawSelect.$selectrpend = data.end
-    this.drawSelect.$selectrpstart = data.start
+    this.drawSelect.$selectrpend = data.analysis.end
+    this.drawSelect.$selectrpstart = data.analysis.start
     // this.emit('selectForward', data.end - data.start)
     //this.drawobj.drawdot(this.canvasline.width * 2, false);
     //kisi 2020-03-05 
@@ -557,6 +558,11 @@ export class Suit extends Draw {
   reviceAnalyse(x: number, y: number) {
     this.drawAnalyse.revice(x, y)
   }
+
+  public get ctgscore(): DrawAnalyse['ctgscore'] {
+    return this.drawAnalyse.ctgscore.bind(this.drawAnalyse)
+  }
+
 }
 
 // function formatAnalyseData(obj: { [x: string]: string }) {

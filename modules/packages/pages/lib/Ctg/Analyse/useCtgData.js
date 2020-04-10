@@ -48,12 +48,11 @@ var CTGChart = function (docid) {
         var fhr1 = ctgData.fhr1, fhr2 = ctgData.fhr2, fhr3 = ctgData.fhr3;
         var regex = /./g;
         var key = "fhr" + index;
-        var data = __assign(__assign({}, ctgData), (_a = { fhr1: fhr1 && fhr1.replace(regex, '0'), fhr2: fhr2 && fhr2.replace(regex, '0'), fhr3: fhr3 && fhr3.replace(regex, '0') }, _a[key] = ctgData["_" + key], _a));
+        var value = ctgData["_" + key];
+        var data = __assign(__assign({}, ctgData), (_a = { fhr1: fhr1 && fhr1.replace(regex, '0'), fhr2: fhr2 && fhr2.replace(regex, '0'), fhr3: fhr3 && fhr3.replace(regex, '0') }, _a[key] = value, _a));
         setCtgData(data);
     }
-    return {
-        ctgData: ctgData, loading: loading, setFhr: setFhr, fetal: fetal, setFetal: setFetal
-    };
+    return { ctgData: ctgData, loading: loading, setFhr: setFhr, fetal: fetal, setFetal: setFetal };
 };
 exports.default = CTGChart;
 //# sourceMappingURL=useCtgData.js.map

@@ -1,6 +1,43 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tableData = {
+    Nst: [
+        {
+            name: '心率基线(bpm)',
+            0: '<100',
+            1: '100~109,>160',
+            2: '110~160',
+            key: 'bhr',
+        },
+        {
+            name: '振幅变异(bpm)',
+            0: '<5',
+            1: '5~9,>30',
+            2: '10~30',
+            key: 'ltv',
+        },
+        {
+            name: '胎动FHR上升时间(s)',
+            0: '<10s',
+            1: '10~14s',
+            2: '>15s',
+            key: 'accduration',
+        },
+        {
+            name: '胎动FHR变化(bpm)',
+            0: '<10',
+            1: '10~14',
+            2: '>15',
+            key: 'accampl',
+        },
+        {
+            name: '胎动次数(次)',
+            0: '无',
+            1: '1~2',
+            2: '>3',
+            key: 'fm',
+        },
+    ],
     Fischer: [
         {
             name: '心率基线(bpm)',
@@ -82,43 +119,6 @@ var tableData = {
             key: 'fm',
         },
     ],
-    Nst: [
-        {
-            name: '心率基线(bpm)',
-            0: '<100',
-            1: '100~109,>160',
-            2: '110~160',
-            key: 'bhr',
-        },
-        {
-            name: '振幅变异(bpm)',
-            0: '<5',
-            1: '5~9,>30',
-            2: '10~30',
-            key: 'ltv',
-        },
-        {
-            name: '胎动FHR上升时间(s)',
-            0: '<10s',
-            1: '10~14s',
-            2: '>15s',
-            key: 'accduration',
-        },
-        {
-            name: '胎动FHR变化(bpm)',
-            0: '<10',
-            1: '10~14',
-            2: '>15',
-            key: 'accampl',
-        },
-        {
-            name: '胎动次数(次)',
-            0: '无',
-            1: '1~2',
-            2: '>3',
-            key: 'fm',
-        },
-    ]
 };
 exports.tableData = tableData;
 //# sourceMappingURL=tableData.js.map

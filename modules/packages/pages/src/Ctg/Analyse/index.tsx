@@ -54,7 +54,6 @@ export const Ctg_Analyse: FC<{
     const ref = useRef<Suit>(null)
 
     const {
-      responseData,
       MARKS,
       analyse,
       startTime,
@@ -66,11 +65,10 @@ export const Ctg_Analyse: FC<{
       Krebs_ref,
       analysis_ref,
       old_ref,
-
+      analyseLoading,
     } = useAnalyse(ref.current, note, fetal, setFhr)
 
-    const d = {
-      responseData,
+    const others = {
       MARKS,
       analyse,
       startTime,
@@ -86,7 +84,7 @@ export const Ctg_Analyse: FC<{
     const submit = () => {
       const rightData = analysis_ref.current.getFieldsValue()
       const { wave, diagnosistxt, NST, CST_OCT, ...analyseData } = rightData
-      const curData: { [x: string]: number } = d[`${mark}_ref`].current.getFieldsValue()
+      const curData: { [x: string]: number } = others[`${mark}_ref`].current.getFieldsValue()
       const oldData: { [x: string]: number } = old_ref.current[mark] || {}
 
 
@@ -152,11 +150,11 @@ export const Ctg_Analyse: FC<{
         </div>
         <Row gutter={12} style={{ height: 420 }}>
           <Col span={12} >
-            <Score disabled={disabled}  {...d} fetal={fetal} setFetal={setFetal} ctgData={ctgData} docid={note} v={ref.current} className="bordered" />
+            <Score disabled={disabled}  {...others} fetal={fetal} setFetal={setFetal} ctgData={ctgData} docid={note} v={ref.current} className="bordered" />
             <div style={{ position: 'absolute', right: 12, bottom: 0 }}>
               <Button size="small" style={{ marginBottom: 10 }} onClick={history} disabled={btnDisabled}>历史分析</Button>
               <Button size="small" style={{ marginBottom: 10 }} disabled={!note} onClick={() => setDisabled(!disabled)}>{disabled ? '修改' : '确认'}</Button>
-              <Button size="small" style={{ marginBottom: 10 }} type="primary" onClick={analyse} disabled={!note}>评分</Button>
+              <Button size="small" style={{ marginBottom: 10 }} type="primary" onClick={analyse} loading={analyseLoading} disabled={!note}>评分</Button>
             </div>
           </Col>
           <Col span={12}  >

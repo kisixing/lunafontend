@@ -1,15 +1,13 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Radio, Select } from 'antd';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 
 import Methods from './methods'
-import { event } from '@lianmed/utils';
 const intervals = [20, 40]
 interface IProps {
   ctgData: any;
   docid: string,
   v: Suit
-  responseData: any
   MARKS: any
   analyse: any
   startTime: any
@@ -27,7 +25,6 @@ const ScoringMethod = (props: IProps) => {
 
 
   const {
-    responseData,
     MARKS,
     startTime,
     mark, setMark,
@@ -42,23 +39,13 @@ const ScoringMethod = (props: IProps) => {
 
 
 
-  useEffect(() => {
 
-    const cb = fn => {
-      fn(JSON.stringify(responseData))
-
-    }
-    event.on('analysis:result', cb)
-    return () => {
-      event.off('analysis:result', cb)
-    };
-  }, [responseData])
 
 
   const IntervalRadio = useMemo(() => {
     return (
       <span style={{ marginRight: 10 }}> 时长：
-            <Select disabled={!docid} onChange={e => {
+        <Select disabled={!docid} onChange={e => {
           const i = Number(e) || 20
           setInterval(i)
 
@@ -75,7 +62,7 @@ const ScoringMethod = (props: IProps) => {
   const FetalSelect = useMemo(() => {
     return (
       <span style={{ marginRight: 10 }}> 胎心率：
-            <Select disabled={!docid} onChange={setFetal} value={fetal}>
+        <Select disabled={!docid} onChange={setFetal} value={fetal}>
           {
             Array(+ctgData.fetalnum).fill(0).map((_, i) => (
               <Select.Option value={i + 1} key={i + 1}>{`FHR${i + 1}`}</Select.Option>

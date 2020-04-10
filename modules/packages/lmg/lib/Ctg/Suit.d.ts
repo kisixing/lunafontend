@@ -1,12 +1,13 @@
 /// <reference types="node" />
 /// <reference types="lodash" />
-import DrawCTG from './DrawCTG';
-import { DrawAnalyse, AnalyseData } from './drawTools/DrawAnalyse';
-import { DrawSelect } from './drawTools/DrawSelect';
-import { IBarTool, TLineTool } from '../ScrollBar/useScroll';
-import ScrollEl from '../ScrollBar/ScrollEl';
-import { ICacheItem } from '../services/WsService';
 import Draw from '../Draw';
+import ScrollEl from '../ScrollBar/ScrollEl';
+import { IBarTool, TLineTool } from '../ScrollBar/useScroll';
+import { ICacheItem } from '../services/WsService';
+import DrawCTG from './DrawCTG';
+import { DrawAnalyse } from './drawTools/DrawAnalyse';
+import { DrawSelect } from './drawTools/DrawSelect';
+import { obvue } from '@lianmed/f_types';
 declare type Canvas = HTMLCanvasElement;
 declare type Context = CanvasRenderingContext2D;
 export declare class Suit extends Draw {
@@ -79,7 +80,7 @@ export declare class Suit extends Draw {
     init(data: ICacheItem): void;
     createLine(): void;
     updateBarTool(): void;
-    analyse(data: AnalyseData): void;
+    analyse(data: obvue.ctg_exams_analyse): void;
     lazyEmit: ((type: string, ...args: any[]) => boolean) & import("lodash").Cancelable;
     alarmOn(alarmType?: string): void;
     alarmOff(alarmType: string): void;
@@ -109,5 +110,6 @@ export declare class Suit extends Draw {
     getoffline(doc_id: string, offlineend: number): void;
     initfhrdata(data: any, datacache: any, offindex: any): void;
     reviceAnalyse(x: number, y: number): void;
+    get ctgscore(): DrawAnalyse['ctgscore'];
 }
 export {};

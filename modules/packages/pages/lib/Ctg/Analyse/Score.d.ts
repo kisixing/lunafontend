@@ -4,7 +4,6 @@ interface IProps {
     ctgData: any;
     docid: string;
     v: Suit;
-    responseData: any;
     MARKS: any;
     analyse: any;
     startTime: any;

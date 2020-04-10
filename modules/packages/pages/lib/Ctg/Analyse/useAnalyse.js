@@ -27,11 +27,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = require("react");
 var request_1 = __importDefault(require("@lianmed/request"));
+var tableData_1 = require("./methods/tableData");
+var MARKS = Object.keys(tableData_1.tableData);
 exports.default = (function (v, docid, fetal, setFhr) {
-    var resultData = react_1.useMemo(function () { return {}; }, []);
     var _a = react_1.useState(MARKS[0]), mark = _a[0], setMark = _a[1];
     var _b = react_1.useState(20), interval = _b[0], setInterval = _b[1];
     var _c = react_1.useState(0), startTime = _c[0], setStartTime = _c[1];
+    var _d = react_1.useState(false), analyseLoading = _d[0], setAnalyseLoading = _d[1];
     var Fischer_ref = react_1.useRef();
     var Krebs_ref = react_1.useRef();
     var Nst_ref = react_1.useRef();
@@ -43,41 +45,37 @@ exports.default = (function (v, docid, fetal, setFhr) {
         Nst_ref: Nst_ref,
         analysis_ref: analysis_ref
     };
-    var analyse = function () {
-        console.log('yyyyyyyyyyyy--------analyse', v);
+    var remoteAnalyse = function () {
+        setAnalyseLoading(true);
         v && request_1.default.post("/ctg-exams-analyse", {
             data: { docid: docid, mark: mark, start: startTime, end: startTime + interval * 240, fetal: fetal },
         }).then(function (r) {
             var analysis = r.analysis, score = r.score;
+            analysis.start = startTime;
+            analysis.end = startTime + 240 * interval;
             var f = score[mark.toLowerCase() + "data"];
             var cur = mapFormToMark[mark + "_ref"];
-            console.log('yyyyyyyyyyyy--------cur', cur.current);
             cur.current.setFieldsValue(f);
             old_ref.current[mark] = f;
             var stv = analysis.stv, ucdata = analysis.ucdata, acc = analysis.acc, dec = analysis.dec, fhrbaselineMinute = analysis.fhrbaselineMinute, others = __rest(analysis, ["stv", "ucdata", "acc", "dec", "fhrbaselineMinute"]);
             analysis_ref.current.setFieldsValue(__assign(__assign({ stv: stv }, ucdata), others));
-            v.analyse({
-                start: startTime,
-                end: startTime + 240 * interval,
-                acc: acc,
-                dec: dec,
-                baseline: fhrbaselineMinute
-            });
-        });
+            v.analyse(r);
+        }).finally(function () { return setAnalyseLoading(false); });
+    };
+    var analyse = function () {
+        setAnalyseLoading(true);
+        v && v.ctgscore;
     };
     react_1.useEffect(function () {
         var s = function (time) {
-            console.log('change', time, docid);
             time = time + 4800 <= v.data.index ? time : ((v.data.index - 4800) > 0 ? (v.data.index - 4800) : 0);
             docid && setStartTime(time);
         };
-        console.log('yyyyyyyyyyyy--------on', v);
-        v && v.on('change:selectPoint', s).on('afterInit', analyse);
+        v && v.on('change:selectPoint', s).on('afterInit', remoteAnalyse);
         return function () {
-            console.log('yyyyyyyyyyyy--------off', v);
-            v && v.off('change:selectPoint', s).off('afterInit', analyse);
+            v && v.off('change:selectPoint', s).off('afterInit', remoteAnalyse);
         };
-    }, [interval, v, docid, analyse]);
+    }, [interval, v, docid, remoteAnalyse]);
     react_1.useEffect(function () {
         Object.values(mapFormToMark).forEach(function (f) { return f.current && f.current.resetFields(); });
         setStartTime(0);
@@ -91,38 +89,15 @@ exports.default = (function (v, docid, fetal, setFhr) {
     };
     return {
         setMark: setMarkAndItems, mark: mark,
-        responseData: resultData,
-        MARKS: MARKS, analyse: analyse, startTime: startTime, endTime: startTime + 240 * interval, setStartTime: setStartTime, interval: interval, setInterval: setInterval,
+        MARKS: MARKS,
+        analyse: analyse,
+        startTime: startTime, endTime: startTime + 240 * interval, setStartTime: setStartTime, interval: interval, setInterval: setInterval,
         Fischer_ref: Fischer_ref,
         Nst_ref: Nst_ref,
         Krebs_ref: Krebs_ref,
         analysis_ref: analysis_ref,
         old_ref: old_ref,
+        analyseLoading: analyseLoading,
     };
 });
-var mapItemsToMarks = {
-    Nst: [
-        'fhrbaseline_score',
-        'zhenfu_lv_score',
-        'fhr_uptime_score',
-        'fm_fhrv_score',
-        'fm_score',
-    ],
-    Fischer: [
-        'fhrbaseline_score',
-        'zhenfu_lv_score',
-        'zhouqi_lv_score',
-        'acc_score',
-        'dec_score',
-    ],
-    Krebs: [
-        'fhrbaseline_score',
-        'zhenfu_lv_score',
-        'zhouqi_lv_score',
-        'acc_score',
-        'dec_score',
-        'movement_score',
-    ]
-};
-var MARKS = Object.keys(mapItemsToMarks);
 //# sourceMappingURL=useAnalyse.js.map

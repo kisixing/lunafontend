@@ -1,5 +1,5 @@
 import Draw from "../../Draw";
-import { } from "@lianmed/f_types";
+import { obvue } from "@lianmed/f_types";
 import { AccPoint, DecPoint, _ctg_exams_analyse } from "@lianmed/f_types/lib/obvue/ctg_exams_analyse";
 
 export interface AnalyseData {
@@ -11,24 +11,26 @@ export interface AnalyseData {
 }
 
 export class DrawAnalyse extends Draw {
-    analyseData: AnalyseData
+    // private _analyseData: AnalyseData
+    analysisData: obvue.ctg_exams_analyse
     constructor(canvas: HTMLCanvasElement, width = 0, height = 0) {
         super(width, height, canvas)
     }
     init() {
-        this.analyseData = null
+        this.analysisData = null
     }
-    setData(analyseData: AnalyseData, ) {
-        this.analyseData = analyseData
+    setData(analyseData: obvue.ctg_exams_analyse, ) {
+        this.analysisData = analyseData
     }
     drawBaseline(cur, color, yspan, xspan, max, basetop) {
         //清空分析画布
-        const { context2D, width, height, analyseData } = this;
+        const { context2D, width, height, analysisData: analyseData } = this;
         context2D && context2D.clearRect(0, 0, width, height)
 
         if (!analyseData) {
             return
         }
+        const { analysis: { fhrbaselineMinute: baseline, start, end } } = analyseData
         let lastx = 0;
         const leftViewposition = cur - width * 2 > 0 ? cur - width * 2 : 0;
         //kisi 2019-10-29 baseline
@@ -43,37 +45,37 @@ export class DrawAnalyse extends Draw {
             let baselineoff = 0;
             let firstindex = Math.floor(leftViewposition / (xspan * 6));
             //console.log("==0==",cur,firstindex,baselineoff);
-            context2D.moveTo(baselineoff * xspan * 3, (max - curfhroffset - analyseData.baseline[firstindex]) * yspan + basetop);
+            context2D.moveTo(baselineoff * xspan * 3, (max - curfhroffset - baseline[firstindex]) * yspan + basetop);
             for (var i = leftViewposition; i < cur; i++) {
                 baselineoff = Math.ceil(i / (xspan * 6));
-                if (baselineoff >= analyseData.baseline.length - 1) {
+                if (baselineoff >= baseline.length - 1) {
                     break;
                 }
                 if ((i) % (xspan * 6) == 0) {
                     //console.log("==1==",cur,firstindex,baselineoff);
                     lastx = Math.floor((i - leftViewposition) / 2);
-                    context2D.lineTo(lastx, (max - curfhroffset - analyseData.baseline[baselineoff]) * yspan + basetop);
+                    context2D.lineTo(lastx, (max - curfhroffset - baseline[baselineoff]) * yspan + basetop);
                 }
             }
-            context2D.lineTo(cur, (max - curfhroffset - analyseData.baseline[baselineoff]) * yspan + basetop)
+            context2D.lineTo(cur, (max - curfhroffset - baseline[baselineoff]) * yspan + basetop)
             context2D.stroke();
 
-        } else if (leftViewposition < analyseData.end) {
+        } else if (leftViewposition < end) {
 
-            let baselineoff = Math.ceil((leftViewposition - analyseData.start) / (xspan * 6));
+            let baselineoff = Math.ceil((leftViewposition - start) / (xspan * 6));
             let firstindex = baselineoff - 1 > 0 ? baselineoff - 1 : 0;
-            context2D.moveTo(0, (max - curfhroffset - analyseData.baseline[firstindex]) * yspan + basetop);
+            context2D.moveTo(0, (max - curfhroffset - baseline[firstindex]) * yspan + basetop);
             for (var i = leftViewposition + 1; i < cur; i++) {
-                baselineoff = Math.ceil((i - analyseData.start) / (xspan * 6));
-                if (baselineoff >= analyseData.baseline.length - 1) {
+                baselineoff = Math.ceil((i - start) / (xspan * 6));
+                if (baselineoff >= baseline.length - 1) {
                     break;
                 }
                 if ((i) % (xspan * 6) == 0) {
                     lastx = Math.floor((i - leftViewposition) / 2);
-                    context2D.lineTo(lastx, (max - curfhroffset - analyseData.baseline[baselineoff]) * yspan + basetop);
+                    context2D.lineTo(lastx, (max - curfhroffset - baseline[baselineoff]) * yspan + basetop);
                 }
             }
-            context2D.lineTo((analyseData.end - leftViewposition) / 2, (max - curfhroffset - analyseData.baseline[baselineoff]) * yspan + basetop)
+            context2D.lineTo((end - leftViewposition) / 2, (max - curfhroffset - baseline[baselineoff]) * yspan + basetop)
 
             context2D.stroke();
 
@@ -82,23 +84,24 @@ export class DrawAnalyse extends Draw {
     //kisi 2019-10-28 绘制 acc dec
     //2020-03-04 用 linecanvas 绘制标记
     drawflag = (canvas, x: number, y: number, index: number) => {
-        const { context2D, analyseData } = this;
+        const { context2D, analysisData: analyseData } = this;
         if (!context2D || !analyseData) return
-        const acc = analyseData.acc.map(_ => _.index)
-        const dec = analyseData.dec.map(_ => _.index)
+        const { analysis: { acc, dec } } = analyseData
+        const _acc = acc.map(_ => _.index)
+        const _dec = dec.map(_ => _.index)
         context2D.textAlign = 'left';
         context2D.textBaseline = 'top';
         let txt = '';
-        if (acc.indexOf(index) > -1 || acc.indexOf(index - 1) > -1) {
-            const target = analyseData.acc.find(_ => [index, index - 1].includes(_.index))
+        if (_acc.indexOf(index) > -1 || _acc.indexOf(index - 1) > -1) {
+            const target = acc.find(_ => [index, index - 1].includes(_.index))
             target.x = x
             target.y = y
             txt = `${(target.reliability / 10 || 0).toFixed(1)}`;
             canvas.font = '15px arial';
             canvas.fillStyle = 'blue';
             canvas.fillText(txt, x + 1, y + 10);
-        } else if (dec.indexOf(index) > -1 || dec.indexOf(index - 1) > -1) {
-            const target = analyseData.dec.find(_ => [index, index - 1].includes(_.index))
+        } else if (_dec.indexOf(index) > -1 || _dec.indexOf(index - 1) > -1) {
+            const target = dec.find(_ => [index, index - 1].includes(_.index))
             target.x = x
             target.y = y
             txt = target ? target.type : '-';
@@ -116,60 +119,63 @@ export class DrawAnalyse extends Draw {
     }
     // TODO：analysis 结构最好与score结构分开
     // 评分类型最好枚举实现
-    ctgscore = (analysis: _ctg_exams_analyse, type: number, start: number, end: number) => {
+    ctgscore = (type: number, start: number, end: number) => {
+        const { analysisData } = this
+        if (!analysisData) return
+        const { analysis, score } = analysisData
         // let timeframe = end-start/4*60;
         //NST(国内) 20分钟
         if (type == 0) {
             // 基线选项
-            analysis.score.nstdata.bhrvalue = analysis.analysis.bhr;
-            if (analysis.analysis.bhr < 100)
-                analysis.score.nstdata.bhrscore = 0;
-            else if (this.inRange(analysis.analysis.bhr, 100, 109) || analysis.analysis.bhr > 160)
-                analysis.score.nstdata.bhrscore = 1;
-            else if (this.inRange(analysis.analysis.bhr, 120, 160)) {
-                analysis.score.nstdata.bhrscore = 2;
+            score.nstdata.bhrvalue = analysis.bhr;
+            if (analysis.bhr < 100)
+                score.nstdata.bhrscore = 0;
+            else if (this.inRange(analysis.bhr, 100, 109) || analysis.bhr > 160)
+                score.nstdata.bhrscore = 1;
+            else if (this.inRange(analysis.bhr, 120, 160)) {
+                score.nstdata.bhrscore = 2;
             }
             // 振幅
-            analysis.score.nstdata.ltvvalue = analysis.analysis.ltv;
-            if (analysis.analysis.ltv < 5) {
-                analysis.score.nstdata.ltvscore = 0;
-            } else if (this.inRange(analysis.analysis.ltv, 5, 9) || analysis.analysis.ltv > 30) {
-                analysis.score.nstdata.ltvscore = 1;
-            } else if (this.inRange(analysis.analysis.ltv, 10, 30)) {
-                analysis.score.nstdata.ltvscore = 2;
+            score.nstdata.ltvvalue = analysis.ltv;
+            if (analysis.ltv < 5) {
+                score.nstdata.ltvscore = 0;
+            } else if (this.inRange(analysis.ltv, 5, 9) || analysis.ltv > 30) {
+                score.nstdata.ltvscore = 1;
+            } else if (this.inRange(analysis.ltv, 10, 30)) {
+                score.nstdata.ltvscore = 2;
             }
 
-            let fhr_uptime = analysis.analysis.ltv;
+            let fhr_uptime = analysis.ltv;
             // 胎动fhr上升时间
-            analysis.score.nstdata.ltvvalue = fhr_uptime;
+            score.nstdata.ltvvalue = fhr_uptime;
             if (fhr_uptime < 10) {
-                analysis.score.nstdata.ltvscore = 0;
+                score.nstdata.ltvscore = 0;
             } else if (this.inRange(fhr_uptime, 10, 14)) {
-                analysis.score.nstdata.ltvscore = 1;
+                score.nstdata.ltvscore = 1;
             } else if (fhr_uptime > 15) {
-                analysis.score.nstdata.ltvscore = 2;
+                score.nstdata.ltvscore = 2;
             }
             // 胎动fhr变化幅度
             let fhr_ampl = 10;
-            analysis.score.nstdata.accamplvalue = fhr_ampl;
+            score.nstdata.accamplvalue = fhr_ampl;
             if (fhr_ampl < 10) {
-                analysis.score.nstdata.accamplscore = 0;
+                score.nstdata.accamplscore = 0;
             } else if (this.inRange(fhr_ampl, 10, 14)) {
-                analysis.score.nstdata.accamplscore = 1;
+                score.nstdata.accamplscore = 1;
             } else if (fhr_ampl > 15) {
-                analysis.score.nstdata.accamplscore = 2;
+                score.nstdata.accamplscore = 2;
             }
             // 胎动
-            let fmnum = analysis.analysis.fm.length;
-            analysis.score.nstdata.fmvalue = fmnum;
+            let fmnum = analysis.fm.length;
+            score.nstdata.fmvalue = fmnum;
             if (fmnum == 0) {
-                analysis.score.nstdata.fmscore = 0;
+                score.nstdata.fmscore = 0;
             } else if (this.inRange(fmnum, 1, 2)) {
-                analysis.score.nstdata.fmscore = 1;
+                score.nstdata.fmscore = 1;
             } else if (fmnum > 2) {
-                analysis.score.nstdata.fmscore = 2;
+                score.nstdata.fmscore = 2;
             }
-            analysis.score.nstdata.totalscore = analysis.score.nstdata.accamplscore + analysis.score.nstdata.accdurationscore + analysis.score.nstdata.bhrscore + analysis.score.nstdata.fmscore + analysis.score.nstdata.ltvscore;
+            score.nstdata.totalscore = score.nstdata.accamplscore + score.nstdata.accdurationscore + score.nstdata.bhrscore + score.nstdata.fmscore + score.nstdata.ltvscore;
         }
         //CST
         //Krebs 30分钟
@@ -177,9 +183,9 @@ export class DrawAnalyse extends Draw {
         //NST-sogc 30分钟
     }
     revice(x: number, y: number) {
-        if (!this.analyseData) return
+        if (!this.analysisData) return
         const edge = 20;
-        const { acc, dec } = this.analyseData
+        const { analysis: { acc, dec } } = this.analysisData
 
         const target = acc.find(_ => (x < _.x + edge) && (x > _.x - edge)) || dec.find(_ => (x < _.x + edge) && (x > _.x - edge))
         if (target && (y < (target.y + edge) && y > (target.y - edge))) {

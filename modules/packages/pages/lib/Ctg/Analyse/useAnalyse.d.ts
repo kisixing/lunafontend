@@ -4,9 +4,6 @@ import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 declare const _default: (v: Suit, docid: any, fetal: any, setFhr: (index: 1 | 2 | 3) => void) => {
     setMark: (mark: string) => void;
     mark: string;
-    responseData: {
-        [x: string]: IResponseData;
-    };
     MARKS: string[];
     analyse: () => void;
     startTime: number;
@@ -21,17 +18,9 @@ declare const _default: (v: Suit, docid: any, fetal: any, setFhr: (index: 1 | 2 
     old_ref: MutableRefObject<{
         [x: string]: any;
     }>;
+    analyseLoading: boolean;
 };
 export default _default;
-interface IResponseData {
-    acc?: string;
-    dec?: string;
-    baseline?: any;
-    meanbaseline?: string;
-    mark?: string;
-    result: string;
-    diagnosis?: any;
-}
 export interface IResult {
     fhr_uptime_score: number;
     fhrbaseline_score: number;

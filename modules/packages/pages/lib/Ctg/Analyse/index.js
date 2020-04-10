@@ -56,9 +56,8 @@ exports.Ctg_Analyse = function (_a) {
     var _k = useCtgData_1.default(note), ctgData = _k.ctgData, loading = _k.loading, setFhr = _k.setFhr, fetal = _k.fetal, setFetal = _k.setFetal;
     var _l = react_1.useState(true), disabled = _l[0], setDisabled = _l[1];
     var ref = react_1.useRef(null);
-    var _m = useAnalyse_1.default(ref.current, note, fetal, setFhr), responseData = _m.responseData, MARKS = _m.MARKS, analyse = _m.analyse, startTime = _m.startTime, endTime = _m.endTime, mark = _m.mark, setMark = _m.setMark, interval = _m.interval, setInterval = _m.setInterval, Fischer_ref = _m.Fischer_ref, Nst_ref = _m.Nst_ref, Krebs_ref = _m.Krebs_ref, analysis_ref = _m.analysis_ref, old_ref = _m.old_ref;
-    var d = {
-        responseData: responseData,
+    var _m = useAnalyse_1.default(ref.current, note, fetal, setFhr), MARKS = _m.MARKS, analyse = _m.analyse, startTime = _m.startTime, endTime = _m.endTime, mark = _m.mark, setMark = _m.setMark, interval = _m.interval, setInterval = _m.setInterval, Fischer_ref = _m.Fischer_ref, Nst_ref = _m.Nst_ref, Krebs_ref = _m.Krebs_ref, analysis_ref = _m.analysis_ref, old_ref = _m.old_ref, analyseLoading = _m.analyseLoading;
+    var others = {
         MARKS: MARKS,
         analyse: analyse,
         startTime: startTime,
@@ -72,7 +71,7 @@ exports.Ctg_Analyse = function (_a) {
     var submit = function () {
         var rightData = analysis_ref.current.getFieldsValue();
         var wave = rightData.wave, diagnosistxt = rightData.diagnosistxt, NST = rightData.NST, CST_OCT = rightData.CST_OCT, analyseData = __rest(rightData, ["wave", "diagnosistxt", "NST", "CST_OCT"]);
-        var curData = d[mark + "_ref"].current.getFieldsValue();
+        var curData = others[mark + "_ref"].current.getFieldsValue();
         var oldData = old_ref.current[mark] || {};
         var isedit = Object.entries(curData).find(function (_a) {
             var k = _a[0], v = _a[1];
@@ -94,17 +93,17 @@ exports.Ctg_Analyse = function (_a) {
                 var diagnosis = r[0].diagnosis;
                 var t = void 0;
                 try {
-                    var d_1 = JSON.parse(diagnosis) || {};
+                    var d = JSON.parse(diagnosis) || {};
                     t = (react_1.default.createElement("div", null,
                         react_1.default.createElement("div", null,
                             "NST\uFF1A",
-                            react_1.default.createElement("span", null, d_1.NST)),
+                            react_1.default.createElement("span", null, d.NST)),
                         react_1.default.createElement("div", null,
                             "CST/OCT\uFF1A",
-                            react_1.default.createElement("span", null, d_1.CST_OCT)),
+                            react_1.default.createElement("span", null, d.CST_OCT)),
                         react_1.default.createElement("div", null,
                             "\u8BCA\u65AD\uFF1A",
-                            react_1.default.createElement("span", null, d_1.diagnosistxt))));
+                            react_1.default.createElement("span", null, d.diagnosistxt))));
                 }
                 catch (error) {
                 }
@@ -125,11 +124,11 @@ exports.Ctg_Analyse = function (_a) {
             react_1.default.createElement(lmg_1.Ctg, { suitType: 1, ref: ref, loading: loading, data: ctgData })),
         react_1.default.createElement(antd_1.Row, { gutter: 12, style: { height: 420 } },
             react_1.default.createElement(antd_1.Col, { span: 12 },
-                react_1.default.createElement(Score_1.default, __assign({ disabled: disabled }, d, { fetal: fetal, setFetal: setFetal, ctgData: ctgData, docid: note, v: ref.current, className: "bordered" })),
+                react_1.default.createElement(Score_1.default, __assign({ disabled: disabled }, others, { fetal: fetal, setFetal: setFetal, ctgData: ctgData, docid: note, v: ref.current, className: "bordered" })),
                 react_1.default.createElement("div", { style: { position: 'absolute', right: 12, bottom: 0 } },
                     react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, onClick: history, disabled: btnDisabled }, "\u5386\u53F2\u5206\u6790"),
                     react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, disabled: !note, onClick: function () { return setDisabled(!disabled); } }, disabled ? '修改' : '确认'),
-                    react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, type: "primary", onClick: analyse, disabled: !note }, "\u8BC4\u5206"))),
+                    react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, type: "primary", onClick: analyse, loading: analyseLoading, disabled: !note }, "\u8BC4\u5206"))),
             react_1.default.createElement(antd_1.Col, { span: 12 },
                 react_1.default.createElement(Analyse_1.default, { ref: analysis_ref }),
                 react_1.default.createElement("div", { style: { position: 'absolute', right: 12, bottom: 0 } },

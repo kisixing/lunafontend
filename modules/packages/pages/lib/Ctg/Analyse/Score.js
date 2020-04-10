@@ -24,24 +24,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importStar(require("react"));
 var antd_1 = require("antd");
 var methods_1 = __importDefault(require("./methods"));
-var utils_1 = require("@lianmed/utils");
 var intervals = [20, 40];
 var ScoringMethod = function (props) {
     var docid = props.docid, ctgData = props.ctgData, fetal = props.fetal, setFetal = props.setFetal, disabled = props.disabled;
-    var responseData = props.responseData, MARKS = props.MARKS, startTime = props.startTime, mark = props.mark, setMark = props.setMark, interval = props.interval, setInterval = props.setInterval;
+    var MARKS = props.MARKS, startTime = props.startTime, mark = props.mark, setMark = props.setMark, interval = props.interval, setInterval = props.setInterval;
     var onChange = function (e) {
         var mark = e.target.value;
         setMark(mark);
     };
-    react_1.useEffect(function () {
-        var cb = function (fn) {
-            fn(JSON.stringify(responseData));
-        };
-        utils_1.event.on('analysis:result', cb);
-        return function () {
-            utils_1.event.off('analysis:result', cb);
-        };
-    }, [responseData]);
     var IntervalRadio = react_1.useMemo(function () {
         return (react_1.default.createElement("span", { style: { marginRight: 10 } },
             " \u65F6\u957F\uFF1A",

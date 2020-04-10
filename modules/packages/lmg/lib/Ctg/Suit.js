@@ -23,14 +23,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var request_1 = __importDefault(require("@lianmed/request"));
+var lodash_1 = require("lodash");
+var Draw_1 = __importDefault(require("../Draw"));
+var utils_1 = require("../services/utils");
+var bindEvents_1 = __importDefault(require("./bindEvents"));
 var DrawCTG_1 = __importDefault(require("./DrawCTG"));
 var DrawAnalyse_1 = require("./drawTools/DrawAnalyse");
 var DrawSelect_1 = require("./drawTools/DrawSelect");
-var request_1 = __importDefault(require("@lianmed/request"));
-var utils_1 = require("../services/utils");
-var lodash_1 = require("lodash");
-var Draw_1 = __importDefault(require("../Draw"));
-var bindEvents_1 = __importDefault(require("./bindEvents"));
 var sid = 0;
 var Suit = (function (_super) {
     __extends(Suit, _super);
@@ -285,8 +285,8 @@ var Suit = (function (_super) {
     };
     Suit.prototype.analyse = function (data) {
         this.drawAnalyse.setData(data);
-        this.drawSelect.$selectrpend = data.end;
-        this.drawSelect.$selectrpstart = data.start;
+        this.drawSelect.$selectrpend = data.analysis.end;
+        this.drawSelect.$selectrpstart = data.analysis.start;
         this.drawobj.drawdot(this.rightViewPosition, false);
     };
     Suit.prototype.alarmOn = function (alarmType) {
@@ -482,6 +482,13 @@ var Suit = (function (_super) {
     Suit.prototype.reviceAnalyse = function (x, y) {
         this.drawAnalyse.revice(x, y);
     };
+    Object.defineProperty(Suit.prototype, "ctgscore", {
+        get: function () {
+            return this.drawAnalyse.ctgscore.bind(this.drawAnalyse);
+        },
+        enumerable: true,
+        configurable: true
+    });
     return Suit;
 }(Draw_1.default));
 exports.Suit = Suit;

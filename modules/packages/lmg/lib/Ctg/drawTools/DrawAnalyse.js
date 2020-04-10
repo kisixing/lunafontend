@@ -24,16 +24,17 @@ var DrawAnalyse = (function (_super) {
         if (height === void 0) { height = 0; }
         var _this = _super.call(this, width, height, canvas) || this;
         _this.drawflag = function (canvas, x, y, index) {
-            var _a = _this, context2D = _a.context2D, analyseData = _a.analyseData;
+            var _a = _this, context2D = _a.context2D, analyseData = _a.analysisData;
             if (!context2D || !analyseData)
                 return;
-            var acc = analyseData.acc.map(function (_) { return _.index; });
-            var dec = analyseData.dec.map(function (_) { return _.index; });
+            var _b = analyseData.analysis, acc = _b.acc, dec = _b.dec;
+            var _acc = acc.map(function (_) { return _.index; });
+            var _dec = dec.map(function (_) { return _.index; });
             context2D.textAlign = 'left';
             context2D.textBaseline = 'top';
             var txt = '';
-            if (acc.indexOf(index) > -1 || acc.indexOf(index - 1) > -1) {
-                var target = analyseData.acc.find(function (_) { return [index, index - 1].includes(_.index); });
+            if (_acc.indexOf(index) > -1 || _acc.indexOf(index - 1) > -1) {
+                var target = acc.find(function (_) { return [index, index - 1].includes(_.index); });
                 target.x = x;
                 target.y = y;
                 txt = "" + (target.reliability / 10 || 0).toFixed(1);
@@ -41,8 +42,8 @@ var DrawAnalyse = (function (_super) {
                 canvas.fillStyle = 'blue';
                 canvas.fillText(txt, x + 1, y + 10);
             }
-            else if (dec.indexOf(index) > -1 || dec.indexOf(index - 1) > -1) {
-                var target = analyseData.dec.find(function (_) { return [index, index - 1].includes(_.index); });
+            else if (_dec.indexOf(index) > -1 || _dec.indexOf(index - 1) > -1) {
+                var target = dec.find(function (_) { return [index, index - 1].includes(_.index); });
                 target.x = x;
                 target.y = y;
                 txt = target ? target.type : '-';
@@ -57,76 +58,81 @@ var DrawAnalyse = (function (_super) {
                 result = true;
             return result;
         };
-        _this.ctgscore = function (analysis, type, start, end) {
+        _this.ctgscore = function (type, start, end) {
+            var analysisData = _this.analysisData;
+            if (!analysisData)
+                return;
+            var analysis = analysisData.analysis, score = analysisData.score;
             if (type == 0) {
-                analysis.score.nstdata.bhrvalue = analysis.analysis.bhr;
-                if (analysis.analysis.bhr < 100)
-                    analysis.score.nstdata.bhrscore = 0;
-                else if (_this.inRange(analysis.analysis.bhr, 100, 109) || analysis.analysis.bhr > 160)
-                    analysis.score.nstdata.bhrscore = 1;
-                else if (_this.inRange(analysis.analysis.bhr, 120, 160)) {
-                    analysis.score.nstdata.bhrscore = 2;
+                score.nstdata.bhrvalue = analysis.bhr;
+                if (analysis.bhr < 100)
+                    score.nstdata.bhrscore = 0;
+                else if (_this.inRange(analysis.bhr, 100, 109) || analysis.bhr > 160)
+                    score.nstdata.bhrscore = 1;
+                else if (_this.inRange(analysis.bhr, 120, 160)) {
+                    score.nstdata.bhrscore = 2;
                 }
-                analysis.score.nstdata.ltvvalue = analysis.analysis.ltv;
-                if (analysis.analysis.ltv < 5) {
-                    analysis.score.nstdata.ltvscore = 0;
+                score.nstdata.ltvvalue = analysis.ltv;
+                if (analysis.ltv < 5) {
+                    score.nstdata.ltvscore = 0;
                 }
-                else if (_this.inRange(analysis.analysis.ltv, 5, 9) || analysis.analysis.ltv > 30) {
-                    analysis.score.nstdata.ltvscore = 1;
+                else if (_this.inRange(analysis.ltv, 5, 9) || analysis.ltv > 30) {
+                    score.nstdata.ltvscore = 1;
                 }
-                else if (_this.inRange(analysis.analysis.ltv, 10, 30)) {
-                    analysis.score.nstdata.ltvscore = 2;
+                else if (_this.inRange(analysis.ltv, 10, 30)) {
+                    score.nstdata.ltvscore = 2;
                 }
-                var fhr_uptime = analysis.analysis.ltv;
-                analysis.score.nstdata.ltvvalue = fhr_uptime;
+                var fhr_uptime = analysis.ltv;
+                score.nstdata.ltvvalue = fhr_uptime;
                 if (fhr_uptime < 10) {
-                    analysis.score.nstdata.ltvscore = 0;
+                    score.nstdata.ltvscore = 0;
                 }
                 else if (_this.inRange(fhr_uptime, 10, 14)) {
-                    analysis.score.nstdata.ltvscore = 1;
+                    score.nstdata.ltvscore = 1;
                 }
                 else if (fhr_uptime > 15) {
-                    analysis.score.nstdata.ltvscore = 2;
+                    score.nstdata.ltvscore = 2;
                 }
                 var fhr_ampl = 10;
-                analysis.score.nstdata.accamplvalue = fhr_ampl;
+                score.nstdata.accamplvalue = fhr_ampl;
                 if (fhr_ampl < 10) {
-                    analysis.score.nstdata.accamplscore = 0;
+                    score.nstdata.accamplscore = 0;
                 }
                 else if (_this.inRange(fhr_ampl, 10, 14)) {
-                    analysis.score.nstdata.accamplscore = 1;
+                    score.nstdata.accamplscore = 1;
                 }
                 else if (fhr_ampl > 15) {
-                    analysis.score.nstdata.accamplscore = 2;
+                    score.nstdata.accamplscore = 2;
                 }
-                var fmnum = analysis.analysis.fm.length;
-                analysis.score.nstdata.fmvalue = fmnum;
+                var fmnum = analysis.fm.length;
+                score.nstdata.fmvalue = fmnum;
                 if (fmnum == 0) {
-                    analysis.score.nstdata.fmscore = 0;
+                    score.nstdata.fmscore = 0;
                 }
                 else if (_this.inRange(fmnum, 1, 2)) {
-                    analysis.score.nstdata.fmscore = 1;
+                    score.nstdata.fmscore = 1;
                 }
                 else if (fmnum > 2) {
-                    analysis.score.nstdata.fmscore = 2;
+                    score.nstdata.fmscore = 2;
                 }
-                analysis.score.nstdata.totalscore = analysis.score.nstdata.accamplscore + analysis.score.nstdata.accdurationscore + analysis.score.nstdata.bhrscore + analysis.score.nstdata.fmscore + analysis.score.nstdata.ltvscore;
+                score.nstdata.totalscore = score.nstdata.accamplscore + score.nstdata.accdurationscore + score.nstdata.bhrscore + score.nstdata.fmscore + score.nstdata.ltvscore;
             }
         };
         return _this;
     }
     DrawAnalyse.prototype.init = function () {
-        this.analyseData = null;
+        this.analysisData = null;
     };
     DrawAnalyse.prototype.setData = function (analyseData) {
-        this.analyseData = analyseData;
+        this.analysisData = analyseData;
     };
     DrawAnalyse.prototype.drawBaseline = function (cur, color, yspan, xspan, max, basetop) {
-        var _a = this, context2D = _a.context2D, width = _a.width, height = _a.height, analyseData = _a.analyseData;
+        var _a = this, context2D = _a.context2D, width = _a.width, height = _a.height, analyseData = _a.analysisData;
         context2D && context2D.clearRect(0, 0, width, height);
         if (!analyseData) {
             return;
         }
+        var _b = analyseData.analysis, baseline = _b.fhrbaselineMinute, start = _b.start, end = _b.end;
         var lastx = 0;
         var leftViewposition = cur - width * 2 > 0 ? cur - width * 2 : 0;
         var curfhroffset = 0;
@@ -136,43 +142,43 @@ var DrawAnalyse = (function (_super) {
         if (true) {
             var baselineoff = 0;
             var firstindex = Math.floor(leftViewposition / (xspan * 6));
-            context2D.moveTo(baselineoff * xspan * 3, (max - curfhroffset - analyseData.baseline[firstindex]) * yspan + basetop);
+            context2D.moveTo(baselineoff * xspan * 3, (max - curfhroffset - baseline[firstindex]) * yspan + basetop);
             for (var i = leftViewposition; i < cur; i++) {
                 baselineoff = Math.ceil(i / (xspan * 6));
-                if (baselineoff >= analyseData.baseline.length - 1) {
+                if (baselineoff >= baseline.length - 1) {
                     break;
                 }
                 if ((i) % (xspan * 6) == 0) {
                     lastx = Math.floor((i - leftViewposition) / 2);
-                    context2D.lineTo(lastx, (max - curfhroffset - analyseData.baseline[baselineoff]) * yspan + basetop);
+                    context2D.lineTo(lastx, (max - curfhroffset - baseline[baselineoff]) * yspan + basetop);
                 }
             }
-            context2D.lineTo(cur, (max - curfhroffset - analyseData.baseline[baselineoff]) * yspan + basetop);
+            context2D.lineTo(cur, (max - curfhroffset - baseline[baselineoff]) * yspan + basetop);
             context2D.stroke();
         }
-        else if (leftViewposition < analyseData.end) {
-            var baselineoff = Math.ceil((leftViewposition - analyseData.start) / (xspan * 6));
+        else if (leftViewposition < end) {
+            var baselineoff = Math.ceil((leftViewposition - start) / (xspan * 6));
             var firstindex = baselineoff - 1 > 0 ? baselineoff - 1 : 0;
-            context2D.moveTo(0, (max - curfhroffset - analyseData.baseline[firstindex]) * yspan + basetop);
+            context2D.moveTo(0, (max - curfhroffset - baseline[firstindex]) * yspan + basetop);
             for (var i = leftViewposition + 1; i < cur; i++) {
-                baselineoff = Math.ceil((i - analyseData.start) / (xspan * 6));
-                if (baselineoff >= analyseData.baseline.length - 1) {
+                baselineoff = Math.ceil((i - start) / (xspan * 6));
+                if (baselineoff >= baseline.length - 1) {
                     break;
                 }
                 if ((i) % (xspan * 6) == 0) {
                     lastx = Math.floor((i - leftViewposition) / 2);
-                    context2D.lineTo(lastx, (max - curfhroffset - analyseData.baseline[baselineoff]) * yspan + basetop);
+                    context2D.lineTo(lastx, (max - curfhroffset - baseline[baselineoff]) * yspan + basetop);
                 }
             }
-            context2D.lineTo((analyseData.end - leftViewposition) / 2, (max - curfhroffset - analyseData.baseline[baselineoff]) * yspan + basetop);
+            context2D.lineTo((end - leftViewposition) / 2, (max - curfhroffset - baseline[baselineoff]) * yspan + basetop);
             context2D.stroke();
         }
     };
     DrawAnalyse.prototype.revice = function (x, y) {
-        if (!this.analyseData)
+        if (!this.analysisData)
             return;
         var edge = 20;
-        var _a = this.analyseData, acc = _a.acc, dec = _a.dec;
+        var _a = this.analysisData.analysis, acc = _a.acc, dec = _a.dec;
         var target = acc.find(function (_) { return (x < _.x + edge) && (x > _.x - edge); }) || dec.find(function (_) { return (x < _.x + edge) && (x > _.x - edge); });
         if (target && (y < (target.y + edge) && y > (target.y - edge))) {
             console.log(x, y, target);

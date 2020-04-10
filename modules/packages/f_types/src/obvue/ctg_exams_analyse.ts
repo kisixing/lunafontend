@@ -37,6 +37,9 @@ export interface _ctg_exams_analyse {
             uckeeptime: number,
             ucdurationtime: number
         }
+        // extend
+        start: number
+        end: number
     },
     score: {
         ret: number,
