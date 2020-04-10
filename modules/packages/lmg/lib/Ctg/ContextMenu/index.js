@@ -1,24 +1,37 @@
 "use strict";
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var react_1 = __importStar(require("react"));
 var antd_1 = require("antd");
-var react_1 = __importDefault(require("react"));
-var menu = (react_1.default.createElement(antd_1.Menu, { onClick: function (e) { return console.log(111, e.domEvent.target); } },
-    react_1.default.createElement(antd_1.Menu.Item, { key: "1" }, "11st menu item"),
-    react_1.default.createElement(antd_1.Menu.Item, { key: "2" }, "22nd menu item"),
-    react_1.default.createElement(antd_1.Menu.Item, { key: "3" }, "33rd menu item")));
+var index_1 = __importDefault(require("./MenuStrategies/index"));
 exports.default = (function (props) {
     var s = props.s;
-    return (react_1.default.createElement(antd_1.Dropdown, { overlay: menu, trigger: ['contextMenu'] },
-        react_1.default.createElement("div", { style: { width: '100%', height: '100%', position: 'absolute', top: 0 }, onContextMenu: function (e) {
-                var target = e.currentTarget;
-                var clientX = e.clientX, clientY = e.clientY;
-                var _a = target.getBoundingClientRect(), x = _a.x, y = _a.y;
-                var offsetX = clientX - x;
-                var offsetY = clientY - y;
-                s.current.reviceAnalyse(offsetX, offsetY);
-            } }, props.children)));
+    var _a = react_1.useState(), pType = _a[0], setPType = _a[1];
+    var offsetX = react_1.useRef(0);
+    var offsetY = react_1.useRef(0);
+    react_1.useEffect(function () {
+        console.log('pType', pType);
+    }, [pType]);
+    return (react_1.default.createElement(react_1.default.Fragment, null,
+        react_1.default.createElement(antd_1.Dropdown, { overlay: react_1.default.createElement(index_1.default, { pType: pType }), trigger: ['contextMenu'] },
+            react_1.default.createElement("div", { style: { width: '100%', height: '100%', position: 'absolute', top: 0 }, onContextMenu: function (e) {
+                    var target = e.currentTarget;
+                    var clientX = e.clientX, clientY = e.clientY;
+                    var _a = target.getBoundingClientRect(), x = _a.x, y = _a.y;
+                    offsetX.current = clientX - x;
+                    offsetY.current = clientY - y;
+                    var type = s.current.drawAnalyse.getPointType(offsetX.current, offsetY.current);
+                    console.log('type', type);
+                    setPType(type);
+                } }, props.children))));
 });
 //# sourceMappingURL=index.js.map

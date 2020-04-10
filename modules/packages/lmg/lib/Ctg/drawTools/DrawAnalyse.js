@@ -187,15 +187,29 @@ var DrawAnalyse = (function (_super) {
         suit.drawSelect.$selectrpstart = data.analysis.start;
         suit.drawobj.drawdot(suit.rightViewPosition, false);
     };
-    DrawAnalyse.prototype.revice = function (x, y) {
+    DrawAnalyse.prototype.revicePoint = function (x, y) {
         if (!this.analysisData)
             return;
         var edge = 20;
         var _a = this.analysisData.analysis, acc = _a.acc, dec = _a.dec;
         var target = acc.find(function (_) { return (x < _.x + edge) && (x > _.x - edge); }) || dec.find(function (_) { return (x < _.x + edge) && (x > _.x - edge); });
         if (target && (y < (target.y + edge) && y > (target.y - edge))) {
-            console.log(x, y, target);
+            var isAcc = 'reliability' in target;
+            return isAcc ? '' : '';
         }
+        return null;
+    };
+    DrawAnalyse.prototype.getPointType = function (x, y) {
+        if (!this.analysisData)
+            return;
+        var edge = 20;
+        var _a = this.analysisData.analysis, acc = _a.acc, dec = _a.dec;
+        var target = acc.find(function (_) { return (x < _.x + edge) && (x > _.x - edge); }) || dec.find(function (_) { return (x < _.x + edge) && (x > _.x - edge); });
+        if (target && (y < (target.y + edge) && y > (target.y - edge))) {
+            var isAcc = 'reliability' in target;
+            return isAcc ? 'AccPoint' : 'DecPoint';
+        }
+        return null;
     };
     return DrawAnalyse;
 }(Draw_1.default));

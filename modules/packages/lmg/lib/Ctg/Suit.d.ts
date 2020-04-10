@@ -107,8 +107,5 @@ export declare class Suit extends Draw {
     onStatusChange(status: boolean): boolean | void;
     getoffline(doc_id: string, offlineend: number): void;
     initfhrdata(data: any, datacache: any, offindex: any): void;
-    reviceAnalyse(x: number, y: number): void;
-    get ctgscore(): DrawAnalyse['ctgscore'];
-    get analyse(): DrawAnalyse['analyse'];
 }
 export {};

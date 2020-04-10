@@ -546,16 +546,17 @@ export class Suit extends Draw {
       }
     });
   }
-  reviceAnalyse(x: number, y: number) {
-    this.drawAnalyse.revice(x, y)
-  }
 
-  public get ctgscore(): DrawAnalyse['ctgscore'] {
-    return this.drawAnalyse.ctgscore.bind(this.drawAnalyse)
-  }
-  public get analyse(): DrawAnalyse['analyse'] {
-    return this.drawAnalyse.analyse.bind(this.drawAnalyse)
-  }
+
+  // public get reviceAnalyse(): DrawAnalyse['revicePoint'] {
+  //   return this.drawAnalyse.revicePoint.bind(this.drawAnalyse)
+  // }
+  // public get ctgscore(): DrawAnalyse['ctgscore'] {
+  //   return this.drawAnalyse.ctgscore.bind(this.drawAnalyse)
+  // }
+  // public get analyse(): DrawAnalyse['analyse'] {
+  //   return this.drawAnalyse.analyse.bind(this.drawAnalyse)
+  // }
 
 }
 

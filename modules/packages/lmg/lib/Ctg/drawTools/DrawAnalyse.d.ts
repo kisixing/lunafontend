@@ -1,6 +1,6 @@
 import Draw from "../../Draw";
 import { obvue } from "@lianmed/f_types";
-import { AnalyseType } from '../../interface';
+import { AnalyseType, PointType } from '../../interface';
 import { Suit } from "../Suit";
 export declare class DrawAnalyse extends Draw {
     analysisData: obvue.ctg_exams_analyse;
@@ -13,5 +13,6 @@ export declare class DrawAnalyse extends Draw {
     drawflag: (canvas: any, x: number, y: number, index: number) => void;
     inRange: (value: number, min: number, max: number) => boolean;
     ctgscore: (type: AnalyseType, start: number, end: number) => void;
-    revice(x: number, y: number): void;
+    revicePoint(x: number, y: number): string;
+    getPointType(x: number, y: number): PointType;
 }

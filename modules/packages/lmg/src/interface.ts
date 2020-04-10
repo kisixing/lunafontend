@@ -7,6 +7,7 @@ export interface IProps {
     [x: string]: any
 }
 export type AnalyseType = 'Nst' | 'Krebs' | 'Fischer';
+export type PointType = 'AccPoint' | 'DecPoint' | 'other';
 
 
 export interface Drawer {

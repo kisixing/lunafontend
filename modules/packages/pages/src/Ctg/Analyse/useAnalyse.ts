@@ -22,13 +22,17 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void) 
     const analysis_ref = useRef<FormInstance>()
     const old_ref = useRef<{ [x: string]: any }>({})
 
+
+
     const mapFormToMark = {
         Fischer_ref,
         Krebs_ref,
         Nst_ref,
         analysis_ref
     }
-
+    // const checkLength = () => {
+    //     return v && v.data && v.data.length > (mark === 'Fischer' ? 30 : 20) * 240
+    // }
     const remoteAnalyse = () => {
         setAnalyseLoading(true)
         v && request.post(`/ctg-exams-analyse`, {
@@ -41,18 +45,18 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void) 
             analysis.end = endTime
             const f = score[`${mark.toLowerCase()}data`]
             const cur: MutableRefObject<FormInstance> = mapFormToMark[`${mark}_ref`]
-            cur.current.setFieldsValue(f);
+            cur.current && cur.current.setFieldsValue(f);
             old_ref.current[mark] = f
 
             const { stv, ucdata, acc, dec, fhrbaselineMinute, ...others } = analysis
-            analysis_ref.current.setFieldsValue({ stv, ...ucdata, ...others })
-            v.analyse(r)
+            analysis_ref.current && analysis_ref.current.setFieldsValue({ stv, ...ucdata, ...others })
+            v.drawAnalyse.analyse(r)
 
         }).finally(() => setAnalyseLoading(false))
     }
     const analyse = () => {
         setAnalyseLoading(true)
-        v && v.ctgscore(mark, startTime, endTime)
+        v && v.drawAnalyse.ctgscore(mark, startTime, endTime)
         setAnalyseLoading(false)
     }
 

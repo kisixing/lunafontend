@@ -28,7 +28,6 @@ export function update_status(this: WsService, received_msg: IData) {
     const { pregnancy, fetalposition, status, device_no, bed_no,
         is_include_mother, is_include_tocozero, is_include_volume, fetal_num, disableStartWork
     } = received_msg.data
-    console.log('----update_status---- \n', received_msg, device_no, bed_no)
 
     var unitId = this.getUnitId(device_no, bed_no);
 

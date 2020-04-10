@@ -473,23 +473,6 @@ var Suit = (function (_super) {
             }
         });
     };
-    Suit.prototype.reviceAnalyse = function (x, y) {
-        this.drawAnalyse.revice(x, y);
-    };
-    Object.defineProperty(Suit.prototype, "ctgscore", {
-        get: function () {
-            return this.drawAnalyse.ctgscore.bind(this.drawAnalyse);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Suit.prototype, "analyse", {
-        get: function () {
-            return this.drawAnalyse.analyse.bind(this.drawAnalyse);
-        },
-        enumerable: true,
-        configurable: true
-    });
     return Suit;
 }(Draw_1.default));
 exports.Suit = Suit;

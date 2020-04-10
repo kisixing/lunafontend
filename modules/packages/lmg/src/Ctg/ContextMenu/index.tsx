@@ -1,34 +1,42 @@
+import React, { PropsWithChildren, useRef, useState, useEffect } from 'react';
 import { Dropdown, Menu } from 'antd';
-import React, { PropsWithChildren } from 'react';
 import { Suit } from '../Suit';
-
-const menu = (
-    <Menu onClick={(e) => console.log(111, e.domEvent.target)}>
-        <Menu.Item key="1">11st menu item</Menu.Item>
-        <Menu.Item key="2">22nd menu item</Menu.Item>
-        <Menu.Item key="3">33rd menu item</Menu.Item>
-    </Menu>
-);
-
+import { PointType } from '../../interface';
+import MenuStrategies from "./MenuStrategies/index";
+import S from './S'
 export default ((props: PropsWithChildren<{ s: React.MutableRefObject<Suit> }>) => {
     const s = props.s
+
+    const [pType, setPType] = useState<PointType>()
+    const offsetX = useRef(0)
+    const offsetY = useRef(0)
+
+    useEffect(() => {
+        console.log('pType', pType)
+    }, [pType])
+
+
+
     return (
+        <>
 
-        <Dropdown overlay={menu} trigger={['contextMenu']}>
-            <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0 }} onContextMenu={e => {
-                const target = e.currentTarget
-                const { clientX, clientY } = e
+            <Dropdown overlay={<MenuStrategies pType={pType} />} trigger={['contextMenu']}>
+                <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0 }} onContextMenu={e => {
+                    const target = e.currentTarget
+                    const { clientX, clientY } = e
 
-                const { x, y } = target.getBoundingClientRect()
-                const offsetX = clientX - x
-                const offsetY = clientY - y
-                s.current.reviceAnalyse(offsetX, offsetY);
-            }}>
-                {
-                    props.children
-                }
-            </div>
-            {/* {
+                    const { x, y } = target.getBoundingClientRect()
+                    offsetX.current = clientX - x
+                    offsetY.current = clientY - y
+                    const type = s.current.drawAnalyse.getPointType(offsetX.current, offsetY.current)
+                    console.log('type',type)
+                    setPType(type)
+                }}>
+                    {
+                        props.children
+                    }
+                </div>
+                {/* {
                     React.Children.map(props.children, (_: any) => {
                         return React.cloneElement(_, {
                             onContextMenu: e => {
@@ -40,8 +48,8 @@ export default ((props: PropsWithChildren<{ s: React.MutableRefObject<Suit> }>) 
                         })
                     })
                 } */}
-        </Dropdown>
+            </Dropdown>
 
-
+        </>
     );
 })

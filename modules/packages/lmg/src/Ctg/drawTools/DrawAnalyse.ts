@@ -2,7 +2,7 @@ import Draw from "../../Draw";
 import { obvue } from "@lianmed/f_types";
 import { _ctg_exams_analyse } from "@lianmed/f_types/lib/obvue/ctg_exams_analyse";
 
-import { AnalyseType } from '../../interface';
+import { AnalyseType, PointType } from '../../interface';
 import { Suit } from "../Suit";
 
 // export interface AnalyseData {
@@ -201,14 +201,30 @@ export class DrawAnalyse extends Draw {
         this.analyse()
         console.log('ctgscore', type)
     }
-    revice(x: number, y: number) {
+    revicePoint(x: number, y: number) {
         if (!this.analysisData) return
         const edge = 20;
         const { analysis: { acc, dec } } = this.analysisData
 
         const target = acc.find(_ => (x < _.x + edge) && (x > _.x - edge)) || dec.find(_ => (x < _.x + edge) && (x > _.x - edge))
         if (target && (y < (target.y + edge) && y > (target.y - edge))) {
-            console.log(x, y, target)
+            const isAcc = 'reliability' in target
+
+            return isAcc ? '' : ''
         }
+        return null
+    }
+    getPointType(x: number, y: number): PointType {
+        if (!this.analysisData) return
+        const edge = 20;
+        const { analysis: { acc, dec } } = this.analysisData
+
+        const target = acc.find(_ => (x < _.x + edge) && (x > _.x - edge)) || dec.find(_ => (x < _.x + edge) && (x > _.x - edge))
+        if (target && (y < (target.y + edge) && y > (target.y - edge))) {
+            const isAcc = 'reliability' in target
+
+            return isAcc ? 'AccPoint' : 'DecPoint'
+        }
+        return null
     }
 }

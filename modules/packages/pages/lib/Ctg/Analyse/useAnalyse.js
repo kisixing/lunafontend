@@ -56,16 +56,16 @@ exports.default = (function (v, docid, fetal, setFhr) {
             analysis.end = endTime;
             var f = score[mark.toLowerCase() + "data"];
             var cur = mapFormToMark[mark + "_ref"];
-            cur.current.setFieldsValue(f);
+            cur.current && cur.current.setFieldsValue(f);
             old_ref.current[mark] = f;
             var stv = analysis.stv, ucdata = analysis.ucdata, acc = analysis.acc, dec = analysis.dec, fhrbaselineMinute = analysis.fhrbaselineMinute, others = __rest(analysis, ["stv", "ucdata", "acc", "dec", "fhrbaselineMinute"]);
-            analysis_ref.current.setFieldsValue(__assign(__assign({ stv: stv }, ucdata), others));
-            v.analyse(r);
+            analysis_ref.current && analysis_ref.current.setFieldsValue(__assign(__assign({ stv: stv }, ucdata), others));
+            v.drawAnalyse.analyse(r);
         }).finally(function () { return setAnalyseLoading(false); });
     };
     var analyse = function () {
         setAnalyseLoading(true);
-        v && v.ctgscore(mark, startTime, endTime);
+        v && v.drawAnalyse.ctgscore(mark, startTime, endTime);
         setAnalyseLoading(false);
     };
     react_1.useEffect(function () {
