@@ -10,7 +10,6 @@ import bindEvents from './bindEvents';
 import DrawCTG from './DrawCTG';
 import { DrawAnalyse } from './drawTools/DrawAnalyse';
 import { DrawSelect } from './drawTools/DrawSelect';
-import { obvue } from '@lianmed/f_types';
 let sid = 0;
 type Canvas = HTMLCanvasElement;
 type Context = CanvasRenderingContext2D;
@@ -118,7 +117,7 @@ export class Suit extends Draw {
     this.barTool = barTool;
     this.drawobj = new DrawCTG(this);
     this.type = type;
-    this.drawAnalyse = new DrawAnalyse(canvasanalyse)
+    this.drawAnalyse = new DrawAnalyse(canvasanalyse, this.width, this.height, this)
     this.drawSelect = new DrawSelect(canvasselect, this)
     if (this.option) {
       this.ctgconfig.tococolor = this.option.tococolor;
@@ -323,15 +322,7 @@ export class Suit extends Draw {
     );
     this.barTool.setBarLeft(this.toolbarposition, false);
   }
-  analyse(data: obvue.ctg_exams_analyse) {
-    this.drawAnalyse.setData(data)
-    this.drawSelect.$selectrpend = data.analysis.end
-    this.drawSelect.$selectrpstart = data.analysis.start
-    // this.emit('selectForward', data.end - data.start)
-    //this.drawobj.drawdot(this.canvasline.width * 2, false);
-    //kisi 2020-03-05 
-    this.drawobj.drawdot(this.rightViewPosition, false);
-  }
+
   lazyEmit = throttle((type: string, ...args: any[]) => {
     // console.log(`Suit:${type}`)
     this.emit(type, ...args);
@@ -561,6 +552,9 @@ export class Suit extends Draw {
 
   public get ctgscore(): DrawAnalyse['ctgscore'] {
     return this.drawAnalyse.ctgscore.bind(this.drawAnalyse)
+  }
+  public get analyse(): DrawAnalyse['analyse'] {
+    return this.drawAnalyse.analyse.bind(this.drawAnalyse)
   }
 
 }

@@ -19,7 +19,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Draw_1 = __importDefault(require("../../Draw"));
 var DrawAnalyse = (function (_super) {
     __extends(DrawAnalyse, _super);
-    function DrawAnalyse(canvas, width, height) {
+    function DrawAnalyse(canvas, width, height, suit) {
         if (width === void 0) { width = 0; }
         if (height === void 0) { height = 0; }
         var _this = _super.call(this, width, height, canvas) || this;
@@ -63,7 +63,9 @@ var DrawAnalyse = (function (_super) {
             if (!analysisData)
                 return;
             var analysis = analysisData.analysis, score = analysisData.score;
-            if (type == 0) {
+            analysis.start = start;
+            analysis.end = end;
+            if (type == 'Nst') {
                 score.nstdata.bhrvalue = analysis.bhr;
                 if (analysis.bhr < 100)
                     score.nstdata.bhrscore = 0;
@@ -104,7 +106,7 @@ var DrawAnalyse = (function (_super) {
                 else if (fhr_ampl > 15) {
                     score.nstdata.accamplscore = 2;
                 }
-                var fmnum = analysis.fm.length;
+                var fmnum = analysis.fm ? analysis.fm.length : 0;
                 score.nstdata.fmvalue = fmnum;
                 if (fmnum == 0) {
                     score.nstdata.fmscore = 0;
@@ -117,7 +119,10 @@ var DrawAnalyse = (function (_super) {
                 }
                 score.nstdata.totalscore = score.nstdata.accamplscore + score.nstdata.accdurationscore + score.nstdata.bhrscore + score.nstdata.fmscore + score.nstdata.ltvscore;
             }
+            _this.analyse();
+            console.log('ctgscore', type);
         };
+        _this.suit = suit;
         return _this;
     }
     DrawAnalyse.prototype.init = function () {
@@ -173,6 +178,14 @@ var DrawAnalyse = (function (_super) {
             context2D.lineTo((end - leftViewposition) / 2, (max - curfhroffset - baseline[baselineoff]) * yspan + basetop);
             context2D.stroke();
         }
+    };
+    DrawAnalyse.prototype.analyse = function (data) {
+        if (data === void 0) { data = this.analysisData; }
+        var suit = this.suit;
+        this.setData(data);
+        suit.drawSelect.$selectrpend = data.analysis.end;
+        suit.drawSelect.$selectrpstart = data.analysis.start;
+        suit.drawobj.drawdot(suit.rightViewPosition, false);
     };
     DrawAnalyse.prototype.revice = function (x, y) {
         if (!this.analysisData)

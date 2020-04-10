@@ -96,7 +96,7 @@ var Suit = (function (_super) {
         _this.barTool = barTool;
         _this.drawobj = new DrawCTG_1.default(_this);
         _this.type = type;
-        _this.drawAnalyse = new DrawAnalyse_1.DrawAnalyse(canvasanalyse);
+        _this.drawAnalyse = new DrawAnalyse_1.DrawAnalyse(canvasanalyse, _this.width, _this.height, _this);
         _this.drawSelect = new DrawSelect_1.DrawSelect(canvasselect, _this);
         if (_this.option) {
             _this.ctgconfig.tococolor = _this.option.tococolor;
@@ -282,12 +282,6 @@ var Suit = (function (_super) {
         this.toolbarposition = Math.floor(((this.canvasline.width - len) * (this.rightViewPosition - this.canvasline.width * 2)) /
             (this.data.index - this.canvasline.width * 2));
         this.barTool.setBarLeft(this.toolbarposition, false);
-    };
-    Suit.prototype.analyse = function (data) {
-        this.drawAnalyse.setData(data);
-        this.drawSelect.$selectrpend = data.analysis.end;
-        this.drawSelect.$selectrpstart = data.analysis.start;
-        this.drawobj.drawdot(this.rightViewPosition, false);
     };
     Suit.prototype.alarmOn = function (alarmType) {
         if (alarmType === void 0) { alarmType = ''; }
@@ -485,6 +479,13 @@ var Suit = (function (_super) {
     Object.defineProperty(Suit.prototype, "ctgscore", {
         get: function () {
             return this.drawAnalyse.ctgscore.bind(this.drawAnalyse);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Suit.prototype, "analyse", {
+        get: function () {
+            return this.drawAnalyse.analyse.bind(this.drawAnalyse);
         },
         enumerable: true,
         configurable: true

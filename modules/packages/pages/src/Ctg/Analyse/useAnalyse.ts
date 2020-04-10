@@ -5,14 +5,16 @@ import { _R } from "@lianmed/utils";
 import { FormInstance } from 'antd/lib/form';
 import { obvue } from "@lianmed/f_types";
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
+import { AnalyseType } from '@lianmed/lmg/lib/interface';
 import { tableData } from './methods/tableData';
 
-const MARKS = Object.keys(tableData)
+const MARKS = Object.keys(tableData) as AnalyseType[]
 export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void) => {
 
     const [mark, setMark] = useState(MARKS[0])
     const [interval, setInterval] = useState(20)
     const [startTime, setStartTime] = useState(0)
+    const [endTime, setEndTime] = useState(0)
     const [analyseLoading, setAnalyseLoading] = useState(false)
     const Fischer_ref = useRef<FormInstance>()
     const Krebs_ref = useRef<FormInstance>()
@@ -30,13 +32,13 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void) 
     const remoteAnalyse = () => {
         setAnalyseLoading(true)
         v && request.post(`/ctg-exams-analyse`, {
-            data: { docid, mark, start: startTime, end: startTime + interval * 240, fetal },
+            data: { docid, mark, start: startTime, end: endTime, fetal },
         }).then((r: obvue.ctg_exams_analyse) => {
 
 
             const { analysis, score } = r
             analysis.start = startTime
-            analysis.end = startTime + 240 * interval
+            analysis.end = endTime
             const f = score[`${mark.toLowerCase()}data`]
             const cur: MutableRefObject<FormInstance> = mapFormToMark[`${mark}_ref`]
             cur.current.setFieldsValue(f);
@@ -50,7 +52,8 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void) 
     }
     const analyse = () => {
         setAnalyseLoading(true)
-        v && v.ctgscore
+        v && v.ctgscore(mark, startTime, endTime)
+        setAnalyseLoading(false)
     }
 
     useEffect(() => {
@@ -78,7 +81,12 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void) 
     }, [fetal])
 
 
-    const setMarkAndItems = (mark: string) => {
+    useEffect(() => {
+        setEndTime(startTime + interval * 240)
+    }, [startTime, interval])
+
+
+    const setMarkAndItems = (mark: AnalyseType) => {
         setMark(mark)
     }
 
@@ -86,7 +94,7 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void) 
         setMark: setMarkAndItems, mark,
         MARKS,
         analyse,
-        startTime, endTime: startTime + 240 * interval, setStartTime, interval, setInterval,
+        startTime, endTime, setStartTime, interval, setInterval,
         Fischer_ref,
         Nst_ref,
         Krebs_ref,

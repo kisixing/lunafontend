@@ -1,20 +1,25 @@
 import Draw from "../../Draw";
 import { obvue } from "@lianmed/f_types";
-import { AccPoint, DecPoint, _ctg_exams_analyse } from "@lianmed/f_types/lib/obvue/ctg_exams_analyse";
+import { _ctg_exams_analyse } from "@lianmed/f_types/lib/obvue/ctg_exams_analyse";
 
-export interface AnalyseData {
-    acc?: AccPoint[]
-    dec?: DecPoint[]
-    baseline?: number[]
-    start?: number
-    end?: number
-}
+import { AnalyseType } from '../../interface';
+import { Suit } from "../Suit";
+
+// export interface AnalyseData {
+//     acc?: AccPoint[]
+//     dec?: DecPoint[]
+//     baseline?: number[]
+//     start?: number
+//     end?: number
+// }
 
 export class DrawAnalyse extends Draw {
     // private _analyseData: AnalyseData
     analysisData: obvue.ctg_exams_analyse
-    constructor(canvas: HTMLCanvasElement, width = 0, height = 0) {
+    suit: Suit
+    constructor(canvas: HTMLCanvasElement, width = 0, height = 0, suit: Suit) {
         super(width, height, canvas)
+        this.suit = suit
     }
     init() {
         this.analysisData = null
@@ -81,6 +86,16 @@ export class DrawAnalyse extends Draw {
 
         }
     }
+    analyse(data: obvue.ctg_exams_analyse = this.analysisData) {
+        const { suit } = this
+        this.setData(data)
+        suit.drawSelect.$selectrpend = data.analysis.end
+        suit.drawSelect.$selectrpstart = data.analysis.start
+        // this.emit('selectForward', data.end - data.start)
+        //this.drawobj.drawdot(this.canvasline.width * 2, false);
+        //kisi 2020-03-05 
+        suit.drawobj.drawdot(suit.rightViewPosition, false);
+    }
     //kisi 2019-10-28 绘制 acc dec
     //2020-03-04 用 linecanvas 绘制标记
     drawflag = (canvas, x: number, y: number, index: number) => {
@@ -119,13 +134,15 @@ export class DrawAnalyse extends Draw {
     }
     // TODO：analysis 结构最好与score结构分开
     // 评分类型最好枚举实现
-    ctgscore = (type: number, start: number, end: number) => {
+    ctgscore = (type: AnalyseType, start: number, end: number) => {
         const { analysisData } = this
         if (!analysisData) return
         const { analysis, score } = analysisData
+        analysis.start = start
+        analysis.end = end
         // let timeframe = end-start/4*60;
         //NST(国内) 20分钟
-        if (type == 0) {
+        if (type == 'Nst') {
             // 基线选项
             score.nstdata.bhrvalue = analysis.bhr;
             if (analysis.bhr < 100)
@@ -166,7 +183,7 @@ export class DrawAnalyse extends Draw {
                 score.nstdata.accamplscore = 2;
             }
             // 胎动
-            let fmnum = analysis.fm.length;
+            let fmnum = analysis.fm ? analysis.fm.length : 0;
             score.nstdata.fmvalue = fmnum;
             if (fmnum == 0) {
                 score.nstdata.fmscore = 0;
@@ -181,6 +198,8 @@ export class DrawAnalyse extends Draw {
         //Krebs 30分钟
         //Fischer 20分钟
         //NST-sogc 30分钟
+        this.analyse()
+        console.log('ctgscore', type)
     }
     revice(x: number, y: number) {
         if (!this.analysisData) return

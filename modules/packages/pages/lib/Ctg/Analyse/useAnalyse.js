@@ -33,7 +33,8 @@ exports.default = (function (v, docid, fetal, setFhr) {
     var _a = react_1.useState(MARKS[0]), mark = _a[0], setMark = _a[1];
     var _b = react_1.useState(20), interval = _b[0], setInterval = _b[1];
     var _c = react_1.useState(0), startTime = _c[0], setStartTime = _c[1];
-    var _d = react_1.useState(false), analyseLoading = _d[0], setAnalyseLoading = _d[1];
+    var _d = react_1.useState(0), endTime = _d[0], setEndTime = _d[1];
+    var _e = react_1.useState(false), analyseLoading = _e[0], setAnalyseLoading = _e[1];
     var Fischer_ref = react_1.useRef();
     var Krebs_ref = react_1.useRef();
     var Nst_ref = react_1.useRef();
@@ -48,11 +49,11 @@ exports.default = (function (v, docid, fetal, setFhr) {
     var remoteAnalyse = function () {
         setAnalyseLoading(true);
         v && request_1.default.post("/ctg-exams-analyse", {
-            data: { docid: docid, mark: mark, start: startTime, end: startTime + interval * 240, fetal: fetal },
+            data: { docid: docid, mark: mark, start: startTime, end: endTime, fetal: fetal },
         }).then(function (r) {
             var analysis = r.analysis, score = r.score;
             analysis.start = startTime;
-            analysis.end = startTime + 240 * interval;
+            analysis.end = endTime;
             var f = score[mark.toLowerCase() + "data"];
             var cur = mapFormToMark[mark + "_ref"];
             cur.current.setFieldsValue(f);
@@ -64,7 +65,8 @@ exports.default = (function (v, docid, fetal, setFhr) {
     };
     var analyse = function () {
         setAnalyseLoading(true);
-        v && v.ctgscore;
+        v && v.ctgscore(mark, startTime, endTime);
+        setAnalyseLoading(false);
     };
     react_1.useEffect(function () {
         var s = function (time) {
@@ -84,6 +86,9 @@ exports.default = (function (v, docid, fetal, setFhr) {
     react_1.useEffect(function () {
         setFhr(fetal);
     }, [fetal]);
+    react_1.useEffect(function () {
+        setEndTime(startTime + interval * 240);
+    }, [startTime, interval]);
     var setMarkAndItems = function (mark) {
         setMark(mark);
     };
@@ -91,7 +96,7 @@ exports.default = (function (v, docid, fetal, setFhr) {
         setMark: setMarkAndItems, mark: mark,
         MARKS: MARKS,
         analyse: analyse,
-        startTime: startTime, endTime: startTime + 240 * interval, setStartTime: setStartTime, interval: interval, setInterval: setInterval,
+        startTime: startTime, endTime: endTime, setStartTime: setStartTime, interval: interval, setInterval: setInterval,
         Fischer_ref: Fischer_ref,
         Nst_ref: Nst_ref,
         Krebs_ref: Krebs_ref,

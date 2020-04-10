@@ -7,6 +7,7 @@ export interface IProps {
     loading?: boolean;
     [x: string]: any;
 }
+export declare type AnalyseType = 'Nst' | 'Krebs' | 'Fischer';
 export interface Drawer {
     wrap: HTMLElement;
     resize: () => void;
