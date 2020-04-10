@@ -1,7 +1,6 @@
 import Draw from "../../Draw";
 import { } from "@lianmed/f_types";
 import { AccPoint, DecPoint,_ctg_exams_analyse } from "@lianmed/f_types/lib/obvue/ctg_exams_analyse";
-import { bool } from "prop-types";
 
 export interface AnalyseData {
     acc?: AccPoint[]
@@ -118,7 +117,7 @@ export class DrawAnalyse extends Draw {
     // TODO：analysis 结构最好与score结构分开
     // 评分类型最好枚举实现
     ctgscore = (analysis:_ctg_exams_analyse,type:number,start:number,end:number) =>{
-        let timeframe = end-start/4*60;
+        // let timeframe = end-start/4*60;
         //NST(国内) 20分钟
         if(type==0){
             // 基线选项

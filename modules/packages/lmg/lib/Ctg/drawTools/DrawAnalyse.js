@@ -34,6 +34,8 @@ var DrawAnalyse = (function (_super) {
             var txt = '';
             if (acc.indexOf(index) > -1 || acc.indexOf(index - 1) > -1) {
                 var target = analyseData.acc.find(function (_) { return [index, index - 1].includes(_.index); });
+                target.x = x;
+                target.y = y;
                 txt = "" + (target.reliability / 10 || 0).toFixed(1);
                 canvas.font = '15px arial';
                 canvas.fillStyle = 'blue';
@@ -41,10 +43,74 @@ var DrawAnalyse = (function (_super) {
             }
             else if (dec.indexOf(index) > -1 || dec.indexOf(index - 1) > -1) {
                 var target = analyseData.dec.find(function (_) { return [index, index - 1].includes(_.index); });
+                target.x = x;
+                target.y = y;
                 txt = target ? target.type : '-';
                 canvas.font = 'bold 15px arial';
                 canvas.fillStyle = 'red';
                 canvas.fillText(txt, x + 1, y - 1);
+            }
+        };
+        _this.inRange = function (value, min, max) {
+            var result = false;
+            if (value >= min && value <= max)
+                result = true;
+            return result;
+        };
+        _this.ctgscore = function (analysis, type, start, end) {
+            if (type == 0) {
+                analysis.score.nstdata.bhrvalue = analysis.analysis.bhr;
+                if (analysis.analysis.bhr < 100)
+                    analysis.score.nstdata.bhrscore = 0;
+                else if (_this.inRange(analysis.analysis.bhr, 100, 109) || analysis.analysis.bhr > 160)
+                    analysis.score.nstdata.bhrscore = 1;
+                else if (_this.inRange(analysis.analysis.bhr, 120, 160)) {
+                    analysis.score.nstdata.bhrscore = 2;
+                }
+                analysis.score.nstdata.ltvvalue = analysis.analysis.ltv;
+                if (analysis.analysis.ltv < 5) {
+                    analysis.score.nstdata.ltvscore = 0;
+                }
+                else if (_this.inRange(analysis.analysis.ltv, 5, 9) || analysis.analysis.ltv > 30) {
+                    analysis.score.nstdata.ltvscore = 1;
+                }
+                else if (_this.inRange(analysis.analysis.ltv, 10, 30)) {
+                    analysis.score.nstdata.ltvscore = 2;
+                }
+                var fhr_uptime = analysis.analysis.ltv;
+                analysis.score.nstdata.ltvvalue = fhr_uptime;
+                if (fhr_uptime < 10) {
+                    analysis.score.nstdata.ltvscore = 0;
+                }
+                else if (_this.inRange(fhr_uptime, 10, 14)) {
+                    analysis.score.nstdata.ltvscore = 1;
+                }
+                else if (fhr_uptime > 15) {
+                    analysis.score.nstdata.ltvscore = 2;
+                }
+                var fhr_ampl = 10;
+                analysis.score.nstdata.accamplvalue = fhr_ampl;
+                if (fhr_ampl < 10) {
+                    analysis.score.nstdata.accamplscore = 0;
+                }
+                else if (_this.inRange(fhr_ampl, 10, 14)) {
+                    analysis.score.nstdata.accamplscore = 1;
+                }
+                else if (fhr_ampl > 15) {
+                    analysis.score.nstdata.accamplscore = 2;
+                }
+                var fmnum = analysis.analysis.fm.length;
+                analysis.score.nstdata.fmvalue = fmnum;
+                if (fmnum == 0) {
+                    analysis.score.nstdata.fmscore = 0;
+                }
+                else if (_this.inRange(fmnum, 1, 2)) {
+                    analysis.score.nstdata.fmscore = 1;
+                }
+                else if (fmnum > 2) {
+                    analysis.score.nstdata.fmscore = 2;
+                }
+                analysis.score.nstdata.totalscore = analysis.score.nstdata.accamplscore + analysis.score.nstdata.accdurationscore + analysis.score.nstdata.bhrscore + analysis.score.nstdata.fmscore + analysis.score.nstdata.ltvscore;
             }
         };
         return _this;
@@ -100,6 +166,16 @@ var DrawAnalyse = (function (_super) {
             }
             context2D.lineTo((analyseData.end - leftViewposition) / 2, (max - curfhroffset - analyseData.baseline[baselineoff]) * yspan + basetop);
             context2D.stroke();
+        }
+    };
+    DrawAnalyse.prototype.revice = function (x, y) {
+        if (!this.analyseData)
+            return;
+        var edge = 20;
+        var _a = this.analyseData, acc = _a.acc, dec = _a.dec;
+        var target = acc.find(function (_) { return (x < _.x + edge) && (x > _.x - edge); }) || dec.find(function (_) { return (x < _.x + edge) && (x > _.x - edge); });
+        if (target && (y < (target.y + edge) && y > (target.y - edge))) {
+            console.log(x, y, target);
         }
     };
     return DrawAnalyse;

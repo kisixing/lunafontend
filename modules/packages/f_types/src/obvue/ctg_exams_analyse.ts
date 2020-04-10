@@ -1,19 +1,20 @@
-export interface AccPoint {
+interface BasePoint {
     index: number;
     start: number;
     end: number;
     peak: number;
     duration: number;
     ampl: number;
+    // local recording
+    x: number
+    y: number
+}
+export interface AccPoint extends BasePoint {
+
     reliability: number
 }
-export interface DecPoint {
-    index: number;
-    start: number;
-    end: number;
-    peak: number;
-    duration: number;
-    ampl: number;
+export interface DecPoint extends BasePoint {
+
     type: string
 }
 export interface _ctg_exams_analyse {
@@ -27,7 +28,7 @@ export interface _ctg_exams_analyse {
         vdtimes: number
         acc: AccPoint[]
         dec: DecPoint[]
-        fm: null,
+        fm: number[],
         fhrbaselineMinute: number[],
         ucdata: {
             ucIndex: number[],
