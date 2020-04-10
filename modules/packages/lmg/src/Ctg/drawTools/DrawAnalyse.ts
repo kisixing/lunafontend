@@ -1,6 +1,6 @@
 import Draw from "../../Draw";
 import { } from "@lianmed/f_types";
-import { AccPoint, DecPoint,_ctg_exams_analyse } from "@lianmed/f_types/lib/obvue/ctg_exams_analyse";
+import { AccPoint, DecPoint, _ctg_exams_analyse } from "@lianmed/f_types/lib/obvue/ctg_exams_analyse";
 
 export interface AnalyseData {
     acc?: AccPoint[]
@@ -108,26 +108,26 @@ export class DrawAnalyse extends Draw {
         }
     }
     // kisi 2020-04-08 增加本地分数统计
-    inRange = (value:number, min:number, max:number) =>{
-		let result = false;
-		if (value >= min && value <= max)
-			result = true;
-		return result;
-	}
+    inRange = (value: number, min: number, max: number) => {
+        let result = false;
+        if (value >= min && value <= max)
+            result = true;
+        return result;
+    }
     // TODO：analysis 结构最好与score结构分开
     // 评分类型最好枚举实现
-    ctgscore = (analysis:_ctg_exams_analyse,type:number,start:number,end:number) =>{
+    ctgscore = (analysis: _ctg_exams_analyse, type: number, start: number, end: number) => {
         // let timeframe = end-start/4*60;
         //NST(国内) 20分钟
-        if(type==0){
+        if (type == 0) {
             // 基线选项
-            analysis.score.nstdata.bhrvalue= analysis.analysis.bhr;
-            if(analysis.analysis.bhr<100)
-                analysis.score.nstdata.bhrscore= 0;
-            else if(this.inRange(analysis.analysis.bhr, 100, 109) || analysis.analysis.bhr > 160)
-                analysis.score.nstdata.bhrscore= 1;
-            else if(this.inRange(analysis.analysis.bhr, 120, 160)){
-                analysis.score.nstdata.bhrscore= 2;		
+            analysis.score.nstdata.bhrvalue = analysis.analysis.bhr;
+            if (analysis.analysis.bhr < 100)
+                analysis.score.nstdata.bhrscore = 0;
+            else if (this.inRange(analysis.analysis.bhr, 100, 109) || analysis.analysis.bhr > 160)
+                analysis.score.nstdata.bhrscore = 1;
+            else if (this.inRange(analysis.analysis.bhr, 120, 160)) {
+                analysis.score.nstdata.bhrscore = 2;
             }
             // 振幅
             analysis.score.nstdata.ltvvalue = analysis.analysis.ltv;
@@ -141,7 +141,7 @@ export class DrawAnalyse extends Draw {
 
             let fhr_uptime = analysis.analysis.ltv;
             // 胎动fhr上升时间
-            analysis.score.nstdata.ltvvalue =fhr_uptime;
+            analysis.score.nstdata.ltvvalue = fhr_uptime;
             if (fhr_uptime < 10) {
                 analysis.score.nstdata.ltvscore = 0;
             } else if (this.inRange(fhr_uptime, 10, 14)) {
@@ -162,14 +162,14 @@ export class DrawAnalyse extends Draw {
             // 胎动
             let fmnum = analysis.analysis.fm.length;
             analysis.score.nstdata.fmvalue = fmnum;
-            if (fmnum==0) {
+            if (fmnum == 0) {
                 analysis.score.nstdata.fmscore = 0;
             } else if (this.inRange(fmnum, 1, 2)) {
                 analysis.score.nstdata.fmscore = 1;
-            } else if(fmnum>2){
+            } else if (fmnum > 2) {
                 analysis.score.nstdata.fmscore = 2;
             }
-            analysis.score.nstdata.totalscore = analysis.score.nstdata.accamplscore+analysis.score.nstdata.accdurationscore+analysis.score.nstdata.bhrscore+analysis.score.nstdata.fmscore+analysis.score.nstdata.ltvscore;           
+            analysis.score.nstdata.totalscore = analysis.score.nstdata.accamplscore + analysis.score.nstdata.accdurationscore + analysis.score.nstdata.bhrscore + analysis.score.nstdata.fmscore + analysis.score.nstdata.ltvscore;
         }
         //CST
         //Krebs 30分钟
@@ -178,7 +178,7 @@ export class DrawAnalyse extends Draw {
     }
     revice(x: number, y: number) {
         if (!this.analyseData) return
-        const edge = 20; 
+        const edge = 20;
         const { acc, dec } = this.analyseData
 
         const target = acc.find(_ => (x < _.x + edge) && (x > _.x - edge)) || dec.find(_ => (x < _.x + edge) && (x > _.x - edge))

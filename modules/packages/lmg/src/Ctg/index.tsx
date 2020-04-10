@@ -74,12 +74,7 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
   })
   const canvasStyles: React.CSSProperties = { position: 'absolute' }
   return (
-    <div style={{ width: '100%', height: '100%' }} ref={box} {...others} onContextMenu={e => {
-      // e.preventDefault()
-      // e.stopPropagation()
-      console.log('menu', e)
-      // return false
-    }}
+    <div style={{ width: '100%', height: '100%' }} ref={box} {...others}
       onMouseDownCapture={e => {
         const x = e.nativeEvent.offsetX
         const y = e.nativeEvent.offsetY
@@ -118,8 +113,9 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
         )
       }
 
-      <ContextMenu rightClickXy={rightClickXy}>
+      <ContextMenu s={ctg}>
         <ScrollBar box={box} getBarTool={tool => { barTool.current = tool }} />
+
       </ContextMenu>
 
 
