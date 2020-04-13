@@ -7,6 +7,7 @@ interface BasePoint {
     ampl: number;
     x: number;
     y: number;
+    marked: boolean;
 }
 export interface AccPoint extends BasePoint {
     reliability: number;

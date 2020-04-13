@@ -10,6 +10,7 @@ import bindEvents from './bindEvents';
 import DrawCTG from './DrawCTG';
 import { DrawAnalyse } from './drawTools/DrawAnalyse';
 import { DrawSelect } from './drawTools/DrawSelect';
+import { PointType } from '../interface';
 let sid = 0;
 type Canvas = HTMLCanvasElement;
 type Context = CanvasRenderingContext2D;
@@ -547,7 +548,22 @@ export class Suit extends Draw {
     });
   }
 
+  getPointType(x: number, y: number): PointType {
+    const { analysisData } = this.drawAnalyse
+    if (analysisData) {
+      const edge = 20;
+      const { analysis: { acc, dec } } = analysisData
 
+      const target = acc.find(_ => (x < _.x + edge) && (x > _.x - edge)) || dec.find(_ => (x < _.x + edge) && (x > _.x - edge))
+      if (target && (y < (target.y + edge) && y > (target.y - edge))) {
+        const isAcc = 'reliability' in target
+
+        return isAcc ? 'AccPoint' : 'DecPoint'
+      }
+    }
+
+    return null
+  }
   // public get reviceAnalyse(): DrawAnalyse['revicePoint'] {
   //   return this.drawAnalyse.revicePoint.bind(this.drawAnalyse)
   // }

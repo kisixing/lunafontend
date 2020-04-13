@@ -39,7 +39,7 @@ var DrawAnalyse = (function (_super) {
                 target.y = y;
                 txt = "" + (target.reliability / 10 || 0).toFixed(1);
                 canvas.font = '15px arial';
-                canvas.fillStyle = 'blue';
+                canvas.fillStyle = target.marked ? 'red' : 'blue';
                 canvas.fillText(txt, x + 1, y + 10);
             }
             else if (_dec.indexOf(index) > -1 || _dec.indexOf(index - 1) > -1) {
@@ -199,17 +199,20 @@ var DrawAnalyse = (function (_super) {
         }
         return null;
     };
-    DrawAnalyse.prototype.getPointType = function (x, y) {
+    DrawAnalyse.prototype.refresh = function () {
+        this.suit.drawobj.drawdot(this.suit.viewposition < this.width * 2 ? this.width * 2 : this.suit.viewposition);
+    };
+    DrawAnalyse.prototype.markAccPoint = function (x, y, marked) {
+        if (marked === void 0) { marked = true; }
         if (!this.analysisData)
             return;
         var edge = 20;
-        var _a = this.analysisData.analysis, acc = _a.acc, dec = _a.dec;
-        var target = acc.find(function (_) { return (x < _.x + edge) && (x > _.x - edge); }) || dec.find(function (_) { return (x < _.x + edge) && (x > _.x - edge); });
+        var acc = this.analysisData.analysis.acc;
+        var target = acc.find(function (_) { return (x < _.x + edge) && (x > _.x - edge); });
         if (target && (y < (target.y + edge) && y > (target.y - edge))) {
-            var isAcc = 'reliability' in target;
-            return isAcc ? 'AccPoint' : 'DecPoint';
+            target.marked = marked;
         }
-        return null;
+        this.refresh();
     };
     return DrawAnalyse;
 }(Draw_1.default));

@@ -3,7 +3,6 @@ import { Dropdown, Menu } from 'antd';
 import { Suit } from '../Suit';
 import { PointType } from '../../interface';
 import MenuStrategies from "./MenuStrategies/index";
-import S from './S'
 export default ((props: PropsWithChildren<{ s: React.MutableRefObject<Suit> }>) => {
     const s = props.s
 
@@ -20,7 +19,7 @@ export default ((props: PropsWithChildren<{ s: React.MutableRefObject<Suit> }>) 
     return (
         <>
 
-            <Dropdown overlay={<MenuStrategies pType={pType} />} trigger={['contextMenu']}>
+            <Dropdown overlay={MenuStrategies({ pType, s, offsetX, offsetY })} trigger={['contextMenu']}>
                 <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0 }} onContextMenu={e => {
                     const target = e.currentTarget
                     const { clientX, clientY } = e
@@ -28,8 +27,7 @@ export default ((props: PropsWithChildren<{ s: React.MutableRefObject<Suit> }>) 
                     const { x, y } = target.getBoundingClientRect()
                     offsetX.current = clientX - x
                     offsetY.current = clientY - y
-                    const type = s.current.drawAnalyse.getPointType(offsetX.current, offsetY.current)
-                    console.log('type',type)
+                    const type = s.current.getPointType(offsetX.current, offsetY.current)
                     setPType(type)
                 }}>
                     {

@@ -8,6 +8,7 @@ interface BasePoint {
     // local recording
     x: number
     y: number
+    marked: boolean
 }
 export interface AccPoint extends BasePoint {
 

@@ -1,7 +1,11 @@
-import React from 'react';
+import { MutableRefObject } from 'react';
 import { PointType } from 'packages/lmg/src/interface';
-interface IProps {
+import { Suit } from '../../Suit';
+export interface IMenuProps {
     pType: PointType;
+    s: MutableRefObject<Suit>;
+    offsetX: MutableRefObject<number>;
+    offsetY: MutableRefObject<number>;
 }
-declare const _default: React.MemoExoticComponent<(props: IProps) => JSX.Element>;
+declare const _default: (props: IMenuProps) => any;
 export default _default;

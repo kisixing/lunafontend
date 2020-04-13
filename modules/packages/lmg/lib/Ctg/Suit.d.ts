@@ -7,6 +7,7 @@ import { ICacheItem } from '../services/WsService';
 import DrawCTG from './DrawCTG';
 import { DrawAnalyse } from './drawTools/DrawAnalyse';
 import { DrawSelect } from './drawTools/DrawSelect';
+import { PointType } from '../interface';
 declare type Canvas = HTMLCanvasElement;
 declare type Context = CanvasRenderingContext2D;
 export declare class Suit extends Draw {
@@ -107,5 +108,6 @@ export declare class Suit extends Draw {
     onStatusChange(status: boolean): boolean | void;
     getoffline(doc_id: string, offlineend: number): void;
     initfhrdata(data: any, datacache: any, offindex: any): void;
+    getPointType(x: number, y: number): PointType;
 }
 export {};

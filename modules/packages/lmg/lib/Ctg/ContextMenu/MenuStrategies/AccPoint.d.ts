@@ -1,5 +1,4 @@
-import React from 'react';
-declare const _default: (props: {
-    children?: React.ReactNode;
-}) => JSX.Element;
+/// <reference types="react" />
+import { IMenuProps } from ".";
+declare const _default: (props: IMenuProps) => JSX.Element;
 export default _default;

@@ -22,15 +22,14 @@ exports.default = (function (props) {
         console.log('pType', pType);
     }, [pType]);
     return (react_1.default.createElement(react_1.default.Fragment, null,
-        react_1.default.createElement(antd_1.Dropdown, { overlay: react_1.default.createElement(index_1.default, { pType: pType }), trigger: ['contextMenu'] },
+        react_1.default.createElement(antd_1.Dropdown, { overlay: index_1.default({ pType: pType, s: s, offsetX: offsetX, offsetY: offsetY }), trigger: ['contextMenu'] },
             react_1.default.createElement("div", { style: { width: '100%', height: '100%', position: 'absolute', top: 0 }, onContextMenu: function (e) {
                     var target = e.currentTarget;
                     var clientX = e.clientX, clientY = e.clientY;
                     var _a = target.getBoundingClientRect(), x = _a.x, y = _a.y;
                     offsetX.current = clientX - x;
                     offsetY.current = clientY - y;
-                    var type = s.current.drawAnalyse.getPointType(offsetX.current, offsetY.current);
-                    console.log('type', type);
+                    var type = s.current.getPointType(offsetX.current, offsetY.current);
                     setPType(type);
                 } }, props.children))));
 });

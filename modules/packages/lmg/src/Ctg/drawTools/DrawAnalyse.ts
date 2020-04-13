@@ -113,7 +113,7 @@ export class DrawAnalyse extends Draw {
             target.y = y
             txt = `${(target.reliability / 10 || 0).toFixed(1)}`;
             canvas.font = '15px arial';
-            canvas.fillStyle = 'blue';
+            canvas.fillStyle = target.marked ? 'red' : 'blue';
             canvas.fillText(txt, x + 1, y + 10);
         } else if (_dec.indexOf(index) > -1 || _dec.indexOf(index - 1) > -1) {
             const target = dec.find(_ => [index, index - 1].includes(_.index))
@@ -214,17 +214,31 @@ export class DrawAnalyse extends Draw {
         }
         return null
     }
-    getPointType(x: number, y: number): PointType {
+    refresh(){
+        this.suit.drawobj.drawdot(this.suit.viewposition < this.width * 2 ? this.width * 2 : this.suit.viewposition);
+    }
+    markAccPoint(x: number, y: number, marked = true) {
         if (!this.analysisData) return
         const edge = 20;
-        const { analysis: { acc, dec } } = this.analysisData
+        const { analysis: { acc } } = this.analysisData
 
-        const target = acc.find(_ => (x < _.x + edge) && (x > _.x - edge)) || dec.find(_ => (x < _.x + edge) && (x > _.x - edge))
+        const target = acc.find(_ => (x < _.x + edge) && (x > _.x - edge))
         if (target && (y < (target.y + edge) && y > (target.y - edge))) {
-            const isAcc = 'reliability' in target
-
-            return isAcc ? 'AccPoint' : 'DecPoint'
+            target.marked = marked
         }
-        return null
+        this.refresh()
     }
+    // getPointType(x: number, y: number): PointType {
+    //     if (!this.analysisData) return
+    //     const edge = 20;
+    //     const { analysis: { acc, dec } } = this.analysisData
+
+    //     const target = acc.find(_ => (x < _.x + edge) && (x > _.x - edge)) || dec.find(_ => (x < _.x + edge) && (x > _.x - edge))
+    //     if (target && (y < (target.y + edge) && y > (target.y - edge))) {
+    //         const isAcc = 'reliability' in target
+
+    //         return isAcc ? 'AccPoint' : 'DecPoint'
+    //     }
+    //     return null
+    // }
 }
