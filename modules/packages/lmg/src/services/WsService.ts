@@ -94,11 +94,9 @@ export class WsService extends EventEmitter {
     refresh(name = 'default') {
 
         if (this.refreshTimeout) {
-            this.log(name, 'explode', 'discarded')
             return
         }
         this.refreshTimeout = setTimeout(() => {
-            this.log(name, 'explode')
             this.emit('explode', new Map(this.datacache))
             this.refreshTimeout = null
         }, this.refreshInterval);
@@ -135,7 +133,7 @@ export class WsService extends EventEmitter {
     }
 
     tip = (text: string, status: EWsStatus) => {
-        this.log(text, status);
+        console.log(text, status);
 
     }
     setTocozero(device_no: number, bed_no: number) {
@@ -296,7 +294,7 @@ export class WsService extends EventEmitter {
         return new Promise(res => {
             this.connectResolve = res
             socket.onerror = () => {
-                this.log('错误')
+                console.log('错误')
             };
 
             socket.onopen = (event) => {

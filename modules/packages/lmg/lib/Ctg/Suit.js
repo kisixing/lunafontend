@@ -40,7 +40,7 @@ var Suit = (function (_super) {
         _this.option = Suit.option;
         _this.initFlag = false;
         _this.sid = sid++;
-        _this.log = console.log.bind(console, 'suit', _this.sid);
+        _this.log = (console && console.log) ? console.log.bind(console, 'suit', _this.sid) : function () { };
         _this.intervalIds = [];
         _this.starttime = '2019-09-26';
         _this.fetalcount = 1;
@@ -138,7 +138,6 @@ var Suit = (function (_super) {
     });
     Suit.prototype.init = function (data) {
         var _this = this;
-        this.log('init', this);
         this.drawAnalyse.init();
         this.drawSelect.init();
         if (!data) {
@@ -291,7 +290,6 @@ var Suit = (function (_super) {
         this.lazyEmit('alarmOff', alarmType);
     };
     Suit.prototype.destroy = function () {
-        this.log('destroy');
         this.intervalIds.forEach(function (_) { return clearInterval(_); });
         this.canvasgrid = null;
         this.canvasdata = null;

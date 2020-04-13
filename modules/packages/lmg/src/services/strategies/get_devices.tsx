@@ -13,7 +13,6 @@ interface IData {
 }
 
 export function get_devices(this: WsService, received_msg: IData) {
-    // this.log('get_devices', received_msg.data);
     // var devlist = received_msg.data;
     // for (var i in devlist) {
     //     var devdata = devlist[i];

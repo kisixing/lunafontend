@@ -23,11 +23,9 @@ export function start_work(this: WsService, received_msg: IData) {
     //TODO : 更新设备状态
     cleardata(datacache, unitId, devdata.fetal_num);
     this.convertdocid(unitId, devdata.doc_id)
-    this.log('start_work', devdata, devdata.is_working);
     const target = datacache.get(unitId);
     if (typeof (devdata.ismulti) != 'undefined') {
         target.ismulti = devdata.ismulti;
-        this.log('start_work_ismulit', devdata, devdata.ismulti);
     }
     if (devdata.is_working == 0) {
         target.status = Working

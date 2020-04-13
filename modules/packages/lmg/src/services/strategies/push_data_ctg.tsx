@@ -20,7 +20,6 @@ export function push_data_ctg(this: WsService, received_msg: IData) {
 
     //TODO 解析应用层数据包
     var data = received_msg.data;
-    //console.this.log(ctgdata);
     var id = received_msg.device_no;
     var bi = received_msg.bed_no;
     var cachbi = id + '-' + bi;
@@ -73,7 +72,6 @@ export function push_data_ctg(this: WsService, received_msg: IData) {
             target.start = data[key].index;
             target.past = data[key].index - 4800 > 0 ? data[key].index - 4800 : 0;
             // if (tmpcache.past > 0) {
-            //     this.log(datacache.get(cachbi).docid, tmpcache.past);
             //     this.offQueue.EnQueue({"docid":datacache.get(cachbi).docid,"length":tmpcache.past})
             //     //this.getoffline(datacache.get(cachbi).docid, tmpcache.past);
             //     if(!this.offstart){

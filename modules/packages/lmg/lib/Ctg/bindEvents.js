@@ -51,7 +51,6 @@ function default_1() {
         .on('selectBackward', function () {
         _this.drawSelect.selectBasedOnStartingBar();
     });
-    this.log(this);
 }
 exports.default = default_1;
 //# sourceMappingURL=bindEvents.js.map

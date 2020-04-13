@@ -25,7 +25,7 @@ export class Suit extends Draw {
   option = Suit.option;
   initFlag = false;
   sid = sid++;
-  log = console.log.bind(console, 'suit', this.sid);
+  log = (console && console.log) ? console.log.bind(console, 'suit', this.sid) : () => { };
 
   intervalIds: NodeJS.Timeout[] = [];
   data: ICacheItem;
@@ -138,13 +138,11 @@ export class Suit extends Draw {
   }
 
   init(data: ICacheItem) {
-    this.log('init', this)
     this.drawAnalyse.init()
     this.drawSelect.init()
     if (!data) {
       return;
     }
-    // this.log('init', data)
     this.initFlag = true;
     let defaultinterval = 500;
     this.data = data;
@@ -340,7 +338,6 @@ export class Suit extends Draw {
 
 
   destroy() {
-    this.log('destroy')
     this.intervalIds.forEach(_ => clearInterval(_));
     this.canvasgrid = null;
     this.canvasdata = null;
@@ -355,7 +352,6 @@ export class Suit extends Draw {
     this.barTool = null;
   }
   _resize() {
-    // this.log('resize');
     const { width, height } = this.wrap.getBoundingClientRect()
 
     Object.values(this).forEach(_ => _ && _.resize && _.resize(width, height))

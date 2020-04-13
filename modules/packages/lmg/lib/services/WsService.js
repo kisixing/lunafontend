@@ -62,7 +62,7 @@ var WsService = (function (_super) {
         _this_1.refreshInterval = 2000;
         _this_1.refreshTimeout = null;
         _this_1.tip = function (text, status) {
-            _this_1.log(text, status);
+            console.log(text, status);
         };
         _this_1.connect = function () {
             var _a = _this_1, datacache = _a.datacache, settingData = _a.settingData;
@@ -75,7 +75,7 @@ var WsService = (function (_super) {
             return new Promise(function (res) {
                 _this_1.connectResolve = res;
                 socket.onerror = function () {
-                    _this_1.log('错误');
+                    console.log('错误');
                 };
                 socket.onopen = function (event) {
                     _this_1.offrequest = 0;
@@ -154,11 +154,9 @@ var WsService = (function (_super) {
         var _this_1 = this;
         if (name === void 0) { name = 'default'; }
         if (this.refreshTimeout) {
-            this.log(name, 'explode', 'discarded');
             return;
         }
         this.refreshTimeout = setTimeout(function () {
-            _this_1.log(name, 'explode');
             _this_1.emit('explode', new Map(_this_1.datacache));
             _this_1.refreshTimeout = null;
         }, this.refreshInterval);

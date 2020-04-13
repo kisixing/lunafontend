@@ -36,7 +36,6 @@ export default function (this: Suit) {
             }
         })
         .on('customizing', value => {
-            // this.log('customizing', value, this.selectrpend, this.rightViewPosition);
             if (value && this.drawSelect.selectflag) {
                 this.drawSelect.selectend = 1;
                 if (this.data.index < this.canvasline.width * 2) {
@@ -54,11 +53,9 @@ export default function (this: Suit) {
             }
         })
         .on('setStartingTime', value => {
-            // this.log('setStartingTime', value);
 
         })
         .on('setEndingTime', value => {
-            // this.log('setEndingTime', value);
 
         })
         .on('showLine', () => {
@@ -74,5 +71,4 @@ export default function (this: Suit) {
         .on('selectBackward', () => {
             this.drawSelect.selectBasedOnStartingBar()
         })
-    this.log(this)
 }

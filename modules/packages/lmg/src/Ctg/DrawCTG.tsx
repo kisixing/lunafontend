@@ -149,7 +149,6 @@ export default class DrawCTG {
   }
   drawdot(cur, isemit = false) {
     cur = Math.round(cur)
-    this.suit.log('drawdot: cur is', cur,this.suit.width*2,this)
 
     const { suit, linecontext, max } = this;
     const { drawAnalyse } = suit
