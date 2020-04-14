@@ -61,13 +61,9 @@ var WsService = (function (_super) {
         _this_1.t = +new Date();
         _this_1.refreshInterval = 2000;
         _this_1.refreshTimeout = null;
-        _this_1.tip = function (text, status) {
-            console.log(text, status);
-        };
         _this_1.connect = function () {
             var _a = _this_1, datacache = _a.datacache, settingData = _a.settingData;
             var ws_url = settingData.ws_url;
-            _this_1.tip('pong 连接中', types_1.EWsStatus.Pendding);
             if (!ws_url)
                 return Promise.reject('错误的ws_url');
             _this_1.socket = new WebSocket("ws://" + ws_url + "/?clientType=ctg-suit&token=eyJ1c2VybmFtZSI6ICJhZG1pbiIsInBhc3N3b3JkIjogImFkbWluIn0=");

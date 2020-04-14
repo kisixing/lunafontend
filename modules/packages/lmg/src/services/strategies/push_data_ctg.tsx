@@ -1,4 +1,5 @@
 import { WsService } from "../WsService";
+import { ICacheItem } from "../types";
 
 interface ICtgData {
     fhr: number
@@ -13,6 +14,19 @@ interface IData {
     data: ICtgData[]
     device_no: number
     name: "push_data_ctg"
+}
+export const LIMIT_LENGTH = 4 * 60 * 60 * 1.5
+export function pushData(target: ICacheItem, data: ICtgData) {
+    for (let fetal = 0; fetal < target.fetal_num; fetal++) {
+        if (!target.fhr[fetal]) {
+            continue;
+        }
+        const fhrKey = `fhr${fetal > 0 ? fetal + 1 : ''}`
+        if (data[fhrKey] == 0) continue;
+        if (target.fhr[fetal]) target.fhr[fetal][data.index] = data[fhrKey];
+    }
+    target.toco[data.index] = data.toco;
+    target.fm[data.index] = data.fm;
 }
 
 export function push_data_ctg(this: WsService, received_msg: IData) {

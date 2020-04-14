@@ -1,9 +1,8 @@
-import Draw from "../../Draw";
 import { obvue } from "@lianmed/f_types";
-import { _ctg_exams_analyse } from "@lianmed/f_types/lib/obvue/ctg_exams_analyse";
-
-import { AnalyseType, PointType } from '../../interface';
+import Draw from "../../Draw";
+import { AnalyseType } from '../../interface';
 import { Suit } from "../Suit";
+
 
 // export interface AnalyseData {
 //     acc?: AccPoint[]

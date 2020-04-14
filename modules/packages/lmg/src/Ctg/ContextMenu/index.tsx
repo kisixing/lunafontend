@@ -1,7 +1,7 @@
-import React, { PropsWithChildren, useRef, useState, useEffect } from 'react';
-import { Dropdown, Menu } from 'antd';
-import { Suit } from '../Suit';
+import { Dropdown } from 'antd';
+import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { PointType } from '../../interface';
+import { Suit } from '../Suit';
 import MenuStrategies from "./MenuStrategies/index";
 export default ((props: PropsWithChildren<{ s: React.MutableRefObject<Suit> }>) => {
     const s = props.s

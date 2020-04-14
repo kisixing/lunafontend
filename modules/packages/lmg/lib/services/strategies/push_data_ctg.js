@@ -1,5 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.LIMIT_LENGTH = 4 * 60 * 60 * 1.5;
+function pushData(target, data) {
+    for (var fetal = 0; fetal < target.fetal_num; fetal++) {
+        if (!target.fhr[fetal]) {
+            continue;
+        }
+        var fhrKey = "fhr" + (fetal > 0 ? fetal + 1 : '');
+        if (data[fhrKey] == 0)
+            continue;
+        if (target.fhr[fetal])
+            target.fhr[fetal][data.index] = data[fhrKey];
+    }
+    target.toco[data.index] = data.toco;
+    target.fm[data.index] = data.fm;
+}
+exports.pushData = pushData;
 function push_data_ctg(received_msg) {
     var datacache = this.datacache;
     var data = received_msg.data;

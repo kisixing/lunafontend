@@ -1,5 +1,5 @@
-import Draw from "../../Draw";
 import { obvue } from "@lianmed/f_types";
+import Draw from "../../Draw";
 import { AnalyseType } from '../../interface';
 import { Suit } from "../Suit";
 export declare class DrawAnalyse extends Draw {

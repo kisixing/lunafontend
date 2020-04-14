@@ -10,8 +10,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var react_1 = __importStar(require("react"));
 var antd_1 = require("antd");
+var react_1 = __importStar(require("react"));
 var index_1 = __importDefault(require("./MenuStrategies/index"));
 exports.default = (function (props) {
     var s = props.s;

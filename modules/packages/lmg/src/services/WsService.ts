@@ -132,10 +132,7 @@ export class WsService extends EventEmitter {
         event.emit(`WsService:${name}`, ...value)
     }
 
-    tip = (text: string, status: EWsStatus) => {
-        console.log(text, status);
 
-    }
     setTocozero(device_no: number, bed_no: number) {
         const msg = JSON.stringify({
             name: "toco_zero",
@@ -283,7 +280,6 @@ export class WsService extends EventEmitter {
     connect = (): Promise<ICache> => {
         const { datacache, settingData } = this
         const { ws_url } = settingData
-        this.tip('pong 连接中', EWsStatus.Pendding)
         if (!ws_url) return Promise.reject('错误的ws_url')
         this.socket = new WebSocket(
 
@@ -308,7 +304,6 @@ export class WsService extends EventEmitter {
                 // }))
             };
             socket.onclose = (event) => {
-                // this.tip('关闭', EWsStatus.Error)
                 setTimeout(() => {
                     this.dirty = true
                     this.connect()
