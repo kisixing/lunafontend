@@ -42,34 +42,34 @@ export interface ICacheItemPregnancy {
 export interface ICacheItem {
     volumeData?: IVolumeData
     deviceType?: TDeviceType
-    is_include_volume: boolean
-    is_include_tocozero: boolean
-    disableStartWork: boolean
+    is_include_volume?: boolean
+    is_include_tocozero?: boolean
+    disableStartWork?: boolean
     analyse?: any;
-    fhr: number[][];
-    toco: number[];
-    fm: number[];
-    index: number;
-    length: number;
-    start: number;
-    last: number;
-    past: number;
-    timestamp: number;
-    docid: string;
-    pregnancy: ICacheItemPregnancy;
-    fetalposition: {
-        fhr1: '',
-        fhr2: '',
-        fhr3: ''
+    fhr?: Uint8Array[];
+    toco?: Uint8Array;
+    fm?: Uint8Array;
+    index?: number;
+    length?: number;
+    start?: number;
+    last?: number;
+    past?: number;
+    timestamp?: number;
+    docid?: string;
+    pregnancy?: ICacheItemPregnancy;
+    fetalposition?: {
+        fhr1: string,
+        fhr2: string,
+        fhr3: string
     };
-    status: BedStatus;
-    orflag: boolean;
-    starttime: string;
-    fetal_num: number;
-    csspan: number;
-    ecg: Queue;
-    ecgdata: any[];
-    ismulti: boolean;
+    status?: BedStatus;
+    orflag?: boolean;
+    starttime?: string;
+    fetal_num?: number;
+    csspan?: number;
+    ecg?: Queue;
+    ecgdata?: any;
+    ismulti?: boolean;
 }
 export type ICache = Map<string, ICacheItem> & { clean?: (key: string) => void }
 export interface IDevice {

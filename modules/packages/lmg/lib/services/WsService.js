@@ -26,16 +26,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var utils_1 = require("@lianmed/utils");
 var request_1 = __importDefault(require("@lianmed/request"));
-var Queue_1 = __importDefault(require("../Ecg/Queue"));
+var utils_1 = require("@lianmed/utils");
 var lodash_1 = require("lodash");
+var Queue_1 = __importDefault(require("../Ecg/Queue"));
+var strategies_1 = require("./strategies");
 var types_1 = require("./types");
 var utils_2 = require("./utils");
 __export(require("./types"));
-__export(require("./utils"));
 __export(require("./useCheckNetwork"));
-var strategies_1 = require("./strategies");
+__export(require("./utils"));
 var ANNOUNCE_INTERVAL = 1000;
 var SECOND = 1000;
 var Working = types_1.BedStatus.Working, Stopped = types_1.BedStatus.Stopped, OfflineStopped = types_1.BedStatus.OfflineStopped;
@@ -117,7 +117,6 @@ var WsService = (function (_super) {
         }
         WsService._this = _this_1;
         _this_1.settingData = settingData;
-        setInterval(_this_1.checkLength.bind(_this_1), 10000);
         return _this_1;
     }
     WsService.prototype.getUnitId = function (device_no, bed_no) {

@@ -12,6 +12,8 @@ export default (data: any, box: any, onReady: () => Drawer, onResize?: () => voi
     useEffect(() => {
         let instance = suit.current = onReady()
         let resizeObserver = new ResizeObserver(() => {
+  console.log('suit render resize');
+
             onResize && onResize()
             instance.resize()
             window.hasOwnProperty('ResizeObserver') || setTimeout(instance.resize.bind(instance), 300)

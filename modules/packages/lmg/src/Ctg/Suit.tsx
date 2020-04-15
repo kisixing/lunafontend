@@ -380,6 +380,7 @@ export class Suit extends Draw {
 
   //胎心数据处理
   InitFileData(oriobj) {
+    console.log('InitFileData')
     let CTGDATA = {
       fhr: [[], [], []],
       toco: [],

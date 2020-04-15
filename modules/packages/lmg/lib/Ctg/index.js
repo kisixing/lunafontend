@@ -41,6 +41,7 @@ var ContextMenu_1 = __importDefault(require("./ContextMenu"));
 var Loading_1 = require("./Loading");
 var Suit_1 = require("./Suit");
 exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
+    console.log('suit render');
     var data = props.data, _a = props.mutableSuitObject, mutableSuitObject = _a === void 0 ? { suit: null } : _a, _b = props.suitType, suitType = _b === void 0 ? 0 : _b, _c = props.showEcg, showEcg = _c === void 0 ? false : _c, _d = props.loading, loading = _d === void 0 ? false : _d, _e = props.onReady, onReady = _e === void 0 ? function (s) { } : _e, others = __rest(props, ["data", "mutableSuitObject", "suitType", "showEcg", "loading", "onReady"]);
     var barTool = react_1.useRef(null);
     var canvasgrid = react_1.useRef(null);

@@ -11,6 +11,8 @@ import { Loading } from './Loading';
 import { Suit } from './Suit';
 
 export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
+  console.log('suit render');
+  
   const {
     data,
     mutableSuitObject = { suit: null },

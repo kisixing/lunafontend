@@ -1,10 +1,10 @@
 /// <reference types="node" />
 import { EventEmitter } from "@lianmed/utils";
 import Queue from "../Ecg/Queue";
-import { EWsStatus, BedStatus, ICache, EWsEvents } from './types';
+import { BedStatus, EWsEvents, EWsStatus, ICache } from './types';
 export * from './types';
-export * from './utils';
 export * from './useCheckNetwork';
+export * from './utils';
 export declare const LIMIT_LENGTH: number;
 export declare class WsService extends EventEmitter {
     static wsStatus: typeof EWsStatus;

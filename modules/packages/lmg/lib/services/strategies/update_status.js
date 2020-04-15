@@ -16,7 +16,7 @@ function update_status(received_msg) {
     target.is_include_volume = is_include_volume;
     target.disableStartWork = disableStartWork;
     target.fhr = Array(fetal_num || 1).fill(0).map(function (_, i) {
-        return target.fhr[i] || [];
+        return target.fhr[i] || utils_1.getMaxArray();
     });
     if (status == 0) {
         target.status = Working;

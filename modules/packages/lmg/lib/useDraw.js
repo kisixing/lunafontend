@@ -7,6 +7,7 @@ exports.default = (function (data, box, onReady, onResize) {
     react_1.useEffect(function () {
         var instance = suit.current = onReady();
         var resizeObserver = new utils_1.ResizeObserver(function () {
+            console.log('suit render resize');
             onResize && onResize();
             instance.resize();
             window.hasOwnProperty('ResizeObserver') || setTimeout(instance.resize.bind(instance), 300);

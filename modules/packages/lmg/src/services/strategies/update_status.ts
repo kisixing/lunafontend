@@ -1,5 +1,5 @@
 import { WsService } from "../WsService";
-import { getEmptyCacheItem } from "../utils";
+import { getEmptyCacheItem, getMaxArray } from "../utils";
 
 interface IData {
     bed_no: number
@@ -44,7 +44,7 @@ export function update_status(this: WsService, received_msg: IData) {
     target.is_include_volume = is_include_volume
     target.disableStartWork = disableStartWork
     target.fhr = Array(fetal_num || 1).fill(0).map((_, i) => {
-        return target.fhr[i] || []
+        return target.fhr[i] || getMaxArray()
     })
     if (status == 0) {
         target.status = Working;

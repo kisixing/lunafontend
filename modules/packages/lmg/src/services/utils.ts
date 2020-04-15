@@ -16,12 +16,16 @@ export const mapStatusToText = {
 };
 
 
-
-export function getEmptyCacheItem(base = null): ICacheItem {
+const MAX_SIZE = 4 * 3600 * 24 * 2
+export function getMaxArray() {
+    return new Uint8Array(MAX_SIZE)
+}
+export function getEmptyCacheItem(base: ICacheItem = { fetal_num: 1 }): ICacheItem {
+    const { fetal_num } = base
     return Object.assign({
-        fhr: [],
-        toco: [],
-        fm: [],
+        fhr: Array(fetal_num).fill(0).map(() => getMaxArray()),
+        toco: getMaxArray(),
+        fm: getMaxArray(),
         index: 0,
         length: 0,
         start: -1,
@@ -38,7 +42,7 @@ export function getEmptyCacheItem(base = null): ICacheItem {
         csspan: NaN,
         ismulti: false,
         ecg: new Queue(),
-        ecgdata: [],
+        ecgdata: getMaxArray(),
         is_include_volume: false,
         is_include_tocozero: false
     }, base)
@@ -46,7 +50,7 @@ export function getEmptyCacheItem(base = null): ICacheItem {
 
 export function cleardata(datacache: ICache, curid: string, fetal_num: number) {
     const target = datacache.get(curid)
-    const empty = getEmptyCacheItem({ fetal_num, fhr: Array(fetal_num).fill(0).map(() => []) })
+    const empty = getEmptyCacheItem({ fetal_num, fhr: Array(fetal_num).fill(0).map(() => getMaxArray()) })
     // for (let fetal = 0; fetal < fetal_num; fetal++) {
     //     empty.fhr[fetal] = [];
     // }

@@ -312,6 +312,7 @@ var Suit = (function (_super) {
     };
     Suit.prototype.movescoller = function () { };
     Suit.prototype.InitFileData = function (oriobj) {
+        console.log('InitFileData');
         var CTGDATA = {
             fhr: [[], [], []],
             toco: [],

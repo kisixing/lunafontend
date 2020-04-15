@@ -1,13 +1,13 @@
-import { EventEmitter, event } from "@lianmed/utils";
-import request from "@lianmed/request"
-import Queue from "../Ecg/Queue";
+import request from "@lianmed/request";
+import { event, EventEmitter } from "@lianmed/utils";
 import { throttle } from "lodash";
-import { EWsStatus, BedStatus, ICache, EWsEvents, ICacheItem } from './types'
-import { getEmptyCacheItem, cleardata, convertstarttime } from "./utils";
-export * from './types'
-export * from './utils'
-export * from './useCheckNetwork'
+import Queue from "../Ecg/Queue";
 import { getStrategies } from "./strategies";
+import { BedStatus, EWsEvents, EWsStatus, ICache } from './types';
+import { cleardata, convertstarttime, getEmptyCacheItem } from "./utils";
+export * from './types';
+export * from './useCheckNetwork';
+export * from './utils';
 // import pingpong from "./pingpong";
 
 const ANNOUNCE_INTERVAL = 1000
@@ -57,7 +57,7 @@ export class WsService extends EventEmitter {
         }
         WsService._this = this;
         this.settingData = settingData
-        setInterval(this.checkLength.bind(this), 10000)
+        // setInterval(this.checkLength.bind(this), 10000)
     }
     getUnitId(device_no: number | string, bed_no: number | string) {
         return `${device_no}-${bed_no}`
