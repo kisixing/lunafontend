@@ -140,15 +140,16 @@ export class DrawAnalyse extends Draw {
         analysis.start = start
         analysis.end = end
         // let timeframe = end-start/4*60;
+        let bhr = analysis.bhr;
         //NST(国内) 20分钟
         if (type == 'Nst') {
             // 基线选项
-            score.nstdata.bhrvalue = analysis.bhr;
-            if (analysis.bhr < 100)
+            score.nstdata.bhrvalue = bhr;
+            if (bhr < 100)
                 score.nstdata.bhrscore = 0;
-            else if (this.inRange(analysis.bhr, 100, 109) || analysis.bhr > 160)
+            else if (this.inRange(bhr, 100, 109) || bhr > 160)
                 score.nstdata.bhrscore = 1;
-            else if (this.inRange(analysis.bhr, 120, 160)) {
+            else if (this.inRange(bhr, 120, 160)) {
                 score.nstdata.bhrscore = 2;
             }
             // 振幅
@@ -195,7 +196,125 @@ export class DrawAnalyse extends Draw {
         }
         //CST
         //Krebs 30分钟
+        else if(type == 'Krebs'){
+		    // 基线选项
+            score.Krebsdata.bhrvalue = bhr;
+            if (analysis.bhr < 100)
+            if (bhr < 100 || bhr > 180) {
+                score.Krebsdata.bhrscore = 0;
+            } else if (this.inRange(bhr, 100, 119) || this.inRange(bhr, 161, 180)) {
+                score.Krebsdata.bhrscore = 1;
+            } else if (this.inRange(bhr, 120, 160)) {
+                score.Krebsdata.bhrscore = 2;
+            }
+            // 振幅变异
+            let zhenfu_tv = 0;
+            score.Krebsdata.ltvalue = zhenfu_tv;
+            if (zhenfu_tv < 5) {
+                score.Krebsdata.ltvscore = 0;
+            } else if (this.inRange(zhenfu_tv, 5, 9) || zhenfu_tv > 25) {
+                score.Krebsdata.ltvscore = 1;
+            } else if (this.inRange(zhenfu_tv, 10, 25)) {
+                score.Krebsdata.ltvscore = 2;
+            }
+            // 周期变异
+            let zhouqi_tv = 0;
+            score.Krebsdata.stvvalue = zhouqi_tv;
+            if (zhouqi_tv < 3) {
+                score.Krebsdata.stvscore = 0;
+            } else if (this.inRange(zhouqi_tv, 3, 6)) {
+                score.Krebsdata.stvscore = 1;
+            } else if (zhouqi_tv > 6) {
+                score.Krebsdata.stvscore = 2;
+            }
+            // 加速
+            let accnum = 0;
+            score.Krebsdata.accvalue = accnum;
+            if (accnum == 0) {
+                score.Krebsdata.accscore = 0;
+            } else if (this.inRange(accnum, 1, 4)) {
+                score.Krebsdata.accscore = 1;
+            } else if (accnum > 4) {
+                score.Krebsdata.accscore = 2;
+            }
+            // 减速
+            let decnum = 0;
+            score.Krebsdata.decvalue = decnum;
+            if (decnum>1) {
+                score.Krebsdata.decscore = 0;
+            } else if (decnum=1) {
+                score.Krebsdata.decscore = 1;
+            } else{
+                score.Krebsdata.decscore = 2;
+            }
+            // 胎动
+            let fmnum = 0;
+            score.Krebsdata.fmvalue = fmnum;
+            if (fmnum == 0) {
+                score.Krebsdata.fmscore = 0;
+            } else if (this.inRange(fmnum, 1, 4)) {
+                score.Krebsdata.fmscore = 1;
+            } else if (fmnum > 4) {
+                score.Krebsdata.fmscore = 2;
+            }
+            score.Krebsdata.total = score.Krebsdata.bhrscore+score.Krebsdata.accscore+score.Krebsdata.decscore+score.Krebsdata.ltvscore+score.Krebsdata.stvscore+score.Krebsdata.fmscore;
+        }
         //Fischer 20分钟
+        else if(type=='Fischer'){
+            // 基线选项
+            score.fischerdata.bhrvalue = bhr;
+            if (analysis.bhr < 100)
+            if (bhr < 100 || bhr > 180) {
+                score.fischerdata.bhrscore = 0;
+            } else if (this.inRange(bhr, 100, 119) || this.inRange(bhr, 161, 180)) {
+                score.fischerdata.bhrscore = 1;
+            } else if (this.inRange(bhr, 120, 160)) {
+                score.fischerdata.bhrscore = 2;
+            }
+            // 振幅变异
+            let zhenfu_tv = 0;
+            score.fischerdata.ltvalue = zhenfu_tv;
+            if (zhenfu_tv < 5) {
+                score.fischerdata.ltvscore = 0;
+            } else if (this.inRange(zhenfu_tv, 5, 9) || zhenfu_tv > 25) {
+                score.fischerdata.ltvscore = 1;
+            } else if (this.inRange(zhenfu_tv, 10, 25)) {
+                score.fischerdata.ltvscore = 2;
+            }
+            // 周期变异
+            let zhouqi_tv = 0;
+            score.fischerdata.stvvalue = zhouqi_tv;
+            if (zhouqi_tv < 3) {
+                score.fischerdata.stvscore = 0;
+            } else if (this.inRange(zhouqi_tv, 3, 6)) {
+                score.fischerdata.stvscore = 1;
+            } else if (zhouqi_tv > 6) {
+                score.fischerdata.stvscore = 2;
+            }
+            // 加速
+            let accnum = 0;
+            score.fischerdata.accvalue = accnum;
+            if (accnum == 0) {
+                score.fischerdata.accscore = 0;
+            } else if (this.inRange(accnum, 1, 4)) {
+                score.fischerdata.accscore = 1;
+            } else if (accnum > 4) {
+                score.fischerdata.accscore = 2;
+            }
+            // 减速
+            let decnum = 0;
+            let ld ;
+            let vd ;
+            score.fischerdata.decvalue = decnum;
+            if (ld) {
+                score.fischerdata.decscore = 0;
+            } else if (vd) {
+                score.fischerdata.decscore = 1;
+            } else{
+                score.fischerdata.decscore = 2;
+            }
+            score.fischerdata.totalscore = score.fischerdata.bhrscore+score.fischerdata.accscore+score.fischerdata.decscore+score.fischerdata.ltvscore+score.fischerdata.stvscore;
+        }
         //NST-sogc 30分钟
         this.analyse()
         console.log('ctgscore', type)
