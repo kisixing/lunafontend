@@ -5,6 +5,7 @@ import { EWsStatus, BedStatus, ICache, EWsEvents } from './types';
 export * from './types';
 export * from './utils';
 export * from './useCheckNetwork';
+export declare const LIMIT_LENGTH: number;
 export declare class WsService extends EventEmitter {
     static wsStatus: typeof EWsStatus;
     static _this: WsService;
@@ -57,4 +58,5 @@ export declare class WsService extends EventEmitter {
     initfhrdata(data: any, datacache: any, offindex: any, queue: any, offstart: any): void;
     starttask(queue: any, offstart: any): void;
     connect: () => Promise<ICache>;
+    checkLength(): void;
 }

@@ -15,7 +15,9 @@ interface IData {
     device_no: number
     name: "push_data_ctg"
 }
-export const LIMIT_LENGTH = 4 * 60 * 60 * 1.5
+
+
+
 export function pushData(target: ICacheItem, data: ICtgData) {
     for (let fetal = 0; fetal < target.fetal_num; fetal++) {
         if (!target.fhr[fetal]) {
@@ -23,10 +25,11 @@ export function pushData(target: ICacheItem, data: ICtgData) {
         }
         const fhrKey = `fhr${fetal > 0 ? fetal + 1 : ''}`
         if (data[fhrKey] == 0) continue;
-        if (target.fhr[fetal]) target.fhr[fetal][data.index] = data[fhrKey];
+        target.fhr[fetal][data.index] = data[fhrKey]
     }
     target.toco[data.index] = data.toco;
     target.fm[data.index] = data.fm;
+
 }
 
 export function push_data_ctg(this: WsService, received_msg: IData) {
@@ -55,33 +58,7 @@ export function push_data_ctg(this: WsService, received_msg: IData) {
         target.csspan = this.span;
     }
     for (let key in data) {
-        for (let fetal = 0; fetal < target.fetal_num; fetal++) {
-            if (!target.fhr[fetal]) {
-                continue;
-            }
-            if (fetal == 0) {
-                if (data[key].fhr == 0) {
-                    continue;
-                }
-                if (target.fhr[fetal])
-                    target.fhr[fetal][data[key].index] = data[key].fhr;
-            } else if (fetal == 1) {
-                if (data[key].fhr2 == 0) {
-                    continue;
-                }
-                if (target.fhr[fetal])
-                    target.fhr[fetal][data[key].index] = data[key].fhr2;
-            } else if (fetal == 2) {
-                if (data[key].fhr3 == 0) {
-                    continue;
-                }
-                if (target.fhr[fetal])
-                    target.fhr[fetal][data[key].index] = data[key].fhr3;
-            }
-        }
-        //console.log(tmpcache.fetal_num,ctgdata[key].index,ctgdata[key].fhr,ctgdata[key].fhr2,tmpcache.fhr[0][ctgdata[key].index]);
-        target.toco[data[key].index] = data[key].toco;
-        target.fm[data[key].index] = data[key].fm;
+        pushData(target, data[key])
         if (target.start == -1) {
             target.start = data[key].index;
             target.past = data[key].index - 4800 > 0 ? data[key].index - 4800 : 0;

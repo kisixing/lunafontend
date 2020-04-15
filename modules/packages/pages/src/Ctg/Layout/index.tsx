@@ -34,9 +34,10 @@ interface IProps {
   contentHeight: number
   themeColor?: string
   loading?: boolean
+  borderedId?: string
 }
 const Home = (props: IProps) => {
-  const { loading, listLayout = [], fullScreenId, contentHeight, RenderIn, items, onClose, themeColor = 'skyblue' } = props;
+  const { borderedId, loading, listLayout = [], fullScreenId, contentHeight, RenderIn, items, onClose, themeColor = 'skyblue' } = props;
   const wrap = useRef(null);
   const empty = useRef(null)
 
@@ -65,6 +66,7 @@ const Home = (props: IProps) => {
                   itemData={item}
                   bedname={bedname}
                   unitId={unitId}
+                  bordered={borderedId === unitId}
                   key={id}
 
                   data={data}

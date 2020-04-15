@@ -2,7 +2,7 @@ import { EventEmitter, event } from "@lianmed/utils";
 import request from "@lianmed/request"
 import Queue from "../Ecg/Queue";
 import { throttle } from "lodash";
-import { EWsStatus, BedStatus, ICache, EWsEvents } from './types'
+import { EWsStatus, BedStatus, ICache, EWsEvents, ICacheItem } from './types'
 import { getEmptyCacheItem, cleardata, convertstarttime } from "./utils";
 export * from './types'
 export * from './utils'
@@ -13,6 +13,10 @@ import { getStrategies } from "./strategies";
 const ANNOUNCE_INTERVAL = 1000
 const SECOND = 1000
 const { Working, Stopped, OfflineStopped } = BedStatus
+export const LIMIT_LENGTH = 4 * 3600 * 1
+
+
+
 
 export class WsService extends EventEmitter {
     static wsStatus: typeof EWsStatus = EWsStatus
@@ -38,6 +42,7 @@ export class WsService extends EventEmitter {
     // store = (window as any).g_app._store
     constructor(settingData?) {
         super();
+        console.log('wsService', this)
         const { datacache } = this
         datacache.clean = function (key: string) {
             const target = datacache.get(key)
@@ -52,6 +57,7 @@ export class WsService extends EventEmitter {
         }
         WsService._this = this;
         this.settingData = settingData
+        setInterval(this.checkLength.bind(this), 10000)
     }
     getUnitId(device_no: number | string, bed_no: number | string) {
         return `${device_no}-${bed_no}`
@@ -328,6 +334,30 @@ export class WsService extends EventEmitter {
             return [datacache];
         });
     };
+    checkLength() {
+        Array.from(this.datacache.values()).forEach(target => {
+            const len = target.index - target.past
+            const diff = len - LIMIT_LENGTH
+            console.log('diff', diff)
+
+            if (diff > 0) {
+                for (let fetal = 0; fetal < target.fetal_num; fetal++) {
+
+                    if (target.fhr[fetal]) {
+                        for (let i = 0; i < diff; i++) {
+                            target.fhr[fetal][i] = undefined
+                        }
+                    };
+                }
+                for (let i = 0; i < diff; i++) {
+                    target.toco[i] = undefined
+                    target.fm[i] = undefined
+                }
+                target.past = target.index - LIMIT_LENGTH
+            }
+        });
+
+    }
 }
 const announce = throttle((text) => {
     if (sp(text)) {

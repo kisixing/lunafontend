@@ -14,7 +14,6 @@ interface IData {
     device_no: number;
     name: "push_data_ctg";
 }
-export declare const LIMIT_LENGTH: number;
 export declare function pushData(target: ICacheItem, data: ICtgData): void;
 export declare function push_data_ctg(this: WsService, received_msg: IData): void;
 export {};

@@ -39,6 +39,7 @@ var strategies_1 = require("./strategies");
 var ANNOUNCE_INTERVAL = 1000;
 var SECOND = 1000;
 var Working = types_1.BedStatus.Working, Stopped = types_1.BedStatus.Stopped, OfflineStopped = types_1.BedStatus.OfflineStopped;
+exports.LIMIT_LENGTH = 4 * 3600 * 1;
 var WsService = (function (_super) {
     __extends(WsService, _super);
     function WsService(settingData) {
@@ -101,6 +102,7 @@ var WsService = (function (_super) {
                 return [datacache];
             });
         };
+        console.log('wsService', _this_1);
         var datacache = _this_1.datacache;
         datacache.clean = function (key) {
             var target = datacache.get(key);
@@ -115,6 +117,7 @@ var WsService = (function (_super) {
         }
         WsService._this = _this_1;
         _this_1.settingData = settingData;
+        setInterval(_this_1.checkLength.bind(_this_1), 10000);
         return _this_1;
     }
     WsService.prototype.getUnitId = function (device_no, bed_no) {
@@ -331,6 +334,28 @@ var WsService = (function (_super) {
         else {
             offstart = false;
         }
+    };
+    WsService.prototype.checkLength = function () {
+        Array.from(this.datacache.values()).forEach(function (target) {
+            var len = target.index - target.past;
+            var diff = len - exports.LIMIT_LENGTH;
+            console.log('diff', diff);
+            if (diff > 0) {
+                for (var fetal = 0; fetal < target.fetal_num; fetal++) {
+                    if (target.fhr[fetal]) {
+                        for (var i = 0; i < diff; i++) {
+                            target.fhr[fetal][i] = undefined;
+                        }
+                    }
+                    ;
+                }
+                for (var i = 0; i < diff; i++) {
+                    target.toco[i] = undefined;
+                    target.fm[i] = undefined;
+                }
+                target.past = target.index - exports.LIMIT_LENGTH;
+            }
+        });
     };
     WsService.wsStatus = types_1.EWsStatus;
     WsService.EWsEvents = types_1.EWsEvents;

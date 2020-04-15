@@ -28,11 +28,12 @@ interface IProps {
   itemHeight: number
   itemSpan: number
   themeColor: string
+  bordered?: boolean
 }
 
 
 const WorkbenchItem = (props: IProps) => {
-  const { themeColor, itemData, onClose, loading = false, fullScreenId, itemHeight, itemSpan, outPadding, data, bedname, status, unitId } = props;
+  const { bordered, themeColor, itemData, onClose, loading = false, fullScreenId, itemHeight, itemSpan, outPadding, data, bedname, status, unitId } = props;
   let { startTime, pregnancy } = props
 
 
@@ -68,7 +69,7 @@ const WorkbenchItem = (props: IProps) => {
     <Col
       span={itemSpan}
       ref={ref}
-      style={{ padding: outPadding, height: itemHeight, background: `var(--theme-light-color)`, position: 'relative' }}
+      style={{transition:'background .6s', padding: outPadding, height: itemHeight, background: `var(--theme-${bordered ? 'dark' : 'light'}-color)`, position: 'relative' }}
     >
       <Ctg_Item
         themeColor={themeColor}

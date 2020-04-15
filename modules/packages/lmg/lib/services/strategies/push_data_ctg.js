@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LIMIT_LENGTH = 4 * 60 * 60 * 1.5;
 function pushData(target, data) {
     for (var fetal = 0; fetal < target.fetal_num; fetal++) {
         if (!target.fhr[fetal]) {
@@ -9,8 +8,7 @@ function pushData(target, data) {
         var fhrKey = "fhr" + (fetal > 0 ? fetal + 1 : '');
         if (data[fhrKey] == 0)
             continue;
-        if (target.fhr[fetal])
-            target.fhr[fetal][data.index] = data[fhrKey];
+        target.fhr[fetal][data.index] = data[fhrKey];
     }
     target.toco[data.index] = data.toco;
     target.fm[data.index] = data.fm;
@@ -29,34 +27,7 @@ function push_data_ctg(received_msg) {
         target.csspan = this.span;
     }
     for (var key in data) {
-        for (var fetal = 0; fetal < target.fetal_num; fetal++) {
-            if (!target.fhr[fetal]) {
-                continue;
-            }
-            if (fetal == 0) {
-                if (data[key].fhr == 0) {
-                    continue;
-                }
-                if (target.fhr[fetal])
-                    target.fhr[fetal][data[key].index] = data[key].fhr;
-            }
-            else if (fetal == 1) {
-                if (data[key].fhr2 == 0) {
-                    continue;
-                }
-                if (target.fhr[fetal])
-                    target.fhr[fetal][data[key].index] = data[key].fhr2;
-            }
-            else if (fetal == 2) {
-                if (data[key].fhr3 == 0) {
-                    continue;
-                }
-                if (target.fhr[fetal])
-                    target.fhr[fetal][data[key].index] = data[key].fhr3;
-            }
-        }
-        target.toco[data[key].index] = data[key].toco;
-        target.fm[data[key].index] = data[key].fm;
+        pushData(target, data[key]);
         if (target.start == -1) {
             target.start = data[key].index;
             target.past = data[key].index - 4800 > 0 ? data[key].index - 4800 : 0;
