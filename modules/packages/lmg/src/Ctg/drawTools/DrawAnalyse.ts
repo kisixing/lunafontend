@@ -514,6 +514,17 @@ export class DrawAnalyse extends Draw {
         }
         this.refresh()
     }
+    markDecPoint(x: number, y: number, type:string) {
+        if (!this.analysisData) return
+        const edge = 20;
+        const { analysis: { dec } } = this.analysisData
+
+        const target = dec.find(_ => (x < _.x + edge) && (x > _.x - edge))
+        if (target && (y < (target.y + edge) && y > (target.y - edge))) {
+            target.type = type;
+        }
+        this.refresh()
+    }
     // getPointType(x: number, y: number): PointType {
     //     if (!this.analysisData) return
     //     const edge = 20;
