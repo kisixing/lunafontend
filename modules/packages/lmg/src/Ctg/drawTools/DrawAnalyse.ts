@@ -2,7 +2,7 @@ import { obvue } from "@lianmed/f_types";
 import Draw from "../../Draw";
 import { AnalyseType } from '../../interface';
 import { Suit } from "../Suit";
-import AccPoint from "../ContextMenu/MenuStrategies/AccPoint";
+import { DecType } from "@lianmed/f_types/lib/obvue/ctg_exams_analyse";
 
 
 // export interface AnalyseData {
@@ -86,15 +86,19 @@ export class DrawAnalyse extends Draw {
 
         }
     }
-    analyse(data: obvue.ctg_exams_analyse = this.analysisData) {
+    analyse(type: AnalyseType, start: number, end: number, data: obvue.ctg_exams_analyse = this.analysisData) {
+        if (!data) return
+        console.log('local analyse', data)
         const { suit } = this
         this.setData(data)
-        suit.drawSelect.$selectrpend = data.analysis.end
-        suit.drawSelect.$selectrpstart = data.analysis.start
+        suit.drawSelect.$selectrpend = end
+        suit.drawSelect.$selectrpstart = start
         // this.emit('selectForward', data.end - data.start)
         //this.drawobj.drawdot(this.canvasline.width * 2, false);
         //kisi 2020-03-05 
+        let newData = this.ctgscore(type)
         suit.drawobj.drawdot(suit.rightViewPosition, false);
+        return newData
     }
     //kisi 2019-10-28 绘制 acc dec
     //2020-03-04 用 linecanvas 绘制标记
@@ -112,13 +116,13 @@ export class DrawAnalyse extends Draw {
             target.x = x
             target.y = y
             // 90%(后台默认处理90%marked为true)以上直接显示为绿色加速标记（+）
-            if(target.marked){
+            if (target.marked) {
                 txt = "+";
                 canvas.font = '16px arial';
                 canvas.fillStyle = 'green';
                 canvas.fillText(txt, x + 1, y + 10);
-            }else if(target.reliability>45){ //45%~90%，显示橙色加速标记（+）及橙色**%确定度
-                txt = "+ "+`${target.reliability}+"%"`;
+            } else if (target.reliability > 45) { //45%~90%，显示橙色加速标记（+）及橙色**%确定度
+                txt = "+ " + `${target.reliability}+"%"`;
                 canvas.font = '15px arial';
                 canvas.fillStyle = 'orange';
                 canvas.fillText(txt, x + 1, y + 10);
@@ -141,39 +145,39 @@ export class DrawAnalyse extends Draw {
         return result;
     }
     //遍历时间段内的可信加速
-    countAcc = (start: number, end: number) =>{
+    countAcc = (start: number, end: number) => {
         let accnum = 0;
         const { analysisData } = this
         if (!analysisData) return accnum;
-        const { analysis} = analysisData
+        const { analysis } = analysisData
         analysis.acc.map(function (item) {
-            if( item.index>end){
+            if (item.index > end) {
                 return accnum;
-            }else if(item.index>=start){
-                if(item.marked)
+            } else if (item.index >= start) {
+                if (item.marked)
                     accnum++;
             }
         })
         return accnum;
     }
     //遍历时间段内的某类型减速
-    countDec = (start: number, end: number,type:string) => {
+    countDec = (start: number, end: number, type: string) => {
         let decnum = 0;
         const { analysisData } = this
         if (!analysisData) return decnum;
-        const { analysis} = analysisData
+        const { analysis } = analysisData
         analysis.dec.map(function (item) {
-            if( item.index>end){
+            if (item.index > end) {
                 return decnum;
-            }else if(item.index>=start){
-                if(item.type.toUpperCase()==type)
+            } else if (item.index >= start) {
+                if (item.type.toUpperCase() == type)
                     decnum++;
             }
         })
         return decnum;
     }
     // fm 128 判断
-    countFm = (start: number, end: number) =>{
+    countFm = (start: number, end: number) => {
         let fmnum = 0;
         for (var i = start; i <= end; i++) {
             if (i % 2 == 1) continue;
@@ -184,67 +188,67 @@ export class DrawAnalyse extends Draw {
         return fmnum;
     }
     //fm-fhr-duration
-    fhrDuration = (start: number, end: number) =>{
-        let accnum =0;
+    fhrDuration = (start: number, end: number) => {
+        let accnum = 0;
         let sum = 0;
         const { analysisData } = this
         if (!analysisData) return accnum;
-        const { analysis} = analysisData
+        const { analysis } = analysisData
         analysis.acc.map(function (item) {
-            if( item.index>end){
-                if(accnum==0)
+            if (item.index > end) {
+                if (accnum == 0)
                     return accnum;
-                else{
-                    return sum/accnum;
+                else {
+                    return sum / accnum;
                 }
-            }else if(item.index>=start){
-                if(item.marked){
+            } else if (item.index >= start) {
+                if (item.marked) {
                     sum += item.duration;
                     accnum++;
                 }
             }
         })
-        if(accnum==0)
+        if (accnum == 0)
             return accnum;
-        else{
-            return sum/accnum;
+        else {
+            return sum / accnum;
         }
     }
     //fm-fhr-ampl
-    fhrAmpl = (start: number, end: number) =>{
-        let accnum =0;
+    fhrAmpl = (start: number, end: number) => {
+        let accnum = 0;
         let sum = 0;
         const { analysisData } = this
         if (!analysisData) return accnum;
-        const { analysis} = analysisData
+        const { analysis } = analysisData
         analysis.acc.map(function (item) {
-            if( item.index>end){
-                if(accnum==0)
+            if (item.index > end) {
+                if (accnum == 0)
                     return accnum;
-                else{
-                    return sum/accnum;
+                else {
+                    return sum / accnum;
                 }
-            }else if(item.index>=start){
-                if(item.marked){
+            } else if (item.index >= start) {
+                if (item.marked) {
                     sum += item.ampl;
                     accnum++;
                 }
             }
         })
-        if(accnum==0)
+        if (accnum == 0)
             return accnum;
-        else{
-            return sum/accnum;
+        else {
+            return sum / accnum;
         }
     }
     // TODO：analysis 结构最好与score结构分开
     // 评分类型最好枚举实现
-    ctgscore = (type: AnalyseType, start: number, end: number) => {
-        const { analysisData } = this
-        if (!analysisData) return
+    ctgscore = (type: AnalyseType): obvue.ctg_exams_analyse => {
+        let { analysisData } = this
+        if (!analysisData) return null
+        analysisData = JSON.parse(JSON.stringify(analysisData))
         const { analysis, score } = analysisData
-        analysis.start = start
-        analysis.end = end
+
         // let timeframe = end-start/4*60;
         let bhr = analysis.bhr;
         //NST(国内) 20分钟
@@ -268,7 +272,7 @@ export class DrawAnalyse extends Draw {
                 score.nstdata.ltvscore = 2;
             }
             // 胎动fhr上升时间
-            let fhr_uptime = this.fhrDuration(analysis.start,analysis.end);
+            let fhr_uptime = this.fhrDuration(analysis.start, analysis.end);
             score.nstdata.accdurationvalue = fhr_uptime;
             if (fhr_uptime < 10) {
                 score.nstdata.accdurationscore = 0;
@@ -278,7 +282,7 @@ export class DrawAnalyse extends Draw {
                 score.nstdata.accdurationscore = 2;
             }
             // 胎动fhr变化幅度
-            let fhr_ampl = this.fhrAmpl(analysis.start,analysis.end);;
+            let fhr_ampl = this.fhrAmpl(analysis.start, analysis.end);;
             score.nstdata.accamplvalue = fhr_ampl;
             if (fhr_ampl < 10) {
                 score.nstdata.accamplscore = 0;
@@ -288,7 +292,7 @@ export class DrawAnalyse extends Draw {
                 score.nstdata.accamplscore = 2;
             }
             // 胎动
-            let fmnum = this.countFm(analysis.start,analysis.end);
+            let fmnum = this.countFm(analysis.start, analysis.end);
             score.nstdata.fmvalue = fmnum;
             if (fmnum == 0) {
                 score.nstdata.fmscore = 0;
@@ -298,19 +302,20 @@ export class DrawAnalyse extends Draw {
                 score.nstdata.fmscore = 2;
             }
             score.nstdata.totalscore = score.nstdata.accamplscore + score.nstdata.accdurationscore + score.nstdata.bhrscore + score.nstdata.fmscore + score.nstdata.ltvscore;
+            return this.analysisData = analysisData
         }
         //Krebs 30分钟
-        else if(type == 'Krebs'){
-		    // 基线选项
+        else if (type == 'Krebs') {
+            // 基线选项
             score.Krebsdata.bhrvalue = bhr;
             if (analysis.bhr < 100)
-            if (bhr < 100 || bhr > 180) {
-                score.Krebsdata.bhrscore = 0;
-            } else if (this.inRange(bhr, 100, 109) || this.inRange(bhr, 161, 180)) {
-                score.Krebsdata.bhrscore = 1;
-            } else if (this.inRange(bhr, 110, 160)) {
-                score.Krebsdata.bhrscore = 2;
-            }
+                if (bhr < 100 || bhr > 180) {
+                    score.Krebsdata.bhrscore = 0;
+                } else if (this.inRange(bhr, 100, 109) || this.inRange(bhr, 161, 180)) {
+                    score.Krebsdata.bhrscore = 1;
+                } else if (this.inRange(bhr, 110, 160)) {
+                    score.Krebsdata.bhrscore = 2;
+                }
             // 振幅变异
             let zhenfu_tv = analysis.ltv;
             score.Krebsdata.ltvvalue = zhenfu_tv;
@@ -332,7 +337,7 @@ export class DrawAnalyse extends Draw {
                 score.Krebsdata.stvscore = 2;
             }
             // 加速
-            let accnum = this.countAcc(analysis.start,analysis.end);
+            let accnum = this.countAcc(analysis.start, analysis.end);
             score.Krebsdata.accvalue = accnum;
             if (accnum == 0) {
                 score.Krebsdata.accscore = 0;
@@ -342,23 +347,23 @@ export class DrawAnalyse extends Draw {
                 score.Krebsdata.accscore = 2;
             }
             // 减速
-            let decnum = analysis.ldtimes+analysis.vdtimes;
-            if (decnum>1) {
+            let decnum = analysis.ldtimes + analysis.vdtimes;
+            if (decnum > 1) {
                 score.Krebsdata.decscore = 0;
-                score.Krebsdata.decvalue = decnum+"";
-            } else if (decnum=1) {
+                score.Krebsdata.decvalue = decnum + "";
+            } else if (decnum = 1) {
                 score.Krebsdata.decscore = 1;
-                score.Krebsdata.decvalue = decnum+"";
-            } else{
+                score.Krebsdata.decvalue = decnum + "";
+            } else {
                 score.Krebsdata.decscore = 2;
-                if(analysis.edtimes>0){
+                if (analysis.edtimes > 0) {
                     score.Krebsdata.decvalue = "早减";
-                }else{
+                } else {
                     score.Krebsdata.decvalue = "无";
                 }
             }
             // 胎动
-            let fmnum = this.countFm(analysis.start,analysis.end);
+            let fmnum = this.countFm(analysis.start, analysis.end);
             score.Krebsdata.fmvalue = fmnum;
             if (fmnum == 0) {
                 score.Krebsdata.fmscore = 0;
@@ -367,20 +372,20 @@ export class DrawAnalyse extends Draw {
             } else if (fmnum > 4) {
                 score.Krebsdata.fmscore = 2;
             }
-            score.Krebsdata.totalscore = score.Krebsdata.bhrscore+score.Krebsdata.accscore+score.Krebsdata.decscore+score.Krebsdata.ltvscore+score.Krebsdata.stvscore+score.Krebsdata.fmscore;
+            score.Krebsdata.totalscore = score.Krebsdata.bhrscore + score.Krebsdata.accscore + score.Krebsdata.decscore + score.Krebsdata.ltvscore + score.Krebsdata.stvscore + score.Krebsdata.fmscore;
         }
         //Fischer 20分钟
-        else if(type=='Fischer'){
+        else if (type == 'Fischer') {
             // 基线选项
             score.fischerdata.bhrvalue = bhr;
             if (analysis.bhr < 100)
-            if (bhr < 100 || bhr > 180) {
-                score.fischerdata.bhrscore = 0;
-            } else if (this.inRange(bhr, 100, 109) || this.inRange(bhr, 161, 180)) {
-                score.fischerdata.bhrscore = 1;
-            } else if (this.inRange(bhr, 110, 160)) {
-                score.fischerdata.bhrscore = 2;
-            }
+                if (bhr < 100 || bhr > 180) {
+                    score.fischerdata.bhrscore = 0;
+                } else if (this.inRange(bhr, 100, 109) || this.inRange(bhr, 161, 180)) {
+                    score.fischerdata.bhrscore = 1;
+                } else if (this.inRange(bhr, 110, 160)) {
+                    score.fischerdata.bhrscore = 2;
+                }
             // 振幅变异
             let zhenfu_tv = analysis.ltv;
             score.fischerdata.ltvvalue = zhenfu_tv;
@@ -402,7 +407,7 @@ export class DrawAnalyse extends Draw {
                 score.fischerdata.stvscore = 2;
             }
             // 加速
-            let accnum = this.countAcc(analysis.start,analysis.end);
+            let accnum = this.countAcc(analysis.start, analysis.end);
             score.fischerdata.accvalue = accnum;
             if (accnum == 0) {
                 score.fischerdata.accscore = 0;
@@ -415,44 +420,44 @@ export class DrawAnalyse extends Draw {
             let ld = analysis.ldtimes;//this.countDec(analysis.start,analysis.end,'LD');
             let vd = analysis.vdtimes;//this.countDec(analysis.start,analysis.end,'VD');
             let ed = analysis.edtimes;//this.countDec(analysis.start,analysis.end,'ED');
-            if (ld>0) {
+            if (ld > 0) {
                 score.fischerdata.decscore = 0;
                 score.fischerdata.decvalue = 'LD';
-            } else if (vd>0) {
+            } else if (vd > 0) {
                 score.fischerdata.decscore = 1;
                 score.fischerdata.decvalue = 'VD';
-            } else{
-                if(ed>0){
+            } else {
+                if (ed > 0) {
                     score.fischerdata.decvalue = 'ED';
-                }else{
+                } else {
                     score.fischerdata.decvalue = '无';
                 }
                 score.fischerdata.decscore = 2;
             }
-            score.fischerdata.totalscore = score.fischerdata.bhrscore+score.fischerdata.accscore+score.fischerdata.decscore+score.fischerdata.ltvscore+score.fischerdata.stvscore;
+            score.fischerdata.totalscore = score.fischerdata.bhrscore + score.fischerdata.accscore + score.fischerdata.decscore + score.fischerdata.ltvscore + score.fischerdata.stvscore;
         }
         //NST-sogc 20~40分钟
-        else if(type=='Sogc'){
-             // 基线选项
-             score.sogcdata.bhrvalue = bhr;
-             if (bhr < 100)
-                 score.sogcdata.bhrscore = 0;
-             else if (this.inRange(bhr, 100, 109) || bhr > 160)
-                 score.sogcdata.bhrscore = 1;
-             else if (this.inRange(bhr, 110, 160)) {
-                 score.sogcdata.bhrscore = 2;
-             }
-             // 振幅
-             score.sogcdata.ltvvalue = analysis.ltv;
-             if (analysis.ltv < 5) {
-                 score.sogcdata.ltvscore = 0;
-             } else if (this.inRange(analysis.ltv, 5, 9) || analysis.ltv > 30) {
-                 score.sogcdata.ltvscore = 1;
-             } else if (this.inRange(analysis.ltv, 10, 30)) {
-                 score.sogcdata.ltvscore = 2;
-             }
-             // 加速
-            let accnum = this.countAcc(analysis.start,analysis.end);
+        else if (type == 'Sogc') {
+            // 基线选项
+            score.sogcdata.bhrvalue = bhr;
+            if (bhr < 100)
+                score.sogcdata.bhrscore = 0;
+            else if (this.inRange(bhr, 100, 109) || bhr > 160)
+                score.sogcdata.bhrscore = 1;
+            else if (this.inRange(bhr, 110, 160)) {
+                score.sogcdata.bhrscore = 2;
+            }
+            // 振幅
+            score.sogcdata.ltvvalue = analysis.ltv;
+            if (analysis.ltv < 5) {
+                score.sogcdata.ltvscore = 0;
+            } else if (this.inRange(analysis.ltv, 5, 9) || analysis.ltv > 30) {
+                score.sogcdata.ltvscore = 1;
+            } else if (this.inRange(analysis.ltv, 10, 30)) {
+                score.sogcdata.ltvscore = 2;
+            }
+            // 加速
+            let accnum = this.countAcc(analysis.start, analysis.end);
             score.sogcdata.accvalue = accnum;
             if (accnum == 0) {
                 score.sogcdata.accscore = 0;
@@ -465,27 +470,26 @@ export class DrawAnalyse extends Draw {
             let ld = analysis.ldtimes;//this.countDec(analysis.start,analysis.end,'LD');
             let vd = analysis.vdtimes;//this.countDec(analysis.start,analysis.end,'VD');
             let ed = analysis.edtimes;//this.countDec(analysis.start,analysis.end,'ED');
-            if (ld>0) {
+            if (ld > 0) {
                 score.fischerdata.decscore = 0;
                 score.fischerdata.decvalue = 'LD';
-            } else if (vd>0) {
+            } else if (vd > 0) {
                 score.fischerdata.decscore = 1;
                 score.fischerdata.decvalue = 'VD';
-            } else{
-                if(ed>0){
+            } else {
+                if (ed > 0) {
                     score.fischerdata.decvalue = 'ED';
-                }else{
+                } else {
                     score.fischerdata.decvalue = '无';
                 }
                 score.fischerdata.decscore = 2;
             }
         }
         //CST
-        else if(type == 'Cst'){
-            
+        else if (type == 'Cst') {
+
         }
-        this.analyse()
-        console.log('ctgscore', type)
+
     }
     revicePoint(x: number, y: number) {
         if (!this.analysisData) return
@@ -500,7 +504,7 @@ export class DrawAnalyse extends Draw {
         }
         return null
     }
-    refresh(){
+    refresh() {
         this.suit.drawobj.drawdot(this.suit.viewposition < this.width * 2 ? this.width * 2 : this.suit.viewposition);
     }
     markAccPoint(x: number, y: number, marked = true) {
@@ -514,7 +518,7 @@ export class DrawAnalyse extends Draw {
         }
         this.refresh()
     }
-    markDecPoint(x: number, y: number, type:string) {
+    markDecPoint(x: number, y: number, type: DecType) {
         if (!this.analysisData) return
         const edge = 20;
         const { analysis: { dec } } = this.analysisData

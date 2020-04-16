@@ -117,6 +117,7 @@ var WsService = (function (_super) {
         }
         WsService._this = _this_1;
         _this_1.settingData = settingData;
+        setInterval(_this_1.checkLength.bind(_this_1), 60000);
         return _this_1;
     }
     WsService.prototype.getUnitId = function (device_no, bed_no) {
@@ -343,14 +344,14 @@ var WsService = (function (_super) {
                 for (var fetal = 0; fetal < target.fetal_num; fetal++) {
                     if (target.fhr[fetal]) {
                         for (var i = 0; i < diff; i++) {
-                            target.fhr[fetal][i] = undefined;
+                            target.fhr[fetal][i] = 0;
                         }
                     }
                     ;
                 }
                 for (var i = 0; i < diff; i++) {
-                    target.toco[i] = undefined;
-                    target.fm[i] = undefined;
+                    target.toco[i] = 0;
+                    target.fm[i] = 0;
                 }
                 target.past = target.index - exports.LIMIT_LENGTH;
             }

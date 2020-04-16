@@ -7,8 +7,14 @@ var antd_1 = require("antd");
 var react_1 = __importDefault(require("react"));
 exports.default = (function (props) {
     console.log('acc props', props);
+    console.log('acc props', props);
+    var fn = function (type) {
+        props.s.current.drawAnalyse.markDecPoint(props.offsetX.current, props.offsetY.current, type);
+    };
     return (react_1.default.createElement(antd_1.Menu, null,
-        react_1.default.createElement(antd_1.Menu.Item, { key: "1" }, "\u6807\u8BB0\u51CF\u901F11"),
-        react_1.default.createElement(antd_1.Menu.Item, { key: "2" }, "\u53D6\u6D88\u6807\u8BB0")));
+        react_1.default.createElement(antd_1.Menu.Item, { key: "1", onClick: function (e) { return fn('ld'); } }, "LD"),
+        react_1.default.createElement(antd_1.Menu.Item, { key: "2", onClick: function (e) { return fn('ed'); } }, "ED"),
+        react_1.default.createElement(antd_1.Menu.Item, { key: "3", onClick: function (e) { return fn('vd'); } }, "VD"),
+        react_1.default.createElement(antd_1.Menu.Item, { key: "4", onClick: function (e) { return fn(''); } }, "\u53D6\u6D88\u6807\u8BB0")));
 });
 //# sourceMappingURL=DecPoint.js.map

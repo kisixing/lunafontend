@@ -16,7 +16,7 @@ export const mapStatusToText = {
 };
 
 
-const MAX_SIZE = 4 * 3600 * 24 * 2
+const MAX_SIZE = 4 * 3600 * 24 * 1
 export function getMaxArray() {
     return new Uint8Array(MAX_SIZE)
 }

@@ -56,7 +56,7 @@ exports.Ctg_Analyse = function (_a) {
     var _k = useCtgData_1.default(note), ctgData = _k.ctgData, loading = _k.loading, setFhr = _k.setFhr, fetal = _k.fetal, setFetal = _k.setFetal;
     var _l = react_1.useState(true), disabled = _l[0], setDisabled = _l[1];
     var ref = react_1.useRef(null);
-    var _m = useAnalyse_1.default(ref.current, note, fetal, setFhr), MARKS = _m.MARKS, analyse = _m.analyse, startTime = _m.startTime, endTime = _m.endTime, mark = _m.mark, setMark = _m.setMark, interval = _m.interval, setInterval = _m.setInterval, Fischer_ref = _m.Fischer_ref, Nst_ref = _m.Nst_ref, Krebs_ref = _m.Krebs_ref, analysis_ref = _m.analysis_ref, old_ref = _m.old_ref, analyseLoading = _m.analyseLoading;
+    var _m = useAnalyse_1.default(ref.current, note, fetal, setFhr, ctgData), MARKS = _m.MARKS, analyse = _m.analyse, startTime = _m.startTime, endTime = _m.endTime, mark = _m.mark, setMark = _m.setMark, interval = _m.interval, setInterval = _m.setInterval, Fischer_ref = _m.Fischer_ref, Nst_ref = _m.Nst_ref, Krebs_ref = _m.Krebs_ref, analysis_ref = _m.analysis_ref, old_ref = _m.old_ref, analyseLoading = _m.analyseLoading, isToShort = _m.isToShort;
     var others = {
         MARKS: MARKS,
         analyse: analyse,
@@ -124,11 +124,12 @@ exports.Ctg_Analyse = function (_a) {
             react_1.default.createElement(lmg_1.Ctg, { suitType: 1, ref: ref, loading: loading, data: ctgData })),
         react_1.default.createElement(antd_1.Row, { gutter: 12, style: { height: 420 } },
             react_1.default.createElement(antd_1.Col, { span: 12 },
-                react_1.default.createElement(Score_1.default, __assign({ disabled: disabled }, others, { fetal: fetal, setFetal: setFetal, ctgData: ctgData, docid: note, v: ref.current, className: "bordered" })),
+                react_1.default.createElement(Score_1.default, __assign({ disabled: disabled, endTime: endTime }, others, { fetal: fetal, setFetal: setFetal, ctgData: ctgData, docid: note, v: ref.current, className: "bordered" })),
                 react_1.default.createElement("div", { style: { position: 'absolute', right: 12, bottom: 0 } },
+                    isToShort && react_1.default.createElement(antd_1.Alert, { type: "warning", message: "\u6863\u6848\u65F6\u957F\u8FC7\u77ED", style: { display: 'inline-block', padding: '1px 4px', marginRight: 10 } }),
                     react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, onClick: history, disabled: btnDisabled }, "\u5386\u53F2\u5206\u6790"),
                     react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, disabled: !note, onClick: function () { return setDisabled(!disabled); } }, disabled ? '修改' : '确认'),
-                    react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, type: "primary", onClick: analyse, loading: analyseLoading, disabled: !note }, "\u8BC4\u5206"))),
+                    react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, type: "primary", onClick: analyse, loading: analyseLoading, disabled: !note || isToShort }, "\u8BC4\u5206"))),
             react_1.default.createElement(antd_1.Col, { span: 12 },
                 react_1.default.createElement(Analyse_1.default, { ref: analysis_ref }),
                 react_1.default.createElement("div", { style: { position: 'absolute', right: 12, bottom: 0 } },

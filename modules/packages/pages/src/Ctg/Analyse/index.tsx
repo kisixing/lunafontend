@@ -1,7 +1,7 @@
 import { Ctg } from '@lianmed/lmg';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import request from "@lianmed/request";
-import { Button, Col, Row, message, Modal } from 'antd';
+import { Button, Col, Row, message, Modal, Tooltip, Alert } from 'antd';
 import 'antd/dist/antd.css';
 import React, { useRef, useState, FC } from 'react';
 import styled from "styled-components";
@@ -66,7 +66,8 @@ export const Ctg_Analyse: FC<{
       analysis_ref,
       old_ref,
       analyseLoading,
-    } = useAnalyse(ref.current, note, fetal, setFhr)
+      isToShort
+    } = useAnalyse(ref.current, note, fetal, setFhr, ctgData)
 
     const others = {
       MARKS,
@@ -144,17 +145,19 @@ export const Ctg_Analyse: FC<{
     const btnDisabled = !note || !disabled
     return (
       <Wrapper >
-        <div style={{ height: `calc(100% - 420px - 12px)`,minHeight:200, marginBottom: 12, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px', overflow: 'hidden' }}>
+        <div style={{ height: `calc(100% - 420px - 12px)`, minHeight: 200, marginBottom: 12, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px', overflow: 'hidden' }}>
           <Ctg suitType={1} ref={ref} loading={loading} data={ctgData} />
 
         </div>
         <Row gutter={12} style={{ height: 420 }}>
           <Col span={12} >
-            <Score disabled={disabled}  {...others} fetal={fetal} setFetal={setFetal} ctgData={ctgData} docid={note} v={ref.current} className="bordered" />
+            <Score disabled={disabled} endTime={endTime}  {...others} fetal={fetal} setFetal={setFetal} ctgData={ctgData} docid={note} v={ref.current} className="bordered" />
             <div style={{ position: 'absolute', right: 12, bottom: 0 }}>
+              {isToShort && <Alert type="warning" message="档案时长过短"  style={{display:'inline-block',padding:'1px 4px',marginRight:10}} />}
+
               <Button size="small" style={{ marginBottom: 10 }} onClick={history} disabled={btnDisabled}>历史分析</Button>
               <Button size="small" style={{ marginBottom: 10 }} disabled={!note} onClick={() => setDisabled(!disabled)}>{disabled ? '修改' : '确认'}</Button>
-              <Button size="small" style={{ marginBottom: 10 }} type="primary" onClick={analyse} loading={analyseLoading} disabled={!note}>评分</Button>
+              <Button size="small" style={{ marginBottom: 10 }} type="primary" onClick={analyse} loading={analyseLoading} disabled={!note || isToShort}>评分</Button>
             </div>
           </Col>
           <Col span={12}  >

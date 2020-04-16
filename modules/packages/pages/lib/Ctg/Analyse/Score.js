@@ -27,7 +27,7 @@ var methods_1 = __importDefault(require("./methods"));
 var intervals = [20, 40];
 var ScoringMethod = function (props) {
     var docid = props.docid, ctgData = props.ctgData, fetal = props.fetal, setFetal = props.setFetal, disabled = props.disabled;
-    var MARKS = props.MARKS, startTime = props.startTime, mark = props.mark, setMark = props.setMark, interval = props.interval, setInterval = props.setInterval;
+    var MARKS = props.MARKS, startTime = props.startTime, mark = props.mark, setMark = props.setMark, interval = props.interval, setInterval = props.setInterval, endTime = props.endTime;
     var onChange = function (e) {
         var mark = e.target.value;
         setMark(mark);
@@ -54,7 +54,7 @@ var ScoringMethod = function (props) {
     var EndTime = function () {
         return react_1.default.createElement("span", null,
             "\u7ED3\u675F\u65F6\u95F4\uFF1A",
-            (startTime / 240 + interval).toFixed(1),
+            (endTime / 240).toFixed(1),
             "\u5206");
     };
     var R = react_1.useMemo(function () {

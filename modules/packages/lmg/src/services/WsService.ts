@@ -57,7 +57,7 @@ export class WsService extends EventEmitter {
         }
         WsService._this = this;
         this.settingData = settingData
-        // setInterval(this.checkLength.bind(this), 10000)
+        setInterval(this.checkLength.bind(this), 60000)
     }
     getUnitId(device_no: number | string, bed_no: number | string) {
         return `${device_no}-${bed_no}`
@@ -345,13 +345,13 @@ export class WsService extends EventEmitter {
 
                     if (target.fhr[fetal]) {
                         for (let i = 0; i < diff; i++) {
-                            target.fhr[fetal][i] = undefined
+                            target.fhr[fetal][i] = 0
                         }
                     };
                 }
                 for (let i = 0; i < diff; i++) {
-                    target.toco[i] = undefined
-                    target.fm[i] = undefined
+                    target.toco[i] = 0
+                    target.fm[i] = 0
                 }
                 target.past = target.index - LIMIT_LENGTH
             }

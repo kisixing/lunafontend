@@ -7,7 +7,7 @@ export interface IProps {
     loading?: boolean;
     [x: string]: any;
 }
-export declare type AnalyseType = 'Nst' | 'Krebs' | 'Fischer';
+export declare type AnalyseType = 'Nst' | 'Krebs' | 'Fischer' | 'Sogc' | 'Cst';
 export declare type PointType = 'AccPoint' | 'DecPoint' | 'other';
 export interface Drawer {
     wrap: HTMLElement;

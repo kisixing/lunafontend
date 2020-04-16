@@ -28,7 +28,7 @@ const ScoringMethod = (props: IProps) => {
     MARKS,
     startTime,
     mark, setMark,
-    interval, setInterval,
+    interval, setInterval,endTime
   } = props
 
   const onChange = e => {
@@ -77,7 +77,7 @@ const ScoringMethod = (props: IProps) => {
     return <span style={{ marginRight: 10 }}>开始时间：{(startTime / 240).toFixed(1)}分</span>
   }
   const EndTime = () => {
-    return <span>结束时间：{(startTime / 240 + interval).toFixed(1)}分</span>
+    return <span>结束时间：{(endTime/240).toFixed(1)}分</span>
   }
   const R = useMemo(
     () => {

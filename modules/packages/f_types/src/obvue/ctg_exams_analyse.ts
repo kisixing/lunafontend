@@ -6,17 +6,19 @@ interface BasePoint {
     duration: number;
     ampl: number;
     // local recording
-    x: number
-    y: number
-    marked: boolean
+    x?: number
+    y?: number
+    marked?: boolean
 }
 export interface AccPoint extends BasePoint {
 
     reliability: number
 }
+
+export type DecType = 'ld' | 'ed' | 'vd'
 export interface DecPoint extends BasePoint {
 
-    type: string
+    type: DecType
 }
 export interface _ctg_exams_analyse {
 
@@ -43,10 +45,17 @@ export interface _ctg_exams_analyse {
         end: number
     },
     score: {
+        sogcdata?: {
+            bhrscore: number
+            ltvvalue:number
+            ltvscore:number
+            accscore:number
+            accvalue:number
+            bhrvalue:number
+        }
         ret: number,
         msg: string,
         cstdata?: null,
-        sogcdata?: null,
         nstdata?: {
             bhrscore: number
             ltvscore: number
@@ -61,6 +70,8 @@ export interface _ctg_exams_analyse {
             fmvalue: number
         },
         Krebsdata?: {
+            ltvvalue:number
+            totalscore:number
             bhrscore: number
             ltvscore: number
             stvscore: number
@@ -72,10 +83,11 @@ export interface _ctg_exams_analyse {
             ltvalue: number
             stvvalue: number
             accvalue: number
-            decvalue: number
+            decvalue: string
             fmvalue: number
         },
         fischerdata?: {
+            ltvvalue: number
             bhrscore: number,
             ltvscore: number,
             stvscore: number,
@@ -86,7 +98,7 @@ export interface _ctg_exams_analyse {
             ltvalue: number,
             stvvalue: number,
             accvalue: number,
-            decvalue: number
+            decvalue: string
         }
     }
 }
