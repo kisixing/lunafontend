@@ -2,6 +2,7 @@ import { obvue } from "@lianmed/f_types";
 import Draw from "../../Draw";
 import { AnalyseType } from '../../interface';
 import { Suit } from "../Suit";
+import AccPoint from "../ContextMenu/MenuStrategies/AccPoint";
 
 
 // export interface AnalyseData {
@@ -110,10 +111,18 @@ export class DrawAnalyse extends Draw {
             const target = acc.find(_ => [index, index - 1].includes(_.index))
             target.x = x
             target.y = y
-            txt = `${(target.reliability / 10 || 0).toFixed(1)}`;
-            canvas.font = '15px arial';
-            canvas.fillStyle = target.marked ? 'red' : 'blue';
-            canvas.fillText(txt, x + 1, y + 10);
+            // 90%(后台默认处理90%marked为true)以上直接显示为绿色加速标记（+）
+            if(target.marked){
+                txt = "+";
+                canvas.font = '16px arial';
+                canvas.fillStyle = 'green';
+                canvas.fillText(txt, x + 1, y + 10);
+            }else if(target.reliability>45){ //45%~90%，显示橙色加速标记（+）及橙色**%确定度
+                txt = "+ "+`${target.reliability}+"%"`;
+                canvas.font = '15px arial';
+                canvas.fillStyle = 'orange';
+                canvas.fillText(txt, x + 1, y + 10);
+            }
         } else if (_dec.indexOf(index) > -1 || _dec.indexOf(index - 1) > -1) {
             const target = dec.find(_ => [index, index - 1].includes(_.index))
             target.x = x
@@ -130,6 +139,103 @@ export class DrawAnalyse extends Draw {
         if (value >= min && value <= max)
             result = true;
         return result;
+    }
+    //遍历时间段内的可信加速
+    countAcc = (start: number, end: number) =>{
+        let accnum = 0;
+        const { analysisData } = this
+        if (!analysisData) return accnum;
+        const { analysis} = analysisData
+        analysis.acc.map(function (item) {
+            if( item.index>end){
+                return accnum;
+            }else if(item.index>=start){
+                if(item.marked)
+                    accnum++;
+            }
+        })
+        return accnum;
+    }
+    //遍历时间段内的某类型减速
+    countDec = (start: number, end: number,type:string) => {
+        let decnum = 0;
+        const { analysisData } = this
+        if (!analysisData) return decnum;
+        const { analysis} = analysisData
+        analysis.dec.map(function (item) {
+            if( item.index>end){
+                return decnum;
+            }else if(item.index>=start){
+                if(item.type.toUpperCase()==type)
+                    decnum++;
+            }
+        })
+        return decnum;
+    }
+    // fm 128 判断
+    countFm = (start: number, end: number) =>{
+        let fmnum = 0;
+        for (var i = start; i <= end; i++) {
+            if (i % 2 == 1) continue;
+            if (this.suit.data.fm[i] == 128 || this.suit.data.fm[i] == 1) {
+                fmnum++;
+            }
+        }
+        return fmnum;
+    }
+    //fm-fhr-duration
+    fhrDuration = (start: number, end: number) =>{
+        let accnum =0;
+        let sum = 0;
+        const { analysisData } = this
+        if (!analysisData) return accnum;
+        const { analysis} = analysisData
+        analysis.acc.map(function (item) {
+            if( item.index>end){
+                if(accnum==0)
+                    return accnum;
+                else{
+                    return sum/accnum;
+                }
+            }else if(item.index>=start){
+                if(item.marked){
+                    sum += item.duration;
+                    accnum++;
+                }
+            }
+        })
+        if(accnum==0)
+            return accnum;
+        else{
+            return sum/accnum;
+        }
+    }
+    //fm-fhr-ampl
+    fhrAmpl = (start: number, end: number) =>{
+        let accnum =0;
+        let sum = 0;
+        const { analysisData } = this
+        if (!analysisData) return accnum;
+        const { analysis} = analysisData
+        analysis.acc.map(function (item) {
+            if( item.index>end){
+                if(accnum==0)
+                    return accnum;
+                else{
+                    return sum/accnum;
+                }
+            }else if(item.index>=start){
+                if(item.marked){
+                    sum += item.ampl;
+                    accnum++;
+                }
+            }
+        })
+        if(accnum==0)
+            return accnum;
+        else{
+            return sum/accnum;
+        }
     }
     // TODO：analysis 结构最好与score结构分开
     // 评分类型最好枚举实现
@@ -149,7 +255,7 @@ export class DrawAnalyse extends Draw {
                 score.nstdata.bhrscore = 0;
             else if (this.inRange(bhr, 100, 109) || bhr > 160)
                 score.nstdata.bhrscore = 1;
-            else if (this.inRange(bhr, 120, 160)) {
+            else if (this.inRange(bhr, 110, 160)) {
                 score.nstdata.bhrscore = 2;
             }
             // 振幅
@@ -161,19 +267,18 @@ export class DrawAnalyse extends Draw {
             } else if (this.inRange(analysis.ltv, 10, 30)) {
                 score.nstdata.ltvscore = 2;
             }
-
-            let fhr_uptime = analysis.ltv;
             // 胎动fhr上升时间
-            score.nstdata.ltvvalue = fhr_uptime;
+            let fhr_uptime = this.fhrDuration(analysis.start,analysis.end);
+            score.nstdata.accdurationvalue = fhr_uptime;
             if (fhr_uptime < 10) {
-                score.nstdata.ltvscore = 0;
+                score.nstdata.accdurationscore = 0;
             } else if (this.inRange(fhr_uptime, 10, 14)) {
-                score.nstdata.ltvscore = 1;
+                score.nstdata.accdurationscore = 1;
             } else if (fhr_uptime > 15) {
-                score.nstdata.ltvscore = 2;
+                score.nstdata.accdurationscore = 2;
             }
             // 胎动fhr变化幅度
-            let fhr_ampl = 10;
+            let fhr_ampl = this.fhrAmpl(analysis.start,analysis.end);;
             score.nstdata.accamplvalue = fhr_ampl;
             if (fhr_ampl < 10) {
                 score.nstdata.accamplscore = 0;
@@ -183,7 +288,7 @@ export class DrawAnalyse extends Draw {
                 score.nstdata.accamplscore = 2;
             }
             // 胎动
-            let fmnum = analysis.fm ? analysis.fm.length : 0;
+            let fmnum = this.countFm(analysis.start,analysis.end);
             score.nstdata.fmvalue = fmnum;
             if (fmnum == 0) {
                 score.nstdata.fmscore = 0;
@@ -194,7 +299,6 @@ export class DrawAnalyse extends Draw {
             }
             score.nstdata.totalscore = score.nstdata.accamplscore + score.nstdata.accdurationscore + score.nstdata.bhrscore + score.nstdata.fmscore + score.nstdata.ltvscore;
         }
-        //CST
         //Krebs 30分钟
         else if(type == 'Krebs'){
 		    // 基线选项
@@ -202,14 +306,14 @@ export class DrawAnalyse extends Draw {
             if (analysis.bhr < 100)
             if (bhr < 100 || bhr > 180) {
                 score.Krebsdata.bhrscore = 0;
-            } else if (this.inRange(bhr, 100, 119) || this.inRange(bhr, 161, 180)) {
+            } else if (this.inRange(bhr, 100, 109) || this.inRange(bhr, 161, 180)) {
                 score.Krebsdata.bhrscore = 1;
-            } else if (this.inRange(bhr, 120, 160)) {
+            } else if (this.inRange(bhr, 110, 160)) {
                 score.Krebsdata.bhrscore = 2;
             }
             // 振幅变异
-            let zhenfu_tv = 0;
-            score.Krebsdata.ltvalue = zhenfu_tv;
+            let zhenfu_tv = analysis.ltv;
+            score.Krebsdata.ltvvalue = zhenfu_tv;
             if (zhenfu_tv < 5) {
                 score.Krebsdata.ltvscore = 0;
             } else if (this.inRange(zhenfu_tv, 5, 9) || zhenfu_tv > 25) {
@@ -218,7 +322,7 @@ export class DrawAnalyse extends Draw {
                 score.Krebsdata.ltvscore = 2;
             }
             // 周期变异
-            let zhouqi_tv = 0;
+            let zhouqi_tv = analysis.stv;
             score.Krebsdata.stvvalue = zhouqi_tv;
             if (zhouqi_tv < 3) {
                 score.Krebsdata.stvscore = 0;
@@ -228,7 +332,7 @@ export class DrawAnalyse extends Draw {
                 score.Krebsdata.stvscore = 2;
             }
             // 加速
-            let accnum = 0;
+            let accnum = this.countAcc(analysis.start,analysis.end);
             score.Krebsdata.accvalue = accnum;
             if (accnum == 0) {
                 score.Krebsdata.accscore = 0;
@@ -238,17 +342,23 @@ export class DrawAnalyse extends Draw {
                 score.Krebsdata.accscore = 2;
             }
             // 减速
-            let decnum = 0;
-            score.Krebsdata.decvalue = decnum;
+            let decnum = analysis.ldtimes+analysis.vdtimes;
             if (decnum>1) {
                 score.Krebsdata.decscore = 0;
+                score.Krebsdata.decvalue = decnum+"";
             } else if (decnum=1) {
                 score.Krebsdata.decscore = 1;
+                score.Krebsdata.decvalue = decnum+"";
             } else{
                 score.Krebsdata.decscore = 2;
+                if(analysis.edtimes>0){
+                    score.Krebsdata.decvalue = "早减";
+                }else{
+                    score.Krebsdata.decvalue = "无";
+                }
             }
             // 胎动
-            let fmnum = 0;
+            let fmnum = this.countFm(analysis.start,analysis.end);
             score.Krebsdata.fmvalue = fmnum;
             if (fmnum == 0) {
                 score.Krebsdata.fmscore = 0;
@@ -257,7 +367,7 @@ export class DrawAnalyse extends Draw {
             } else if (fmnum > 4) {
                 score.Krebsdata.fmscore = 2;
             }
-            score.Krebsdata.total = score.Krebsdata.bhrscore+score.Krebsdata.accscore+score.Krebsdata.decscore+score.Krebsdata.ltvscore+score.Krebsdata.stvscore+score.Krebsdata.fmscore;
+            score.Krebsdata.totalscore = score.Krebsdata.bhrscore+score.Krebsdata.accscore+score.Krebsdata.decscore+score.Krebsdata.ltvscore+score.Krebsdata.stvscore+score.Krebsdata.fmscore;
         }
         //Fischer 20分钟
         else if(type=='Fischer'){
@@ -266,23 +376,23 @@ export class DrawAnalyse extends Draw {
             if (analysis.bhr < 100)
             if (bhr < 100 || bhr > 180) {
                 score.fischerdata.bhrscore = 0;
-            } else if (this.inRange(bhr, 100, 119) || this.inRange(bhr, 161, 180)) {
+            } else if (this.inRange(bhr, 100, 109) || this.inRange(bhr, 161, 180)) {
                 score.fischerdata.bhrscore = 1;
-            } else if (this.inRange(bhr, 120, 160)) {
+            } else if (this.inRange(bhr, 110, 160)) {
                 score.fischerdata.bhrscore = 2;
             }
             // 振幅变异
-            let zhenfu_tv = 0;
-            score.fischerdata.ltvalue = zhenfu_tv;
+            let zhenfu_tv = analysis.ltv;
+            score.fischerdata.ltvvalue = zhenfu_tv;
             if (zhenfu_tv < 5) {
                 score.fischerdata.ltvscore = 0;
-            } else if (this.inRange(zhenfu_tv, 5, 9) || zhenfu_tv > 25) {
+            } else if (this.inRange(zhenfu_tv, 5, 9) || zhenfu_tv > 30) {
                 score.fischerdata.ltvscore = 1;
-            } else if (this.inRange(zhenfu_tv, 10, 25)) {
+            } else if (this.inRange(zhenfu_tv, 10, 30)) {
                 score.fischerdata.ltvscore = 2;
             }
             // 周期变异
-            let zhouqi_tv = 0;
+            let zhouqi_tv = analysis.stv;
             score.fischerdata.stvvalue = zhouqi_tv;
             if (zhouqi_tv < 3) {
                 score.fischerdata.stvscore = 0;
@@ -292,7 +402,7 @@ export class DrawAnalyse extends Draw {
                 score.fischerdata.stvscore = 2;
             }
             // 加速
-            let accnum = 0;
+            let accnum = this.countAcc(analysis.start,analysis.end);
             score.fischerdata.accvalue = accnum;
             if (accnum == 0) {
                 score.fischerdata.accscore = 0;
@@ -302,20 +412,78 @@ export class DrawAnalyse extends Draw {
                 score.fischerdata.accscore = 2;
             }
             // 减速
-            let decnum = 0;
-            let ld ;
-            let vd ;
-            score.fischerdata.decvalue = decnum;
-            if (ld) {
+            let ld = analysis.ldtimes;//this.countDec(analysis.start,analysis.end,'LD');
+            let vd = analysis.vdtimes;//this.countDec(analysis.start,analysis.end,'VD');
+            let ed = analysis.edtimes;//this.countDec(analysis.start,analysis.end,'ED');
+            if (ld>0) {
                 score.fischerdata.decscore = 0;
-            } else if (vd) {
+                score.fischerdata.decvalue = 'LD';
+            } else if (vd>0) {
                 score.fischerdata.decscore = 1;
+                score.fischerdata.decvalue = 'VD';
             } else{
+                if(ed>0){
+                    score.fischerdata.decvalue = 'ED';
+                }else{
+                    score.fischerdata.decvalue = '无';
+                }
                 score.fischerdata.decscore = 2;
             }
             score.fischerdata.totalscore = score.fischerdata.bhrscore+score.fischerdata.accscore+score.fischerdata.decscore+score.fischerdata.ltvscore+score.fischerdata.stvscore;
         }
-        //NST-sogc 30分钟
+        //NST-sogc 20~40分钟
+        else if(type=='Sogc'){
+             // 基线选项
+             score.sogcdata.bhrvalue = bhr;
+             if (bhr < 100)
+                 score.sogcdata.bhrscore = 0;
+             else if (this.inRange(bhr, 100, 109) || bhr > 160)
+                 score.sogcdata.bhrscore = 1;
+             else if (this.inRange(bhr, 110, 160)) {
+                 score.sogcdata.bhrscore = 2;
+             }
+             // 振幅
+             score.sogcdata.ltvvalue = analysis.ltv;
+             if (analysis.ltv < 5) {
+                 score.sogcdata.ltvscore = 0;
+             } else if (this.inRange(analysis.ltv, 5, 9) || analysis.ltv > 30) {
+                 score.sogcdata.ltvscore = 1;
+             } else if (this.inRange(analysis.ltv, 10, 30)) {
+                 score.sogcdata.ltvscore = 2;
+             }
+             // 加速
+            let accnum = this.countAcc(analysis.start,analysis.end);
+            score.sogcdata.accvalue = accnum;
+            if (accnum == 0) {
+                score.sogcdata.accscore = 0;
+            } else if (this.inRange(accnum, 1, 2)) {
+                score.sogcdata.accscore = 1;
+            } else if (accnum > 2) {
+                score.sogcdata.accscore = 2;
+            }
+            // 减速
+            let ld = analysis.ldtimes;//this.countDec(analysis.start,analysis.end,'LD');
+            let vd = analysis.vdtimes;//this.countDec(analysis.start,analysis.end,'VD');
+            let ed = analysis.edtimes;//this.countDec(analysis.start,analysis.end,'ED');
+            if (ld>0) {
+                score.fischerdata.decscore = 0;
+                score.fischerdata.decvalue = 'LD';
+            } else if (vd>0) {
+                score.fischerdata.decscore = 1;
+                score.fischerdata.decvalue = 'VD';
+            } else{
+                if(ed>0){
+                    score.fischerdata.decvalue = 'ED';
+                }else{
+                    score.fischerdata.decvalue = '无';
+                }
+                score.fischerdata.decscore = 2;
+            }
+        }
+        //CST
+        else if(type == 'Cst'){
+            
+        }
         this.analyse()
         console.log('ctgscore', type)
     }

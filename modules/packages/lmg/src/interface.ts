@@ -6,7 +6,7 @@ export interface IProps {
     loading?: boolean;
     [x: string]: any
 }
-export type AnalyseType = 'Nst' | 'Krebs' | 'Fischer';
+export type AnalyseType = 'Nst' | 'Krebs' | 'Fischer'| 'Sogc'| 'Cst';
 export type PointType = 'AccPoint' | 'DecPoint' | 'other';
 
 

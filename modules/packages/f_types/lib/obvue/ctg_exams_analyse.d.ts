@@ -40,8 +40,20 @@ export interface _ctg_exams_analyse {
     score: {
         ret: number;
         msg: string;
-        cstdata?: null;
-        sogcdata?: null;
+        cstdata?: {
+
+        };
+        sogcdata?: {
+            bhrscore: number;
+            ltvscore: number;
+            accscore: number;
+            decscore: number;
+            totalscore: number;
+            bhrvalue: number;
+            ltvvalue: number;
+            accvalue: number;
+            decvalue: string;
+        };
         nstdata?: {
             bhrscore: number;
             ltvscore: number;
@@ -62,12 +74,12 @@ export interface _ctg_exams_analyse {
             accscore: number;
             decscore: number;
             fmscore: number;
-            total: number;
+            totalscore: number;
             bhrvalue: number;
-            ltvalue: number;
+            ltvvalue: number;
             stvvalue: number;
             accvalue: number;
-            decvalue: number;
+            decvalue: string;
             fmvalue: number;
         };
         fischerdata?: {
@@ -78,10 +90,10 @@ export interface _ctg_exams_analyse {
             decscore: number;
             totalscore: number;
             bhrvalue: number;
-            ltvalue: number;
+            ltvvalue: number;
             stvvalue: number;
             accvalue: number;
-            decvalue: number;
+            decvalue: string;
         };
     };
 }
