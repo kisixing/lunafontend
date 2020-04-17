@@ -59,7 +59,7 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
     };
     var remoteAnalyse = function () {
         return new Promise(function (res) {
-            if (isToShort || initData || endTime === 0) {
+            if ((isToShort || initData || endTime === 0)) {
                 res();
             }
             else {
@@ -105,11 +105,10 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
             clearInterval(id);
         };
     }, [initData, v, mark, startTime, endTime, setFormData]);
-    var analyse = function () {
-        setAnalyseLoading(true);
-        remoteAnalyse().then(function () {
-            v && setFormData(v.drawAnalyse.analyse(mark, startTime, endTime));
-            setAnalyseLoading(false);
+    var analyse = function (force) {
+        if (force === void 0) { force = false; }
+        remoteAnalyse(force).then(function () {
+            v && setFormData(v.drawAnalyse.analyse(mark, startTime, endTime, initData));
         });
     };
     react_1.useEffect(function () {
@@ -129,6 +128,8 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
     react_1.useEffect(function () { setMarkAndItems(MARKS[0]); }, []);
     react_1.useEffect(function () {
         setFhr(fetal);
+        setInitData(null);
+        setHasInited(false);
     }, [fetal]);
     react_1.useEffect(function () {
         if (ctgData && ctgData.fhr1) {

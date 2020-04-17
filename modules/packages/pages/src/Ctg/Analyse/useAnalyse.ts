@@ -7,7 +7,6 @@ import { obvue } from "@lianmed/f_types";
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import { AnalyseType } from '@lianmed/lmg/lib/interface';
 import { tableData } from './methods/tableData';
-import { message } from 'antd';
 
 const MARKS = Object.keys(tableData) as AnalyseType[]
 
@@ -51,7 +50,7 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void, 
 
     const remoteAnalyse = () => {
         return new Promise((res) => {
-            if (isToShort || initData || endTime === 0) {
+            if ((isToShort || initData || endTime === 0)) {
                 res()
             } else {
                 setAnalyseLoading(true)
@@ -119,12 +118,9 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void, 
         }
     }, [initData, v, mark, startTime, endTime, setFormData])
 
-    const analyse = () => {
-        setAnalyseLoading(true)
-        remoteAnalyse().then(() => {
-            v && setFormData(v.drawAnalyse.analyse(mark, startTime, endTime))
-            setAnalyseLoading(false)
-
+    const analyse = (force = false) => {
+        remoteAnalyse(force).then(() => {
+            v && setFormData(v.drawAnalyse.analyse(mark, startTime, endTime, initData))
         })
     }
 
@@ -150,6 +146,8 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void, 
 
     useEffect(() => {
         setFhr(fetal)
+        setInitData(null)
+        setHasInited(false)
     }, [fetal])
 
 

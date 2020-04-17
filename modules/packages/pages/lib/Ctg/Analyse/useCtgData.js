@@ -50,6 +50,7 @@ var CTGChart = function (docid) {
         var key = "fhr" + index;
         var value = ctgData["_" + key];
         var data = __assign(__assign({}, ctgData), (_a = { fhr1: fhr1 && fhr1.replace(regex, '0'), fhr2: fhr2 && fhr2.replace(regex, '0'), fhr3: fhr3 && fhr3.replace(regex, '0') }, _a[key] = value, _a));
+        console.log('setFhr', JSON.parse(JSON.stringify(data)), JSON.parse(JSON.stringify(ctgData)));
         setCtgData(data);
     }
     return { ctgData: ctgData, loading: loading, setFhr: setFhr, fetal: fetal, setFetal: setFetal };

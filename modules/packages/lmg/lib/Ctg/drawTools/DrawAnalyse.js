@@ -426,6 +426,7 @@ var DrawAnalyse = (function (_super) {
             }
             else if (type == 'Cst') {
             }
+            return (_this.analysisData = analysisData);
         };
         _this.suit = suit;
         return _this;
@@ -485,12 +486,11 @@ var DrawAnalyse = (function (_super) {
         }
     };
     DrawAnalyse.prototype.analyse = function (type, start, end, data) {
-        if (data === void 0) { data = this.analysisData; }
         if (!data)
             return;
-        console.log('local analyse', data);
         var suit = this.suit;
         this.setData(data);
+        console.log('local analyse result', data);
         suit.drawSelect.$selectrpend = end;
         suit.drawSelect.$selectrpstart = start;
         var newData = this.ctgscore(type);

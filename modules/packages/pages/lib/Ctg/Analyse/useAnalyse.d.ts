@@ -18,7 +18,7 @@ declare const _default: (v: Suit, docid: any, fetal: any, setFhr: (index: 2 | 1 
     setMark: (mark: AnalyseType) => void;
     mark: AnalyseType;
     MARKS: AnalyseType[];
-    analyse: () => void;
+    analyse: (force?: boolean) => void;
     startTime: number;
     endTime: number;
     setStartTime: import("react").Dispatch<import("react").SetStateAction<number>>;

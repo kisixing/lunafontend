@@ -86,11 +86,11 @@ export class DrawAnalyse extends Draw {
 
         }
     }
-    analyse(type: AnalyseType, start: number, end: number, data: obvue.ctg_exams_analyse = this.analysisData) {
+    analyse(type: AnalyseType, start: number, end: number, data: obvue.ctg_exams_analyse) {
         if (!data) return
-        console.log('local analyse', data)
         const { suit } = this
         this.setData(data)
+        console.log('local analyse result', data)
         suit.drawSelect.$selectrpend = end
         suit.drawSelect.$selectrpstart = start
         // this.emit('selectForward', data.end - data.start)
@@ -243,7 +243,7 @@ export class DrawAnalyse extends Draw {
     }
     // TODO：analysis 结构最好与score结构分开
     // 评分类型最好枚举实现
-    ctgscore = (type: AnalyseType): obvue.ctg_exams_analyse => {
+    ctgscore = (type: AnalyseType) => {
         let { analysisData } = this
         if (!analysisData) return null
         analysisData = JSON.parse(JSON.stringify(analysisData))
@@ -489,6 +489,7 @@ export class DrawAnalyse extends Draw {
         else if (type == 'Cst') {
 
         }
+        return (this.analysisData = analysisData)
 
     }
     revicePoint(x: number, y: number) {

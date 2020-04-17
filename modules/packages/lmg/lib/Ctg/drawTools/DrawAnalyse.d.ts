@@ -10,7 +10,7 @@ export declare class DrawAnalyse extends Draw {
     init(): void;
     setData(analyseData: obvue.ctg_exams_analyse): void;
     drawBaseline(cur: any, color: any, yspan: any, xspan: any, max: any, basetop: any): void;
-    analyse(type: AnalyseType, start: number, end: number, data?: obvue.ctg_exams_analyse): {
+    analyse(type: AnalyseType, start: number, end: number, data: obvue.ctg_exams_analyse): {
         analysis?: {
             bhr: number;
             ltv: number;
