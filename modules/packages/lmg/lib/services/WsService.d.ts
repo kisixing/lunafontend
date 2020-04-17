@@ -58,5 +58,6 @@ export declare class WsService extends EventEmitter {
     initfhrdata(data: any, datacache: any, offindex: any, queue: any, offstart: any): void;
     starttask(queue: any, offstart: any): void;
     connect: () => Promise<ICache>;
-    checkLength(): void;
+    dataLimitTimeoutId: NodeJS.Timeout;
+    dataLimit(): void;
 }

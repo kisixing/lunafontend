@@ -57,8 +57,10 @@ export class WsService extends EventEmitter {
         }
         WsService._this = this;
         this.settingData = settingData
-        setInterval(this.checkLength.bind(this), 60000)
+        this.dataLimit()
+        event.on('suit:keepData', this.dataLimit.bind(this))
     }
+
     getUnitId(device_no: number | string, bed_no: number | string) {
         return `${device_no}-${bed_no}`
     }
@@ -334,29 +336,34 @@ export class WsService extends EventEmitter {
             return [datacache];
         });
     };
-    checkLength() {
-        Array.from(this.datacache.values()).forEach(target => {
-            const len = target.index - target.past
-            const diff = len - LIMIT_LENGTH
-            console.log('diff', diff)
+    dataLimitTimeoutId: NodeJS.Timeout
+    dataLimit() {
+        if (this.dataLimitTimeoutId) {
+            clearTimeout(this.dataLimitTimeoutId)
+        }
+        this.dataLimitTimeoutId = setTimeout(() => {
+            Array.from(this.datacache.values()).forEach(target => {
+                const len = target.index - target.past
+                const diff = len - LIMIT_LENGTH
 
-            if (diff > 0) {
-                for (let fetal = 0; fetal < target.fetal_num; fetal++) {
+                if (diff > 0) {
+                    for (let fetal = 0; fetal < target.fetal_num; fetal++) {
 
-                    if (target.fhr[fetal]) {
-                        for (let i = 0; i < diff; i++) {
-                            target.fhr[fetal][i] = 0
-                        }
-                    };
+                        if (target.fhr[fetal]) {
+                            for (let i = 0; i < diff; i++) {
+                                target.fhr[fetal][i] = 0
+                            }
+                        };
+                    }
+                    for (let i = 0; i < diff; i++) {
+                        target.toco[i] = 0
+                        target.fm[i] = 0
+                    }
+                    target.past = target.index - LIMIT_LENGTH
                 }
-                for (let i = 0; i < diff; i++) {
-                    target.toco[i] = 0
-                    target.fm[i] = 0
-                }
-                target.past = target.index - LIMIT_LENGTH
-            }
-        });
-
+            });
+            this.dataLimit()
+        }, 60 * 1000)
     }
 }
 const announce = throttle((text) => {

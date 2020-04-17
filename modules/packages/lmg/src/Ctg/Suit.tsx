@@ -11,6 +11,7 @@ import DrawCTG from './DrawCTG';
 import { DrawAnalyse } from './drawTools/DrawAnalyse';
 import { DrawSelect } from './drawTools/DrawSelect';
 import { PointType } from '../interface';
+import { event } from '@lianmed/utils';
 let sid = 0;
 type Canvas = HTMLCanvasElement;
 type Context = CanvasRenderingContext2D;
@@ -184,6 +185,7 @@ export class Suit extends Draw {
       this.timerCtg(defaultinterval);
     }
     this.barTool.watch(value => {
+      this.getoffline();
 
       //显示历史数据
       //kisi 优化拖动赋值
@@ -208,17 +210,13 @@ export class Suit extends Draw {
       this.drawobj.drawdot(this.rightViewPosition, false);
     });
     this.barTool.watchGrab(value => {
+      this.getoffline();
 
 
       let _viewposition;
       value = ~~value * 2;
-      if (this.type == 0 && this.data.past > 0) {
-        //console.log('print', this.data,this.selectrpstart, this.selectrpend);
-        if (!this.requestflag) {
-          this.requestflag = true;
-          this.getoffline(this.data.docid, this.data.past);
-        }
-      }
+
+      
 
       if (this.data.index < this.canvasline.width * 2) {
         return;
@@ -509,15 +507,22 @@ export class Suit extends Draw {
     return status;
   }
 
-  getoffline(doc_id: string, offlineend: number) {
-    request.get(`/ctg-exams-data/${doc_id}`).then(responseData => {
-      // console.log(doc_id, offlineend, responseData, this.data.past);
-      if (responseData) {
-        this.initfhrdata(responseData, this.data, offlineend);
-        this.data.past = 0;
-        this.requestflag = false;
-      }
-    });
+  getoffline() {
+    const doc_id = this.data.docid
+    const offlineend = this.data.past
+    if (!this.requestflag && this.type == 0 && this.data.past > 0) {
+      this.requestflag = true;
+      request.get(`/ctg-exams-data/${doc_id}`).then(responseData => {
+        // console.log(doc_id, offlineend, responseData, this.data.past);
+        if (responseData) {
+          this.initfhrdata(responseData, this.data, offlineend);
+          this.data.past = 0;
+          this.requestflag = false;
+        }
+      });
+    }
+    event.emit('suit:keepData')
+
   }
 
   initfhrdata(data, datacache, offindex) {

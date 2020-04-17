@@ -117,7 +117,8 @@ var WsService = (function (_super) {
         }
         WsService._this = _this_1;
         _this_1.settingData = settingData;
-        setInterval(_this_1.checkLength.bind(_this_1), 60000);
+        _this_1.dataLimit();
+        utils_1.event.on('suit:keepData', _this_1.dataLimit.bind(_this_1));
         return _this_1;
     }
     WsService.prototype.getUnitId = function (device_no, bed_no) {
@@ -335,27 +336,33 @@ var WsService = (function (_super) {
             offstart = false;
         }
     };
-    WsService.prototype.checkLength = function () {
-        Array.from(this.datacache.values()).forEach(function (target) {
-            var len = target.index - target.past;
-            var diff = len - exports.LIMIT_LENGTH;
-            console.log('diff', diff);
-            if (diff > 0) {
-                for (var fetal = 0; fetal < target.fetal_num; fetal++) {
-                    if (target.fhr[fetal]) {
-                        for (var i = 0; i < diff; i++) {
-                            target.fhr[fetal][i] = 0;
+    WsService.prototype.dataLimit = function () {
+        var _this_1 = this;
+        if (this.dataLimitTimeoutId) {
+            clearTimeout(this.dataLimitTimeoutId);
+        }
+        this.dataLimitTimeoutId = setTimeout(function () {
+            Array.from(_this_1.datacache.values()).forEach(function (target) {
+                var len = target.index - target.past;
+                var diff = len - exports.LIMIT_LENGTH;
+                if (diff > 0) {
+                    for (var fetal = 0; fetal < target.fetal_num; fetal++) {
+                        if (target.fhr[fetal]) {
+                            for (var i = 0; i < diff; i++) {
+                                target.fhr[fetal][i] = 0;
+                            }
                         }
+                        ;
                     }
-                    ;
+                    for (var i = 0; i < diff; i++) {
+                        target.toco[i] = 0;
+                        target.fm[i] = 0;
+                    }
+                    target.past = target.index - exports.LIMIT_LENGTH;
                 }
-                for (var i = 0; i < diff; i++) {
-                    target.toco[i] = 0;
-                    target.fm[i] = 0;
-                }
-                target.past = target.index - exports.LIMIT_LENGTH;
-            }
-        });
+            });
+            _this_1.dataLimit();
+        }, 60 * 1000);
     };
     WsService.wsStatus = types_1.EWsStatus;
     WsService.EWsEvents = types_1.EWsEvents;

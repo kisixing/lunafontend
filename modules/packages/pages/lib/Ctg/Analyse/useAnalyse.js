@@ -77,6 +77,8 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
         });
     };
     var setFormData = function (r) {
+        if (!r)
+            return;
         var analysis = r.analysis, score = r.score;
         var f = score[mark.toLowerCase() + "data"];
         var cur = mapFormToMark[mark + "_ref"];

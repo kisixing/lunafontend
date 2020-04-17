@@ -31,6 +31,7 @@ var bindEvents_1 = __importDefault(require("./bindEvents"));
 var DrawCTG_1 = __importDefault(require("./DrawCTG"));
 var DrawAnalyse_1 = require("./drawTools/DrawAnalyse");
 var DrawSelect_1 = require("./drawTools/DrawSelect");
+var utils_2 = require("@lianmed/utils");
 var sid = 0;
 var Suit = (function (_super) {
     __extends(Suit, _super);
@@ -185,6 +186,7 @@ var Suit = (function (_super) {
             this.timerCtg(defaultinterval);
         }
         this.barTool.watch(function (value) {
+            _this.getoffline();
             _this.toolbarposition = value;
             _this.dragtimestamp = new Date().getTime();
             var len = 100;
@@ -202,14 +204,9 @@ var Suit = (function (_super) {
             _this.drawobj.drawdot(_this.rightViewPosition, false);
         });
         this.barTool.watchGrab(function (value) {
+            _this.getoffline();
             var _viewposition;
             value = ~~value * 2;
-            if (_this.type == 0 && _this.data.past > 0) {
-                if (!_this.requestflag) {
-                    _this.requestflag = true;
-                    _this.getoffline(_this.data.docid, _this.data.past);
-                }
-            }
             if (_this.data.index < _this.canvasline.width * 2) {
                 return;
             }
@@ -432,15 +429,21 @@ var Suit = (function (_super) {
     Suit.prototype.onStatusChange = function (status) {
         return status;
     };
-    Suit.prototype.getoffline = function (doc_id, offlineend) {
+    Suit.prototype.getoffline = function () {
         var _this = this;
-        request_1.default.get("/ctg-exams-data/" + doc_id).then(function (responseData) {
-            if (responseData) {
-                _this.initfhrdata(responseData, _this.data, offlineend);
-                _this.data.past = 0;
-                _this.requestflag = false;
-            }
-        });
+        var doc_id = this.data.docid;
+        var offlineend = this.data.past;
+        if (!this.requestflag && this.type == 0 && this.data.past > 0) {
+            this.requestflag = true;
+            request_1.default.get("/ctg-exams-data/" + doc_id).then(function (responseData) {
+                if (responseData) {
+                    _this.initfhrdata(responseData, _this.data, offlineend);
+                    _this.data.past = 0;
+                    _this.requestflag = false;
+                }
+            });
+        }
+        utils_2.event.emit('suit:keepData');
     };
     Suit.prototype.initfhrdata = function (data, datacache, offindex) {
         Object.keys(data).forEach(function (key) {

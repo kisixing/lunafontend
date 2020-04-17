@@ -106,7 +106,7 @@ export declare class Suit extends Draw {
     drawdot(): void;
     timerCtg(dely: any): void;
     onStatusChange(status: boolean): boolean | void;
-    getoffline(doc_id: string, offlineend: number): void;
+    getoffline(): void;
     initfhrdata(data: any, datacache: any, offindex: any): void;
     getPointType(x: number, y: number): PointType;
 }

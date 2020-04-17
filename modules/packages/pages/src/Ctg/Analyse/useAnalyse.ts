@@ -83,7 +83,7 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void, 
     }
 
     const setFormData = (r: obvue.ctg_exams_analyse) => {
-
+        if (!r) return;
         const { analysis, score } = r
 
         const f = score[`${mark.toLowerCase()}data`]
