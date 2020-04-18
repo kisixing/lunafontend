@@ -122,7 +122,7 @@ export class DrawAnalyse extends Draw {
                 canvas.fillStyle = 'green';
                 canvas.fillText(txt, x + 1, y + 10);
             } else if (target.reliability > 45) { //45%~90%，显示橙色加速标记（+）及橙色**%确定度
-                txt = "+ " + `${target.reliability}+"%"`;
+                txt = "+" + `${target.reliability}%`;
                 canvas.font = '15px arial';
                 canvas.fillStyle = 'orange';
                 canvas.fillText(txt, x + 1, y + 10);
