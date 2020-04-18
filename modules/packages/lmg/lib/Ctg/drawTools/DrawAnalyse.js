@@ -516,7 +516,7 @@ var DrawAnalyse = (function (_super) {
         if (marked === void 0) { marked = true; }
         if (!this.analysisData)
             return;
-        var edge = 20;
+        var edge = 24;
         var acc = this.analysisData.analysis.acc;
         var target = acc.find(function (_) { return (x < _.x + edge) && (x > _.x - edge); });
         if (target && (y < (target.y + edge) && y > (target.y - edge))) {
@@ -527,7 +527,7 @@ var DrawAnalyse = (function (_super) {
     DrawAnalyse.prototype.markDecPoint = function (x, y, type) {
         if (!this.analysisData)
             return;
-        var edge = 20;
+        var edge = 24;
         var dec = this.analysisData.analysis.dec;
         var target = dec.find(function (_) { return (x < _.x + edge) && (x > _.x - edge); });
         if (target && (y < (target.y + edge) && y > (target.y - edge))) {

@@ -38,7 +38,7 @@ const App = (props: any) => {
         setParams({ ...params, page })
     }, [page])
     useEffect(() => {
-        type == 0 ?fetchList():fetchSignList()
+        type == 0 ? fetchList() : fetchSignList()
     }, [params])
 
     const fetchCtgExamData = () => {
@@ -90,24 +90,28 @@ const App = (props: any) => {
 
         fetchCtgExamData().then(id => {
             request
-                .get(`/ctg-exams-criteria`, {params: {
-                    page: page - 1,
-                    size: 10,
-                    'diagnosis.specified': true,
-                    'diagnosis.contains':'SM'
-                } })
+                .get(`/ctg-exams-criteria`, {
+                    params: {
+                        page: page - 1,
+                        size: 10,
+                        'diagnosis.specified': true,
+                        'diagnosis.contains': 'SM'
+                    }
+                })
                 .then(function (response) {
                     setDataSource1(response);
                     selected1 || setSelected1(response[0])
                 }).finally(() => setLoading(false))
 
             request
-                .get(`/ctg-exams-criteria/count`, { params: {
-                    page: page - 1,
-                    size: 10,
-                    'diagnosis.specified': true,
-                    'diagnosis.contains':'SM'
-                } })
+                .get(`/ctg-exams-criteria/count`, {
+                    params: {
+                        page: page - 1,
+                        size: 10,
+                        'diagnosis.specified': true,
+                        'diagnosis.contains': 'SM'
+                    }
+                })
                 .then(function (t) {
                     setTotal(t)
                     if (page > t) setPage(t < 1 ? 1 : t)
@@ -119,7 +123,7 @@ const App = (props: any) => {
     const onRadiochange = (e: RadioChangeEvent) => {
         console.log(e.target.value);
         setType(e.target.value);
-        e.target.value==1?fetchSignList():fetchList();
+        e.target.value == 1 ? fetchSignList() : fetchList();
     }
 
     return (
@@ -137,7 +141,7 @@ const App = (props: any) => {
                     <Input allowClear style={{ width: 136 }} size="small" onChange={e => docidRef.current = (e.target.value)} />
                 </div>
                 <Button loading={loading} type="primary" disabled size="small" style={{ width: 220, marginBottom: 5 }} onClick={() => setParams({
-                    ...params, 
+                    ...params,
                 })}>搜索</Button>
                 <div style={{ marginBottom: 5 }}>
                     <Radio.Group defaultValue="0" size="large" onChange={onRadiochange}>
@@ -145,14 +149,14 @@ const App = (props: any) => {
                         <Radio.Button value="1">已标记</Radio.Button>
                     </Radio.Group>
                 </div>
-                {type == 0?<SiderMenu setItem={setSelected} selected={selected} dataSource={dataSource} />:
+                {type == 0 ? <SiderMenu setItem={setSelected} selected={selected} dataSource={dataSource} /> :
                     <SiderMenuC setItem={setSelected1} selected={selected1} dataSource={dataSource1} />}
                 <Pagination disabled={loading} showLessItems current={page} size="small" total={total} onChange={p => setPage(p)} />
             </Layout.Sider>
             <Layout.Content style={{ padding: 12 }}>
-            {type == 0?
-                <Ctg_Analyse docid={selected && selected.ctgexam && selected.ctgexam.note} />:
-                <Ctg_Analyse docid={selected1 && selected1.note} />}
+                {type == 0 ?
+                    <Ctg_Analyse onDownload={() => { }} docid={selected && selected.ctgexam && selected.ctgexam.note} /> :
+                    <Ctg_Analyse onDownload={() => { }} docid={selected1 && selected1.note} />}
             </Layout.Content>
         </Layout>
 

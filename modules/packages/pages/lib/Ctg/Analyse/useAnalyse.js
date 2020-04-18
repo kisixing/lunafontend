@@ -39,12 +39,11 @@ var limitMap = {
 exports.default = (function (v, docid, fetal, setFhr, ctgData) {
     var _a = react_1.useState(), initData = _a[0], setInitData = _a[1];
     var _b = react_1.useState(false), isToShort = _b[0], setIsToShort = _b[1];
-    var _c = react_1.useState(false), hasInited = _c[0], setHasInited = _c[1];
-    var _d = react_1.useState(MARKS[0]), mark = _d[0], setMark = _d[1];
-    var _e = react_1.useState(20), interval = _e[0], setInterval = _e[1];
-    var _f = react_1.useState(0), startTime = _f[0], setStartTime = _f[1];
-    var _g = react_1.useState(0), endTime = _g[0], setEndTime = _g[1];
-    var _h = react_1.useState(false), analyseLoading = _h[0], setAnalyseLoading = _h[1];
+    var _c = react_1.useState(MARKS[0]), mark = _c[0], setMark = _c[1];
+    var _d = react_1.useState(20), interval = _d[0], setInterval = _d[1];
+    var _e = react_1.useState(0), startTime = _e[0], setStartTime = _e[1];
+    var _f = react_1.useState(0), endTime = _f[0], setEndTime = _f[1];
+    var _g = react_1.useState(false), analyseLoading = _g[0], setAnalyseLoading = _g[1];
     var Fischer_ref = react_1.useRef();
     var Krebs_ref = react_1.useRef();
     var Nst_ref = react_1.useRef();
@@ -93,11 +92,11 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
         }
     }, [remoteAnalyse]);
     react_1.useEffect(function () {
-        var id = hasInited ? 0 : window.setInterval(function () {
+        var id = hasFetchedInitData.current ? 0 : window.setInterval(function () {
             if (initData && v) {
                 clearInterval(id);
                 var r = v.drawAnalyse.analyse(mark, startTime, endTime, initData);
-                setHasInited(true);
+                hasFetchedInitData.current = true;
                 setFormData(r);
             }
         }, 1000);
@@ -107,7 +106,7 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
     }, [initData, v, mark, startTime, endTime, setFormData]);
     var analyse = function (force) {
         if (force === void 0) { force = false; }
-        remoteAnalyse(force).then(function () {
+        remoteAnalyse().then(function () {
             v && setFormData(v.drawAnalyse.analyse(mark, startTime, endTime, initData));
         });
     };
@@ -123,13 +122,15 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
     }, [interval, v, docid]);
     react_1.useEffect(function () {
         Object.values(mapFormToMark).forEach(function (f) { return f.current && f.current.resetFields(); });
+        hasFetchedInitData.current = false;
+        setInitData(null);
         setStartTime(0);
     }, [docid]);
     react_1.useEffect(function () { setMarkAndItems(MARKS[0]); }, []);
     react_1.useEffect(function () {
         setFhr(fetal);
         setInitData(null);
-        setHasInited(false);
+        hasFetchedInitData.current = false;
     }, [fetal]);
     react_1.useEffect(function () {
         if (ctgData && ctgData.fhr1) {

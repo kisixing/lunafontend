@@ -22,7 +22,6 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void, 
 
     const [initData, setInitData] = useState<obvue.ctg_exams_analyse>()
     const [isToShort, setIsToShort] = useState(false)
-    const [hasInited, setHasInited] = useState(false)
     const [mark, setMark] = useState(MARKS[0])
     const [interval, setInterval] = useState(20)
     const [startTime, setStartTime] = useState(0)
@@ -104,11 +103,11 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void, 
 
 
     useEffect(() => {
-        const id = hasInited ? 0 : window.setInterval(() => {
+        const id = hasFetchedInitData.current ? 0 : window.setInterval(() => {
             if (initData && v) {
                 clearInterval(id)
                 let r = v.drawAnalyse.analyse(mark, startTime, endTime, initData)
-                setHasInited(true)
+                hasFetchedInitData.current = true
                 setFormData(r)
 
             }
@@ -119,7 +118,7 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void, 
     }, [initData, v, mark, startTime, endTime, setFormData])
 
     const analyse = (force = false) => {
-        remoteAnalyse(force).then(() => {
+        remoteAnalyse().then(() => {
             v && setFormData(v.drawAnalyse.analyse(mark, startTime, endTime, initData))
         })
     }
@@ -140,6 +139,8 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void, 
 
     useEffect(() => {
         Object.values(mapFormToMark).forEach(f => f.current && f.current.resetFields())
+        hasFetchedInitData.current = false
+        setInitData(null)
         setStartTime(0)
     }, [docid])
     useEffect(() => { setMarkAndItems(MARKS[0]) }, [])
@@ -147,7 +148,7 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void, 
     useEffect(() => {
         setFhr(fetal)
         setInitData(null)
-        setHasInited(false)
+        hasFetchedInitData.current = false
     }, [fetal])
 
 
