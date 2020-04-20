@@ -56,22 +56,24 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void, 
                 hasFetchedInitData.current = true
                 request.post(`/ctg-exams-analyse`, {
                     data: { docid, mark, start: startTime, end: endTime, fetal },
-                }).then((r: obvue.ctg_exams_analyse) => {
-                    // r.analysis.dec = [{
-                    //     index: 100,
-                    //     start: 0,
-                    //     end: 1,
-                    //     peak: 11,
-                    //     duration:11, 
-                    //     ampl: 11,
-                    //     // local re
-                    //     type:'ed'
-                    // }]
-                    setInitData(r)
-                }).finally(() => {
-                    setAnalyseLoading(false)
-                    res()
                 })
+                    .then((r: obvue.ctg_exams_analyse) => {
+                        // r.analysis.dec = [{
+                        //     index: 100,
+                        //     start: 0,
+                        //     end: 1,
+                        //     peak: 11,
+                        //     duration:11, 
+                        //     ampl: 11,
+                        //     // local re
+                        //     type:'ed'
+                        // }]
+                        setInitData(r)
+                    })
+                    .finally(() => {
+                        setAnalyseLoading(false)
+                        res()
+                    })
             }
 
 
@@ -109,7 +111,6 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void, 
                 let r = v.drawAnalyse.analyse(mark, startTime, endTime, initData)
                 hasFetchedInitData.current = true
                 setFormData(r)
-
             }
         }, 1000)
         return () => {

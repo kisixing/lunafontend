@@ -39,7 +39,7 @@ __export(require("./utils"));
 var ANNOUNCE_INTERVAL = 1000;
 var SECOND = 1000;
 var Working = types_1.BedStatus.Working, Stopped = types_1.BedStatus.Stopped, OfflineStopped = types_1.BedStatus.OfflineStopped;
-exports.LIMIT_LENGTH = 4 * 3600 * 1;
+exports.LIMIT_LENGTH = 4 * 3600 * 2;
 var WsService = (function (_super) {
     __extends(WsService, _super);
     function WsService(settingData) {

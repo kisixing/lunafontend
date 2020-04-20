@@ -13,7 +13,7 @@ export * from './utils';
 const ANNOUNCE_INTERVAL = 1000
 const SECOND = 1000
 const { Working, Stopped, OfflineStopped } = BedStatus
-export const LIMIT_LENGTH = 4 * 3600 * 1
+export const LIMIT_LENGTH = 4 * 3600 * 2
 
 
 

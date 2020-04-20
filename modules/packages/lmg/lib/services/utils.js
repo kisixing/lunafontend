@@ -18,7 +18,7 @@ exports.mapStatusToText = (_b = {},
     _b[types_1.BedStatus.OfflineStopped] = '停止',
     _b[types_1.BedStatus.Working] = '监护中',
     _b);
-var MAX_SIZE = 4 * 3600 * 24 * 1;
+var MAX_SIZE = 4 * 3600 * 24 * 2;
 function getMaxArray() {
     return new Uint8Array(MAX_SIZE);
 }

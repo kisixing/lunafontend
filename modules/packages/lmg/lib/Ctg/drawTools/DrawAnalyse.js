@@ -44,7 +44,7 @@ var DrawAnalyse = (function (_super) {
                     canvas.fillText(txt, x + 1, y + 10);
                 }
                 else if (target.reliability > 45) {
-                    txt = "+ " + (target.reliability + "+\"%\"");
+                    txt = "+" + (target.reliability + "%");
                     canvas.font = '15px arial';
                     canvas.fillStyle = 'orange';
                     canvas.fillText(txt, x + 1, y + 10);
