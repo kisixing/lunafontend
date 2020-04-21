@@ -307,72 +307,72 @@ export class DrawAnalyse extends Draw {
         //Krebs 30分钟
         else if (type == 'Krebs') {
             // 基线选项
-            score.Krebsdata.bhrvalue = bhr;
+            score.krebsdata.bhrvalue = bhr;
             if (analysis.bhr < 100)
                 if (bhr < 100 || bhr > 180) {
-                    score.Krebsdata.bhrscore = 0;
+                    score.krebsdata.bhrscore = 0;
                 } else if (this.inRange(bhr, 100, 109) || this.inRange(bhr, 161, 180)) {
-                    score.Krebsdata.bhrscore = 1;
+                    score.krebsdata.bhrscore = 1;
                 } else if (this.inRange(bhr, 110, 160)) {
-                    score.Krebsdata.bhrscore = 2;
+                    score.krebsdata.bhrscore = 2;
                 }
             // 振幅变异
             let zhenfu_tv = analysis.ltv;
-            score.Krebsdata.ltvvalue = zhenfu_tv;
+            score.krebsdata.ltvvalue = zhenfu_tv;
             if (zhenfu_tv < 5) {
-                score.Krebsdata.ltvscore = 0;
+                score.krebsdata.ltvscore = 0;
             } else if (this.inRange(zhenfu_tv, 5, 9) || zhenfu_tv > 25) {
-                score.Krebsdata.ltvscore = 1;
+                score.krebsdata.ltvscore = 1;
             } else if (this.inRange(zhenfu_tv, 10, 25)) {
-                score.Krebsdata.ltvscore = 2;
+                score.krebsdata.ltvscore = 2;
             }
             // 周期变异
             let zhouqi_tv = analysis.stv;
-            score.Krebsdata.stvvalue = zhouqi_tv;
+            score.krebsdata.stvvalue = zhouqi_tv;
             if (zhouqi_tv < 3) {
-                score.Krebsdata.stvscore = 0;
+                score.krebsdata.stvscore = 0;
             } else if (this.inRange(zhouqi_tv, 3, 6)) {
-                score.Krebsdata.stvscore = 1;
+                score.krebsdata.stvscore = 1;
             } else if (zhouqi_tv > 6) {
-                score.Krebsdata.stvscore = 2;
+                score.krebsdata.stvscore = 2;
             }
             // 加速
             let accnum = this.countAcc(analysis.start, analysis.end);
-            score.Krebsdata.accvalue = accnum;
+            score.krebsdata.accvalue = accnum;
             if (accnum == 0) {
-                score.Krebsdata.accscore = 0;
+                score.krebsdata.accscore = 0;
             } else if (this.inRange(accnum, 1, 4)) {
-                score.Krebsdata.accscore = 1;
+                score.krebsdata.accscore = 1;
             } else if (accnum > 4) {
-                score.Krebsdata.accscore = 2;
+                score.krebsdata.accscore = 2;
             }
             // 减速
             let decnum = analysis.ldtimes + analysis.vdtimes;
             if (decnum > 1) {
-                score.Krebsdata.decscore = 0;
-                score.Krebsdata.decvalue = decnum + "";
+                score.krebsdata.decscore = 0;
+                score.krebsdata.decvalue = decnum + "";
             } else if (decnum = 1) {
-                score.Krebsdata.decscore = 1;
-                score.Krebsdata.decvalue = decnum + "";
+                score.krebsdata.decscore = 1;
+                score.krebsdata.decvalue = decnum + "";
             } else {
-                score.Krebsdata.decscore = 2;
+                score.krebsdata.decscore = 2;
                 if (analysis.edtimes > 0) {
-                    score.Krebsdata.decvalue = "早减";
+                    score.krebsdata.decvalue = "早减";
                 } else {
-                    score.Krebsdata.decvalue = "无";
+                    score.krebsdata.decvalue = "无";
                 }
             }
             // 胎动
             let fmnum = this.countFm(analysis.start, analysis.end);
-            score.Krebsdata.fmvalue = fmnum;
+            score.krebsdata.fmvalue = fmnum;
             if (fmnum == 0) {
-                score.Krebsdata.fmscore = 0;
+                score.krebsdata.fmscore = 0;
             } else if (this.inRange(fmnum, 1, 4)) {
-                score.Krebsdata.fmscore = 1;
+                score.krebsdata.fmscore = 1;
             } else if (fmnum > 4) {
-                score.Krebsdata.fmscore = 2;
+                score.krebsdata.fmscore = 2;
             }
-            score.Krebsdata.total = score.Krebsdata.bhrscore + score.Krebsdata.accscore + score.Krebsdata.decscore + score.Krebsdata.ltvscore + score.Krebsdata.stvscore + score.Krebsdata.fmscore;
+            score.krebsdata.total = score.krebsdata.bhrscore + score.krebsdata.accscore + score.krebsdata.decscore + score.krebsdata.ltvscore + score.krebsdata.stvscore + score.krebsdata.fmscore;
         }
         //Fischer 20分钟
         else if (type == 'Fischer') {

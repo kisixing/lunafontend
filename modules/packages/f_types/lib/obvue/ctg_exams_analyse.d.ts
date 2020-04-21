@@ -63,7 +63,7 @@ export interface _ctg_exams_analyse {
             accamplvalue: number;
             fmvalue: number;
         };
-        Krebsdata?: {
+        krebsdata?: {
             ltvvalue: number;
             bhrscore: number;
             ltvscore: number;

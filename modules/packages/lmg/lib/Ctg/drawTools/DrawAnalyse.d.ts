@@ -57,7 +57,7 @@ export declare class DrawAnalyse extends Draw {
                 accamplvalue: number;
                 fmvalue: number;
             };
-            Krebsdata?: {
+            krebsdata?: {
                 ltvvalue: number;
                 bhrscore: number;
                 ltvscore: number;
@@ -143,7 +143,7 @@ export declare class DrawAnalyse extends Draw {
                 accamplvalue: number;
                 fmvalue: number;
             };
-            Krebsdata?: {
+            krebsdata?: {
                 ltvvalue: number;
                 bhrscore: number;
                 ltvscore: number;

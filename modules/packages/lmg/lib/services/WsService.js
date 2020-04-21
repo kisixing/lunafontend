@@ -349,14 +349,14 @@ var WsService = (function (_super) {
                     for (var fetal = 0; fetal < target.fetal_num; fetal++) {
                         if (target.fhr[fetal]) {
                             for (var i = 0; i < diff; i++) {
-                                target.fhr[fetal][i] = 0;
+                                delete target.fhr[fetal][i];
                             }
                         }
                         ;
                     }
                     for (var i = 0; i < diff; i++) {
-                        target.toco[i] = 0;
-                        target.fm[i] = 0;
+                        delete target.toco[i];
+                        delete target.fm[i];
                     }
                     target.past = target.index - exports.LIMIT_LENGTH;
                 }

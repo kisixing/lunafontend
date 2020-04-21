@@ -67,62 +67,60 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void, 
                         //     // local re
                         //     type:'ed'
                         // }]
-                        if (!r.score) {
-                            r.score = {
-                                sogcdata: {
-                                    bhrscore: 0,
-                                    ltvvalue: 0,
-                                    ltvscore: 0,
-                                    accscore: 0,
-                                    accvalue: 0,
-                                    bhrvalue: 0,
-                                },
-                                ret: 0,
-                                msg: '',
-                                cstdata: null,
-                                nstdata: {
-                                    bhrscore: 0,
-                                    ltvscore: 0,
-                                    accdurationscore: 0,
-                                    accamplscore: 0,
-                                    fmscore: 0,
-                                    total: 0,
-                                    bhrvalue: 0,
-                                    ltvvalue: 0,
-                                    accdurationvalue: 0,
-                                    accamplvalue: 0,
-                                    fmvalue: 0,
-                                },
-                                Krebsdata: {
-                                    ltvvalue: 0,
-                                    total: 0,
-                                    bhrscore: 0,
-                                    ltvscore: 0,
-                                    stvscore: 0,
-                                    accscore: 0,
-                                    decscore: 0,
-                                    fmscore: 0,
-                                    bhrvalue: 0,
-                                    ltvalue: 0,
-                                    stvvalue: 0,
-                                    accvalue: 0,
-                                    decvalue: '',
-                                    fmvalue: 0,
-                                },
-                                fischerdata: {
-                                    ltvvalue: 0,
-                                    bhrscore: 0,
-                                    ltvscore: 0,
-                                    stvscore: 0,
-                                    accscore: 0,
-                                    decscore: 0,
-                                    total: 0,
-                                    bhrvalue: 0,
-                                    ltvalue: 0,
-                                    stvvalue: 0,
-                                    accvalue: 0,
-                                    decvalue: '',
-                                }
+                        r.score = {
+                            sogcdata: {
+                                bhrscore: 0,
+                                ltvvalue: 0,
+                                ltvscore: 0,
+                                accscore: 0,
+                                accvalue: 0,
+                                bhrvalue: 0,
+                            },
+                            ret: 0,
+                            msg: '',
+                            cstdata: null,
+                            nstdata: {
+                                bhrscore: 0,
+                                ltvscore: 0,
+                                accdurationscore: 0,
+                                accamplscore: 0,
+                                fmscore: 0,
+                                total: 0,
+                                bhrvalue: 0,
+                                ltvvalue: 0,
+                                accdurationvalue: 0,
+                                accamplvalue: 0,
+                                fmvalue: 0,
+                            },
+                            krebsdata: {
+                                ltvvalue: 0,
+                                total: 0,
+                                bhrscore: 0,
+                                ltvscore: 0,
+                                stvscore: 0,
+                                accscore: 0,
+                                decscore: 0,
+                                fmscore: 0,
+                                bhrvalue: 0,
+                                ltvalue: 0,
+                                stvvalue: 0,
+                                accvalue: 0,
+                                decvalue: '',
+                                fmvalue: 0,
+                            },
+                            fischerdata: {
+                                ltvvalue: 0,
+                                bhrscore: 0,
+                                ltvscore: 0,
+                                stvscore: 0,
+                                accscore: 0,
+                                decscore: 0,
+                                total: 0,
+                                bhrvalue: 0,
+                                ltvalue: 0,
+                                stvvalue: 0,
+                                accvalue: 0,
+                                decvalue: '',
                             }
                         }
                         setInitData(r)
@@ -188,6 +186,8 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void, 
         const s = (time) => {
             time = time + 4800 <= v.data.index ? time : ((v.data.index - 4800) > 0 ? (v.data.index - 4800) : 0)
             docid && setStartTime(time)
+            setInitData(null)
+            hasInitAnalysed.current = false
         }
 
         v && v.on('change:selectPoint', s)
@@ -233,7 +233,7 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void, 
 
     useEffect(() => {
         analyse()
-    }, [ mark])
+    }, [mark])
 
     return {
         setMark, mark,
