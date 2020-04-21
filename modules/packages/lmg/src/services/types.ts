@@ -46,9 +46,13 @@ export interface ICacheItem {
     is_include_tocozero?: boolean
     disableStartWork?: boolean
     analyse?: any;
-    fhr?: Uint8Array[];
-    toco?: Uint8Array;
-    fm?: Uint8Array;
+    // fhr?: Uint8Array[];
+    // toco?: Uint8Array;
+    // fm?: Uint8Array;
+    fhr?: number[][];
+    toco?: number[];
+    fm?: number[];
+    
     index?: number;
     length?: number;
     start?: number;

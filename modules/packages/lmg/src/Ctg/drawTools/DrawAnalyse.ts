@@ -301,7 +301,7 @@ export class DrawAnalyse extends Draw {
             } else if (fmnum > 2) {
                 score.nstdata.fmscore = 2;
             }
-            score.nstdata.totalscore = score.nstdata.accamplscore + score.nstdata.accdurationscore + score.nstdata.bhrscore + score.nstdata.fmscore + score.nstdata.ltvscore;
+            score.nstdata.total = score.nstdata.accamplscore + score.nstdata.accdurationscore + score.nstdata.bhrscore + score.nstdata.fmscore + score.nstdata.ltvscore;
             return this.analysisData = analysisData
         }
         //Krebs 30分钟
@@ -372,7 +372,7 @@ export class DrawAnalyse extends Draw {
             } else if (fmnum > 4) {
                 score.Krebsdata.fmscore = 2;
             }
-            score.Krebsdata.totalscore = score.Krebsdata.bhrscore + score.Krebsdata.accscore + score.Krebsdata.decscore + score.Krebsdata.ltvscore + score.Krebsdata.stvscore + score.Krebsdata.fmscore;
+            score.Krebsdata.total = score.Krebsdata.bhrscore + score.Krebsdata.accscore + score.Krebsdata.decscore + score.Krebsdata.ltvscore + score.Krebsdata.stvscore + score.Krebsdata.fmscore;
         }
         //Fischer 20分钟
         else if (type == 'Fischer') {
@@ -434,7 +434,7 @@ export class DrawAnalyse extends Draw {
                 }
                 score.fischerdata.decscore = 2;
             }
-            score.fischerdata.totalscore = score.fischerdata.bhrscore + score.fischerdata.accscore + score.fischerdata.decscore + score.fischerdata.ltvscore + score.fischerdata.stvscore;
+            score.fischerdata.total = score.fischerdata.bhrscore + score.fischerdata.accscore + score.fischerdata.decscore + score.fischerdata.ltvscore + score.fischerdata.stvscore;
         }
         //NST-sogc 20~40分钟
         else if (type == 'Sogc') {

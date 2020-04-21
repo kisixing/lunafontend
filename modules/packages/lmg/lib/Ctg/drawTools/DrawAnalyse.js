@@ -227,7 +227,7 @@ var DrawAnalyse = (function (_super) {
                 else if (fmnum > 2) {
                     score.nstdata.fmscore = 2;
                 }
-                score.nstdata.totalscore = score.nstdata.accamplscore + score.nstdata.accdurationscore + score.nstdata.bhrscore + score.nstdata.fmscore + score.nstdata.ltvscore;
+                score.nstdata.total = score.nstdata.accamplscore + score.nstdata.accdurationscore + score.nstdata.bhrscore + score.nstdata.fmscore + score.nstdata.ltvscore;
                 return _this.analysisData = analysisData;
             }
             else if (type == 'Krebs') {
@@ -304,7 +304,7 @@ var DrawAnalyse = (function (_super) {
                 else if (fmnum > 4) {
                     score.Krebsdata.fmscore = 2;
                 }
-                score.Krebsdata.totalscore = score.Krebsdata.bhrscore + score.Krebsdata.accscore + score.Krebsdata.decscore + score.Krebsdata.ltvscore + score.Krebsdata.stvscore + score.Krebsdata.fmscore;
+                score.Krebsdata.total = score.Krebsdata.bhrscore + score.Krebsdata.accscore + score.Krebsdata.decscore + score.Krebsdata.ltvscore + score.Krebsdata.stvscore + score.Krebsdata.fmscore;
             }
             else if (type == 'Fischer') {
                 score.fischerdata.bhrvalue = bhr;
@@ -371,7 +371,7 @@ var DrawAnalyse = (function (_super) {
                     }
                     score.fischerdata.decscore = 2;
                 }
-                score.fischerdata.totalscore = score.fischerdata.bhrscore + score.fischerdata.accscore + score.fischerdata.decscore + score.fischerdata.ltvscore + score.fischerdata.stvscore;
+                score.fischerdata.total = score.fischerdata.bhrscore + score.fischerdata.accscore + score.fischerdata.decscore + score.fischerdata.ltvscore + score.fischerdata.stvscore;
             }
             else if (type == 'Sogc') {
                 score.sogcdata.bhrvalue = bhr;

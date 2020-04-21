@@ -49,7 +49,7 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
     var Nst_ref = react_1.useRef();
     var analysis_ref = react_1.useRef();
     var old_ref = react_1.useRef({});
-    var hasFetchedInitData = react_1.useRef(false);
+    var hasInitAnalysed = react_1.useRef(false);
     var mapFormToMark = {
         Fischer_ref: Fischer_ref,
         Krebs_ref: Krebs_ref,
@@ -63,12 +63,71 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
             }
             else {
                 setAnalyseLoading(true);
-                hasFetchedInitData.current = true;
                 request_1.default.post("/ctg-exams-analyse", {
                     data: { docid: docid, mark: mark, start: startTime, end: endTime, fetal: fetal },
-                }).then(function (r) {
+                })
+                    .then(function (r) {
+                    if (!r.score) {
+                        r.score = {
+                            sogcdata: {
+                                bhrscore: 0,
+                                ltvvalue: 0,
+                                ltvscore: 0,
+                                accscore: 0,
+                                accvalue: 0,
+                                bhrvalue: 0,
+                            },
+                            ret: 0,
+                            msg: '',
+                            cstdata: null,
+                            nstdata: {
+                                bhrscore: 0,
+                                ltvscore: 0,
+                                accdurationscore: 0,
+                                accamplscore: 0,
+                                fmscore: 0,
+                                total: 0,
+                                bhrvalue: 0,
+                                ltvvalue: 0,
+                                accdurationvalue: 0,
+                                accamplvalue: 0,
+                                fmvalue: 0,
+                            },
+                            Krebsdata: {
+                                ltvvalue: 0,
+                                total: 0,
+                                bhrscore: 0,
+                                ltvscore: 0,
+                                stvscore: 0,
+                                accscore: 0,
+                                decscore: 0,
+                                fmscore: 0,
+                                bhrvalue: 0,
+                                ltvalue: 0,
+                                stvvalue: 0,
+                                accvalue: 0,
+                                decvalue: '',
+                                fmvalue: 0,
+                            },
+                            fischerdata: {
+                                ltvvalue: 0,
+                                bhrscore: 0,
+                                ltvscore: 0,
+                                stvscore: 0,
+                                accscore: 0,
+                                decscore: 0,
+                                total: 0,
+                                bhrvalue: 0,
+                                ltvalue: 0,
+                                stvvalue: 0,
+                                accvalue: 0,
+                                decvalue: '',
+                            }
+                        };
+                    }
                     setInitData(r);
-                }).finally(function () {
+                })
+                    .finally(function () {
                     setAnalyseLoading(false);
                     res();
                 });
@@ -87,16 +146,17 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
         analysis_ref.current && analysis_ref.current.setFieldsValue(__assign(__assign({ stv: stv }, ucdata), others));
     };
     react_1.useEffect(function () {
-        if (!hasFetchedInitData.current) {
+        if (!analyseLoading) {
             remoteAnalyse();
         }
     }, [remoteAnalyse]);
     react_1.useEffect(function () {
-        var id = hasFetchedInitData.current ? 0 : window.setInterval(function () {
+        var id = hasInitAnalysed.current ? 0 : window.setInterval(function () {
+            console.log('111', initData, v);
             if (initData && v) {
                 clearInterval(id);
                 var r = v.drawAnalyse.analyse(mark, startTime, endTime, initData);
-                hasFetchedInitData.current = true;
+                hasInitAnalysed.current = true;
                 setFormData(r);
             }
         }, 1000);
@@ -122,15 +182,15 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
     }, [interval, v, docid]);
     react_1.useEffect(function () {
         Object.values(mapFormToMark).forEach(function (f) { return f.current && f.current.resetFields(); });
-        hasFetchedInitData.current = false;
+        hasInitAnalysed.current = false;
         setInitData(null);
         setStartTime(0);
     }, [docid]);
-    react_1.useEffect(function () { setMarkAndItems(MARKS[0]); }, []);
+    react_1.useEffect(function () { setMark(MARKS[0]); }, []);
     react_1.useEffect(function () {
         setFhr(fetal);
         setInitData(null);
-        hasFetchedInitData.current = false;
+        hasInitAnalysed.current = false;
     }, [fetal]);
     react_1.useEffect(function () {
         if (ctgData && ctgData.fhr1) {
@@ -147,11 +207,11 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
             setIsToShort(false);
         }
     }, [startTime, endTime, mark]);
-    var setMarkAndItems = function (mark) {
-        setMark(mark);
-    };
+    react_1.useEffect(function () {
+        analyse();
+    }, [mark]);
     return {
-        setMark: setMarkAndItems, mark: mark,
+        setMark: setMark, mark: mark,
         MARKS: MARKS,
         analyse: analyse,
         startTime: startTime, endTime: endTime, setStartTime: setStartTime, interval: interval, setInterval: setInterval,

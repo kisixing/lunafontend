@@ -33,7 +33,7 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void, 
     const analysis_ref = useRef<FormInstance>()
     const old_ref = useRef<{ [x: string]: any }>({})
 
-    const hasFetchedInitData = useRef(false)
+    const hasInitAnalysed = useRef(false)
 
 
     const mapFormToMark = {
@@ -53,7 +53,6 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void, 
                 res()
             } else {
                 setAnalyseLoading(true)
-                hasFetchedInitData.current = true
                 request.post(`/ctg-exams-analyse`, {
                     data: { docid, mark, start: startTime, end: endTime, fetal },
                 })
@@ -68,6 +67,64 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void, 
                         //     // local re
                         //     type:'ed'
                         // }]
+                        if (!r.score) {
+                            r.score = {
+                                sogcdata: {
+                                    bhrscore: 0,
+                                    ltvvalue: 0,
+                                    ltvscore: 0,
+                                    accscore: 0,
+                                    accvalue: 0,
+                                    bhrvalue: 0,
+                                },
+                                ret: 0,
+                                msg: '',
+                                cstdata: null,
+                                nstdata: {
+                                    bhrscore: 0,
+                                    ltvscore: 0,
+                                    accdurationscore: 0,
+                                    accamplscore: 0,
+                                    fmscore: 0,
+                                    total: 0,
+                                    bhrvalue: 0,
+                                    ltvvalue: 0,
+                                    accdurationvalue: 0,
+                                    accamplvalue: 0,
+                                    fmvalue: 0,
+                                },
+                                Krebsdata: {
+                                    ltvvalue: 0,
+                                    total: 0,
+                                    bhrscore: 0,
+                                    ltvscore: 0,
+                                    stvscore: 0,
+                                    accscore: 0,
+                                    decscore: 0,
+                                    fmscore: 0,
+                                    bhrvalue: 0,
+                                    ltvalue: 0,
+                                    stvvalue: 0,
+                                    accvalue: 0,
+                                    decvalue: '',
+                                    fmvalue: 0,
+                                },
+                                fischerdata: {
+                                    ltvvalue: 0,
+                                    bhrscore: 0,
+                                    ltvscore: 0,
+                                    stvscore: 0,
+                                    accscore: 0,
+                                    decscore: 0,
+                                    total: 0,
+                                    bhrvalue: 0,
+                                    ltvalue: 0,
+                                    stvvalue: 0,
+                                    accvalue: 0,
+                                    decvalue: '',
+                                }
+                            }
+                        }
                         setInitData(r)
                     })
                     .finally(() => {
@@ -95,8 +152,8 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void, 
         analysis_ref.current && analysis_ref.current.setFieldsValue({ stv, ...ucdata, ...others })
     }
     useEffect(() => {
-        if (!hasFetchedInitData.current) {
 
+        if (!analyseLoading) {
             remoteAnalyse()
         }
 
@@ -105,11 +162,14 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void, 
 
 
     useEffect(() => {
-        const id = hasFetchedInitData.current ? 0 : window.setInterval(() => {
+
+        const id = hasInitAnalysed.current ? 0 : window.setInterval(() => {
+            console.log('111', initData, v)
             if (initData && v) {
+
                 clearInterval(id)
                 let r = v.drawAnalyse.analyse(mark, startTime, endTime, initData)
-                hasFetchedInitData.current = true
+                hasInitAnalysed.current = true
                 setFormData(r)
             }
         }, 1000)
@@ -140,16 +200,16 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void, 
 
     useEffect(() => {
         Object.values(mapFormToMark).forEach(f => f.current && f.current.resetFields())
-        hasFetchedInitData.current = false
+        hasInitAnalysed.current = false
         setInitData(null)
         setStartTime(0)
     }, [docid])
-    useEffect(() => { setMarkAndItems(MARKS[0]) }, [])
+    useEffect(() => { setMark(MARKS[0]) }, [])
 
     useEffect(() => {
         setFhr(fetal)
         setInitData(null)
-        hasFetchedInitData.current = false
+        hasInitAnalysed.current = false
     }, [fetal])
 
 
@@ -171,13 +231,12 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void, 
 
 
 
-    const setMarkAndItems = (mark: AnalyseType) => {
-        setMark(mark)
-    }
-
+    useEffect(() => {
+        analyse()
+    }, [ mark])
 
     return {
-        setMark: setMarkAndItems, mark,
+        setMark, mark,
         MARKS,
         analyse,
         startTime, endTime, setStartTime, interval, setInterval,
@@ -204,9 +263,9 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void, 
 
 
 export interface IResult {
-    fhr_uptime_score: number;
-    fhrbaseline_score: number;
-    fm_fhrv_score: number;
-    fm_score: number;
-    zhenfu_lv_score: number;
+    fhr_uptime_score: 0,
+    fhrbaseline_score: 0,
+    fm_fhrv_score: 0,
+    fm_score: 0,
+    zhenfu_lv_score: 0,
 }

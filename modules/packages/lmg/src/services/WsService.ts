@@ -351,13 +351,13 @@ export class WsService extends EventEmitter {
 
                         if (target.fhr[fetal]) {
                             for (let i = 0; i < diff; i++) {
-                                target.fhr[fetal][i] = 0
+                                delete target.fhr[fetal][i]
                             }
                         };
                     }
                     for (let i = 0; i < diff; i++) {
-                        target.toco[i] = 0
-                        target.fm[i] = 0
+                        delete target.toco[i]
+                        delete target.fm[i]
                     }
                     target.past = target.index - LIMIT_LENGTH
                 }
