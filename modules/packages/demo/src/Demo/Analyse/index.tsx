@@ -122,6 +122,10 @@ const App = (props: any) => {
         e.target.value==1?fetchSignList():fetchList();
     }
 
+    const onDownloadT = () => {
+        console.log("on download test");
+    }
+
     return (
 
         <Layout style={{ height: '100%' }}>
@@ -151,8 +155,8 @@ const App = (props: any) => {
             </Layout.Sider>
             <Layout.Content style={{ padding: 12 }}>
             {type == 0?
-                <Ctg_Analyse docid={selected && selected.ctgexam && selected.ctgexam.note} />:
-                <Ctg_Analyse docid={selected1 && selected1.note} />}
+                <Ctg_Analyse docid={selected && selected.ctgexam && selected.ctgexam.note} onDownload={onDownloadT}/>:
+                <Ctg_Analyse docid={selected1 && selected1.note} onDownload={onDownloadT}/>}
             </Layout.Content>
         </Layout>
 
