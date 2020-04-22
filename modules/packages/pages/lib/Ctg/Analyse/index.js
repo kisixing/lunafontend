@@ -140,8 +140,9 @@ exports.Ctg_Analyse = function (_a) {
                 react_1.default.createElement(Analyse_1.default, { ref: analysis_ref }),
                 react_1.default.createElement("div", { style: { position: 'absolute', right: 12, bottom: 0 } },
                     react_1.default.createElement(antd_1.Button, { size: "small", onClick: function () {
-                            var query = qs_1.stringify(getrRequestData());
-                            onDownload("/ctg-exams-analysis-pdf?" + query);
+                            var url = "/ctg-exams-analysis-pdf?query=" + btoa(unescape(encodeURIComponent(JSON.stringify(getrRequestData()))));
+                            console.log('url', url);
+                            onDownload(url);
                         }, style: { marginBottom: 10 }, disabled: btnDisabled }, "\u6253\u5370"),
                     react_1.default.createElement(antd_1.Button, { size: "small", type: "primary", onClick: submit, disabled: btnDisabled }, "\u4FDD\u5B58"))))));
 };

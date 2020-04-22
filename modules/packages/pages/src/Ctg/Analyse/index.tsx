@@ -176,8 +176,10 @@ export const Ctg_Analyse: FC<{
               <Button size="small" onClick={() => {
                 // const rightData = analysis_ref.current.getFieldsValue()
                 // const { diagnosistxt } = rightData
-                const query = stringify(getrRequestData())
-                onDownload(`/ctg-exams-analysis-pdf?${query}`)
+                const url = `/ctg-exams-analysis-pdf?query=${btoa(unescape(encodeURIComponent(JSON.stringify(getrRequestData()))))}`
+                console.log('url',url);
+                
+                onDownload(url)
                 // request.get('/ctg-exams-analysis-pdf', { params: getrRequestData() }).then(() => { })
                 // fetchCtgExamsPdf({
                 //   diagnosis: diagnosistxt,
