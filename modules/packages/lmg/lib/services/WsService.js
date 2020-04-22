@@ -39,7 +39,7 @@ __export(require("./utils"));
 var ANNOUNCE_INTERVAL = 1000;
 var SECOND = 1000;
 var Working = types_1.BedStatus.Working, Stopped = types_1.BedStatus.Stopped, OfflineStopped = types_1.BedStatus.OfflineStopped;
-exports.LIMIT_LENGTH = 4 * 3600 * 1;
+exports.LIMIT_LENGTH = 4 * 3600 * 2;
 var WsService = (function (_super) {
     __extends(WsService, _super);
     function WsService(settingData) {
@@ -349,14 +349,14 @@ var WsService = (function (_super) {
                     for (var fetal = 0; fetal < target.fetal_num; fetal++) {
                         if (target.fhr[fetal]) {
                             for (var i = 0; i < diff; i++) {
-                                target.fhr[fetal][i] = 0;
+                                delete target.fhr[fetal][i];
                             }
                         }
                         ;
                     }
                     for (var i = 0; i < diff; i++) {
-                        target.toco[i] = 0;
-                        target.fm[i] = 0;
+                        delete target.toco[i];
+                        delete target.fm[i];
                     }
                     target.past = target.index - exports.LIMIT_LENGTH;
                 }

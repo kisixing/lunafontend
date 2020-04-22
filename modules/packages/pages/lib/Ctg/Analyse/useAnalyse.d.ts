@@ -15,7 +15,7 @@ declare const _default: (v: Suit, docid: any, fetal: any, setFhr: (index: 2 | 1 
     _fhr2?: string;
     _fhr3?: string;
 }) => {
-    setMark: (mark: AnalyseType) => void;
+    setMark: import("react").Dispatch<import("react").SetStateAction<AnalyseType>>;
     mark: AnalyseType;
     MARKS: AnalyseType[];
     analyse: (force?: boolean) => void;
@@ -36,9 +36,9 @@ declare const _default: (v: Suit, docid: any, fetal: any, setFhr: (index: 2 | 1 
 };
 export default _default;
 export interface IResult {
-    fhr_uptime_score: number;
-    fhrbaseline_score: number;
-    fm_fhrv_score: number;
-    fm_score: number;
-    zhenfu_lv_score: number;
+    fhr_uptime_score: 0;
+    fhrbaseline_score: 0;
+    fm_fhrv_score: 0;
+    fm_score: 0;
+    zhenfu_lv_score: 0;
 }

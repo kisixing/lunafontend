@@ -39,18 +39,17 @@ var limitMap = {
 exports.default = (function (v, docid, fetal, setFhr, ctgData) {
     var _a = react_1.useState(), initData = _a[0], setInitData = _a[1];
     var _b = react_1.useState(false), isToShort = _b[0], setIsToShort = _b[1];
-    var _c = react_1.useState(false), hasInited = _c[0], setHasInited = _c[1];
-    var _d = react_1.useState(MARKS[0]), mark = _d[0], setMark = _d[1];
-    var _e = react_1.useState(20), interval = _e[0], setInterval = _e[1];
-    var _f = react_1.useState(0), startTime = _f[0], setStartTime = _f[1];
-    var _g = react_1.useState(0), endTime = _g[0], setEndTime = _g[1];
-    var _h = react_1.useState(false), analyseLoading = _h[0], setAnalyseLoading = _h[1];
+    var _c = react_1.useState(MARKS[0]), mark = _c[0], setMark = _c[1];
+    var _d = react_1.useState(20), interval = _d[0], setInterval = _d[1];
+    var _e = react_1.useState(0), startTime = _e[0], setStartTime = _e[1];
+    var _f = react_1.useState(0), endTime = _f[0], setEndTime = _f[1];
+    var _g = react_1.useState(false), analyseLoading = _g[0], setAnalyseLoading = _g[1];
     var Fischer_ref = react_1.useRef();
     var Krebs_ref = react_1.useRef();
     var Nst_ref = react_1.useRef();
     var analysis_ref = react_1.useRef();
     var old_ref = react_1.useRef({});
-    var hasFetchedInitData = react_1.useRef(false);
+    var hasInitAnalysed = react_1.useRef(false);
     var mapFormToMark = {
         Fischer_ref: Fischer_ref,
         Krebs_ref: Krebs_ref,
@@ -64,12 +63,69 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
             }
             else {
                 setAnalyseLoading(true);
-                hasFetchedInitData.current = true;
                 request_1.default.post("/ctg-exams-analyse", {
                     data: { docid: docid, mark: mark, start: startTime, end: endTime, fetal: fetal },
-                }).then(function (r) {
+                })
+                    .then(function (r) {
+                    r.score = {
+                        sogcdata: {
+                            bhrscore: 0,
+                            ltvvalue: 0,
+                            ltvscore: 0,
+                            accscore: 0,
+                            accvalue: 0,
+                            bhrvalue: 0,
+                        },
+                        ret: 0,
+                        msg: '',
+                        cstdata: null,
+                        nstdata: {
+                            bhrscore: 0,
+                            ltvscore: 0,
+                            accdurationscore: 0,
+                            accamplscore: 0,
+                            fmscore: 0,
+                            total: 0,
+                            bhrvalue: 0,
+                            ltvvalue: 0,
+                            accdurationvalue: 0,
+                            accamplvalue: 0,
+                            fmvalue: 0,
+                        },
+                        krebsdata: {
+                            ltvvalue: 0,
+                            total: 0,
+                            bhrscore: 0,
+                            ltvscore: 0,
+                            stvscore: 0,
+                            accscore: 0,
+                            decscore: 0,
+                            fmscore: 0,
+                            bhrvalue: 0,
+                            ltvalue: 0,
+                            stvvalue: 0,
+                            accvalue: 0,
+                            decvalue: '',
+                            fmvalue: 0,
+                        },
+                        fischerdata: {
+                            ltvvalue: 0,
+                            bhrscore: 0,
+                            ltvscore: 0,
+                            stvscore: 0,
+                            accscore: 0,
+                            decscore: 0,
+                            total: 0,
+                            bhrvalue: 0,
+                            ltvalue: 0,
+                            stvvalue: 0,
+                            accvalue: 0,
+                            decvalue: '',
+                        }
+                    };
                     setInitData(r);
-                }).finally(function () {
+                })
+                    .finally(function () {
                     setAnalyseLoading(false);
                     res();
                 });
@@ -88,16 +144,17 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
         analysis_ref.current && analysis_ref.current.setFieldsValue(__assign(__assign({ stv: stv }, ucdata), others));
     };
     react_1.useEffect(function () {
-        if (!hasFetchedInitData.current) {
+        if (!analyseLoading) {
             remoteAnalyse();
         }
     }, [remoteAnalyse]);
     react_1.useEffect(function () {
-        var id = hasInited ? 0 : window.setInterval(function () {
+        var id = hasInitAnalysed.current ? 0 : window.setInterval(function () {
+            console.log('111', initData, v);
             if (initData && v) {
                 clearInterval(id);
                 var r = v.drawAnalyse.analyse(mark, startTime, endTime, initData);
-                setHasInited(true);
+                hasInitAnalysed.current = true;
                 setFormData(r);
             }
         }, 1000);
@@ -107,7 +164,7 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
     }, [initData, v, mark, startTime, endTime, setFormData]);
     var analyse = function (force) {
         if (force === void 0) { force = false; }
-        remoteAnalyse(force).then(function () {
+        remoteAnalyse().then(function () {
             v && setFormData(v.drawAnalyse.analyse(mark, startTime, endTime, initData));
         });
     };
@@ -115,6 +172,8 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
         var s = function (time) {
             time = time + 4800 <= v.data.index ? time : ((v.data.index - 4800) > 0 ? (v.data.index - 4800) : 0);
             docid && setStartTime(time);
+            setInitData(null);
+            hasInitAnalysed.current = false;
         };
         v && v.on('change:selectPoint', s);
         return function () {
@@ -123,13 +182,15 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
     }, [interval, v, docid]);
     react_1.useEffect(function () {
         Object.values(mapFormToMark).forEach(function (f) { return f.current && f.current.resetFields(); });
+        hasInitAnalysed.current = false;
+        setInitData(null);
         setStartTime(0);
     }, [docid]);
-    react_1.useEffect(function () { setMarkAndItems(MARKS[0]); }, []);
+    react_1.useEffect(function () { setMark(MARKS[0]); }, []);
     react_1.useEffect(function () {
         setFhr(fetal);
         setInitData(null);
-        setHasInited(false);
+        hasInitAnalysed.current = false;
     }, [fetal]);
     react_1.useEffect(function () {
         if (ctgData && ctgData.fhr1) {
@@ -146,11 +207,11 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
             setIsToShort(false);
         }
     }, [startTime, endTime, mark]);
-    var setMarkAndItems = function (mark) {
-        setMark(mark);
-    };
+    react_1.useEffect(function () {
+        analyse();
+    }, [mark]);
     return {
-        setMark: setMarkAndItems, mark: mark,
+        setMark: setMark, mark: mark,
         MARKS: MARKS,
         analyse: analyse,
         startTime: startTime, endTime: endTime, setStartTime: setStartTime, interval: interval, setInterval: setInterval,

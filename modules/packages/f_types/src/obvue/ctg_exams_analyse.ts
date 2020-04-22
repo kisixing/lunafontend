@@ -62,16 +62,15 @@ export interface _ctg_exams_analyse {
             accdurationscore: number
             accamplscore: number
             fmscore: number
-            totalscore: number
+            total: number
             bhrvalue: number
             ltvvalue: number
             accdurationvalue: number
             accamplvalue: number
             fmvalue: number
         },
-        Krebsdata?: {
+        krebsdata?: {
             ltvvalue:number
-            totalscore:number
             bhrscore: number
             ltvscore: number
             stvscore: number
@@ -93,7 +92,7 @@ export interface _ctg_exams_analyse {
             stvscore: number,
             accscore: number,
             decscore: number,
-            totalscore: number,
+            total: number,
             bhrvalue: number,
             ltvalue: number,
             stvvalue: number,

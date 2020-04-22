@@ -1,7 +1,7 @@
 import { Ctg } from '@lianmed/lmg';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import request from "@lianmed/request";
-import { Button, Col, Row, message, Modal, Tooltip, Alert } from 'antd';
+import { Button, Col, Row, message, Modal, Alert } from 'antd';
 import 'antd/dist/antd.css';
 import React, { useRef, useState, FC } from 'react';
 import styled from "styled-components";
@@ -73,8 +73,10 @@ export const Ctg_Analyse: FC<{
       MARKS,
       analyse,
       startTime,
-      mark, setMark,
-      interval, setInterval,
+      mark,
+      setMark,
+      interval,
+      setInterval,
       Fischer_ref,
       Nst_ref,
       Krebs_ref,
@@ -153,11 +155,11 @@ export const Ctg_Analyse: FC<{
           <Col span={12} >
             <Score disabled={disabled} endTime={endTime}  {...others} fetal={fetal} setFetal={setFetal} ctgData={ctgData} docid={note} v={ref.current} className="bordered" />
             <div style={{ position: 'absolute', right: 12, bottom: 0 }}>
-              {isToShort && <Alert type="warning" message="档案时长过短"  style={{display:'inline-block',padding:'1px 4px',marginRight:10}} />}
+              {isToShort && <Alert type="warning" message="选段时间过短" style={{ display: 'inline-block', padding: '1px 4px', marginRight: 10 }} />}
 
               <Button size="small" style={{ marginBottom: 10 }} onClick={history} disabled={btnDisabled}>历史分析</Button>
               <Button size="small" style={{ marginBottom: 10 }} disabled={!note} onClick={() => setDisabled(!disabled)}>{disabled ? '修改' : '确认'}</Button>
-              <Button size="small" style={{ marginBottom: 10 }} type="primary" onClick={analyse} loading={analyseLoading} disabled={!note || isToShort}>评分</Button>
+              <Button size="small" style={{ marginBottom: 10 }} type="primary" onClick={analyse as any} loading={analyseLoading} disabled={!note || isToShort}>评分</Button>
             </div>
           </Col>
           <Col span={12}  >

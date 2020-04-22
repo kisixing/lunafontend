@@ -16,9 +16,10 @@ export const mapStatusToText = {
 };
 
 
-const MAX_SIZE = 4 * 3600 * 24 * 1
+// const MAX_SIZE = 4 * 3600 * 24 * 2
 export function getMaxArray() {
-    return new Uint8Array(MAX_SIZE)
+    // return new Uint8Array(MAX_SIZE)
+    return [] as number[]
 }
 export function getEmptyCacheItem(base: ICacheItem = { fetal_num: 1 }): ICacheItem {
     const { fetal_num } = base
