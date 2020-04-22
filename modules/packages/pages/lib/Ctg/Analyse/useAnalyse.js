@@ -206,7 +206,6 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
     return {
         setMark: function (m) {
             setMark(m);
-            analyse();
         },
         mark: mark,
         MARKS: MARKS,

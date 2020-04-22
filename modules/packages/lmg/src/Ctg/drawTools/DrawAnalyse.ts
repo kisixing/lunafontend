@@ -86,7 +86,7 @@ export class DrawAnalyse extends Draw {
 
         }
     }
-    analyse(type: AnalyseType, start: number, end: number, data: obvue.ctg_exams_analyse = this.analysisData) {
+    analyse(type: AnalyseType, start: number, end: number, data = this.analysisData) {
         if (!data) return
         const { suit } = this
         this.setData(data)

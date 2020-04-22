@@ -233,7 +233,7 @@ export default (v: Suit, docid: string, fetal: any, setFhr: (index: 2 | 1 | 3) =
     return {
         setMark(m: AnalyseType) {
             setMark(m);
-            analyse()
+            // analyse()
         },
         mark,
         MARKS,
