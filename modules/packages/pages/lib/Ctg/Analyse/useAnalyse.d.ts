@@ -1,8 +1,6 @@
 import { MutableRefObject } from 'react';
 import { FormInstance } from 'antd/lib/form';
-import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
-import { AnalyseType } from '@lianmed/lmg/lib/interface';
-declare const _default: (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (index: 2 | 1 | 3) => void, ctgData: {
+declare const _default: (v: MutableRefObject<any>, docid: string, fetal: any, setFhr: (index: 1 | 2 | 3) => void, ctgData: {
     fhr1?: string;
     fhr2?: string;
     fhr3?: string;
@@ -15,9 +13,9 @@ declare const _default: (v: MutableRefObject<Suit>, docid: string, fetal: any, s
     _fhr2?: string;
     _fhr3?: string;
 }) => {
-    setMark(m: AnalyseType): void;
-    mark: AnalyseType;
-    MARKS: AnalyseType[];
+    setMark(m: any): void;
+    mark: any;
+    MARKS: any[];
     reAnalyse: () => Promise<void>;
     startTime: number;
     endTime: number;

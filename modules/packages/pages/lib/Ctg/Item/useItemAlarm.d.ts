@@ -1,3 +1,2 @@
-import { Suit } from "@lianmed/lmg/lib/Ctg/Suit";
-declare const _default: (suit: Suit) => string[];
+declare const _default: (suit: any) => string[];
 export default _default;

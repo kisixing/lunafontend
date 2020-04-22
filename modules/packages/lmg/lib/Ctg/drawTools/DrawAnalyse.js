@@ -123,20 +123,21 @@ var DrawAnalyse = (function (_super) {
                     if (accnum == 0)
                         return accnum;
                     else {
-                        return sum / accnum;
+                        return Math.ceil(sum / accnum / 4);
                     }
                 }
                 else if (item.index >= start) {
                     if (item.marked) {
                         sum += item.duration;
                         accnum++;
+                        console.log(item.duration);
                     }
                 }
             });
             if (accnum == 0)
                 return accnum;
             else {
-                return sum / accnum;
+                return Math.ceil(sum / accnum / 4);
             }
         };
         _this.fhrAmpl = function (start, end) {
@@ -151,7 +152,7 @@ var DrawAnalyse = (function (_super) {
                     if (accnum == 0)
                         return accnum;
                     else {
-                        return sum / accnum;
+                        return Math.ceil(sum / accnum);
                     }
                 }
                 else if (item.index >= start) {
@@ -164,7 +165,7 @@ var DrawAnalyse = (function (_super) {
             if (accnum == 0)
                 return accnum;
             else {
-                return sum / accnum;
+                return Math.ceil(sum / accnum);
             }
         };
         _this.ctgscore = function (type) {
@@ -232,16 +233,15 @@ var DrawAnalyse = (function (_super) {
             }
             else if (type == 'Krebs') {
                 score.krebsdata.bhrvalue = bhr;
-                if (analysis.bhr < 100)
-                    if (bhr < 100 || bhr > 180) {
-                        score.krebsdata.bhrscore = 0;
-                    }
-                    else if (_this.inRange(bhr, 100, 109) || _this.inRange(bhr, 161, 180)) {
-                        score.krebsdata.bhrscore = 1;
-                    }
-                    else if (_this.inRange(bhr, 110, 160)) {
-                        score.krebsdata.bhrscore = 2;
-                    }
+                if (bhr < 100 || bhr > 180) {
+                    score.krebsdata.bhrscore = 0;
+                }
+                else if (_this.inRange(bhr, 100, 109) || _this.inRange(bhr, 161, 180)) {
+                    score.krebsdata.bhrscore = 1;
+                }
+                else if (_this.inRange(bhr, 110, 160)) {
+                    score.krebsdata.bhrscore = 2;
+                }
                 var zhenfu_tv = analysis.ltv;
                 score.krebsdata.ltvvalue = zhenfu_tv;
                 if (zhenfu_tv < 5) {
@@ -308,16 +308,15 @@ var DrawAnalyse = (function (_super) {
             }
             else if (type == 'Fischer') {
                 score.fischerdata.bhrvalue = bhr;
-                if (analysis.bhr < 100)
-                    if (bhr < 100 || bhr > 180) {
-                        score.fischerdata.bhrscore = 0;
-                    }
-                    else if (_this.inRange(bhr, 100, 109) || _this.inRange(bhr, 161, 180)) {
-                        score.fischerdata.bhrscore = 1;
-                    }
-                    else if (_this.inRange(bhr, 110, 160)) {
-                        score.fischerdata.bhrscore = 2;
-                    }
+                if (bhr < 100 || bhr > 180) {
+                    score.fischerdata.bhrscore = 0;
+                }
+                else if (_this.inRange(bhr, 100, 109) || _this.inRange(bhr, 161, 180)) {
+                    score.fischerdata.bhrscore = 1;
+                }
+                else if (_this.inRange(bhr, 110, 160)) {
+                    score.fischerdata.bhrscore = 2;
+                }
                 var zhenfu_tv = analysis.ltv;
                 score.fischerdata.ltvvalue = zhenfu_tv;
                 if (zhenfu_tv < 5) {

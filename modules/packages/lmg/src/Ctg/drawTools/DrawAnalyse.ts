@@ -199,19 +199,20 @@ export class DrawAnalyse extends Draw {
                 if (accnum == 0)
                     return accnum;
                 else {
-                    return sum / accnum;
+                    return Math.ceil(sum / accnum/4);
                 }
             } else if (item.index >= start) {
                 if (item.marked) {
                     sum += item.duration;
                     accnum++;
+                    console.log(item.duration);
                 }
             }
         })
         if (accnum == 0)
             return accnum;
         else {
-            return sum / accnum;
+            return Math.ceil(sum / accnum/4);
         }
     }
     //fm-fhr-ampl
@@ -226,7 +227,7 @@ export class DrawAnalyse extends Draw {
                 if (accnum == 0)
                     return accnum;
                 else {
-                    return sum / accnum;
+                    return Math.ceil(sum / accnum);
                 }
             } else if (item.index >= start) {
                 if (item.marked) {
@@ -238,7 +239,7 @@ export class DrawAnalyse extends Draw {
         if (accnum == 0)
             return accnum;
         else {
-            return sum / accnum;
+            return Math.ceil(sum / accnum);
         }
     }
     // TODO：analysis 结构最好与score结构分开
@@ -308,14 +309,13 @@ export class DrawAnalyse extends Draw {
         else if (type == 'Krebs') {
             // 基线选项
             score.krebsdata.bhrvalue = bhr;
-            if (analysis.bhr < 100)
-                if (bhr < 100 || bhr > 180) {
-                    score.krebsdata.bhrscore = 0;
-                } else if (this.inRange(bhr, 100, 109) || this.inRange(bhr, 161, 180)) {
-                    score.krebsdata.bhrscore = 1;
-                } else if (this.inRange(bhr, 110, 160)) {
-                    score.krebsdata.bhrscore = 2;
-                }
+            if (bhr < 100 || bhr > 180) {
+                score.krebsdata.bhrscore = 0;
+            } else if (this.inRange(bhr, 100, 109) || this.inRange(bhr, 161, 180)) {
+                score.krebsdata.bhrscore = 1;
+            } else if (this.inRange(bhr, 110, 160)) {
+                score.krebsdata.bhrscore = 2;
+            }
             // 振幅变异
             let zhenfu_tv = analysis.ltv;
             score.krebsdata.ltvvalue = zhenfu_tv;
@@ -378,14 +378,13 @@ export class DrawAnalyse extends Draw {
         else if (type == 'Fischer') {
             // 基线选项
             score.fischerdata.bhrvalue = bhr;
-            if (analysis.bhr < 100)
-                if (bhr < 100 || bhr > 180) {
-                    score.fischerdata.bhrscore = 0;
-                } else if (this.inRange(bhr, 100, 109) || this.inRange(bhr, 161, 180)) {
-                    score.fischerdata.bhrscore = 1;
-                } else if (this.inRange(bhr, 110, 160)) {
-                    score.fischerdata.bhrscore = 2;
-                }
+            if (bhr < 100 || bhr > 180) {
+                score.fischerdata.bhrscore = 0;
+            } else if (this.inRange(bhr, 100, 109) || this.inRange(bhr, 161, 180)) {
+                score.fischerdata.bhrscore = 1;
+            } else if (this.inRange(bhr, 110, 160)) {
+                score.fischerdata.bhrscore = 2;
+            }
             // 振幅变异
             let zhenfu_tv = analysis.ltv;
             score.fischerdata.ltvvalue = zhenfu_tv;

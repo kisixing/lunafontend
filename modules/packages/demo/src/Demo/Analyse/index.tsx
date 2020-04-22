@@ -126,6 +126,10 @@ const App = (props: any) => {
         e.target.value == 1 ? fetchSignList() : fetchList();
     }
 
+    const onDownloadT = () => {
+        console.log("on download test");
+    }
+
     return (
 
         <Layout style={{ height: '100%' }}>
