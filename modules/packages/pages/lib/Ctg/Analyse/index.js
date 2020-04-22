@@ -47,11 +47,12 @@ var Score_1 = __importDefault(require("./Score"));
 var useAnalyse_1 = __importDefault(require("./useAnalyse"));
 var useCtgData_1 = __importDefault(require("./useCtgData"));
 var utils_1 = require("@lianmed/utils");
-var services_1 = require("../services");
+var qs_1 = require("qs");
+console.log(' stringify,parse ', qs_1.stringify, qs_1.parse);
 exports.ANALYSE_SUCCESS_TYPE = "(●'◡'●)";
 var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  height:100%;\n  .divider {\n    border-radius:2px;\n    background:linear-gradient(45deg, #e0e0e0, transparent) !important;\n    padding-left:20px;\n    margin: 8px 0;\n  }\n  button {\n    margin:0 6px 6px 0\n  }\n  .bordered {\n    border: 1px solid #ddd;\n  }\n"], ["\n  height:100%;\n  .divider {\n    border-radius:2px;\n    background:linear-gradient(45deg, #e0e0e0, transparent) !important;\n    padding-left:20px;\n    margin: 8px 0;\n  }\n  button {\n    margin:0 6px 6px 0\n  }\n  .bordered {\n    border: 1px solid #ddd;\n  }\n"])));
 exports.Ctg_Analyse = function (_a) {
-    var docid = _a.docid, _b = _a.type, type = _b === void 0 ? "default" : _b, id = _a.id, note = _a.note, _c = _a.onDownload, onDownload = _c === void 0 ? function () { } : _c, _d = _a.age, age = _d === void 0 ? 0 : _d, _e = _a.fetalcount, fetalcount = _e === void 0 ? 0 : _e, _f = _a.gestationalWeek, gestationalWeek = _f === void 0 ? '' : _f, _g = _a.inpatientNO, inpatientNO = _g === void 0 ? '' : _g, _h = _a.name, name = _h === void 0 ? '' : _h, _j = _a.startdate, startdate = _j === void 0 ? '' : _j;
+    var docid = _a.docid, _b = _a.type, type = _b === void 0 ? "default" : _b, id = _a.id, note = _a.note, _c = _a.onDownload, onDownload = _c === void 0 ? function (url) { } : _c, _d = _a.age, age = _d === void 0 ? 0 : _d, _e = _a.fetalcount, fetalcount = _e === void 0 ? 0 : _e, _f = _a.gestationalWeek, gestationalWeek = _f === void 0 ? '' : _f, _g = _a.inpatientNO, inpatientNO = _g === void 0 ? '' : _g, _h = _a.name, name = _h === void 0 ? '' : _h, _j = _a.startdate, startdate = _j === void 0 ? '' : _j;
     note = note ? note : docid;
     var _k = useCtgData_1.default(note), ctgData = _k.ctgData, loading = _k.loading, setFhr = _k.setFhr, fetal = _k.fetal, setFetal = _k.setFetal;
     var _l = react_1.useState(true), disabled = _l[0], setDisabled = _l[1];
@@ -69,7 +70,7 @@ exports.Ctg_Analyse = function (_a) {
         Krebs_ref: Krebs_ref,
         old_ref: old_ref
     };
-    var submit = function () {
+    var getrRequestData = function () {
         var rightData = analysis_ref.current.getFieldsValue();
         var wave = rightData.wave, diagnosistxt = rightData.diagnosistxt, NST = rightData.NST, CST_OCT = rightData.CST_OCT, analyseData = __rest(rightData, ["wave", "diagnosistxt", "NST", "CST_OCT"]);
         var curData = others[mark + "_ref"].current.getFieldsValue();
@@ -79,9 +80,12 @@ exports.Ctg_Analyse = function (_a) {
             return oldData[k] !== v;
         }) ? true : false;
         var identify = type === 'default' ? { note: note } : { id: id };
-        var data = __assign(__assign({}, identify), { diagnosis: JSON.stringify({ wave: wave, diagnosistxt: diagnosistxt, NST: NST, CST_OCT: CST_OCT }), result: JSON.stringify(__assign(__assign(__assign({}, analyseData), curData), { isedit: isedit, type: mark, startTime: startTime,
+        var requestData = __assign(__assign({}, identify), { diagnosis: JSON.stringify({ wave: wave, diagnosistxt: diagnosistxt, NST: NST, CST_OCT: CST_OCT }), result: JSON.stringify(__assign(__assign(__assign({}, analyseData), curData), { isedit: isedit, type: mark, startTime: startTime,
                 endTime: endTime })) });
-        request_1.default.put(type === "default" ? '/ctg-exams-note' : '/serviceorders', { data: data }).then(function (r) {
+        return requestData;
+    };
+    var submit = function () {
+        request_1.default.put(type === "default" ? '/ctg-exams-note' : '/serviceorders', { data: getrRequestData() }).then(function (r) {
             antd_1.message.success('保存成功！', 3);
             utils_1.event.emit(exports.ANALYSE_SUCCESS_TYPE, type == "default" ? note : id);
         });
@@ -136,20 +140,8 @@ exports.Ctg_Analyse = function (_a) {
                 react_1.default.createElement(Analyse_1.default, { ref: analysis_ref }),
                 react_1.default.createElement("div", { style: { position: 'absolute', right: 12, bottom: 0 } },
                     react_1.default.createElement(antd_1.Button, { size: "small", onClick: function () {
-                            var rightData = analysis_ref.current.getFieldsValue();
-                            var diagnosistxt = rightData.diagnosistxt;
-                            services_1.fetchCtgExamsPdf({
-                                diagnosis: diagnosistxt,
-                                docid: docid,
-                                end: endTime,
-                                start: startTime,
-                                age: age,
-                                fetalcount: fetalcount,
-                                gestationalWeek: gestationalWeek,
-                                inpatientNO: inpatientNO,
-                                name: name,
-                                startdate: startdate,
-                            }).then(onDownload);
+                            var query = qs_1.stringify(getrRequestData());
+                            onDownload("/ctg-exams-analysis-pdf?" + query);
                         }, style: { marginBottom: 10 }, disabled: btnDisabled }, "\u6253\u5370"),
                     react_1.default.createElement(antd_1.Button, { size: "small", type: "primary", onClick: submit, disabled: btnDisabled }, "\u4FDD\u5B58"))))));
 };

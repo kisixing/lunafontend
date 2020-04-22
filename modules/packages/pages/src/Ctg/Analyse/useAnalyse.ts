@@ -146,8 +146,8 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
 
     }
     const analyse = () => {
-    console.log('zz analyse');
-    
+        console.log('zz analyse');
+
         remoteAnalyse().then(() => {
             v.current && setFormData(v.current.drawAnalyse.analyse(mark, startTime, endTime))
         })
@@ -239,8 +239,8 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
 
 
     useEffect(() => {
-        isToShort || analyse()
-    }, [mark, isToShort])
+        analyse()
+    }, [mark])
 
 
     return {

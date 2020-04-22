@@ -10,7 +10,8 @@ import Score from './Score';
 import useAnalyse from './useAnalyse';
 import useCtgData from './useCtgData';
 import { event } from '@lianmed/utils';
-import { fetchCtgExamsPdf } from '../services';
+import { stringify, parse } from 'qs';
+console.log(' stringify,parse ', stringify, parse)
 export const ANALYSE_SUCCESS_TYPE = "(●'◡'●)"
 
 const Wrapper = styled.div`
@@ -38,7 +39,7 @@ export const Ctg_Analyse: FC<{
   name?: string,
   startdate?: string,
   age?: any
-}> = function ({ docid, type = "default", id, note, onDownload = () => { },
+}> = function ({ docid, type = "default", id, note, onDownload = (url: string) => { },
   age = 0,
   fetalcount = 0,
   gestationalWeek = '',
@@ -83,8 +84,7 @@ export const Ctg_Analyse: FC<{
       old_ref
     }
 
-
-    const submit = () => {
+    const getrRequestData = () => {
       const rightData = analysis_ref.current.getFieldsValue()
       const { wave, diagnosistxt, NST, CST_OCT, ...analyseData } = rightData
       const curData: { [x: string]: number } = others[`${mark}_ref`].current.getFieldsValue()
@@ -94,7 +94,7 @@ export const Ctg_Analyse: FC<{
 
       const isedit = Object.entries(curData).find(([k, v]) => oldData[k] !== v) ? true : false
       const identify = type === 'default' ? { note } : { id }
-      const data = {
+      const requestData = {
         ...identify,
         diagnosis: JSON.stringify({ wave, diagnosistxt, NST, CST_OCT }),
         result: JSON.stringify({
@@ -106,8 +106,12 @@ export const Ctg_Analyse: FC<{
           endTime
         })
       }
+      return requestData
+    }
 
-      request.put(type === "default" ? '/ctg-exams-note' : '/serviceorders', { data }).then((r: any) => {
+    const submit = () => {
+
+      request.put(type === "default" ? '/ctg-exams-note' : '/serviceorders', { data: getrRequestData() }).then((r: any) => {
         //TODO: 结果判断
         message.success('保存成功！', 3);
         event.emit(ANALYSE_SUCCESS_TYPE, type == "default" ? note : id)
@@ -170,20 +174,23 @@ export const Ctg_Analyse: FC<{
             <Analyse ref={analysis_ref} />
             <div style={{ position: 'absolute', right: 12, bottom: 0 }}>
               <Button size="small" onClick={() => {
-                const rightData = analysis_ref.current.getFieldsValue()
-                const { diagnosistxt } = rightData
-                fetchCtgExamsPdf({
-                  diagnosis: diagnosistxt,
-                  docid,
-                  end: endTime,
-                  start: startTime,
-                  age,
-                  fetalcount,
-                  gestationalWeek,
-                  inpatientNO,
-                  name,
-                  startdate,
-                }).then(onDownload)
+                // const rightData = analysis_ref.current.getFieldsValue()
+                // const { diagnosistxt } = rightData
+                const query = stringify(getrRequestData())
+                onDownload(`/ctg-exams-analysis-pdf?${query}`)
+                // request.get('/ctg-exams-analysis-pdf', { params: getrRequestData() }).then(() => { })
+                // fetchCtgExamsPdf({
+                //   diagnosis: diagnosistxt,
+                //   docid,
+                //   end: endTime,
+                //   start: startTime,
+                //   age,
+                //   fetalcount,
+                //   gestationalWeek,
+                //   inpatientNO,
+                //   name,
+                //   startdate,
+                // }).then(onDownload)
               }} style={{ marginBottom: 10 }} disabled={btnDisabled}>打印</Button>
               <Button size="small" type="primary" onClick={submit} disabled={btnDisabled}>保存</Button>
             </div>

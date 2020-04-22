@@ -267,8 +267,8 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
         }
     }, [startTime, endTime, mark]);
     react_1.useEffect(function () {
-        isToShort || analyse();
-    }, [mark, isToShort]);
+        analyse();
+    }, [mark]);
     return {
         setMark: function (m) {
             setMark(m);
