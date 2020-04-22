@@ -162,18 +162,15 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
             clearInterval(id);
         };
     }, [initData, v, mark, startTime, endTime, setFormData]);
-    var analyse = function (force) {
-        if (force === void 0) { force = false; }
+    var analyse = function () {
         remoteAnalyse().then(function () {
-            v && setFormData(v.drawAnalyse.analyse(mark, startTime, endTime, initData));
+            v && setFormData(v.drawAnalyse.analyse(mark, startTime, endTime));
         });
     };
     react_1.useEffect(function () {
         var s = function (time) {
             time = time + 4800 <= v.data.index ? time : ((v.data.index - 4800) > 0 ? (v.data.index - 4800) : 0);
             docid && setStartTime(time);
-            setInitData(null);
-            hasInitAnalysed.current = false;
         };
         v && v.on('change:selectPoint', s);
         return function () {
@@ -186,7 +183,6 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
         setInitData(null);
         setStartTime(0);
     }, [docid]);
-    react_1.useEffect(function () { setMark(MARKS[0]); }, []);
     react_1.useEffect(function () {
         setFhr(fetal);
         setInitData(null);
@@ -207,11 +203,12 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
             setIsToShort(false);
         }
     }, [startTime, endTime, mark]);
-    react_1.useEffect(function () {
-        analyse();
-    }, [mark]);
     return {
-        setMark: setMark, mark: mark,
+        setMark: function (m) {
+            setMark(m);
+            analyse();
+        },
+        mark: mark,
         MARKS: MARKS,
         analyse: analyse,
         startTime: startTime, endTime: endTime, setStartTime: setStartTime, interval: interval, setInterval: setInterval,

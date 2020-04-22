@@ -486,13 +486,14 @@ var DrawAnalyse = (function (_super) {
         }
     };
     DrawAnalyse.prototype.analyse = function (type, start, end, data) {
+        if (data === void 0) { data = this.analysisData; }
         if (!data)
             return;
         var suit = this.suit;
         this.setData(data);
         console.log('local analyse result', data);
-        suit.drawSelect.$selectrpend = end;
-        suit.drawSelect.$selectrpstart = start;
+        suit.drawSelect.$selectrpend = data.analysis.end = end;
+        suit.drawSelect.$selectrpstart = data.analysis.start = start;
         var newData = this.ctgscore(type);
         suit.drawobj.drawdot(suit.rightViewPosition, false);
         return newData;
