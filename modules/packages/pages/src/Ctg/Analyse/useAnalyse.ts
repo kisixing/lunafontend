@@ -18,7 +18,7 @@ const limitMap: { [x in AnalyseType]: any } = {
     Cst: 20
 }
 
-export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void, ctgData: obvue.ctg_exams_data) => {
+export default (v: Suit, docid: string, fetal: any, setFhr: (index: 2 | 1 | 3) => void, ctgData: obvue.ctg_exams_data) => {
 
     const [initData, setInitData] = useState<obvue.ctg_exams_analyse>()
     const [isToShort, setIsToShort] = useState(false)
@@ -176,9 +176,9 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void, 
         }
     }, [initData, v, mark, startTime, endTime, setFormData])
 
-    const analyse = (force = false) => {
+    const analyse = () => {
         remoteAnalyse().then(() => {
-            v && setFormData(v.drawAnalyse.analyse(mark, startTime, endTime, initData))
+            v && setFormData(v.drawAnalyse.analyse(mark, startTime, endTime))
         })
     }
 
@@ -186,8 +186,6 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void, 
         const s = (time) => {
             time = time + 4800 <= v.data.index ? time : ((v.data.index - 4800) > 0 ? (v.data.index - 4800) : 0)
             docid && setStartTime(time)
-            setInitData(null)
-            hasInitAnalysed.current = false
         }
 
         v && v.on('change:selectPoint', s)
@@ -204,7 +202,6 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void, 
         setInitData(null)
         setStartTime(0)
     }, [docid])
-    useEffect(() => { setMark(MARKS[0]) }, [])
 
     useEffect(() => {
         setFhr(fetal)
@@ -231,12 +228,14 @@ export default (v: Suit, docid, fetal: any, setFhr: (index: 2 | 1 | 3) => void, 
 
 
 
-    useEffect(() => {
-        analyse()
-    }, [mark])
+
 
     return {
-        setMark, mark,
+        setMark(m: AnalyseType) {
+            setMark(m);
+            analyse()
+        },
+        mark,
         MARKS,
         analyse,
         startTime, endTime, setStartTime, interval, setInterval,

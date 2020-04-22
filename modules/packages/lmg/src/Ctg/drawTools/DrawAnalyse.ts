@@ -86,13 +86,13 @@ export class DrawAnalyse extends Draw {
 
         }
     }
-    analyse(type: AnalyseType, start: number, end: number, data: obvue.ctg_exams_analyse) {
+    analyse(type: AnalyseType, start: number, end: number, data: obvue.ctg_exams_analyse = this.analysisData) {
         if (!data) return
         const { suit } = this
         this.setData(data)
         console.log('local analyse result', data)
-        suit.drawSelect.$selectrpend = end
-        suit.drawSelect.$selectrpstart = start
+        suit.drawSelect.$selectrpend = data.analysis.end = end
+        suit.drawSelect.$selectrpstart = data.analysis.start = start
         // this.emit('selectForward', data.end - data.start)
         //this.drawobj.drawdot(this.canvasline.width * 2, false);
         //kisi 2020-03-05 
