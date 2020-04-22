@@ -9,7 +9,6 @@ interface IProps {
   docid: string,
   v: Suit
   MARKS: any
-  analyse: any
   startTime: any
   mark, setMark: any
   interval, setInterval: any

@@ -55,7 +55,7 @@ export const Ctg_Analyse: FC<{
 
     const {
       MARKS,
-      analyse,
+      reAnalyse,
       startTime,
       endTime,
       mark, setMark,
@@ -67,11 +67,11 @@ export const Ctg_Analyse: FC<{
       old_ref,
       analyseLoading,
       isToShort
-    } = useAnalyse(ref.current, note, fetal, setFhr, ctgData)
+    } = useAnalyse(ref, note, fetal, setFhr, ctgData)
 
     const others = {
       MARKS,
-      analyse,
+
       startTime,
       mark,
       setMark,
@@ -100,7 +100,10 @@ export const Ctg_Analyse: FC<{
         result: JSON.stringify({
           ...analyseData,
           ...curData,
-          isedit
+          isedit,
+          type: mark,
+          startTime,
+          endTime
         })
       }
 
@@ -158,9 +161,10 @@ export const Ctg_Analyse: FC<{
               {isToShort && <Alert type="warning" message="选段时间过短" style={{ display: 'inline-block', padding: '1px 4px', marginRight: 10 }} />}
 
               <Button size="small" style={{ marginBottom: 10 }} onClick={history} disabled={btnDisabled}>历史分析</Button>
-              <Button size="small" style={{ marginBottom: 10 }} disabled={!note} onClick={() => setDisabled(!disabled)}>{disabled ? '修改' : '确认'}</Button>
-              <Button size="small" style={{ marginBottom: 10 }} type="primary" onClick={analyse as any} loading={analyseLoading} disabled={!note || isToShort}>评分</Button>
+              <Button size="small" style={{ marginBottom: 10 }} disabled={!note} onClick={() => setDisabled(!disabled)}>{disabled ? '修改评分' : '确认'}</Button>
             </div>
+            <Button style={{ position: 'absolute', right: 12, top: 16 }} size="small" type="primary" onClick={reAnalyse as any} loading={analyseLoading} disabled={!note || isToShort}>重新分析</Button>
+
           </Col>
           <Col span={12}  >
             <Analyse ref={analysis_ref} />

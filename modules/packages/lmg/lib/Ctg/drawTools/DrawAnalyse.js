@@ -511,6 +511,7 @@ var DrawAnalyse = (function (_super) {
         return null;
     };
     DrawAnalyse.prototype.refresh = function () {
+        this.suit.emit('suit:analyseMark');
         this.suit.drawobj.drawdot(this.suit.viewposition < this.width * 2 ? this.width * 2 : this.suit.viewposition);
     };
     DrawAnalyse.prototype.markAccPoint = function (x, y, marked) {

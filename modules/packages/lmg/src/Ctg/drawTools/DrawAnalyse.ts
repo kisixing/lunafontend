@@ -506,8 +506,10 @@ export class DrawAnalyse extends Draw {
         return null
     }
     refresh() {
+        this.suit.emit('suit:analyseMark')
         this.suit.drawobj.drawdot(this.suit.viewposition < this.width * 2 ? this.width * 2 : this.suit.viewposition);
     }
+ 
     markAccPoint(x: number, y: number, marked = true) {
         if (!this.analysisData) return
         const edge = 24;

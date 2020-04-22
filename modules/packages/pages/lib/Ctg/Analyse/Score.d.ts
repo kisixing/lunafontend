@@ -5,7 +5,6 @@ interface IProps {
     docid: string;
     v: Suit;
     MARKS: any;
-    analyse: any;
     startTime: any;
     mark: any;
     setMark: any;

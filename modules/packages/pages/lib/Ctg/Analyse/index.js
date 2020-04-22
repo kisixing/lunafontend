@@ -56,10 +56,9 @@ exports.Ctg_Analyse = function (_a) {
     var _k = useCtgData_1.default(note), ctgData = _k.ctgData, loading = _k.loading, setFhr = _k.setFhr, fetal = _k.fetal, setFetal = _k.setFetal;
     var _l = react_1.useState(true), disabled = _l[0], setDisabled = _l[1];
     var ref = react_1.useRef(null);
-    var _m = useAnalyse_1.default(ref.current, note, fetal, setFhr, ctgData), MARKS = _m.MARKS, analyse = _m.analyse, startTime = _m.startTime, endTime = _m.endTime, mark = _m.mark, setMark = _m.setMark, interval = _m.interval, setInterval = _m.setInterval, Fischer_ref = _m.Fischer_ref, Nst_ref = _m.Nst_ref, Krebs_ref = _m.Krebs_ref, analysis_ref = _m.analysis_ref, old_ref = _m.old_ref, analyseLoading = _m.analyseLoading, isToShort = _m.isToShort;
+    var _m = useAnalyse_1.default(ref, note, fetal, setFhr, ctgData), MARKS = _m.MARKS, reAnalyse = _m.reAnalyse, startTime = _m.startTime, endTime = _m.endTime, mark = _m.mark, setMark = _m.setMark, interval = _m.interval, setInterval = _m.setInterval, Fischer_ref = _m.Fischer_ref, Nst_ref = _m.Nst_ref, Krebs_ref = _m.Krebs_ref, analysis_ref = _m.analysis_ref, old_ref = _m.old_ref, analyseLoading = _m.analyseLoading, isToShort = _m.isToShort;
     var others = {
         MARKS: MARKS,
-        analyse: analyse,
         startTime: startTime,
         mark: mark,
         setMark: setMark,
@@ -80,7 +79,8 @@ exports.Ctg_Analyse = function (_a) {
             return oldData[k] !== v;
         }) ? true : false;
         var identify = type === 'default' ? { note: note } : { id: id };
-        var data = __assign(__assign({}, identify), { diagnosis: JSON.stringify({ wave: wave, diagnosistxt: diagnosistxt, NST: NST, CST_OCT: CST_OCT }), result: JSON.stringify(__assign(__assign(__assign({}, analyseData), curData), { isedit: isedit })) });
+        var data = __assign(__assign({}, identify), { diagnosis: JSON.stringify({ wave: wave, diagnosistxt: diagnosistxt, NST: NST, CST_OCT: CST_OCT }), result: JSON.stringify(__assign(__assign(__assign({}, analyseData), curData), { isedit: isedit, type: mark, startTime: startTime,
+                endTime: endTime })) });
         request_1.default.put(type === "default" ? '/ctg-exams-note' : '/serviceorders', { data: data }).then(function (r) {
             antd_1.message.success('保存成功！', 3);
             utils_1.event.emit(exports.ANALYSE_SUCCESS_TYPE, type == "default" ? note : id);
@@ -130,8 +130,8 @@ exports.Ctg_Analyse = function (_a) {
                 react_1.default.createElement("div", { style: { position: 'absolute', right: 12, bottom: 0 } },
                     isToShort && react_1.default.createElement(antd_1.Alert, { type: "warning", message: "\u9009\u6BB5\u65F6\u95F4\u8FC7\u77ED", style: { display: 'inline-block', padding: '1px 4px', marginRight: 10 } }),
                     react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, onClick: history, disabled: btnDisabled }, "\u5386\u53F2\u5206\u6790"),
-                    react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, disabled: !note, onClick: function () { return setDisabled(!disabled); } }, disabled ? '修改' : '确认'),
-                    react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, type: "primary", onClick: analyse, loading: analyseLoading, disabled: !note || isToShort }, "\u8BC4\u5206"))),
+                    react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, disabled: !note, onClick: function () { return setDisabled(!disabled); } }, disabled ? '修改评分' : '确认')),
+                react_1.default.createElement(antd_1.Button, { style: { position: 'absolute', right: 12, top: 16 }, size: "small", type: "primary", onClick: reAnalyse, loading: analyseLoading, disabled: !note || isToShort }, "\u91CD\u65B0\u5206\u6790")),
             react_1.default.createElement(antd_1.Col, { span: 12 },
                 react_1.default.createElement(Analyse_1.default, { ref: analysis_ref }),
                 react_1.default.createElement("div", { style: { position: 'absolute', right: 12, bottom: 0 } },

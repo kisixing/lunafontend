@@ -17,8 +17,65 @@ const limitMap: { [x in AnalyseType]: any } = {
     Sogc: 20,
     Cst: 20
 }
-
-export default (v: Suit, docid: string, fetal: any, setFhr: (index: 2 | 1 | 3) => void, ctgData: obvue.ctg_exams_data) => {
+const getEmptyScore = () => {
+    return {
+        sogcdata: {
+            bhrscore: 0,
+            ltvvalue: 0,
+            ltvscore: 0,
+            accscore: 0,
+            accvalue: 0,
+            bhrvalue: 0,
+        },
+        ret: 0,
+        msg: '',
+        cstdata: null,
+        nstdata: {
+            bhrscore: 0,
+            ltvscore: 0,
+            accdurationscore: 0,
+            accamplscore: 0,
+            fmscore: 0,
+            total: 0,
+            bhrvalue: 0,
+            ltvvalue: 0,
+            accdurationvalue: 0,
+            accamplvalue: 0,
+            fmvalue: 0,
+        },
+        krebsdata: {
+            ltvvalue: 0,
+            total: 0,
+            bhrscore: 0,
+            ltvscore: 0,
+            stvscore: 0,
+            accscore: 0,
+            decscore: 0,
+            fmscore: 0,
+            bhrvalue: 0,
+            ltvalue: 0,
+            stvvalue: 0,
+            accvalue: 0,
+            decvalue: '',
+            fmvalue: 0,
+        },
+        fischerdata: {
+            ltvvalue: 0,
+            bhrscore: 0,
+            ltvscore: 0,
+            stvscore: 0,
+            accscore: 0,
+            decscore: 0,
+            total: 0,
+            bhrvalue: 0,
+            ltvalue: 0,
+            stvvalue: 0,
+            accvalue: 0,
+            decvalue: '',
+        }
+    }
+}
+export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (index: 2 | 1 | 3) => void, ctgData: obvue.ctg_exams_data) => {
 
     const [initData, setInitData] = useState<obvue.ctg_exams_analyse>()
     const [isToShort, setIsToShort] = useState(false)
@@ -43,90 +100,42 @@ export default (v: Suit, docid: string, fetal: any, setFhr: (index: 2 | 1 | 3) =
         analysis_ref
     }
     // const checkLength = () => {
-    //     return v && v.data && v.data.length > (mark === 'Fischer' ? 30 : 20) * 240
+    //     return v.current && v.current.data && v.current.data.length > (mark === 'Fischer' ? 30 : 20) * 240
     // }
 
-
+    const fetchData = () => {
+        setAnalyseLoading(true)
+        return request.post(`/ctg-exams-analyse`, {
+            data: { docid, mark, start: startTime, end: endTime, fetal },
+        })
+            .then((r: obvue.ctg_exams_analyse) => r)
+            .finally(() => {
+                setAnalyseLoading(false)
+            })
+    }
+    const reAnalyse = async () => {
+        const r = await fetchData()
+        const analysisData = v.current.drawAnalyse.analysisData
+        if (analysisData) {
+            r.analysis.acc = analysisData.analysis.acc
+            r.analysis.dec = analysisData.analysis.dec
+        }
+        setInitData(r)
+        setFormData(v.current.drawAnalyse.analyse(mark, startTime, endTime, r))
+    }
     const remoteAnalyse = () => {
         return new Promise((res) => {
             if ((isToShort || initData || endTime === 0)) {
                 res()
+
             } else {
-                setAnalyseLoading(true)
-                request.post(`/ctg-exams-analyse`, {
-                    data: { docid, mark, start: startTime, end: endTime, fetal },
-                })
-                    .then((r: obvue.ctg_exams_analyse) => {
-                        // r.analysis.dec = [{
-                        //     index: 100,
-                        //     start: 0,
-                        //     end: 1,
-                        //     peak: 11,
-                        //     duration:11, 
-                        //     ampl: 11,
-                        //     // local re
-                        //     type:'ed'
-                        // }]
-                        r.score = {
-                            sogcdata: {
-                                bhrscore: 0,
-                                ltvvalue: 0,
-                                ltvscore: 0,
-                                accscore: 0,
-                                accvalue: 0,
-                                bhrvalue: 0,
-                            },
-                            ret: 0,
-                            msg: '',
-                            cstdata: null,
-                            nstdata: {
-                                bhrscore: 0,
-                                ltvscore: 0,
-                                accdurationscore: 0,
-                                accamplscore: 0,
-                                fmscore: 0,
-                                total: 0,
-                                bhrvalue: 0,
-                                ltvvalue: 0,
-                                accdurationvalue: 0,
-                                accamplvalue: 0,
-                                fmvalue: 0,
-                            },
-                            krebsdata: {
-                                ltvvalue: 0,
-                                total: 0,
-                                bhrscore: 0,
-                                ltvscore: 0,
-                                stvscore: 0,
-                                accscore: 0,
-                                decscore: 0,
-                                fmscore: 0,
-                                bhrvalue: 0,
-                                ltvalue: 0,
-                                stvvalue: 0,
-                                accvalue: 0,
-                                decvalue: '',
-                                fmvalue: 0,
-                            },
-                            fischerdata: {
-                                ltvvalue: 0,
-                                bhrscore: 0,
-                                ltvscore: 0,
-                                stvscore: 0,
-                                accscore: 0,
-                                decscore: 0,
-                                total: 0,
-                                bhrvalue: 0,
-                                ltvalue: 0,
-                                stvvalue: 0,
-                                accvalue: 0,
-                                decvalue: '',
-                            }
-                        }
+
+                fetchData()
+                    .then(r => {
+                        r.score = getEmptyScore()
                         setInitData(r)
                     })
                     .finally(() => {
-                        setAnalyseLoading(false)
                         res()
                     })
             }
@@ -135,6 +144,13 @@ export default (v: Suit, docid: string, fetal: any, setFhr: (index: 2 | 1 | 3) =
         })
 
 
+    }
+    const analyse = () => {
+    console.log('zz analyse');
+    
+        remoteAnalyse().then(() => {
+            v.current && setFormData(v.current.drawAnalyse.analyse(mark, startTime, endTime))
+        })
     }
 
     const setFormData = (r: obvue.ctg_exams_analyse) => {
@@ -162,11 +178,10 @@ export default (v: Suit, docid: string, fetal: any, setFhr: (index: 2 | 1 | 3) =
     useEffect(() => {
 
         const id = hasInitAnalysed.current ? 0 : window.setInterval(() => {
-            console.log('111', initData, v)
-            if (initData && v) {
+            if (initData && v.current) {
 
                 clearInterval(id)
-                let r = v.drawAnalyse.analyse(mark, startTime, endTime, initData)
+                let r = v.current.drawAnalyse.analyse(mark, startTime, endTime, initData)
                 hasInitAnalysed.current = true
                 setFormData(r)
             }
@@ -174,27 +189,23 @@ export default (v: Suit, docid: string, fetal: any, setFhr: (index: 2 | 1 | 3) =
         return () => {
             clearInterval(id)
         }
-    }, [initData, v, mark, startTime, endTime, setFormData])
+    }, [initData, v.current, mark, startTime, endTime, setFormData])
 
-    const analyse = () => {
-        remoteAnalyse().then(() => {
-            v && setFormData(v.drawAnalyse.analyse(mark, startTime, endTime))
-        })
-    }
+
 
     useEffect(() => {
         const s = (time) => {
-            time = time + 4800 <= v.data.index ? time : ((v.data.index - 4800) > 0 ? (v.data.index - 4800) : 0)
+            time = time + 4800 <= v.current.data.index ? time : ((v.current.data.index - 4800) > 0 ? (v.current.data.index - 4800) : 0)
             docid && setStartTime(time)
         }
 
-        v && v.on('change:selectPoint', s)
+        v.current && v.current.on('change:selectPoint', s).on('suit:analyseMark', analyse)
         return () => {
 
-            v && v.off('change:selectPoint', s)
+            v.current && v.current.off('change:selectPoint', s).off('suit:analyseMark', analyse)
 
         };
-    }, [interval, v, docid])
+    }, [interval, v.current, docid, analyse])
 
     useEffect(() => {
         Object.values(mapFormToMark).forEach(f => f.current && f.current.resetFields())
@@ -227,17 +238,19 @@ export default (v: Suit, docid: string, fetal: any, setFhr: (index: 2 | 1 | 3) =
     }, [startTime, endTime, mark])
 
 
-
+    useEffect(() => {
+        isToShort || analyse()
+    }, [mark, isToShort])
 
 
     return {
         setMark(m: AnalyseType) {
+
             setMark(m);
-            // analyse()
         },
         mark,
         MARKS,
-        analyse,
+        reAnalyse,
         startTime, endTime, setStartTime, interval, setInterval,
         Fischer_ref,
         Nst_ref,
