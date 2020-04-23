@@ -11,6 +11,8 @@ import useAnalyse from './useAnalyse';
 import useCtgData from './useCtgData';
 import { event } from '@lianmed/utils';
 import { stringify, parse } from 'qs';
+import { Document, Page } from 'react-pdf';
+import 'react-pdf/dist/Page/AnnotationLayer.css';
 console.log(' stringify,parse ', stringify, parse)
 export const ANALYSE_SUCCESS_TYPE = "(●'◡'●)"
 
@@ -50,7 +52,9 @@ export const Ctg_Analyse: FC<{
     note = note ? note : docid
     const { ctgData, loading, setFhr, fetal, setFetal } = useCtgData(note)
     const [disabled, setDisabled] = useState(true)
-
+    const [visible, setVisible] = useState(false)
+    const [pdfBase64, setPdfBase64] = useState('')
+    const [padBase64Loading, setPadBase64Loading] = useState(false)
 
     const ref = useRef<Suit>(null)
 
@@ -91,7 +95,6 @@ export const Ctg_Analyse: FC<{
       const oldData: { [x: string]: number } = old_ref.current[mark] || {}
 
 
-
       const isedit = Object.entries(curData).find(([k, v]) => oldData[k] !== v) ? true : false
       const identify = type === 'default' ? { note } : { id }
       const requestData = {
@@ -107,6 +110,11 @@ export const Ctg_Analyse: FC<{
         })
       }
       return requestData
+    }
+    const getPrintUrl = (path: string) => {
+      const url = `${path}?query=${btoa(unescape(encodeURIComponent(JSON.stringify(getrRequestData()))))}`
+      console.log('url', url);
+      return url
     }
 
     const submit = () => {
@@ -162,7 +170,7 @@ export const Ctg_Analyse: FC<{
           <Col span={12} >
             <Score disabled={disabled} endTime={endTime}  {...others} fetal={fetal} setFetal={setFetal} ctgData={ctgData} docid={note} v={ref.current} className="bordered" />
             <div style={{ position: 'absolute', right: 12, bottom: 0 }}>
-              {isToShort && <Alert type="warning" message="选段时间过短" style={{ display: 'inline-block', padding: '1px 4px', marginRight: 10 }} />}
+              {isToShort && <Alert  message="选段时间过短" style={{ display: 'inline-block', padding: '1px 4px', marginRight: 10 }} />}
 
               <Button size="small" style={{ marginBottom: 10 }} onClick={history} disabled={btnDisabled}>历史分析</Button>
               <Button size="small" style={{ marginBottom: 10 }} disabled={!note} onClick={() => setDisabled(!disabled)}>{disabled ? '修改评分' : '确认'}</Button>
@@ -174,31 +182,29 @@ export const Ctg_Analyse: FC<{
             <Analyse ref={analysis_ref} />
             <div style={{ position: 'absolute', right: 12, bottom: 0 }}>
               <Button size="small" onClick={() => {
-                // const rightData = analysis_ref.current.getFieldsValue()
-                // const { diagnosistxt } = rightData
-                const url = `/ctg-exams-analysis-pdf?query=${btoa(unescape(encodeURIComponent(JSON.stringify(getrRequestData()))))}`
-                console.log('url',url);
-                
-                onDownload(url)
-                // request.get('/ctg-exams-analysis-pdf', { params: getrRequestData() }).then(() => { })
-                // fetchCtgExamsPdf({
-                //   diagnosis: diagnosistxt,
-                //   docid,
-                //   end: endTime,
-                //   start: startTime,
-                //   age,
-                //   fetalcount,
-                //   gestationalWeek,
-                //   inpatientNO,
-                //   name,
-                //   startdate,
-                // }).then(onDownload)
-              }} style={{ marginBottom: 10 }} disabled={btnDisabled}>打印</Button>
+                setPadBase64Loading(true)
+                request.get(getPrintUrl('/ctg-exams-analysis-pdf-preview')).then(r => {
+                  setVisible(true)
+                  setPdfBase64(r.pdfdata)
+                }).finally(() => setPadBase64Loading(false))
+              }} style={{ marginBottom: 10 }} disabled={btnDisabled} loading={padBase64Loading}>打印预览</Button>
               <Button size="small" type="primary" onClick={submit} disabled={btnDisabled}>保存</Button>
             </div>
 
           </Col>
         </Row>
+        <Modal visible={visible} closable={false} okText="打印" onCancel={() => setVisible(false)} onOk={() => {
+          setVisible(false)
+          onDownload(getPrintUrl('/ctg-exams-analysis-pdf'))
+        }}>
+          <Document
+            file={pdfBase64 ? `data:application/pdf;base64,${pdfBase64}` : null}
+            renderMode="canvas"
+
+          >
+            <Page pageNumber={1} scale={0.8}   />
+          </Document>
+        </Modal>
       </Wrapper>
     );
   }

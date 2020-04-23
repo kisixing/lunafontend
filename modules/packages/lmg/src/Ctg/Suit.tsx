@@ -558,9 +558,9 @@ export class Suit extends Draw {
 
       const target = acc.find(_ => (x < _.x + edge) && (x > _.x - edge)) || dec.find(_ => (x < _.x + edge) && (x > _.x - edge))
       if (target && (y < (target.y + edge) && y > (target.y - edge))) {
-        const isAcc = 'reliability' in target
+        const isDec = 'type' in target
 
-        return isAcc ? 'AccPoint' : 'DecPoint'
+        return isDec ? 'DecPoint' : 'AccPoint'
       }
     }
 

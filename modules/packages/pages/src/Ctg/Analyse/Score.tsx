@@ -3,7 +3,7 @@ import { Radio, Select } from 'antd';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 
 import Methods from './methods'
-const intervals = [20, 40]
+const intervals = [20, 30]
 interface IProps {
   ctgData: any;
   docid: string,

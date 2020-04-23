@@ -48,6 +48,8 @@ var useAnalyse_1 = __importDefault(require("./useAnalyse"));
 var useCtgData_1 = __importDefault(require("./useCtgData"));
 var utils_1 = require("@lianmed/utils");
 var qs_1 = require("qs");
+var react_pdf_1 = require("react-pdf");
+require("react-pdf/dist/Page/AnnotationLayer.css");
 console.log(' stringify,parse ', qs_1.stringify, qs_1.parse);
 exports.ANALYSE_SUCCESS_TYPE = "(●'◡'●)";
 var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  height:100%;\n  .divider {\n    border-radius:2px;\n    background:linear-gradient(45deg, #e0e0e0, transparent) !important;\n    padding-left:20px;\n    margin: 8px 0;\n  }\n  button {\n    margin:0 6px 6px 0\n  }\n  .bordered {\n    border: 1px solid #ddd;\n  }\n"], ["\n  height:100%;\n  .divider {\n    border-radius:2px;\n    background:linear-gradient(45deg, #e0e0e0, transparent) !important;\n    padding-left:20px;\n    margin: 8px 0;\n  }\n  button {\n    margin:0 6px 6px 0\n  }\n  .bordered {\n    border: 1px solid #ddd;\n  }\n"])));
@@ -56,8 +58,11 @@ exports.Ctg_Analyse = function (_a) {
     note = note ? note : docid;
     var _k = useCtgData_1.default(note), ctgData = _k.ctgData, loading = _k.loading, setFhr = _k.setFhr, fetal = _k.fetal, setFetal = _k.setFetal;
     var _l = react_1.useState(true), disabled = _l[0], setDisabled = _l[1];
+    var _m = react_1.useState(false), visible = _m[0], setVisible = _m[1];
+    var _o = react_1.useState(''), pdfBase64 = _o[0], setPdfBase64 = _o[1];
+    var _p = react_1.useState(false), padBase64Loading = _p[0], setPadBase64Loading = _p[1];
     var ref = react_1.useRef(null);
-    var _m = useAnalyse_1.default(ref, note, fetal, setFhr, ctgData), MARKS = _m.MARKS, reAnalyse = _m.reAnalyse, startTime = _m.startTime, endTime = _m.endTime, mark = _m.mark, setMark = _m.setMark, interval = _m.interval, setInterval = _m.setInterval, Fischer_ref = _m.Fischer_ref, Nst_ref = _m.Nst_ref, Krebs_ref = _m.Krebs_ref, analysis_ref = _m.analysis_ref, old_ref = _m.old_ref, analyseLoading = _m.analyseLoading, isToShort = _m.isToShort;
+    var _q = useAnalyse_1.default(ref, note, fetal, setFhr, ctgData), MARKS = _q.MARKS, reAnalyse = _q.reAnalyse, startTime = _q.startTime, endTime = _q.endTime, mark = _q.mark, setMark = _q.setMark, interval = _q.interval, setInterval = _q.setInterval, Fischer_ref = _q.Fischer_ref, Nst_ref = _q.Nst_ref, Krebs_ref = _q.Krebs_ref, analysis_ref = _q.analysis_ref, old_ref = _q.old_ref, analyseLoading = _q.analyseLoading, isToShort = _q.isToShort;
     var others = {
         MARKS: MARKS,
         startTime: startTime,
@@ -83,6 +88,11 @@ exports.Ctg_Analyse = function (_a) {
         var requestData = __assign(__assign({}, identify), { diagnosis: JSON.stringify({ wave: wave, diagnosistxt: diagnosistxt, NST: NST, CST_OCT: CST_OCT }), result: JSON.stringify(__assign(__assign(__assign({}, analyseData), curData), { isedit: isedit, type: mark, startTime: startTime,
                 endTime: endTime })) });
         return requestData;
+    };
+    var getPrintUrl = function (path) {
+        var url = path + "?query=" + btoa(unescape(encodeURIComponent(JSON.stringify(getrRequestData()))));
+        console.log('url', url);
+        return url;
     };
     var submit = function () {
         request_1.default.put(type === "default" ? '/ctg-exams-note' : '/serviceorders', { data: getrRequestData() }).then(function (r) {
@@ -132,7 +142,7 @@ exports.Ctg_Analyse = function (_a) {
             react_1.default.createElement(antd_1.Col, { span: 12 },
                 react_1.default.createElement(Score_1.default, __assign({ disabled: disabled, endTime: endTime }, others, { fetal: fetal, setFetal: setFetal, ctgData: ctgData, docid: note, v: ref.current, className: "bordered" })),
                 react_1.default.createElement("div", { style: { position: 'absolute', right: 12, bottom: 0 } },
-                    isToShort && react_1.default.createElement(antd_1.Alert, { type: "warning", message: "\u9009\u6BB5\u65F6\u95F4\u8FC7\u77ED", style: { display: 'inline-block', padding: '1px 4px', marginRight: 10 } }),
+                    isToShort && react_1.default.createElement(antd_1.Alert, { message: "\u9009\u6BB5\u65F6\u95F4\u8FC7\u77ED", style: { display: 'inline-block', padding: '1px 4px', marginRight: 10 } }),
                     react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, onClick: history, disabled: btnDisabled }, "\u5386\u53F2\u5206\u6790"),
                     react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, disabled: !note, onClick: function () { return setDisabled(!disabled); } }, disabled ? '修改评分' : '确认')),
                 react_1.default.createElement(antd_1.Button, { style: { position: 'absolute', right: 12, top: 16 }, size: "small", type: "primary", onClick: reAnalyse, loading: analyseLoading, disabled: !note || isToShort }, "\u91CD\u65B0\u5206\u6790")),
@@ -140,11 +150,19 @@ exports.Ctg_Analyse = function (_a) {
                 react_1.default.createElement(Analyse_1.default, { ref: analysis_ref }),
                 react_1.default.createElement("div", { style: { position: 'absolute', right: 12, bottom: 0 } },
                     react_1.default.createElement(antd_1.Button, { size: "small", onClick: function () {
-                            var url = "/ctg-exams-analysis-pdf?query=" + btoa(unescape(encodeURIComponent(JSON.stringify(getrRequestData()))));
-                            console.log('url', url);
-                            onDownload(url);
-                        }, style: { marginBottom: 10 }, disabled: btnDisabled }, "\u6253\u5370"),
-                    react_1.default.createElement(antd_1.Button, { size: "small", type: "primary", onClick: submit, disabled: btnDisabled }, "\u4FDD\u5B58"))))));
+                            setPadBase64Loading(true);
+                            request_1.default.get(getPrintUrl('/ctg-exams-analysis-pdf-preview')).then(function (r) {
+                                setVisible(true);
+                                setPdfBase64(r.pdfdata);
+                            }).finally(function () { return setPadBase64Loading(false); });
+                        }, style: { marginBottom: 10 }, disabled: btnDisabled, loading: padBase64Loading }, "\u6253\u5370\u9884\u89C8"),
+                    react_1.default.createElement(antd_1.Button, { size: "small", type: "primary", onClick: submit, disabled: btnDisabled }, "\u4FDD\u5B58")))),
+        react_1.default.createElement(antd_1.Modal, { visible: visible, closable: false, okText: "\u6253\u5370", onCancel: function () { return setVisible(false); }, onOk: function () {
+                setVisible(false);
+                onDownload(getPrintUrl('/ctg-exams-analysis-pdf'));
+            } },
+            react_1.default.createElement(react_pdf_1.Document, { file: pdfBase64 ? "data:application/pdf;base64," + pdfBase64 : null, renderMode: "canvas" },
+                react_1.default.createElement(react_pdf_1.Page, { pageNumber: 1, scale: 0.8 })))));
 };
 exports.default = exports.Ctg_Analyse;
 var templateObject_1;

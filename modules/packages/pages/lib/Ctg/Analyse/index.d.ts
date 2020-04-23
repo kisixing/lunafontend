@@ -1,5 +1,6 @@
 import 'antd/dist/antd.css';
 import { FC } from 'react';
+import 'react-pdf/dist/Page/AnnotationLayer.css';
 export declare const ANALYSE_SUCCESS_TYPE = "(\u25CF'\u25E1'\u25CF)";
 export declare const Ctg_Analyse: FC<{
     onDownload: () => void;

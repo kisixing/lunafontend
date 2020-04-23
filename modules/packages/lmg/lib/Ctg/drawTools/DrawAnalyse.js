@@ -536,6 +536,7 @@ var DrawAnalyse = (function (_super) {
         var target = dec.find(function (_) { return (x < _.x + edge) && (x > _.x - edge); });
         if (target && (y < (target.y + edge) && y > (target.y - edge))) {
             target.type = type;
+            target.marked = !!type;
         }
         this.refresh();
     };

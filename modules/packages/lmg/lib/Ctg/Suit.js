@@ -482,8 +482,8 @@ var Suit = (function (_super) {
             var _a = analysisData.analysis, acc = _a.acc, dec = _a.dec;
             var target = acc.find(function (_) { return (x < _.x + edge_1) && (x > _.x - edge_1); }) || dec.find(function (_) { return (x < _.x + edge_1) && (x > _.x - edge_1); });
             if (target && (y < (target.y + edge_1) && y > (target.y - edge_1))) {
-                var isAcc = 'reliability' in target;
-                return isAcc ? 'AccPoint' : 'DecPoint';
+                var isDec = 'type' in target;
+                return isDec ? 'DecPoint' : 'AccPoint';
             }
         }
         return null;

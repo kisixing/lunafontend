@@ -532,6 +532,7 @@ export class DrawAnalyse extends Draw {
         const target = dec.find(_ => (x < _.x + edge) && (x > _.x - edge))
         if (target && (y < (target.y + edge) && y > (target.y - edge))) {
             target.type = type;
+            target.marked = !!type
         }
         this.refresh()
     }

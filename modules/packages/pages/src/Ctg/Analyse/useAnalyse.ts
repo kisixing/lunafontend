@@ -248,7 +248,6 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
 
     return {
         setMark(m: AnalyseType) {
-
             setMark(m);
         },
         mark,
