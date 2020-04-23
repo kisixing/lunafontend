@@ -230,16 +230,19 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
             clearInterval(id);
         };
     }, [initData, v.current, mark, startTime, endTime, setFormData]);
+    var hardAnalyse = function () {
+        setFormData(v.current.drawAnalyse.analyse(mark));
+    };
     react_1.useEffect(function () {
         var s = function (time) {
             time = time + 4800 <= v.current.data.index ? time : ((v.current.data.index - 4800) > 0 ? (v.current.data.index - 4800) : 0);
             docid && setStartTime(time);
         };
-        v.current && v.current.on('change:selectPoint', s).on('suit:analyseMark', analyse);
+        v.current && v.current.on('change:selectPoint', s).on('suit:analyseMark', hardAnalyse);
         return function () {
-            v.current && v.current.off('change:selectPoint', s).off('suit:analyseMark', analyse);
+            v.current && v.current.off('change:selectPoint', s).off('suit:analyseMark', hardAnalyse);
         };
-    }, [interval, v.current, docid, analyse]);
+    }, [interval, v.current, docid, analyse, hardAnalyse]);
     react_1.useEffect(function () {
         Object.values(mapFormToMark).forEach(function (f) { return f.current && f.current.resetFields(); });
         hasInitAnalysed.current = false;
@@ -267,8 +270,8 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
         }
     }, [startTime, endTime, mark]);
     react_1.useEffect(function () {
-        analyse();
-    }, [mark]);
+        v.current && hardAnalyse();
+    }, [mark, v]);
     return {
         setMark: function (m) {
             setMark(m);

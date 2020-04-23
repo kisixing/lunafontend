@@ -86,13 +86,17 @@ export class DrawAnalyse extends Draw {
 
         }
     }
-    analyse(type: AnalyseType, start: number, end: number, data = this.analysisData) {
+    analyse(type: AnalyseType, start?: number, end?: number, data = this.analysisData) {
         if (!data) return
         const { suit } = this
         this.setData(data)
-        console.log('local analyse result', data)
+        if (!start && !end && this.analysisData) {
+            start = this.analysisData.analysis.start
+            end = this.analysisData.analysis.end
+        }
         suit.drawSelect.$selectrpend = data.analysis.end = end
         suit.drawSelect.$selectrpstart = data.analysis.start = start
+
         // this.emit('selectForward', data.end - data.start)
         //this.drawobj.drawdot(this.canvasline.width * 2, false);
         //kisi 2020-03-05 
@@ -199,7 +203,7 @@ export class DrawAnalyse extends Draw {
                 if (accnum == 0)
                     return accnum;
                 else {
-                    return Math.ceil(sum / accnum/4);
+                    return Math.ceil(sum / accnum / 4);
                 }
             } else if (item.index >= start) {
                 if (item.marked) {
@@ -212,7 +216,7 @@ export class DrawAnalyse extends Draw {
         if (accnum == 0)
             return accnum;
         else {
-            return Math.ceil(sum / accnum/4);
+            return Math.ceil(sum / accnum / 4);
         }
     }
     //fm-fhr-ampl
@@ -508,7 +512,7 @@ export class DrawAnalyse extends Draw {
         this.suit.emit('suit:analyseMark')
         this.suit.drawobj.drawdot(this.suit.viewposition < this.width * 2 ? this.width * 2 : this.suit.viewposition);
     }
- 
+
     markAccPoint(x: number, y: number, marked = true) {
         if (!this.analysisData) return
         const edge = 24;

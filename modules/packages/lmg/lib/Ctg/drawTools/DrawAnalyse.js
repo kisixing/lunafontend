@@ -490,7 +490,10 @@ var DrawAnalyse = (function (_super) {
             return;
         var suit = this.suit;
         this.setData(data);
-        console.log('local analyse result', data);
+        if (!start && !end && this.analysisData) {
+            start = this.analysisData.analysis.start;
+            end = this.analysisData.analysis.end;
+        }
         suit.drawSelect.$selectrpend = data.analysis.end = end;
         suit.drawSelect.$selectrpstart = data.analysis.start = start;
         var newData = this.ctgscore(type);

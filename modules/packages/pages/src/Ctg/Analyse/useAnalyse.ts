@@ -192,20 +192,23 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
     }, [initData, v.current, mark, startTime, endTime, setFormData])
 
 
-
+    const hardAnalyse = () => {
+        setFormData(v.current.drawAnalyse.analyse(mark))
+    }
     useEffect(() => {
         const s = (time) => {
             time = time + 4800 <= v.current.data.index ? time : ((v.current.data.index - 4800) > 0 ? (v.current.data.index - 4800) : 0)
             docid && setStartTime(time)
         }
 
-        v.current && v.current.on('change:selectPoint', s).on('suit:analyseMark', analyse)
+
+        v.current && v.current.on('change:selectPoint', s).on('suit:analyseMark', hardAnalyse)
         return () => {
 
-            v.current && v.current.off('change:selectPoint', s).off('suit:analyseMark', analyse)
+            v.current && v.current.off('change:selectPoint', s).off('suit:analyseMark', hardAnalyse)
 
         };
-    }, [interval, v.current, docid, analyse])
+    }, [interval, v.current, docid, analyse, hardAnalyse])
 
     useEffect(() => {
         Object.values(mapFormToMark).forEach(f => f.current && f.current.resetFields())
@@ -239,8 +242,8 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
 
 
     useEffect(() => {
-        analyse()
-    }, [mark])
+        v.current && hardAnalyse()
+    }, [mark,v])
 
 
     return {
