@@ -266,21 +266,3 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-export interface IResult {
-    fhr_uptime_score: 0,
-    fhrbaseline_score: 0,
-    fm_fhrv_score: 0,
-    fm_score: 0,
-    zhenfu_lv_score: 0,
-}

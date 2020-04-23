@@ -1,5 +1,6 @@
+import { AnalyseType } from "@lianmed/lmg/lib/interface"
 
-const tableData = {
+const tableData: { [x in AnalyseType]?: any } = {
     Nst: [
         {
             name: '心率基线(bpm)',
@@ -124,7 +125,6 @@ const tableData = {
             key: 'fm',
         },
     ],
-
 }
 
 export { tableData }
