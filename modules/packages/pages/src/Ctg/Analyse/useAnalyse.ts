@@ -104,6 +104,9 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
     // }
 
     const fetchData = () => {
+        // if(docid==undefined){
+        //     return;
+        // }
         setAnalyseLoading(true)
         return request.post(`/ctg-exams-analyse`, {
             data: { docid, mark, start: startTime, end: endTime, fetal },

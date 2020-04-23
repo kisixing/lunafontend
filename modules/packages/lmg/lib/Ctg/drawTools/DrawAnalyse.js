@@ -44,17 +44,19 @@ var DrawAnalyse = (function (_super) {
                     canvas.fillText(txt, x + 1, y + 10);
                 }
                 else if (target.reliability > 45) {
-                    txt = "+" + (target.reliability + "%");
-                    canvas.font = '15px arial';
-                    canvas.fillStyle = 'orange';
-                    canvas.fillText(txt, x + 1, y + 10);
+                    if (!target.remove) {
+                        txt = "+" + (target.reliability + "%");
+                        canvas.font = '15px arial';
+                        canvas.fillStyle = 'orange';
+                        canvas.fillText(txt, x + 1, y + 10);
+                    }
                 }
             }
             else if (_dec.indexOf(index) > -1 || _dec.indexOf(index - 1) > -1) {
                 var target = dec.find(function (_) { return [index, index - 1].includes(_.index); });
                 target.x = x;
                 target.y = y;
-                txt = target ? target.type : '-';
+                txt = target ? target.type.toUpperCase() : '-';
                 canvas.font = 'bold 15px arial';
                 canvas.fillStyle = 'red';
                 canvas.fillText(txt, x + 1, y - 1);
@@ -94,7 +96,7 @@ var DrawAnalyse = (function (_super) {
                     return decnum;
                 }
                 else if (item.index >= start) {
-                    if (item.type.toUpperCase() == type)
+                    if (item.type.toUpperCase() == type && !item.remove)
                         decnum++;
                 }
             });
@@ -275,18 +277,22 @@ var DrawAnalyse = (function (_super) {
                 else if (accnum > 4) {
                     score.krebsdata.accscore = 2;
                 }
-                var decnum = analysis.ldtimes + analysis.vdtimes;
-                if (decnum > 1) {
+                var ld = analysis.ldtimes = _this.countDec(analysis.start, analysis.end, 'LD');
+                var vd = analysis.vdtimes = _this.countDec(analysis.start, analysis.end, 'VD');
+                var ed = analysis.edtimes = _this.countDec(analysis.start, analysis.end, 'ED');
+                console.log(ld, vd, ed);
+                var sum = ld + vd;
+                if (sum > 1) {
                     score.krebsdata.decscore = 0;
-                    score.krebsdata.decvalue = decnum + "";
+                    score.krebsdata.decvalue = sum + "";
                 }
-                else if (decnum = 1) {
+                else if (sum == 1) {
                     score.krebsdata.decscore = 1;
-                    score.krebsdata.decvalue = decnum + "";
+                    score.krebsdata.decvalue = sum + "";
                 }
                 else {
                     score.krebsdata.decscore = 2;
-                    if (analysis.edtimes > 0) {
+                    if (ed > 0) {
                         score.krebsdata.decvalue = "早减";
                     }
                     else {
@@ -350,9 +356,9 @@ var DrawAnalyse = (function (_super) {
                 else if (accnum > 4) {
                     score.fischerdata.accscore = 2;
                 }
-                var ld = analysis.ldtimes;
-                var vd = analysis.vdtimes;
-                var ed = analysis.edtimes;
+                var ld = _this.countDec(analysis.start, analysis.end, 'LD');
+                var vd = _this.countDec(analysis.start, analysis.end, 'VD');
+                var ed = _this.countDec(analysis.start, analysis.end, 'ED');
                 if (ld > 0) {
                     score.fischerdata.decscore = 0;
                     score.fischerdata.decvalue = 'LD';
@@ -402,9 +408,9 @@ var DrawAnalyse = (function (_super) {
                 else if (accnum > 2) {
                     score.sogcdata.accscore = 2;
                 }
-                var ld = analysis.ldtimes;
-                var vd = analysis.vdtimes;
-                var ed = analysis.edtimes;
+                var ld = _this.countDec(analysis.start, analysis.end, 'LD');
+                var vd = _this.countDec(analysis.start, analysis.end, 'VD');
+                var ed = _this.countDec(analysis.start, analysis.end, 'ED');
                 if (ld > 0) {
                     score.fischerdata.decscore = 0;
                     score.fischerdata.decvalue = 'LD';
@@ -525,6 +531,12 @@ var DrawAnalyse = (function (_super) {
         var target = acc.find(function (_) { return (x < _.x + edge) && (x > _.x - edge); });
         if (target && (y < (target.y + edge) && y > (target.y - edge))) {
             target.marked = marked;
+            if (!marked) {
+                target.remove = true;
+            }
+            else {
+                target.remove = false;
+            }
         }
         this.refresh();
     };
@@ -536,7 +548,13 @@ var DrawAnalyse = (function (_super) {
         var target = dec.find(function (_) { return (x < _.x + edge) && (x > _.x - edge); });
         if (target && (y < (target.y + edge) && y > (target.y - edge))) {
             target.type = type;
-            target.marked = !!type;
+            console.log('markDecPoint', type);
+            if (type == "ld" || type == "vd" || type == "ed") {
+                target.remove = false;
+            }
+            else {
+                target.remove = true;
+            }
         }
         this.refresh();
     };

@@ -9,6 +9,7 @@ interface BasePoint {
     x?: number
     y?: number
     marked?: boolean
+    remove?: boolean
 }
 export interface AccPoint extends BasePoint {
 
