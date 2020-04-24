@@ -87,8 +87,7 @@ exports.Ctg_Analyse = function (_a) {
             return oldData[k] !== v;
         }) ? true : false;
         var identify = type === 'default' ? { note: note } : { id: id };
-        var requestData = __assign(__assign({}, identify), { diagnosis: JSON.stringify({ wave: wave, diagnosistxt: diagnosistxt, NST: NST, CST_OCT: CST_OCT }), result: JSON.stringify(__assign(__assign(__assign({}, analyseData), curData), { isedit: isedit, type: mark, startTime: startTime,
-                endTime: endTime })) });
+        var requestData = __assign(__assign({}, identify), { diagnosis: JSON.stringify({ wave: wave, diagnosistxt: diagnosistxt, NST: NST, CST_OCT: CST_OCT }), result: JSON.stringify(__assign(__assign(__assign({}, analyseData), curData), { isedit: isedit, type: mark, startTime: ref.current.drawAnalyse.analysisData.analysis.start, endTime: ref.current.drawAnalyse.analysisData.analysis.end })) });
         return requestData;
     };
     var getPrintUrl = function (path) {

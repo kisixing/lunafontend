@@ -108,8 +108,8 @@ export const Ctg_Analyse: FC<{
           ...curData,
           isedit,
           type: mark,
-          startTime,
-          endTime
+          startTime:ref.current.drawAnalyse.analysisData.analysis.start,
+          endTime:ref.current.drawAnalyse.analysisData.analysis.end
         })
       }
       return requestData
