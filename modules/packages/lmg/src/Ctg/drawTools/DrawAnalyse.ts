@@ -521,7 +521,7 @@ export class DrawAnalyse extends Draw {
 
     markAccPoint(x: number, y: number, marked = true) {
         if (!this.analysisData) return
-        const edge = 24;
+        const edge = 40;
         const { analysis: { acc } } = this.analysisData
 
         const target = acc.find(_ => (x < _.x + edge) && (x > _.x - edge))
@@ -537,7 +537,7 @@ export class DrawAnalyse extends Draw {
     }
     markDecPoint(x: number, y: number, type: DecType) {
         if (!this.analysisData) return
-        const edge = 24;
+        const edge = 40;
         const { analysis: { dec } } = this.analysisData
 
         const target = dec.find(_ => (x < _.x + edge) && (x > _.x - edge))

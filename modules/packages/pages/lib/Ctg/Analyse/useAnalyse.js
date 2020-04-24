@@ -64,7 +64,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = require("react");
 var request_1 = __importDefault(require("@lianmed/request"));
 var tableData_1 = require("./methods/tableData");
+var store_1 = __importDefault(require("store"));
 var MARKS = Object.keys(tableData_1.tableData);
+var AUTOFM_KEY = 'autofm';
 var limitMap = {
     Krebs: 30,
     Nst: 20,
@@ -138,6 +140,7 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
     var _e = react_1.useState(0), startTime = _e[0], setStartTime = _e[1];
     var _f = react_1.useState(0), endTime = _f[0], setEndTime = _f[1];
     var _g = react_1.useState(false), analyseLoading = _g[0], setAnalyseLoading = _g[1];
+    var _h = react_1.useState(store_1.default.get(AUTOFM_KEY) || false), autoFm = _h[0], setAutoFm = _h[1];
     var Fischer_ref = react_1.useRef();
     var Krebs_ref = react_1.useRef();
     var Nst_ref = react_1.useRef();
@@ -153,7 +156,7 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
     var fetchData = function () {
         setAnalyseLoading(true);
         return request_1.default.post("/ctg-exams-analyse", {
-            data: { docid: docid, mark: mark, start: startTime, end: endTime, fetal: fetal },
+            data: { docid: docid, mark: mark, start: startTime, end: endTime, fetal: fetal, autoFm: autoFm },
         })
             .then(function (r) { return r; })
             .finally(function () {
@@ -286,7 +289,12 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
         analysis_ref: analysis_ref,
         old_ref: old_ref,
         analyseLoading: analyseLoading,
-        isToShort: isToShort
+        isToShort: isToShort,
+        setAutoFm: function (s) {
+            setAutoFm(s);
+            store_1.default.set(AUTOFM_KEY, s);
+        },
+        autoFm: autoFm
     };
 });
 //# sourceMappingURL=useAnalyse.js.map

@@ -39,7 +39,16 @@ var Setting = react_1.forwardRef(function (props, ref) {
     }); };
     return (react_1.default.createElement("div", { style: { height: '100%', background: '#fff' }, className: "bordered" },
         react_1.default.createElement("div", null,
-            react_1.default.createElement(antd_1.Form, { ref: ref, size: "small", style: { padding: '6px 12px' }, form: form, labelCol: { xs: 9 }, wrapperCol: { xs: 15 }, labelAlign: "left" },
+            react_1.default.createElement(antd_1.Form, { ref: ref, size: "small", style: { padding: '6px 12px' }, form: form, labelCol: { xs: 9 }, wrapperCol: { xs: 15 }, labelAlign: "left", onValuesChange: function (a, b) {
+                    var keys = ['NST', 'CST_OCT'];
+                    var index = keys.indexOf(Object.keys(a)[0]);
+                    if (index === 0) {
+                        form.setFieldsValue({ CST_OCT: undefined });
+                    }
+                    else if (index === 1) {
+                        form.setFieldsValue({ NST: undefined });
+                    }
+                } },
                 react_1.default.createElement("div", { className: "divider" }, "\u5BAB\u7F29 "),
                 react_1.default.createElement(antd_1.Row, null,
                     react_1.default.createElement(antd_1.Col, { span: 6 },

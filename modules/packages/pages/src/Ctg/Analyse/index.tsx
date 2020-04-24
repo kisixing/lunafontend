@@ -1,7 +1,7 @@
 import { Ctg } from '@lianmed/lmg';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import request from "@lianmed/request";
-import { Button, Col, Row, message, Modal, Alert } from 'antd';
+import { Button, Col, Row, message, Modal, Alert, Checkbox } from 'antd';
 import 'antd/dist/antd.css';
 import React, { useRef, useState, FC } from 'react';
 import styled from "styled-components";
@@ -72,7 +72,9 @@ export const Ctg_Analyse: FC<{
       analysis_ref,
       old_ref,
       analyseLoading,
-      isToShort
+      isToShort,
+      autoFm,
+      setAutoFm
     } = useAnalyse(ref, note, fetal, setFhr, ctgData)
 
     const others = {
@@ -171,11 +173,12 @@ export const Ctg_Analyse: FC<{
           <Col span={12} >
             <Score disabled={disabled} endTime={endTime}  {...others} fetal={fetal} setFetal={setFetal} ctgData={ctgData} docid={note} v={ref.current} className="bordered" />
             <div style={{ position: 'absolute', right: 12, bottom: 0 }}>
-              {isToShort && <Alert message="选段时间过短" style={{ display: 'inline-block', padding: '1px 4px', marginRight: 10 }} />}
+              {isToShort && <Alert message="选段时间过短" style={{ display: 'inline-block', border: 0, padding: '1px 4px', marginRight: 10 }} />}
 
               <Button size="small" style={{ marginBottom: 10 }} onClick={history} disabled={btnDisabled}>历史分析</Button>
               <Button size="small" style={{ marginBottom: 10 }} disabled={!note} onClick={() => setDisabled(!disabled)}>{disabled ? '修改评分' : '确认'}</Button>
             </div>
+            <Checkbox checked={autoFm} onChange={e => setAutoFm(e.target.checked)} style={{ position: 'absolute', left: 18, bottom: 8 }}>自动胎动</Checkbox>
             <Button style={{ position: 'absolute', right: 12, top: 16 }} size="small" type="primary" onClick={reAnalyse as any} loading={analyseLoading} disabled={!note || isToShort}>重新分析</Button>
 
           </Col>

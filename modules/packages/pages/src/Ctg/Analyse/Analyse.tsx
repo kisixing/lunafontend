@@ -34,7 +34,17 @@ const Setting = forwardRef<FormInstance, { [x: string]: any }>((props, ref) => {
         {/* <div style={{ padding: '12px 24px', background: '#ddd' }}>
           <span> &nbsp;</span>
         </div> */}
-        <Form ref={ref} size="small" style={{ padding: '6px 12px' }} form={form} labelCol={{ xs: 9 }} wrapperCol={{ xs: 15 }} labelAlign="left">
+        <Form ref={ref} size="small" style={{ padding: '6px 12px' }} form={form} labelCol={{ xs: 9 }} wrapperCol={{ xs: 15 }} labelAlign="left" onValuesChange={(a,b)=>{
+          const keys = ['NST','CST_OCT']
+          const index = keys.indexOf(Object.keys(a)[0])
+          if(index === 0){
+            form.setFieldsValue({ CST_OCT:undefined })
+            
+          }else if(index === 1){
+            form.setFieldsValue({ NST:undefined })
+
+          }
+        }}>
           <div className="divider"  >宫缩 </div>
           <Row>
             <Col span={6}>

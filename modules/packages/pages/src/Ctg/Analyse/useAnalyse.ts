@@ -7,9 +7,9 @@ import { obvue } from "@lianmed/f_types";
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import { AnalyseType } from '@lianmed/lmg/lib/interface';
 import { tableData } from './methods/tableData';
-
+import store from "store";
 const MARKS = Object.keys(tableData) as AnalyseType[]
-
+const AUTOFM_KEY = 'autofm'
 const limitMap: { [x in AnalyseType]: any } = {
     Krebs: 30,
     Nst: 20,
@@ -84,12 +84,13 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
     const [startTime, setStartTime] = useState(0)
     const [endTime, setEndTime] = useState(0)
     const [analyseLoading, setAnalyseLoading] = useState(false)
+    const [autoFm, setAutoFm] = useState<boolean>(store.get(AUTOFM_KEY) || false)
+
     const Fischer_ref = useRef<FormInstance>()
     const Krebs_ref = useRef<FormInstance>()
     const Nst_ref = useRef<FormInstance>()
     const analysis_ref = useRef<FormInstance>()
     const old_ref = useRef<{ [x: string]: any }>({})
-
     const hasInitAnalysed = useRef(false)
 
 
@@ -109,7 +110,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
         // }
         setAnalyseLoading(true)
         return request.post(`/ctg-exams-analyse`, {
-            data: { docid, mark, start: startTime, end: endTime, fetal },
+            data: { docid, mark, start: startTime, end: endTime, fetal, autoFm },
         })
             .then((r: obvue.ctg_exams_analyse) => r)
             .finally(() => {
@@ -246,7 +247,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
 
     useEffect(() => {
         v.current && hardAnalyse()
-    }, [mark,v])
+    }, [mark, v])
 
 
     return {
@@ -263,7 +264,12 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
         analysis_ref,
         old_ref,
         analyseLoading,
-        isToShort
+        isToShort,
+        setAutoFm(s: boolean) {
+            setAutoFm(s)
+            store.set(AUTOFM_KEY, s)
+        },
+        autoFm
     }
 }
 

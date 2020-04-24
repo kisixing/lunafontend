@@ -33,5 +33,7 @@ declare const _default: (v: MutableRefObject<Suit>, docid: string, fetal: any, s
     }>;
     analyseLoading: boolean;
     isToShort: boolean;
+    setAutoFm(s: boolean): void;
+    autoFm: boolean;
 };
 export default _default;
