@@ -56,6 +56,8 @@ var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObjec
 exports.Ctg_Analyse = function (_a) {
     var docid = _a.docid, _b = _a.type, type = _b === void 0 ? "default" : _b, id = _a.id, note = _a.note, _c = _a.onDownload, onDownload = _c === void 0 ? function (url) { } : _c, _d = _a.age, age = _d === void 0 ? 0 : _d, _e = _a.fetalcount, fetalcount = _e === void 0 ? 0 : _e, _f = _a.gestationalWeek, gestationalWeek = _f === void 0 ? '' : _f, _g = _a.inpatientNO, inpatientNO = _g === void 0 ? '' : _g, _h = _a.name, name = _h === void 0 ? '' : _h, _j = _a.startdate, startdate = _j === void 0 ? '' : _j;
     note = note ? note : docid;
+    if (!note)
+        return null;
     var _k = useCtgData_1.default(note), ctgData = _k.ctgData, loading = _k.loading, setFhr = _k.setFhr, fetal = _k.fetal, setFetal = _k.setFetal;
     var _l = react_1.useState(true), disabled = _l[0], setDisabled = _l[1];
     var _m = react_1.useState(false), visible = _m[0], setVisible = _m[1];

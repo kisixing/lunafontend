@@ -50,6 +50,7 @@ export const Ctg_Analyse: FC<{
   startdate = '',
 }) {
     note = note ? note : docid
+    if (!note) return null
     const { ctgData, loading, setFhr, fetal, setFetal } = useCtgData(note)
     const [disabled, setDisabled] = useState(true)
     const [visible, setVisible] = useState(false)
@@ -170,7 +171,7 @@ export const Ctg_Analyse: FC<{
           <Col span={12} >
             <Score disabled={disabled} endTime={endTime}  {...others} fetal={fetal} setFetal={setFetal} ctgData={ctgData} docid={note} v={ref.current} className="bordered" />
             <div style={{ position: 'absolute', right: 12, bottom: 0 }}>
-              {isToShort && <Alert  message="选段时间过短" style={{ display: 'inline-block', padding: '1px 4px', marginRight: 10 }} />}
+              {isToShort && <Alert message="选段时间过短" style={{ display: 'inline-block', padding: '1px 4px', marginRight: 10 }} />}
 
               <Button size="small" style={{ marginBottom: 10 }} onClick={history} disabled={btnDisabled}>历史分析</Button>
               <Button size="small" style={{ marginBottom: 10 }} disabled={!note} onClick={() => setDisabled(!disabled)}>{disabled ? '修改评分' : '确认'}</Button>
@@ -202,7 +203,7 @@ export const Ctg_Analyse: FC<{
             renderMode="canvas"
 
           >
-            <Page pageNumber={1} scale={0.8}   />
+            <Page pageNumber={1} scale={0.8} />
           </Document>
         </Modal>
       </Wrapper>
