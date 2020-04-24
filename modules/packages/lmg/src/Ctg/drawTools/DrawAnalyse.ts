@@ -114,7 +114,6 @@ export class DrawAnalyse extends Draw {
     //2020-03-04 用 linecanvas 绘制标记
     drawflag = (canvas, x: number, y: number, index: number) => {
         this.mapXtoY[x] = { y: y + this.suit.drawobj.basetop, index }
-
         const { context2D, analysisData: analyseData } = this;
         if (!context2D || !analyseData) return
         const { analysis: { acc, dec } } = analyseData
@@ -142,13 +141,14 @@ export class DrawAnalyse extends Draw {
                 }
             }
         } else if (_dec.indexOf(index) > -1 || _dec.indexOf(index - 1) > -1) {
+            console.log('drawflag',x,y)
             const target = dec.find(_ => [index, index - 1].includes(_.index))
             target.x = x
             target.y = y
             txt = target ? target.type.toUpperCase() : '-';
             canvas.font = 'bold 15px arial';
             canvas.fillStyle = 'red';
-            canvas.fillText(txt, x + 1, y - 1);
+            canvas.fillText(txt, x + 1, y + 20);
         }
     }
     // kisi 2020-04-08 增加本地分数统计
@@ -217,8 +217,10 @@ export class DrawAnalyse extends Draw {
                 }
             } else if (item.index >= start) {
                 if (item.marked) {
-                    sum += item.duration;
-                    accnum++;
+                    if(item.duration!=0){
+                        sum += item.duration;
+                        accnum++;
+                    }
                     console.log(item.duration);
                 }
             }
@@ -245,8 +247,10 @@ export class DrawAnalyse extends Draw {
                 }
             } else if (item.index >= start) {
                 if (item.marked) {
-                    sum += item.ampl;
-                    accnum++;
+                    if(item.ampl!=0){
+                        sum += item.ampl;
+                        accnum++;
+                    }
                 }
             }
         })
@@ -529,10 +533,10 @@ export class DrawAnalyse extends Draw {
 
     markAccPoint(x: number, y: number, marked = true) {
         if (!this.analysisData) return
-        const edge = 40;
+        const edge = 20;
         const { analysis: { acc } } = this.analysisData
-
         const target = acc.find(_ => (x < _.x + edge) && (x > _.x - edge))
+        console.log('acc',x,y,target)
         if (target && (y < (target.y + edge) && y > (target.y - edge))) {
             target.marked = marked
             if (!marked) {
@@ -556,7 +560,7 @@ export class DrawAnalyse extends Draw {
     }
     markDecPoint(x: number, y: number, type: DecType) {
         if (!this.analysisData) return
-        const edge = 40;
+        const edge = 20;
         const { analysis: { dec } } = this.analysisData
 
         const target = dec.find(_ => (x < _.x + edge) && (x > _.x - edge))

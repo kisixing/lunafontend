@@ -476,6 +476,7 @@ var Suit = (function (_super) {
         });
     };
     Suit.prototype.getPointType = function (x, y) {
+        console.log('click', x, y);
         x = Math.round(x);
         var _a = this.drawAnalyse, analysisData = _a.analysisData, mapXtoY = _a.mapXtoY, mapBaselilneXtoY = _a.mapBaselilneXtoY;
         if (analysisData) {

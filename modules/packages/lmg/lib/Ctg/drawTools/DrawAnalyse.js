@@ -56,13 +56,14 @@ var DrawAnalyse = (function (_super) {
                 }
             }
             else if (_dec.indexOf(index) > -1 || _dec.indexOf(index - 1) > -1) {
+                console.log('drawflag', x, y);
                 var target = dec.find(function (_) { return [index, index - 1].includes(_.index); });
                 target.x = x;
                 target.y = y;
                 txt = target ? target.type.toUpperCase() : '-';
                 canvas.font = 'bold 15px arial';
                 canvas.fillStyle = 'red';
-                canvas.fillText(txt, x + 1, y - 1);
+                canvas.fillText(txt, x + 1, y + 20);
             }
         };
         _this.inRange = function (value, min, max) {
@@ -133,8 +134,10 @@ var DrawAnalyse = (function (_super) {
                 }
                 else if (item.index >= start) {
                     if (item.marked) {
-                        sum += item.duration;
-                        accnum++;
+                        if (item.duration != 0) {
+                            sum += item.duration;
+                            accnum++;
+                        }
                         console.log(item.duration);
                     }
                 }
@@ -162,8 +165,10 @@ var DrawAnalyse = (function (_super) {
                 }
                 else if (item.index >= start) {
                     if (item.marked) {
-                        sum += item.ampl;
-                        accnum++;
+                        if (item.ampl != 0) {
+                            sum += item.ampl;
+                            accnum++;
+                        }
                     }
                 }
             });
@@ -530,9 +535,10 @@ var DrawAnalyse = (function (_super) {
         if (marked === void 0) { marked = true; }
         if (!this.analysisData)
             return;
-        var edge = 40;
+        var edge = 20;
         var acc = this.analysisData.analysis.acc;
         var target = acc.find(function (_) { return (x < _.x + edge) && (x > _.x - edge); });
+        console.log('acc', x, y, target);
         if (target && (y < (target.y + edge) && y > (target.y - edge))) {
             target.marked = marked;
             if (!marked) {
@@ -559,7 +565,7 @@ var DrawAnalyse = (function (_super) {
     DrawAnalyse.prototype.markDecPoint = function (x, y, type) {
         if (!this.analysisData)
             return;
-        var edge = 40;
+        var edge = 20;
         var dec = this.analysisData.analysis.dec;
         var target = dec.find(function (_) { return (x < _.x + edge) && (x > _.x - edge); });
         if (target && (y < (target.y + edge) && y > (target.y - edge))) {

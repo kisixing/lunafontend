@@ -551,6 +551,7 @@ export class Suit extends Draw {
   }
 
   getPointType(x: number, y: number): PointType {
+    console.log('click',x,y)
     x = Math.round(x)
     const { analysisData, mapXtoY, mapBaselilneXtoY } = this.drawAnalyse
 
