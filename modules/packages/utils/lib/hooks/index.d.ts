@@ -1,6 +1,7 @@
 export declare namespace Hooks {
     const useLogin: (prefix: string, data?: {
+        [x: string]: any;
         password?: string;
         username?: string;
-    }, cb?: () => void) => void;
+    }, cb?: () => void, path?: string) => void;
 }

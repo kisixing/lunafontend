@@ -5,7 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = require("react");
 var request_1 = __importDefault(require("@lianmed/request"));
-exports.default = (function (prefix, data, cb) {
+exports.default = (function (prefix, data, cb, path) {
+    if (path === void 0) { path = "/authenticate"; }
     react_1.useEffect(function () {
         var sp = new window.URL(location.href).searchParams;
         var password = sp.get('password');
@@ -13,7 +14,7 @@ exports.default = (function (prefix, data, cb) {
         if (!data && password && username) {
             data = { password: password, username: username };
         }
-        request_1.default.post('/authenticate', { data: data, prefix: prefix }).then(function (_a) {
+        request_1.default.post(path, { data: data, prefix: prefix }).then(function (_a) {
             var id_token = _a.id_token;
             request_1.default.config({ Authorization: id_token, prefix: prefix });
             cb && cb();

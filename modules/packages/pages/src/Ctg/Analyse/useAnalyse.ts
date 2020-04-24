@@ -248,6 +248,9 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
     useEffect(() => {
         v.current && hardAnalyse()
     }, [mark, v])
+    useEffect(() => {
+        reAnalyse()
+    }, [autoFm])
 
 
     return {

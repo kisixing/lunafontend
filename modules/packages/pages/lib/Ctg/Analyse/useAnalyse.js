@@ -275,6 +275,9 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
     react_1.useEffect(function () {
         v.current && hardAnalyse();
     }, [mark, v]);
+    react_1.useEffect(function () {
+        reAnalyse();
+    }, [autoFm]);
     return {
         setMark: function (m) {
             setMark(m);
