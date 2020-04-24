@@ -476,14 +476,40 @@ var Suit = (function (_super) {
         });
     };
     Suit.prototype.getPointType = function (x, y) {
-        var analysisData = this.drawAnalyse.analysisData;
+        x = Math.round(x);
+        var _a = this.drawAnalyse, analysisData = _a.analysisData, mapXtoY = _a.mapXtoY, mapBaselilneXtoY = _a.mapBaselilneXtoY;
         if (analysisData) {
-            var edge_1 = 20;
-            var _a = analysisData.analysis, acc = _a.acc, dec = _a.dec;
-            var target = acc.find(function (_) { return (x < _.x + edge_1) && (x > _.x - edge_1); }) || dec.find(function (_) { return (x < _.x + edge_1) && (x > _.x - edge_1); });
-            if (target && (y < (target.y + edge_1) && y > (target.y - edge_1))) {
-                var isDec = 'type' in target;
-                return isDec ? 'DecPoint' : 'AccPoint';
+            var target = mapXtoY[x];
+            var mKeys_1 = Object.keys(mapBaselilneXtoY).map(function (_) { return Number(_); });
+            var leftIndex = mKeys_1.reduce(function (index, _) {
+                var left = mKeys_1[index];
+                var right = mKeys_1[index + 1];
+                if (right === undefined) {
+                    return;
+                }
+                if (left < x) {
+                    if (x < right) {
+                        return index;
+                    }
+                    else {
+                        return index + 1;
+                    }
+                }
+                else {
+                    return;
+                }
+            }, 0);
+            if (typeof leftIndex === 'number' && target) {
+                var x1 = mKeys_1[leftIndex];
+                var x2 = mKeys_1[leftIndex + 1];
+                var y1 = mapBaselilneXtoY[x1];
+                var y2 = mapBaselilneXtoY[x2];
+                var k = (y2 - y1) / (x2 - x1);
+                var b = y1 - x1 * k;
+                var baseY = x * k + b;
+                var type = (target.y - baseY) < 0 ? 'AccPoint' : 'DecPoint';
+                this.drawAnalyse.pointToInsert = { type: type, index: target.index };
+                return type;
             }
         }
         return null;

@@ -1,9 +1,22 @@
 import { obvue } from "@lianmed/f_types";
 import Draw from "../../Draw";
-import { AnalyseType } from '../../interface';
+import { AnalyseType, PointType } from '../../interface';
 import { Suit } from "../Suit";
 import { DecType } from "@lianmed/f_types/lib/obvue/ctg_exams_analyse";
 export declare class DrawAnalyse extends Draw {
+    pointToInsert: {
+        type: PointType;
+        index: number;
+    };
+    mapXtoY: {
+        [x: string]: {
+            y: number;
+            index: number;
+        };
+    };
+    mapBaselilneXtoY: {
+        [x: string]: number;
+    };
     analysisData: obvue.ctg_exams_analyse;
     suit: Suit;
     constructor(canvas: HTMLCanvasElement, width: number, height: number, suit: Suit);

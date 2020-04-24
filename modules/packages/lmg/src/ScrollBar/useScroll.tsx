@@ -36,6 +36,7 @@ function useScroll(
     })
 
     const boxGrabCb = (e: MouseEvent) => {
+      if (e.which !== 1) return e.preventDefault()
       // alert('box click')
       let { x: x1 } = getCoordInDocument(e);
       let temp = x1;

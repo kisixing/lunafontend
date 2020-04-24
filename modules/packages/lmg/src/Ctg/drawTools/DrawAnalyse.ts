@@ -1,6 +1,6 @@
 import { obvue } from "@lianmed/f_types";
 import Draw from "../../Draw";
-import { AnalyseType } from '../../interface';
+import { AnalyseType, PointType } from '../../interface';
 import { Suit } from "../Suit";
 import { DecType } from "@lianmed/f_types/lib/obvue/ctg_exams_analyse";
 
@@ -14,6 +14,9 @@ import { DecType } from "@lianmed/f_types/lib/obvue/ctg_exams_analyse";
 // }
 
 export class DrawAnalyse extends Draw {
+    pointToInsert: { type: PointType, index: number }
+    mapXtoY: { [x: string]: { y: number, index: number } } = {}
+    mapBaselilneXtoY: { [x: string]: number } = {}
     // private _analyseData: AnalyseData
     analysisData: obvue.ctg_exams_analyse
     suit: Suit
@@ -28,6 +31,7 @@ export class DrawAnalyse extends Draw {
         this.analysisData = analyseData
     }
     drawBaseline(cur, color, yspan, xspan, max, basetop) {
+
         //清空分析画布
         const { context2D, width, height, analysisData: analyseData } = this;
         context2D && context2D.clearRect(0, 0, width, height)
@@ -59,7 +63,9 @@ export class DrawAnalyse extends Draw {
                 if ((i) % (xspan * 6) == 0) {
                     //console.log("==1==",cur,firstindex,baselineoff);
                     lastx = Math.floor((i - leftViewposition) / 2);
+
                     context2D.lineTo(lastx, (max - curfhroffset - baseline[baselineoff]) * yspan + basetop);
+                    this.mapBaselilneXtoY[lastx] = (max - curfhroffset - baseline[baselineoff]) * yspan + basetop
                 }
             }
             context2D.lineTo(cur, (max - curfhroffset - baseline[baselineoff]) * yspan + basetop)
@@ -107,6 +113,8 @@ export class DrawAnalyse extends Draw {
     //kisi 2019-10-28 绘制 acc dec
     //2020-03-04 用 linecanvas 绘制标记
     drawflag = (canvas, x: number, y: number, index: number) => {
+        this.mapXtoY[x] = { y: y + this.suit.drawobj.basetop, index }
+
         const { context2D, analysisData: analyseData } = this;
         if (!context2D || !analyseData) return
         const { analysis: { acc, dec } } = analyseData
@@ -126,7 +134,7 @@ export class DrawAnalyse extends Draw {
                 canvas.fillStyle = 'green';
                 canvas.fillText(txt, x + 1, y + 10);
             } else if (target.reliability > 45) { //45%~90%，显示橙色加速标记（+）及橙色**%确定度
-                if(!target.remove){
+                if (!target.remove) {
                     txt = "+" + `${target.reliability}%`;
                     canvas.font = '15px arial';
                     canvas.fillStyle = 'orange';
@@ -353,10 +361,10 @@ export class DrawAnalyse extends Draw {
                 score.krebsdata.accscore = 2;
             }
             // 减速
-            let ld = analysis.ldtimes = this.countDec(analysis.start,analysis.end,'LD');//analysis.ldtimes;
-            let vd = analysis.vdtimes = this.countDec(analysis.start,analysis.end,'VD');//analysis.vdtimes;
-            let ed = analysis.edtimes = this.countDec(analysis.start,analysis.end,'ED');//analysis.edtimes;
-            console.log(ld,vd,ed);
+            let ld = analysis.ldtimes = this.countDec(analysis.start, analysis.end, 'LD');//analysis.ldtimes;
+            let vd = analysis.vdtimes = this.countDec(analysis.start, analysis.end, 'VD');//analysis.vdtimes;
+            let ed = analysis.edtimes = this.countDec(analysis.start, analysis.end, 'ED');//analysis.edtimes;
+            console.log(ld, vd, ed);
             let sum = ld + vd;
             if (sum > 1) {
                 score.krebsdata.decscore = 0;
@@ -426,9 +434,9 @@ export class DrawAnalyse extends Draw {
                 score.fischerdata.accscore = 2;
             }
             // 减速
-            let ld = this.countDec(analysis.start,analysis.end,'LD');//analysis.ldtimes;
-            let vd = this.countDec(analysis.start,analysis.end,'VD');//analysis.vdtimes;
-            let ed = this.countDec(analysis.start,analysis.end,'ED');//analysis.edtimes;
+            let ld = this.countDec(analysis.start, analysis.end, 'LD');//analysis.ldtimes;
+            let vd = this.countDec(analysis.start, analysis.end, 'VD');//analysis.vdtimes;
+            let ed = this.countDec(analysis.start, analysis.end, 'ED');//analysis.edtimes;
             if (ld > 0) {
                 score.fischerdata.decscore = 0;
                 score.fischerdata.decvalue = 'LD';
@@ -476,9 +484,9 @@ export class DrawAnalyse extends Draw {
                 score.sogcdata.accscore = 2;
             }
             // 减速
-            let ld = this.countDec(analysis.start,analysis.end,'LD');//analysis.ldtimes;
-            let vd = this.countDec(analysis.start,analysis.end,'VD');//analysis.vdtimes;
-            let ed = this.countDec(analysis.start,analysis.end,'ED');//analysis.edtimes;
+            let ld = this.countDec(analysis.start, analysis.end, 'LD');//analysis.ldtimes;
+            let vd = this.countDec(analysis.start, analysis.end, 'VD');//analysis.vdtimes;
+            let ed = this.countDec(analysis.start, analysis.end, 'ED');//analysis.edtimes;
             if (ld > 0) {
                 score.fischerdata.decscore = 0;
                 score.fischerdata.decvalue = 'LD';
@@ -527,11 +535,22 @@ export class DrawAnalyse extends Draw {
         const target = acc.find(_ => (x < _.x + edge) && (x > _.x - edge))
         if (target && (y < (target.y + edge) && y > (target.y - edge))) {
             target.marked = marked
-            if(!marked){
+            if (!marked) {
                 target.remove = true;
-            }else{
+            } else {
                 target.remove = false;
             }
+        } else {
+            acc.push({
+                marked,
+                index: this.pointToInsert.index,
+                start: 0,
+                end: 0,
+                peak: 0,
+                duration: 0,
+                ampl: 0,
+                reliability: 0
+            })
         }
         this.refresh()
     }
@@ -543,12 +562,23 @@ export class DrawAnalyse extends Draw {
         const target = dec.find(_ => (x < _.x + edge) && (x > _.x - edge))
         if (target && (y < (target.y + edge) && y > (target.y - edge))) {
             target.type = type;
-            console.log('markDecPoint',type)
-            if(type=="ld" ||type=="vd"|| type=="ed" ){
+            console.log('markDecPoint', type)
+            if (type == "ld" || type == "vd" || type == "ed") {
                 target.remove = false;
-            }else{
+            } else {
                 target.remove = true;
             }
+        } else {
+            dec.push({
+                index: this.pointToInsert.index,
+                type,
+                start: 0,
+                end: 0,
+                peak: 0,
+                duration: 0,
+                ampl: 0,
+                marked: true
+            })
         }
         this.refresh()
     }

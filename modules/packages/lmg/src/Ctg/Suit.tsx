@@ -216,7 +216,7 @@ export class Suit extends Draw {
       let _viewposition;
       value = ~~value * 2;
 
-      
+
 
       if (this.data.index < this.canvasline.width * 2) {
         return;
@@ -551,17 +551,52 @@ export class Suit extends Draw {
   }
 
   getPointType(x: number, y: number): PointType {
-    const { analysisData } = this.drawAnalyse
+    x = Math.round(x)
+    const { analysisData, mapXtoY, mapBaselilneXtoY } = this.drawAnalyse
+
     if (analysisData) {
-      const edge = 20;
-      const { analysis: { acc, dec } } = analysisData
+      // const edge = 20;
+      // const { analysis: { acc, dec } } = analysisData
 
-      const target = acc.find(_ => (x < _.x + edge) && (x > _.x - edge)) || dec.find(_ => (x < _.x + edge) && (x > _.x - edge))
-      if (target && (y < (target.y + edge) && y > (target.y - edge))) {
-        const isDec = 'type' in target
+      // const target = acc.find(_ => (x < _.x + edge) && (x > _.x - edge)) || dec.find(_ => (x < _.x + edge) && (x > _.x - edge))
+      // if (target && (y < (target.y + edge) && y > (target.y - edge))) {
+      //   const isDec = 'type' in target
 
-        return isDec ? 'DecPoint' : 'AccPoint'
+      //   return isDec ? 'DecPoint' : 'AccPoint'
+      // }
+      const target = mapXtoY[x]
+      const mKeys = Object.keys(mapBaselilneXtoY).map(_ => Number(_))
+      const leftIndex = mKeys.reduce((index, _) => {
+        const left = mKeys[index]
+        const right = mKeys[index + 1]
+        if (right === undefined) {
+          return
+        }
+        if (left < x) {
+          if (x < right) {
+            return index
+          } else {
+            return index + 1
+          }
+        } else {
+          return
+
+        }
+      }, 0)
+
+      if (typeof leftIndex === 'number' && target) {
+        const x1 = mKeys[leftIndex]
+        const x2 = mKeys[leftIndex + 1]
+        const y1 = mapBaselilneXtoY[x1]
+        const y2 = mapBaselilneXtoY[x2]
+        const k = (y2 - y1) / (x2 - x1)
+        const b = y1 - x1 * k
+        const baseY = x * k + b
+        const type = (target.y - baseY) < 0 ? 'AccPoint' : 'DecPoint'
+        this.drawAnalyse.pointToInsert = { type, index: target.index }
+        return type
       }
+
     }
 
     return null

@@ -100,10 +100,19 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
         Nst_ref,
         analysis_ref
     }
-    // const checkLength = () => {
-    //     return v.current && v.current.data && v.current.data.length > (mark === 'Fischer' ? 30 : 20) * 240
-    // }
-
+    function setFm(flag = true) {
+        console.log('setFm')
+        if (v.current && initData) {
+            if (autoFm) {
+                const fmIndex = initData.analysis.fm || []
+                const fm = v.current.data.fm
+                fmIndex.forEach(_ => {
+                    fm[_] = 1
+                })
+                flag && hardAnalyse()
+            }
+        }
+    }
     const fetchData = () => {
         // if(docid==undefined){
         //     return;
@@ -149,13 +158,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
 
 
     }
-    const analyse = () => {
-        console.log('zz analyse');
 
-        remoteAnalyse().then(() => {
-            v.current && setFormData(v.current.drawAnalyse.analyse(mark, startTime, endTime))
-        })
-    }
 
     const setFormData = (r: obvue.ctg_exams_analyse) => {
         if (!r) return;
@@ -188,6 +191,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
                 let r = v.current.drawAnalyse.analyse(mark, startTime, endTime, initData)
                 hasInitAnalysed.current = true
                 setFormData(r)
+
             }
         }, 1000)
         return () => {
@@ -212,7 +216,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
             v.current && v.current.off('change:selectPoint', s).off('suit:analyseMark', hardAnalyse)
 
         };
-    }, [interval, v.current, docid, analyse, hardAnalyse])
+    }, [interval, v.current, docid, hardAnalyse])
 
     useEffect(() => {
         Object.values(mapFormToMark).forEach(f => f.current && f.current.resetFields())
@@ -249,8 +253,9 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
         v.current && hardAnalyse()
     }, [mark, v])
     useEffect(() => {
-        v.current && reAnalyse()
-    }, [autoFm])
+        setFm()
+
+    }, [autoFm, initData])
 
 
     return {

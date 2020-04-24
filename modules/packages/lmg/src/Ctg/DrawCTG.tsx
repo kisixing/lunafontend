@@ -85,8 +85,8 @@ export default class DrawCTG {
           this.suit.barTool.setBarWidth(100);
         }
         this.suit.barTool.setBarLeft(Math.floor(this.suit.toolbarposition * width / oldwidth), false);
-      }else{
-        this.drawdot(width*2)
+      } else {
+        this.drawdot(width * 2)
       }
     } else {
       this.drawgrid(width * 2, false);
@@ -147,6 +147,7 @@ export default class DrawCTG {
     // }
     // linecontext.stroke();
   }
+
   drawdot(cur, isemit = false) {
     cur = Math.round(cur)
 
@@ -263,6 +264,7 @@ export default class DrawCTG {
         }
         //kisi 2019-10-29
         //绘制加减速标记
+        // console.log('lastx', lastx, (max - lasty - curfhroffset) * this.yspan + this.basetop)
         this.suit.drawAnalyse.drawflag(this.linecontext, lastx, (max - lasty - curfhroffset) * this.yspan, i);
       }
       this.linecontext.stroke();

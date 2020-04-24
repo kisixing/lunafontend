@@ -17,6 +17,8 @@ function useScroll(box, wrapper) {
             width: 10, height: 6, bottom: 0
         });
         var boxGrabCb = function (e) {
+            if (e.which !== 1)
+                return e.preventDefault();
             var x1 = ScrollEl_2.getCoordInDocument(e).x;
             var temp = x1;
             boxEl.style.cursor = 'grab';

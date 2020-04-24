@@ -23,7 +23,10 @@ var DrawAnalyse = (function (_super) {
         if (width === void 0) { width = 0; }
         if (height === void 0) { height = 0; }
         var _this = _super.call(this, width, height, canvas) || this;
+        _this.mapXtoY = {};
+        _this.mapBaselilneXtoY = {};
         _this.drawflag = function (canvas, x, y, index) {
+            _this.mapXtoY[x] = { y: y + _this.suit.drawobj.basetop, index: index };
             var _a = _this, context2D = _a.context2D, analyseData = _a.analysisData;
             if (!context2D || !analyseData)
                 return;
@@ -467,6 +470,7 @@ var DrawAnalyse = (function (_super) {
                 if ((i) % (xspan * 6) == 0) {
                     lastx = Math.floor((i - leftViewposition) / 2);
                     context2D.lineTo(lastx, (max - curfhroffset - baseline[baselineoff]) * yspan + basetop);
+                    this.mapBaselilneXtoY[lastx] = (max - curfhroffset - baseline[baselineoff]) * yspan + basetop;
                 }
             }
             context2D.lineTo(cur, (max - curfhroffset - baseline[baselineoff]) * yspan + basetop);
@@ -538,6 +542,18 @@ var DrawAnalyse = (function (_super) {
                 target.remove = false;
             }
         }
+        else {
+            acc.push({
+                marked: marked,
+                index: this.pointToInsert.index,
+                start: 0,
+                end: 0,
+                peak: 0,
+                duration: 0,
+                ampl: 0,
+                reliability: 0
+            });
+        }
         this.refresh();
     };
     DrawAnalyse.prototype.markDecPoint = function (x, y, type) {
@@ -555,6 +571,18 @@ var DrawAnalyse = (function (_super) {
             else {
                 target.remove = true;
             }
+        }
+        else {
+            dec.push({
+                index: this.pointToInsert.index,
+                type: type,
+                start: 0,
+                end: 0,
+                peak: 0,
+                duration: 0,
+                ampl: 0,
+                marked: true
+            });
         }
         this.refresh();
     };

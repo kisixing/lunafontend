@@ -153,6 +153,20 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
         Nst_ref: Nst_ref,
         analysis_ref: analysis_ref
     };
+    function setFm(flag) {
+        if (flag === void 0) { flag = true; }
+        console.log('setFm');
+        if (v.current && initData) {
+            if (autoFm) {
+                var fmIndex = initData.analysis.fm || [];
+                var fm_1 = v.current.data.fm;
+                fmIndex.forEach(function (_) {
+                    fm_1[_] = 1;
+                });
+                flag && hardAnalyse();
+            }
+        }
+    }
     var fetchData = function () {
         setAnalyseLoading(true);
         return request_1.default.post("/ctg-exams-analyse", {
@@ -198,12 +212,6 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
             }
         });
     };
-    var analyse = function () {
-        console.log('zz analyse');
-        remoteAnalyse().then(function () {
-            v.current && setFormData(v.current.drawAnalyse.analyse(mark, startTime, endTime));
-        });
-    };
     var setFormData = function (r) {
         if (!r)
             return;
@@ -245,7 +253,7 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
         return function () {
             v.current && v.current.off('change:selectPoint', s).off('suit:analyseMark', hardAnalyse);
         };
-    }, [interval, v.current, docid, analyse, hardAnalyse]);
+    }, [interval, v.current, docid, hardAnalyse]);
     react_1.useEffect(function () {
         Object.values(mapFormToMark).forEach(function (f) { return f.current && f.current.resetFields(); });
         hasInitAnalysed.current = false;
@@ -276,8 +284,8 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
         v.current && hardAnalyse();
     }, [mark, v]);
     react_1.useEffect(function () {
-        v.current && reAnalyse();
-    }, [autoFm]);
+        setFm();
+    }, [autoFm, initData]);
     return {
         setMark: function (m) {
             setMark(m);
