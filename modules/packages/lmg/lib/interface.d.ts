@@ -8,7 +8,7 @@ export interface IProps {
     [x: string]: any;
 }
 export declare type AnalyseType = 'Nst' | 'Krebs' | 'Fischer' | 'Sogc' | 'Cst';
-export declare type PointType = 'AccPoint' | 'DecPoint' | 'other';
+export declare type PointType = 'EditAccPoint' | 'EditDecPoint' | 'MarkAccPoint' | 'MarkDecPoint' | 'other';
 export interface Drawer {
     wrap: HTMLElement;
     resize: () => void;

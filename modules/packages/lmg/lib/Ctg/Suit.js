@@ -479,8 +479,16 @@ var Suit = (function (_super) {
         var _a = this.drawAnalyse, analysisData = _a.analysisData, mapXtoY = _a.mapXtoY, mapBaselilneXtoY = _a.mapBaselilneXtoY;
         x = Math.round(x);
         if (analysisData) {
-            var edge = 2;
-            var target = mapXtoY[x];
+            var edge_1 = 10;
+            var _b = analysisData.analysis, acc = _b.acc, dec = _b.dec;
+            var target = acc.find(function (_) { return (x < _.x + edge_1) && (x >= _.x); }) || dec.find(function (_) { return (x < _.x + edge_1 * 2) && (x >= _.x); });
+            console.log('click', x, y, target);
+            if (target && (y <= (target.y + 2 * edge_1) && y > (target.y))) {
+                var isDec = 'type' in target;
+                this.drawAnalyse.pointToEdit = target;
+                return isDec ? 'EditDecPoint' : 'EditAccPoint';
+            }
+            var linePoint = mapXtoY[x];
             var mKeys_1 = Object.keys(mapBaselilneXtoY).map(function (_) { return Number(_); });
             var leftIndex = mKeys_1.reduce(function (index, _) {
                 var left = mKeys_1[index];
@@ -500,8 +508,8 @@ var Suit = (function (_super) {
                     return;
                 }
             }, 0);
-            console.log('click', x, mKeys_1);
-            if (typeof leftIndex === 'number' && target && y < (target.y + edge) && y > (target.y - edge)) {
+            console.log('click', x, y, linePoint);
+            if (typeof leftIndex === 'number' && linePoint && Math.abs(y - linePoint.y) < 4) {
                 var x1 = mKeys_1[leftIndex];
                 var x2 = mKeys_1[leftIndex + 1];
                 var y1 = mapBaselilneXtoY[x1];
@@ -509,8 +517,8 @@ var Suit = (function (_super) {
                 var k = (y2 - y1) / (x2 - x1);
                 var b = y1 - x1 * k;
                 var baseY = x * k + b;
-                var type = (target.y - baseY) < 0 ? 'AccPoint' : 'DecPoint';
-                this.drawAnalyse.pointToInsert = { type: type, index: target.index };
+                var type = (linePoint.y - baseY) < 0 ? 'MarkAccPoint' : 'MarkDecPoint';
+                this.drawAnalyse.pointToInsert = { type: type, index: linePoint.index };
                 return type;
             }
         }

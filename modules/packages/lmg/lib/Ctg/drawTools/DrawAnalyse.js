@@ -531,64 +531,72 @@ var DrawAnalyse = (function (_super) {
         this.suit.emit('suit:analyseMark');
         this.suit.drawobj.drawdot(this.suit.viewposition < this.width * 2 ? this.width * 2 : this.suit.viewposition);
     };
-    DrawAnalyse.prototype.markAccPoint = function (x, y, marked) {
+    DrawAnalyse.prototype.markAccPoint = function () {
+        if (!this.analysisData)
+            return;
+        var acc = this.analysisData.analysis.acc;
+        acc.push({
+            marked: true,
+            index: this.pointToInsert.index,
+            start: 0,
+            end: 0,
+            peak: 0,
+            duration: 0,
+            ampl: 0,
+            reliability: 0,
+            user: true
+        });
+        this.refresh();
+    };
+    DrawAnalyse.prototype.editAccPoint = function (marked) {
         if (marked === void 0) { marked = true; }
         if (!this.analysisData)
             return;
-        var edge = 20;
         var acc = this.analysisData.analysis.acc;
-        var target = acc.find(function (_) { return (x < _.x + edge) && (x > _.x - edge); });
-        console.log('acc', x, y, target);
-        if (target && (y < (target.y + edge) && y > (target.y - edge))) {
-            target.marked = marked;
-            if (!marked) {
-                target.remove = true;
-            }
-            else {
-                target.remove = false;
-            }
-        }
-        else {
-            acc.push({
-                marked: marked,
-                index: this.pointToInsert.index,
-                start: 0,
-                end: 0,
-                peak: 0,
-                duration: 0,
-                ampl: 0,
-                reliability: 0
-            });
+        var target = this.pointToEdit;
+        target.marked = marked;
+        target.remove = !marked;
+        var user = target.user;
+        if (user && !marked) {
+            var index = acc.findIndex(function (_) { return _.index === target.index; });
+            acc.splice(index, 1);
         }
         this.refresh();
     };
-    DrawAnalyse.prototype.markDecPoint = function (x, y, type) {
+    DrawAnalyse.prototype.markDecPoint = function (type) {
         if (!this.analysisData)
             return;
-        var edge = 20;
         var dec = this.analysisData.analysis.dec;
-        var target = dec.find(function (_) { return (x < _.x + edge) && (x > _.x - edge); });
-        if (target && (y < (target.y + edge) && y > (target.y - edge))) {
-            target.type = type;
-            console.log('markDecPoint', type);
-            if (type == "ld" || type == "vd" || type == "ed") {
-                target.remove = false;
-            }
-            else {
-                target.remove = true;
-            }
+        dec.push({
+            index: this.pointToInsert.index,
+            type: type,
+            start: 0,
+            end: 0,
+            peak: 0,
+            duration: 0,
+            ampl: 0,
+            marked: true,
+            user: true
+        });
+        this.refresh();
+    };
+    DrawAnalyse.prototype.editDecPoint = function (type) {
+        if (!this.analysisData)
+            return;
+        var dec = this.analysisData.analysis.dec;
+        var target = this.pointToEdit;
+        var user = target.user;
+        target.type = type;
+        console.log('markDecPoint', type);
+        if (type == "ld" || type == "vd" || type == "ed") {
+            target.remove = false;
         }
         else {
-            dec.push({
-                index: this.pointToInsert.index,
-                type: type,
-                start: 0,
-                end: 0,
-                peak: 0,
-                duration: 0,
-                ampl: 0,
-                marked: true
-            });
+            target.remove = true;
+        }
+        if (user && !type) {
+            var index = dec.findIndex(function (_) { return _.index === target.index; });
+            dec.splice(index, 1);
         }
         this.refresh();
     };

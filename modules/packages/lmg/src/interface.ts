@@ -6,8 +6,8 @@ export interface IProps {
     loading?: boolean;
     [x: string]: any
 }
-export type AnalyseType = 'Nst' | 'Krebs' | 'Fischer'| 'Sogc'| 'Cst';
-export type PointType = 'AccPoint' | 'DecPoint' | 'other';
+export type AnalyseType = 'Nst' | 'Krebs' | 'Fischer' | 'Sogc' | 'Cst';
+export type PointType = 'EditAccPoint' | 'EditDecPoint' | 'MarkAccPoint' | 'MarkDecPoint' | 'other';
 
 
 export interface Drawer {

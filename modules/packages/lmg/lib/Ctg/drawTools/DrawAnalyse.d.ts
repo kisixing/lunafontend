@@ -2,12 +2,13 @@ import { obvue } from "@lianmed/f_types";
 import Draw from "../../Draw";
 import { AnalyseType, PointType } from '../../interface';
 import { Suit } from "../Suit";
-import { DecType } from "@lianmed/f_types/lib/obvue/ctg_exams_analyse";
+import { DecType, AccPoint, DecPoint } from "@lianmed/f_types/lib/obvue/ctg_exams_analyse";
 export declare class DrawAnalyse extends Draw {
     pointToInsert: {
         type: PointType;
         index: number;
     };
+    pointToEdit: AccPoint | DecPoint;
     mapXtoY: {
         [x: string]: {
             y: number;
@@ -31,8 +32,8 @@ export declare class DrawAnalyse extends Draw {
             edtimes: number;
             ldtimes: number;
             vdtimes: number;
-            acc: import("@lianmed/f_types/lib/obvue/ctg_exams_analyse").AccPoint[];
-            dec: import("@lianmed/f_types/lib/obvue/ctg_exams_analyse").DecPoint[];
+            acc: AccPoint[];
+            dec: DecPoint[];
             fm: number[];
             fhrbaselineMinute: number[];
             ucdata: {
@@ -109,8 +110,8 @@ export declare class DrawAnalyse extends Draw {
             edtimes: number;
             ldtimes: number;
             vdtimes: number;
-            acc: import("@lianmed/f_types/lib/obvue/ctg_exams_analyse").AccPoint[];
-            dec: import("@lianmed/f_types/lib/obvue/ctg_exams_analyse").DecPoint[];
+            acc: AccPoint[];
+            dec: DecPoint[];
             fm: number[];
             fhrbaselineMinute: number[];
             ucdata: {
@@ -180,7 +181,7 @@ export declare class DrawAnalyse extends Draw {
             };
         };
     };
-    drawflag: (canvas: any, x: number, y: number, index: number) => void;
+    drawflag: (canvas: CanvasRenderingContext2D, x: number, y: number, index: number) => void;
     inRange: (value: number, min: number, max: number) => boolean;
     countAcc: (start: number, end: number) => number;
     countDec: (start: number, end: number, type: string) => number;
@@ -195,8 +196,8 @@ export declare class DrawAnalyse extends Draw {
             edtimes: number;
             ldtimes: number;
             vdtimes: number;
-            acc: import("@lianmed/f_types/lib/obvue/ctg_exams_analyse").AccPoint[];
-            dec: import("@lianmed/f_types/lib/obvue/ctg_exams_analyse").DecPoint[];
+            acc: AccPoint[];
+            dec: DecPoint[];
             fm: number[];
             fhrbaselineMinute: number[];
             ucdata: {
@@ -268,6 +269,8 @@ export declare class DrawAnalyse extends Draw {
     };
     revicePoint(x: number, y: number): string;
     refresh(): void;
-    markAccPoint(x: number, y: number, marked?: boolean): void;
-    markDecPoint(x: number, y: number, type: DecType): void;
+    markAccPoint(): void;
+    editAccPoint(marked?: boolean): void;
+    markDecPoint(type: DecType): void;
+    editDecPoint(type: DecType): void;
 }

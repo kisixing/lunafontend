@@ -555,16 +555,18 @@ export class Suit extends Draw {
     x = Math.round(x)
 
     if (analysisData) {
-      const edge = 2;
-      // const { analysis: { acc, dec } } = analysisData
+      const edge = 10;
+      const { analysis: { acc, dec } } = analysisData
 
-      // const target = acc.find(_ => (x < _.x + edge) && (x > _.x - edge)) || dec.find(_ => (x < _.x + edge) && (x > _.x - edge))
-      // if (target && (y < (target.y + edge) && y > (target.y - edge))) {
-      //   const isDec = 'type' in target
-
-      //   return isDec ? 'DecPoint' : 'AccPoint'
-      // }
-      const target = mapXtoY[x]
+      let target = acc.find(_ => (x < _.x + edge) && (x >= _.x)) || dec.find(_ => (x < _.x + edge * 2) && (x >= _.x))
+      console.log('click', x, y, target)
+      // 标记文字
+      if (target && (y <= (target.y + 2 * edge) && y > (target.y))) {
+        const isDec = 'type' in target
+        this.drawAnalyse.pointToEdit = target
+        return isDec ? 'EditDecPoint' : 'EditAccPoint'
+      }
+      const linePoint = mapXtoY[x]
 
       const mKeys = Object.keys(mapBaselilneXtoY).map(_ => Number(_))
       const leftIndex = mKeys.reduce((index, _) => {
@@ -584,9 +586,9 @@ export class Suit extends Draw {
 
         }
       }, 0)
-      console.log('click', x, mKeys)
-
-      if (typeof leftIndex === 'number' && target && y < (target.y + edge) && y > (target.y - edge)) {
+      console.log('click', x, y, linePoint)
+      // 线上的点
+      if (typeof leftIndex === 'number' && linePoint && Math.abs(y - linePoint.y) < 4) {
         const x1 = mKeys[leftIndex]
         const x2 = mKeys[leftIndex + 1]
         const y1 = mapBaselilneXtoY[x1]
@@ -594,8 +596,8 @@ export class Suit extends Draw {
         const k = (y2 - y1) / (x2 - x1)
         const b = y1 - x1 * k
         const baseY = x * k + b
-        const type = (target.y - baseY) < 0 ? 'AccPoint' : 'DecPoint'
-        this.drawAnalyse.pointToInsert = { type, index: target.index }
+        const type = (linePoint.y - baseY) < 0 ? 'MarkAccPoint' : 'MarkDecPoint'
+        this.drawAnalyse.pointToInsert = { type, index: linePoint.index }
         return type
       }
 

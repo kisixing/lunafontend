@@ -17,7 +17,6 @@ export default (props: {
     <div style={{ position: 'absolute', width: '100%', height: '100%', bottom: 0 }} ref={wrapper}onContextMenu={e => {
       // e.preventDefault()
       // e.stopPropagation()
-      console.log('menu', e)
       // return false
     }}>
 

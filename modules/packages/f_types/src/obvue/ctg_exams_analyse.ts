@@ -10,6 +10,7 @@ interface BasePoint {
     y?: number
     marked?: boolean
     remove?: boolean
+    user?: boolean
 }
 export interface AccPoint extends BasePoint {
 
@@ -18,7 +19,6 @@ export interface AccPoint extends BasePoint {
 
 export type DecType = 'ld' | 'ed' | 'vd'
 export interface DecPoint extends BasePoint {
-
     type: DecType
 }
 export interface _ctg_exams_analyse {
@@ -48,11 +48,11 @@ export interface _ctg_exams_analyse {
     score: {
         sogcdata?: {
             bhrscore: number
-            ltvvalue:number
-            ltvscore:number
-            accscore:number
-            accvalue:number
-            bhrvalue:number
+            ltvvalue: number
+            ltvscore: number
+            accscore: number
+            accvalue: number
+            bhrvalue: number
         }
         ret: number,
         msg: string,
@@ -71,7 +71,7 @@ export interface _ctg_exams_analyse {
             fmvalue: number
         },
         krebsdata?: {
-            ltvvalue:number
+            ltvvalue: number
             bhrscore: number
             ltvscore: number
             stvscore: number

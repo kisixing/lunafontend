@@ -21,7 +21,6 @@ exports.default = (function (props) {
         box.current.style.position = 'relative';
     }, []);
     return (react_1.default.createElement("div", { style: { position: 'absolute', width: '100%', height: '100%', bottom: 0 }, ref: wrapper, onContextMenu: function (e) {
-            console.log('menu', e);
         } }));
 });
 //# sourceMappingURL=index.js.map

@@ -2,7 +2,7 @@ import { obvue } from "@lianmed/f_types";
 import Draw from "../../Draw";
 import { AnalyseType, PointType } from '../../interface';
 import { Suit } from "../Suit";
-import { DecType } from "@lianmed/f_types/lib/obvue/ctg_exams_analyse";
+import { DecType, AccPoint, DecPoint } from "@lianmed/f_types/lib/obvue/ctg_exams_analyse";
 
 
 // export interface AnalyseData {
@@ -15,6 +15,7 @@ import { DecType } from "@lianmed/f_types/lib/obvue/ctg_exams_analyse";
 
 export class DrawAnalyse extends Draw {
     pointToInsert: { type: PointType, index: number }
+    pointToEdit: AccPoint | DecPoint
     mapXtoY: { [x: string]: { y: number, index: number } } = {}
     mapBaselilneXtoY: { [x: string]: number } = {}
     // private _analyseData: AnalyseData
@@ -112,7 +113,7 @@ export class DrawAnalyse extends Draw {
     }
     //kisi 2019-10-28 绘制 acc dec
     //2020-03-04 用 linecanvas 绘制标记
-    drawflag = (canvas, x: number, y: number, index: number) => {
+    drawflag = (canvas: CanvasRenderingContext2D, x: number, y: number, index: number) => {
         this.mapXtoY[x] = { y: y + this.suit.drawobj.basetop, index }
         const { context2D, analysisData: analyseData } = this;
         if (!context2D || !analyseData) return
@@ -132,16 +133,21 @@ export class DrawAnalyse extends Draw {
                 canvas.font = '16px arial';
                 canvas.fillStyle = 'green';
                 canvas.fillText(txt, x + 1, y + 10);
+                // canvas.fillRect(x, y, 2, 2)
+                // canvas.fillRect(x + 1, y + 10, 2, 2)
+
             } else if (target.reliability > 45) { //45%~90%，显示橙色加速标记（+）及橙色**%确定度
                 if (!target.remove) {
                     txt = "+" + `${target.reliability}%`;
                     canvas.font = '15px arial';
                     canvas.fillStyle = 'orange';
                     canvas.fillText(txt, x + 1, y + 10);
+                    // canvas.fillRect(x, y, 2, 2)
+                    // canvas.fillRect(x + 1, y + 10, 2, 2)
                 }
             }
         } else if (_dec.indexOf(index) > -1 || _dec.indexOf(index - 1) > -1) {
-            console.log('drawflag',x,y)
+            console.log('drawflag', x, y)
             const target = dec.find(_ => [index, index - 1].includes(_.index))
             target.x = x
             target.y = y
@@ -149,6 +155,8 @@ export class DrawAnalyse extends Draw {
             canvas.font = 'bold 15px arial';
             canvas.fillStyle = 'red';
             canvas.fillText(txt, x + 1, y + 20);
+            // canvas.fillRect(x, y, 2, 2)
+            // canvas.fillRect(x + 1, y + 20, 2, 2)
         }
     }
     // kisi 2020-04-08 增加本地分数统计
@@ -217,7 +225,7 @@ export class DrawAnalyse extends Draw {
                 }
             } else if (item.index >= start) {
                 if (item.marked) {
-                    if(item.duration!=0){
+                    if (item.duration != 0) {
                         sum += item.duration;
                         accnum++;
                     }
@@ -247,7 +255,7 @@ export class DrawAnalyse extends Draw {
                 }
             } else if (item.index >= start) {
                 if (item.marked) {
-                    if(item.ampl!=0){
+                    if (item.ampl != 0) {
                         sum += item.ampl;
                         accnum++;
                     }
@@ -531,72 +539,73 @@ export class DrawAnalyse extends Draw {
         this.suit.drawobj.drawdot(this.suit.viewposition < this.width * 2 ? this.width * 2 : this.suit.viewposition);
     }
 
-    markAccPoint(x: number, y: number, marked = true) {
+    markAccPoint() {
         if (!this.analysisData) return
-        const edge = 20;
         const { analysis: { acc } } = this.analysisData
-        const target = acc.find(_ => (x < _.x + edge) && (x > _.x - edge))
-        console.log('acc',x,y,target)
-        if (target && (y < (target.y + edge) && y > (target.y - edge))) {
-            target.marked = marked
-            if (!marked) {
-                target.remove = true;
-            } else {
-                target.remove = false;
-            }
-        } else {
-            acc.push({
-                marked,
-                index: this.pointToInsert.index,
-                start: 0,
-                end: 0,
-                peak: 0,
-                duration: 0,
-                ampl: 0,
-                reliability: 0
-            })
+
+        acc.push({
+            marked: true,
+            index: this.pointToInsert.index,
+            start: 0,
+            end: 0,
+            peak: 0,
+            duration: 0,
+            ampl: 0,
+            reliability: 0,
+            user: true
+        })
+        this.refresh()
+    }
+    editAccPoint(marked = true) {
+        if (!this.analysisData) return
+        const { analysis: { acc } } = this.analysisData
+        const target = this.pointToEdit as AccPoint
+        target.marked = marked
+        target.remove = !marked;
+        const { user } = target
+        if (user && !marked) {
+            const index = acc.findIndex(_ => _.index === target.index)
+            acc.splice(index, 1)
         }
         this.refresh()
     }
-    markDecPoint(x: number, y: number, type: DecType) {
+    markDecPoint(type: DecType) {
         if (!this.analysisData) return
-        const edge = 20;
+        const { analysis: { dec } } = this.analysisData
+        dec.push({
+            index: this.pointToInsert.index,
+            type,
+            start: 0,
+            end: 0,
+            peak: 0,
+            duration: 0,
+            ampl: 0,
+            marked: true,
+            user: true
+        })
+        this.refresh()
+    }
+    editDecPoint(type: DecType) {
+        if (!this.analysisData) return
         const { analysis: { dec } } = this.analysisData
 
-        const target = dec.find(_ => (x < _.x + edge) && (x > _.x - edge))
-        if (target && (y < (target.y + edge) && y > (target.y - edge))) {
-            target.type = type;
-            console.log('markDecPoint', type)
-            if (type == "ld" || type == "vd" || type == "ed") {
-                target.remove = false;
-            } else {
-                target.remove = true;
-            }
+        const target = this.pointToEdit as DecPoint
+        const { user } = target
+
+        target.type = type;
+        console.log('markDecPoint', type)
+        if (type == "ld" || type == "vd" || type == "ed") {
+            target.remove = false;
         } else {
-            dec.push({
-                index: this.pointToInsert.index,
-                type,
-                start: 0,
-                end: 0,
-                peak: 0,
-                duration: 0,
-                ampl: 0,
-                marked: true
-            })
+            target.remove = true;
         }
+        if (user && !type) {
+            const index = dec.findIndex(_ => _.index === target.index)
+            dec.splice(index, 1)
+        }
+
         this.refresh()
     }
-    // getPointType(x: number, y: number): PointType {
-    //     if (!this.analysisData) return
-    //     const edge = 20;
-    //     const { analysis: { acc, dec } } = this.analysisData
 
-    //     const target = acc.find(_ => (x < _.x + edge) && (x > _.x - edge)) || dec.find(_ => (x < _.x + edge) && (x > _.x - edge))
-    //     if (target && (y < (target.y + edge) && y > (target.y - edge))) {
-    //         const isAcc = 'reliability' in target
 
-    //         return isAcc ? 'AccPoint' : 'DecPoint'
-    //     }
-    //     return null
-    // }
 }

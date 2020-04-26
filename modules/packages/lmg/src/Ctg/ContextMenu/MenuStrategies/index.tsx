@@ -1,12 +1,15 @@
-import { Menu } from 'antd';
 import React, { MutableRefObject } from 'react';
-import AccPoint from "./AccPoint";
-import DecPoint from "./DecPoint";
+import MarkAccPoint from "./MarkAccPoint";
+import MarkDecPoint from "./MarkDecPoint";
+import EditAccPoint from "./EditAccPoint";
+import EditDecPoint from "./EditDecPoint";
 import { PointType } from 'packages/lmg/src/interface';
 import { Suit } from '../../Suit';
 const m = {
-    AccPoint,
-    DecPoint
+    MarkAccPoint,
+    MarkDecPoint,
+    EditAccPoint,
+    EditDecPoint
 }
 
 export interface IMenuProps {
@@ -20,8 +23,8 @@ export default (props: IMenuProps) => {
     const { pType } = props
     const T = m[pType]
     return (T && T(props)) || (
-        <Menu>
-
-        </Menu>
+        <div style={{background:'#fff',}}>
+            无效点击
+        </div>
     )
 }   
