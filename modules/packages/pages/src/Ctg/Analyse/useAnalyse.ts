@@ -108,6 +108,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
                 const fm = v.current.data.fm
                 fmIndex.forEach(_ => {
                     fm[_] = 1
+                    fm[_ - 1] = 1
                 })
                 flag && hardAnalyse()
             }

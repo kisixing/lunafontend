@@ -476,10 +476,10 @@ var Suit = (function (_super) {
         });
     };
     Suit.prototype.getPointType = function (x, y) {
-        console.log('click', x, y);
-        x = Math.round(x);
         var _a = this.drawAnalyse, analysisData = _a.analysisData, mapXtoY = _a.mapXtoY, mapBaselilneXtoY = _a.mapBaselilneXtoY;
+        x = Math.round(x);
         if (analysisData) {
+            var edge = 2;
             var target = mapXtoY[x];
             var mKeys_1 = Object.keys(mapBaselilneXtoY).map(function (_) { return Number(_); });
             var leftIndex = mKeys_1.reduce(function (index, _) {
@@ -488,8 +488,8 @@ var Suit = (function (_super) {
                 if (right === undefined) {
                     return;
                 }
-                if (left < x) {
-                    if (x < right) {
+                if (left <= x) {
+                    if (x <= right) {
                         return index;
                     }
                     else {
@@ -500,7 +500,8 @@ var Suit = (function (_super) {
                     return;
                 }
             }, 0);
-            if (typeof leftIndex === 'number' && target) {
+            console.log('click', x, mKeys_1);
+            if (typeof leftIndex === 'number' && target && y < (target.y + edge) && y > (target.y - edge)) {
                 var x1 = mKeys_1[leftIndex];
                 var x2 = mKeys_1[leftIndex + 1];
                 var y1 = mapBaselilneXtoY[x1];

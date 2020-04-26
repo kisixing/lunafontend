@@ -162,6 +162,7 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
                 var fm_1 = v.current.data.fm;
                 fmIndex.forEach(function (_) {
                     fm_1[_] = 1;
+                    fm_1[_ - 1] = 1;
                 });
                 flag && hardAnalyse();
             }

@@ -551,12 +551,11 @@ export class Suit extends Draw {
   }
 
   getPointType(x: number, y: number): PointType {
-    console.log('click',x,y)
-    x = Math.round(x)
     const { analysisData, mapXtoY, mapBaselilneXtoY } = this.drawAnalyse
+    x = Math.round(x)
 
     if (analysisData) {
-      // const edge = 20;
+      const edge = 2;
       // const { analysis: { acc, dec } } = analysisData
 
       // const target = acc.find(_ => (x < _.x + edge) && (x > _.x - edge)) || dec.find(_ => (x < _.x + edge) && (x > _.x - edge))
@@ -566,6 +565,7 @@ export class Suit extends Draw {
       //   return isDec ? 'DecPoint' : 'AccPoint'
       // }
       const target = mapXtoY[x]
+
       const mKeys = Object.keys(mapBaselilneXtoY).map(_ => Number(_))
       const leftIndex = mKeys.reduce((index, _) => {
         const left = mKeys[index]
@@ -573,8 +573,8 @@ export class Suit extends Draw {
         if (right === undefined) {
           return
         }
-        if (left < x) {
-          if (x < right) {
+        if (left <= x) {
+          if (x <= right) {
             return index
           } else {
             return index + 1
@@ -584,8 +584,9 @@ export class Suit extends Draw {
 
         }
       }, 0)
+      console.log('click', x, mKeys)
 
-      if (typeof leftIndex === 'number' && target) {
+      if (typeof leftIndex === 'number' && target && y < (target.y + edge) && y > (target.y - edge)) {
         const x1 = mKeys[leftIndex]
         const x2 = mKeys[leftIndex + 1]
         const y1 = mapBaselilneXtoY[x1]
