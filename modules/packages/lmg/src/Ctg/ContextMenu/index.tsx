@@ -11,7 +11,10 @@ export default ((props: PropsWithChildren<{ s: React.MutableRefObject<Suit> }>) 
     const offsetY = useRef(0)
 
     useEffect(() => {
-        console.log('pType', pType)
+        document.oncontextmenu = () => false
+        return ()=>{
+            document.oncontextmenu = null
+        }
     }, [pType])
 
 

@@ -19,7 +19,10 @@ exports.default = (function (props) {
     var offsetX = react_1.useRef(0);
     var offsetY = react_1.useRef(0);
     react_1.useEffect(function () {
-        console.log('pType', pType);
+        document.oncontextmenu = function () { return false; };
+        return function () {
+            document.oncontextmenu = null;
+        };
     }, [pType]);
     return (react_1.default.createElement(react_1.default.Fragment, null,
         react_1.default.createElement(antd_1.Dropdown, { overlay: index_1.default({ pType: pType, s: s, offsetX: offsetX, offsetY: offsetY }), trigger: ['contextMenu'] },

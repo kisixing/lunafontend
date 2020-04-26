@@ -553,6 +553,7 @@ export class Suit extends Draw {
   getPointType(x: number, y: number): PointType {
     const { analysisData, mapXtoY, mapBaselilneXtoY } = this.drawAnalyse
     x = Math.round(x)
+    console.log('ll', mapXtoY, analysisData, mapBaselilneXtoY, x, y);
 
     if (analysisData) {
       const edge = 10;

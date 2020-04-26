@@ -478,6 +478,7 @@ var Suit = (function (_super) {
     Suit.prototype.getPointType = function (x, y) {
         var _a = this.drawAnalyse, analysisData = _a.analysisData, mapXtoY = _a.mapXtoY, mapBaselilneXtoY = _a.mapBaselilneXtoY;
         x = Math.round(x);
+        console.log('ll', mapXtoY, analysisData, mapBaselilneXtoY, x, y);
         if (analysisData) {
             var edge_1 = 10;
             var _b = analysisData.analysis, acc = _b.acc, dec = _b.dec;
