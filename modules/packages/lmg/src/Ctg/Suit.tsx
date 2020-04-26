@@ -589,7 +589,7 @@ export class Suit extends Draw {
       }, 0)
       console.log('click', x, y, linePoint)
       // 线上的点
-      if (typeof leftIndex === 'number' && linePoint && Math.abs(y - linePoint.y) < 4) {
+      if (typeof leftIndex === 'number' && linePoint && Math.abs(y - linePoint.y) < 8) {
         const x1 = mKeys[leftIndex]
         const x2 = mKeys[leftIndex + 1]
         const y1 = mapBaselilneXtoY[x1]

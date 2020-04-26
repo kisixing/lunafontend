@@ -42,7 +42,7 @@ var DrawAnalyse = (function (_super) {
                 target.y = y;
                 if (target.marked) {
                     txt = "+";
-                    canvas.font = '16px arial';
+                    canvas.font = '18px arial';
                     canvas.fillStyle = 'green';
                     canvas.fillText(txt, x + 1, y + 10);
                 }

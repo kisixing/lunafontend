@@ -510,7 +510,7 @@ var Suit = (function (_super) {
                 }
             }, 0);
             console.log('click', x, y, linePoint);
-            if (typeof leftIndex === 'number' && linePoint && Math.abs(y - linePoint.y) < 4) {
+            if (typeof leftIndex === 'number' && linePoint && Math.abs(y - linePoint.y) < 8) {
                 var x1 = mKeys_1[leftIndex];
                 var x2 = mKeys_1[leftIndex + 1];
                 var y1 = mapBaselilneXtoY[x1];

@@ -130,7 +130,7 @@ export class DrawAnalyse extends Draw {
             // 90%(后台默认处理90%marked为true)以上直接显示为绿色加速标记（+）
             if (target.marked) {
                 txt = "+";
-                canvas.font = '16px arial';
+                canvas.font = '18px arial';
                 canvas.fillStyle = 'green';
                 canvas.fillText(txt, x + 1, y + 10);
                 // canvas.fillRect(x, y, 2, 2)
