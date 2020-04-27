@@ -34,7 +34,8 @@ export class DrawAnalyse extends Draw {
     drawBaseline(cur, color, yspan, xspan, max, basetop) {
 
         //清空分析画布
-        const { context2D, width, height, analysisData: analyseData } = this;
+        let { context2D, width, height, analysisData: analyseData } = this;
+        width = Math.floor(width)
         context2D && context2D.clearRect(0, 0, width, height)
 
         if (!analyseData) {
@@ -54,9 +55,9 @@ export class DrawAnalyse extends Draw {
         if (true) {
             let baselineoff = 0;
             let firstindex = Math.floor(leftViewposition / (xspan * 6));
-            console.log('firstindex',(max - curfhroffset - baseline[firstindex]) * yspan + basetop))
             //console.log("==0==",cur,firstindex,baselineoff);
             context2D.moveTo(baselineoff * xspan * 3, (max - curfhroffset - baseline[firstindex]) * yspan + basetop);
+
             for (var i = leftViewposition; i < cur; i++) {
                 baselineoff = Math.ceil(i / (xspan * 6));
                 if (baselineoff >= baseline.length - 1) {

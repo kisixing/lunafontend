@@ -455,6 +455,7 @@ var DrawAnalyse = (function (_super) {
     };
     DrawAnalyse.prototype.drawBaseline = function (cur, color, yspan, xspan, max, basetop) {
         var _a = this, context2D = _a.context2D, width = _a.width, height = _a.height, analyseData = _a.analysisData;
+        width = Math.floor(width);
         context2D && context2D.clearRect(0, 0, width, height);
         if (!analyseData) {
             return;
@@ -469,7 +470,6 @@ var DrawAnalyse = (function (_super) {
         if (true) {
             var baselineoff = 0;
             var firstindex = Math.floor(leftViewposition / (xspan * 6));
-            console.log('firstindex', (max - curfhroffset - baseline[firstindex]) * yspan + basetop);
             context2D.moveTo(baselineoff * xspan * 3, (max - curfhroffset - baseline[firstindex]) * yspan + basetop);
             for (var i = leftViewposition; i < cur; i++) {
                 baselineoff = Math.ceil(i / (xspan * 6));
