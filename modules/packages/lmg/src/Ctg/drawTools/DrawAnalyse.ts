@@ -54,6 +54,7 @@ export class DrawAnalyse extends Draw {
         if (true) {
             let baselineoff = 0;
             let firstindex = Math.floor(leftViewposition / (xspan * 6));
+            console.log('firstindex',(max - curfhroffset - baseline[firstindex]) * yspan + basetop))
             //console.log("==0==",cur,firstindex,baselineoff);
             context2D.moveTo(baselineoff * xspan * 3, (max - curfhroffset - baseline[firstindex]) * yspan + basetop);
             for (var i = leftViewposition; i < cur; i++) {

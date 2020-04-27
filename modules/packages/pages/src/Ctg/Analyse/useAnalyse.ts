@@ -142,7 +142,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
     }
     const remoteAnalyse = () => {
         return new Promise((res) => {
-            if ((isToShort || initData || endTime === 0)) {
+            if ((isToShort || initData || endTime === 0 || analyseLoading)) {
                 res()
 
             } else {
@@ -234,7 +234,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
 
     useEffect(() => {
         if (ctgData && ctgData.fhr1) {
-            const value = startTime + interval * 240 > ctgData.fhr1.length/2 ? ctgData.fhr1.length/2 : startTime + interval * 240
+            const value = startTime + interval * 240 > ctgData.fhr1.length / 2 ? ctgData.fhr1.length / 2 : startTime + interval * 240
             setEndTime(value)
         }
     }, [startTime, interval, ctgData])

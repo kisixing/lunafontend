@@ -469,6 +469,7 @@ var DrawAnalyse = (function (_super) {
         if (true) {
             var baselineoff = 0;
             var firstindex = Math.floor(leftViewposition / (xspan * 6));
+            console.log('firstindex', (max - curfhroffset - baseline[firstindex]) * yspan + basetop);
             context2D.moveTo(baselineoff * xspan * 3, (max - curfhroffset - baseline[firstindex]) * yspan + basetop);
             for (var i = leftViewposition; i < cur; i++) {
                 baselineoff = Math.ceil(i / (xspan * 6));

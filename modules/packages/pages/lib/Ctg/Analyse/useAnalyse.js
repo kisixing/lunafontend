@@ -198,7 +198,7 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
     }); };
     var remoteAnalyse = function () {
         return new Promise(function (res) {
-            if ((isToShort || initData || endTime === 0)) {
+            if ((isToShort || initData || endTime === 0 || analyseLoading)) {
                 res();
             }
             else {
