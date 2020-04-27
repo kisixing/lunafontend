@@ -328,6 +328,11 @@ export class DrawAnalyse extends Draw {
             } else if (fmnum > 2) {
                 score.nstdata.fmscore = 2;
             }
+            //kisi add 2020-04-26
+            // 减速
+            analysis.ldtimes = this.countDec(analysis.start, analysis.end, 'LD');//analysis.ldtimes;
+            analysis.vdtimes = this.countDec(analysis.start, analysis.end, 'VD');//analysis.vdtimes;
+            analysis.edtimes = this.countDec(analysis.start, analysis.end, 'ED');//analysis.edtimes;
             score.nstdata.total = score.nstdata.accamplscore + score.nstdata.accdurationscore + score.nstdata.bhrscore + score.nstdata.fmscore + score.nstdata.ltvscore;
             return this.analysisData = analysisData
         }
@@ -446,9 +451,9 @@ export class DrawAnalyse extends Draw {
                 score.fischerdata.accscore = 2;
             }
             // 减速
-            let ld = this.countDec(analysis.start, analysis.end, 'LD');//analysis.ldtimes;
-            let vd = this.countDec(analysis.start, analysis.end, 'VD');//analysis.vdtimes;
-            let ed = this.countDec(analysis.start, analysis.end, 'ED');//analysis.edtimes;
+            let ld = analysis.ldtimes = this.countDec(analysis.start, analysis.end, 'LD');//analysis.ldtimes;
+            let vd = analysis.vdtimes = this.countDec(analysis.start, analysis.end, 'VD');//analysis.vdtimes;
+            let ed = analysis.edtimes = this.countDec(analysis.start, analysis.end, 'ED');//analysis.edtimes;
             if (ld > 0) {
                 score.fischerdata.decscore = 0;
                 score.fischerdata.decvalue = 'LD';
@@ -496,9 +501,9 @@ export class DrawAnalyse extends Draw {
                 score.sogcdata.accscore = 2;
             }
             // 减速
-            let ld = this.countDec(analysis.start, analysis.end, 'LD');//analysis.ldtimes;
-            let vd = this.countDec(analysis.start, analysis.end, 'VD');//analysis.vdtimes;
-            let ed = this.countDec(analysis.start, analysis.end, 'ED');//analysis.edtimes;
+            let ld = analysis.ldtimes = this.countDec(analysis.start, analysis.end, 'LD');//analysis.ldtimes;
+            let vd = analysis.vdtimes = this.countDec(analysis.start, analysis.end, 'VD');//analysis.vdtimes;
+            let ed = analysis.edtimes = this.countDec(analysis.start, analysis.end, 'ED');//analysis.edtimes;
             if (ld > 0) {
                 score.fischerdata.decscore = 0;
                 score.fischerdata.decvalue = 'LD';

@@ -238,6 +238,9 @@ var DrawAnalyse = (function (_super) {
                 else if (fmnum > 2) {
                     score.nstdata.fmscore = 2;
                 }
+                analysis.ldtimes = _this.countDec(analysis.start, analysis.end, 'LD');
+                analysis.vdtimes = _this.countDec(analysis.start, analysis.end, 'VD');
+                analysis.edtimes = _this.countDec(analysis.start, analysis.end, 'ED');
                 score.nstdata.total = score.nstdata.accamplscore + score.nstdata.accdurationscore + score.nstdata.bhrscore + score.nstdata.fmscore + score.nstdata.ltvscore;
                 return _this.analysisData = analysisData;
             }
@@ -364,9 +367,9 @@ var DrawAnalyse = (function (_super) {
                 else if (accnum > 4) {
                     score.fischerdata.accscore = 2;
                 }
-                var ld = _this.countDec(analysis.start, analysis.end, 'LD');
-                var vd = _this.countDec(analysis.start, analysis.end, 'VD');
-                var ed = _this.countDec(analysis.start, analysis.end, 'ED');
+                var ld = analysis.ldtimes = _this.countDec(analysis.start, analysis.end, 'LD');
+                var vd = analysis.vdtimes = _this.countDec(analysis.start, analysis.end, 'VD');
+                var ed = analysis.edtimes = _this.countDec(analysis.start, analysis.end, 'ED');
                 if (ld > 0) {
                     score.fischerdata.decscore = 0;
                     score.fischerdata.decvalue = 'LD';
@@ -416,9 +419,9 @@ var DrawAnalyse = (function (_super) {
                 else if (accnum > 2) {
                     score.sogcdata.accscore = 2;
                 }
-                var ld = _this.countDec(analysis.start, analysis.end, 'LD');
-                var vd = _this.countDec(analysis.start, analysis.end, 'VD');
-                var ed = _this.countDec(analysis.start, analysis.end, 'ED');
+                var ld = analysis.ldtimes = _this.countDec(analysis.start, analysis.end, 'LD');
+                var vd = analysis.vdtimes = _this.countDec(analysis.start, analysis.end, 'VD');
+                var ed = analysis.edtimes = _this.countDec(analysis.start, analysis.end, 'ED');
                 if (ld > 0) {
                     score.fischerdata.decscore = 0;
                     score.fischerdata.decvalue = 'LD';
