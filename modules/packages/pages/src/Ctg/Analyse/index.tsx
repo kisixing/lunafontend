@@ -115,7 +115,7 @@ export const Ctg_Analyse: FC<{
       return requestData
     }
     const getPrintUrl = (path: string) => {
-      const url = `${path}?query=${btoa(unescape(encodeURIComponent(JSON.stringify(getrRequestData()))))}`
+      const url = `${path}?query=${encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(getrRequestData())))))}`
       console.log('url', url);
       return url
     }

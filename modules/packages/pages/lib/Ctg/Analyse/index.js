@@ -91,7 +91,7 @@ exports.Ctg_Analyse = function (_a) {
         return requestData;
     };
     var getPrintUrl = function (path) {
-        var url = path + "?query=" + btoa(unescape(encodeURIComponent(JSON.stringify(getrRequestData()))));
+        var url = path + "?query=" + encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(getrRequestData())))));
         console.log('url', url);
         return url;
     };

@@ -225,10 +225,8 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
         analysis_ref.current && analysis_ref.current.setFieldsValue(__assign(__assign({ stv: stv }, ucdata), others));
     };
     react_1.useEffect(function () {
-        if (!analyseLoading) {
-            remoteAnalyse();
-        }
-    }, [remoteAnalyse]);
+        remoteAnalyse();
+    }, [endTime, isToShort]);
     react_1.useEffect(function () {
         var id = hasInitAnalysed.current ? 0 : window.setInterval(function () {
             if (initData && v.current) {
@@ -268,7 +266,7 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
     }, [fetal]);
     react_1.useEffect(function () {
         if (ctgData && ctgData.fhr1) {
-            var value = startTime + interval * 240 > ctgData.fhr1.length ? ctgData.fhr1.length : startTime + interval * 240;
+            var value = startTime + interval * 240 > ctgData.fhr1.length / 2 ? ctgData.fhr1.length / 2 : startTime + interval * 240;
             setEndTime(value);
         }
     }, [startTime, interval, ctgData]);

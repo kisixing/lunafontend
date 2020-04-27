@@ -100,6 +100,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
         Nst_ref,
         analysis_ref
     }
+
     function setFm(flag = true) {
         console.log('setFm')
         if (v.current && initData) {
@@ -114,6 +115,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
             }
         }
     }
+
     const fetchData = () => {
         // if(docid==undefined){
         //     return;
@@ -127,6 +129,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
                 setAnalyseLoading(false)
             })
     }
+
     const reAnalyse = async () => {
         const r = await fetchData()
         const analysisData = v.current.drawAnalyse.analysisData
@@ -156,8 +159,6 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
 
 
         })
-
-
     }
 
 
@@ -175,11 +176,9 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
     }
     useEffect(() => {
 
-        if (!analyseLoading) {
-            remoteAnalyse()
-        }
+        remoteAnalyse()
 
-    }, [remoteAnalyse])
+    }, [endTime, isToShort])
 
 
 
@@ -235,7 +234,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
 
     useEffect(() => {
         if (ctgData && ctgData.fhr1) {
-            const value = startTime + interval * 240 > ctgData.fhr1.length ? ctgData.fhr1.length : startTime + interval * 240
+            const value = startTime + interval * 240 > ctgData.fhr1.length/2 ? ctgData.fhr1.length/2 : startTime + interval * 240
             setEndTime(value)
         }
     }, [startTime, interval, ctgData])
