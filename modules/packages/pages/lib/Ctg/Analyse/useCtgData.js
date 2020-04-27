@@ -17,9 +17,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = require("react");
 var utils_1 = require("@lianmed/utils");
 var request_1 = __importDefault(require("@lianmed/request"));
+var regex = /./g;
 function copyFhr(origin) {
     var fhr1 = origin.fhr1, fhr2 = origin.fhr2, fhr3 = origin.fhr3;
-    return __assign(__assign({}, origin), { _fhr1: fhr1, _fhr2: fhr2, _fhr3: fhr3 });
+    return __assign(__assign({}, origin), { fhr2: fhr2 && fhr2.replace(regex, '0'), fhr3: fhr3 && fhr3.replace(regex, '0'), _fhr1: fhr1, _fhr2: fhr2, _fhr3: fhr3 });
 }
 var CTGChart = function (docid) {
     var _a = react_1.useState(1), fetal = _a[0], setFetal = _a[1];
@@ -46,7 +47,6 @@ var CTGChart = function (docid) {
     function setFhr(index) {
         var _a;
         var fhr1 = ctgData.fhr1, fhr2 = ctgData.fhr2, fhr3 = ctgData.fhr3;
-        var regex = /./g;
         var key = "fhr" + index;
         var value = ctgData["_" + key];
         var data = __assign(__assign({}, ctgData), (_a = { fhr1: fhr1 && fhr1.replace(regex, '0'), fhr2: fhr2 && fhr2.replace(regex, '0'), fhr3: fhr3 && fhr3.replace(regex, '0') }, _a[key] = value, _a));
