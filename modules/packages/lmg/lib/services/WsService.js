@@ -362,7 +362,7 @@ var WsService = (function (_super) {
                 }
             });
             _this_1.dataLimit();
-        }, 60 * 1000);
+        }, 60 * 1000 * 5);
     };
     WsService.wsStatus = types_1.EWsStatus;
     WsService.EWsEvents = types_1.EWsEvents;

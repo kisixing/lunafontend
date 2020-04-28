@@ -363,7 +363,7 @@ export class WsService extends EventEmitter {
                 }
             });
             this.dataLimit()
-        }, 60 * 1000)
+        }, 60 * 1000 * 5)
     }
 }
 const announce = throttle((text) => {

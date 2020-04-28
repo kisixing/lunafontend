@@ -10,10 +10,8 @@ import Score from './Score';
 import useAnalyse from './useAnalyse';
 import useCtgData from './useCtgData';
 import { event } from '@lianmed/utils';
-import { stringify, parse } from 'qs';
 import { Document, Page } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
-console.log(' stringify,parse ', stringify, parse)
 export const ANALYSE_SUCCESS_TYPE = "(●'◡'●)"
 
 const Wrapper = styled.div`
