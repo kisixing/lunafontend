@@ -45,6 +45,7 @@ var R = (function (_super) {
         _this.TOKEN_KEY = utils_1.TOKEN_KEY;
         _this.hasConfiged = false;
         _this.configure = { Authorization: store_1.default.get(utils_1.TOKEN_KEY) };
+        _this.responseInterceptrorUsed = false;
         _this.config = function (configs) {
             if (configs === void 0) { configs = {}; }
             var hasConfiged = _this.hasConfiged;
@@ -60,37 +61,40 @@ var R = (function (_super) {
                 options.headers.Authorization = Authorization;
                 return { url: url, options: options };
             });
-            _this._request.interceptors.response.use(function (response, options) {
-                var successText = options.successText, hideErr = options.hideErr;
-                var errorData = getErrData_1.default(response);
-                var status = errorData.status, errortext = errorData.errortext, url = errorData.url, data = errorData.data;
-                if ([200, 201, 204, 304].includes(status)) {
-                    successText && message.success(successText);
-                }
-                else {
-                    var r_1 = reasons_1.default[Math.floor(Math.random() * reasons_1.default.length)];
-                    data.then(function (d) {
-                        if (d === void 0) { d = { title: r_1 }; }
-                        var _a = d.title, title = _a === void 0 ? r_1 : _a;
-                        console.log('dddd', d);
-                        if (status === 401) {
-                            notification.error({
-                                message: '未登录或登录已过期，请重新登录。',
-                            });
-                        }
-                        if (!hideErr) {
-                            notification.error({
-                                message: "\u8BF7\u6C42\u9519\u8BEF " + status + ": " + url,
-                                description: "\u539F\u56E0\uFF1A" + title,
-                            });
-                        }
-                        else {
-                            console.error('Network Error', "\u8BF7\u6C42\u9519\u8BEF " + status + ": " + url + ": " + errortext);
-                        }
-                    });
-                }
-                return response;
-            });
+            if (!_this.responseInterceptrorUsed) {
+                _this.responseInterceptrorUsed = true;
+                _this._request.interceptors.response.use(function (response, options) {
+                    var successText = options.successText, hideErr = options.hideErr;
+                    var errorData = getErrData_1.default(response);
+                    var status = errorData.status, errortext = errorData.errortext, url = errorData.url, data = errorData.data;
+                    if ([200, 201, 204, 304].includes(status)) {
+                        successText && message.success(successText);
+                    }
+                    else {
+                        var r_1 = reasons_1.default[Math.floor(Math.random() * reasons_1.default.length)];
+                        data.then(function (d) {
+                            if (d === void 0) { d = { title: r_1 }; }
+                            var _a = d.title, title = _a === void 0 ? r_1 : _a;
+                            console.log('dddd', d);
+                            if (status === 401) {
+                                notification.error({
+                                    message: '未登录或登录已过期，请重新登录。',
+                                });
+                            }
+                            if (!hideErr) {
+                                notification.error({
+                                    message: "\u8BF7\u6C42\u9519\u8BEF " + status + ": " + url,
+                                    description: "\u539F\u56E0\uFF1A" + title,
+                                });
+                            }
+                            else {
+                                console.error('Network Error', "\u8BF7\u6C42\u9519\u8BEF " + status + ": " + url + ": " + errortext);
+                            }
+                        });
+                    }
+                    return response;
+                });
+            }
             return _this;
         };
         _this.authenticate = function (params, c) {

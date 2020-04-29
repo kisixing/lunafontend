@@ -23,7 +23,7 @@ export function getMaxArray() {
 }
 export function getEmptyCacheItem(base: ICacheItem = { fetal_num: 1 }): ICacheItem {
     const { fetal_num } = base
-    return Object.assign({
+    return Object.assign(Object.create(null), {
         fhr: Array(fetal_num).fill(0).map(() => getMaxArray()),
         toco: getMaxArray(),
         fm: getMaxArray(),
