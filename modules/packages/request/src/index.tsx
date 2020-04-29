@@ -89,6 +89,11 @@ class R extends Request {
       }
     })
   }
+  unAuthenticate = () => new Promise((res) => {
+    store.remove(TOKEN_KEY)
+    res()
+
+  })
   configFromLocation(url = location.href) {
     const _ = new URL(url)
     const key = _.searchParams.get(SEARCH_KEY)
@@ -107,6 +112,7 @@ class R extends Request {
     _.searchParams.append(SEARCH_KEY, enc)
     return _.href
   }
+
 }
 
 const r = new R();

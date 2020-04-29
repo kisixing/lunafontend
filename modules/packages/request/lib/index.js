@@ -113,6 +113,10 @@ var R = (function (_super) {
                 }
             });
         };
+        _this.unAuthenticate = function () { return new Promise(function (res) {
+            store_1.default.remove(utils_1.TOKEN_KEY);
+            res();
+        }); };
         return _this;
     }
     R.prototype.configFromLocation = function (url) {

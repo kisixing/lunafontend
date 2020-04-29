@@ -12,6 +12,8 @@ import Partogram from './Partogram'
 import Page from './Page'
 import request from "@lianmed/request";
 import Analyse from "./Analyse/index";
+import { Modal, Form, Input, Button, message } from 'antd';
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
 
 
 
@@ -41,25 +43,48 @@ const setting = {
   alarm_on_sound: "1"
 }
 
-// request.config({
-//   prefix: `http://${setting.xhr_url}/api`,
-//   Authorization: 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOIiwiZXhwIjoxNTczNDY2MDAyfQ.NWtIOKu61dARucHpTO9Usyb9D9s3rLkuJwGxZL4nHtlC9AAVb6yfz509i0e3sYhbXFBi8HYVV97sm67Rxi0sXA'
-// })
+request.config({
+  prefix: `http://${setting.xhr_url}/api`,
+  Authorization: request.configure.Authorization,
+  errHandler(a) {
+    if ([401].includes(a.status)) {
+      request.unAuthenticate().then(() => window.history.go())
+    }
+  },
+  timeout:99999
+})
 export default function () {
-  const w = new WsService(setting)
-  const [ok, setOk] = useState(false)
+  const [form] = Form.useForm()
+  // const w = new WsService(setting)
+  const [ok, setOk] = useState(!!request.configure.Authorization)
+  const [loading, setLoading] = useState(false)
   // w.dispatch=()=>{}
-  w.connect()
-  Hooks.useLogin(`http://${setting.xhr_url}/api`, { username: 'admin', password: 'admin' }, () => {
-    setOk(true)
-  })
+  // w.connect()
 
+  const submit = () => {
+    form.validateFields().then(v => {
+      setLoading(true)
+      request.authenticate(v, { prefix: `http://${setting.xhr_url}/api`, hideErr: false }).then(() => {
+        setOk(true)
+      })
+        .catch(() => {
+          message.error('密码不正确')
+        })
+        .finally(() => setLoading(false))
+    })
+  }
   return (
     <>
       {
+        ok && <Button size="small" type="danger" onClick={() => {
+          request.unAuthenticate().then(() => setOk(false))
+        }} style={{ position: 'absolute', right: 20, top: 2 }}>退出登陆</Button>
+      }
+
+      {
         ok &&
         <Switch>
-          <Route path="/Analyse">
+          <Route path="/">
             <Analyse />
           </Route>
           <Route path="/CtgPanel">
@@ -82,6 +107,19 @@ export default function () {
         </Switch>
 
       }
+      <Modal footer={null} visible={!ok} closable={false} title="欢迎登陆 CTG 数据库📟！" centered width={360}>
+        <Form form={form} layout="horizontal">
+          <Form.Item name="username" rules={[{ required: true, message: "用户名不能为空" }]}>
+            <Input prefix={<UserOutlined />} placeholder="请输入用户名" />
+          </Form.Item>
+          <Form.Item name="password" rules={[{ required: true, message: "密码不能为空" }]}>
+            <Input prefix={<LockOutlined />} type="password" placeholder="请输入密码" />
+          </Form.Item>
+          <Button type="primary" block onClick={submit} loading={loading}>
+            登录
+          </Button>
+        </Form>
+      </Modal>
     </>
 
   );

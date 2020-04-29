@@ -27,7 +27,7 @@ const Bed = memo<any>(({ bedname }) => {
 
     return <span style={{ marginRight: '8px', color: '#fff' }}>{bedname}号</span>
 })
-const Status = memo<any>(({ alarmStatus,status }) => {
+const Status = memo<any>(({ alarmStatus, status }) => {
 
     return !!mapStatusToColor[status] && (
         <Tag style={{ border: '2px solid #fff' }} color={alarmStatus ? '#f5222d' : mapStatusToColor[status]}>

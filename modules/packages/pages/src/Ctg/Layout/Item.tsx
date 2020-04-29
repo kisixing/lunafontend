@@ -69,7 +69,7 @@ const WorkbenchItem = (props: IProps) => {
     <Col
       span={itemSpan}
       ref={ref}
-      style={{transition:'background .6s', padding: outPadding, height: itemHeight, background: `var(--theme-${bordered ? 'dark' : 'light'}-color)`, position: 'relative' }}
+      style={{ transition: 'background .6s', padding: outPadding, height: itemHeight, background: `var(--theme-${bordered ? 'dark' : 'light'}-color)`, position: 'relative' }}
     >
       <Ctg_Item
         themeColor={themeColor}
@@ -96,5 +96,4 @@ const WorkbenchItem = (props: IProps) => {
     </Col >
   );
 }
-export default memo(WorkbenchItem
-);;
+export default memo(WorkbenchItem);;

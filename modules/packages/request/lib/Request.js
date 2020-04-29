@@ -37,8 +37,8 @@ var Request = (function () {
         this._request = null;
         this.init = function (configs) {
             if (configs === void 0) { configs = {}; }
-            var errHandler = configs.errHandler, _a = configs.prefix, prefix = _a === void 0 ? '' : _a, others = __rest(configs, ["errHandler", "prefix"]);
-            _this._request = umi_request_1.extend(__assign({ prefix: prefix.startsWith('/') ? prefix : (prefix.includes('://') ? prefix : "http://" + prefix), timeout: 10000, headers: {
+            var errHandler = configs.errHandler, _a = configs.prefix, prefix = _a === void 0 ? '' : _a, _b = configs.timeout, timeout = _b === void 0 ? 10000 : _b, others = __rest(configs, ["errHandler", "prefix", "timeout"]);
+            _this._request = umi_request_1.extend(__assign({ prefix: prefix.startsWith('/') ? prefix : (prefix.includes('://') ? prefix : "http://" + prefix), timeout: timeout, headers: {
                     Accept: 'application/json',
                 }, errorHandler: function (arg) {
                     var response = arg.response, request = arg.request;

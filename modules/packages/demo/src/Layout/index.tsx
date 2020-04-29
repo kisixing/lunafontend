@@ -20,7 +20,7 @@ export default class SiderDemo extends React.Component {
   render() {
     return (
       <Layout style={{ height: '100vh', overflow: 'hidden' }}>
-        <Sider trigger={null} collapsible collapsed={this.state.collapsed} theme="dark">
+        {/* <Sider trigger={null} collapsible collapsed={this.state.collapsed} theme="dark">
           <div
             className="logo"
             style={{
@@ -75,12 +75,12 @@ export default class SiderDemo extends React.Component {
               </Menu.Item>
             </SubMenu>
           </Menu>
-        </Sider>
+        </Sider> */}
         <Layout>
           <Content
             style={{
-              margin: '24px 16px',
-              padding: 24,
+              padding: 20,
+              paddingTop:28,
               background: '#fff',
               height:'calc(100vh - 64px)'
             }}

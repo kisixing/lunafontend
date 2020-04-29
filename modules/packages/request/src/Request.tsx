@@ -17,12 +17,12 @@ export default class Request {
     this.init();
   }
   public init = (configs: Iconfig = {}) => {
-    const { errHandler, prefix = '', ...others } = configs;
+    const { errHandler, prefix = '', timeout = 10000, ...others } = configs;
 
 
     this._request = extend({
       prefix: prefix.startsWith('/') ? prefix : (prefix.includes('://') ? prefix : `http://${prefix}`),
-      timeout: 10000,
+      timeout,
       // credentials: 'include', // 默认请求是否带上cookie
       headers: {
         Accept: 'application/json',

@@ -7,6 +7,7 @@ declare class R extends Request {
     responseInterceptrorUsed: boolean;
     config: (configs?: Iconfig) => Request;
     authenticate: (params: any, c?: Iconfig) => Promise<any>;
+    unAuthenticate: () => Promise<unknown>;
     configFromLocation(url?: string): Iconfig;
     configToLocation(url?: string, attachment?: {
         [x: string]: any;
