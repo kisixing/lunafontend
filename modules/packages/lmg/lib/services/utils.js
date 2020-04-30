@@ -25,7 +25,7 @@ exports.getMaxArray = getMaxArray;
 function getEmptyCacheItem(base) {
     if (base === void 0) { base = { fetal_num: 1 }; }
     var fetal_num = base.fetal_num;
-    return Object.assign({
+    return Object.assign(Object.create(null), {
         fhr: Array(fetal_num).fill(0).map(function () { return getMaxArray(); }),
         toco: getMaxArray(),
         fm: getMaxArray(),

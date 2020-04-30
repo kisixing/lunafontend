@@ -1,19 +1,17 @@
-import React, { useState } from 'react';
-
-import { Switch, Route, Router } from "react-router-dom";
-
-import { WsService } from '@lianmed/lmg'
-import { Hooks } from "@lianmed/utils";
-import Ctg from './Ctg'
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Suit } from "@lianmed/lmg/lib/Ctg/Suit";
-import CtgPanel from './CtgPanel'
-import Ecg from './Ecg'
-import Partogram from './Partogram'
-import Page from './Page'
 import request from "@lianmed/request";
+import { Button, Form, Input, message, Modal } from 'antd';
+import React, { useState } from 'react';
+import { Route, Switch } from "react-router-dom";
 import Analyse from "./Analyse/index";
-import { Modal, Form, Input, Button, message } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import Ctg from './Ctg';
+import CtgPanel from './CtgPanel';
+import Ecg from './Ecg';
+import Page from './Page';
+import Partogram from './Partogram';
+
+
 
 
 
@@ -35,7 +33,7 @@ Suit.option = {
 
 const setting = {
   ws_url: "192.168.123.10:8084",
-  xhr_url: "transfer.lian-med.com:9988",
+  xhr_url: "transfer.lian-med.com:9989",
   // xhr_url: "192.168.123.56:9987",
   alarm_high: "160",
   alarm_low: "110",
