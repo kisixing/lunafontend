@@ -28,11 +28,12 @@ const App = (props: any) => {
         'pregnancyId.specified': true,
         'visitDate.greaterOrEqualThan': sDate,
         'visitDate.lessOrEqualThan': eDate,
-        'cTGExamId.equals': 0,
+        'cTGExamId.in': '0',
         size: 10,
         sort: 'visitDate,asc',
         page,
     })
+
     const [loading, setLoading] = useState(false)
     useEffect(() => {
         setParams({ ...params, page })
@@ -41,8 +42,16 @@ const App = (props: any) => {
         type == 0 ? fetchList() : fetchSignList()
     }, [params])
 
+    useEffect(() => {
+        setParams({
+            ...params,
+            'visitDate.greaterOrEqualThan': sDate,
+            'visitDate.lessOrEqualThan': eDate,
+        })
+    }, [eDate, sDate])
+
     const fetchCtgExamData = () => {
-        return new Promise<number>((res, rej) => {
+        return new Promise<any[]>((res, rej) => {
             const docid = docidRef.current
             const sign = signRef.current
             if (docid || sign) {
@@ -50,12 +59,11 @@ const App = (props: any) => {
                     params: {
                         page: 1,
                         size: 2,
-                        'note.equals': docid || undefined,
+                        'note.contains': docid || undefined,
                         'sign.equals': sign || undefined,
                     }
-                }).then((r: any[]) => {
-                    const t = r[0] || { id: 0 }
-                    res(t.id)
+                }).then((r: any[] = []) => {
+                    res(r.map(_ => _.id))
                 })
             } else {
                 res()
@@ -66,17 +74,26 @@ const App = (props: any) => {
         setLoading(true)
 
         fetchCtgExamData().then(id => {
-            params["cTGExamId.equals"] = id
-            params["page"] = page - 1
+
+            const p = {
+                ...params,
+                "cTGExamId.in": id && id.join(','),
+                page: page - 1
+            }
+            if (docidRef.current) {
+                console.log('dd', docidRef.current)
+                delete p["visitDate.greaterOrEqualThan"]
+                delete p['visitDate.lessOrEqualThan']
+            }
             request
-                .get(`/prenatal-visitspage`, { params })
+                .get(`/prenatal-visitspage`, { params: p })
                 .then(function (response) {
                     setDataSource(response);
                     selected || setSelected(response[0])
                 }).finally(() => setLoading(false))
 
             request
-                .get(`/prenatal-visits/count`, { params })
+                .get(`/prenatal-visits/count`, { params: p })
                 .then(function (t) {
                     setTotal(t)
                     if (page > t) setPage(t < 1 ? 1 : t)
@@ -95,7 +112,7 @@ const App = (props: any) => {
                         page: page - 1,
                         size: 10,
                         'diagnosis.specified': true,
-                        'diagnosis.contains': 'SM'
+                        'diagnosis.contains': 'SM',
                     }
                 })
                 .then(function (response) {
@@ -133,6 +150,8 @@ const App = (props: any) => {
     return (
 
         <Layout style={{ height: '100%' }}>
+            <span style={{position:'absolute',top:0,fontWeight:'bold',color:'#40a9ff',fontSize:16}}>CTG Database</span>
+
             <Layout.Sider style={{ background: '#fff' }} width={250} >
                 <div style={{ marginBottom: 5 }}>
                     <span style={{ marginRight: 14 }}>开始时间：</span><DatePicker size="small" value={moment(sDate)} onChange={e => setSDate(formatDate(e))} />
@@ -144,7 +163,7 @@ const App = (props: any) => {
                     <span style={{ marginRight: 28 }}>档案号：</span>
                     <Input allowClear style={{ width: 136 }} size="small" onChange={e => docidRef.current = (e.target.value)} />
                 </div>
-                <Button loading={loading} type="primary" disabled size="small" style={{ width: 220, marginBottom: 5 }} onClick={() => setParams({
+                <Button loading={loading} type="primary" size="small" style={{ width: 220, marginBottom: 5 }} onClick={() => setParams({
                     ...params,
                 })}>搜索</Button>
                 <div style={{ marginBottom: 5 }}>
