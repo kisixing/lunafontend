@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
 import { Button, Modal, Radio } from 'antd';
-import usePrintConfig from "./hooks/usePrintConfig";
-import useSign from "./hooks/useSign";
-import useSave from "./hooks/useSave";
-import useArchive from "./hooks/useArchive";
-import { IProps as IP, Context } from "../index";
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { fetchCtgExamsPdf } from '../../services';
+import { Context, IProps as IP } from "../index";
+import useArchive from "./hooks/useArchive";
+import usePrintConfig from "./hooks/usePrintConfig";
+import useSave from "./hooks/useSave";
+import useSign from "./hooks/useSign";
 const Wrapper = styled.div`
     .bottomBtns button {
         margin-right: 10px 
@@ -170,9 +170,11 @@ const Preview = (props: IProps) => {
                                                 </Button>
                                             )
                                     }
-                                    <Button block disabled={!(signed || saved)} type="primary" loading={archiveLoading} onClick={archive}>
-                                        <span>{archived ? '取消归档' : '归档'}</span>
-                                    </Button>
+                                    {
+                                        false && <Button block disabled={!(signed || saved)} type="primary" loading={archiveLoading} onClick={archive}>
+                                            <span>{archived ? '取消归档' : '归档'}</span>
+                                        </Button>
+                                    }
                                     <Button block disabled={!pdfBase64} type="primary" onClick={onDownload}>
                                         <span>打印</span>
                                     </Button>

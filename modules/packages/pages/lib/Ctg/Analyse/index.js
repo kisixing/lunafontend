@@ -47,10 +47,8 @@ var Score_1 = __importDefault(require("./Score"));
 var useAnalyse_1 = __importDefault(require("./useAnalyse"));
 var useCtgData_1 = __importDefault(require("./useCtgData"));
 var utils_1 = require("@lianmed/utils");
-var qs_1 = require("qs");
 var react_pdf_1 = require("react-pdf");
 require("react-pdf/dist/Page/AnnotationLayer.css");
-console.log('stringify,parse', qs_1.stringify, qs_1.parse);
 exports.ANALYSE_SUCCESS_TYPE = "(●'◡'●)";
 var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  height:100%;\n  .divider {\n    border-radius:2px;\n    background:linear-gradient(45deg, #e0e0e0, transparent) !important;\n    padding-left:20px;\n    margin: 8px 0;\n  }\n  button {\n    margin:0 6px 6px 0\n  }\n  .bordered {\n    border: 1px solid #ddd;\n  }\n"], ["\n  height:100%;\n  .divider {\n    border-radius:2px;\n    background:linear-gradient(45deg, #e0e0e0, transparent) !important;\n    padding-left:20px;\n    margin: 8px 0;\n  }\n  button {\n    margin:0 6px 6px 0\n  }\n  .bordered {\n    border: 1px solid #ddd;\n  }\n"])));
 exports.Ctg_Analyse = function (_a) {

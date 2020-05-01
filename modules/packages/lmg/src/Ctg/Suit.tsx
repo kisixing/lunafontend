@@ -57,6 +57,7 @@ export class Suit extends Draw {
     alarm_high: 160,
     alarm_low: 110,
     print_interval: 20,
+    alarm_delay: 5
   };
   fetalposition = {
     fhr1: '',
@@ -135,6 +136,7 @@ export class Suit extends Draw {
       this.ctgconfig.alarm_high = Number(this.option.alarm_high);
       this.ctgconfig.alarm_low = Number(this.option.alarm_low);
       this.ctgconfig.print_interval = Number(this.option.print_interval) || 20;
+      this.ctgconfig.alarm_delay = Number(this.option.alarm_delay) || 5
     }
   }
 
@@ -326,12 +328,26 @@ export class Suit extends Draw {
     // console.log('alarmtype in',type,this)
     return true;
   }, this.emitInterval || 0);
+  alarmHighCount = []
+  alarmLowCount = []
+
   // 报警
-  alarmOn(alarmType: string = '') {
-    this.lazyEmit('alarmOn', alarmType);
+  alarmLow() {
+    this.alarmLowCount.push(0)
+    if (this.alarmLowCount.length >= 4 * this.ctgconfig.alarm_delay) {
+      this.lazyEmit('alarmOn', '心率过低');
+    }
   }
-  alarmOff(alarmType: string) {
-    this.lazyEmit('alarmOff', alarmType);
+  alarmHigh() {
+    this.alarmHighCount.push(0)
+    if (this.alarmHighCount.length >= 4 * this.ctgconfig.alarm_delay) {
+      this.lazyEmit('alarmOn', '心率过高');
+    }
+  }
+  alarmOff() {
+    this.lazyEmit('alarmOff', '');
+    this.alarmHighCount = []
+    this.alarmLowCount = []
   }
 
 

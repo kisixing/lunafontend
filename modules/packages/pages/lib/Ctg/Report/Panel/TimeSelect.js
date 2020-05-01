@@ -36,15 +36,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var react_1 = __importStar(require("react"));
 var antd_1 = require("antd");
-var usePrintConfig_1 = __importDefault(require("./hooks/usePrintConfig"));
-var useSign_1 = __importDefault(require("./hooks/useSign"));
-var useSave_1 = __importDefault(require("./hooks/useSave"));
-var useArchive_1 = __importDefault(require("./hooks/useArchive"));
-var index_1 = require("../index");
+var react_1 = __importStar(require("react"));
 var styled_components_1 = __importDefault(require("styled-components"));
 var services_1 = require("../../services");
+var index_1 = require("../index");
+var useArchive_1 = __importDefault(require("./hooks/useArchive"));
+var usePrintConfig_1 = __importDefault(require("./hooks/usePrintConfig"));
+var useSave_1 = __importDefault(require("./hooks/useSave"));
+var useSign_1 = __importDefault(require("./hooks/useSign"));
 var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n    .bottomBtns button {\n        margin-right: 10px \n    }\n    .bottomBtns button:last-child {\n        margin-right: 0px \n    }\n"], ["\n    .bottomBtns button {\n        margin-right: 10px \n    }\n    .bottomBtns button:last-child {\n        margin-right: 0px \n    }\n"])));
 var COEFFICIENT = 240;
 var Preview = function (props) {
@@ -104,7 +104,7 @@ var Preview = function (props) {
                         react_1.default.createElement(antd_1.Button, { block: true, disabled: !pdfBase64, type: "primary", loading: qrCodeBase64Loading, onClick: fetchQrCode },
                             react_1.default.createElement("span", null, " \u7B7E\u540D")))) : (react_1.default.createElement(antd_1.Button, { block: true, disabled: !pdfBase64, type: "primary", loading: saveLoading, onClick: save },
                         react_1.default.createElement("span", null, "\u4FDD\u5B58"))),
-                    react_1.default.createElement(antd_1.Button, { block: true, disabled: !(signed || saved), type: "primary", loading: archiveLoading, onClick: archive },
+                    false && react_1.default.createElement(antd_1.Button, { block: true, disabled: !(signed || saved), type: "primary", loading: archiveLoading, onClick: archive },
                         react_1.default.createElement("span", null, archived ? '取消归档' : '归档')),
                     react_1.default.createElement(antd_1.Button, { block: true, disabled: !pdfBase64, type: "primary", onClick: onDownload },
                         react_1.default.createElement("span", null, "\u6253\u5370")))),

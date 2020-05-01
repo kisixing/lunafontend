@@ -586,14 +586,14 @@ export default class DrawCTG {
       if (suit.ctgconfig.alarm_enable && cv > suit.ctgconfig.alarm_high) {
         if (eventemit) {
           console.log('心率过高', cv);
-          this.suit.alarmOn('心率过高');
+          this.suit.alarmHigh();
         }
         alarm = 1;
         this.suit.alarm = alarm;
       } else if (suit.ctgconfig.alarm_enable && cv < suit.ctgconfig.alarm_low) {
         if (eventemit) {
           console.log('心率过低', cv);
-          this.suit.alarmOn('心率过低');
+          this.suit.alarmLow();
         }
         alarm = 1;
         this.suit.alarm = alarm;
@@ -604,7 +604,7 @@ export default class DrawCTG {
       if (alarm == 0 && suit.ctgconfig.alarm_enable && this.suit.alarm == 1) {
 
         console.log('恢复', cv, alarm, this.suit.alarm);
-        this.suit.alarmOff('');
+        this.suit.alarmOff();
         this.suit.alarm = alarm;
       }
       //kisi todo 2019-11-14 增加3胎的备注

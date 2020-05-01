@@ -9,11 +9,10 @@ exports.default = (function (suit) {
     }, []);
     react_1.useEffect(function () {
         var onCb = function (alarmType) {
-            utils_1.event.emit("Suit:alarmOn", alarmType);
+            utils_1.event.emit("audio:alarm", 2);
             _setAlarmStatus(alarmType);
         };
         var offCb = function (alarmType) {
-            utils_1.event.emit("Suit:alarmOff", alarmType);
             _setAlarmStatus(null);
         };
         suit && suit

@@ -1,12 +1,11 @@
+import { WsService } from '@lianmed/lmg';
 import Ecg from '@lianmed/lmg/lib/Ecg';
-
-
-
-
-import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { Ctg } from '@lianmed/lmg';
 import { Button } from 'antd';
-import { WsService } from '@lianmed/lmg'
+import React, { useEffect, useRef, useState } from 'react';
+
+
+
+
 export default function () {
 
   const box = useRef<HTMLDivElement>(null)

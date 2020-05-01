@@ -10,11 +10,10 @@ export default (suit: Suit) => {
     useEffect(() => {
 
         const onCb = (alarmType: string) => {
-            event.emit(`Suit:alarmOn`, alarmType)
+            event.emit(`audio:alarm`, 2)
             _setAlarmStatus(alarmType)
         }
         const offCb = (alarmType: string) => {
-            event.emit(`Suit:alarmOff`, alarmType)
             _setAlarmStatus(null)
         }
 
