@@ -592,7 +592,7 @@ export default class DrawCTG {
         this.suit.alarm = alarm;
       } else if (suit.ctgconfig.alarm_enable && cv < suit.ctgconfig.alarm_low) {
         if (eventemit) {
-          console.log('心率过低', cv);
+          console.log('心率过低', cv,this.suit.ctgconfig.alarm_delay);
           this.suit.alarmLow();
         }
         alarm = 1;

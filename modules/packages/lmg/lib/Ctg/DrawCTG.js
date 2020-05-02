@@ -272,15 +272,15 @@ var DrawCTG = (function () {
                 if (suit.ctgconfig.alarm_enable && cv > suit.ctgconfig.alarm_high) {
                     if (eventemit) {
                         console.log('心率过高', cv);
-                        _this.suit.alarmOn('心率过高');
+                        _this.suit.alarmHigh();
                     }
                     alarm = 1;
                     _this.suit.alarm = alarm;
                 }
                 else if (suit.ctgconfig.alarm_enable && cv < suit.ctgconfig.alarm_low) {
                     if (eventemit) {
-                        console.log('心率过低', cv);
-                        _this.suit.alarmOn('心率过低');
+                        console.log('心率过低', cv, _this.suit.ctgconfig.alarm_delay);
+                        _this.suit.alarmLow();
                     }
                     alarm = 1;
                     _this.suit.alarm = alarm;
@@ -290,7 +290,7 @@ var DrawCTG = (function () {
                 }
                 if (alarm == 0 && suit.ctgconfig.alarm_enable && _this.suit.alarm == 1) {
                     console.log('恢复', cv, alarm, _this.suit.alarm);
-                    _this.suit.alarmOff('');
+                    _this.suit.alarmOff();
                     _this.suit.alarm = alarm;
                 }
                 if (i == 0) {

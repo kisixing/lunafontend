@@ -67,6 +67,7 @@ var Suit = (function (_super) {
             alarm_high: 160,
             alarm_low: 110,
             print_interval: 20,
+            alarm_delay: 5
         };
         _this.fetalposition = {
             fhr1: '',
@@ -86,6 +87,8 @@ var Suit = (function (_super) {
             _this.emit.apply(_this, __spreadArrays([type], args));
             return true;
         }, _this.emitInterval || 0);
+        _this.alarmHighCount = [];
+        _this.alarmLowCount = [];
         bindEvents_1.default.call(_this);
         _this.wrap = wrap;
         _this.canvasgrid = canvasgrid;
@@ -114,6 +117,7 @@ var Suit = (function (_super) {
             _this.ctgconfig.alarm_high = Number(_this.option.alarm_high);
             _this.ctgconfig.alarm_low = Number(_this.option.alarm_low);
             _this.ctgconfig.print_interval = Number(_this.option.print_interval) || 20;
+            _this.ctgconfig.alarm_delay = Number(_this.option.alarm_delay) || 5;
         }
         return _this;
     }
@@ -279,12 +283,26 @@ var Suit = (function (_super) {
             (this.data.index - this.canvasline.width * 2));
         this.barTool.setBarLeft(this.toolbarposition, false);
     };
-    Suit.prototype.alarmOn = function (alarmType) {
-        if (alarmType === void 0) { alarmType = ''; }
-        this.lazyEmit('alarmOn', alarmType);
+    Suit.prototype.alarmLow = function () {
+        this.alarmLowCount.push(0);
+        console.log('alarm low', this.alarmLowCount.length);
+        if (this.alarmLowCount.length >= 4 * this.ctgconfig.alarm_delay) {
+            console.log('alarm length', this.alarmLowCount.length);
+            this.lazyEmit('alarmOn', '心率过低');
+        }
     };
-    Suit.prototype.alarmOff = function (alarmType) {
-        this.lazyEmit('alarmOff', alarmType);
+    Suit.prototype.alarmHigh = function () {
+        this.alarmHighCount.push(0);
+        console.log('alarm high', this.alarmHighCount.length);
+        if (this.alarmHighCount.length >= 4 * this.ctgconfig.alarm_delay) {
+            this.lazyEmit('alarmOn', '心率过高');
+        }
+    };
+    Suit.prototype.alarmOff = function () {
+        this.lazyEmit('alarmOff', '');
+        console.log('alarm off');
+        this.alarmHighCount = [];
+        this.alarmLowCount = [];
     };
     Suit.prototype.destroy = function () {
         this.intervalIds.forEach(function (_) { return clearInterval(_); });

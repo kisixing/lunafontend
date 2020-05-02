@@ -334,18 +334,26 @@ export class Suit extends Draw {
   // 报警
   alarmLow() {
     this.alarmLowCount.push(0)
+    console.log('alarm low', this.alarmLowCount.length)
+
     if (this.alarmLowCount.length >= 4 * this.ctgconfig.alarm_delay) {
+      console.log('alarm length', this.alarmLowCount.length)
+
       this.lazyEmit('alarmOn', '心率过低');
     }
   }
   alarmHigh() {
     this.alarmHighCount.push(0)
+    console.log('alarm high', this.alarmHighCount.length)
+
     if (this.alarmHighCount.length >= 4 * this.ctgconfig.alarm_delay) {
       this.lazyEmit('alarmOn', '心率过高');
     }
   }
   alarmOff() {
     this.lazyEmit('alarmOff', '');
+    console.log('alarm off',)
+
     this.alarmHighCount = []
     this.alarmLowCount = []
   }

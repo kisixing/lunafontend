@@ -4,7 +4,7 @@ import { CloseOutlined } from "@ant-design/icons";
 import useItemAlarm from "./useItemAlarm";
 import { mapStatusToColor, mapStatusToText, BedStatus } from "@lianmed/lmg/lib/services/WsService";
 import styled from 'styled-components';
-
+import AlarmStatus from './AlarmStatus'
 import "antd/lib/card/style/index.css"
 import "antd/lib/tag/style/index.css"
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
@@ -27,15 +27,15 @@ const Bed = memo<any>(({ bedname }) => {
 
     return <span style={{ marginRight: '8px', color: '#fff' }}>{bedname}号</span>
 })
-const Status = memo<any>(({ alarmStatus, status }) => {
+// const Status = memo<any>(({ alarmStatus, status }) => {
 
-    return !!mapStatusToColor[status] && (
-        <Tag style={{ border: '2px solid #fff' }} color={alarmStatus ? '#f5222d' : mapStatusToColor[status]}>
-            {alarmStatus ? alarmStatus : mapStatusToText[status]}
-        </Tag>
+//     return !!mapStatusToColor[status] && (
+//         <Tag style={{ border: '2px solid #fff' }} color={alarmStatus ? '#f5222d' : mapStatusToColor[status]}>
+//             {alarmStatus ? alarmStatus : mapStatusToText[status]}
+//         </Tag>
 
-    )
-})
+//     )
+// })
 
 
 const C = (props: IProps) => {
@@ -61,7 +61,7 @@ const C = (props: IProps) => {
         <>
             <Bed bedname={bedname} />
 
-            <Status alarmStatus={alarmStatus} status={status} />
+            <AlarmStatus alarmStatus={alarmStatus} status={status} />
             {
                 close
             }

@@ -52,6 +52,7 @@ export declare class Suit extends Draw {
         alarm_high: number;
         alarm_low: number;
         print_interval: number;
+        alarm_delay: number;
     };
     fetalposition: {
         fhr1: string;
@@ -81,8 +82,11 @@ export declare class Suit extends Draw {
     createLine(): void;
     updateBarTool(): void;
     lazyEmit: ((type: string, ...args: any[]) => boolean) & import("lodash").Cancelable;
-    alarmOn(alarmType?: string): void;
-    alarmOff(alarmType: string): void;
+    alarmHighCount: any[];
+    alarmLowCount: any[];
+    alarmLow(): void;
+    alarmHigh(): void;
+    alarmOff(): void;
     destroy(): void;
     _resize(): void;
     setfetalposition(fhr1: any, fhr2: any, fhr3: any): void;

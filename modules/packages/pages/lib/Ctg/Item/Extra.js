@@ -18,8 +18,8 @@ var react_1 = __importStar(require("react"));
 var antd_1 = require("antd");
 var icons_1 = require("@ant-design/icons");
 var useItemAlarm_1 = __importDefault(require("./useItemAlarm"));
-var WsService_1 = require("@lianmed/lmg/lib/services/WsService");
 var styled_components_1 = __importDefault(require("styled-components"));
+var AlarmStatus_1 = __importDefault(require("./AlarmStatus"));
 require("antd/lib/card/style/index.css");
 require("antd/lib/tag/style/index.css");
 var SB = styled_components_1.default(antd_1.Button)(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n:hover {\n    background: rgba(255,255,255,.2)\n}\n"], ["\n:hover {\n    background: rgba(255,255,255,.2)\n}\n"])));
@@ -30,10 +30,6 @@ var Bed = react_1.memo(function (_a) {
         bedname,
         "\u53F7");
 });
-var Status = react_1.memo(function (_a) {
-    var alarmStatus = _a.alarmStatus, status = _a.status;
-    return !!WsService_1.mapStatusToColor[status] && (react_1.default.createElement(antd_1.Tag, { style: { border: '2px solid #fff' }, color: alarmStatus ? '#f5222d' : WsService_1.mapStatusToColor[status] }, alarmStatus ? alarmStatus : WsService_1.mapStatusToText[status]));
-});
 var C = function (props) {
     var status = props.status, suit = props.suit, onClose = props.onClose, bedname = props.bedname;
     var alarmStatus = useItemAlarm_1.default(suit)[0];
@@ -43,7 +39,7 @@ var C = function (props) {
     }, [onClose]);
     return (react_1.default.createElement(react_1.default.Fragment, null,
         react_1.default.createElement(Bed, { bedname: bedname }),
-        react_1.default.createElement(Status, { alarmStatus: alarmStatus, status: status }),
+        react_1.default.createElement(AlarmStatus_1.default, { alarmStatus: alarmStatus, status: status }),
         close));
 };
 exports.default = react_1.memo(C);
