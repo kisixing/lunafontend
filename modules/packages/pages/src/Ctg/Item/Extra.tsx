@@ -2,7 +2,7 @@ import React, { useMemo, memo } from 'react';
 import { Tag, Button } from 'antd';
 import { CloseOutlined } from "@ant-design/icons";
 import useItemAlarm from "./useItemAlarm";
-import { mapStatusToColor, mapStatusToText, BedStatus } from "@lianmed/lmg/lib/services/WsService";
+import { BedStatus } from "@lianmed/lmg/lib/services/WsService";
 import styled from 'styled-components';
 import AlarmStatus from './AlarmStatus'
 import "antd/lib/card/style/index.css"
@@ -61,7 +61,7 @@ const C = (props: IProps) => {
         <>
             <Bed bedname={bedname} />
 
-            <AlarmStatus alarmStatus={alarmStatus} status={status} />
+            <AlarmStatus alarm2Text={alarmStatus} status={status} />
             {
                 close
             }

@@ -1,4 +1,8 @@
 "use strict";
+var __makeTemplateObject = (this && this.__makeTemplateObject) || function (cooked, raw) {
+    if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
+    return cooked;
+};
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -40,6 +44,9 @@ var useDraw_1 = __importDefault(require("../useDraw"));
 var ContextMenu_1 = __importDefault(require("./ContextMenu"));
 var Loading_1 = require("./Loading");
 var Suit_1 = require("./Suit");
+var ButtonTools_1 = require("./ButtonTools");
+var styled_components_1 = __importDefault(require("styled-components"));
+var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  width:100%;\n  height:100%;\n  .btns{\n    display:none\n  }\n  :hover .btns{\n    display:block\n  }\n"], ["\n  width:100%;\n  height:100%;\n  .btns{\n    display:none\n  }\n  :hover .btns{\n    display:block\n  }\n"])));
 exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
     console.log('suit render');
     var data = props.data, _a = props.mutableSuitObject, mutableSuitObject = _a === void 0 ? { suit: null } : _a, _b = props.suitType, suitType = _b === void 0 ? 0 : _b, _c = props.showEcg, showEcg = _c === void 0 ? false : _c, _d = props.loading, loading = _d === void 0 ? false : _d, _e = props.onReady, onReady = _e === void 0 ? function (s) { } : _e, others = __rest(props, ["data", "mutableSuitObject", "suitType", "showEcg", "loading", "onReady"]);
@@ -74,7 +81,7 @@ exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
         return ctg.current;
     });
     var canvasStyles = { position: 'absolute' };
-    return (react_1.default.createElement("div", __assign({ style: { width: '100%', height: '100%' }, ref: box }, others, { onMouseDownCapture: function (e) {
+    return (react_1.default.createElement(Wrapper, __assign({ ref: box }, others, { onMouseDownCapture: function (e) {
             var x = e.nativeEvent.offsetX;
             var y = e.nativeEvent.offsetY;
             var which = e.nativeEvent.which;
@@ -94,6 +101,8 @@ exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
         ecgHeight && showEcg && (react_1.default.createElement("div", { style: { height: ecgHeight, overflow: 'hidden' } },
             react_1.default.createElement(Ecg_1.default, { data: data, onReady: function (e) { return ecg.current = e; } }))),
         react_1.default.createElement(ContextMenu_1.default, { s: ctg },
-            react_1.default.createElement(ScrollBar_1.default, { box: box, getBarTool: function (tool) { barTool.current = tool; } }))));
+            react_1.default.createElement(ScrollBar_1.default, { box: box, getBarTool: function (tool) { barTool.current = tool; } })),
+        react_1.default.createElement(ButtonTools_1.ButtonTools, { data: data, visible: true, ctg: ctg, className: "btns" })));
 }));
+var templateObject_1;
 //# sourceMappingURL=index.js.map

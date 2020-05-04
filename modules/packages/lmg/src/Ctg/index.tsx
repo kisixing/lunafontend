@@ -9,7 +9,18 @@ import useDraw from "../useDraw";
 import ContextMenu from "./ContextMenu";
 import { Loading } from './Loading';
 import { Suit } from './Suit';
-
+import {ButtonTools} from "./ButtonTools";
+import styled from "styled-components";
+const Wrapper = styled.div`
+  width:100%;
+  height:100%;
+  .btns{
+    display:none
+  }
+  :hover .btns{
+    display:block
+  }
+`
 export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
   console.log('suit render');
   
@@ -76,7 +87,7 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
   })
   const canvasStyles: React.CSSProperties = { position: 'absolute' }
   return (
-    <div style={{ width: '100%', height: '100%' }} ref={box} {...others}
+    <Wrapper  ref={box} {...others}
       onMouseDownCapture={e => {
         const x = e.nativeEvent.offsetX
         const y = e.nativeEvent.offsetY
@@ -128,7 +139,8 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
       {/* {
         suitType > 100 && <ButtonTools ctg={ctg} visible={showBtns && staticType} />
       } */}
-    </div>
+      <ButtonTools data={data} visible={true} ctg={ctg} className={"btns"}/>
+    </Wrapper>
   );
 })
 )

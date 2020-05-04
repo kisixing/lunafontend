@@ -1,5 +1,5 @@
 import { Tag } from 'antd';
-import React, { memo, useState, useEffect, useRef } from 'react';
+import React, { memo, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom'
 
 interface IProps {
@@ -15,7 +15,7 @@ const C = (props: IProps) => {
     useEffect(() => {
         const d = ReactDOM.findDOMNode(ref.current) as HTMLElement
         const id = setInterval(() => {
-            d && (d.style.background = flag.current ? 'red' : 'blue');
+            d && (d.style.background = flag.current ? 'red' : 'transparent');
             flag.current = !flag.current
         }, 250)
         return () => {

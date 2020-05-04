@@ -20,7 +20,7 @@ var C = function (props) {
     react_1.useEffect(function () {
         var d = react_dom_1.default.findDOMNode(ref.current);
         var id = setInterval(function () {
-            d && (d.style.background = flag.current ? 'red' : 'blue');
+            d && (d.style.background = flag.current ? 'red' : 'transparent');
             flag.current = !flag.current;
         }, 250);
         return function () {

@@ -4,7 +4,9 @@ import "antd/lib/tag/style/index.css";
 import React from 'react';
 interface IProps {
     status: BedStatus;
-    alarmStatus: string;
+    alarm2Text?: string;
+    alarm1Text?: string;
+    alarm0Text?: string;
 }
 declare const _default: React.MemoExoticComponent<React.NamedExoticComponent<IProps>>;
 export default _default;

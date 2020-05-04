@@ -39,7 +39,7 @@ var C = function (props) {
     }, [onClose]);
     return (react_1.default.createElement(react_1.default.Fragment, null,
         react_1.default.createElement(Bed, { bedname: bedname }),
-        react_1.default.createElement(AlarmStatus_1.default, { alarmStatus: alarmStatus, status: status }),
+        react_1.default.createElement(AlarmStatus_1.default, { alarm2Text: alarmStatus, status: status }),
         close));
 };
 exports.default = react_1.memo(C);
