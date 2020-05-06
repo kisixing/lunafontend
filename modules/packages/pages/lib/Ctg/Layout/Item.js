@@ -56,7 +56,7 @@ var WorkbenchItem = function (props) {
             utils_1.event.emit('bedFullScreen', unitId);
         }
     }, [fullScreenId]);
-    return (react_1.default.createElement(antd_1.Col, { span: itemSpan, ref: ref, style: { transition: 'background .6s', padding: outPadding, height: itemHeight, background: "var(--theme-" + (bordered ? 'dark' : 'light') + "-color)", position: 'relative' } },
+    return (react_1.default.createElement(antd_1.Col, { span: itemSpan, ref: ref, style: { transition: 'background .6s', padding: outPadding, height: itemHeight, background: bordered ? 'black' : "var(--theme-" + 'light' + "-color)", position: 'relative' } },
         react_1.default.createElement(index_1.default, { themeColor: themeColor, startTime: startTime, bedname: bedname, status: status, data: data, onDoubleClick: fullScreen, loading: loading, onClose: onClose && (function () { return onClose(itemData); }), name: pregnancy.name, age: pregnancy.age, bedNO: pregnancy.bedNO, GP: pregnancy.GP, gestationalWeek: pregnancy.gestationalWeek }, props.children)));
 };
 exports.default = react_1.memo(WorkbenchItem);
