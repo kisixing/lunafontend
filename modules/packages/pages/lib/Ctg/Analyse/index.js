@@ -56,7 +56,7 @@ exports.Ctg_Analyse = function (_a) {
     note = note ? note : docid;
     if (!note)
         return null;
-    var _k = useCtgData_1.default(note), ctgData = _k.ctgData, loading = _k.loading, setFhr = _k.setFhr, fetal = _k.fetal, setFetal = _k.setFetal;
+    var _k = useCtgData_1.default(note, true), ctgData = _k.ctgData, loading = _k.loading, setFhr = _k.setFhr, fetal = _k.fetal, setFetal = _k.setFetal;
     var _l = react_1.useState(true), disabled = _l[0], setDisabled = _l[1];
     var _m = react_1.useState(false), visible = _m[0], setVisible = _m[1];
     var _o = react_1.useState(''), pdfBase64 = _o[0], setPdfBase64 = _o[1];

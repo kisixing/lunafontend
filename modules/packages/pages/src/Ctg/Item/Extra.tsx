@@ -1,5 +1,5 @@
 import React, { useMemo, memo } from 'react';
-import { Tag, Button } from 'antd';
+import { Button } from 'antd';
 import { CloseOutlined } from "@ant-design/icons";
 import useItemAlarm from "./useItemAlarm";
 import { BedStatus } from "@lianmed/lmg/lib/services/WsService";

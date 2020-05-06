@@ -8,10 +8,10 @@ const regex = /./g
 
 function copyFhr(origin: obvue.ctg_exams_data): obvue.ctg_exams_data {
     const { fhr1, fhr2, fhr3 } = origin
-    return { ...origin, fhr2: fhr2 && fhr2.replace(regex, '0'), fhr3: fhr3 && fhr3.replace(regex, '0'),_fhr1: fhr1, _fhr2: fhr2, _fhr3: fhr3 }
+    return { ...origin, fhr2: fhr2 && fhr2.replace(regex, '0'), fhr3: fhr3 && fhr3.replace(regex, '0'), _fhr1: fhr1, _fhr2: fhr2, _fhr3: fhr3 }
 }
 
-const CTGChart = (docid: string) => {
+const CTGChart = (docid: string, single = false) => {
     const [fetal, setFetal] = useState(1)
 
     const [loading, setLoading] = useState(false)
@@ -20,7 +20,7 @@ const CTGChart = (docid: string) => {
         if (docid) {
             setLoading(true)
             request.get(`/ctg-exams-data/${docid}`).then(res => {
-                res && setCtgData({ docid, ...res, ...copyFhr(res) })
+                res && setCtgData({ docid, ...res, ...(single ? copyFhr(res) : {}) })
             }).finally(() => setLoading(false))
             setFetal(1)
         }
@@ -41,7 +41,7 @@ const CTGChart = (docid: string) => {
         const key = `fhr${index}`
         const value = ctgData[`_${key}`]
         const data = { ...ctgData, fhr1: fhr1 && fhr1.replace(regex, '0'), fhr2: fhr2 && fhr2.replace(regex, '0'), fhr3: fhr3 && fhr3.replace(regex, '0'), [key]: value }
-        console.log('setFhr',JSON.parse(JSON.stringify(data)),JSON.parse(JSON.stringify(ctgData)))
+        console.log('setFhr', JSON.parse(JSON.stringify(data)), JSON.parse(JSON.stringify(ctgData)))
         setCtgData(data)
     }
     return { ctgData, loading, setFhr, fetal, setFetal };

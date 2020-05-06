@@ -49,7 +49,7 @@ export const Ctg_Analyse: FC<{
 }) {
     note = note ? note : docid
     if (!note) return null
-    const { ctgData, loading, setFhr, fetal, setFetal } = useCtgData(note)
+    const { ctgData, loading, setFhr, fetal, setFetal } = useCtgData(note, true)
     const [disabled, setDisabled] = useState(true)
     const [visible, setVisible] = useState(false)
     const [pdfBase64, setPdfBase64] = useState('')
@@ -106,8 +106,8 @@ export const Ctg_Analyse: FC<{
           ...curData,
           isedit,
           type: mark,
-          startTime:ref.current.drawAnalyse.analysisData.analysis.start,
-          endTime:ref.current.drawAnalyse.analysisData.analysis.end
+          startTime: ref.current.drawAnalyse.analysisData.analysis.start,
+          endTime: ref.current.drawAnalyse.analysisData.analysis.end
         })
       }
       return requestData

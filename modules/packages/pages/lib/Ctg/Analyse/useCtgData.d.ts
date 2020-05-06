@@ -1,5 +1,5 @@
 /// <reference types="react" />
-declare const CTGChart: (docid: string) => {
+declare const CTGChart: (docid: string, single?: boolean) => {
     ctgData: {
         fhr1?: string;
         fhr2?: string;

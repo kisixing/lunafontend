@@ -22,7 +22,8 @@ function copyFhr(origin) {
     var fhr1 = origin.fhr1, fhr2 = origin.fhr2, fhr3 = origin.fhr3;
     return __assign(__assign({}, origin), { fhr2: fhr2 && fhr2.replace(regex, '0'), fhr3: fhr3 && fhr3.replace(regex, '0'), _fhr1: fhr1, _fhr2: fhr2, _fhr3: fhr3 });
 }
-var CTGChart = function (docid) {
+var CTGChart = function (docid, single) {
+    if (single === void 0) { single = false; }
     var _a = react_1.useState(1), fetal = _a[0], setFetal = _a[1];
     var _b = react_1.useState(false), loading = _b[0], setLoading = _b[1];
     var _c = react_1.useState({ fetalnum: '1', docid: docid }), ctgData = _c[0], setCtgData = _c[1];
@@ -30,7 +31,7 @@ var CTGChart = function (docid) {
         if (docid) {
             setLoading(true);
             request_1.default.get("/ctg-exams-data/" + docid).then(function (res) {
-                res && setCtgData(__assign(__assign({ docid: docid }, res), copyFhr(res)));
+                res && setCtgData(__assign(__assign({ docid: docid }, res), (single ? copyFhr(res) : {})));
             }).finally(function () { return setLoading(false); });
             setFetal(1);
         }
