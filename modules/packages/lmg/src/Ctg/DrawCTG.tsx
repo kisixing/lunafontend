@@ -200,10 +200,13 @@ export default class DrawCTG {
         if (typeof (fhr[fetal][inneri]) != "undefined" && fhr[fetal][inneri] && fhr[fetal][inneri] != 0) {
           lasty = fhr[fetal][inneri];
         } else {
+          if (fhr[fetal][inneri] + curfhroffset > this.max && fhr[fetal][inneri] + curfhroffset < this.min) {
+            continue;
+          }
           linecontext.moveTo(lastx, (max - 0 - curfhroffset) * this.yspan + this.basetop);
           continue;
         }
-        if (i > 1 && (typeof (fhr[fetal][inneri - 2]) == "undefined" || fhr[fetal][inneri - 2] == 0 || (lasty - fhr[fetal][inneri - 2]) > 30 || (fhr[fetal][inneri - 2] - lasty) > 30)) {
+        if (i > 1 && (typeof (fhr[fetal][inneri - 2]) == "undefined" || fhr[fetal][inneri - 2] == 0 || Math.abs(lasty - fhr[fetal][inneri - 2]) > 30) || ((fhr[fetal][inneri - 2] + curfhroffset) < this.min) || ((fhr[fetal][inneri - 2] + curfhroffset) > this.max)) {
           //kisi 2019-10-20 add 划线规则
           linecontext.moveTo(lastx, (max - fhr[fetal][inneri] - curfhroffset) * this.yspan + this.basetop);
         } else {
@@ -234,9 +237,7 @@ export default class DrawCTG {
               this.linecontext.strokeStyle = suit.ctgconfig.alarmcolor;
               alarmstate = 1;
               this.linecontext.moveTo(lastx - 1 + minoff, (max - curstand - curfhroffset) * this.yspan + this.basetop);
-              this.linecontext.lineTo(lastx, (max - lasty - curfhroffset) * this.yspan + this.basetop);
             }
-            this.linecontext.lineTo(lastx, (max - lasty - curfhroffset) * this.yspan + this.basetop);
           } else {
             let type = 0;
             let minoff = 0;
@@ -257,10 +258,10 @@ export default class DrawCTG {
               this.linecontext.strokeStyle = suit.ctgconfig.fhrcolor[fetal];
               alarmstate = 0;
               this.linecontext.moveTo(lastx - 1 + minoff, (max - curstand - curfhroffset) * this.yspan + this.basetop);
-              this.linecontext.lineTo(lastx, (max - lasty - curfhroffset) * this.yspan + this.basetop);
             }
-            this.linecontext.lineTo(lastx, (max - lasty - curfhroffset) * this.yspan + this.basetop);
           }
+          this.linecontext.lineTo(lastx, (max - lasty - curfhroffset) * this.yspan + this.basetop);
+
         }
         //kisi 2019-10-29
         //绘制加减速标记
@@ -592,7 +593,7 @@ export default class DrawCTG {
         this.suit.alarm = alarm;
       } else if (suit.ctgconfig.alarm_enable && cv < suit.ctgconfig.alarm_low) {
         if (eventemit) {
-          console.log('心率过低', cv,this.suit.ctgconfig.alarm_delay);
+          console.log('心率过低', cv, this.suit.ctgconfig.alarm_delay);
           this.suit.alarmLow();
         }
         alarm = 1;

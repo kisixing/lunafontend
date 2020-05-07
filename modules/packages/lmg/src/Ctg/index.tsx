@@ -82,7 +82,6 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
 
   useImperativeHandle(ref, () => {
     console.log('yyyyyyyyyyyy--------useImperativeHandle', ctg.current)
-
     return ctg.current
   })
   const canvasStyles: React.CSSProperties = { position: 'absolute' }
@@ -139,7 +138,7 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
       {/* {
         suitType > 100 && <ButtonTools ctg={ctg} visible={showBtns && staticType} />
       } */}
-      <ButtonTools data={data} visible={true} ctg={ctg} className={"btns"}/>
+      {/* <ButtonTools data={data} visible={true} ctg={ctg} className={"btns"}/> */}
     </Wrapper>
   );
 })

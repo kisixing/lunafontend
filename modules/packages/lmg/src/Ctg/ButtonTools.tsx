@@ -41,7 +41,7 @@ export const ButtonTools = (props: IProps) => {
 
         if (target) {
             const audio = target.current
-            const r = ctg.current.drawSelect.selectingBarPoint / ctg.current.data.index
+            const r = (ctg.current.drawSelect.selectingBarPoint / ctg.current.data.index) || 0
             audio.currentTime = r * audio.duration
             audio.ontimeupdate = () => {
                 const play_r = audio.currentTime / audio.duration

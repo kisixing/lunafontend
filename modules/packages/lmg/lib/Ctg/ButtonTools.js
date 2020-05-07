@@ -44,7 +44,7 @@ exports.ButtonTools = function (props) {
         });
         if (target) {
             var audio_1 = target.current;
-            var r = ctg.current.drawSelect.selectingBarPoint / ctg.current.data.index;
+            var r = (ctg.current.drawSelect.selectingBarPoint / ctg.current.data.index) || 0;
             audio_1.currentTime = r * audio_1.duration;
             audio_1.ontimeupdate = function () {
                 var play_r = audio_1.currentTime / audio_1.duration;

@@ -44,7 +44,6 @@ var useDraw_1 = __importDefault(require("../useDraw"));
 var ContextMenu_1 = __importDefault(require("./ContextMenu"));
 var Loading_1 = require("./Loading");
 var Suit_1 = require("./Suit");
-var ButtonTools_1 = require("./ButtonTools");
 var styled_components_1 = __importDefault(require("styled-components"));
 var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  width:100%;\n  height:100%;\n  .btns{\n    display:none\n  }\n  :hover .btns{\n    display:block\n  }\n"], ["\n  width:100%;\n  height:100%;\n  .btns{\n    display:none\n  }\n  :hover .btns{\n    display:block\n  }\n"])));
 exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
@@ -101,8 +100,7 @@ exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
         ecgHeight && showEcg && (react_1.default.createElement("div", { style: { height: ecgHeight, overflow: 'hidden' } },
             react_1.default.createElement(Ecg_1.default, { data: data, onReady: function (e) { return ecg.current = e; } }))),
         react_1.default.createElement(ContextMenu_1.default, { s: ctg },
-            react_1.default.createElement(ScrollBar_1.default, { box: box, getBarTool: function (tool) { barTool.current = tool; } })),
-        react_1.default.createElement(ButtonTools_1.ButtonTools, { data: data, visible: true, ctg: ctg, className: "btns" })));
+            react_1.default.createElement(ScrollBar_1.default, { box: box, getBarTool: function (tool) { barTool.current = tool; } }))));
 }));
 var templateObject_1;
 //# sourceMappingURL=index.js.map

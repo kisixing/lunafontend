@@ -453,10 +453,13 @@ var DrawCTG = (function () {
                     lasty = fhr[fetal][inneri];
                 }
                 else {
+                    if (fhr[fetal][inneri] + curfhroffset > this.max && fhr[fetal][inneri] + curfhroffset < this.min) {
+                        continue;
+                    }
                     linecontext.moveTo(lastx, (max - 0 - curfhroffset) * this.yspan + this.basetop);
                     continue;
                 }
-                if (i_1 > 1 && (typeof (fhr[fetal][inneri - 2]) == "undefined" || fhr[fetal][inneri - 2] == 0 || (lasty - fhr[fetal][inneri - 2]) > 30 || (fhr[fetal][inneri - 2] - lasty) > 30)) {
+                if (i_1 > 1 && (typeof (fhr[fetal][inneri - 2]) == "undefined" || fhr[fetal][inneri - 2] == 0 || Math.abs(lasty - fhr[fetal][inneri - 2]) > 30) || ((fhr[fetal][inneri - 2] + curfhroffset) < this.min) || ((fhr[fetal][inneri - 2] + curfhroffset) > this.max)) {
                     linecontext.moveTo(lastx, (max - fhr[fetal][inneri] - curfhroffset) * this.yspan + this.basetop);
                 }
                 else {
@@ -484,9 +487,7 @@ var DrawCTG = (function () {
                             this.linecontext.strokeStyle = suit.ctgconfig.alarmcolor;
                             alarmstate = 1;
                             this.linecontext.moveTo(lastx - 1 + minoff, (max - curstand - curfhroffset) * this.yspan + this.basetop);
-                            this.linecontext.lineTo(lastx, (max - lasty - curfhroffset) * this.yspan + this.basetop);
                         }
-                        this.linecontext.lineTo(lastx, (max - lasty - curfhroffset) * this.yspan + this.basetop);
                     }
                     else {
                         var type = 0;
@@ -508,10 +509,9 @@ var DrawCTG = (function () {
                             this.linecontext.strokeStyle = suit.ctgconfig.fhrcolor[fetal];
                             alarmstate = 0;
                             this.linecontext.moveTo(lastx - 1 + minoff, (max - curstand - curfhroffset) * this.yspan + this.basetop);
-                            this.linecontext.lineTo(lastx, (max - lasty - curfhroffset) * this.yspan + this.basetop);
                         }
-                        this.linecontext.lineTo(lastx, (max - lasty - curfhroffset) * this.yspan + this.basetop);
                     }
+                    this.linecontext.lineTo(lastx, (max - lasty - curfhroffset) * this.yspan + this.basetop);
                 }
                 this.suit.drawAnalyse.drawflag(this.linecontext, lastx, (max - lasty - curfhroffset) * this.yspan, i_1);
             }
