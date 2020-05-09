@@ -39,7 +39,7 @@ exports.ButtonTools = function (props) {
         }
     ];
     function stopPlay() {
-        utils_1.event.emit('ctg:replay', '');
+        utils_1.event.emit('ctg:replay', '', 0);
         clearInterval(timeoutId.current);
     }
     react_1.useEffect(function () {
@@ -49,9 +49,9 @@ exports.ButtonTools = function (props) {
             var i = 0;
             timeoutId.current = setInterval(function () {
                 var dis = (index - ctg.current.leftViewposition) / 2;
-                console.log('go', dis + 2 * (++i));
-                ctg.current.drawSelect.selectingBar.setLeft(dis + 2 * (++i));
-            }, 1000);
+                console.log('go', dis + 1 * (++i));
+                ctg.current.drawSelect.selectingBar.setLeft(dis + 1 * (++i));
+            }, 500);
         }
         utils_1.event
             .on('ctg:canReplay', cb);
@@ -75,7 +75,9 @@ exports.ButtonTools = function (props) {
                         var k = isTarget ? 0 : (i + 1);
                         var id = k ? data.docid + "_" + replayKey : '';
                         setReplayKey(k);
-                        id ? utils_1.event.emit('ctg:replay', id) : stopPlay();
+                        var r = (ctg.current.drawSelect.selectingBarPoint / ctg.current.data.index) || 0;
+                        var index = ctg.current.data.index * r;
+                        id ? utils_1.event.emit('ctg:replay', id, index / 4) : stopPlay();
                     } },
                     "\u7B2C",
                     i + 1,

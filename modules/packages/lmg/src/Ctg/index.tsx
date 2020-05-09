@@ -139,7 +139,7 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
         suitType > 100 && <ButtonTools ctg={ctg} visible={showBtns && staticType} />
       } */}
       {
-        suitType > 0 && <ButtonTools data={data} visible={true} ctg={ctg} className={"btns"} />
+        suitType > 100 && <ButtonTools data={data} visible={true} ctg={ctg} className={"btns"} />
       }
 
     </Wrapper>

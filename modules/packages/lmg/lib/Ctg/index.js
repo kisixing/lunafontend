@@ -102,7 +102,7 @@ exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
             react_1.default.createElement(Ecg_1.default, { data: data, onReady: function (e) { return ecg.current = e; } }))),
         react_1.default.createElement(ContextMenu_1.default, { s: ctg },
             react_1.default.createElement(ScrollBar_1.default, { box: box, getBarTool: function (tool) { barTool.current = tool; } })),
-        suitType > 0 && react_1.default.createElement(ButtonTools_1.ButtonTools, { data: data, visible: true, ctg: ctg, className: "btns" })));
+        suitType > 100 && react_1.default.createElement(ButtonTools_1.ButtonTools, { data: data, visible: true, ctg: ctg, className: "btns" })));
 }));
 var templateObject_1;
 //# sourceMappingURL=index.js.map

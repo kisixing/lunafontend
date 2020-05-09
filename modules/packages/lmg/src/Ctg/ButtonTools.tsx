@@ -37,7 +37,7 @@ export const ButtonTools = (props: IProps) => {
         }
     ]
     function stopPlay() {
-        event.emit('ctg:replay', '')
+        event.emit('ctg:replay', '', 0)
         clearInterval(timeoutId.current)
     }
     useEffect(() => {
@@ -48,10 +48,10 @@ export const ButtonTools = (props: IProps) => {
             timeoutId.current = setInterval(() => {
 
                 const dis = (index - ctg.current.leftViewposition) / 2
-                console.log('go', dis + 2 * (++i))
+                console.log('go', dis + 1 * (++i))
 
-                ctg.current.drawSelect.selectingBar.setLeft(dis + 2 * (++i))
-            }, 1000);
+                ctg.current.drawSelect.selectingBar.setLeft(dis + 1 * (++i))
+            }, 500);
 
             // target.current.play()
         }
@@ -100,7 +100,11 @@ export const ButtonTools = (props: IProps) => {
                             const k = isTarget ? 0 : (i + 1)
                             const id = k ? `${data.docid}_${replayKey}` : ''
                             setReplayKey(k)
-                            id ? event.emit('ctg:replay', id) : stopPlay()
+
+                            const r = (ctg.current.drawSelect.selectingBarPoint / ctg.current.data.index) || 0
+                            const index = ctg.current.data.index * r
+
+                            id ? event.emit('ctg:replay', id, index / 4) : stopPlay()
 
                         }}>
                             第{i + 1}胎心音回放

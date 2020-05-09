@@ -191,7 +191,9 @@ var DrawSelect = (function (_super) {
         endingBar.toggleVisibility();
         startingBar.toggleVisibility();
         selectingBar.on('change:x', function (value) {
-            _this.suit.drawobj.showcur(_this.selectingBarPoint, false);
+            if (!_this.suit)
+                return;
+            _this.suit.drawobj && _this.suit.drawobj.showcur(_this.selectingBarPoint, false);
             _this.suit.emit('change:selectPoint', _this.selectingBarPoint);
         });
         startingBar.on('change:x', function (value) {

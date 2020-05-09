@@ -192,7 +192,8 @@ export class DrawSelect extends Draw {
         endingBar.toggleVisibility();
         startingBar.toggleVisibility();
         selectingBar.on('change:x', value => {
-            this.suit.drawobj.showcur(this.selectingBarPoint, false);
+            if (!this.suit) return
+            this.suit.drawobj && this.suit.drawobj.showcur(this.selectingBarPoint, false);
             this.suit.emit('change:selectPoint', this.selectingBarPoint)
 
 
