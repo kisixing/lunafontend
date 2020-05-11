@@ -127,6 +127,7 @@ export class DrawEcg extends Draw {
   DrawDatatext() {
     const { datactx, data, height, width } = this;
     const keys = ['脉率bpm', '血氧%', '体温℃', '心率bpm', '呼吸(次/分)', '血压(SDM)mmHg'];
+    console.log('ecgdata',data && data.ecgdata)
     const v = Object.assign(Array(7).fill('--'), data.ecgdata)
     v[2] = `${v[2]} ~ ${v[3]}`
     v.splice(3, 1)
@@ -135,6 +136,7 @@ export class DrawEcg extends Draw {
 
     if (height > 60) {
       // 大屏显示
+      return
       const V = (height) / 6;
       let size = V / 2;
       let D = 10;

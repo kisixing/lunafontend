@@ -71,7 +71,7 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
     () => {
       const { height } = box.current.getBoundingClientRect();
       const h = height / 5;
-      const t = h > 40 ? (h > 200 ? 200 : 40) : (26)
+      const t = h > 40 ? (h > 200 ? 240 : 40) : (26)
       setTimeout(() => setEcgHeight(t), 100)
     })
   // useLayoutEffect(() => {
@@ -120,7 +120,7 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
       {
         ecgHeight && showEcg && (
           <div style={{ height: ecgHeight, overflow: 'hidden' }} >
-            <Ecg data={data} onReady={e => ecg.current = e} />
+            <Ecg data={data} ecgHeight={ecgHeight} onReady={e => ecg.current = e} />
           </div>
         )
       }

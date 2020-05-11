@@ -114,12 +114,14 @@ var DrawEcg = (function (_super) {
     DrawEcg.prototype.DrawDatatext = function () {
         var _a = this, datactx = _a.datactx, data = _a.data, height = _a.height, width = _a.width;
         var keys = ['脉率bpm', '血氧%', '体温℃', '心率bpm', '呼吸(次/分)', '血压(SDM)mmHg'];
+        console.log('ecgdata', data && data.ecgdata);
         var v = Object.assign(Array(7).fill('--'), data.ecgdata);
         v[2] = v[2] + " ~ " + v[3];
         v.splice(3, 1);
         var entries = utils_1._R.zip(keys, v);
         datactx.clearRect(0, 0, width, height);
         if (height > 60) {
+            return;
             var V_1 = (height) / 6;
             var size_1 = V_1 / 2;
             var D_1 = 10;

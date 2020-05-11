@@ -72,7 +72,7 @@ exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
     }, function () {
         var height = box.current.getBoundingClientRect().height;
         var h = height / 5;
-        var t = h > 40 ? (h > 200 ? 200 : 40) : (26);
+        var t = h > 40 ? (h > 200 ? 240 : 40) : (26);
         setTimeout(function () { return setEcgHeight(t); }, 100);
     });
     WsService_1.useCheckNetwork(function (isOn) { return ctg.current && (ctg.current.isOn = isOn); });
@@ -99,7 +99,7 @@ exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
             react_1.default.createElement("canvas", { style: canvasStyles, ref: canvasselect }),
             react_1.default.createElement("canvas", { style: canvasStyles, ref: canvasanalyse })),
         ecgHeight && showEcg && (react_1.default.createElement("div", { style: { height: ecgHeight, overflow: 'hidden' } },
-            react_1.default.createElement(Ecg_1.default, { data: data, onReady: function (e) { return ecg.current = e; } }))),
+            react_1.default.createElement(Ecg_1.default, { data: data, ecgHeight: ecgHeight, onReady: function (e) { return ecg.current = e; } }))),
         react_1.default.createElement(ContextMenu_1.default, { s: ctg },
             react_1.default.createElement(ScrollBar_1.default, { box: box, getBarTool: function (tool) { barTool.current = tool; } })),
         suitType > 100 && react_1.default.createElement(ButtonTools_1.ButtonTools, { data: data, visible: true, ctg: ctg, className: "btns" })));
