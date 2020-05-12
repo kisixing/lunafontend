@@ -51,7 +51,13 @@ export class DrawEcg extends Draw {
   private linectx: Ctx;
   private datactx: Ctx;
   private ecg_scope?= 2;
-  private current_times?= 0;
+  private _current_times?= 0;
+  public get current_times() {
+    return this._current_times;
+  }
+  public set current_times(value) {
+    this._current_times = value % this.max_times;
+  }
   private max_times?= 135;
   // private current_time_millis?= 0;
   private start?= NaN;
@@ -248,13 +254,14 @@ export class DrawEcg extends Draw {
 
   initparm() {
     const { canvasline, linectx } = this;
+    linectx.lineJoin = 'round'
+    linectx.strokeStyle = '#9d6003';
     if (canvasline.width < 150) {
       // alert(' width is limited');
     } else {
       this.max_times = Math.floor((canvasline.width - 25) * 0.6 / gx);
     }
     // console.log('ecg-width', canvasline.width);
-    linectx.strokeStyle = '#9d6003';
     this.current_times = 0;
   }
 
@@ -297,7 +304,7 @@ export class DrawEcg extends Draw {
   // }
   // 绘制单心电走纸
   drawsingle() {
-    const { last_points, max_times, linectx } = this;
+    const { last_points, linectx } = this;
     const y_starts = this.GetYStarts(12);
     //2019-10-03 kisi 根据容器调整高度
     // let scale = this.height / 100;
@@ -305,7 +312,6 @@ export class DrawEcg extends Draw {
       return;
     }
     isstop = true;
-    this.current_times = this.current_times % max_times;
     if (this.data.ecg.IsEmpty()) {
       this.start = NaN;
       isstop = false;
@@ -336,34 +342,33 @@ export class DrawEcg extends Draw {
     if (invalid > 7) {
       return;
     }
-    let L = x_start + this.current_times * points_one_times * ((gride_width * 5) / samplingrate);
+    let L = x_start + this.current_times * gx;
     linectx.beginPath();
     for (let K = 0; K < F.length; K++) {
       const C = F[K] - BASE_INEVAL;
       let I = K * (gride_width * 5 / samplingrate);
       let M;
-      linectx.strokeStyle = '#9d6003';
+
       if (this.ecg_scope != 0) {
         M = Math.abs(C);
       } else {
         M = (Math.abs(C) * (adu / (gride_width * 2))) / 2;
       }
+      var D = parseFloat(C >= 0 ? y_starts[0] - M : y_starts[0] + M);
+
       if (K == 0) {
         if (this.current_times != 0) {
           linectx.moveTo(last_points[0], last_points[1]);
-          var D = parseFloat(C >= 0 ? y_starts[0] - M : y_starts[0] + M);
           linectx.lineTo(last_points[0], D);
           last_points[0] = last_points[0];
           last_points[1] = D;
         } else {
-          var D = parseFloat(C >= 0 ? y_starts[0] - M : y_starts[0] + M);
           linectx.moveTo(x_start, D);
           last_points[0] = x_start;
           last_points[1] = D;
         }
       } else {
         linectx.moveTo(last_points[0], last_points[1]);
-        var D = parseFloat(C >= 0 ? y_starts[0] - M : y_starts[0] + M);
         linectx.lineTo(L + I, D);
         if (L + I < last_points[0]) {
           // console.log('error data', this.current_times, L, I, K, last_points);
@@ -380,9 +385,8 @@ export class DrawEcg extends Draw {
   clearcanvans() {
     const current_times = this.current_times
     const linectx = this.linectx
-    const A = points_one_times * ((gride_width * 5) / samplingrate);
     if (current_times != 0) {
-      linectx.clearRect(x_start + current_times * A, 0, 20, this.height);
+      linectx.clearRect(x_start + current_times * gx, 0, 20, this.height);
     } else {
       linectx.clearRect(x_start - 10, 0, x_start + 20, this.height);
     }

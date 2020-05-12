@@ -45,7 +45,7 @@ var DrawEcg = (function (_super) {
     function DrawEcg(args) {
         var _this = _super.call(this) || this;
         _this.ecg_scope = 2;
-        _this.current_times = 0;
+        _this._current_times = 0;
         _this.max_times = 135;
         _this.start = NaN;
         _this.intervalIds = [];
@@ -57,6 +57,16 @@ var DrawEcg = (function (_super) {
         _this.ecg();
         return _this;
     }
+    Object.defineProperty(DrawEcg.prototype, "current_times", {
+        get: function () {
+            return this._current_times;
+        },
+        set: function (value) {
+            this._current_times = value % this.max_times;
+        },
+        enumerable: true,
+        configurable: true
+    });
     DrawEcg.prototype.init = function (data) {
         console.log('ecgdata', data);
         if (data) {
@@ -189,12 +199,13 @@ var DrawEcg = (function (_super) {
     };
     DrawEcg.prototype.initparm = function () {
         var _a = this, canvasline = _a.canvasline, linectx = _a.linectx;
+        linectx.lineJoin = 'round';
+        linectx.strokeStyle = '#9d6003';
         if (canvasline.width < 150) {
         }
         else {
             this.max_times = Math.floor((canvasline.width - 25) * 0.6 / gx);
         }
-        linectx.strokeStyle = '#9d6003';
         this.current_times = 0;
     };
     DrawEcg.prototype.timerEcg = function (dely) {
@@ -213,13 +224,12 @@ var DrawEcg = (function (_super) {
         this.intervalIds.push(id);
     };
     DrawEcg.prototype.drawsingle = function () {
-        var _a = this, last_points = _a.last_points, max_times = _a.max_times, linectx = _a.linectx;
+        var _a = this, last_points = _a.last_points, linectx = _a.linectx;
         var y_starts = this.GetYStarts(12);
         if (isstop) {
             return;
         }
         isstop = true;
-        this.current_times = this.current_times % max_times;
         if (this.data.ecg.IsEmpty()) {
             this.start = NaN;
             isstop = false;
@@ -252,29 +262,27 @@ var DrawEcg = (function (_super) {
         if (invalid > 7) {
             return;
         }
-        var L = x_start + this.current_times * points_one_times * ((gride_width * 5) / samplingrate);
+        var L = x_start + this.current_times * gx;
         linectx.beginPath();
         for (var K = 0; K < F.length; K++) {
             var C = F[K] - BASE_INEVAL;
             var I = K * (gride_width * 5 / samplingrate);
             var M = void 0;
-            linectx.strokeStyle = '#9d6003';
             if (this.ecg_scope != 0) {
                 M = Math.abs(C);
             }
             else {
                 M = (Math.abs(C) * (adu / (gride_width * 2))) / 2;
             }
+            var D = parseFloat(C >= 0 ? y_starts[0] - M : y_starts[0] + M);
             if (K == 0) {
                 if (this.current_times != 0) {
                     linectx.moveTo(last_points[0], last_points[1]);
-                    var D = parseFloat(C >= 0 ? y_starts[0] - M : y_starts[0] + M);
                     linectx.lineTo(last_points[0], D);
                     last_points[0] = last_points[0];
                     last_points[1] = D;
                 }
                 else {
-                    var D = parseFloat(C >= 0 ? y_starts[0] - M : y_starts[0] + M);
                     linectx.moveTo(x_start, D);
                     last_points[0] = x_start;
                     last_points[1] = D;
@@ -282,7 +290,6 @@ var DrawEcg = (function (_super) {
             }
             else {
                 linectx.moveTo(last_points[0], last_points[1]);
-                var D = parseFloat(C >= 0 ? y_starts[0] - M : y_starts[0] + M);
                 linectx.lineTo(L + I, D);
                 if (L + I < last_points[0]) {
                 }
@@ -297,9 +304,8 @@ var DrawEcg = (function (_super) {
     DrawEcg.prototype.clearcanvans = function () {
         var current_times = this.current_times;
         var linectx = this.linectx;
-        var A = points_one_times * ((gride_width * 5) / samplingrate);
         if (current_times != 0) {
-            linectx.clearRect(x_start + current_times * A, 0, 20, this.height);
+            linectx.clearRect(x_start + current_times * gx, 0, 20, this.height);
         }
         else {
             linectx.clearRect(x_start - 10, 0, x_start + 20, this.height);

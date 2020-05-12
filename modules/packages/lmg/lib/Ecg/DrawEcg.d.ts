@@ -26,7 +26,9 @@ export declare class DrawEcg extends Draw {
     private linectx;
     private datactx;
     private ecg_scope?;
-    private current_times?;
+    private _current_times?;
+    get current_times(): number;
+    set current_times(value: number);
     private max_times?;
     private start?;
     private intervalIds;
