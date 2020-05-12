@@ -31,32 +31,32 @@ interface I {
   height?: number;
   data: any
 }
-enum displayMode {
-  canvas,
-  text
-}
+// enum displayMode {
+//   canvas,
+//   text
+// }
 
 export class DrawEcg extends Draw {
-  data: ICacheItem
-  mode: displayMode = displayMode.canvas
   static Queue: typeof Queue = Queue
-  wrap: HTMLDivElement;
-  MultiParam: number[];
-  Ple: number[];
-  Tre: number[];
+  private data: ICacheItem
+  // private mode: displayMode = displayMode.canvas
+  // private wrap: HTMLDivElement;
+  // private MultiParam: number[];
+  // private Ple: number[];
+  // private Tre: number[];
   canvas: Canvas;
   canvasline: Canvas;
-  canvasmonitor: Canvas;
-  ctx: Ctx;
-  linectx: Ctx;
-  datactx: Ctx;
-  ecg_scope?= 2;
-  current_times?= 0;
-  max_times?= 135;
-  current_time_millis?= 0;
-  start?= NaN;
-  intervalIds: NodeJS.Timeout[] = [];
-  last_points: number[];
+  private canvasmonitor: Canvas;
+  private ctx: Ctx;
+  private linectx: Ctx;
+  private datactx: Ctx;
+  private ecg_scope?= 2;
+  private current_times?= 0;
+  private max_times?= 135;
+  // private current_time_millis?= 0;
+  private start?= NaN;
+  private intervalIds: NodeJS.Timeout[] = [];
+  private last_points: number[];
   constructor(args: I) {
     super()
     const { canvas, canvasline, canvasmonitor } = args;
@@ -73,9 +73,11 @@ export class DrawEcg extends Draw {
     this.ecg();
   }
   init(data) {
+    console.log('ecgdata', data)
+
     if (data) {
       this.data = data
-      this.current_time_millis = 0;
+      // this.current_time_millis = 0;
       this.current_times = 0;
       isstop = false;
       //this.loop();
@@ -87,7 +89,7 @@ export class DrawEcg extends Draw {
   }
   _resize() {
     const { height, width } = this
-    this.mode = height <= 50 ? displayMode.text : displayMode.canvas
+    // this.mode = height <= 50 ? displayMode.text : displayMode.canvas
     Object.assign(this.canvas, { width, height })
     Object.assign(this.canvasline, { width, height })
     Object.assign(this.canvasmonitor, { width, height })
@@ -127,7 +129,6 @@ export class DrawEcg extends Draw {
   DrawDatatext() {
     const { datactx, data, height, width } = this;
     const keys = ['脉率bpm', '血氧%', '体温℃', '心率bpm', '呼吸(次/分)', '血压(SDM)mmHg'];
-    console.log('ecgdata',data && data.ecgdata)
     const v = Object.assign(Array(7).fill('--'), data.ecgdata)
     v[2] = `${v[2]} ~ ${v[3]}`
     v.splice(3, 1)
@@ -264,8 +265,8 @@ export class DrawEcg extends Draw {
         clearInterval(id);
       }
       this.DrawDatatext();
-      const A = new Date().getTime();
-      this.current_time_millis = A;
+      // const A = new Date().getTime();
+      // this.current_time_millis = A;
       if (!isNaN(this.start) || this.data.ecg.GetSize() > points_one_times * 5) {
         this.start = 1;
         this.drawsingle();
@@ -315,7 +316,7 @@ export class DrawEcg extends Draw {
       isstop = false;
       return;
     }
-    this.clearcanvans(this.current_times, points_one_times, samplingrate, linectx);
+    this.clearcanvans();
     let F = [];
     let invalid = 0;
     for (let J = 0; J < points_one_times; J++) {
@@ -376,13 +377,14 @@ export class DrawEcg extends Draw {
     isstop = false;
   }
 
-  clearcanvans(B, F, C, D) {
-    const A = F * ((gride_width * 5) / C);
-    const E = x_start + B * A;
-    if (B != 0) {
-      D.clearRect(E, 0, 20, this.height);
+  clearcanvans() {
+    const current_times = this.current_times
+    const linectx = this.linectx
+    const A = points_one_times * ((gride_width * 5) / samplingrate);
+    if (current_times != 0) {
+      linectx.clearRect(x_start + current_times * A, 0, 20, this.height);
     } else {
-      D.clearRect(E - 10, 0, E + 20, this.height);
+      linectx.clearRect(x_start - 10, 0, x_start + 20, this.height);
     }
   }
 

@@ -72,7 +72,7 @@ exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
     }, function () {
         var height = box.current.getBoundingClientRect().height;
         var h = height / 5;
-        var t = h > 40 ? (h > 200 ? 240 : 40) : (26);
+        var t = h > 40 ? (h > 200 ? 210 : 40) : (26);
         setTimeout(function () { return setEcgHeight(t); }, 100);
     });
     WsService_1.useCheckNetwork(function (isOn) { return ctg.current && (ctg.current.isOn = isOn); });

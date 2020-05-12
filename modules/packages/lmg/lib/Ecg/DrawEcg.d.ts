@@ -1,9 +1,6 @@
-/// <reference types="node" />
 import Draw from "../Draw";
 import Queue from "./Queue";
-import { ICacheItem } from "../services/types";
 declare type Canvas = HTMLCanvasElement;
-declare type Ctx = CanvasRenderingContext2D;
 interface I {
     wrap: HTMLDivElement;
     MultiParam: number[];
@@ -19,31 +16,21 @@ interface I {
     height?: number;
     data: any;
 }
-declare enum displayMode {
-    canvas = 0,
-    text = 1
-}
 export declare class DrawEcg extends Draw {
-    data: ICacheItem;
-    mode: displayMode;
     static Queue: typeof Queue;
-    wrap: HTMLDivElement;
-    MultiParam: number[];
-    Ple: number[];
-    Tre: number[];
+    private data;
     canvas: Canvas;
     canvasline: Canvas;
-    canvasmonitor: Canvas;
-    ctx: Ctx;
-    linectx: Ctx;
-    datactx: Ctx;
-    ecg_scope?: number;
-    current_times?: number;
-    max_times?: number;
-    current_time_millis?: number;
-    start?: number;
-    intervalIds: NodeJS.Timeout[];
-    last_points: number[];
+    private canvasmonitor;
+    private ctx;
+    private linectx;
+    private datactx;
+    private ecg_scope?;
+    private current_times?;
+    private max_times?;
+    private start?;
+    private intervalIds;
+    private last_points;
     constructor(args: I);
     init(data: any): void;
     _resize(): void;
@@ -56,7 +43,7 @@ export declare class DrawEcg extends Draw {
     initparm(): void;
     timerEcg(dely: any): void;
     drawsingle(): void;
-    clearcanvans(B: any, F: any, C: any, D: any): void;
+    clearcanvans(): void;
     GetYStarts(C: any): any[];
 }
 export {};

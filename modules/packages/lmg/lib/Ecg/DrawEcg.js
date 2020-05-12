@@ -40,20 +40,13 @@ var x_start = 25;
 var ruler = [64, 64, 64, 64, 64, 64, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 64, 64, 64, 64, 64, 64];
 var isstop = true;
 var loopmill = 90;
-var displayMode;
-(function (displayMode) {
-    displayMode[displayMode["canvas"] = 0] = "canvas";
-    displayMode[displayMode["text"] = 1] = "text";
-})(displayMode || (displayMode = {}));
 var DrawEcg = (function (_super) {
     __extends(DrawEcg, _super);
     function DrawEcg(args) {
         var _this = _super.call(this) || this;
-        _this.mode = displayMode.canvas;
         _this.ecg_scope = 2;
         _this.current_times = 0;
         _this.max_times = 135;
-        _this.current_time_millis = 0;
         _this.start = NaN;
         _this.intervalIds = [];
         var canvas = args.canvas, canvasline = args.canvasline, canvasmonitor = args.canvasmonitor;
@@ -65,9 +58,9 @@ var DrawEcg = (function (_super) {
         return _this;
     }
     DrawEcg.prototype.init = function (data) {
+        console.log('ecgdata', data);
         if (data) {
             this.data = data;
-            this.current_time_millis = 0;
             this.current_times = 0;
             isstop = false;
             this.last_points = [];
@@ -77,7 +70,6 @@ var DrawEcg = (function (_super) {
     };
     DrawEcg.prototype._resize = function () {
         var _a = this, height = _a.height, width = _a.width;
-        this.mode = height <= 50 ? displayMode.text : displayMode.canvas;
         Object.assign(this.canvas, { width: width, height: height });
         Object.assign(this.canvasline, { width: width, height: height });
         Object.assign(this.canvasmonitor, { width: width, height: height });
@@ -114,7 +106,6 @@ var DrawEcg = (function (_super) {
     DrawEcg.prototype.DrawDatatext = function () {
         var _a = this, datactx = _a.datactx, data = _a.data, height = _a.height, width = _a.width;
         var keys = ['脉率bpm', '血氧%', '体温℃', '心率bpm', '呼吸(次/分)', '血压(SDM)mmHg'];
-        console.log('ecgdata', data && data.ecgdata);
         var v = Object.assign(Array(7).fill('--'), data.ecgdata);
         v[2] = v[2] + " ~ " + v[3];
         v.splice(3, 1);
@@ -214,8 +205,6 @@ var DrawEcg = (function (_super) {
                 clearInterval(id);
             }
             _this.DrawDatatext();
-            var A = new Date().getTime();
-            _this.current_time_millis = A;
             if (!isNaN(_this.start) || _this.data.ecg.GetSize() > points_one_times * 5) {
                 _this.start = 1;
                 _this.drawsingle();
@@ -241,7 +230,7 @@ var DrawEcg = (function (_super) {
             isstop = false;
             return;
         }
-        this.clearcanvans(this.current_times, points_one_times, samplingrate, linectx);
+        this.clearcanvans();
         var F = [];
         var invalid = 0;
         for (var J = 0; J < points_one_times; J++) {
@@ -305,14 +294,15 @@ var DrawEcg = (function (_super) {
         this.current_times++;
         isstop = false;
     };
-    DrawEcg.prototype.clearcanvans = function (B, F, C, D) {
-        var A = F * ((gride_width * 5) / C);
-        var E = x_start + B * A;
-        if (B != 0) {
-            D.clearRect(E, 0, 20, this.height);
+    DrawEcg.prototype.clearcanvans = function () {
+        var current_times = this.current_times;
+        var linectx = this.linectx;
+        var A = points_one_times * ((gride_width * 5) / samplingrate);
+        if (current_times != 0) {
+            linectx.clearRect(x_start + current_times * A, 0, 20, this.height);
         }
         else {
-            D.clearRect(E - 10, 0, E + 20, this.height);
+            linectx.clearRect(x_start - 10, 0, x_start + 20, this.height);
         }
     };
     DrawEcg.prototype.GetYStarts = function (C) {
