@@ -505,7 +505,7 @@ export class Suit extends Draw {
       }
     } else {
       // console.log('status',this.data.status);
-      this.alarmOff('');
+      this.alarmOff();
       this.drawobj.showcur(this.data.index + 2, false);
       this.drawobj.drawdot(this.data.index + 2, false);
     }

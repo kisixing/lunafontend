@@ -423,7 +423,7 @@ var Suit = (function (_super) {
             }
         }
         else {
-            this.alarmOff('');
+            this.alarmOff();
             this.drawobj.showcur(this.data.index + 2, false);
             this.drawobj.drawdot(this.data.index + 2, false);
         }
