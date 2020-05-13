@@ -19,7 +19,7 @@ var Gg = function (props) {
     var title = props.title, value = props.value, unit = props.unit;
     return (react_1.default.createElement("div", { style: { display: 'flex', height: '70px', fontWeight: 'bold', fontFamily: 'arial', border: '1px dashed #ccc', borderTop: 'none' } },
         react_1.default.createElement("div", { style: { position: 'absolute', left: 10, top: 0, fontSize: 12 } }, title),
-        react_1.default.createElement("div", { style: { flex: 1, fontSize: 48, lineHeight: '74px', textAlign: 'center' } }, value),
+        react_1.default.createElement("div", { style: { flex: 1, fontSize: 48, lineHeight: '74px', textAlign: 'center' } }, value || ''),
         react_1.default.createElement("div", { style: { position: 'absolute', right: 10, bottom: 0, fontSize: 12, } }, unit)));
 };
 exports.default = (function (props) {
@@ -53,19 +53,19 @@ exports.default = (function (props) {
         react_1.default.createElement("canvas", { id: "background", style: canvasStyles, ref: canvas }),
         react_1.default.createElement("canvas", { ref: canvasline, id: "line", style: canvasStyles }),
         react_1.default.createElement("canvas", { ref: canvasmonitor, id: "monitor", style: canvasStyles }),
-        !!(showDetail && data && data.ecgdata) && react_1.default.createElement("div", { style: { position: 'absolute', right: 0, width: '30%', height: '100%', top: 0, } },
+        !!(showDetail && data && data.ecgdata && data.ecgdata.length) && react_1.default.createElement("div", { style: { position: 'absolute', right: 0, width: '30%', height: '100%', top: 0, } },
             react_1.default.createElement(antd_1.Row, { gutter: 0 },
                 react_1.default.createElement(antd_1.Col, { span: 12 },
-                    react_1.default.createElement(Gg, { title: "\u8109\u7387", value: "" + data.ecgdata[0], unit: "bpm" })),
+                    react_1.default.createElement(Gg, { title: "\u8109\u7387", value: "" + (data.ecgdata[0] || ''), unit: "bpm" })),
                 react_1.default.createElement(antd_1.Col, { span: 12 },
-                    react_1.default.createElement(Gg, { title: "\u8840\u6C27", value: "" + data.ecgdata[1], unit: "%" })),
+                    react_1.default.createElement(Gg, { title: "\u8840\u6C27", value: "" + (data.ecgdata[1] || ''), unit: "%" })),
                 react_1.default.createElement(antd_1.Col, { span: 12 },
-                    react_1.default.createElement(Gg, { title: "\u4F53\u6E29", value: data.ecgdata[2] + "~" + data.ecgdata[3], unit: "\u2103" })),
+                    react_1.default.createElement(Gg, { title: "\u4F53\u6E29", value: (data.ecgdata[2] || '') + "~" + (data.ecgdata[3] || ''), unit: "\u2103" })),
                 react_1.default.createElement(antd_1.Col, { span: 12 },
-                    react_1.default.createElement(Gg, { title: "\u5FC3\u7387", value: "" + data.ecgdata[4], unit: "bpm" })),
+                    react_1.default.createElement(Gg, { title: "\u5FC3\u7387", value: "" + (data.ecgdata[4] || ''), unit: "bpm" })),
                 react_1.default.createElement(antd_1.Col, { span: 12 },
-                    react_1.default.createElement(Gg, { title: "\u547C\u5438", value: "" + data.ecgdata[5], unit: "\u6B21/\u5206" })),
+                    react_1.default.createElement(Gg, { title: "\u547C\u5438", value: "" + (data.ecgdata[5] || ''), unit: "\u6B21/\u5206" })),
                 react_1.default.createElement(antd_1.Col, { span: 12 },
-                    react_1.default.createElement(Gg, { title: "\u8840\u538BSDM", value: "" + data.ecgdata[6], unit: "mmHg" }))))));
+                    react_1.default.createElement(Gg, { title: "\u8840\u538BSDM", value: "" + (data.ecgdata[6] || ''), unit: "mmHg" }))))));
 });
 //# sourceMappingURL=index.js.map

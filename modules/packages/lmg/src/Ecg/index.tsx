@@ -8,9 +8,9 @@ import { DrawEcg } from './DrawEcg';
 const Gg = (props: { title?: string, value?: any, unit?: string }) => {
   const { title, value, unit } = props
   return (
-    <div style={{ display: 'flex', height: '70px', fontWeight: 'bold', fontFamily: 'arial',border:'1px dashed #ccc',borderTop:'none' }}>
+    <div style={{ display: 'flex', height: '70px', fontWeight: 'bold', fontFamily: 'arial', border: '1px dashed #ccc', borderTop: 'none' }}>
       <div style={{ position: 'absolute', left: 10, top: 0, fontSize: 12 }}>{title}</div>
-      <div style={{ flex: 1, fontSize: 48, lineHeight: '74px', textAlign: 'center' }}>{value}</div>
+      <div style={{ flex: 1, fontSize: 48, lineHeight: '74px', textAlign: 'center' }}>{value || ''}</div>
       <div style={{ position: 'absolute', right: 10, bottom: 0, fontSize: 12, }}>{unit}</div>
     </div>
   )
@@ -59,7 +59,7 @@ export default (props: IProps) => {
       <canvas ref={canvasline} id="line" style={canvasStyles} />
       <canvas ref={canvasmonitor} id="monitor" style={canvasStyles} />
       {
-        !!(showDetail && data && data.ecgdata) && <div style={{ position: 'absolute', right: 0, width: '30%', height: '100%', top: 0, }}>
+        !!(showDetail && data && data.ecgdata && data.ecgdata.length) && <div style={{ position: 'absolute', right: 0, width: '30%', height: '100%', top: 0, }}>
 
           {/* <Descriptions  column={2} bordered size="small">
                 <Descriptions.Item label="脉率bpm"span={2}>{data.ecgdata[0]}</Descriptions.Item>
@@ -71,22 +71,22 @@ export default (props: IProps) => {
             </Descriptions> */}
           <Row gutter={0}>
             <Col span={12} >
-              <Gg title="脉率" value={`${data.ecgdata[0]}`} unit="bpm" />
+              <Gg title="脉率" value={`${data.ecgdata[0] || ''}`} unit="bpm" />
             </Col>
             <Col span={12} >
-              <Gg title="血氧" value={`${data.ecgdata[1]}`} unit="%" />
+              <Gg title="血氧" value={`${data.ecgdata[1] || ''}`} unit="%" />
             </Col>
             <Col span={12} >
-              <Gg title="体温" value={`${data.ecgdata[2]}~${data.ecgdata[3]}`} unit="℃" />
+              <Gg title="体温" value={`${data.ecgdata[2] || ''}~${data.ecgdata[3] || ''}`} unit="℃" />
             </Col>
             <Col span={12} >
-              <Gg title="心率" value={`${data.ecgdata[4]}`} unit="bpm" />
+              <Gg title="心率" value={`${data.ecgdata[4] || ''}`} unit="bpm" />
             </Col>
             <Col span={12} >
-              <Gg title="呼吸" value={`${data.ecgdata[5]}`} unit="次/分" />
+              <Gg title="呼吸" value={`${data.ecgdata[5] || ''}`} unit="次/分" />
             </Col>
             <Col span={12} >
-              <Gg title="血压SDM" value={`${data.ecgdata[6]}`} unit="mmHg" />
+              <Gg title="血压SDM" value={`${data.ecgdata[6] || ''}`} unit="mmHg" />
             </Col>
           </Row>
           {/* <Row gutter={0}>
