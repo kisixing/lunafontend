@@ -20,7 +20,14 @@ const Status = memo<IProps>(({ alarm2Text, status, alarm0Text, alarm1Text }) => 
         [alarm0Text, alarm1Text, alarm2Text].forEach((_, i) => {
             _ && arr.push(i)
         })
-        let i = 0
+        let i = arr.reduce((target, next) => {
+            if (next > target) {
+                target = next
+            }
+            return target
+        }, -1)
+        setIndex(arr[i % arr.length] || -1)
+
         const id = setInterval(() => {
             i++;
             setIndex(arr[i % arr.length] || -1)
@@ -31,7 +38,7 @@ const Status = memo<IProps>(({ alarm2Text, status, alarm0Text, alarm1Text }) => 
         }
     }, [alarm2Text, alarm1Text, alarm0Text])
     //@ts-ignore
-    const r = index !== -1 ? <Alarm2 alarmText={alarm2Text} /> : null
+    const r = (index !== -1 && (alarm0Text || alarm1Text || alarm2Text)) ? <Alarm2 alarmText={alarm2Text} /> : null
     return !!mapStatusToColor[status] && (
         <>
             {

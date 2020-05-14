@@ -172,7 +172,7 @@ var DrawSelect = (function (_super) {
         else {
             this.selectstart = this.selectstartposition * 2;
         }
-        suit.drawobj.showcur(this.selectstart, false);
+        suit.type !== 0 && suit.drawobj.showcur(this.selectstart, false);
     };
     DrawSelect.prototype.createBar = function () {
         var _this = this;

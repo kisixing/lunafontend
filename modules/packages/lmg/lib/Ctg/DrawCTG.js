@@ -289,7 +289,7 @@ var DrawCTG = (function () {
                     datacontext.fillStyle = suit.ctgconfig.fhrcolor[i];
                 }
                 if (alarm == 0 && suit.ctgconfig.alarm_enable && _this.suit.alarm == 1) {
-                    console.log('恢复', cv, alarm, _this.suit.alarm);
+                    console.log('恢复', cv, curvalue, alarm, _this.suit.alarm, suit.ctgconfig.alarm_high < cv, suit.ctgconfig.alarm_low > cv, x);
                     _this.suit.alarmOff();
                     _this.suit.alarm = alarm;
                 }
@@ -319,7 +319,7 @@ var DrawCTG = (function () {
                 if (label.length > 0 || i > 0) {
                     span = '    ';
                 }
-                datacontext.fillText('FHR' + (i + 1) + span + ' : ' + curvalue, 10, curpostion);
+                datacontext.fillText('FHR__' + (i + 1) + span + ' : ' + curvalue, 10, curpostion);
                 if (label.length > 0 || i > 0) {
                     datacontext.font = 'bold ' + fontsize / 2 + 'px arial';
                     datacontext.fillText(label, 10 + fontsize * 2.8, curpostion);

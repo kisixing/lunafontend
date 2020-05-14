@@ -67,7 +67,7 @@ var Suit = (function (_super) {
             alarm_high: 160,
             alarm_low: 110,
             print_interval: 20,
-            alarm_delay: 5
+            alarm_delay: 0
         };
         _this.fetalposition = {
             fhr1: '',
@@ -117,7 +117,7 @@ var Suit = (function (_super) {
             _this.ctgconfig.alarm_high = Number(_this.option.alarm_high);
             _this.ctgconfig.alarm_low = Number(_this.option.alarm_low);
             _this.ctgconfig.print_interval = Number(_this.option.print_interval) || 20;
-            _this.ctgconfig.alarm_delay = Number(_this.option.alarm_delay) || 5;
+            _this.ctgconfig.alarm_delay = Number(_this.option.alarm_delay) || 0;
         }
         return _this;
     }

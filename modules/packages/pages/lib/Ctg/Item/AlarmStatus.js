@@ -24,7 +24,13 @@ var Status = react_1.memo(function (_a) {
         [alarm0Text, alarm1Text, alarm2Text].forEach(function (_, i) {
             _ && arr.push(i);
         });
-        var i = 0;
+        var i = arr.reduce(function (target, next) {
+            if (next > target) {
+                target = next;
+            }
+            return target;
+        }, -1);
+        setIndex(arr[i % arr.length] || -1);
         var id = setInterval(function () {
             i++;
             setIndex(arr[i % arr.length] || -1);
@@ -33,7 +39,7 @@ var Status = react_1.memo(function (_a) {
             clearInterval(id);
         };
     }, [alarm2Text, alarm1Text, alarm0Text]);
-    var r = index !== -1 ? react_1.default.createElement(Alarm2_1.default, { alarmText: alarm2Text }) : null;
+    var r = (index !== -1 && (alarm0Text || alarm1Text || alarm2Text)) ? react_1.default.createElement(Alarm2_1.default, { alarmText: alarm2Text }) : null;
     return !!WsService_1.mapStatusToColor[status] && (react_1.default.createElement(react_1.default.Fragment, null, r ? r : (react_1.default.createElement(antd_1.Tag, { style: { border: '2px solid #fff' }, color: WsService_1.mapStatusToColor[status] }, WsService_1.mapStatusToText[status]))));
 });
 exports.default = react_1.memo(Status);

@@ -57,7 +57,7 @@ export class Suit extends Draw {
     alarm_high: 160,
     alarm_low: 110,
     print_interval: 20,
-    alarm_delay: 5
+    alarm_delay: 0
   };
   fetalposition = {
     fhr1: '',
@@ -136,7 +136,7 @@ export class Suit extends Draw {
       this.ctgconfig.alarm_high = Number(this.option.alarm_high);
       this.ctgconfig.alarm_low = Number(this.option.alarm_low);
       this.ctgconfig.print_interval = Number(this.option.print_interval) || 20;
-      this.ctgconfig.alarm_delay = Number(this.option.alarm_delay) || 5
+      this.ctgconfig.alarm_delay = Number(this.option.alarm_delay) || 0
     }
   }
 

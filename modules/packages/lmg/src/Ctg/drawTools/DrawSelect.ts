@@ -170,7 +170,7 @@ export class DrawSelect extends Draw {
             this.selectstart = this.selectstartposition * 2;
         }
         // this.suit.emit('startTime', this.selectstart)
-        suit.drawobj.showcur(this.selectstart, false);
+        suit.type!==0 && suit.drawobj.showcur(this.selectstart, false);
         // }
     }
 
