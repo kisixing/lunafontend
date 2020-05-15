@@ -171,7 +171,7 @@ const Preview = (props: IProps) => {
                                             )
                                     }
                                     {
-                                        false && <Button block disabled={!(signed || saved)} type="primary" loading={archiveLoading} onClick={archive}>
+                                        true && <Button block disabled={!(signed || saved)} type="primary" loading={archiveLoading} onClick={archive}>
                                             <span>{archived ? '取消归档' : '归档'}</span>
                                         </Button>
                                     }

@@ -104,7 +104,7 @@ var Preview = function (props) {
                         react_1.default.createElement(antd_1.Button, { block: true, disabled: !pdfBase64, type: "primary", loading: qrCodeBase64Loading, onClick: fetchQrCode },
                             react_1.default.createElement("span", null, " \u7B7E\u540D")))) : (react_1.default.createElement(antd_1.Button, { block: true, disabled: !pdfBase64, type: "primary", loading: saveLoading, onClick: save },
                         react_1.default.createElement("span", null, "\u4FDD\u5B58"))),
-                    false && react_1.default.createElement(antd_1.Button, { block: true, disabled: !(signed || saved), type: "primary", loading: archiveLoading, onClick: archive },
+                    true && react_1.default.createElement(antd_1.Button, { block: true, disabled: !(signed || saved), type: "primary", loading: archiveLoading, onClick: archive },
                         react_1.default.createElement("span", null, archived ? '取消归档' : '归档')),
                     react_1.default.createElement(antd_1.Button, { block: true, disabled: !pdfBase64, type: "primary", onClick: onDownload },
                         react_1.default.createElement("span", null, "\u6253\u5370")))),

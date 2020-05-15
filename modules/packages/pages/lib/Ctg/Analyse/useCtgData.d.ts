@@ -14,7 +14,7 @@ declare const CTGChart: (docid: string, single?: boolean) => {
         _fhr3?: string;
     };
     loading: boolean;
-    setFhr: (index: 2 | 1 | 3) => void;
+    setFhr: (index: 1 | 2 | 3) => void;
     fetal: number;
     setFetal: import("react").Dispatch<import("react").SetStateAction<number>>;
 };

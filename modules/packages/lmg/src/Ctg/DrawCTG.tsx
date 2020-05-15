@@ -635,7 +635,7 @@ export default class DrawCTG {
         span = '    ';
       }
 
-      datacontext.fillText('FHR__' + (i + 1) + span + ' : ' + curvalue, 10, curpostion);
+      datacontext.fillText('FHR' + (i + 1) + span + ' : ' + curvalue, 10, curpostion);
       if (label.length > 0 || i > 0) {
         datacontext.font = 'bold ' + fontsize / 2 + 'px arial';
         datacontext.fillText(label, 10 + fontsize * 2.8, curpostion);
