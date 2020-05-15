@@ -38,7 +38,8 @@ export default class Request {
           const { options, url } = request
           if (options && !(options as any).hideErr) {
             notification.error({
-              message: `${url} 未响应`,
+              message: `服务器未响应请求`,
+              // message: `${url} 未响应`,
             });
           }
           return Promise.reject(`${url} no response`);

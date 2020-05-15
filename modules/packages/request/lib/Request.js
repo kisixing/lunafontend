@@ -51,7 +51,7 @@ var Request = (function () {
                         var options = request.options, url = request.url;
                         if (options && !options.hideErr) {
                             notification.error({
-                                message: url + " \u672A\u54CD\u5E94",
+                                message: "\u670D\u52A1\u5668\u672A\u54CD\u5E94\u8BF7\u6C42",
                             });
                         }
                         return Promise.reject(url + " no response");

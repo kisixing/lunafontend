@@ -48,15 +48,14 @@ class R extends Request {
           const r = reasons[Math.floor(Math.random() * reasons.length)]
           data.then((d = { title: r }) => {
             const { title = r } = d
-            console.log('dddd', d)
-            if (status === 401) {
-              notification.error({
-                message: '未登录或登录已过期，请重新登录。',
-              });
-            }
+            //   notification.error({
+            //     message: '未登录或登录已过期，请重新登录。',
+            //   });
+            // }
             if (!hideErr) {
               notification.error({
-                message: `请求错误 ${status}: ${url}`,
+                // message: `请求错误 ${status}: ${url}`,
+                message: `请求错误 ${errortext}`,
                 description: `原因：${title}`,
               });
             } else {

@@ -75,15 +75,9 @@ var R = (function (_super) {
                         data.then(function (d) {
                             if (d === void 0) { d = { title: r_1 }; }
                             var _a = d.title, title = _a === void 0 ? r_1 : _a;
-                            console.log('dddd', d);
-                            if (status === 401) {
-                                notification.error({
-                                    message: '未登录或登录已过期，请重新登录。',
-                                });
-                            }
                             if (!hideErr) {
                                 notification.error({
-                                    message: "\u8BF7\u6C42\u9519\u8BEF " + status + ": " + url,
+                                    message: "\u8BF7\u6C42\u9519\u8BEF " + errortext,
                                     description: "\u539F\u56E0\uFF1A" + title,
                                 });
                             }
