@@ -7,7 +7,7 @@ function update_status(received_msg) {
     var _b = received_msg.data, pregnancy = _b.pregnancy, fetalposition = _b.fetalposition, status = _b.status, device_no = _b.device_no, bed_no = _b.bed_no, is_include_mother = _b.is_include_mother, is_include_tocozero = _b.is_include_tocozero, is_include_volume = _b.is_include_volume, fetal_num = _b.fetal_num, disableStartWork = _b.disableStartWork;
     var unitId = this.getUnitId(device_no, bed_no);
     if (!datacache.has(unitId)) {
-        datacache.set(unitId, utils_1.getEmptyCacheItem());
+        datacache.set(unitId, utils_1.getEmptyCacheItem({ id: unitId }));
     }
     var target = datacache.get(unitId);
     target.fetal_num = fetal_num;

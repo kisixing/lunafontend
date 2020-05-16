@@ -29,12 +29,14 @@ exports.default = (function (props) {
     var canvas = react_1.useRef(null);
     var canvasline = react_1.useRef(null);
     var canvasmonitor = react_1.useRef(null);
+    var canvasPle = react_1.useRef(null);
     useDraw_1.default(data, box, function () {
         var instance = new DrawEcg_1.DrawEcg({
             wrap: box.current,
             canvas: canvas.current,
             canvasline: canvasline.current,
             canvasmonitor: canvasmonitor.current,
+            canvasPle: canvasPle.current,
             MultiParam: data_1.MultiParam,
             Ple: data_1.Ple,
             Tre: data_1.Tre,
@@ -51,8 +53,9 @@ exports.default = (function (props) {
     };
     return (react_1.default.createElement("div", { style: { position: 'relative', height: '100%' }, ref: box },
         react_1.default.createElement("canvas", { id: "background", style: canvasStyles, ref: canvas }),
-        react_1.default.createElement("canvas", { ref: canvasline, id: "line", style: canvasStyles }),
-        react_1.default.createElement("canvas", { ref: canvasmonitor, id: "monitor", style: canvasStyles }),
+        react_1.default.createElement("canvas", { ref: canvasline, style: canvasStyles }),
+        react_1.default.createElement("canvas", { ref: canvasmonitor, style: canvasStyles }),
+        react_1.default.createElement("canvas", { ref: canvasPle, style: canvasStyles }),
         !!(showDetail && data && data.ecgdata && data.ecgdata.length) && react_1.default.createElement("div", { style: { position: 'absolute', right: 0, width: '30%', height: '100%', top: 0, } },
             react_1.default.createElement(antd_1.Row, { gutter: 0 },
                 react_1.default.createElement(antd_1.Col, { span: 12 },

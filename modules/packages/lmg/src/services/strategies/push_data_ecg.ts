@@ -6,7 +6,8 @@ interface II {
     blood_oxygen: number
     dia_bp: number
     ecg: number
-    ecg_arr: number[]
+    ecg_arr: number[] | number
+    ple_arr: number[] | number
     index: number
     mean_bp: number
     pulse_rate: number
@@ -14,6 +15,9 @@ interface II {
     sys_bp: number
     temperature: string
     temperature1: string
+
+
+    cuff_bp: 0
 }
 
 interface IData {
@@ -21,6 +25,7 @@ interface IData {
     data: II[]
     device_no: 18
     name: "push_data_ecg"
+    device_type: "V3" | "K9"
 }
 
 export function push_data_ecg(this: WsService, received_msg: IData) {
@@ -31,29 +36,41 @@ export function push_data_ecg(this: WsService, received_msg: IData) {
     var id = received_msg.device_no;
     var bi = received_msg.bed_no;
     var cachbi = id + '-' + bi;
-    if (datacache.has(cachbi)) {
-        for (let eindex = 0; eindex < ecgdata.length; eindex++) {
-            for (let elop = 0; elop < ecgdata[eindex].ecg_arr.length; elop++) {
-                datacache.get(cachbi).ecg.EnQueue(ecgdata[eindex].ecg_arr[elop] & 0xff);
+    const target = datacache.get(cachbi)
+    if (target) {
+        ecgdata.forEach(item => {
+            item.ecg_arr = Array.isArray(item.ecg_arr) ? item.ecg_arr : []
+            item.ple_arr = Array.isArray(item.ple_arr) ? item.ple_arr : []
+
+
+            for (let i = 0; i < item.ecg_arr.length; i++) {
+                target.ecg.EnQueue(item.ecg_arr[i] & 0xff);
             }
-            let pulse_rate: any = ecgdata[eindex].pulse_rate;
+            for (let i = 0; i < item.ple_arr.length; i++) {
+                target.ple.EnQueue(item.ple_arr[i] & 0xff);
+                //TODO:
+                target.ismulti = true
+            }
+
+            let pulse_rate: any = item.pulse_rate;
             if (pulse_rate == 0) {
                 pulse_rate = '--';
             }
-            let sys_bp: any = ecgdata[eindex].sys_bp;
+            let sys_bp: any = item.sys_bp;
             if (sys_bp == 1) {
                 sys_bp = '--';
             }
-            let dia_bp: any = ecgdata[eindex].dia_bp;
+            let dia_bp: any = item.dia_bp;
             if (dia_bp == 1) {
                 dia_bp = '--';
             }
-            let mean_bp: any = ecgdata[eindex].mean_bp;
+            let mean_bp: any = item.mean_bp;
             if (mean_bp == 1) {
                 mean_bp = '--';
             }
-            datacache.get(cachbi).ecgdata = [pulse_rate, ecgdata[eindex].blood_oxygen, ecgdata[eindex].temperature, ecgdata[eindex].temperature1, pulse_rate, ecgdata[eindex].resp_rate, sys_bp + '/' + dia_bp + '/' + mean_bp];
-        }
+            target.ecgdata = [pulse_rate, item.blood_oxygen, item.temperature, item.temperature1, pulse_rate, item.resp_rate, sys_bp + '/' + dia_bp + '/' + mean_bp];
+        })
+
     } else {
         console.log('cache error', datacache);
     }

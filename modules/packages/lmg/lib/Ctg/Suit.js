@@ -457,9 +457,8 @@ var Suit = (function (_super) {
                 if (responseData) {
                     _this.initfhrdata(responseData, _this.data, offlineend);
                     _this.data.past = 0;
-                    _this.requestflag = false;
                 }
-            });
+            }).finally(function () { return _this.requestflag = false; });
         }
         utils_2.event.emit('suit:keepData');
     };

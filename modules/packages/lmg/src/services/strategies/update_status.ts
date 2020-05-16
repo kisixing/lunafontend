@@ -33,7 +33,7 @@ export function update_status(this: WsService, received_msg: IData) {
 
 
     if (!datacache.has(unitId)) {
-        datacache.set(unitId, getEmptyCacheItem());
+        datacache.set(unitId, getEmptyCacheItem({ id: unitId }));
     }
 
     const target = datacache.get(unitId)

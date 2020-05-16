@@ -39,6 +39,14 @@ export class WsService extends EventEmitter {
     strategies = getStrategies(this)
     BedStatus = BedStatus
     PENDDING_INTERVAL = SECOND * 30
+    private _current: string[];
+    public get current(): string[] {
+        return this._current;
+    }
+    public set current(value: string[]) {
+        console.log('current',value)
+        this._current = value;
+    }
     // store = (window as any).g_app._store
     constructor(settingData?) {
         super();
@@ -46,7 +54,7 @@ export class WsService extends EventEmitter {
         const { datacache } = this
         datacache.clean = function (key: string) {
             const target = datacache.get(key)
-            datacache.set(key, Object.assign(target, getEmptyCacheItem()))
+            datacache.set(key, Object.assign(target, getEmptyCacheItem({ id: key })))
         }
         settingData = settingData || {
             ws_url: "192.168.0.227:8084",
@@ -139,7 +147,6 @@ export class WsService extends EventEmitter {
     _emit(name: string, ...value: any[]) {
         event.emit(`WsService:${name}`, ...value)
     }
-
 
     setTocozero(device_no: number, bed_no: number) {
         const msg = JSON.stringify({

@@ -6,29 +6,36 @@ function push_data_ecg(received_msg) {
     var id = received_msg.device_no;
     var bi = received_msg.bed_no;
     var cachbi = id + '-' + bi;
-    if (datacache.has(cachbi)) {
-        for (var eindex = 0; eindex < ecgdata.length; eindex++) {
-            for (var elop = 0; elop < ecgdata[eindex].ecg_arr.length; elop++) {
-                datacache.get(cachbi).ecg.EnQueue(ecgdata[eindex].ecg_arr[elop] & 0xff);
+    var target = datacache.get(cachbi);
+    if (target) {
+        ecgdata.forEach(function (item) {
+            item.ecg_arr = Array.isArray(item.ecg_arr) ? item.ecg_arr : [];
+            item.ple_arr = Array.isArray(item.ple_arr) ? item.ple_arr : [];
+            for (var i = 0; i < item.ecg_arr.length; i++) {
+                target.ecg.EnQueue(item.ecg_arr[i] & 0xff);
             }
-            var pulse_rate = ecgdata[eindex].pulse_rate;
+            for (var i = 0; i < item.ple_arr.length; i++) {
+                target.ple.EnQueue(item.ple_arr[i] & 0xff);
+                target.ismulti = true;
+            }
+            var pulse_rate = item.pulse_rate;
             if (pulse_rate == 0) {
                 pulse_rate = '--';
             }
-            var sys_bp = ecgdata[eindex].sys_bp;
+            var sys_bp = item.sys_bp;
             if (sys_bp == 1) {
                 sys_bp = '--';
             }
-            var dia_bp = ecgdata[eindex].dia_bp;
+            var dia_bp = item.dia_bp;
             if (dia_bp == 1) {
                 dia_bp = '--';
             }
-            var mean_bp = ecgdata[eindex].mean_bp;
+            var mean_bp = item.mean_bp;
             if (mean_bp == 1) {
                 mean_bp = '--';
             }
-            datacache.get(cachbi).ecgdata = [pulse_rate, ecgdata[eindex].blood_oxygen, ecgdata[eindex].temperature, ecgdata[eindex].temperature1, pulse_rate, ecgdata[eindex].resp_rate, sys_bp + '/' + dia_bp + '/' + mean_bp];
-        }
+            target.ecgdata = [pulse_rate, item.blood_oxygen, item.temperature, item.temperature1, pulse_rate, item.resp_rate, sys_bp + '/' + dia_bp + '/' + mean_bp];
+        });
     }
     else {
         console.log('cache error', datacache);

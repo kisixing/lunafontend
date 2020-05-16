@@ -21,9 +21,11 @@ export function getMaxArray() {
     // return new Uint8Array(MAX_SIZE)
     return [] as number[]
 }
-export function getEmptyCacheItem(base: ICacheItem = { fetal_num: 1 }): ICacheItem {
+export function getEmptyCacheItem(base: ICacheItem): ICacheItem {
+    base.fetal_num = base.fetal_num ? base.fetal_num : 1
     const { fetal_num } = base
-    return Object.assign(Object.create(null), {
+    const item: ICacheItem = {
+        id: '0',
         fhr: Array(fetal_num).fill(0).map(() => getMaxArray()),
         toco: getMaxArray(),
         fm: getMaxArray(),
@@ -43,15 +45,17 @@ export function getEmptyCacheItem(base: ICacheItem = { fetal_num: 1 }): ICacheIt
         csspan: NaN,
         ismulti: false,
         ecg: new Queue(),
+        ple: new Queue(),
         ecgdata: getMaxArray(),
         is_include_volume: false,
         is_include_tocozero: false
-    }, base)
+    }
+    return Object.assign(Object.create(null), item, base)
 }
 
 export function cleardata(datacache: ICache, curid: string, fetal_num: number) {
     const target = datacache.get(curid)
-    const empty = getEmptyCacheItem({ fetal_num, fhr: Array(fetal_num).fill(0).map(() => getMaxArray()) })
+    const empty = getEmptyCacheItem({ fetal_num, fhr: Array(fetal_num).fill(0).map(() => getMaxArray()), id: curid })
     // for (let fetal = 0; fetal < fetal_num; fetal++) {
     //     empty.fhr[fetal] = [];
     // }

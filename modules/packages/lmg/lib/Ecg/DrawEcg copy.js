@@ -30,7 +30,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Draw_1 = __importDefault(require("../Draw"));
 var Queue_1 = __importDefault(require("./Queue"));
 var utils_1 = require("@lianmed/utils");
-var DrawPle_1 = require("./DrawPle");
 var BASE_INEVAL = 128;
 var adu = 52;
 var samplingrate = 90;
@@ -52,7 +51,6 @@ var DrawEcg = (function (_super) {
         _this.intervalIds = [];
         var canvas = args.canvas, canvasline = args.canvasline, canvasmonitor = args.canvasmonitor, canvasPle = args.canvasPle;
         var width = canvas.width, height = canvas.height;
-        _this.drawPle = new DrawPle_1.DrawPle(width, height, canvasPle);
         canvas.style.letterSpacing = '5px';
         Object.assign(_this, __assign(__assign({}, args), { width: width,
             height: height, ctx: canvas.getContext('2d'), linectx: canvasline.getContext('2d'), datactx: canvasmonitor.getContext('2d'), plectx: canvasPle.getContext('2d') }));
@@ -72,7 +70,6 @@ var DrawEcg = (function (_super) {
     DrawEcg.prototype.init = function (data) {
         console.log('ecgdata', data);
         if (data) {
-            this.drawPle.init(data.ple_arr);
             this.data = data;
             this.current_times = 0;
             isstop = false;
@@ -221,7 +218,7 @@ var DrawEcg = (function (_super) {
             _this.DrawDatatext();
             if (!isNaN(_this.start) || _this.data.ecg.GetSize() > points_one_times * 5) {
                 _this.start = 1;
-                _this.drawPle.drawsingle();
+                _this.drawsingle();
             }
         }, dely);
         this.intervalIds.push(id);
@@ -331,4 +328,4 @@ var DrawEcg = (function (_super) {
     return DrawEcg;
 }(Draw_1.default));
 exports.DrawEcg = DrawEcg;
-//# sourceMappingURL=DrawEcg.js.map
+//# sourceMappingURL=DrawEcg copy.js.map

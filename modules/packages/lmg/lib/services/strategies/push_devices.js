@@ -15,7 +15,7 @@ function push_devices(received_msg) {
             var unitId = this.getUnitId(devdata.device_no, bedData.bed_no);
             var old = datacache.get(unitId);
             if (!old || (old.docid !== doc_id)) {
-                var item = utils_1.getEmptyCacheItem({ is_include_tocozero: is_include_tocozero, is_include_volume: is_include_volume, fetal_num: fetal_num });
+                var item = utils_1.getEmptyCacheItem({ is_include_tocozero: is_include_tocozero, is_include_volume: is_include_volume, fetal_num: fetal_num, id: unitId });
                 item.deviceType = devdata.device_type;
                 datacache.set(unitId, item);
                 item.docid = doc_id;

@@ -22,7 +22,7 @@ export function push_devices(this: WsService, received_msg: IData) {
             const old = datacache.get(unitId)
 
             if (!old || (old.docid !== doc_id)) {
-                const item = getEmptyCacheItem({ is_include_tocozero, is_include_volume, fetal_num })
+                const item = getEmptyCacheItem({ is_include_tocozero, is_include_volume, fetal_num, id: unitId })
 
                 item.deviceType = devdata.device_type
 

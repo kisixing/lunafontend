@@ -31,6 +31,9 @@ export declare class WsService extends EventEmitter {
     };
     BedStatus: typeof BedStatus;
     PENDDING_INTERVAL: number;
+    private _current;
+    get current(): string[];
+    set current(value: string[]);
     constructor(settingData?: any);
     getUnitId(device_no: number | string, bed_no: number | string): string;
     pongIndex: number;

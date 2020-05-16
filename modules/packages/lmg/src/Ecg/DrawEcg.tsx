@@ -1,6 +1,7 @@
 import Draw from "../Draw";
 import Queue from "./Queue";
 import { _R } from "@lianmed/utils";
+import { DrawPle } from "./DrawPle";
 import { ICacheItem } from "../services/types";
 const BASE_INEVAL = 128;
 const adu = 52;
@@ -24,6 +25,7 @@ interface I {
   canvas: Canvas;
   canvasline: Canvas;
   canvasmonitor: Canvas;
+  canvasPle: Canvas;
   ecg_scope?: number;
   current_times?: number;
   max_times?: number;
@@ -52,6 +54,7 @@ export class DrawEcg extends Draw {
   private datactx: Ctx;
   private ecg_scope?= 2;
   private _current_times?= 0;
+  private drawPle: DrawPle
   public get current_times() {
     return this._current_times;
   }
@@ -65,8 +68,10 @@ export class DrawEcg extends Draw {
   private last_points: number[];
   constructor(args: I) {
     super()
-    const { canvas, canvasline, canvasmonitor } = args;
+    const { canvas, canvasline, canvasmonitor, canvasPle } = args;
     const { width, height } = canvas;
+
+    this.drawPle = new DrawPle(width, height, canvasPle)
     canvas.style.letterSpacing = '5px';
     Object.assign(this, {
       ...args,
@@ -75,6 +80,7 @@ export class DrawEcg extends Draw {
       ctx: canvas.getContext('2d'),
       linectx: canvasline.getContext('2d'),
       datactx: canvasmonitor.getContext('2d'),
+      plectx: canvasPle.getContext('2d')
     });
     this.ecg();
   }
@@ -82,6 +88,7 @@ export class DrawEcg extends Draw {
     console.log('ecgdata', data)
 
     if (data) {
+      this.drawPle.init(data.ple_arr)
       this.data = data
       // this.current_time_millis = 0;
       this.current_times = 0;
@@ -276,7 +283,8 @@ export class DrawEcg extends Draw {
       // this.current_time_millis = A;
       if (!isNaN(this.start) || this.data.ecg.GetSize() > points_one_times * 5) {
         this.start = 1;
-        this.drawsingle();
+        // this.drawsingle();
+        this.drawPle.drawsingle()
       }
     }, dely);
     this.intervalIds.push(id);

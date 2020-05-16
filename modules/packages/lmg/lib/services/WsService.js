@@ -106,7 +106,7 @@ var WsService = (function (_super) {
         var datacache = _this_1.datacache;
         datacache.clean = function (key) {
             var target = datacache.get(key);
-            datacache.set(key, Object.assign(target, utils_2.getEmptyCacheItem()));
+            datacache.set(key, Object.assign(target, utils_2.getEmptyCacheItem({ id: key })));
         };
         settingData = settingData || {
             ws_url: "192.168.0.227:8084",
@@ -121,6 +121,17 @@ var WsService = (function (_super) {
         utils_1.event.on('suit:keepData', _this_1.dataLimit.bind(_this_1));
         return _this_1;
     }
+    Object.defineProperty(WsService.prototype, "current", {
+        get: function () {
+            return this._current;
+        },
+        set: function (value) {
+            console.log('current', value);
+            this._current = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
     WsService.prototype.getUnitId = function (device_no, bed_no) {
         return device_no + "-" + bed_no;
     };

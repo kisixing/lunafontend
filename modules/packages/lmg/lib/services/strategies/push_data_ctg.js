@@ -16,6 +16,7 @@ function pushData(target, data) {
 exports.pushData = pushData;
 function push_data_ctg(received_msg) {
     var datacache = this.datacache;
+    return;
     var data = received_msg.data;
     var id = received_msg.device_no;
     var bi = received_msg.bed_no;

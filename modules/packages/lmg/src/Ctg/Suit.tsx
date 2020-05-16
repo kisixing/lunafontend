@@ -352,7 +352,7 @@ export class Suit extends Draw {
   }
   alarmOff() {
     this.lazyEmit('alarmOff', '');
-    console.log('alarm off',)
+    console.log('alarm off')
 
     this.alarmHighCount = []
     this.alarmLowCount = []
@@ -541,9 +541,8 @@ export class Suit extends Draw {
         if (responseData) {
           this.initfhrdata(responseData, this.data, offlineend);
           this.data.past = 0;
-          this.requestflag = false;
         }
-      });
+      }).finally(() => this.requestflag = false);
     }
     event.emit('suit:keepData')
 

@@ -29,6 +29,7 @@ export default (props: IProps) => {
   const canvas = useRef<Canvas>(null);
   const canvasline = useRef<Canvas>(null);
   const canvasmonitor = useRef<Canvas>(null);
+  const canvasPle = useRef<Canvas>(null);
 
   useDraw(data, box, () => {
     let instance = new DrawEcg({
@@ -36,6 +37,7 @@ export default (props: IProps) => {
       canvas: canvas.current,
       canvasline: canvasline.current,
       canvasmonitor: canvasmonitor.current,
+      canvasPle: canvasPle.current,
       MultiParam,
       Ple,
       Tre,
@@ -56,8 +58,9 @@ export default (props: IProps) => {
   return (
     <div style={{ position: 'relative', height: '100%' }} ref={box}>
       <canvas id="background" style={canvasStyles} ref={canvas} />
-      <canvas ref={canvasline} id="line" style={canvasStyles} />
-      <canvas ref={canvasmonitor} id="monitor" style={canvasStyles} />
+      <canvas ref={canvasline} style={canvasStyles} />
+      <canvas ref={canvasmonitor} style={canvasStyles} />
+      <canvas ref={canvasPle} style={canvasStyles} />
       {
         !!(showDetail && data && data.ecgdata && data.ecgdata.length) && <div style={{ position: 'absolute', right: 0, width: '30%', height: '100%', top: 0, }}>
 

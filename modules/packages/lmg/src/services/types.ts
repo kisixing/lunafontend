@@ -40,6 +40,7 @@ export interface ICacheItemPregnancy {
     outpatientNO?: string
 }
 export interface ICacheItem {
+    id: string
     volumeData?: IVolumeData
     deviceType?: TDeviceType
     is_include_volume?: boolean
@@ -52,7 +53,7 @@ export interface ICacheItem {
     fhr?: number[][];
     toco?: number[];
     fm?: number[];
-    
+
     index?: number;
     length?: number;
     start?: number;
@@ -72,7 +73,8 @@ export interface ICacheItem {
     fetal_num?: number;
     csspan?: number;
     ecg?: Queue;
-    ecgdata?: any;
+    ple?: Queue;
+    ecgdata?: any[];
     ismulti?: boolean;
 }
 export type ICache = Map<string, ICacheItem> & { clean?: (key: string) => void }

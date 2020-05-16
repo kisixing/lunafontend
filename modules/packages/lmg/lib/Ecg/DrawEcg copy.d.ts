@@ -28,7 +28,6 @@ export declare class DrawEcg extends Draw {
     private datactx;
     private ecg_scope?;
     private _current_times?;
-    private drawPle;
     get current_times(): number;
     set current_times(value: number);
     private max_times?;

@@ -23,9 +23,10 @@ function getMaxArray() {
 }
 exports.getMaxArray = getMaxArray;
 function getEmptyCacheItem(base) {
-    if (base === void 0) { base = { fetal_num: 1 }; }
+    base.fetal_num = base.fetal_num ? base.fetal_num : 1;
     var fetal_num = base.fetal_num;
-    return Object.assign(Object.create(null), {
+    var item = {
+        id: '0',
         fhr: Array(fetal_num).fill(0).map(function () { return getMaxArray(); }),
         toco: getMaxArray(),
         fm: getMaxArray(),
@@ -45,15 +46,17 @@ function getEmptyCacheItem(base) {
         csspan: NaN,
         ismulti: false,
         ecg: new Queue_1.default(),
+        ple: new Queue_1.default(),
         ecgdata: getMaxArray(),
         is_include_volume: false,
         is_include_tocozero: false
-    }, base);
+    };
+    return Object.assign(Object.create(null), item, base);
 }
 exports.getEmptyCacheItem = getEmptyCacheItem;
 function cleardata(datacache, curid, fetal_num) {
     var target = datacache.get(curid);
-    var empty = getEmptyCacheItem({ fetal_num: fetal_num, fhr: Array(fetal_num).fill(0).map(function () { return getMaxArray(); }) });
+    var empty = getEmptyCacheItem({ fetal_num: fetal_num, fhr: Array(fetal_num).fill(0).map(function () { return getMaxArray(); }), id: curid });
     if (target) {
         Object.assign(target, empty);
     }
