@@ -34,7 +34,7 @@ function push_data_ecg(received_msg) {
             if (mean_bp == 1) {
                 mean_bp = '--';
             }
-            target.ecgdata = [pulse_rate, item.blood_oxygen, item.temperature, item.temperature1, pulse_rate, item.resp_rate, sys_bp + '/' + dia_bp + '/' + mean_bp];
+            target.ecgdata = [pulse_rate, item.blood_oxygen, "" + checkTemperature(item.temperature) + (item.temperature1 ? ('~' + checkTemperature(item.temperature1)) : ''), pulse_rate, item.resp_rate, sys_bp + '/' + dia_bp + '/' + mean_bp];
         });
     }
     else {
@@ -42,4 +42,8 @@ function push_data_ecg(received_msg) {
     }
 }
 exports.push_data_ecg = push_data_ecg;
+function checkTemperature(n) {
+    var t = Number(n) || 0;
+    return t > 50 ? t / 10 : t;
+}
 //# sourceMappingURL=push_data_ecg.js.map

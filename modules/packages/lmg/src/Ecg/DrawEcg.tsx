@@ -3,6 +3,7 @@ import Queue from "./Queue";
 import { _R } from "@lianmed/utils";
 import { DrawPle } from "./DrawPle";
 import { ICacheItem } from "../services/types";
+export const L_SCALE = 1
 const BASE_INEVAL = 128;
 const adu = 52;
 const samplingrate = 90;
@@ -19,9 +20,6 @@ type Canvas = HTMLCanvasElement;
 type Ctx = CanvasRenderingContext2D;
 interface I {
   wrap: HTMLDivElement;
-  MultiParam: number[];
-  Ple: number[];
-  Tre: number[];
   canvas: Canvas;
   canvasline: Canvas;
   canvasmonitor: Canvas;
@@ -43,9 +41,6 @@ export class DrawEcg extends Draw {
   private data: ICacheItem
   // private mode: displayMode = displayMode.canvas
   // private wrap: HTMLDivElement;
-  // private MultiParam: number[];
-  // private Ple: number[];
-  // private Tre: number[];
   canvas: Canvas;
   canvasline: Canvas;
   private canvasmonitor: Canvas;
@@ -67,16 +62,14 @@ export class DrawEcg extends Draw {
   private intervalIds: NodeJS.Timeout[] = [];
   private last_points: number[];
   constructor(args: I) {
-    super()
+    super(args.wrap)
     const { canvas, canvasline, canvasmonitor, canvasPle } = args;
-    const { width, height } = canvas;
 
-    this.drawPle = new DrawPle(width, height, canvasPle)
+    this.drawPle = new DrawPle(args.wrap, canvasPle)
     canvas.style.letterSpacing = '5px';
     Object.assign(this, {
       ...args,
-      width,
-      height,
+
       ctx: canvas.getContext('2d'),
       linectx: canvasline.getContext('2d'),
       datactx: canvasmonitor.getContext('2d'),
@@ -84,11 +77,10 @@ export class DrawEcg extends Draw {
     });
     this.ecg();
   }
-  init(data) {
-    console.log('ecgdata', data)
+  init(data: ICacheItem) {
 
     if (data) {
-      this.drawPle.init(data.ple_arr)
+      this.drawPle.init(data)
       this.data = data
       // this.current_time_millis = 0;
       this.current_times = 0;
@@ -96,7 +88,7 @@ export class DrawEcg extends Draw {
       //this.loop();
       // console.log("loop");
       this.last_points = [];
-      this.timerEcg(loopmill);
+      this.timerEcg();
       console.log(this);
     }
   }
@@ -106,6 +98,7 @@ export class DrawEcg extends Draw {
     Object.assign(this.canvas, { width, height })
     Object.assign(this.canvasline, { width, height })
     Object.assign(this.canvasmonitor, { width, height })
+    this.drawPle.resize()
     this.addfilltext();
     this.initparm();
   }
@@ -115,6 +108,7 @@ export class DrawEcg extends Draw {
     this.canvas = null;
     this.canvasline = null;
     this.canvasmonitor = null;
+    this.drawPle.destroy()
   }
   ecg() {
     this.addfilltext();
@@ -132,9 +126,9 @@ export class DrawEcg extends Draw {
     let scale = 1;
     ctx.strokeStyle = '#006003';
     ctx.beginPath();
-    ctx.moveTo(x_start * 2, ruler[0] * scale);
+    ctx.moveTo(x_start, ruler[0] * scale);
     for (let i = 0; i < ruler.length; i++) {
-      ctx.lineTo(i + x_start * 2, ruler[i] * scale);
+      ctx.lineTo(i + x_start, ruler[i] * scale);
     }
     ctx.stroke();
   }
@@ -266,13 +260,13 @@ export class DrawEcg extends Draw {
     if (canvasline.width < 150) {
       // alert(' width is limited');
     } else {
-      this.max_times = Math.floor((canvasline.width - 25) * 0.6 / gx);
+      this.max_times = Math.floor((canvasline.width - 25) * L_SCALE / gx);
     }
     // console.log('ecg-width', canvasline.width);
     this.current_times = 0;
   }
 
-  timerEcg(dely) {
+  timerEcg() {
     let id = setInterval(() => {
       if (!this) {
         console.log('ecg', 'clear interval');
@@ -283,10 +277,10 @@ export class DrawEcg extends Draw {
       // this.current_time_millis = A;
       if (!isNaN(this.start) || this.data.ecg.GetSize() > points_one_times * 5) {
         this.start = 1;
-        // this.drawsingle();
-        this.drawPle.drawsingle()
+        this.drawsingle();
       }
-    }, dely);
+
+    }, loopmill);
     this.intervalIds.push(id);
   }
 
@@ -405,9 +399,9 @@ export class DrawEcg extends Draw {
     const B = [];
     for (let A = 0; A < C; A++) {
       if (height < 480) {
-        B[A] = -BASE_INEVAL / 2 + A * 100 - 20 + 0.3 * height;
+        B[A] = -BASE_INEVAL / 2 + A * 100 - 20 + 0.2 * height;
       } else {
-        B[A] = -BASE_INEVAL / 2 + A * 100 - 20 + 0.3 * height;
+        B[A] = -BASE_INEVAL / 2 + A * 100 - 20 + 0.2 * height;
       }
     }
     return B;

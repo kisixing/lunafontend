@@ -25,23 +25,27 @@ export default class Draw extends EventEmitter implements Drawer {
     }
 
     wrap: HTMLElement
-    constructor(width: number = 0, height: number = 0, canvas?: HTMLCanvasElement) {
+    constructor(wrap: HTMLElement, canvas?: HTMLCanvasElement) {
         super()
+        this.wrap = wrap
         this.canvas = canvas
         this.context2D = canvas && canvas.getContext('2d')
-        this.width = width
-        this.height = height
+        this.autoWH()
 
     }
     log = console.log.bind(console, this.constructor.name, this.sid)
     destroy() { }
     init(data: any) { }
-    resize(w = 0, h = 0) {
-        const rect = this.wrap ? this.wrap.getBoundingClientRect() : { width: w, height: h };
+    resize() {
+        this.autoWH()
+        this._resize()
+    }
+    autoWH() {
+        const rect = this.wrap ? this.wrap.getBoundingClientRect() : { width: 0, height: 0 };
         const { width, height } = rect;
+        console.log('auto 000', width, height)
         this.width = width
         this.height = height
-        this._resize()
     }
     _resize() {
 

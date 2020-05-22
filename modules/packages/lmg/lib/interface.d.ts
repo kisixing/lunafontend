@@ -1,5 +1,6 @@
+import { ICacheItem } from "./services/types";
 export interface IProps {
-    data: any;
+    data: ICacheItem;
     mutableSuitObject?: {
         suit: (Drawer | any);
     };

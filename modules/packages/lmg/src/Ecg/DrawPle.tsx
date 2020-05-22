@@ -1,25 +1,32 @@
+/**
+ * 
+*/
 import Draw from "../Draw";
 import Queue from "./Queue";
 import { _R } from "@lianmed/utils";
+import { L_SCALE } from "./DrawEcg";
 import { ICacheItem } from "../services/types";
+// import { ICacheItem } from "../services/types";
 const BASE_INEVAL = 128;
 const adu = 52;
-const samplingrate = 90;
-const points_one_times = 8;
-const gride_width = 40;
-const gx = points_one_times * ((gride_width * 5) / samplingrate);
-const x_start = 25;
+const samplingrate = 100;
+const points_one_times = 6;
+const points_one_second = 1000 * points_one_times / samplingrate;
+const gride_width = 1;
+// const gx = points_one_times * ((gride_width * 5) / samplingrate);
+const gx = points_one_times * gride_width;
+const x_start = 40;
 // const law_index = 1;
 // const draw_lines_index = [0, 1, 2];
-let isstop = true;
-let loopmill = 90;
+// let loopmill = 90;
 
 
 // enum displayMode {
 //   canvas,
 //   text
 // }
-
+const scale = 0.5
+const baseY = 180
 export class DrawPle extends Draw {
   static Queue: typeof Queue = Queue
   // private mode: displayMode = displayMode.canvas
@@ -27,7 +34,6 @@ export class DrawPle extends Draw {
   // private MultiParam: number[];
   // private Ple: number[];
   // private Tre: number[];
-  private ecg_scope?= 2;
   private ple_data: Queue;
   private _current_times?= 0;
   public get current_times() {
@@ -35,40 +41,65 @@ export class DrawPle extends Draw {
   }
   public set current_times(value) {
     this._current_times = value % this.max_times;
+    // console.log('current', this.max_times * gx, value, this._current_times * gx)
+
   }
   private max_times?= 135;
   // private current_time_millis?= 0;
-  private start?= NaN;
+  start?= NaN;
   private intervalIds: NodeJS.Timeout[] = [];
   private last_points: number[];
-  constructor(width: number, height: number, canvas: HTMLCanvasElement) {
-    super(width, height, canvas)
-    this.context2D = this.context2D
+  constructor(wrap: HTMLElement, canvas: HTMLCanvasElement) {
+    super(wrap, canvas)
   }
-  init(ple_data:Queue) {
+  data: ICacheItem
+  init(data: ICacheItem) {
 
+    console.log('ple', this)
 
-    if (ple_data) {
-      this.ple_data = ple_data
+    if (data) {
+      this.initparm()
+
+      this.ple_data = data.ple
+      this.data = data
       // this.current_time_millis = 0;
       this.current_times = 0;
-      isstop = false;
       //this.loop();
       // console.log("loop");
       this.last_points = [];
+      this.loop()
+
+
     }
+
+
   }
 
   destroy() {
-    isstop = false;
     this.intervalIds.forEach(_ => clearInterval(_));
     this.canvas = null;
     this.canvas = null;
   }
 
+  _resize() {
+    this.initparm()
+  }
+
+  loop() {
+    let id = setInterval(() => {
+      if (!this) {
+        console.log('ecg', 'clear interval');
+        clearInterval(id);
+      }
+      // const A = new Date().getTime();
+      // this.current_time_millis = A;
+
+      this.drawsingle();
 
 
-
+    }, samplingrate);
+    this.intervalIds.push(id);
+  }
 
 
   //kisi 2019-10-03
@@ -86,13 +117,19 @@ export class DrawPle extends Draw {
   // }
 
   initparm() {
-    const { canvas, context2D } = this;
+    const { width, context2D, ple_data } = this;
+    context2D.strokeStyle = '#006003';
+    context2D.font = 'bold 16px'
+    context2D.textAlign = 'left';
+    context2D.textBaseline = 'top'
     context2D.lineJoin = 'round'
-    context2D.strokeStyle = '#9d6003';
-    if (canvas.width < 150) {
+    if (width < 150) {
       // alert(' width is limited');
     } else {
-      this.max_times = Math.floor((canvas.width - 25) * 0.6 / gx);
+      this.max_times = Math.floor((width - x_start * 2) * L_SCALE / gx);
+      context2D.fillText('血氧', x_start - 30, baseY - 70)
+      context2D.fillText('100', x_start - 30, baseY - 50)
+      context2D.fillText('0', x_start - 30, baseY)
     }
     // console.log('ecg-width', canvas.width);
     this.current_times = 0;
@@ -121,82 +158,45 @@ export class DrawPle extends Draw {
   // }
   // 绘制单心电走纸
   drawsingle() {
-    const { last_points, context2D } = this;
-    const y_starts = this.GetYStarts(12);
-    //2019-10-03 kisi 根据容器调整高度
-    // let scale = this.height / 100;
-    if (isstop) {
-      return;
-    }
-    isstop = true;
-    if (this.ple_data.IsEmpty()) {
+
+
+    const { last_points, context2D, height } = this;
+
+    this.ple_data = this.data.ple
+
+    if (this.ple_data.GetSize() < points_one_times * 1) {
       this.start = NaN;
-      isstop = false;
+      console.log('ws ws ws', height < 50, this.ple_data.GetSize() < points_one_times * 1)
       return;
     }
-    if (this.ple_data.GetSize() < points_one_times * 5) {
-      this.start = NaN;
-      isstop = false;
-      return;
-    }
+
     this.clearcanvans();
-    let F = [];
-    let invalid = 0;
+    const F = [];
+    // const append = (this.ple_data.GetSize() / points_one_second)
+    // console.log('wsssss', append)
     for (let J = 0; J < points_one_times; J++) {
       let ecgdot = this.ple_data.DeQueue();
-      if (ecgdot == 1) {
-        invalid++;
-      } else {
-        invalid = 0;
-      }
-      if (ecgdot > BASE_INEVAL) {
-        ecgdot = ecgdot - BASE_INEVAL;
-      } else if (ecgdot > 0) {
-        ecgdot = -ecgdot;
-      }
-      F.push(ecgdot * this.ecg_scope);
+      F.push(ecgdot * scale);
     }
-    if (invalid > 7) {
-      return;
-    }
-    let L = x_start + this.current_times * gx;
+    if (height < 50) return
+    let blockStartX = x_start + this.current_times * gx;
     context2D.beginPath();
     for (let K = 0; K < F.length; K++) {
-      const C = F[K] - BASE_INEVAL;
-      let I = K * (gride_width * 5 / samplingrate);
-      let M;
+      const y = baseY - F[K]
+      const xSpan = K * gride_width;
 
-      if (this.ecg_scope != 0) {
-        M = Math.abs(C);
-      } else {
-        M = (Math.abs(C) * (adu / (gride_width * 2))) / 2;
-      }
-      var D = parseFloat(C >= 0 ? y_starts[0] - M : y_starts[0] + M);
 
-      if (K == 0) {
-        if (this.current_times != 0) {
-          context2D.moveTo(last_points[0], last_points[1]);
-          context2D.lineTo(last_points[0], D);
-          last_points[0] = last_points[0];
-          last_points[1] = D;
-        } else {
-          context2D.moveTo(x_start, D);
-          last_points[0] = x_start;
-          last_points[1] = D;
-        }
-      } else {
+
+      if (this.current_times !== 0) {
         context2D.moveTo(last_points[0], last_points[1]);
-        context2D.lineTo(L + I, D);
-        if (L + I < last_points[0]) {
-          // console.log('error data', this.current_times, L, I, K, last_points);
-        }
-        last_points[0] = L + I;
-        last_points[1] = D;
       }
+      context2D.lineTo(blockStartX + xSpan, y);
+      // console.log('current', blockStartX + xSpan)
+      last_points[0] = blockStartX + xSpan;
+      last_points[1] = y;
     }
     context2D.stroke();
     this.current_times++;
-    isstop = false;
   }
 
   clearcanvans() {
@@ -209,16 +209,5 @@ export class DrawPle extends Draw {
     }
   }
 
-  GetYStarts(C) {
-    const { height } = this;
-    const B = [];
-    for (let A = 0; A < C; A++) {
-      if (height < 480) {
-        B[A] = -BASE_INEVAL / 2 + A * 100 - 20 + 0.3 * height;
-      } else {
-        B[A] = -BASE_INEVAL / 2 + A * 100 - 20 + 0.3 * height;
-      }
-    }
-    return B;
-  }
+
 }

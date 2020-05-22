@@ -1,7 +1,9 @@
 export default class Queue {
   B: number[] = [];
-  capacity = 512;
-
+  capacity: number;
+  constructor(capacity?: number) {
+    this.capacity = capacity || 512
+  }
   EnQueue(C: any) {
     if (C == null) {
       return -1;

@@ -10,6 +10,7 @@ export declare class WsService extends EventEmitter {
     static wsStatus: typeof EWsStatus;
     static _this: WsService;
     static EWsEvents: typeof EWsEvents;
+    test_ple: boolean;
     eventNamespace: string;
     isReady: boolean;
     dirty: boolean;
@@ -49,6 +50,8 @@ export declare class WsService extends EventEmitter {
     startwork(device_no: string, bed_no: string): void;
     endwork(device_no: string, bed_no: string): void;
     _emit(name: string, ...value: any[]): void;
+    subscribeList: string[];
+    subscribe(str: string[]): void;
     setTocozero(device_no: number, bed_no: number): void;
     getVolume(device_no: number, bed_no: number): void;
     change_volume(device_no: number, bed_no: number, vol: number): void;

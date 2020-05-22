@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Queue = (function () {
-    function Queue() {
+    function Queue(capacity) {
         this.B = [];
-        this.capacity = 512;
+        this.capacity = capacity || 512;
     }
     Queue.prototype.EnQueue = function (C) {
         if (C == null) {

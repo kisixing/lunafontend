@@ -1,6 +1,6 @@
 import { WsService } from "../WsService";
 
-
+import { TDeviceType } from "../types";
 
 interface II {
     blood_oxygen: number
@@ -15,8 +15,6 @@ interface II {
     sys_bp: number
     temperature: string
     temperature1: string
-
-
     cuff_bp: 0
 }
 
@@ -25,7 +23,7 @@ interface IData {
     data: II[]
     device_no: 18
     name: "push_data_ecg"
-    device_type: "V3" | "K9"
+    device_type: TDeviceType
 }
 
 export function push_data_ecg(this: WsService, received_msg: IData) {
@@ -68,10 +66,15 @@ export function push_data_ecg(this: WsService, received_msg: IData) {
             if (mean_bp == 1) {
                 mean_bp = '--';
             }
-            target.ecgdata = [pulse_rate, item.blood_oxygen, item.temperature, item.temperature1, pulse_rate, item.resp_rate, sys_bp + '/' + dia_bp + '/' + mean_bp];
+            target.ecgdata = [pulse_rate, item.blood_oxygen, `${checkTemperature(item.temperature)}${item.temperature1 ? ('~' + checkTemperature(item.temperature1)) : ''}`,pulse_rate, item.resp_rate, sys_bp + '/' + dia_bp + '/' + mean_bp];
         })
 
     } else {
         console.log('cache error', datacache);
     }
+}
+
+function checkTemperature(n: any) {
+    const t = Number(n) || 0
+    return t > 50 ? t / 10 : t
 }

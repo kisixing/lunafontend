@@ -1,8 +1,7 @@
 import { Col, Row } from "antd";
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Canvas, Div, Drawer, IProps } from "../interface";
 import useDraw from "../useDraw";
-import { MultiParam, Ple, Tre } from './data';
 import { DrawEcg } from './DrawEcg';
 
 const Gg = (props: { title?: string, value?: any, unit?: string }) => {
@@ -31,6 +30,19 @@ export default (props: IProps) => {
   const canvasmonitor = useRef<Canvas>(null);
   const canvasPle = useRef<Canvas>(null);
 
+  const [ecgData, setEcgData] = useState(data.ecgdata)
+
+
+  useEffect(() => {
+    setEcgData(data.ecgdata)
+
+    const id = setInterval(() => {
+      setEcgData(data.ecgdata)
+    }, 2000)
+    return () => {
+      clearInterval(id)
+    }
+  }, [data])
   useDraw(data, box, () => {
     let instance = new DrawEcg({
       wrap: box.current,
@@ -38,9 +50,6 @@ export default (props: IProps) => {
       canvasline: canvasline.current,
       canvasmonitor: canvasmonitor.current,
       canvasPle: canvasPle.current,
-      MultiParam,
-      Ple,
-      Tre,
       data
     });
     mutableSuitObject.suit = instance;
@@ -50,7 +59,7 @@ export default (props: IProps) => {
 
   const canvasStyles: React.CSSProperties = {
     position: 'absolute',
-    width: showDetail ? '70%' : '100%',
+    width: '100%',
     height: '100%',
     // letterSpacing: '1px',
   };
@@ -58,11 +67,11 @@ export default (props: IProps) => {
   return (
     <div style={{ position: 'relative', height: '100%' }} ref={box}>
       <canvas id="background" style={canvasStyles} ref={canvas} />
-      <canvas ref={canvasline} style={canvasStyles} />
-      <canvas ref={canvasmonitor} style={canvasStyles} />
-      <canvas ref={canvasPle} style={canvasStyles} />
+      <canvas id="line" ref={canvasline} style={canvasStyles} />
+      <canvas id="monitor" ref={canvasmonitor} style={canvasStyles} />
+      <canvas id="ple" ref={canvasPle} style={canvasStyles} />
       {
-        !!(showDetail && data && data.ecgdata && data.ecgdata.length) && <div style={{ position: 'absolute', right: 0, width: '30%', height: '100%', top: 0, }}>
+        !!(showDetail && data && data.ecgdata && data.ecgdata.length && false) && <div style={{ position: 'absolute', right: 0, width: '30%', height: '100%', top: 0, }}>
 
           {/* <Descriptions  column={2} bordered size="small">
                 <Descriptions.Item label="脉率bpm"span={2}>{data.ecgdata[0]}</Descriptions.Item>
@@ -74,22 +83,22 @@ export default (props: IProps) => {
             </Descriptions> */}
           <Row gutter={0}>
             <Col span={12} >
-              <Gg title="脉率" value={`${data.ecgdata[0] || ''}`} unit="bpm" />
+              <Gg title="脉率" value={`${ecgData[0] || ''}`} unit="bpm" />
             </Col>
             <Col span={12} >
-              <Gg title="血氧" value={`${data.ecgdata[1] || ''}`} unit="%" />
+              <Gg title="血氧" value={`${ecgData[1] || ''}`} unit="%" />
             </Col>
             <Col span={12} >
-              <Gg title="体温" value={`${data.ecgdata[2] || ''}~${data.ecgdata[3] || ''}`} unit="℃" />
+              <Gg title="体温" value={`${ecgData[2] || ''}~${ecgData[3] || ''}`} unit="℃" />
             </Col>
             <Col span={12} >
-              <Gg title="心率" value={`${data.ecgdata[4] || ''}`} unit="bpm" />
+              <Gg title="心率" value={`${ecgData[4] || ''}`} unit="bpm" />
             </Col>
             <Col span={12} >
-              <Gg title="呼吸" value={`${data.ecgdata[5] || ''}`} unit="次/分" />
+              <Gg title="呼吸" value={`${ecgData[5] || ''}`} unit="次/分" />
             </Col>
             <Col span={12} >
-              <Gg title="血压SDM" value={`${data.ecgdata[6] || ''}`} unit="mmHg" />
+              <Gg title="血压SDM" value={`${ecgData[6] || ''}`} unit="mmHg" />
             </Col>
           </Row>
           {/* <Row gutter={0}>

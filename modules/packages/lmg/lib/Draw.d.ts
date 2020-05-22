@@ -11,10 +11,11 @@ export default class Draw extends EventEmitter implements Drawer {
     get height(): number;
     set height(v: number);
     wrap: HTMLElement;
-    constructor(width?: number, height?: number, canvas?: HTMLCanvasElement);
+    constructor(wrap: HTMLElement, canvas?: HTMLCanvasElement);
     log: any;
     destroy(): void;
     init(data: any): void;
-    resize(w?: number, h?: number): void;
+    resize(): void;
+    autoWH(): void;
     _resize(): void;
 }

@@ -45,7 +45,7 @@ export function getEmptyCacheItem(base: ICacheItem): ICacheItem {
         csspan: NaN,
         ismulti: false,
         ecg: new Queue(),
-        ple: new Queue(),
+        ple: new Queue(240),
         ecgdata: getMaxArray(),
         is_include_volume: false,
         is_include_tocozero: false

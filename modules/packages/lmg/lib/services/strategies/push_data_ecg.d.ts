@@ -1,4 +1,5 @@
 import { WsService } from "../WsService";
+import { TDeviceType } from "../types";
 interface II {
     blood_oxygen: number;
     dia_bp: number;
@@ -19,7 +20,7 @@ interface IData {
     data: II[];
     device_no: 18;
     name: "push_data_ecg";
-    device_type: "V3" | "K9";
+    device_type: TDeviceType;
 }
 export declare function push_data_ecg(this: WsService, received_msg: IData): void;
 export {};

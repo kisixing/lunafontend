@@ -34,13 +34,11 @@ export function pushData(target: ICacheItem, data: ICtgData) {
 
 export function push_data_ctg(this: WsService, received_msg: IData) {
     const { datacache } = this
-    return 
     //TODO 解析应用层数据包
     var data = received_msg.data;
     var id = received_msg.device_no;
     var bi = received_msg.bed_no;
     var cachbi = id + '-' + bi;
-
     var target = datacache.get(cachbi);
 
     if (!target) return

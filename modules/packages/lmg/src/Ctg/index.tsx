@@ -11,18 +11,22 @@ import { Loading } from './Loading';
 import { Suit } from './Suit';
 import { ButtonTools } from "./ButtonTools";
 import styled from "styled-components";
+import { MultiParamL } from "./MultiParamL";
 const Wrapper = styled.div`
   width:100%;
   height:100%;
+  display:flex;
   .btns{
     display:none
   }
   :hover .btns{
     display:block
   }
+  .box {
+    flex:1
+  }
 `
 export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
-  console.log('suit render');
 
   const {
     data,
@@ -33,6 +37,9 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
     onReady = (s: Drawer) => { },
     ...others
   } = props
+
+  const isV3 = false || data && (data.deviceType === 'V3')
+
   const barTool = useRef<IBarTool>(null)
   const canvasgrid = useRef<Canvas>(null);
   const canvasdata = useRef<Canvas>(null);
@@ -71,13 +78,16 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
     () => {
       const { height } = box.current.getBoundingClientRect();
       const h = height / 5;
-      const t = h > 40 ? (h > 200 ? 210 : 40) : (26)
-      setTimeout(() => setEcgHeight(t), 100)
+      const t = h > 40 ? (h > 120 ? 210 : 40) : (26)
+      console.log('resizeheight', height, t)
+      setEcgHeight(t)
     })
   // useLayoutEffect(() => {
   //   ctg.current && ctg.current.resize()
   //   ecg.current && ecg.current.resize()
   // }, [ecgHeight])
+  const isFullScreen = ecgHeight > 200
+  console.log('isFullScreen', isFullScreen)
   useCheckNetwork(isOn => ctg.current && (ctg.current.isOn = isOn))
 
   useImperativeHandle(ref, () => {
@@ -86,61 +96,67 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
   })
   const canvasStyles: React.CSSProperties = { position: 'absolute' }
   return (
-    <Wrapper ref={box} {...others}
-      onMouseDownCapture={e => {
-        const x = e.nativeEvent.offsetX
-        const y = e.nativeEvent.offsetY
-        const which = e.nativeEvent.which
-        if (which === 3) {
-          rightClickXy.current.x = x
-          rightClickXy.current.y = y
-        }
-      }}
-    // onMouseEnter={() => staticType && setShowBtns(true)}
-    // onMouseLeave={() => staticType && setShowBtns(false)}
-    >
+    <Wrapper style={{ flexDirection: isFullScreen ? 'row' : 'column-reverse' }}>
       {
-        loading && (
-          <div style={{ position: 'absolute', width: '100%', height: '100%', background: '#fff', zIndex: 1, opacity: .9 }}>
-            <Loading style={{ margin: 'auto', position: 'absolute', left: 0, right: 0, bottom: 0, top: 0 }} />
-          </div>
-        )
+        <MultiParamL data={data} isFullScreen={isFullScreen} height={ecgHeight} />
       }
-      <div style={{ height: ecgHeight && showEcg ? `calc(100% - ${ecgHeight}px)` : `100%`, position: 'relative' }} ref={ctgBox}>
-        <canvas style={canvasStyles} ref={canvasgrid} />
-        <canvas style={canvasStyles} ref={canvasline} />
-        <canvas style={canvasStyles} ref={canvasdata} />
-        <canvas style={canvasStyles} ref={canvasselect} />
-        <canvas style={canvasStyles} ref={canvasanalyse} />
-        {/* <FancyCanvas style={{ position: 'absolute' }}>
+      <div className="box" ref={box} {...others}
+        onMouseDownCapture={e => {
+          const x = e.nativeEvent.offsetX
+          const y = e.nativeEvent.offsetY
+          const which = e.nativeEvent.which
+          if (which === 3) {
+            rightClickXy.current.x = x
+            rightClickXy.current.y = y
+          }
+        }}
+      // onMouseEnter={() => staticType && setShowBtns(true)}
+      // onMouseLeave={() => staticType && setShowBtns(false)}
+      >
+        {
+          loading && (
+            <div style={{ position: 'absolute', width: '100%', height: '100%', background: '#fff', zIndex: 1, opacity: .9 }}>
+              <Loading style={{ margin: 'auto', position: 'absolute', left: 0, right: 0, bottom: 0, top: 0 }} />
+            </div>
+          )
+        }
+        <div style={{ height: isV3 ? 0 : (isFullScreen ? `calc(100% - ${ecgHeight}px)` : `100%`), position: 'relative' }} ref={ctgBox}>
+          <canvas style={canvasStyles} ref={canvasgrid} />
+          <canvas style={canvasStyles} ref={canvasline} />
+          <canvas style={canvasStyles} ref={canvasdata} />
+          <canvas style={canvasStyles} ref={canvasselect} />
+          <canvas style={canvasStyles} ref={canvasanalyse} />
+          {/* <FancyCanvas style={{ position: 'absolute' }}>
           <Line />
           <Rect />
         </FancyCanvas> */}
-      </div>
-      {
-        ecgHeight && showEcg && (
-          <div style={{ height: ecgHeight, overflow: 'hidden' }} >
-            <Ecg data={data} ecgHeight={ecgHeight} onReady={e => ecg.current = e} />
-          </div>
-        )
-      }
+        </div>
+        {
+          ecgHeight && showEcg && (
+            <div style={{ height: isV3 ? '100%' : (isFullScreen ? ecgHeight : 0), overflow: 'hidden' }} >
+              <Ecg data={data} ecgHeight={ecgHeight} onReady={e => ecg.current = e} />
+            </div>
+          )
+        }
 
-      <ContextMenu s={ctg}>
-        <ScrollBar box={box} getBarTool={tool => { barTool.current = tool }} />
+        <ContextMenu s={ctg}>
+          <ScrollBar box={box} getBarTool={tool => { barTool.current = tool }} />
 
-      </ContextMenu>
-
-
+        </ContextMenu>
 
 
 
 
-      {/* {
+
+
+        {/* {
         suitType > 100 && <ButtonTools ctg={ctg} visible={showBtns && staticType} />
       } */}
-      {
-        suitType > 100 && <ButtonTools data={data} visible={true} ctg={ctg} className={"btns"} />
-      }
+        {
+          suitType > 100 && <ButtonTools data={data} visible={true} ctg={ctg} className={"btns"} />
+        }
+
+      </div>
 
     </Wrapper>
   );

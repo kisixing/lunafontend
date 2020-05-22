@@ -36,7 +36,7 @@ var sid = 0;
 var Suit = (function (_super) {
     __extends(Suit, _super);
     function Suit(canvasgrid, canvasdata, canvasline, canvasselect, canvasanalyse, wrap, barTool, type) {
-        var _this = _super.call(this) || this;
+        var _this = _super.call(this, wrap) || this;
         _this.needScroll = false;
         _this.option = Suit.option;
         _this.initFlag = false;
@@ -100,8 +100,8 @@ var Suit = (function (_super) {
         _this.barTool = barTool;
         _this.drawobj = new DrawCTG_1.default(_this);
         _this.type = type;
-        _this.drawAnalyse = new DrawAnalyse_1.DrawAnalyse(canvasanalyse, _this.width, _this.height, _this);
-        _this.drawSelect = new DrawSelect_1.DrawSelect(canvasselect, _this);
+        _this.drawAnalyse = new DrawAnalyse_1.DrawAnalyse(wrap, canvasanalyse, _this);
+        _this.drawSelect = new DrawSelect_1.DrawSelect(wrap, canvasselect, _this);
         if (_this.option) {
             _this.ctgconfig.tococolor = _this.option.tococolor;
             _this.ctgconfig.fhrcolor[0] = _this.option.fhrcolor1;

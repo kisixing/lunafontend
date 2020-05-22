@@ -20,7 +20,7 @@ export declare class DrawAnalyse extends Draw {
     };
     analysisData: obvue.ctg_exams_analyse;
     suit: Suit;
-    constructor(canvas: HTMLCanvasElement, width: number, height: number, suit: Suit);
+    constructor(wrap: HTMLElement, canvas: HTMLCanvasElement, suit: Suit);
     init(): void;
     setData(analyseData: obvue.ctg_exams_analyse): void;
     drawBaseline(cur: any, color: any, yspan: any, xspan: any, max: any, basetop: any): void;

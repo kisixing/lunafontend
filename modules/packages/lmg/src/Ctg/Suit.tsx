@@ -108,7 +108,7 @@ export class Suit extends Draw {
     barTool: IBarTool,
     type: number
   ) {
-    super();
+    super(wrap);
     bindEvents.call(this);
     this.wrap = wrap;
     this.canvasgrid = canvasgrid;
@@ -120,8 +120,8 @@ export class Suit extends Draw {
     this.barTool = barTool;
     this.drawobj = new DrawCTG(this);
     this.type = type;
-    this.drawAnalyse = new DrawAnalyse(canvasanalyse, this.width, this.height, this)
-    this.drawSelect = new DrawSelect(canvasselect, this)
+    this.drawAnalyse = new DrawAnalyse(wrap, canvasanalyse, this)
+    this.drawSelect = new DrawSelect(wrap, canvasselect, this)
     if (this.option) {
       this.ctgconfig.tococolor = this.option.tococolor;
       this.ctgconfig.fhrcolor[0] = this.option.fhrcolor1;

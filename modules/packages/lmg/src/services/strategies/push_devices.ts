@@ -20,14 +20,14 @@ export function push_devices(this: WsService, received_msg: IData) {
             const { is_include_tocozero, is_include_volume, doc_id, fetal_num } = bedData
             var unitId = this.getUnitId(devdata.device_no, bedData.bed_no);
             const old = datacache.get(unitId)
-
+    
             if (!old || (old.docid !== doc_id)) {
-                const item = getEmptyCacheItem({ is_include_tocozero, is_include_volume, fetal_num, id: unitId })
+
+                const item = getEmptyCacheItem({ is_include_tocozero, is_include_volume, fetal_num, id: unitId, docid: doc_id })
 
                 item.deviceType = devdata.device_type
 
                 datacache.set(unitId, item);
-                item.docid = doc_id;
                 this.convertdocid(unitId, doc_id)
 
                 if (bedData.is_working == 0) {

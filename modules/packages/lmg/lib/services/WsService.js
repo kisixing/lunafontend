@@ -44,6 +44,7 @@ var WsService = (function (_super) {
     __extends(WsService, _super);
     function WsService(settingData) {
         var _this_1 = _super.call(this) || this;
+        _this_1.test_ple = false;
         _this_1.eventNamespace = "ws";
         _this_1.isReady = false;
         _this_1.dirty = false;
@@ -58,10 +59,12 @@ var WsService = (function (_super) {
         _this_1.strategies = strategies_1.getStrategies(_this_1);
         _this_1.BedStatus = types_1.BedStatus;
         _this_1.PENDDING_INTERVAL = SECOND * 30;
+        _this_1._current = [];
         _this_1.pongIndex = 0;
         _this_1.t = +new Date();
         _this_1.refreshInterval = 2000;
         _this_1.refreshTimeout = null;
+        _this_1.subscribeList = [];
         _this_1.connect = function () {
             var _a = _this_1, datacache = _a.datacache, settingData = _a.settingData;
             var ws_url = settingData.ws_url;
@@ -85,6 +88,9 @@ var WsService = (function (_super) {
                     }, _this_1.RECONNECT_INTERVAL);
                 };
                 socket.onmessage = function (msg) {
+                    if (!_this_1.subscribeList && msg.data.includes('push_data_')) {
+                        return;
+                    }
                     _this_1.pong();
                     var received_msg;
                     try {
@@ -208,6 +214,17 @@ var WsService = (function (_super) {
             value[_i - 1] = arguments[_i];
         }
         utils_1.event.emit.apply(utils_1.event, __spreadArrays(["WsService:" + name], value));
+    };
+    WsService.prototype.subscribe = function (str) {
+        var _this_1 = this;
+        if (this.subscribeList && str.every(function (_) { return _this_1.subscribeList.includes(_); }) && this.subscribeList.every(function (_) { return str.includes(_); })) {
+            return;
+        }
+        this.subscribeList = str;
+        this.send(JSON.stringify({
+            name: "area_devices",
+            data: str.join(',')
+        }));
     };
     WsService.prototype.setTocozero = function (device_no, bed_no) {
         var msg = JSON.stringify({

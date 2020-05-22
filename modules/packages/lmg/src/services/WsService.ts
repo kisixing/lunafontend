@@ -22,6 +22,7 @@ export class WsService extends EventEmitter {
     static wsStatus: typeof EWsStatus = EWsStatus
     static _this: WsService
     static EWsEvents = EWsEvents
+    test_ple = false
     eventNamespace = "ws"
     isReady = false
     dirty = false
@@ -39,12 +40,12 @@ export class WsService extends EventEmitter {
     strategies = getStrategies(this)
     BedStatus = BedStatus
     PENDDING_INTERVAL = SECOND * 30
-    private _current: string[];
+    private _current: string[] = [];
     public get current(): string[] {
         return this._current;
     }
     public set current(value: string[]) {
-        console.log('current',value)
+        console.log('current', value)
         this._current = value;
     }
     // store = (window as any).g_app._store
@@ -147,7 +148,19 @@ export class WsService extends EventEmitter {
     _emit(name: string, ...value: any[]) {
         event.emit(`WsService:${name}`, ...value)
     }
-
+    subscribeList: string[] = []
+    subscribe(str: string[]) {
+        if (this.subscribeList && str.every(_ => this.subscribeList.includes(_)) && this.subscribeList.every(_ => str.includes(_))) {
+            return
+        }
+        this.subscribeList = str
+        this.send(JSON.stringify(
+            {
+                name: "area_devices",
+                data: str.join(',')
+            }
+        ))
+    }
     setTocozero(device_no: number, bed_no: number) {
         const msg = JSON.stringify({
             name: "toco_zero",
@@ -326,6 +339,9 @@ export class WsService extends EventEmitter {
             };
             // 接收服务端数据时触发事件
             socket.onmessage = (msg) => {
+                if (!this.subscribeList && msg.data.includes('push_data_')) {
+                    return
+                }
                 this.pong()
                 let received_msg
                 try {

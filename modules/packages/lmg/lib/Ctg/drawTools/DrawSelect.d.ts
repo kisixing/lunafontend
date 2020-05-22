@@ -17,7 +17,7 @@ export declare class DrawSelect extends Draw {
     set $selectrpend(value: number);
     get $selectrpstart(): number;
     set $selectrpstart(value: number);
-    constructor(canvas: HTMLCanvasElement, suit: Suit, width?: number, height?: number);
+    constructor(wrap: HTMLElement, canvas: HTMLCanvasElement, suit: Suit);
     init(): void;
     clearselect: () => void;
     showselect: (start?: number, end?: number) => void;

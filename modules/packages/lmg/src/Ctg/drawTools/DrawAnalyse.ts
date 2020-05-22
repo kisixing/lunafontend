@@ -21,8 +21,8 @@ export class DrawAnalyse extends Draw {
     // private _analyseData: AnalyseData
     analysisData: obvue.ctg_exams_analyse
     suit: Suit
-    constructor(canvas: HTMLCanvasElement, width = 0, height = 0, suit: Suit) {
-        super(width, height, canvas)
+    constructor(wrap: HTMLElement, canvas: HTMLCanvasElement, suit: Suit) {
+        super(wrap, canvas)
         this.suit = suit
     }
     init() {

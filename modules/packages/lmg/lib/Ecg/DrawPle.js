@@ -18,25 +18,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Draw_1 = __importDefault(require("../Draw"));
 var Queue_1 = __importDefault(require("./Queue"));
+var DrawEcg_1 = require("./DrawEcg");
 var BASE_INEVAL = 128;
 var adu = 52;
-var samplingrate = 90;
-var points_one_times = 8;
-var gride_width = 40;
-var gx = points_one_times * ((gride_width * 5) / samplingrate);
-var x_start = 25;
-var isstop = true;
-var loopmill = 90;
+var samplingrate = 100;
+var points_one_times = 6;
+var points_one_second = 1000 * points_one_times / samplingrate;
+var gride_width = 1;
+var gx = points_one_times * gride_width;
+var x_start = 40;
+var scale = 0.5;
+var baseY = 180;
 var DrawPle = (function (_super) {
     __extends(DrawPle, _super);
-    function DrawPle(width, height, canvas) {
-        var _this = _super.call(this, width, height, canvas) || this;
-        _this.ecg_scope = 2;
+    function DrawPle(wrap, canvas) {
+        var _this = _super.call(this, wrap, canvas) || this;
         _this._current_times = 0;
         _this.max_times = 135;
         _this.start = NaN;
         _this.intervalIds = [];
-        _this.context2D = _this.context2D;
         return _this;
     }
     Object.defineProperty(DrawPle.prototype, "current_times", {
@@ -49,108 +49,83 @@ var DrawPle = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    DrawPle.prototype.init = function (ple_data) {
-        if (ple_data) {
-            this.ple_data = ple_data;
+    DrawPle.prototype.init = function (data) {
+        console.log('ple', this);
+        if (data) {
+            this.initparm();
+            this.ple_data = data.ple;
+            this.data = data;
             this.current_times = 0;
-            isstop = false;
             this.last_points = [];
+            this.loop();
         }
     };
     DrawPle.prototype.destroy = function () {
-        isstop = false;
         this.intervalIds.forEach(function (_) { return clearInterval(_); });
         this.canvas = null;
         this.canvas = null;
     };
+    DrawPle.prototype._resize = function () {
+        this.initparm();
+    };
+    DrawPle.prototype.loop = function () {
+        var _this = this;
+        var id = setInterval(function () {
+            if (!_this) {
+                console.log('ecg', 'clear interval');
+                clearInterval(id);
+            }
+            _this.drawsingle();
+        }, samplingrate);
+        this.intervalIds.push(id);
+    };
     DrawPle.prototype.initparm = function () {
-        var _a = this, canvas = _a.canvas, context2D = _a.context2D;
+        var _a = this, width = _a.width, context2D = _a.context2D, ple_data = _a.ple_data;
+        context2D.strokeStyle = '#006003';
+        context2D.font = 'bold 16px';
+        context2D.textAlign = 'left';
+        context2D.textBaseline = 'top';
         context2D.lineJoin = 'round';
-        context2D.strokeStyle = '#9d6003';
-        if (canvas.width < 150) {
+        if (width < 150) {
         }
         else {
-            this.max_times = Math.floor((canvas.width - 25) * 0.6 / gx);
+            this.max_times = Math.floor((width - x_start * 2) * DrawEcg_1.L_SCALE / gx);
+            context2D.fillText('血氧', x_start - 30, baseY - 70);
+            context2D.fillText('100', x_start - 30, baseY - 50);
+            context2D.fillText('0', x_start - 30, baseY);
         }
         this.current_times = 0;
     };
     DrawPle.prototype.drawsingle = function () {
-        var _a = this, last_points = _a.last_points, context2D = _a.context2D;
-        var y_starts = this.GetYStarts(12);
-        if (isstop) {
-            return;
-        }
-        isstop = true;
-        if (this.ple_data.IsEmpty()) {
+        var _a = this, last_points = _a.last_points, context2D = _a.context2D, height = _a.height;
+        this.ple_data = this.data.ple;
+        if (this.ple_data.GetSize() < points_one_times * 1) {
             this.start = NaN;
-            isstop = false;
-            return;
-        }
-        if (this.ple_data.GetSize() < points_one_times * 5) {
-            this.start = NaN;
-            isstop = false;
+            console.log('ws ws ws', height < 50, this.ple_data.GetSize() < points_one_times * 1);
             return;
         }
         this.clearcanvans();
         var F = [];
-        var invalid = 0;
         for (var J = 0; J < points_one_times; J++) {
             var ecgdot = this.ple_data.DeQueue();
-            if (ecgdot == 1) {
-                invalid++;
-            }
-            else {
-                invalid = 0;
-            }
-            if (ecgdot > BASE_INEVAL) {
-                ecgdot = ecgdot - BASE_INEVAL;
-            }
-            else if (ecgdot > 0) {
-                ecgdot = -ecgdot;
-            }
-            F.push(ecgdot * this.ecg_scope);
+            F.push(ecgdot * scale);
         }
-        if (invalid > 7) {
+        if (height < 50)
             return;
-        }
-        var L = x_start + this.current_times * gx;
+        var blockStartX = x_start + this.current_times * gx;
         context2D.beginPath();
         for (var K = 0; K < F.length; K++) {
-            var C = F[K] - BASE_INEVAL;
-            var I = K * (gride_width * 5 / samplingrate);
-            var M = void 0;
-            if (this.ecg_scope != 0) {
-                M = Math.abs(C);
-            }
-            else {
-                M = (Math.abs(C) * (adu / (gride_width * 2))) / 2;
-            }
-            var D = parseFloat(C >= 0 ? y_starts[0] - M : y_starts[0] + M);
-            if (K == 0) {
-                if (this.current_times != 0) {
-                    context2D.moveTo(last_points[0], last_points[1]);
-                    context2D.lineTo(last_points[0], D);
-                    last_points[0] = last_points[0];
-                    last_points[1] = D;
-                }
-                else {
-                    context2D.moveTo(x_start, D);
-                    last_points[0] = x_start;
-                    last_points[1] = D;
-                }
-            }
-            else {
+            var y = baseY - F[K];
+            var xSpan = K * gride_width;
+            if (this.current_times !== 0) {
                 context2D.moveTo(last_points[0], last_points[1]);
-                context2D.lineTo(L + I, D);
-                if (L + I < last_points[0]) {
-                }
-                last_points[0] = L + I;
-                last_points[1] = D;
             }
+            context2D.lineTo(blockStartX + xSpan, y);
+            last_points[0] = blockStartX + xSpan;
+            last_points[1] = y;
         }
         context2D.stroke();
         this.current_times++;
-        isstop = false;
     };
     DrawPle.prototype.clearcanvans = function () {
         var current_times = this.current_times;
@@ -161,19 +136,6 @@ var DrawPle = (function (_super) {
         else {
             context2D.clearRect(x_start - 10, 0, x_start + 20, this.height);
         }
-    };
-    DrawPle.prototype.GetYStarts = function (C) {
-        var height = this.height;
-        var B = [];
-        for (var A = 0; A < C; A++) {
-            if (height < 480) {
-                B[A] = -BASE_INEVAL / 2 + A * 100 - 20 + 0.3 * height;
-            }
-            else {
-                B[A] = -BASE_INEVAL / 2 + A * 100 - 20 + 0.3 * height;
-            }
-        }
-        return B;
     };
     DrawPle.Queue = Queue_1.default;
     return DrawPle;

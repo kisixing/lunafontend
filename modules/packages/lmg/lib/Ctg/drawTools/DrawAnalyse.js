@@ -19,10 +19,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Draw_1 = __importDefault(require("../../Draw"));
 var DrawAnalyse = (function (_super) {
     __extends(DrawAnalyse, _super);
-    function DrawAnalyse(canvas, width, height, suit) {
-        if (width === void 0) { width = 0; }
-        if (height === void 0) { height = 0; }
-        var _this = _super.call(this, width, height, canvas) || this;
+    function DrawAnalyse(wrap, canvas, suit) {
+        var _this = _super.call(this, wrap, canvas) || this;
         _this.mapXtoY = {};
         _this.mapBaselilneXtoY = {};
         _this.drawflag = function (canvas, x, y, index) {

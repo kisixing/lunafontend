@@ -1,11 +1,10 @@
 import Draw from "../Draw";
 import Queue from "./Queue";
+import { ICacheItem } from "../services/types";
+export declare const L_SCALE = 1;
 declare type Canvas = HTMLCanvasElement;
 interface I {
     wrap: HTMLDivElement;
-    MultiParam: number[];
-    Ple: number[];
-    Tre: number[];
     canvas: Canvas;
     canvasline: Canvas;
     canvasmonitor: Canvas;
@@ -36,7 +35,7 @@ export declare class DrawEcg extends Draw {
     private intervalIds;
     private last_points;
     constructor(args: I);
-    init(data: any): void;
+    init(data: ICacheItem): void;
     _resize(): void;
     destroy(): void;
     ecg(): void;
@@ -45,7 +44,7 @@ export declare class DrawEcg extends Draw {
     DrawDatatext(): void;
     getLength(val: any): number;
     initparm(): void;
-    timerEcg(dely: any): void;
+    timerEcg(): void;
     drawsingle(): void;
     clearcanvans(): void;
     GetYStarts(C: any): any[];

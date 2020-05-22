@@ -19,10 +19,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Draw_1 = __importDefault(require("../../Draw"));
 var DrawSelect = (function (_super) {
     __extends(DrawSelect, _super);
-    function DrawSelect(canvas, suit, width, height) {
-        if (width === void 0) { width = 0; }
-        if (height === void 0) { height = 0; }
-        var _this = _super.call(this, width, height, canvas) || this;
+    function DrawSelect(wrap, canvas, suit) {
+        var _this = _super.call(this, wrap, canvas) || this;
         _this.selectrpstart = 0;
         _this.selectend = 0;
         _this.selectrpend = 0;

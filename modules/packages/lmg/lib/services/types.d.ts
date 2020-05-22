@@ -1,5 +1,5 @@
 import Queue from "../Ecg/Queue";
-declare type TDeviceType = ('SR_K9' | 'SR_B5_B6');
+export declare type TDeviceType = ('SR_K9' | 'SR_B5_B6' | 'V3' | 'F3');
 declare type TF = 0 | 1;
 export interface IVolumeData {
     isMute1: TF;

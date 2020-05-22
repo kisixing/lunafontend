@@ -17,16 +17,14 @@ var utils_1 = require("@lianmed/utils");
 var sid = 0;
 var Draw = (function (_super) {
     __extends(Draw, _super);
-    function Draw(width, height, canvas) {
-        if (width === void 0) { width = 0; }
-        if (height === void 0) { height = 0; }
+    function Draw(wrap, canvas) {
         var _this = _super.call(this) || this;
         _this.sid = sid++;
         _this.log = console.log.bind(console, _this.constructor.name, _this.sid);
+        _this.wrap = wrap;
         _this.canvas = canvas;
         _this.context2D = canvas && canvas.getContext('2d');
-        _this.width = width;
-        _this.height = height;
+        _this.autoWH();
         return _this;
     }
     Object.defineProperty(Draw.prototype, "width", {
@@ -53,14 +51,16 @@ var Draw = (function (_super) {
     });
     Draw.prototype.destroy = function () { };
     Draw.prototype.init = function (data) { };
-    Draw.prototype.resize = function (w, h) {
-        if (w === void 0) { w = 0; }
-        if (h === void 0) { h = 0; }
-        var rect = this.wrap ? this.wrap.getBoundingClientRect() : { width: w, height: h };
+    Draw.prototype.resize = function () {
+        this.autoWH();
+        this._resize();
+    };
+    Draw.prototype.autoWH = function () {
+        var rect = this.wrap ? this.wrap.getBoundingClientRect() : { width: 0, height: 0 };
         var width = rect.width, height = rect.height;
+        console.log('auto 000', width, height);
         this.width = width;
         this.height = height;
-        this._resize();
     };
     Draw.prototype._resize = function () {
     };

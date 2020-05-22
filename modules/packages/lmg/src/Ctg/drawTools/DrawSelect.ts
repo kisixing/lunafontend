@@ -44,8 +44,8 @@ export class DrawSelect extends Draw {
         this.selectflag && this.suit.drawobj.showcur(value);
         this.suit.emit('startTime', value);
     }
-    constructor(canvas: HTMLCanvasElement, suit: Suit, width = 0, height = 0) {
-        super(width, height, canvas)
+    constructor(wrap: HTMLElement, canvas: HTMLCanvasElement, suit: Suit, ) {
+        super(wrap, canvas)
         this.suit = suit
     }
     init() {
@@ -170,7 +170,7 @@ export class DrawSelect extends Draw {
             this.selectstart = this.selectstartposition * 2;
         }
         // this.suit.emit('startTime', this.selectstart)
-        suit.type!==0 && suit.drawobj.showcur(this.selectstart, false);
+        suit.type !== 0 && suit.drawobj.showcur(this.selectstart, false);
         // }
     }
 
