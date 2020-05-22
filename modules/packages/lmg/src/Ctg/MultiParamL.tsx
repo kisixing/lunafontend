@@ -15,7 +15,6 @@ const Gg = (props: { title?: string, value?: any, unit?: string, color?: string,
     )
 }
 
-    ,
 export const MultiParamL = (props: { data: ICacheItem, isFullScreen: boolean, height: number }) => {
     const {
         data,
@@ -23,16 +22,16 @@ export const MultiParamL = (props: { data: ICacheItem, isFullScreen: boolean, he
         height
     } = props
 
-
-    const [ecgData, setEcgData] = useState(data.ecgdata)
+    if (!data) return null
+    const [ecgData, setEcgData] = useState(data && data.ecgdata)
 
 
 
     useEffect(() => {
-        setEcgData(data.ecgdata)
+        setEcgData(data && data.ecgdata)
 
         const id = setInterval(() => {
-            setEcgData(data.ecgdata)
+            setEcgData(data && data.ecgdata)
         }, 2000)
         return () => {
             clearInterval(id)
@@ -43,13 +42,13 @@ export const MultiParamL = (props: { data: ICacheItem, isFullScreen: boolean, he
 
     return (
 
-        !!(ecgData.length) && (
+        !!(ecgData && ecgData.length) && (
             <div style={{ width: isFullScreen ? 220 : '100%', borderRight: isFullScreen && border }}>
                 {
                     isFullScreen ?
                         (
                             <>
-                                <Gg title="脉率" value={ecgData[0] || ''} unit="bpm" color={Suit.option.fhrcolor1} />
+                                <Gg title="脉率" value={isFullScreen || ''} unit="bpm" color={Suit.option.fhrcolor1} />
                                 <Gg title="血氧" value={ecgData[1] || ''} unit="%" color={Suit.option.tococolor} />
                                 <Gg title="体温" small value={ecgData[2] || ''} unit="℃" />
                                 <Gg title="心率" small value={ecgData[3] || ''} unit="bpm" />

@@ -63,10 +63,8 @@ exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
     var ecg = react_1.useRef(null);
     var _f = react_1.useState(0), ecgHeight = _f[0], setEcgHeight = _f[1];
     var rightClickXy = react_1.useRef({ x: 0, y: 0 });
-    console.log('yyyyyyyyyyyyyyyyyy 画');
     useDraw_1.default(data, ctgBox, function () {
         var instance = ctg.current = new Suit_1.Suit(canvasgrid.current, canvasdata.current, canvasline.current, canvasselect.current, canvasanalyse.current, ctgBox.current, barTool.current, suitType);
-        console.log('yyyyyyyyyyyy--------new', instance);
         onReady(instance);
         mutableSuitObject.suit = instance;
         return instance;
@@ -74,14 +72,12 @@ exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
         var height = box.current.getBoundingClientRect().height;
         var h = height / 5;
         var t = h > 40 ? (h > 120 ? 210 : 40) : (26);
-        console.log('resizeheight', height, t);
         setEcgHeight(t);
     });
     var isFullScreen = ecgHeight > 200;
     console.log('isFullScreen', isFullScreen);
     WsService_1.useCheckNetwork(function (isOn) { return ctg.current && (ctg.current.isOn = isOn); });
     react_1.useImperativeHandle(ref, function () {
-        console.log('yyyyyyyyyyyy--------useImperativeHandle', ctg.current);
         return ctg.current;
     });
     var canvasStyles = { position: 'absolute' };

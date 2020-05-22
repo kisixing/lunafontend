@@ -56,7 +56,6 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
 
   const rightClickXy = useRef<{ x: number, y: number }>({ x: 0, y: 0 });
 
-  console.log('yyyyyyyyyyyyyyyyyy 画')
 
   useDraw(data, ctgBox, () => {
     const instance = ctg.current = new Suit(
@@ -69,7 +68,6 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
       barTool.current,
       suitType
     )
-    console.log('yyyyyyyyyyyy--------new', instance)
 
     onReady(instance)
     mutableSuitObject.suit = instance;
@@ -79,7 +77,6 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
       const { height } = box.current.getBoundingClientRect();
       const h = height / 5;
       const t = h > 40 ? (h > 120 ? 210 : 40) : (26)
-      console.log('resizeheight', height, t)
       setEcgHeight(t)
     })
   // useLayoutEffect(() => {
@@ -91,7 +88,6 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
   useCheckNetwork(isOn => ctg.current && (ctg.current.isOn = isOn))
 
   useImperativeHandle(ref, () => {
-    console.log('yyyyyyyyyyyy--------useImperativeHandle', ctg.current)
     return ctg.current
   })
   const canvasStyles: React.CSSProperties = { position: 'absolute' }

@@ -32,13 +32,14 @@ var Item = function (props) {
     var _b = react_1.useState(null), suit = _b[0], setSuit = _b[1];
     var ref = react_1.useRef();
     var RenderTilte = function () {
+        var m = moment_1.default(startTime);
         var text = (react_1.default.createElement("span", null, [
             ['姓名', name],
             ['床号', bedNO],
             ['年龄', age],
             ['孕周', gestationalWeek],
             ['GP', GP],
-            ['开始时间', moment_1.default(startTime).format('HH:mm')],
+            ['开始时间', m.isValid ? m.format('HH:mm') : ''],
         ]
             .filter(function (_) { return !!_[1]; })
             .map(function (_a) {

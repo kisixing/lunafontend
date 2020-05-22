@@ -53,6 +53,7 @@ const Item = (props: IProps) => {
 
     // 床位信息
     const RenderTilte = () => {
+        const m = moment(startTime)
         const text = (
             <span>
                 {
@@ -62,7 +63,7 @@ const Item = (props: IProps) => {
                         ['年龄', age],
                         ['孕周', gestationalWeek],
                         ['GP', GP],
-                        ['开始时间', moment(startTime).format('HH:mm')],
+                        ['开始时间', m.isValid ? m.format('HH:mm') : ''],
                     ]
                         .filter(_ => !!_[1])
                         .map(([a, b]) => <span key={a} style={{ marginRight: 12 }}>{a}：{b}</span>)

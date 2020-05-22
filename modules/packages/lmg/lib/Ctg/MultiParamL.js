@@ -23,20 +23,22 @@ var Gg = function (props) {
 };
 exports.MultiParamL = function (props) {
     var data = props.data, isFullScreen = props.isFullScreen, height = props.height;
-    var _a = react_1.useState(data.ecgdata), ecgData = _a[0], setEcgData = _a[1];
+    if (!data)
+        return null;
+    var _a = react_1.useState(data && data.ecgdata), ecgData = _a[0], setEcgData = _a[1];
     react_1.useEffect(function () {
-        setEcgData(data.ecgdata);
+        setEcgData(data && data.ecgdata);
         var id = setInterval(function () {
-            setEcgData(data.ecgdata);
+            setEcgData(data && data.ecgdata);
         }, 2000);
         return function () {
             clearInterval(id);
         };
     }, [data]);
     var keys = ['脉率bpm', '血氧%', '体温℃', '心率bpm', '呼吸(次/分)', '血压(SDM)mmHg'];
-    return (!!(ecgData.length) && (react_1.default.createElement("div", { style: { width: isFullScreen ? 220 : '100%', borderRight: isFullScreen && border } }, isFullScreen ?
+    return (!!(ecgData && ecgData.length) && (react_1.default.createElement("div", { style: { width: isFullScreen ? 220 : '100%', borderRight: isFullScreen && border } }, isFullScreen ?
         (react_1.default.createElement(react_1.default.Fragment, null,
-            react_1.default.createElement(Gg, { title: "\u8109\u7387", value: ecgData[0] || '', unit: "bpm", color: Suit_1.Suit.option.fhrcolor1 }),
+            react_1.default.createElement(Gg, { title: "\u8109\u7387", value: isFullScreen || '', unit: "bpm", color: Suit_1.Suit.option.fhrcolor1 }),
             react_1.default.createElement(Gg, { title: "\u8840\u6C27", value: ecgData[1] || '', unit: "%", color: Suit_1.Suit.option.tococolor }),
             react_1.default.createElement(Gg, { title: "\u4F53\u6E29", small: true, value: ecgData[2] || '', unit: "\u2103" }),
             react_1.default.createElement(Gg, { title: "\u5FC3\u7387", small: true, value: ecgData[3] || '', unit: "bpm" }),
