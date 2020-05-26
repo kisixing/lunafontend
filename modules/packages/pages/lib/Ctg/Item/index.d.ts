@@ -18,6 +18,7 @@ interface IProps extends PropsWithChildren<{}> {
     loading?: boolean;
     onSuitRead?: (s: Drawer) => void;
     themeColor?: string;
+    unitId: string;
 }
 declare const Item: (props: IProps) => JSX.Element;
 export default Item;

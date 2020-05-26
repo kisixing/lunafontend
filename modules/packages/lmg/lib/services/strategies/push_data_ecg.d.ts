@@ -1,5 +1,5 @@
 import { WsService } from "../WsService";
-import { TDeviceType } from "../types";
+import { TDeviceType, TAlarmType } from "../types";
 interface II {
     blood_oxygen: number;
     dia_bp: number;
@@ -14,6 +14,15 @@ interface II {
     temperature: string;
     temperature1: string;
     cuff_bp: 0;
+    alarm_pulse_rate: TAlarmType;
+    alarm_sys_bp: TAlarmType;
+    alarm_mean_bp: TAlarmType;
+    alarm_blood_oxygen: TAlarmType;
+    alarm_offline_blood_temperature: TAlarmType;
+    alarm_temperature: TAlarmType;
+    alarm_dia_bp: TAlarmType;
+    alarm_offline_blood_oxygen: TAlarmType;
+    power: number;
 }
 interface IData {
     bed_no: 4;

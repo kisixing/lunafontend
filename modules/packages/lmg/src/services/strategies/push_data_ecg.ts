@@ -1,7 +1,7 @@
 import { WsService } from "../WsService";
 
-import { TDeviceType } from "../types";
-
+import { TDeviceType, TAlarmType } from "../types";
+import { event } from "@lianmed/utils";
 interface II {
     blood_oxygen: number
     dia_bp: number
@@ -16,8 +16,34 @@ interface II {
     temperature: string
     temperature1: string
     cuff_bp: 0
-}
 
+
+    alarm_pulse_rate: TAlarmType
+    alarm_sys_bp: TAlarmType
+    alarm_mean_bp: TAlarmType
+    alarm_blood_oxygen: TAlarmType
+    alarm_offline_blood_temperature: TAlarmType
+    alarm_temperature: TAlarmType
+    alarm_dia_bp: TAlarmType
+    alarm_offline_blood_oxygen: TAlarmType
+    power: number
+
+
+
+    //多参报警
+    //0：无报警  1：过低报警  2：过高报警
+
+}
+const mapAlarmToText = {
+    alarm_sys_bp: '收缩压',
+    alarm_mean_bp: '平均压',
+    alarm_dia_bp: '舒张压',
+    alarm_pulse_rate: '脉率',
+    alarm_blood_oxygen: '血氧',
+    alarm_temperature: '体温',
+    // alarm_offline_blood_oxygen: '血氧探头脱落',
+    // alarm_offline_blood_temperature: '体温探头脱落'
+}
 interface IData {
     bed_no: 4
     data: II[]
@@ -40,33 +66,40 @@ export function push_data_ecg(this: WsService, received_msg: IData) {
             item.ecg_arr = Array.isArray(item.ecg_arr) ? item.ecg_arr : []
             item.ple_arr = Array.isArray(item.ple_arr) ? item.ple_arr : []
 
-
-            for (let i = 0; i < item.ecg_arr.length; i++) {
-                target.ecg.EnQueue(item.ecg_arr[i] & 0xff);
+            const { ecg_arr, ple_arr, pulse_rate, sys_bp, dia_bp, mean_bp, temperature, temperature1, blood_oxygen, resp_rate, index, ecg, power, cuff_bp, ...o } = item
+            o.alarm_blood_oxygen = 2
+            o.alarm_dia_bp = 1
+            target.alarms = Object.assign(Object.create(null), target.alarms, o)
+            Object.keys(o).forEach(k => {
+                const value = o[k]
+                if (!value) return
+                const text = mapAlarmToText[k]
+                const valueText = value === 1 ? '过低' : '过高'
+                if (text) {
+                    event.emit('item:alarm', cachbi, 2, text + valueText)
+                    event.emit('audio:alarm',2)
+                }
+            })
+            for (let i = 0; i < ecg_arr.length; i++) {
+                target.ecg.EnQueue(ecg_arr[i] & 0xff);
             }
-            for (let i = 0; i < item.ple_arr.length; i++) {
-                target.ple.EnQueue(item.ple_arr[i] & 0xff);
+            for (let i = 0; i < ple_arr.length; i++) {
+                target.ple.EnQueue(ple_arr[i]);
                 //TODO:
                 target.ismulti = true
             }
 
-            let pulse_rate: any = item.pulse_rate;
-            if (pulse_rate == 0) {
-                pulse_rate = '--';
-            }
-            let sys_bp: any = item.sys_bp;
-            if (sys_bp == 1) {
-                sys_bp = '--';
-            }
-            let dia_bp: any = item.dia_bp;
-            if (dia_bp == 1) {
-                dia_bp = '--';
-            }
-            let mean_bp: any = item.mean_bp;
-            if (mean_bp == 1) {
-                mean_bp = '--';
-            }
-            target.ecgdata = [pulse_rate, item.blood_oxygen, `${checkTemperature(item.temperature)}${item.temperature1 ? ('~' + checkTemperature(item.temperature1)) : ''}`,pulse_rate, item.resp_rate, sys_bp + '/' + dia_bp + '/' + mean_bp];
+
+
+            target.ecgdata = [
+                checkPulseRate(pulse_rate),
+                blood_oxygen,
+                `${checkTemperature(temperature)}${temperature1 ? ('~' + checkTemperature(item.temperature1)) : ''}`,
+                checkPulseRate(pulse_rate),
+                resp_rate,
+                // `${checkBlood(sys_bp)}/${checkBlood(dia_bp)}/${checkBlood(mean_bp)}`,
+                checkBlood(cuff_bp)
+            ];
         })
 
     } else {
@@ -77,4 +110,10 @@ export function push_data_ecg(this: WsService, received_msg: IData) {
 function checkTemperature(n: any) {
     const t = Number(n) || 0
     return t > 50 ? t / 10 : t
+}
+function checkBlood(n: number) {
+    return n === 1 ? '--' : n.toString()
+}
+function checkPulseRate(n: number) {
+    return n === 0 ? '--' : n.toString()
 }

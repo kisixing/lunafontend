@@ -21,7 +21,7 @@ export function getMaxArray() {
     // return new Uint8Array(MAX_SIZE)
     return [] as number[]
 }
-export function getEmptyCacheItem(base: ICacheItem): ICacheItem {
+export function getEmptyCacheItem(base: { [x in keyof ICacheItem]?: ICacheItem[x] }): ICacheItem {
     base.fetal_num = base.fetal_num ? base.fetal_num : 1
     const { fetal_num } = base
     const item: ICacheItem = {
@@ -48,7 +48,9 @@ export function getEmptyCacheItem(base: ICacheItem): ICacheItem {
         ple: new Queue(240),
         ecgdata: getMaxArray(),
         is_include_volume: false,
-        is_include_tocozero: false
+        is_include_tocozero: false,
+        realTime: true,
+        alarms: Object.create(null)
     }
     return Object.assign(Object.create(null), item, base)
 }

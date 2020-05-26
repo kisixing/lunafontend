@@ -8,6 +8,7 @@ interface IProps {
     suit: Suit;
     onClose?: (e: React.MouseEvent) => void;
     bedname: string;
+    unitId: string;
 }
 declare const _default: React.MemoExoticComponent<(props: IProps) => JSX.Element>;
 export default _default;

@@ -1,7 +1,8 @@
 /// <reference types="react" />
-import { ICacheItem } from "../services/types";
+import { IBloodListItem } from "../services/types";
+import Queue from '../Ecg/Queue';
 export declare const MultiParamL: (props: {
-    data: ICacheItem;
-    isFullScreen: boolean;
-    height: number;
+    ecgData: any[];
+    p: Queue;
+    bloodList: IBloodListItem[];
 }) => JSX.Element;

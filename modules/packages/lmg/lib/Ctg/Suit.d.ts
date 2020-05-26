@@ -81,6 +81,7 @@ export declare class Suit extends Draw {
     init(data: ICacheItem): void;
     createLine(): void;
     updateBarTool(): void;
+    itemAlarm(text: string): void;
     lazyEmit: ((type: string, ...args: any[]) => boolean) & import("lodash").Cancelable;
     alarmHighCount: any[];
     alarmLowCount: any[];

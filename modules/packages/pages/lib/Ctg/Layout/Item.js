@@ -57,7 +57,7 @@ var WorkbenchItem = function (props) {
         }
     }, [fullScreenId]);
     return (react_1.default.createElement(antd_1.Col, { span: itemSpan, ref: ref, style: { transition: 'background .6s', padding: outPadding, height: itemHeight, background: bordered ? 'black' : "var(--theme-" + 'light' + "-color)", position: 'relative' } },
-        react_1.default.createElement(index_1.default, { themeColor: themeColor, startTime: startTime, bedname: bedname, status: status, data: data, onDoubleClick: fullScreen, loading: loading, onClose: onClose && (function () { return onClose(itemData); }), name: pregnancy.name, age: pregnancy.age, bedNO: pregnancy.bedNO, GP: pregnancy.GP, gestationalWeek: pregnancy.gestationalWeek }, props.children)));
+        react_1.default.createElement(index_1.default, { themeColor: themeColor, startTime: startTime, bedname: bedname, status: status, data: data, onDoubleClick: fullScreen, loading: loading, onClose: onClose && (function () { return onClose(itemData); }), unitId: unitId, name: pregnancy.name, age: pregnancy.age, bedNO: pregnancy.bedNO, GP: pregnancy.GP, gestationalWeek: pregnancy.gestationalWeek }, props.children)));
 };
 exports.default = react_1.memo(WorkbenchItem);
 ;

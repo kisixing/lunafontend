@@ -81,7 +81,7 @@ const WorkbenchItem = (props: IProps) => {
         loading={loading}
         // onClose={() => { event.emit('bedClose', unitId, status, isTodo, docid) }}
         onClose={onClose && (() => onClose(itemData))}
-
+        unitId={unitId}
         name={pregnancy.name}
         age={pregnancy.age as any}
         bedNO={pregnancy.bedNO}

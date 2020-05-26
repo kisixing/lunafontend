@@ -27,6 +27,7 @@
     "antd": "^4.0.0",
     "crypto-js": "^4.0.0",
     "doc-scripts": "^1.7.29",
+    "echarts": "^4.7.0",
     "fs-extra": "^8.1.0",
     "lerna": "^3.16.4",
     "react": "^16.13.0",

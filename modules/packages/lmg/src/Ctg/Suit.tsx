@@ -321,7 +321,9 @@ export class Suit extends Draw {
     );
     this.barTool.setBarLeft(this.toolbarposition, false);
   }
-
+  itemAlarm(text: string) {
+    event.emit('item:alarm', this.data.id, 2, text)
+  }
   lazyEmit = throttle((type: string, ...args: any[]) => {
     // console.log(`Suit:${type}`)
     this.emit(type, ...args);
@@ -338,6 +340,7 @@ export class Suit extends Draw {
 
     if (this.alarmLowCount.length >= 4 * this.ctgconfig.alarm_delay) {
       console.log('alarm length', this.alarmLowCount.length)
+      this.itemAlarm('心率过低')
 
       this.lazyEmit('alarmOn', '心率过低');
     }
@@ -347,7 +350,10 @@ export class Suit extends Draw {
     console.log('alarm high', this.alarmHighCount.length)
 
     if (this.alarmHighCount.length >= 4 * this.ctgconfig.alarm_delay) {
-      this.lazyEmit('alarmOn', '心率过高');
+      this.itemAlarm('心率过高')
+
+      event.emit('item:alarm', this.data.id, 2, '心率过高')
+
     }
   }
   alarmOff() {

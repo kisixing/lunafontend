@@ -3,7 +3,7 @@ import { event, EventEmitter } from "@lianmed/utils";
 import { throttle } from "lodash";
 import Queue from "../Ecg/Queue";
 import { getStrategies } from "./strategies";
-import { BedStatus, EWsEvents, EWsStatus, ICache } from './types';
+import { BedStatus, EWsEvents, EWsStatus, ICache, IDeviceType } from './types';
 import { cleardata, convertstarttime, getEmptyCacheItem } from "./utils";
 export * from './types';
 export * from './useCheckNetwork';
@@ -72,6 +72,12 @@ export class WsService extends EventEmitter {
 
     getUnitId(device_no: number | string, bed_no: number | string) {
         return `${device_no}-${bed_no}`
+    }
+    getCacheItem(data: IDeviceType) {
+        const { datacache } = this
+        const { device_no, bed_num } = data
+        const target = datacache.get(this.getUnitId(device_no, bed_num))
+        return target || null
     }
     pongIndex = 0
     sendHeard() {

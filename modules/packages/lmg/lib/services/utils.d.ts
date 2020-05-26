@@ -12,6 +12,8 @@ export declare const mapStatusToText: {
     1: string;
 };
 export declare function getMaxArray(): number[];
-export declare function getEmptyCacheItem(base: ICacheItem): ICacheItem;
+export declare function getEmptyCacheItem(base: {
+    [x in keyof ICacheItem]?: ICacheItem[x];
+}): ICacheItem;
 export declare function cleardata(datacache: ICache, curid: string, fetal_num: number): void;
 export declare function convertstarttime(pureid: string): string;

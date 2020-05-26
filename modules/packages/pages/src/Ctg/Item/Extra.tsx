@@ -13,7 +13,7 @@ interface IProps {
     suit: Suit
     onClose?: (e: React.MouseEvent) => void
     bedname: string
-
+    unitId: string
 }
 
 const SB = styled(Button)`
@@ -39,7 +39,7 @@ const Bed = memo<any>(({ bedname }) => {
 
 
 const C = (props: IProps) => {
-    const { status, suit, onClose, bedname } = props;
+    const { status, suit, onClose, bedname, unitId } = props;
     const [alarmStatus] = useItemAlarm(suit)
 
     const close = useMemo(() =>
@@ -61,7 +61,7 @@ const C = (props: IProps) => {
         <>
             <Bed bedname={bedname} />
 
-            <AlarmStatus alarm2Text={alarmStatus} status={status} />
+            <AlarmStatus alarm2Text={alarmStatus} status={status} unitId={unitId} />
             {
                 close
             }

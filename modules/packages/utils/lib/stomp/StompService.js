@@ -79,7 +79,7 @@ var StompService = (function (_super) {
         if (StompService.s) {
             return StompService.s;
         }
-        console.log('new stomservice', url);
+        console.log('new stomservice', url, _this);
         StompService.s = _this;
         _this.config(url);
         _this.connect();

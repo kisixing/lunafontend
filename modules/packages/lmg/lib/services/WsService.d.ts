@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import { EventEmitter } from "@lianmed/utils";
 import Queue from "../Ecg/Queue";
-import { BedStatus, EWsEvents, EWsStatus, ICache } from './types';
+import { BedStatus, EWsEvents, EWsStatus, ICache, IDeviceType } from './types';
 export * from './types';
 export * from './useCheckNetwork';
 export * from './utils';
@@ -37,6 +37,7 @@ export declare class WsService extends EventEmitter {
     set current(value: string[]);
     constructor(settingData?: any);
     getUnitId(device_no: number | string, bed_no: number | string): string;
+    getCacheItem(data: IDeviceType): import("./types").ICacheItem;
     pongIndex: number;
     sendHeard(): void;
     t: number;

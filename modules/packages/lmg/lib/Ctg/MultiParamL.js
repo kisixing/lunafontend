@@ -7,6 +7,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var antd_1 = require("antd");
 var react_1 = __importStar(require("react"));
 var Suit_1 = require("./Suit");
 var border = '1px dashed #ccc';
@@ -22,31 +23,32 @@ var Gg = function (props) {
         react_1.default.createElement("div", { style: { fontSize: small ? 18 : 64, lineHeight: small ? '34px' : '120px', textAlign: 'right', marginRight: 10, color: color } }, value || '')));
 };
 exports.MultiParamL = function (props) {
-    var data = props.data, isFullScreen = props.isFullScreen, height = props.height;
-    if (!data)
-        return null;
-    var _a = react_1.useState(data && data.ecgdata), ecgData = _a[0], setEcgData = _a[1];
+    var ref = react_1.useRef();
+    var _a = props.ecgData, ecgData = _a === void 0 ? [] : _a, p = props.p, _b = props.bloodList, bloodList = _b === void 0 ? [] : _b;
     react_1.useEffect(function () {
-        setEcgData(data && data.ecgdata);
         var id = setInterval(function () {
-            setEcgData(data && data.ecgdata);
-        }, 2000);
+            var _ = p.B[0];
+            ref.current.style.height = (_ === 50 ? 0 : _) + "%";
+        }, 50);
         return function () {
             clearInterval(id);
         };
-    }, [data]);
-    var keys = ['脉率bpm', '血氧%', '体温℃', '心率bpm', '呼吸(次/分)', '血压(SDM)mmHg'];
-    return (!!(ecgData && ecgData.length) && (react_1.default.createElement("div", { style: { width: isFullScreen ? 220 : '100%', borderRight: isFullScreen && border } }, isFullScreen ?
-        (react_1.default.createElement(react_1.default.Fragment, null,
-            react_1.default.createElement(Gg, { title: "\u8109\u7387", value: isFullScreen || '', unit: "bpm", color: Suit_1.Suit.option.fhrcolor1 }),
-            react_1.default.createElement(Gg, { title: "\u8840\u6C27", value: ecgData[1] || '', unit: "%", color: Suit_1.Suit.option.tococolor }),
-            react_1.default.createElement(Gg, { title: "\u4F53\u6E29", small: true, value: ecgData[2] || '', unit: "\u2103" }),
-            react_1.default.createElement(Gg, { title: "\u5FC3\u7387", small: true, value: ecgData[3] || '', unit: "bpm" }),
-            react_1.default.createElement(Gg, { title: "\u547C\u5438", small: true, value: ecgData[4] || '', unit: "\u6B21/\u5206" }),
-            react_1.default.createElement(Gg, { title: "\u8840\u538BSDM", small: true, value: ecgData[5] || '', unit: "mmHg" }))) : (react_1.default.createElement("div", { style: { height: height, display: 'flex', alignItems: 'center', justifyContent: 'space-around', fontSize: 10 } }, keys.map(function (_, i) {
-        return (react_1.default.createElement("span", null,
-            _,
-            ecgData[i]));
-    }))))));
+    }, [p]);
+    var columns = [
+        { dataIndex: 'sys_bp', title: 'SBP' },
+        { dataIndex: 'mean_bp', title: 'MBP' },
+        { dataIndex: 'dia_bp', title: 'DBP' },
+        { dataIndex: 'time', title: '时间' },
+    ];
+    return (react_1.default.createElement(react_1.default.Fragment, null,
+        react_1.default.createElement(Gg, { title: "\u8109\u7387", value: ecgData[0] || '', unit: "bpm", color: Suit_1.Suit.option.fhrcolor1 }),
+        react_1.default.createElement(Gg, { title: "\u8840\u6C27", value: (react_1.default.createElement(react_1.default.Fragment, null,
+                react_1.default.createElement("span", null, ecgData[1] || ''),
+                react_1.default.createElement("div", { style: { display: 'inline-block', width: 14, height: 46, border: '2px solid blue', position: 'relative' } },
+                    react_1.default.createElement("div", { ref: ref, style: { background: 'red', width: 14 - 4, position: 'absolute', bottom: 0 } })))), unit: "%", color: Suit_1.Suit.option.tococolor }),
+        react_1.default.createElement(Gg, { title: "\u4F53\u6E29", small: true, value: ecgData[2] || '', unit: "\u2103" }),
+        react_1.default.createElement(Gg, { title: "\u5FC3\u7387", small: true, value: ecgData[3] || '', unit: "bpm" }),
+        react_1.default.createElement(Gg, { title: "\u547C\u5438", small: true, value: ecgData[4] || '', unit: "\u6B21/\u5206" }),
+        react_1.default.createElement(antd_1.Table, { title: function () { return "\u8840\u538B(mmHg)\uFF1A" + ecgData[5]; }, rowKey: "id", size: "small", pagination: false, columns: columns, dataSource: bloodList })));
 };
 //# sourceMappingURL=MultiParamL.js.map

@@ -49,7 +49,9 @@ function getEmptyCacheItem(base) {
         ple: new Queue_1.default(240),
         ecgdata: getMaxArray(),
         is_include_volume: false,
-        is_include_tocozero: false
+        is_include_tocozero: false,
+        realTime: true,
+        alarms: Object.create(null)
     };
     return Object.assign(Object.create(null), item, base);
 }

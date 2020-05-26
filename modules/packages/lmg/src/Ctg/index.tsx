@@ -11,7 +11,7 @@ import { Loading } from './Loading';
 import { Suit } from './Suit';
 import { ButtonTools } from "./ButtonTools";
 import styled from "styled-components";
-import { MultiParamL } from "./MultiParamL";
+import { MultiParam } from "./MultiParam";
 const Wrapper = styled.div`
   width:100%;
   height:100%;
@@ -77,7 +77,7 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
       const { height } = box.current.getBoundingClientRect();
       const h = height / 5;
       const t = h > 40 ? (h > 120 ? 210 : 40) : (26)
-      setEcgHeight(t)
+      setEcgHeight(showEcg ? t : 0)
     })
   // useLayoutEffect(() => {
   //   ctg.current && ctg.current.resize()
@@ -94,7 +94,7 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
   return (
     <Wrapper style={{ flexDirection: isFullScreen ? 'row' : 'column-reverse' }}>
       {
-        <MultiParamL data={data} isFullScreen={isFullScreen} height={ecgHeight} />
+        <MultiParam data={data} isFullScreen={isFullScreen} height={ecgHeight} />
       }
       <div className="box" ref={box} {...others}
         onMouseDownCapture={e => {
@@ -128,7 +128,7 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
         </FancyCanvas> */}
         </div>
         {
-          ecgHeight && showEcg && (
+          ecgHeight && showEcg && (isV3 || isFullScreen) && (
             <div style={{ height: isV3 ? '100%' : (isFullScreen ? ecgHeight : 0), overflow: 'hidden' }} >
               <Ecg data={data} ecgHeight={ecgHeight} onReady={e => ecg.current = e} />
             </div>

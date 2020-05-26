@@ -141,6 +141,12 @@ var WsService = (function (_super) {
     WsService.prototype.getUnitId = function (device_no, bed_no) {
         return device_no + "-" + bed_no;
     };
+    WsService.prototype.getCacheItem = function (data) {
+        var datacache = this.datacache;
+        var device_no = data.device_no, bed_num = data.bed_num;
+        var target = datacache.get(this.getUnitId(device_no, bed_num));
+        return target || null;
+    };
     WsService.prototype.sendHeard = function () {
         this.send(JSON.stringify({
             data: { index: this.pongIndex, time: +new Date() },

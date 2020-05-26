@@ -46,7 +46,7 @@ var Loading_1 = require("./Loading");
 var Suit_1 = require("./Suit");
 var ButtonTools_1 = require("./ButtonTools");
 var styled_components_1 = __importDefault(require("styled-components"));
-var MultiParamL_1 = require("./MultiParamL");
+var MultiParam_1 = require("./MultiParam");
 var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  width:100%;\n  height:100%;\n  display:flex;\n  .btns{\n    display:none\n  }\n  :hover .btns{\n    display:block\n  }\n  .box {\n    flex:1\n  }\n"], ["\n  width:100%;\n  height:100%;\n  display:flex;\n  .btns{\n    display:none\n  }\n  :hover .btns{\n    display:block\n  }\n  .box {\n    flex:1\n  }\n"])));
 exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
     var data = props.data, _a = props.mutableSuitObject, mutableSuitObject = _a === void 0 ? { suit: null } : _a, _b = props.suitType, suitType = _b === void 0 ? 0 : _b, _c = props.showEcg, showEcg = _c === void 0 ? false : _c, _d = props.loading, loading = _d === void 0 ? false : _d, _e = props.onReady, onReady = _e === void 0 ? function (s) { } : _e, others = __rest(props, ["data", "mutableSuitObject", "suitType", "showEcg", "loading", "onReady"]);
@@ -72,7 +72,7 @@ exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
         var height = box.current.getBoundingClientRect().height;
         var h = height / 5;
         var t = h > 40 ? (h > 120 ? 210 : 40) : (26);
-        setEcgHeight(t);
+        setEcgHeight(showEcg ? t : 0);
     });
     var isFullScreen = ecgHeight > 200;
     console.log('isFullScreen', isFullScreen);
@@ -82,7 +82,7 @@ exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
     });
     var canvasStyles = { position: 'absolute' };
     return (react_1.default.createElement(Wrapper, { style: { flexDirection: isFullScreen ? 'row' : 'column-reverse' } },
-        react_1.default.createElement(MultiParamL_1.MultiParamL, { data: data, isFullScreen: isFullScreen, height: ecgHeight }),
+        react_1.default.createElement(MultiParam_1.MultiParam, { data: data, isFullScreen: isFullScreen, height: ecgHeight }),
         react_1.default.createElement("div", __assign({ className: "box", ref: box }, others, { onMouseDownCapture: function (e) {
                 var x = e.nativeEvent.offsetX;
                 var y = e.nativeEvent.offsetY;
@@ -100,7 +100,7 @@ exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
                 react_1.default.createElement("canvas", { style: canvasStyles, ref: canvasdata }),
                 react_1.default.createElement("canvas", { style: canvasStyles, ref: canvasselect }),
                 react_1.default.createElement("canvas", { style: canvasStyles, ref: canvasanalyse })),
-            ecgHeight && showEcg && (react_1.default.createElement("div", { style: { height: isV3 ? '100%' : (isFullScreen ? ecgHeight : 0), overflow: 'hidden' } },
+            ecgHeight && showEcg && (isV3 || isFullScreen) && (react_1.default.createElement("div", { style: { height: isV3 ? '100%' : (isFullScreen ? ecgHeight : 0), overflow: 'hidden' } },
                 react_1.default.createElement(Ecg_1.default, { data: data, ecgHeight: ecgHeight, onReady: function (e) { return ecg.current = e; } }))),
             react_1.default.createElement(ContextMenu_1.default, { s: ctg },
                 react_1.default.createElement(ScrollBar_1.default, { box: box, getBarTool: function (tool) { barTool.current = tool; } })),

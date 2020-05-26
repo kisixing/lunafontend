@@ -16,31 +16,53 @@ require("antd/lib/card/style/index.css");
 require("antd/lib/tag/style/index.css");
 var react_1 = __importStar(require("react"));
 var Alarm2_1 = __importDefault(require("./Alarm2"));
+var utils_1 = require("@lianmed/utils");
+function genAlarm(type, text) {
+    var target = { type: type, text: text, fucked: false, dirty: 0 };
+    return target;
+}
 var Status = react_1.memo(function (_a) {
-    var alarm2Text = _a.alarm2Text, status = _a.status, alarm0Text = _a.alarm0Text, alarm1Text = _a.alarm1Text;
-    var _b = react_1.useState(alarm2Text ? 2 : (alarm1Text ? 1 : (alarm0Text ? 0 : -1))), index = _b[0], setIndex = _b[1];
+    var alarm2Text = _a.alarm2Text, status = _a.status, alarm0Text = _a.alarm0Text, alarm1Text = _a.alarm1Text, unitId = _a.unitId;
+    var intervalId = react_1.useRef();
+    var interval = react_1.useRef(2000);
+    var alarmList = react_1.useRef([]);
+    var _b = react_1.useState(), current = _b[0], setCurrent = _b[1];
     react_1.useEffect(function () {
-        var arr = [];
-        [alarm0Text, alarm1Text, alarm2Text].forEach(function (_, i) {
-            _ && arr.push(i);
-        });
-        var i = arr.reduce(function (target, next) {
-            if (next > target) {
-                target = next;
+        var cb = function (_unitId, type, text) {
+            if (_unitId !== unitId)
+                return;
+            var list = alarmList.current;
+            var old = list.find(function (_) { return _.text === text; });
+            if (!old) {
+                var target = genAlarm(type, text);
+                list.push(target);
             }
-            return target;
-        }, -1);
-        setIndex(arr[i % arr.length] || -1);
-        var id = setInterval(function () {
-            i++;
-            setIndex(arr[i % arr.length] || -1);
-        }, 6000);
-        return function () {
-            clearInterval(id);
         };
-    }, [alarm2Text, alarm1Text, alarm0Text]);
-    var r = (index !== -1 && (alarm0Text || alarm1Text || alarm2Text)) ? react_1.default.createElement(Alarm2_1.default, { alarmText: alarm2Text }) : null;
-    return !!WsService_1.mapStatusToColor[status] && (react_1.default.createElement(react_1.default.Fragment, null, r ? r : (react_1.default.createElement(antd_1.Tag, { style: { border: '2px solid #fff' }, color: WsService_1.mapStatusToColor[status] }, WsService_1.mapStatusToText[status]))));
+        utils_1.event.on('item:alarm', cb);
+        return function () {
+            utils_1.event.off('item:alarm', cb);
+        };
+    }, [unitId]);
+    react_1.useEffect(function () {
+        call();
+        return function () {
+            clearTimeout(intervalId.current);
+        };
+    }, [call]);
+    function call() {
+        intervalId.current = setTimeout(function () {
+            var list = alarmList.current;
+            if (!list.length) {
+                setCurrent(null);
+            }
+            else {
+                var head = list.shift();
+                setCurrent(head);
+            }
+            call();
+        }, interval.current);
+    }
+    return !!WsService_1.mapStatusToColor[status] && (react_1.default.createElement(react_1.default.Fragment, null, current ? react_1.default.createElement(Alarm2_1.default, { alarm: current }) : (react_1.default.createElement(antd_1.Tag, { style: { border: '2px solid #fff' }, color: WsService_1.mapStatusToColor[status] }, WsService_1.mapStatusToText[status]))));
 });
 exports.default = react_1.memo(Status);
 //# sourceMappingURL=AlarmStatus.js.map

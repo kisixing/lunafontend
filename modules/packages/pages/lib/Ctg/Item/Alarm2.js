@@ -13,23 +13,43 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var antd_1 = require("antd");
 var react_1 = __importStar(require("react"));
 var react_dom_1 = __importDefault(require("react-dom"));
+var map = {
+    0: {
+        color: 'red',
+        star: '*',
+        interval: 1000
+    },
+    1: {
+        color: 'red',
+        star: '**',
+        interval: 500
+    },
+    2: {
+        color: 'red',
+        star: '***',
+        interval: 250
+    }
+};
 var C = function (props) {
-    var alarmText = props.alarmText;
+    var alarm = props.alarm;
+    if (!alarm)
+        return null;
     var ref = react_1.useRef();
     var flag = react_1.useRef(false);
+    var config = map[alarm.type];
     react_1.useEffect(function () {
         var d = react_dom_1.default.findDOMNode(ref.current);
         var id = setInterval(function () {
-            d && (d.style.background = flag.current ? 'red' : 'transparent');
+            d && (d.style.background = flag.current ? config.color : 'transparent');
             flag.current = !flag.current;
-        }, 250);
+        }, config.interval);
         return function () {
             return clearInterval(id);
         };
-    }, []);
-    return (react_1.default.createElement(antd_1.Tag, { ref: ref, style: { border: '2px solid #fff', color: '#fff', display: alarmText ? 'inline-block' : 'none' } },
-        "***",
-        alarmText));
+    }, [config]);
+    return (react_1.default.createElement(antd_1.Tag, { ref: ref, style: { border: '2px solid #fff', color: '#fff', display: alarm.text ? 'inline-block' : 'none' } },
+        config.star,
+        alarm.text));
 };
 exports.default = react_1.memo(C);
 //# sourceMappingURL=Alarm2.js.map

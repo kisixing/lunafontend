@@ -283,11 +283,15 @@ var Suit = (function (_super) {
             (this.data.index - this.canvasline.width * 2));
         this.barTool.setBarLeft(this.toolbarposition, false);
     };
+    Suit.prototype.itemAlarm = function (text) {
+        utils_2.event.emit('item:alarm', this.data.id, 2, text);
+    };
     Suit.prototype.alarmLow = function () {
         this.alarmLowCount.push(0);
         console.log('alarm low', this.alarmLowCount.length);
         if (this.alarmLowCount.length >= 4 * this.ctgconfig.alarm_delay) {
             console.log('alarm length', this.alarmLowCount.length);
+            this.itemAlarm('心率过低');
             this.lazyEmit('alarmOn', '心率过低');
         }
     };
@@ -295,7 +299,8 @@ var Suit = (function (_super) {
         this.alarmHighCount.push(0);
         console.log('alarm high', this.alarmHighCount.length);
         if (this.alarmHighCount.length >= 4 * this.ctgconfig.alarm_delay) {
-            this.lazyEmit('alarmOn', '心率过高');
+            this.itemAlarm('心率过高');
+            utils_2.event.emit('item:alarm', this.data.id, 2, '心率过高');
         }
     };
     Suit.prototype.alarmOff = function () {

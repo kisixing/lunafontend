@@ -1,7 +1,7 @@
 import Queue from "../Ecg/Queue";
 
 export type TDeviceType = ('SR_K9' | 'SR_B5_B6' | 'V3' | 'F3')
-
+export type TAlarmType = 0 | 1 | 2
 type TF = 0 | 1
 
 export interface IVolumeData {
@@ -40,6 +40,7 @@ export interface ICacheItemPregnancy {
     outpatientNO?: string
 }
 export interface ICacheItem {
+    realTime?: boolean
     id: string
     volumeData?: IVolumeData
     deviceType?: TDeviceType
@@ -76,17 +77,39 @@ export interface ICacheItem {
     ple?: Queue;
     ecgdata?: any[];
     ismulti?: boolean;
+    bloodList?: IBloodListItem[]
+
+    alarms: {
+        alarm_pulse_rate?: TAlarmType
+        alarm_sys_bp?: TAlarmType
+        alarm_mean_bp?: TAlarmType
+        alarm_blood_oxygen?: TAlarmType
+        alarm_offline_blood_temperature?: TAlarmType
+        alarm_temperature?: TAlarmType
+        alarm_dia_bp?: TAlarmType
+        alarm_offline_blood_oxygen?: TAlarmType
+    }
 }
 export type ICache = Map<string, ICacheItem> & { clean?: (key: string) => void }
-export interface IDevice {
-    ERP: string;
+export interface IDeviceType {
     bed_num: number;
-    beds: IBed[];
     device_no: number;
     device_type: TDeviceType;
+}
+export interface IDevice extends IDeviceType {
+    ERP: string;
+    beds: IBed[];
+
     ecg_sampling_rate: number;
     is_handshake_finish: boolean;
     wifi_conn_state: boolean;
+}
+
+export interface IBloodListItem {
+    dia_bp: number
+    mean_bp: number
+    sys_bp: number
+    time: string
 }
 interface IBed {
     bed_no: number;

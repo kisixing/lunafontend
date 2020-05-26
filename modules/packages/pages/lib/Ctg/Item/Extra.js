@@ -31,7 +31,7 @@ var Bed = react_1.memo(function (_a) {
         "\u53F7");
 });
 var C = function (props) {
-    var status = props.status, suit = props.suit, onClose = props.onClose, bedname = props.bedname;
+    var status = props.status, suit = props.suit, onClose = props.onClose, bedname = props.bedname, unitId = props.unitId;
     var alarmStatus = useItemAlarm_1.default(suit)[0];
     var close = react_1.useMemo(function () {
         return onClose &&
@@ -39,7 +39,7 @@ var C = function (props) {
     }, [onClose]);
     return (react_1.default.createElement(react_1.default.Fragment, null,
         react_1.default.createElement(Bed, { bedname: bedname }),
-        react_1.default.createElement(AlarmStatus_1.default, { alarm2Text: alarmStatus, status: status }),
+        react_1.default.createElement(AlarmStatus_1.default, { alarm2Text: alarmStatus, status: status, unitId: unitId }),
         close));
 };
 exports.default = react_1.memo(C);

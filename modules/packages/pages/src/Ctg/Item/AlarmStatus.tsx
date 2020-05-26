@@ -2,47 +2,74 @@ import { BedStatus, mapStatusToColor, mapStatusToText } from "@lianmed/lmg/lib/s
 import { Tag } from 'antd';
 import "antd/lib/card/style/index.css";
 import "antd/lib/tag/style/index.css";
-import React, { memo, useState, useEffect } from 'react';
+import React, { memo, useState, useEffect, useRef } from 'react';
 import Alarm2 from './Alarm2'
+import { event } from "@lianmed/utils";
 interface IProps {
     status: BedStatus
+    unitId: string
     alarm2Text?: string
     alarm1Text?: string
     alarm0Text?: string
-
+}
+export type TAlarmType = 0 | 1 | 2
+export interface IAlarm {
+    text: string
+    type: TAlarmType
+    fucked: boolean
+    dirty: number
+}
+function genAlarm(type: TAlarmType, text: string) {
+    const target: IAlarm = { type, text, fucked: false, dirty: 0 }
+    return target
 }
 
-const Status = memo<IProps>(({ alarm2Text, status, alarm0Text, alarm1Text }) => {
-
-    const [index, setIndex] = useState(alarm2Text ? 2 : (alarm1Text ? 1 : (alarm0Text ? 0 : -1)))
+const Status = memo<IProps>(({ alarm2Text, status, alarm0Text, alarm1Text, unitId }) => {
+    const intervalId = useRef<NodeJS.Timeout>()
+    const interval = useRef(2000)
+    const alarmList = useRef<IAlarm[]>([])
+    const [current, setCurrent] = useState<IAlarm>()
     useEffect(() => {
-        const arr = [];
-        [alarm0Text, alarm1Text, alarm2Text].forEach((_, i) => {
-            _ && arr.push(i)
-        })
-        let i = arr.reduce((target, next) => {
-            if (next > target) {
-                target = next
+        const cb = (_unitId: string, type: TAlarmType, text: string) => {
+            if (_unitId !== unitId) return
+            const list = alarmList.current
+            const old = list.find(_ => _.text === text)
+            if (!old) {
+                const target = genAlarm(type, text)
+                list.push(target)
             }
-            return target
-        }, -1)
-        setIndex(arr[i % arr.length] || -1)
-
-        const id = setInterval(() => {
-            i++;
-            setIndex(arr[i % arr.length] || -1)
-
-        }, 6000)
-        return () => {
-            clearInterval(id)
         }
-    }, [alarm2Text, alarm1Text, alarm0Text])
-    //@ts-ignore
-    const r = (index !== -1 && (alarm0Text || alarm1Text || alarm2Text)) ? <Alarm2 alarmText={alarm2Text} /> : null
+        event.on('item:alarm', cb)
+        return () => {
+            event.off('item:alarm', cb)
+        }
+    }, [unitId])
+    useEffect(() => {
+        call()
+        return () => {
+            clearTimeout(intervalId.current)
+        }
+    }, [call])
+    function call() {
+        intervalId.current = setTimeout(() => {
+            let list = alarmList.current
+            if (!list.length) {
+                setCurrent(null)
+            } else {
+                const head = list.shift()
+                setCurrent(head)
+            }
+
+            call()
+        }, interval.current);
+    }
+
+
+
     return !!mapStatusToColor[status] && (
         <>
             {
-                r ? r : (
+                current ? <Alarm2 alarm={current} /> : (
                     <Tag style={{ border: '2px solid #fff' }} color={mapStatusToColor[status]}>
                         {mapStatusToText[status]}
                     </Tag>
