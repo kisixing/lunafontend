@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getOptions1 = function (hr, pulse, temperature, spoz, date) {
+exports.getOptions1 = function (data, date, title, name, unit, color) {
     return {
         tooltip: {
             trigger: 'axis',
@@ -10,10 +10,7 @@ exports.getOptions1 = function (hr, pulse, temperature, spoz, date) {
         },
         title: {
             left: 'left',
-            text: '多参数曲线',
-        },
-        legend: {
-            data: ['心率', '脉率', '体温', '血氧',]
+            text: title,
         },
         toolbox: {
             feature: {
@@ -33,18 +30,7 @@ exports.getOptions1 = function (hr, pulse, temperature, spoz, date) {
             {
                 type: 'value',
                 boundaryGap: [0, '20%'],
-                name: '心率/脉率'
-            },
-            {
-                type: 'value',
-                boundaryGap: [0, '20%'],
-                name: '体温°C',
-            },
-            {
-                type: 'value',
-                boundaryGap: [0, '20%'],
-                name: '血氧%',
-                offset: 50
+                name: name + unit,
             }
         ],
         dataZoom: [{
@@ -67,50 +53,15 @@ exports.getOptions1 = function (hr, pulse, temperature, spoz, date) {
             }],
         series: [
             {
-                name: '心率',
-                type: 'line',
-                smooth: true,
-                symbol: 'none',
-                sampling: 'average',
-                itemStyle: {
-                    color: 'rgb(255, 70, 131)'
-                },
-                data: hr
-            },
-            {
-                name: '脉率',
-                type: 'line',
-                smooth: true,
-                symbol: 'none',
-                sampling: 'average',
-                itemStyle: {
-                    color: 'blue'
-                },
-                data: pulse
-            },
-            {
                 name: '体温',
-                yAxisIndex: 1,
                 type: 'line',
                 smooth: true,
                 symbol: 'none',
                 sampling: 'average',
                 itemStyle: {
-                    color: 'red'
+                    color: color
                 },
-                data: temperature
-            },
-            {
-                name: '血氧',
-                type: 'line',
-                yAxisIndex: 2,
-                smooth: true,
-                symbol: 'none',
-                sampling: 'average',
-                itemStyle: {
-                    color: 'green'
-                },
-                data: spoz
+                data: data
             }
         ]
     };

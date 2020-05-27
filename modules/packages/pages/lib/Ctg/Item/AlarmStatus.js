@@ -24,7 +24,7 @@ function genAlarm(type, text) {
 var Status = react_1.memo(function (_a) {
     var alarm2Text = _a.alarm2Text, status = _a.status, alarm0Text = _a.alarm0Text, alarm1Text = _a.alarm1Text, unitId = _a.unitId;
     var intervalId = react_1.useRef();
-    var interval = react_1.useRef(2000);
+    var interval = react_1.useRef(1000);
     var alarmList = react_1.useRef([]);
     var _b = react_1.useState(), current = _b[0], setCurrent = _b[1];
     react_1.useEffect(function () {
@@ -33,6 +33,7 @@ var Status = react_1.memo(function (_a) {
                 return;
             var list = alarmList.current;
             var old = list.find(function (_) { return _.text === text; });
+            console.log('item:alarm', _unitId, old, list);
             if (!old) {
                 var target = genAlarm(type, text);
                 list.push(target);
@@ -45,13 +46,16 @@ var Status = react_1.memo(function (_a) {
     }, [unitId]);
     react_1.useEffect(function () {
         call();
+        console.log('call', unitId);
         return function () {
+            console.log('clear', unitId);
             clearTimeout(intervalId.current);
         };
-    }, [call]);
+    }, []);
     function call() {
         intervalId.current = setTimeout(function () {
             var list = alarmList.current;
+            console.log('item:alarm---', unitId, list);
             if (!list.length) {
                 setCurrent(null);
             }

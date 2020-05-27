@@ -14,6 +14,7 @@ var push_data_ctg_1 = require("./push_data_ctg");
 var push_data_ecg_1 = require("./push_data_ecg");
 var push_offline_data_ctg_1 = require("./push_offline_data_ctg");
 var endpoint_user_confirm_msg_1 = require("./endpoint_user_confirm_msg");
+var list_blood_pressure_1 = require("./list_blood_pressure");
 exports.strategies = {
     start_work: start_work_1.start_work,
     end_work: end_work_1.end_work,
@@ -29,6 +30,7 @@ exports.strategies = {
     push_data_ecg: push_data_ecg_1.push_data_ecg,
     push_offline_data_ctg: push_offline_data_ctg_1.push_offline_data_ctg,
     endpoint_user_confirm_msg: endpoint_user_confirm_msg_1.endpoint_user_confirm_msg,
+    list_blood_pressure: list_blood_pressure_1.list_blood_pressure,
 };
 function getStrategies(context) {
     var entries = Object.entries(exports.strategies);

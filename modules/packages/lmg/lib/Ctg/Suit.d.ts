@@ -85,9 +85,9 @@ export declare class Suit extends Draw {
     lazyEmit: ((type: string, ...args: any[]) => boolean) & import("lodash").Cancelable;
     alarmHighCount: any[];
     alarmLowCount: any[];
-    alarmLow(): void;
-    alarmHigh(): void;
-    alarmOff(): void;
+    alarmLow(fetalIndex: number): void;
+    alarmHigh(fetalIndex: number): void;
+    alarmOff(fetalIndex: number): void;
     destroy(): void;
     _resize(): void;
     setfetalposition(fhr1: any, fhr2: any, fhr3: any): void;

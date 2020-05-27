@@ -77,7 +77,7 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
       const { height } = box.current.getBoundingClientRect();
       const h = height / 5;
       const t = h > 40 ? (h > 120 ? 210 : 40) : (26)
-      setEcgHeight(showEcg ? t : 0)
+      setEcgHeight(t)
     })
   // useLayoutEffect(() => {
   //   ctg.current && ctg.current.resize()
@@ -94,7 +94,7 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
   return (
     <Wrapper style={{ flexDirection: isFullScreen ? 'row' : 'column-reverse' }}>
       {
-        <MultiParam data={data} isFullScreen={isFullScreen} height={ecgHeight} />
+        showEcg && <MultiParam data={data} isFullScreen={isFullScreen} height={ecgHeight} />
       }
       <div className="box" ref={box} {...others}
         onMouseDownCapture={e => {

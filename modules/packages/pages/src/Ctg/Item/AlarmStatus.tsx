@@ -26,14 +26,18 @@ function genAlarm(type: TAlarmType, text: string) {
 
 const Status = memo<IProps>(({ alarm2Text, status, alarm0Text, alarm1Text, unitId }) => {
     const intervalId = useRef<NodeJS.Timeout>()
-    const interval = useRef(2000)
+    const interval = useRef(1000)
     const alarmList = useRef<IAlarm[]>([])
     const [current, setCurrent] = useState<IAlarm>()
     useEffect(() => {
         const cb = (_unitId: string, type: TAlarmType, text: string) => {
             if (_unitId !== unitId) return
+
             const list = alarmList.current
             const old = list.find(_ => _.text === text)
+
+            console.log('item:alarm', _unitId, old,list)
+
             if (!old) {
                 const target = genAlarm(type, text)
                 list.push(target)
@@ -46,13 +50,20 @@ const Status = memo<IProps>(({ alarm2Text, status, alarm0Text, alarm1Text, unitI
     }, [unitId])
     useEffect(() => {
         call()
+
+        console.log('call', unitId)
+
         return () => {
+        console.log('clear', unitId)
+
             clearTimeout(intervalId.current)
         }
-    }, [call])
+    }, [])
     function call() {
         intervalId.current = setTimeout(() => {
             let list = alarmList.current
+            console.log('item:alarm---', unitId, list)
+
             if (!list.length) {
                 setCurrent(null)
             } else {

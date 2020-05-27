@@ -286,28 +286,31 @@ var Suit = (function (_super) {
     Suit.prototype.itemAlarm = function (text) {
         utils_2.event.emit('item:alarm', this.data.id, 2, text);
     };
-    Suit.prototype.alarmLow = function () {
-        this.alarmLowCount.push(0);
-        console.log('alarm low', this.alarmLowCount.length);
-        if (this.alarmLowCount.length >= 4 * this.ctgconfig.alarm_delay) {
-            console.log('alarm length', this.alarmLowCount.length);
+    Suit.prototype.alarmLow = function (fetalIndex) {
+        var key = 'alarmLowCount' + fetalIndex;
+        this[key] = this[key] || [];
+        var arr = this[key];
+        arr.push(0);
+        if (arr.length >= 2 * this.ctgconfig.alarm_delay) {
             this.itemAlarm('心率过低');
             this.lazyEmit('alarmOn', '心率过低');
         }
     };
-    Suit.prototype.alarmHigh = function () {
-        this.alarmHighCount.push(0);
-        console.log('alarm high', this.alarmHighCount.length);
-        if (this.alarmHighCount.length >= 4 * this.ctgconfig.alarm_delay) {
+    Suit.prototype.alarmHigh = function (fetalIndex) {
+        var key = 'alarmHighCount' + fetalIndex;
+        this[key] = this[key] || [];
+        var arr = this[key];
+        arr.push(0);
+        if (arr.length >= 2 * this.ctgconfig.alarm_delay) {
+            console.log("hh" + fetalIndex, arr.length);
             this.itemAlarm('心率过高');
-            utils_2.event.emit('item:alarm', this.data.id, 2, '心率过高');
+            this.lazyEmit('alarmOn', '心率过高');
         }
     };
-    Suit.prototype.alarmOff = function () {
+    Suit.prototype.alarmOff = function (fetalIndex) {
         this.lazyEmit('alarmOff', '');
-        console.log('alarm off');
-        this.alarmHighCount = [];
-        this.alarmLowCount = [];
+        var key = 'alarmLowCount' + fetalIndex;
+        this[key] = [];
     };
     Suit.prototype.destroy = function () {
         this.intervalIds.forEach(function (_) { return clearInterval(_); });

@@ -572,13 +572,13 @@ export default class DrawCTG {
     let span = '';
     let offsetfhr = '';
     //kisi 2019-12-08 fetalcount 修改为 fetal_num
-    for (let i = 0; i < suit.data.fetal_num; i++) {
+    for (let fetalIndex = 0; fetalIndex < suit.data.fetal_num; fetalIndex++) {
       label = '';
       offsetfhr = '';
       span = '';
       datacontext.font = 'bold ' + fontsize + 'px arial';
-      datacontext.fillStyle = suit.ctgconfig.fhrcolor[i];
-      let cv = fhr[i] && fhr[i][x]
+      datacontext.fillStyle = suit.ctgconfig.fhrcolor[fetalIndex];
+      let cv = fhr[fetalIndex] && fhr[fetalIndex][x]
 
 
       let curvalue = (typeof cv !== 'number' || cv < 1 || cv > 240) ? EMPTY_SYMBOL : cv.toString()
@@ -587,40 +587,40 @@ export default class DrawCTG {
       if (suit.ctgconfig.alarm_enable && cv > suit.ctgconfig.alarm_high) {
         if (eventemit) {
           console.log('心率过高', cv);
-          this.suit.alarmHigh();
+          this.suit.alarmHigh(fetalIndex);
         }
         alarm = 1;
         this.suit.alarm = alarm;
       } else if (suit.ctgconfig.alarm_enable && cv < suit.ctgconfig.alarm_low) {
         if (eventemit) {
           console.log('心率过低', cv, this.suit.ctgconfig.alarm_delay);
-          this.suit.alarmLow();
+          this.suit.alarmLow(fetalIndex);
         }
         alarm = 1;
         this.suit.alarm = alarm;
       }
       else {
-        datacontext.fillStyle = suit.ctgconfig.fhrcolor[i];
+        datacontext.fillStyle = suit.ctgconfig.fhrcolor[fetalIndex];
       }
       if (alarm == 0 && suit.ctgconfig.alarm_enable && this.suit.alarm == 1) {
 
         console.log('恢复', cv, curvalue, alarm, this.suit.alarm, suit.ctgconfig.alarm_high < cv, suit.ctgconfig.alarm_low > cv,x);
-        this.suit.alarmOff();
+        this.suit.alarmOff(fetalIndex);
         this.suit.alarm = alarm;
       }
       //kisi todo 2019-11-14 增加3胎的备注
       //kisi 2019-12-08 对象修改到 suit.data
       //console.log('fetalposition',suit.data.fetalposition);
-      if (i == 0) {
+      if (fetalIndex == 0) {
         if (suit.data.fetalposition && typeof (suit.data.fetalposition.fhr1) != 'undefined') {
           label = suit.data.fetalposition.fhr1;
         }
-      } else if (i == 1) {
+      } else if (fetalIndex == 1) {
         if (suit.data.fetalposition && typeof (suit.data.fetalposition.fhr2) != 'undefined') {
           label = suit.data.fetalposition.fhr2;
         }
         offsetfhr = ' ' + this.fhroffset;
-      } else if (i == 2) {
+      } else if (fetalIndex == 2) {
         if (suit.data.fetalposition && typeof (suit.data.fetalposition.fhr3) != 'undefined') {
           label = suit.data.fetalposition.fhr3;
         }
@@ -631,12 +631,12 @@ export default class DrawCTG {
       if (typeof (label) == 'undefined') {
         label = '';
       }
-      if (label.length > 0 || i > 0) {
+      if (label.length > 0 || fetalIndex > 0) {
         span = '    ';
       }
 
-      datacontext.fillText('FHR' + (i + 1) + span + ' : ' + curvalue, 10, curpostion);
-      if (label.length > 0 || i > 0) {
+      datacontext.fillText('FHR' + (fetalIndex + 1) + span + ' : ' + curvalue, 10, curpostion);
+      if (label.length > 0 || fetalIndex > 0) {
         datacontext.font = 'bold ' + fontsize / 2 + 'px arial';
         datacontext.fillText(label, 10 + fontsize * 2.8, curpostion);
         datacontext.fillText(offsetfhr, 10 + fontsize * 2.8, curpostion + fontsize / 2);

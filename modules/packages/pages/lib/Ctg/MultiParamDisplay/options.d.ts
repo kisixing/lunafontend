@@ -1,4 +1,4 @@
-export declare const getOptions1: (hr: any, pulse: any, temperature: any, spoz: any, date: any) => {
+export declare const getOptions1: (data: any[], date: any[], title: string, name: string, unit: string, color: string) => {
     tooltip: {
         trigger: string;
         position: (pt: any) => any[];
@@ -6,9 +6,6 @@ export declare const getOptions1: (hr: any, pulse: any, temperature: any, spoz: 
     title: {
         left: string;
         text: string;
-    };
-    legend: {
-        data: string[];
     };
     toolbox: {
         feature: {
@@ -22,19 +19,13 @@ export declare const getOptions1: (hr: any, pulse: any, temperature: any, spoz: 
     xAxis: {
         type: string;
         boundaryGap: boolean;
-        data: any;
+        data: any[];
     };
-    yAxis: ({
+    yAxis: {
         type: string;
         boundaryGap: (string | number)[];
         name: string;
-        offset?: undefined;
-    } | {
-        type: string;
-        boundaryGap: (string | number)[];
-        name: string;
-        offset: number;
-    })[];
+    }[];
     dataZoom: ({
         type: string;
         startValue: number;
@@ -62,7 +53,7 @@ export declare const getOptions1: (hr: any, pulse: any, temperature: any, spoz: 
         startValue?: undefined;
         endValue?: undefined;
     })[];
-    series: ({
+    series: {
         name: string;
         type: string;
         smooth: boolean;
@@ -71,18 +62,6 @@ export declare const getOptions1: (hr: any, pulse: any, temperature: any, spoz: 
         itemStyle: {
             color: string;
         };
-        data: any;
-        yAxisIndex?: undefined;
-    } | {
-        name: string;
-        yAxisIndex: number;
-        type: string;
-        smooth: boolean;
-        symbol: string;
-        sampling: string;
-        itemStyle: {
-            color: string;
-        };
-        data: any;
-    })[];
+        data: any[];
+    }[];
 };

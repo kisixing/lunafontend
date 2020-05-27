@@ -72,7 +72,7 @@ exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
         var height = box.current.getBoundingClientRect().height;
         var h = height / 5;
         var t = h > 40 ? (h > 120 ? 210 : 40) : (26);
-        setEcgHeight(showEcg ? t : 0);
+        setEcgHeight(t);
     });
     var isFullScreen = ecgHeight > 200;
     console.log('isFullScreen', isFullScreen);
@@ -82,7 +82,7 @@ exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
     });
     var canvasStyles = { position: 'absolute' };
     return (react_1.default.createElement(Wrapper, { style: { flexDirection: isFullScreen ? 'row' : 'column-reverse' } },
-        react_1.default.createElement(MultiParam_1.MultiParam, { data: data, isFullScreen: isFullScreen, height: ecgHeight }),
+        showEcg && react_1.default.createElement(MultiParam_1.MultiParam, { data: data, isFullScreen: isFullScreen, height: ecgHeight }),
         react_1.default.createElement("div", __assign({ className: "box", ref: box }, others, { onMouseDownCapture: function (e) {
                 var x = e.nativeEvent.offsetX;
                 var y = e.nativeEvent.offsetY;

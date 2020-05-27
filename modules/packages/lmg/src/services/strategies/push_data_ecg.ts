@@ -67,8 +67,8 @@ export function push_data_ecg(this: WsService, received_msg: IData) {
             item.ple_arr = Array.isArray(item.ple_arr) ? item.ple_arr : []
 
             const { ecg_arr, ple_arr, pulse_rate, sys_bp, dia_bp, mean_bp, temperature, temperature1, blood_oxygen, resp_rate, index, ecg, power, cuff_bp, ...o } = item
-            o.alarm_blood_oxygen = 2
-            o.alarm_dia_bp = 1
+            // o.alarm_blood_oxygen = 2
+            // o.alarm_dia_bp = 1
             target.alarms = Object.assign(Object.create(null), target.alarms, o)
             Object.keys(o).forEach(k => {
                 const value = o[k]
@@ -77,7 +77,7 @@ export function push_data_ecg(this: WsService, received_msg: IData) {
                 const valueText = value === 1 ? '过低' : '过高'
                 if (text) {
                     event.emit('item:alarm', cachbi, 2, text + valueText)
-                    event.emit('audio:alarm',2)
+                    event.emit('audio:alarm', 2)
                 }
             })
             for (let i = 0; i < ecg_arr.length; i++) {
@@ -112,8 +112,8 @@ function checkTemperature(n: any) {
     return t > 50 ? t / 10 : t
 }
 function checkBlood(n: number) {
-    return n === 1 ? '--' : n.toString()
+    return n === 1 ? '--' : (n && n.toString())
 }
 function checkPulseRate(n: number) {
-    return n === 0 ? '--' : n.toString()
+    return n === 0 ? '--' : (n && n.toString())
 }

@@ -12,6 +12,7 @@ import { DrawAnalyse } from './drawTools/DrawAnalyse';
 import { DrawSelect } from './drawTools/DrawSelect';
 import { PointType } from '../interface';
 import { event } from '@lianmed/utils';
+import { message } from 'antd';
 let sid = 0;
 type Canvas = HTMLCanvasElement;
 type Context = CanvasRenderingContext2D;
@@ -334,34 +335,33 @@ export class Suit extends Draw {
   alarmLowCount = []
 
   // 报警
-  alarmLow() {
-    this.alarmLowCount.push(0)
-    console.log('alarm low', this.alarmLowCount.length)
+  alarmLow(fetalIndex: number) {
+    const key = 'alarmLowCount' + fetalIndex
+    this[key] = this[key] || []
+    const arr: number[] = this[key]
+    arr.push(0)
 
-    if (this.alarmLowCount.length >= 4 * this.ctgconfig.alarm_delay) {
-      console.log('alarm length', this.alarmLowCount.length)
+    if (arr.length >= 2 * this.ctgconfig.alarm_delay) {
       this.itemAlarm('心率过低')
-
       this.lazyEmit('alarmOn', '心率过低');
     }
   }
-  alarmHigh() {
-    this.alarmHighCount.push(0)
-    console.log('alarm high', this.alarmHighCount.length)
+  alarmHigh(fetalIndex: number) {
+    const key = 'alarmHighCount' + fetalIndex
+    this[key] = this[key] || []
+    const arr: number[] = this[key]
+    arr.push(0)
+    if (arr.length >= 2 * this.ctgconfig.alarm_delay) {
+    console.log(`hh${fetalIndex}`,arr.length)
 
-    if (this.alarmHighCount.length >= 4 * this.ctgconfig.alarm_delay) {
       this.itemAlarm('心率过高')
-
-      event.emit('item:alarm', this.data.id, 2, '心率过高')
-
+      this.lazyEmit('alarmOn', '心率过高');
     }
   }
-  alarmOff() {
+  alarmOff(fetalIndex: number) {
     this.lazyEmit('alarmOff', '');
-    console.log('alarm off')
-
-    this.alarmHighCount = []
-    this.alarmLowCount = []
+    const key = 'alarmLowCount' + fetalIndex
+    this[key] = []
   }
 
 

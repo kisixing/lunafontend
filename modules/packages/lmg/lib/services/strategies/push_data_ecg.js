@@ -32,8 +32,6 @@ function push_data_ecg(received_msg) {
             item.ecg_arr = Array.isArray(item.ecg_arr) ? item.ecg_arr : [];
             item.ple_arr = Array.isArray(item.ple_arr) ? item.ple_arr : [];
             var ecg_arr = item.ecg_arr, ple_arr = item.ple_arr, pulse_rate = item.pulse_rate, sys_bp = item.sys_bp, dia_bp = item.dia_bp, mean_bp = item.mean_bp, temperature = item.temperature, temperature1 = item.temperature1, blood_oxygen = item.blood_oxygen, resp_rate = item.resp_rate, index = item.index, ecg = item.ecg, power = item.power, cuff_bp = item.cuff_bp, o = __rest(item, ["ecg_arr", "ple_arr", "pulse_rate", "sys_bp", "dia_bp", "mean_bp", "temperature", "temperature1", "blood_oxygen", "resp_rate", "index", "ecg", "power", "cuff_bp"]);
-            o.alarm_blood_oxygen = 2;
-            o.alarm_dia_bp = 1;
             target.alarms = Object.assign(Object.create(null), target.alarms, o);
             Object.keys(o).forEach(function (k) {
                 var value = o[k];
@@ -73,9 +71,9 @@ function checkTemperature(n) {
     return t > 50 ? t / 10 : t;
 }
 function checkBlood(n) {
-    return n === 1 ? '--' : n.toString();
+    return n === 1 ? '--' : (n && n.toString());
 }
 function checkPulseRate(n) {
-    return n === 0 ? '--' : n.toString();
+    return n === 0 ? '--' : (n && n.toString());
 }
 //# sourceMappingURL=push_data_ecg.js.map

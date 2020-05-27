@@ -260,19 +260,19 @@ var DrawCTG = (function () {
             var label = '';
             var span = '';
             var offsetfhr = '';
-            for (var i = 0; i < suit.data.fetal_num; i++) {
+            for (var fetalIndex = 0; fetalIndex < suit.data.fetal_num; fetalIndex++) {
                 label = '';
                 offsetfhr = '';
                 span = '';
                 datacontext.font = 'bold ' + fontsize + 'px arial';
-                datacontext.fillStyle = suit.ctgconfig.fhrcolor[i];
-                var cv = fhr[i] && fhr[i][x];
+                datacontext.fillStyle = suit.ctgconfig.fhrcolor[fetalIndex];
+                var cv = fhr[fetalIndex] && fhr[fetalIndex][x];
                 var curvalue = (typeof cv !== 'number' || cv < 1 || cv > 240) ? EMPTY_SYMBOL : cv.toString();
                 datacontext.fillStyle = suit.ctgconfig.alarmcolor;
                 if (suit.ctgconfig.alarm_enable && cv > suit.ctgconfig.alarm_high) {
                     if (eventemit) {
                         console.log('心率过高', cv);
-                        _this.suit.alarmHigh();
+                        _this.suit.alarmHigh(fetalIndex);
                     }
                     alarm = 1;
                     _this.suit.alarm = alarm;
@@ -280,31 +280,31 @@ var DrawCTG = (function () {
                 else if (suit.ctgconfig.alarm_enable && cv < suit.ctgconfig.alarm_low) {
                     if (eventemit) {
                         console.log('心率过低', cv, _this.suit.ctgconfig.alarm_delay);
-                        _this.suit.alarmLow();
+                        _this.suit.alarmLow(fetalIndex);
                     }
                     alarm = 1;
                     _this.suit.alarm = alarm;
                 }
                 else {
-                    datacontext.fillStyle = suit.ctgconfig.fhrcolor[i];
+                    datacontext.fillStyle = suit.ctgconfig.fhrcolor[fetalIndex];
                 }
                 if (alarm == 0 && suit.ctgconfig.alarm_enable && _this.suit.alarm == 1) {
                     console.log('恢复', cv, curvalue, alarm, _this.suit.alarm, suit.ctgconfig.alarm_high < cv, suit.ctgconfig.alarm_low > cv, x);
-                    _this.suit.alarmOff();
+                    _this.suit.alarmOff(fetalIndex);
                     _this.suit.alarm = alarm;
                 }
-                if (i == 0) {
+                if (fetalIndex == 0) {
                     if (suit.data.fetalposition && typeof (suit.data.fetalposition.fhr1) != 'undefined') {
                         label = suit.data.fetalposition.fhr1;
                     }
                 }
-                else if (i == 1) {
+                else if (fetalIndex == 1) {
                     if (suit.data.fetalposition && typeof (suit.data.fetalposition.fhr2) != 'undefined') {
                         label = suit.data.fetalposition.fhr2;
                     }
                     offsetfhr = ' ' + _this.fhroffset;
                 }
-                else if (i == 2) {
+                else if (fetalIndex == 2) {
                     if (suit.data.fetalposition && typeof (suit.data.fetalposition.fhr3) != 'undefined') {
                         label = suit.data.fetalposition.fhr3;
                     }
@@ -316,11 +316,11 @@ var DrawCTG = (function () {
                 if (typeof (label) == 'undefined') {
                     label = '';
                 }
-                if (label.length > 0 || i > 0) {
+                if (label.length > 0 || fetalIndex > 0) {
                     span = '    ';
                 }
-                datacontext.fillText('FHR' + (i + 1) + span + ' : ' + curvalue, 10, curpostion);
-                if (label.length > 0 || i > 0) {
+                datacontext.fillText('FHR' + (fetalIndex + 1) + span + ' : ' + curvalue, 10, curpostion);
+                if (label.length > 0 || fetalIndex > 0) {
                     datacontext.font = 'bold ' + fontsize / 2 + 'px arial';
                     datacontext.fillText(label, 10 + fontsize * 2.8, curpostion);
                     datacontext.fillText(offsetfhr, 10 + fontsize * 2.8, curpostion + fontsize / 2);

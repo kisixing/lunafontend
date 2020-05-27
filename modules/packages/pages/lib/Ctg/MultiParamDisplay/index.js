@@ -32,26 +32,32 @@ require("echarts/lib/component/dataZoom");
 require("echarts/lib/component/dataZoomInside");
 exports.MultiParamDisplay = function (props) {
     var ref1 = react_1.useRef();
+    var ref2 = react_1.useRef();
     var docid = props.docid;
     var _a = react_1.useState([]), pressures = _a[0], setPressures = _a[1];
     react_1.useEffect(function () {
-        var myChart = echarts.init(ref1.current);
+        var myChart1 = echarts.init(ref1.current);
+        var myChart2 = echarts.init(ref2.current);
         request_1.get("/ctg-exams-mother-data/" + ('1801_1_200524200942' && docid)).then(function (r) {
-            var _a = r.normals, normals = _a === void 0 ? [] : _a, _b = r.pressures, pressures = _b === void 0 ? [] : _b;
+            var normals = r.normals, pressures = r.pressures;
+            normals = normals || [];
+            pressures = pressures || [];
             setPressures(pressures.map(function (_) { return (__assign(__assign({}, _), { time: lmg_1.convertstarttime(_.time) })); }));
             var _hr = [], _pulse = [], _temperature = [], _spoz = [];
             normals.forEach(function (_) {
                 _hr.push(_.hr);
                 _pulse.push(_.pulse);
                 _temperature.push(_.temperature);
-                _spoz.push(_.spoz);
+                _spoz.push(_.spoz || undefined);
             });
             console.log(normals, _pulse);
-            myChart.setOption(options_1.getOptions1(_hr, _pulse, _temperature, _spoz, _pulse.map(function (_, i) { return (i / 60).toFixed(0) + "\u5206" + i % 60 + "\u79D2"; })));
+            myChart1.setOption(options_1.getOptions1(_temperature, _temperature.map(function (_, i) { return (i / 60).toFixed(0) + "\u5206" + i % 60 + "\u79D2"; }), '体温趋势图', '体温', '°C', 'blue'));
+            myChart2.setOption(options_1.getOptions1(_spoz, _spoz.map(function (_, i) { return (i / 60).toFixed(0) + "\u5206" + i % 60 + "\u79D2"; }), '血氧趋势图', '血氧', '%', 'red'));
         });
     }, []);
-    return (react_1.default.createElement(react_1.default.Fragment, null,
-        react_1.default.createElement("div", { ref: ref1, style: { width: '100%', height: 400 } }),
+    return (react_1.default.createElement("div", { style: { height: '100%', overflowY: 'scroll' } },
+        react_1.default.createElement("div", { ref: ref1, style: { width: '100%', height: 300 } }),
+        react_1.default.createElement("div", { ref: ref2, style: { width: '100%', height: 300 } }),
         react_1.default.createElement(antd_1.Table, { size: "small", style: { margin: '0 10%' }, columns: [
                 { dataIndex: 'sbp', title: '收缩压' },
                 { dataIndex: 'dbp', title: '舒张压' },
