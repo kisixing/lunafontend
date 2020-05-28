@@ -23,15 +23,13 @@ export declare const getOptions1: (data: any[], date: any[], title: string, name
     };
     yAxis: {
         type: string;
-        boundaryGap: (string | number)[];
+        boundaryGap: import("csstype").AnimationIterationCountProperty[];
         name: string;
     }[];
     dataZoom: ({
         type: string;
-        startValue: number;
-        endValue: number;
-        start?: undefined;
-        end?: undefined;
+        start: number;
+        end: number;
         handleIcon?: undefined;
         handleSize?: undefined;
         zoomLock?: undefined;
@@ -50,8 +48,6 @@ export declare const getOptions1: (data: any[], date: any[], title: string, name
             shadowOffsetY: number;
         };
         type?: undefined;
-        startValue?: undefined;
-        endValue?: undefined;
     })[];
     series: {
         name: string;

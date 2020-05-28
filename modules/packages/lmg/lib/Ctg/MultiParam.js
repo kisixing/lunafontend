@@ -15,26 +15,21 @@ exports.MultiParam = function (props) {
     if (!data || !data.realTime)
         return null;
     var _a = react_1.useState(data && data.ecgdata), ecgData = _a[0], setEcgData = _a[1];
-    var _b = react_1.useState(0), p = _b[0], setP = _b[1];
+    var _b = react_1.useState([]), list = _b[0], setList = _b[1];
     react_1.useEffect(function () {
         setEcgData(data.ecgdata);
-        _setP();
+        setList(data.bloodList);
         var id = setInterval(function () {
-            _setP();
             setEcgData(data.ecgdata);
+            setList(data.bloodList);
         }, 1000);
         return function () {
             clearInterval(id);
         };
     }, [data]);
-    function _setP() {
-        var pv = data ? data.ple.B[0] : 0;
-        pv = !!pv ? (pv === 50 ? 0 : pv) : 0;
-        setP(pv);
-    }
     var keys = ['脉率bpm', '血氧%', '体温℃', '心率bpm', '呼吸(次/分)', '血压(SDM)mmHg'];
     return (!!(ecgData && ecgData.length) && (react_1.default.createElement("div", { style: { width: isFullScreen ? 280 : '100%', borderRight: isFullScreen && border } }, isFullScreen ?
-        (react_1.default.createElement(MultiParamL_1.MultiParamL, { ecgData: ecgData, p: data.ple, bloodList: data.bloodList })) : (react_1.default.createElement("div", { style: { height: height, display: 'flex', alignItems: 'center', justifyContent: 'space-around', fontSize: 10 } }, keys.map(function (_, i) {
+        (react_1.default.createElement(MultiParamL_1.MultiParamL, { ecgData: ecgData, p: data.ple, bloodList: list })) : (react_1.default.createElement("div", { style: { height: height, display: 'flex', alignItems: 'center', justifyContent: 'space-around', fontSize: 10 } }, keys.map(function (_, i) {
         return (react_1.default.createElement("span", null,
             _,
             ecgData[i]));

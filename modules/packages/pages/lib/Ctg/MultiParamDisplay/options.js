@@ -35,8 +35,8 @@ exports.getOptions1 = function (data, date, title, name, unit, color) {
         ],
         dataZoom: [{
                 type: 'inside',
-                startValue: 0,
-                endValue: 30
+                start: 0,
+                end: 100
             }, {
                 start: 0,
                 end: 10,
@@ -53,7 +53,7 @@ exports.getOptions1 = function (data, date, title, name, unit, color) {
             }],
         series: [
             {
-                name: '体温',
+                name: name,
                 type: 'line',
                 smooth: true,
                 symbol: 'none',

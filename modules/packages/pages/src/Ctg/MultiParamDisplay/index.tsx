@@ -21,6 +21,7 @@ export interface IProps {
 export const MultiParamDisplay = (props: IProps) => {
     const ref1 = useRef()
     const ref2 = useRef()
+    const ref3 = useRef()
     const { docid } = props
     // const [hr, setHr] = useState([])
     // const [pulse, setPulse] = useState([])
@@ -30,6 +31,7 @@ export const MultiParamDisplay = (props: IProps) => {
     useEffect(() => {
         var myChart1 = echarts.init(ref1.current);
         var myChart2 = echarts.init(ref2.current);
+        var myChart3 = echarts.init(ref3.current);
         get(`/ctg-exams-mother-data/${'1801_1_200524200942' && docid}`).then(r => {
             let { normals, pressures } = r
             normals = normals || []
@@ -51,7 +53,8 @@ export const MultiParamDisplay = (props: IProps) => {
             // setSpoz(_spoz)
 
             myChart1.setOption(getOptions1(_temperature, _temperature.map((_, i) => `${(i / 60).toFixed(0)}分${i % 60}秒`), '体温趋势图', '体温', '°C', 'blue'));
-            myChart2.setOption(getOptions1(_spoz, _spoz.map((_, i) => `${(i / 60).toFixed(0)}分${i % 60}秒`), '血氧趋势图', '血氧', '%', 'red'));
+            myChart2.setOption(getOptions1(_spoz, _spoz.map((_, i) => `${(i / 60).toFixed(0)}分${i % 60}秒`), '血氧趋势图', '血氧', '%', 'green'));
+            myChart3.setOption(getOptions1(_pulse, _pulse.map((_, i) => `${(i / 60).toFixed(0)}分${i % 60}秒`), '脉率趋势图', '脉率', '次', 'darkblue'));
 
         })
     }, [])
@@ -66,6 +69,7 @@ export const MultiParamDisplay = (props: IProps) => {
         <div style={{ height: '100%', overflowY: 'scroll' }}>
             <div ref={ref1} style={{ width: '100%', height: 300 }}></div>
             <div ref={ref2} style={{ width: '100%', height: 300 }}></div>
+            <div ref={ref3} style={{ width: '100%', height: 300 }}></div>
             <Table size="small" style={{ margin: '0 10%' }}
                 columns={[
                     { dataIndex: 'sbp', title: '收缩压' },

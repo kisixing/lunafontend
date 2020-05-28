@@ -143,8 +143,8 @@ var WsService = (function (_super) {
     };
     WsService.prototype.getCacheItem = function (data) {
         var datacache = this.datacache;
-        var device_no = data.device_no, bed_num = data.bed_num;
-        var target = datacache.get(this.getUnitId(device_no, bed_num));
+        var device_no = data.device_no, bed_no = data.bed_no;
+        var target = datacache.get(this.getUnitId(device_no, bed_no));
         return target || null;
     };
     WsService.prototype.sendHeard = function () {

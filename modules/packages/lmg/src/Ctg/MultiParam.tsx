@@ -14,26 +14,22 @@ export const MultiParam = (props: { data: ICacheItem, isFullScreen: boolean, hei
 
     if (!data || !data.realTime) return null
     const [ecgData, setEcgData] = useState(data && data.ecgdata)
-
-    const [p, setP] = useState(0)
+    const [list, setList] = useState([])
 
     useEffect(() => {
         setEcgData(data.ecgdata)
-        _setP()
+        setList(data.bloodList)
         const id = setInterval(() => {
-            _setP()
             setEcgData(data.ecgdata)
+            setList(data.bloodList)
+
         }, 1000)
         return () => {
             clearInterval(id)
         }
     }, [data])
 
-    function _setP() {
-        let pv = data ? data.ple.B[0] : 0
-        pv = !!pv ? (pv === 50 ? 0 : pv) : 0
-        setP(pv)
-    }
+
     const keys = ['脉率bpm', '血氧%', '体温℃', '心率bpm', '呼吸(次/分)', '血压(SDM)mmHg'];
 
 
@@ -44,7 +40,7 @@ export const MultiParam = (props: { data: ICacheItem, isFullScreen: boolean, hei
                 {
                     isFullScreen ?
                         (
-                            <MultiParamL ecgData={ecgData} p={data.ple} bloodList={data.bloodList } />
+                            <MultiParamL ecgData={ecgData} p={data.ple} bloodList={list} />
                         ) : (
                             <div style={{ height, display: 'flex', alignItems: 'center', justifyContent: 'space-around', fontSize: 10 }}>
 

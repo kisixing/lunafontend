@@ -75,8 +75,8 @@ export class WsService extends EventEmitter {
     }
     getCacheItem(data: IDeviceType) {
         const { datacache } = this
-        const { device_no, bed_num } = data
-        const target = datacache.get(this.getUnitId(device_no, bed_num))
+        const { device_no, bed_no } = data
+        const target = datacache.get(this.getUnitId(device_no, bed_no))
         return target || null
     }
     pongIndex = 0

@@ -50,8 +50,8 @@ export const MultiParamL = (props: { ecgData: any[], p: Queue, bloodList: IBlood
             <Gg title="血氧" value={(
                 <>
                     <span>{ecgData[1] || ''}</span>
-                    <div style={{ display: 'inline-block', width: 14, height: 46, border: '2px solid blue', position: 'relative' }}>
-                        <div ref={ref} style={{ background: 'red',  width: 14 - 4, position: 'absolute', bottom: 0 }}></div>
+                    <div style={{ display: 'inline-block', width: 14, height: 46, border: '2px solid red', position: 'relative' }}>
+                        <div ref={ref} style={{ background: 'blue',  width: 14 - 4, position: 'absolute', bottom: 0 }}></div>
                     </div>
                 </>
             )} unit="%" color={Suit.option.tococolor} />

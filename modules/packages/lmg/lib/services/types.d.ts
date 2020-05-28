@@ -85,7 +85,7 @@ export declare type ICache = Map<string, ICacheItem> & {
     clean?: (key: string) => void;
 };
 export interface IDeviceType {
-    bed_num: number;
+    bed_no: number;
     device_no: number;
     device_type: TDeviceType;
 }

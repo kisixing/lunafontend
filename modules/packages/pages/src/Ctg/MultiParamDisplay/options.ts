@@ -37,10 +37,10 @@ export const getOptions1 = (data: any[], date: any[], title: string, name: strin
         ],
         dataZoom: [{
             type: 'inside',
-            // start: 0,
-            // end: 10
-            startValue: 0,
-            endValue: 30
+            start: 0,
+            end: 100
+            // startValue: 0,
+            // endValue: 30
         }, {
             start: 0,
             end: 10,
@@ -58,7 +58,7 @@ export const getOptions1 = (data: any[], date: any[], title: string, name: strin
         series: [
 
             {
-                name: '体温',
+                name,
                 type: 'line',
                 smooth: true,
                 symbol: 'none',
