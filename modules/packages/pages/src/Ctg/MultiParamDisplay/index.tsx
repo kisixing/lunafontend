@@ -52,9 +52,9 @@ export const MultiParamDisplay = (props: IProps) => {
             // setTemperature(_temperature)
             // setSpoz(_spoz)
 
-            myChart1.setOption(getOptions1(_temperature, _temperature.map((_, i) => `${(i / 60).toFixed(0)}分${i % 60}秒`), '体温趋势图', '体温', '°C', 'blue'));
-            myChart2.setOption(getOptions1(_spoz, _spoz.map((_, i) => `${(i / 60).toFixed(0)}分${i % 60}秒`), '血氧趋势图', '血氧', '%', 'green'));
-            myChart3.setOption(getOptions1(_pulse, _pulse.map((_, i) => `${(i / 60).toFixed(0)}分${i % 60}秒`), '脉率趋势图', '脉率', '次', 'darkblue'));
+            myChart1.setOption(getOptions1(_temperature, _temperature.map((_, i) => `${(i / 60).toFixed(0)}分${i % 60}秒`), '体温趋势图', '体温', '°C', 'blue', 0, 50));
+            myChart2.setOption(getOptions1(_spoz, _spoz.map((_, i) => `${(i / 60).toFixed(0)}分${i % 60}秒`), '血氧趋势图', '血氧', '%', 'green', 35, 100));
+            myChart3.setOption(getOptions1(_pulse, _pulse.map((_, i) => `${(i / 60).toFixed(0)}分${i % 60}秒`), '脉率趋势图', '脉率', '次', 'darkblue', 25, 250));
 
         })
     }, [])

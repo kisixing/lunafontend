@@ -11,16 +11,17 @@ interface IProps {
     data: ICacheItem
     visible: boolean
     className: string
+    audios: string[]
 }
 
 export const ButtonTools = (props: IProps) => {
-    const { ctg, visible, className, data } = props
+    const { ctg, visible, className, data, audios } = props
     const [activeList, setActiveList] = useState(new Set())
     const audio_ref1 = useRef<HTMLAudioElement>()
     const audio_ref2 = useRef<HTMLAudioElement>()
     const audio_ref3 = useRef<HTMLAudioElement>()
     const timeoutId = useRef<NodeJS.Timeout>()
-    const [replayKey, setReplayKey] = useState(0)
+    const [replayKey, setReplayKey] = useState('')
     const audioRefMap: { [x: string]: React.MutableRefObject<HTMLAudioElement> } = {
         audio_ref1,
         audio_ref2,
@@ -39,18 +40,24 @@ export const ButtonTools = (props: IProps) => {
     function stopPlay() {
         event.emit('ctg:replay', '', 0)
         clearInterval(timeoutId.current)
+        setReplayKey('')
     }
     useEffect(() => {
-        function cb() {
-            const r = (ctg.current.drawSelect.selectingBarPoint / ctg.current.data.index) || 0
-            const index = ctg.current.data.index * r
+        function cb(audioId: string) {
+            setReplayKey(audioId)
+            // const r = (ctg.current.drawSelect.selectingBarPoint / ctg.current.data.index) || 0
+            const index = ctg.current.drawSelect.selectingBarPoint
             let i = 0
+            clearInterval(timeoutId.current)
             timeoutId.current = setInterval(() => {
 
+                console.log('gg', ctg.current.drawSelect.selectingBarPoint, ctg.current.data.index)
                 const dis = (index - ctg.current.leftViewposition) / 2
-                console.log('go', dis + 1 * (++i))
-
-                ctg.current.drawSelect.selectingBar.setLeft(dis + 1 * (++i))
+                i = i + 1
+                ctg.current.drawSelect.selectingBar.setLeft(dis + i)
+                if (ctg.current.drawSelect.selectingBarPoint >= (ctg.current.data.index - 10)) {
+                    stopPlay()
+                }
             }, 500);
 
             // target.current.play()
@@ -61,7 +68,7 @@ export const ButtonTools = (props: IProps) => {
             event
                 .off('ctg:canReplay', cb)
 
-            clearInterval(timeoutId.current)
+            stopPlay()
         }
     }, [])
     useEffect(() => {
@@ -86,7 +93,7 @@ export const ButtonTools = (props: IProps) => {
     }, [replayKey, data])
 
     useEffect(() => {
-        setReplayKey(0)
+        setReplayKey('')
         stopPlay()
 
     }, [data])
@@ -94,12 +101,10 @@ export const ButtonTools = (props: IProps) => {
         <>
             <ButtonGroup size="small" style={{ position: 'absolute', right: 0, bottom: 0, opacity: visible ? 1 : 0 }} className={className}>
                 {
-                    data && Array(data.fetal_num).fill(0).map((_, i) => {
-                        const isTarget = replayKey === i + 1
-                        return <Button key={`b${i}`} type={isTarget ? 'primary' : 'default'} onClick={() => {
-                            const k = isTarget ? 0 : (i + 1)
-                            const id = k ? `${data.docid}_${replayKey}` : ''
-                            setReplayKey(k)
+                    Array.isArray(audios) && audios.map((_, i) => {
+                        const isTarget = replayKey === _
+                        return <Button key={_} type={isTarget ? 'primary' : 'default'} onClick={() => {
+                            const id = isTarget ? '' : _
 
                             const r = (ctg.current.drawSelect.selectingBarPoint / ctg.current.data.index) || 0
                             const index = ctg.current.data.index * r
@@ -111,7 +116,7 @@ export const ButtonTools = (props: IProps) => {
                         </Button>
                     })
                 }
-                {
+                {/* {
                     btns.map((_, index) => {
                         const _set = new Set(activeList)
                         const isExist = _set.has(index)
@@ -127,7 +132,7 @@ export const ButtonTools = (props: IProps) => {
 
                         }} >{_.text}</Button>
                     })
-                }
+                } */}
             </ButtonGroup>
             {
                 data && Array(data.fetal_num).fill(0).map((_, i) => {

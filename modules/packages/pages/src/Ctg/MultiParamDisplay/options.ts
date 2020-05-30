@@ -1,4 +1,4 @@
-export const getOptions1 = (data: any[], date: any[], title: string, name: string, unit: string, color: string) => {
+export const getOptions1 = (data: any[], date: any[], title: string, name: string, unit: string, color: string, min: number, max: number) => {
     return {
         tooltip: {
             trigger: 'axis',
@@ -32,7 +32,8 @@ export const getOptions1 = (data: any[], date: any[], title: string, name: strin
                 type: 'value',
                 boundaryGap: [0, '20%'],
                 name: name + unit,
-
+                min,
+                max
             }
         ],
         dataZoom: [{

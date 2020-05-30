@@ -6,6 +6,7 @@ export interface IProps {
     };
     onReady?: (suit: Drawer) => void;
     loading?: boolean;
+    audios?: string[];
     [x: string]: any;
 }
 export declare type AnalyseType = 'Nst' | 'Krebs' | 'Fischer' | 'Sogc' | 'Cst';

@@ -53,9 +53,9 @@ exports.MultiParamDisplay = function (props) {
                 _spoz.push(_.spoz || undefined);
             });
             console.log(normals, _pulse);
-            myChart1.setOption(options_1.getOptions1(_temperature, _temperature.map(function (_, i) { return (i / 60).toFixed(0) + "\u5206" + i % 60 + "\u79D2"; }), '体温趋势图', '体温', '°C', 'blue'));
-            myChart2.setOption(options_1.getOptions1(_spoz, _spoz.map(function (_, i) { return (i / 60).toFixed(0) + "\u5206" + i % 60 + "\u79D2"; }), '血氧趋势图', '血氧', '%', 'green'));
-            myChart3.setOption(options_1.getOptions1(_pulse, _pulse.map(function (_, i) { return (i / 60).toFixed(0) + "\u5206" + i % 60 + "\u79D2"; }), '脉率趋势图', '脉率', '次', 'darkblue'));
+            myChart1.setOption(options_1.getOptions1(_temperature, _temperature.map(function (_, i) { return (i / 60).toFixed(0) + "\u5206" + i % 60 + "\u79D2"; }), '体温趋势图', '体温', '°C', 'blue', 0, 50));
+            myChart2.setOption(options_1.getOptions1(_spoz, _spoz.map(function (_, i) { return (i / 60).toFixed(0) + "\u5206" + i % 60 + "\u79D2"; }), '血氧趋势图', '血氧', '%', 'green', 35, 100));
+            myChart3.setOption(options_1.getOptions1(_pulse, _pulse.map(function (_, i) { return (i / 60).toFixed(0) + "\u5206" + i % 60 + "\u79D2"; }), '脉率趋势图', '脉率', '次', 'darkblue', 25, 250));
         });
     }, []);
     return (react_1.default.createElement("div", { style: { height: '100%', overflowY: 'scroll' } },

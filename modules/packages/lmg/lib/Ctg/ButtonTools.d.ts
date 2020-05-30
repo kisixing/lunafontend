@@ -6,6 +6,7 @@ interface IProps {
     data: ICacheItem;
     visible: boolean;
     className: string;
+    audios: string[];
 }
 export declare const ButtonTools: (props: IProps) => JSX.Element;
 export {};

@@ -1,4 +1,4 @@
-export declare const getOptions1: (data: any[], date: any[], title: string, name: string, unit: string, color: string) => {
+export declare const getOptions1: (data: any[], date: any[], title: string, name: string, unit: string, color: string, min: number, max: number) => {
     tooltip: {
         trigger: string;
         position: (pt: any) => any[];
@@ -23,8 +23,10 @@ export declare const getOptions1: (data: any[], date: any[], title: string, name
     };
     yAxis: {
         type: string;
-        boundaryGap: import("csstype").AnimationIterationCountProperty[];
+        boundaryGap: (string | number)[];
         name: string;
+        min: number;
+        max: number;
     }[];
     dataZoom: ({
         type: string;

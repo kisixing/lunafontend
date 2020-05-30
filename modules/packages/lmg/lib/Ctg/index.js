@@ -41,15 +41,15 @@ var Ecg_1 = __importDefault(require("../Ecg"));
 var ScrollBar_1 = __importDefault(require("../ScrollBar"));
 var WsService_1 = require("../services/WsService");
 var useDraw_1 = __importDefault(require("../useDraw"));
+var ButtonTools_1 = require("./ButtonTools");
 var ContextMenu_1 = __importDefault(require("./ContextMenu"));
 var Loading_1 = require("./Loading");
 var Suit_1 = require("./Suit");
-var ButtonTools_1 = require("./ButtonTools");
 var styled_components_1 = __importDefault(require("styled-components"));
 var MultiParam_1 = require("./MultiParam");
 var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  width:100%;\n  height:100%;\n  display:flex;\n  .btns{\n    display:none\n  }\n  :hover .btns{\n    display:block\n  }\n  .box {\n    flex:1\n  }\n"], ["\n  width:100%;\n  height:100%;\n  display:flex;\n  .btns{\n    display:none\n  }\n  :hover .btns{\n    display:block\n  }\n  .box {\n    flex:1\n  }\n"])));
 exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
-    var data = props.data, _a = props.mutableSuitObject, mutableSuitObject = _a === void 0 ? { suit: null } : _a, _b = props.suitType, suitType = _b === void 0 ? 0 : _b, _c = props.showEcg, showEcg = _c === void 0 ? false : _c, _d = props.loading, loading = _d === void 0 ? false : _d, _e = props.onReady, onReady = _e === void 0 ? function (s) { } : _e, others = __rest(props, ["data", "mutableSuitObject", "suitType", "showEcg", "loading", "onReady"]);
+    var data = props.data, _a = props.mutableSuitObject, mutableSuitObject = _a === void 0 ? { suit: null } : _a, _b = props.suitType, suitType = _b === void 0 ? 0 : _b, _c = props.showEcg, showEcg = _c === void 0 ? false : _c, _d = props.loading, loading = _d === void 0 ? false : _d, _e = props.onReady, onReady = _e === void 0 ? function (s) { } : _e, audios = props.audios, others = __rest(props, ["data", "mutableSuitObject", "suitType", "showEcg", "loading", "onReady", "audios"]);
     var isV3 = false || data && (data.deviceType === 'V3');
     var barTool = react_1.useRef(null);
     var canvasgrid = react_1.useRef(null);
@@ -104,7 +104,7 @@ exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
                 react_1.default.createElement(Ecg_1.default, { data: data, ecgHeight: ecgHeight, onReady: function (e) { return ecg.current = e; } }))),
             react_1.default.createElement(ContextMenu_1.default, { s: ctg },
                 react_1.default.createElement(ScrollBar_1.default, { box: box, getBarTool: function (tool) { barTool.current = tool; } })),
-            suitType > 100 && react_1.default.createElement(ButtonTools_1.ButtonTools, { data: data, visible: true, ctg: ctg, className: "btns" }))));
+            audios && react_1.default.createElement(ButtonTools_1.ButtonTools, { audios: audios, data: data, visible: true, ctg: ctg, className: "btns" }))));
 }));
 var templateObject_1;
 //# sourceMappingURL=index.js.map

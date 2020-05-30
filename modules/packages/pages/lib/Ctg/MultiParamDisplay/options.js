@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getOptions1 = function (data, date, title, name, unit, color) {
+exports.getOptions1 = function (data, date, title, name, unit, color, min, max) {
     return {
         tooltip: {
             trigger: 'axis',
@@ -31,6 +31,8 @@ exports.getOptions1 = function (data, date, title, name, unit, color) {
                 type: 'value',
                 boundaryGap: [0, '20%'],
                 name: name + unit,
+                min: min,
+                max: max
             }
         ],
         dataZoom: [{

@@ -5,11 +5,10 @@ import ScrollBar from '../ScrollBar';
 import { IBarTool } from '../ScrollBar/useScroll';
 import { useCheckNetwork } from '../services/WsService';
 import useDraw from "../useDraw";
-// import { ButtonTools } from "./ButtonTools";
+import { ButtonTools } from "./ButtonTools";
 import ContextMenu from "./ContextMenu";
 import { Loading } from './Loading';
 import { Suit } from './Suit';
-import { ButtonTools } from "./ButtonTools";
 import styled from "styled-components";
 import { MultiParam } from "./MultiParam";
 const Wrapper = styled.div`
@@ -35,6 +34,7 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
     showEcg = false,
     loading = false,
     onReady = (s: Drawer) => { },
+    audios,
     ...others
   } = props
 
@@ -145,11 +145,9 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
 
 
 
-        {/* {
-        suitType > 100 && <ButtonTools ctg={ctg} visible={showBtns && staticType} />
-      } */}
+
         {
-          suitType > 100 && <ButtonTools data={data} visible={true} ctg={ctg} className={"btns"} />
+          audios && <ButtonTools audios={audios} data={data} visible={true} ctg={ctg} className={"btns"} />
         }
 
       </div>
