@@ -152,7 +152,7 @@ const App = (props: any) => {
         <Layout style={{ height: '100%' }}>
             <span style={{position:'absolute',top:0,fontWeight:'bold',color:'#40a9ff',fontSize:16}}>CTG Database</span>
 
-            <Layout.Sider style={{ background: '#fff' }} width={250} >
+            <Layout.Sider style={{ background: '#fff' }} width={280} >
                 <div style={{ marginBottom: 5 }}>
                     <span style={{ marginRight: 14 }}>开始时间：</span><DatePicker size="small" value={moment(sDate)} onChange={e => setSDate(formatDate(e))} />
                 </div>

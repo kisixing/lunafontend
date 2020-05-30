@@ -88,9 +88,6 @@ var WsService = (function (_super) {
                     }, _this_1.RECONNECT_INTERVAL);
                 };
                 socket.onmessage = function (msg) {
-                    if (!_this_1.subscribeList && msg.data.includes('push_data_')) {
-                        return;
-                    }
                     _this_1.pong();
                     var received_msg;
                     try {
@@ -226,11 +223,6 @@ var WsService = (function (_super) {
         if (this.subscribeList && str.every(function (_) { return _this_1.subscribeList.includes(_); }) && this.subscribeList.every(function (_) { return str.includes(_); })) {
             return;
         }
-        this.subscribeList = str;
-        this.send(JSON.stringify({
-            name: "area_devices",
-            data: str.join(',')
-        }));
     };
     WsService.prototype.setTocozero = function (device_no, bed_no) {
         var msg = JSON.stringify({

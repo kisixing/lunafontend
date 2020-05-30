@@ -33,7 +33,7 @@ class SiderMenu extends Component<{ dataSource: obvue.prenatal_visitspage[], set
         {dataSource.map((item) => {
           return (
             <Menu.Item key={item.id} >
-              <div>{item.ctgexam ? item.ctgexam.note : item.visitDate}</div>
+              <div><span>{item.pregnancy && (item.pregnancy.name + '——')}</span>{item.ctgexam ? item.ctgexam.note : item.visitDate}</div>
             </Menu.Item>
           );
         })}

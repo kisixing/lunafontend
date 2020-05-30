@@ -159,13 +159,13 @@ export class WsService extends EventEmitter {
         if (this.subscribeList && str.every(_ => this.subscribeList.includes(_)) && this.subscribeList.every(_ => str.includes(_))) {
             return
         }
-        this.subscribeList = str
-        this.send(JSON.stringify(
-            {
-                name: "area_devices",
-                data: str.join(',')
-            }
-        ))
+        // this.subscribeList = str
+        // this.send(JSON.stringify(
+        //     {
+        //         name: "area_devices",
+        //         data: str.join(',')
+        //     }
+        // ))
     }
     setTocozero(device_no: number, bed_no: number) {
         const msg = JSON.stringify({
@@ -345,9 +345,9 @@ export class WsService extends EventEmitter {
             };
             // 接收服务端数据时触发事件
             socket.onmessage = (msg) => {
-                if (!this.subscribeList && msg.data.includes('push_data_')) {
-                    return
-                }
+                // if (!this.subscribeList && msg.data.includes('push_data_')) {
+                //     return
+                // }
                 this.pong()
                 let received_msg
                 try {
