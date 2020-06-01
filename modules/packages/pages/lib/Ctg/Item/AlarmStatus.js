@@ -33,7 +33,6 @@ var Status = react_1.memo(function (_a) {
                 return;
             var list = alarmList.current;
             var old = list.find(function (_) { return _.text === text; });
-            console.log('item:alarm', _unitId, old, list);
             if (!old) {
                 var target = genAlarm(type, text);
                 list.push(target);
@@ -55,7 +54,6 @@ var Status = react_1.memo(function (_a) {
     function call() {
         intervalId.current = setTimeout(function () {
             var list = alarmList.current;
-            console.log('item:alarm---', unitId, list);
             if (!list.length) {
                 setCurrent(null);
             }

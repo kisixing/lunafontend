@@ -330,6 +330,8 @@ export class DrawEcg extends Draw {
     for (let J = 0; J < points_one_times; J++) {
       let ecgdot = this.data.ecg.DeQueue();
       if (ecgdot == 1) {
+      console.log('drawsingle invalid++')
+
         invalid++;
       } else {
         invalid = 0;
@@ -342,6 +344,8 @@ export class DrawEcg extends Draw {
       F.push(ecgdot * this.ecg_scope);
     }
     if (invalid > 7) {
+      console.log('drawsingle invalid')
+      isstop = false;
       return;
     }
     let L = x_start + this.current_times * gx;

@@ -249,6 +249,7 @@ var DrawEcg = (function (_super) {
         for (var J = 0; J < points_one_times; J++) {
             var ecgdot = this.data.ecg.DeQueue();
             if (ecgdot == 1) {
+                console.log('drawsingle invalid++');
                 invalid++;
             }
             else {
@@ -263,6 +264,8 @@ var DrawEcg = (function (_super) {
             F.push(ecgdot * this.ecg_scope);
         }
         if (invalid > 7) {
+            console.log('drawsingle invalid');
+            isstop = false;
             return;
         }
         var L = x_start + this.current_times * gx;

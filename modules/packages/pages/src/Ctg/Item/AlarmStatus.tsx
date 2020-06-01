@@ -36,7 +36,6 @@ const Status = memo<IProps>(({ alarm2Text, status, alarm0Text, alarm1Text, unitI
             const list = alarmList.current
             const old = list.find(_ => _.text === text)
 
-            console.log('item:alarm', _unitId, old,list)
 
             if (!old) {
                 const target = genAlarm(type, text)
@@ -62,7 +61,6 @@ const Status = memo<IProps>(({ alarm2Text, status, alarm0Text, alarm1Text, unitI
     function call() {
         intervalId.current = setTimeout(() => {
             let list = alarmList.current
-            console.log('item:alarm---', unitId, list)
 
             if (!list.length) {
                 setCurrent(null)

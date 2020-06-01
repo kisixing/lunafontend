@@ -14,7 +14,7 @@ import 'react-pdf/dist/Page/AnnotationLayer.css';
 // pdfjs.GlobalWorkerOptions.workerSrc = pdf_worker_url;
 
 const PreviewContent = props => {
-    const { pdfBase64, isFull = false, wh, borderd = true } = props;
+    const { pdfBase64, isFull = false, wh, borderd = true, onDownload } = props;
     const { h, w } = wh;
 
     const [isFullpage, setFullpage] = useState(false);
@@ -86,12 +86,22 @@ const PreviewContent = props => {
                         pageSize={1}
                         size="small"
                         onChange={onChangePage}
-                    /></>
+                    />
+                </>
             }
             {isFullpage ? (
-                <span style={{ position: 'absolute', top: 24, right: 24, cursor: 'pointer' }} onClick={shrink}>
-                    返回<FullscreenExitOutlined title="缩小" />
-                </span>
+                <>
+                    <span style={{ position: 'absolute', top: 24, right: 24, cursor: 'pointer' }} onClick={shrink}>
+                        返回<FullscreenExitOutlined title="缩小" />
+                    </span>
+                    {
+                        onDownload && (
+                            <Button style={{ position: 'absolute', top: 64, right: 24, cursor: 'pointer' }} onClick={onDownload}>
+                                打印
+                            </Button>
+                        )
+                    }
+                </>
             ) : (
                     isFull || <span style={{ position: 'absolute', bottom: 36, right: 12, }}>
                         <Button

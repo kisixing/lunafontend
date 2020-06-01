@@ -12,7 +12,7 @@ interface IProps extends IP {
   empId?: string
 }
 const Preview = (props: IProps) => {
-  const { wh, empId = null, ...others } = props;
+  const { wh, empId = null, onDownload, ...others } = props;
   const [pdfBase64, setPdfBase64] = useState('')
   const [t, setT] = useState(0)
 
@@ -21,9 +21,9 @@ const Preview = (props: IProps) => {
   return (
 
     <div style={{ display: 'flex', height: '100%' }}>
-      <PreviewContent pdfBase64={pdfBase64} wh={wh} />
+      <PreviewContent pdfBase64={pdfBase64} wh={wh} onDownload={onDownload} />
       <Diagnosis value={diagnosis} onChange={setDiagnosis} />
-      <TimeSelect empId={empId} diagnosis={diagnosis} onTotalChange={setT} pdfBase64={pdfBase64} setPdfBase64={setPdfBase64} {...others} />
+      <TimeSelect empId={empId} diagnosis={diagnosis} onTotalChange={setT} onDownload={onDownload} pdfBase64={pdfBase64} setPdfBase64={setPdfBase64} {...others} />
     </div>
 
   );
