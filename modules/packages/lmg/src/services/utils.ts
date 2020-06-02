@@ -29,6 +29,7 @@ export function getEmptyCacheItem(base: { [x in keyof ICacheItem]?: ICacheItem[x
         fhr: Array(fetal_num).fill(0).map(() => getMaxArray()),
         toco: getMaxArray(),
         fm: getMaxArray(),
+        fmp: getMaxArray(),
         index: 0,
         length: 0,
         start: -1,

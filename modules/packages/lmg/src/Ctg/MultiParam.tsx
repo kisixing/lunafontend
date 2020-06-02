@@ -4,12 +4,11 @@ import { MultiParamL } from "./MultiParamL";
 const border = '1px dashed #ccc'
 
 
-export const MultiParam = (props: { data: ICacheItem, isFullScreen: boolean, height: number }) => {
+export const MultiParam = (props: { data: ICacheItem, isFullScreen: boolean}) => {
 
     const {
         data,
         isFullScreen,
-        height
     } = props
 
     if (!data || !data.realTime) return null
@@ -35,14 +34,14 @@ export const MultiParam = (props: { data: ICacheItem, isFullScreen: boolean, hei
 
     return (
 
-        !!(ecgData && ecgData.length) && (
-            <div style={{ width: isFullScreen ? 280 : '100%', borderRight: isFullScreen && border }}>
+        !!(ecgData && ecgData.length || true) && (
+            <div style={{ width: isFullScreen ? 280 : '100%', height: isFullScreen ? 'auto' : '20%', maxHeight: isFullScreen ? 'unset' : 40, minHeight: isFullScreen ? 'auto' : 26, borderRight: isFullScreen && border }}>
                 {
                     isFullScreen ?
                         (
                             <MultiParamL ecgData={ecgData} p={data.ple} bloodList={list} />
                         ) : (
-                            <div style={{ height, display: 'flex', alignItems: 'center', justifyContent: 'space-around', fontSize: 10 }}>
+                            <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-around', fontSize: 10 }}>
 
                                 {
                                     keys.map((_, i) => {

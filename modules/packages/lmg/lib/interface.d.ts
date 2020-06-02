@@ -6,6 +6,7 @@ export interface IProps {
     };
     onReady?: (suit: Drawer) => void;
     loading?: boolean;
+    isFullscreen?: boolean;
     audios?: string[];
     [x: string]: any;
 }

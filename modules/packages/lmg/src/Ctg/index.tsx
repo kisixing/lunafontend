@@ -35,6 +35,7 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
     loading = false,
     onReady = (s: Drawer) => { },
     audios,
+    isFullscreen,
     ...others
   } = props
 
@@ -50,7 +51,7 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
   const ctgBox = useRef<Div>(null);
   const ctg = useRef<Suit>(null)
   const ecg = useRef<Drawer>(null)
-  const [ecgHeight, setEcgHeight] = useState(0)
+  // const [ecgHeight, setEcgHeight] = useState(0)
   // const [showBtns, setShowBtns] = useState(false)
   // const staticType = suitType > 0
 
@@ -74,17 +75,16 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
     return instance
   },
     () => {
-      const { height } = box.current.getBoundingClientRect();
-      const h = height / 5;
-      const t = h > 40 ? (h > 120 ? 210 : 40) : (26)
-      setEcgHeight(t)
+      // const { height } = box.current.getBoundingClientRect();
+      // const h = height / 5;
+      // const t = h > 40 ? (h > 120 ? 210 : 40) : (26)
+      // setEcgHeight(t)
     })
   // useLayoutEffect(() => {
   //   ctg.current && ctg.current.resize()
   //   ecg.current && ecg.current.resize()
   // }, [ecgHeight])
-  const isFullScreen = ecgHeight > 200
-  console.log('isFullScreen', isFullScreen)
+  console.log('isFullScreen', isFullscreen)
   useCheckNetwork(isOn => ctg.current && (ctg.current.isOn = isOn))
 
   useImperativeHandle(ref, () => {
@@ -92,9 +92,9 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
   })
   const canvasStyles: React.CSSProperties = { position: 'absolute' }
   return (
-    <Wrapper style={{ flexDirection: isFullScreen ? 'row' : 'column-reverse' }}>
+    <Wrapper style={{ flexDirection: isFullscreen ? 'row' : 'column-reverse' }}>
       {
-        showEcg && <MultiParam data={data} isFullScreen={isFullScreen} height={ecgHeight} />
+        showEcg && <MultiParam data={data} isFullScreen={isFullscreen} />
       }
       <div className="box" ref={box} {...others}
         onMouseDownCapture={e => {
@@ -116,7 +116,7 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
             </div>
           )
         }
-        <div style={{ height: isV3 ? 0 : (isFullScreen ? `calc(100% - ${ecgHeight}px)` : `100%`), position: 'relative' }} ref={ctgBox}>
+        <div style={{ height: isV3 ? 0 : ((isFullscreen && showEcg) ? `calc(100% - 210px)` : '100%'), position: 'relative' }} ref={ctgBox}>
           <canvas style={canvasStyles} ref={canvasgrid} />
           <canvas style={canvasStyles} ref={canvasline} />
           <canvas style={canvasStyles} ref={canvasdata} />
@@ -128,9 +128,9 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
         </FancyCanvas> */}
         </div>
         {
-          ecgHeight && showEcg && (isV3 || isFullScreen) && (
-            <div style={{ height: isV3 ? '100%' : (isFullScreen ? ecgHeight : 0), overflow: 'hidden' }} >
-              <Ecg data={data} ecgHeight={ecgHeight} onReady={e => ecg.current = e} />
+          showEcg && (isV3 || isFullscreen) && (
+            <div style={{ height: isV3 ? `100%` : (isFullscreen ? 210 : 0), overflow: 'hidden' }} >
+              <Ecg isFullscreen={isFullscreen} data={data} onReady={e => ecg.current = e} />
             </div>
           )
         }
@@ -152,7 +152,7 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
 
       </div>
 
-    </Wrapper>
+    </Wrapper >
   );
 })
 )

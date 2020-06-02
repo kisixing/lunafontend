@@ -6,6 +6,7 @@ interface ICtgData {
     fhr3: number;
     toco: number;
     fm: number;
+    fmp: number;
     index: number;
 }
 interface IData {

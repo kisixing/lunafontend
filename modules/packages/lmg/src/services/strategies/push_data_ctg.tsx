@@ -7,6 +7,7 @@ interface ICtgData {
     fhr3: number
     toco: number
     fm: number
+    fmp: number
     index: number
 }
 interface IData {
@@ -19,6 +20,7 @@ interface IData {
 
 
 export function pushData(target: ICacheItem, data: ICtgData) {
+    const { index, toco, fm, fmp } = data
     for (let fetal = 0; fetal < target.fetal_num; fetal++) {
         if (!target.fhr[fetal]) {
             continue;
@@ -27,9 +29,9 @@ export function pushData(target: ICacheItem, data: ICtgData) {
         if (data[fhrKey] == 0) continue;
         target.fhr[fetal][data.index] = data[fhrKey]
     }
-    target.toco[data.index] = data.toco;
-    target.fm[data.index] = data.fm;
-
+    target.toco[index] = toco;
+    target.fm[index] = fm;
+    target.fmp[index] = fmp
 }
 
 export function push_data_ctg(this: WsService, received_msg: IData) {

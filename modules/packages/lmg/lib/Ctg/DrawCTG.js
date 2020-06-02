@@ -410,7 +410,7 @@ var DrawCTG = (function () {
         cur = Math.round(cur);
         var _a = this, suit = _a.suit, linecontext = _a.linecontext, max = _a.max;
         var drawAnalyse = suit.drawAnalyse;
-        var _b = suit.data, fhr = _b.fhr, toco = _b.toco, fm = _b.fm;
+        var _b = suit.data, fhr = _b.fhr, toco = _b.toco, fm = _b.fm, fmp = _b.fmp;
         if (typeof (fhr[0]) == "undefined") {
             this.drawgrid(cur, false);
             return;
@@ -555,6 +555,46 @@ var DrawCTG = (function () {
             }
         }
         linecontext.stroke();
+        if (fmp) {
+            lastx = 0;
+            lasty = 0;
+            linecontext.beginPath();
+            linecontext.strokeStyle = suit.ctgconfig.fmpcolor;
+            linecontext.lineWidth = 1;
+            for (var i = start; i < cur - 2; i++) {
+                if (i % 2 == 1)
+                    continue;
+                if (start == 0) {
+                    lastx = Math.floor((suit.canvasline.width * 2 - cur + i) / 2);
+                }
+                else {
+                    lastx = Math.floor((i - start) / 2);
+                }
+                if (fmp[i] === -1) {
+                    continue;
+                }
+                if (fmp[i - 2] === -1) {
+                    console.log('sd', suit.canvasline.height - fmp[i] * this.yspan);
+                    linecontext.moveTo(lastx, suit.canvasline.height - fmp[i] * this.yspan);
+                    continue;
+                }
+                if (i > 2 && typeof (fmp[i]) != "undefined" && typeof (fmp[i - 2]) != "undefined" && fmp[i] != 255) {
+                    linecontext.lineTo(lastx, suit.canvasline.height - fmp[i] * this.yspan);
+                }
+                else {
+                    if (typeof (fmp[i]) != "undefined" && fmp[i] != 255) {
+                        linecontext.moveTo(lastx, suit.canvasline.height - fmp[i] * this.yspan);
+                    }
+                    else if (typeof (fmp[i - 2]) != "undefined" && fmp[i] != 255) {
+                        linecontext.moveTo(lastx, suit.canvasline.height - fmp[i - 2] * this.yspan);
+                    }
+                    else {
+                        linecontext.moveTo(lastx, suit.canvasline.height);
+                    }
+                }
+            }
+            linecontext.stroke();
+        }
         for (var i = start; i < cur; i++) {
             if (i % 2 == 1)
                 continue;

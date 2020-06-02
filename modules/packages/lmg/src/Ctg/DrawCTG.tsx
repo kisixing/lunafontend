@@ -153,7 +153,7 @@ export default class DrawCTG {
 
     const { suit, linecontext, max } = this;
     const { drawAnalyse } = suit
-    const { fhr, toco, fm } = suit.data;
+    const { fhr, toco, fm, fmp } = suit.data;
     if (typeof (fhr[0]) == "undefined") {
       this.drawgrid(cur, false);
       return;
@@ -291,7 +291,6 @@ export default class DrawCTG {
         console.log('sd', suit.canvasline.height - toco[i] * this.yspan)
         linecontext.moveTo(lastx, suit.canvasline.height - toco[i] * this.yspan);
         continue
-
       }
 
       if (i > 2 && typeof (toco[i]) != "undefined" && typeof (toco[i - 2]) != "undefined" && toco[i] != 255) {
@@ -307,6 +306,45 @@ export default class DrawCTG {
       }
     }
     linecontext.stroke();
+    if (fmp) {
+      //draw fmp
+      lastx = 0;
+      lasty = 0;
+      linecontext.beginPath();
+      linecontext.strokeStyle = suit.ctgconfig.fmpcolor;
+      linecontext.lineWidth = 1;
+      for (var i = start; i < cur - 2; i++) {
+        if (i % 2 == 1) continue;
+        if (start == 0) {
+          lastx = Math.floor((suit.canvasline.width * 2 - cur + i) / 2);
+        } else {
+          lastx = Math.floor((i - start) / 2);
+        }
+        if (fmp[i] === -1) {
+          continue
+        }
+
+        if (fmp[i - 2] === -1) {
+          console.log('sd', suit.canvasline.height - fmp[i] * this.yspan)
+          linecontext.moveTo(lastx, suit.canvasline.height - fmp[i] * this.yspan);
+          continue
+
+        }
+
+        if (i > 2 && typeof (fmp[i]) != "undefined" && typeof (fmp[i - 2]) != "undefined" && fmp[i] != 255) {
+          linecontext.lineTo(lastx, suit.canvasline.height - fmp[i] * this.yspan);
+        } else {
+          if (typeof (fmp[i]) != "undefined" && fmp[i] != 255) {
+            linecontext.moveTo(lastx, suit.canvasline.height - fmp[i] * this.yspan);
+          } else if (typeof (fmp[i - 2]) != "undefined" && fmp[i] != 255) {
+            linecontext.moveTo(lastx, suit.canvasline.height - fmp[i - 2] * this.yspan);
+          } else {
+            linecontext.moveTo(lastx, suit.canvasline.height);
+          }
+        }
+      }
+      linecontext.stroke();
+    }
     //kisi 2019-10-10 fm 128 判断
     for (var i = start; i < cur; i++) {
       if (i % 2 == 1) continue;
@@ -604,7 +642,7 @@ export default class DrawCTG {
       }
       if (alarm == 0 && suit.ctgconfig.alarm_enable && this.suit.alarm == 1) {
 
-        console.log('恢复', cv, curvalue, alarm, this.suit.alarm, suit.ctgconfig.alarm_high < cv, suit.ctgconfig.alarm_low > cv,x);
+        console.log('恢复', cv, curvalue, alarm, this.suit.alarm, suit.ctgconfig.alarm_high < cv, suit.ctgconfig.alarm_low > cv, x);
         this.suit.alarmOff(fetalIndex);
         this.suit.alarm = alarm;
       }

@@ -6,6 +6,7 @@ interface IData {
     fhr3: number
     toco: number
     fm: number
+    fmp: number
     index: number
 }
 interface IData {
@@ -35,6 +36,7 @@ export function get_data_ctg(this: WsService, received_msg: IData) {
             }
             tmpcache.toco[ctgdata[key].index] = ctgdata[key].toco;
             tmpcache.fm[ctgdata[key].index] = ctgdata[key].fm;
+            tmpcache.fmp[ctgdata[key].index] = ctgdata[key].fmp;
             this.setcur(cachbi, ctgdata[key].index);
         }
         tmpcache.orflag = true;

@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useEffect, memo } from 'react';
+import React, { useRef, useCallback, useEffect, memo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { BedStatus, ICacheItem, ICacheItemPregnancy } from "@lianmed/lmg/lib/services/types";
 
@@ -36,7 +36,7 @@ const WorkbenchItem = (props: IProps) => {
   const { bordered, themeColor, itemData, onClose, loading = false, fullScreenId, itemHeight, itemSpan, outPadding, data, bedname, status, unitId } = props;
   let { startTime, pregnancy } = props
 
-
+  const [isFullscreen, setIsFullscreen] = useState(false)
   let w: any = window
   const k = `spinfo_${unitId}`
   const c = w[k] || (w[k] = {})
@@ -49,7 +49,7 @@ const WorkbenchItem = (props: IProps) => {
 
   // -------------------
   const ref = useRef(null)
-  const fullScreen: clickCb = useCallback(
+  const fullScreenCb: clickCb = useCallback(
     (e) => {
       const el = ReactDOM.findDOMNode(ref.current) as HTMLElement;
       if (document.fullscreenElement) {
@@ -60,8 +60,20 @@ const WorkbenchItem = (props: IProps) => {
     }, []
   )
   useEffect(() => {
+    const cb = e => {
+      const el = ReactDOM.findDOMNode(ref.current) as HTMLElement;
+      if (e.target === el) {
+        setIsFullscreen(!isFullscreen)
+      }
+    }
+    document.addEventListener('fullscreenchange', cb)
+    return () => {
+      document.removeEventListener('fullscreenchange', cb)
+    }
+  }, [isFullscreen])
+  useEffect(() => {
     if (fullScreenId === unitId) {
-      fullScreen(null);
+      fullScreenCb(null);
       event.emit('bedFullScreen', unitId)
     }
   }, [fullScreenId])
@@ -72,12 +84,13 @@ const WorkbenchItem = (props: IProps) => {
       style={{ transition: 'background .6s', padding: outPadding, height: itemHeight, background: bordered ? 'black' : `var(--theme-${'light'}-color)`, position: 'relative' }}
     >
       <Ctg_Item
+        isFullscreen={isFullscreen}
         themeColor={themeColor}
         startTime={startTime}
         bedname={bedname}
         status={status}
         data={data}
-        onDoubleClick={fullScreen}
+        onDoubleClick={fullScreenCb}
         loading={loading}
         // onClose={() => { event.emit('bedClose', unitId, status, isTodo, docid) }}
         onClose={onClose && (() => onClose(itemData))}

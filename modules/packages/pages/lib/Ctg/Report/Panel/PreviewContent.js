@@ -70,10 +70,10 @@ var PreviewContent = function (props) {
                 react_1.default.createElement(react_pdf_1.Page, { pageNumber: pageNumber, scale: 1, height: height })),
             react_1.default.createElement(antd_1.Pagination, { ref: ref2, total: numPages, showTotal: function (total) { return "\u5171 " + total + " \u9875"; }, current: pageNumber, pageSize: 1, size: "small", onChange: onChangePage })),
         isFullpage ? (react_1.default.createElement(react_1.default.Fragment, null,
-            react_1.default.createElement("span", { style: { position: 'absolute', top: 24, right: 24, cursor: 'pointer' }, onClick: shrink },
-                "\u8FD4\u56DE",
-                react_1.default.createElement(icons_1.FullscreenExitOutlined, { title: "\u7F29\u5C0F" })),
-            onDownload && (react_1.default.createElement(antd_1.Button, { style: { position: 'absolute', top: 64, right: 24, cursor: 'pointer' }, onClick: onDownload }, "\u6253\u5370")))) : (isFull || react_1.default.createElement("span", { style: { position: 'absolute', bottom: 36, right: 12, } },
+            react_1.default.createElement(antd_1.Button, { icon: react_1.default.createElement(icons_1.FullscreenExitOutlined, { title: "\u7F29\u5C0F" }), style: { position: 'absolute', top: 24, right: 24 }, onClick: shrink },
+                react_1.default.createElement("span", null, "\u6253\u5370")),
+            onDownload && (react_1.default.createElement(antd_1.Button, { style: { position: 'absolute', top: 64, right: 24 }, onClick: onDownload },
+                react_1.default.createElement("span", null, "\u6253\u5370"))))) : (isFull || react_1.default.createElement("span", { style: { position: 'absolute', bottom: 36, right: 12, } },
             react_1.default.createElement(antd_1.Button, { title: "\u5168\u5C4F", type: "primary", onClick: largen }, "\u653E\u5927\u9884\u89C8"))))) : (react_1.default.createElement(antd_1.Empty, { style: { height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'white', margin: 0 } }));
     return (react_1.default.createElement("div", { style: {
             position: 'relative',

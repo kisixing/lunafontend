@@ -19,6 +19,7 @@ interface IProps extends PropsWithChildren<{}> {
     onSuitRead?: (s: Drawer) => void;
     themeColor?: string;
     unitId: string;
+    isFullscreen: boolean;
 }
 declare const Item: (props: IProps) => JSX.Element;
 export default Item;

@@ -5,6 +5,7 @@ export interface IProps {
     mutableSuitObject?: { suit: (Drawer | any) };
     onReady?: (suit: Drawer) => void;
     loading?: boolean;
+    isFullscreen?:boolean
     audios?: string[]
     [x: string]: any
 }

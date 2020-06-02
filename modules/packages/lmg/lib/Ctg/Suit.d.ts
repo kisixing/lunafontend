@@ -48,6 +48,7 @@ export declare class Suit extends Draw {
         fhrcolor: string[];
         tococolor: string;
         alarmcolor: string;
+        fmpcolor: string;
         alarm_enable: boolean;
         alarm_high: number;
         alarm_low: number;

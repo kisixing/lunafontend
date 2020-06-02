@@ -19,6 +19,7 @@ function get_data_ctg(received_msg) {
             }
             tmpcache.toco[ctgdata[key].index] = ctgdata[key].toco;
             tmpcache.fm[ctgdata[key].index] = ctgdata[key].fm;
+            tmpcache.fmp[ctgdata[key].index] = ctgdata[key].fmp;
             this.setcur(cachbi, ctgdata[key].index);
         }
         tmpcache.orflag = true;

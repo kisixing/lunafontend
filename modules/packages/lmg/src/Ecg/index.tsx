@@ -21,9 +21,7 @@ export default (props: IProps) => {
     data,
     mutableSuitObject = { suit: null },
     onReady = (s: Drawer) => { },
-    ecgHeight
   } = props
-  const showDetail = (ecgHeight) >= 200
   const box = useRef<Div>(null);
   const canvas = useRef<Canvas>(null);
   const canvasline = useRef<Canvas>(null);
@@ -70,17 +68,17 @@ export default (props: IProps) => {
       <canvas id="line" ref={canvasline} style={canvasStyles} />
       <canvas id="monitor" ref={canvasmonitor} style={canvasStyles} />
       <canvas id="ple" ref={canvasPle} style={canvasStyles} />
-      {
+      {/* {
         !!(showDetail && data && data.ecgdata && data.ecgdata.length && false) && <div style={{ position: 'absolute', right: 0, width: '30%', height: '100%', top: 0, }}>
 
-          {/* <Descriptions  column={2} bordered size="small">
-                <Descriptions.Item label="脉率bpm"span={2}>{data.ecgdata[0]}</Descriptions.Item>
-                <Descriptions.Item label="血氧%"span={2}>{data.ecgdata[1]}</Descriptions.Item>
-                <Descriptions.Item label="体温℃" span={2}>{data.ecgdata[2]}~{data.ecgdata[3]}</Descriptions.Item>
-                <Descriptions.Item label="心率bpm"span={2}>{data.ecgdata[4]}</Descriptions.Item>
-                <Descriptions.Item label="呼吸(次/分)" span={2} >{data.ecgdata[5]}</Descriptions.Item>
-                <Descriptions.Item span={2} label="血压(SDM)mmHg">{data.ecgdata[6]}</Descriptions.Item>
-            </Descriptions> */}
+          <Descriptions column={2} bordered size="small">
+            <Descriptions.Item label="脉率bpm" span={2}>{data.ecgdata[0]}</Descriptions.Item>
+            <Descriptions.Item label="血氧%" span={2}>{data.ecgdata[1]}</Descriptions.Item>
+            <Descriptions.Item label="体温℃" span={2}>{data.ecgdata[2]}~{data.ecgdata[3]}</Descriptions.Item>
+            <Descriptions.Item label="心率bpm" span={2}>{data.ecgdata[4]}</Descriptions.Item>
+            <Descriptions.Item label="呼吸(次/分)" span={2} >{data.ecgdata[5]}</Descriptions.Item>
+            <Descriptions.Item span={2} label="血压(SDM)mmHg">{data.ecgdata[6]}</Descriptions.Item>
+          </Descriptions>
           <Row gutter={0}>
             <Col span={12} >
               <Gg title="脉率" value={`${ecgData[0] || ''}`} unit="bpm" />
@@ -101,7 +99,7 @@ export default (props: IProps) => {
               <Gg title="血压SDM" value={`${ecgData[6] || ''}`} unit="mmHg" />
             </Col>
           </Row>
-          {/* <Row gutter={0}>
+          <Row gutter={0}>
             <Col span={12} >
               <Statistic title="脉率" value={`${data.ecgdata[0]}bpm`} />
             </Col>
@@ -120,9 +118,9 @@ export default (props: IProps) => {
             <Col span={12} >
               <Statistic title="血压SDM" value={`${data.ecgdata[6]}mmHg`} />
             </Col>
-          </Row> */}
+          </Row>
         </div>
-      }
+      } */}
     </div>
   );
 };

@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function pushData(target, data) {
+    var index = data.index, toco = data.toco, fm = data.fm, fmp = data.fmp;
     for (var fetal = 0; fetal < target.fetal_num; fetal++) {
         if (!target.fhr[fetal]) {
             continue;
@@ -10,8 +11,9 @@ function pushData(target, data) {
             continue;
         target.fhr[fetal][data.index] = data[fhrKey];
     }
-    target.toco[data.index] = data.toco;
-    target.fm[data.index] = data.fm;
+    target.toco[index] = toco;
+    target.fm[index] = fm;
+    target.fmp[index] = fmp;
 }
 exports.pushData = pushData;
 function push_data_ctg(received_msg) {

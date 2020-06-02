@@ -30,6 +30,7 @@ function getEmptyCacheItem(base) {
         fhr: Array(fetal_num).fill(0).map(function () { return getMaxArray(); }),
         toco: getMaxArray(),
         fm: getMaxArray(),
+        fmp: getMaxArray(),
         index: 0,
         length: 0,
         start: -1,

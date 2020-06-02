@@ -359,6 +359,13 @@ export class WsService extends EventEmitter {
                 if (received_msg) {
                     const mesName = received_msg.name
                     const strategy = this.strategies[mesName]
+                    // if (mesName === 'push_devices') {
+                        
+                    //     const t = received_msg.data.find(_ => _.device_no === 1)
+                    //     console.log('push',t);
+
+                    //     t && (t.device_type = 'V3')
+                    // }
                     strategy && strategy(received_msg)
                 }
             };

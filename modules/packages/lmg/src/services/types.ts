@@ -51,9 +51,10 @@ export interface ICacheItem {
     // fhr?: Uint8Array[];
     // toco?: Uint8Array;
     // fm?: Uint8Array;
-    fhr?: number[][];
-    toco?: number[];
-    fm?: number[];
+    fhr: number[][];
+    toco: number[];
+    fm: number[];
+    fmp: number[];
 
     index?: number;
     length?: number;

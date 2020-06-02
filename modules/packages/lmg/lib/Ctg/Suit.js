@@ -63,6 +63,7 @@ var Suit = (function (_super) {
             fhrcolor: ['green', 'blue', 'rgb(0,0,0)'],
             tococolor: 'rgb(0,0,0)',
             alarmcolor: 'rgb(255, 1, 1)',
+            fmpcolor: 'darkgreen',
             alarm_enable: true,
             alarm_high: 160,
             alarm_low: 110,

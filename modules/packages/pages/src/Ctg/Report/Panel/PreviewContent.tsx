@@ -91,13 +91,14 @@ const PreviewContent = props => {
             }
             {isFullpage ? (
                 <>
-                    <span style={{ position: 'absolute', top: 24, right: 24, cursor: 'pointer' }} onClick={shrink}>
-                        返回<FullscreenExitOutlined title="缩小" />
-                    </span>
+
+                    <Button icon={<FullscreenExitOutlined title="缩小" />} style={{ position: 'absolute', top: 24, right: 24 }} onClick={shrink}>
+                        <span>打印</span>
+                    </Button>
                     {
                         onDownload && (
-                            <Button style={{ position: 'absolute', top: 64, right: 24, cursor: 'pointer' }} onClick={onDownload}>
-                                打印
+                            <Button style={{ position: 'absolute', top: 64, right: 24 }} onClick={onDownload}>
+                                <span>打印</span>
                             </Button>
                         )
                     }

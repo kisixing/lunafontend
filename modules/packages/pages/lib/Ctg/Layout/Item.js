@@ -30,6 +30,7 @@ var utils_1 = require("@lianmed/utils");
 var WorkbenchItem = function (props) {
     var bordered = props.bordered, themeColor = props.themeColor, itemData = props.itemData, onClose = props.onClose, _a = props.loading, loading = _a === void 0 ? false : _a, fullScreenId = props.fullScreenId, itemHeight = props.itemHeight, itemSpan = props.itemSpan, outPadding = props.outPadding, data = props.data, bedname = props.bedname, status = props.status, unitId = props.unitId;
     var startTime = props.startTime, pregnancy = props.pregnancy;
+    var _b = react_1.useState(false), isFullscreen = _b[0], setIsFullscreen = _b[1];
     var w = window;
     var k = "spinfo_" + unitId;
     var c = w[k] || (w[k] = {});
@@ -41,7 +42,7 @@ var WorkbenchItem = function (props) {
         Object.assign(c, { pregnancy: __assign(__assign({}, pregnancy), { pvId: null }), startTime: startTime });
     }
     var ref = react_1.useRef(null);
-    var fullScreen = react_1.useCallback(function (e) {
+    var fullScreenCb = react_1.useCallback(function (e) {
         var el = react_dom_1.default.findDOMNode(ref.current);
         if (document.fullscreenElement) {
             document.exitFullscreen();
@@ -51,13 +52,25 @@ var WorkbenchItem = function (props) {
         }
     }, []);
     react_1.useEffect(function () {
+        var cb = function (e) {
+            var el = react_dom_1.default.findDOMNode(ref.current);
+            if (e.target === el) {
+                setIsFullscreen(!isFullscreen);
+            }
+        };
+        document.addEventListener('fullscreenchange', cb);
+        return function () {
+            document.removeEventListener('fullscreenchange', cb);
+        };
+    }, [isFullscreen]);
+    react_1.useEffect(function () {
         if (fullScreenId === unitId) {
-            fullScreen(null);
+            fullScreenCb(null);
             utils_1.event.emit('bedFullScreen', unitId);
         }
     }, [fullScreenId]);
     return (react_1.default.createElement(antd_1.Col, { span: itemSpan, ref: ref, style: { transition: 'background .6s', padding: outPadding, height: itemHeight, background: bordered ? 'black' : "var(--theme-" + 'light' + "-color)", position: 'relative' } },
-        react_1.default.createElement(index_1.default, { themeColor: themeColor, startTime: startTime, bedname: bedname, status: status, data: data, onDoubleClick: fullScreen, loading: loading, onClose: onClose && (function () { return onClose(itemData); }), unitId: unitId, name: pregnancy.name, age: pregnancy.age, bedNO: pregnancy.bedNO, GP: pregnancy.GP, gestationalWeek: pregnancy.gestationalWeek }, props.children)));
+        react_1.default.createElement(index_1.default, { isFullscreen: isFullscreen, themeColor: themeColor, startTime: startTime, bedname: bedname, status: status, data: data, onDoubleClick: fullScreenCb, loading: loading, onClose: onClose && (function () { return onClose(itemData); }), unitId: unitId, name: pregnancy.name, age: pregnancy.age, bedNO: pregnancy.bedNO, GP: pregnancy.GP, gestationalWeek: pregnancy.gestationalWeek }, props.children)));
 };
 exports.default = react_1.memo(WorkbenchItem);
 ;

@@ -44,9 +44,10 @@ export interface ICacheItem {
     is_include_tocozero?: boolean;
     disableStartWork?: boolean;
     analyse?: any;
-    fhr?: number[][];
-    toco?: number[];
-    fm?: number[];
+    fhr: number[][];
+    toco: number[];
+    fm: number[];
+    fmp: number[];
     index?: number;
     length?: number;
     start?: number;
