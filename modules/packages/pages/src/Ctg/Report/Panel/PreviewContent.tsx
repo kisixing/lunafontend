@@ -90,19 +90,19 @@ const PreviewContent = props => {
                 </>
             }
             {isFullpage ? (
-                <>
+                <div style={{ position: 'absolute', top: 24, right: 24 }} >
 
-                    <Button size="large" type="primary" icon={<FullscreenExitOutlined title="缩小" />} style={{ position: 'absolute', top: 24, right: 24 }} onClick={shrink}>
+                    <Button size="large" type="primary" style={{ marginRight: 10 }} onClick={shrink}>
                         <span>返回</span>
                     </Button>
                     {
                         onDownload && (
-                            <Button size="large" type="primary" style={{ position: 'absolute', top: 64, right: 24 }} onClick={onDownload}>
+                            <Button size="large" type="primary" onClick={onDownload}>
                                 <span>打印</span>
                             </Button>
                         )
                     }
-                </>
+                </div>
             ) : (
                     isFull || <span style={{ position: 'absolute', bottom: 36, right: 12, }}>
                         <Button

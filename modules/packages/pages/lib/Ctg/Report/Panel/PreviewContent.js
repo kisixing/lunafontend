@@ -21,7 +21,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importStar(require("react"));
 var react_pdf_1 = require("react-pdf");
 var antd_1 = require("antd");
-var icons_1 = require("@ant-design/icons");
 require("react-pdf/dist/Page/AnnotationLayer.css");
 var PreviewContent = function (props) {
     var pdfBase64 = props.pdfBase64, _a = props.isFull, isFull = _a === void 0 ? false : _a, wh = props.wh, _b = props.borderd, borderd = _b === void 0 ? true : _b, onDownload = props.onDownload;
@@ -69,10 +68,10 @@ var PreviewContent = function (props) {
             react_1.default.createElement(react_pdf_1.Document, { ref: ref1, loading: react_1.default.createElement(antd_1.Spin, { style: { margin: '120px 0' } }), onLoadSuccess: onDocumentLoad, file: pdfBase64, renderMode: "canvas" },
                 react_1.default.createElement(react_pdf_1.Page, { pageNumber: pageNumber, scale: 1, height: height })),
             react_1.default.createElement(antd_1.Pagination, { ref: ref2, total: numPages, showTotal: function (total) { return "\u5171 " + total + " \u9875"; }, current: pageNumber, pageSize: 1, size: "small", onChange: onChangePage })),
-        isFullpage ? (react_1.default.createElement(react_1.default.Fragment, null,
-            react_1.default.createElement(antd_1.Button, { size: "large", type: "primary", icon: react_1.default.createElement(icons_1.FullscreenExitOutlined, { title: "\u7F29\u5C0F" }), style: { position: 'absolute', top: 24, right: 24 }, onClick: shrink },
+        isFullpage ? (react_1.default.createElement("div", { style: { position: 'absolute', top: 24, right: 24 } },
+            react_1.default.createElement(antd_1.Button, { size: "large", type: "primary", style: { marginRight: 10 }, onClick: shrink },
                 react_1.default.createElement("span", null, "\u8FD4\u56DE")),
-            onDownload && (react_1.default.createElement(antd_1.Button, { size: "large", type: "primary", style: { position: 'absolute', top: 64, right: 24 }, onClick: onDownload },
+            onDownload && (react_1.default.createElement(antd_1.Button, { size: "large", type: "primary", onClick: onDownload },
                 react_1.default.createElement("span", null, "\u6253\u5370"))))) : (isFull || react_1.default.createElement("span", { style: { position: 'absolute', bottom: 36, right: 12, } },
             react_1.default.createElement(antd_1.Button, { title: "\u5168\u5C4F", type: "primary", onClick: largen }, "\u653E\u5927\u9884\u89C8"))))) : (react_1.default.createElement(antd_1.Empty, { style: { height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'white', margin: 0 } }));
     return (react_1.default.createElement("div", { style: {
