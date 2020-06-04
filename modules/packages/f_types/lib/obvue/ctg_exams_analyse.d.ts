@@ -39,6 +39,7 @@ export interface _ctg_exams_analyse {
         };
         start: number;
         end: number;
+        isSinusoid:boolean;
     };
     score: {
         sogcdata?: {
@@ -48,10 +49,38 @@ export interface _ctg_exams_analyse {
             accscore: number;
             accvalue: number;
             bhrvalue: number;
+            decscore: number;
+            decvalue: string;
+            total: number;
+        };
+        cstdata?: {
+            bhrscore: number;
+            ltvvalue: number;
+            ltvscore: number;
+            stvscore: number;
+            stvvalue: number;
+            accscore: number;
+            accvalue: number;
+            bhrvalue: number;
+            decscore: number;
+            decvalue: string;
+            total: number;
+        };
+        cstoctdata?: {
+            bhrscore: number;
+            ltvvalue: number;
+            ltvscore: number;
+            accscore: number;
+            accvalue: number;
+            bhrvalue: number;
+            decscore: number;
+            decvalue: string;
+            sinusoidscore: number;
+            sinusoidvalue: number;
+            total: number;
         };
         ret: number;
         msg: string;
-        cstdata?: null;
         nstdata?: {
             bhrscore: number;
             ltvscore: number;

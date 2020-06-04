@@ -200,6 +200,22 @@ export class DrawAnalyse extends Draw {
         })
         return decnum;
     }
+    //加速周期性判断
+    cycleAcc = () => {
+        let error = 8;
+        const { analysisData } = this
+        if (!analysisData) return 0;
+        const { analysis } = analysisData
+        if(analysis.acc.length<3) return 0;
+        let base = analysis.acc[1].index - analysis.acc[0].index; 
+        for(let i = 2;i<analysis.acc.length;i++){
+            let diff = analysis.acc[i].index-analysis.acc[i-1].index;
+            if(diff>base+error || diff<base-error){
+                return 1;
+            }
+        }
+        return 0;
+    }
     // fm 128 判断
     countFm = (start: number, end: number) => {
         let fmnum = 0;
@@ -474,23 +490,35 @@ export class DrawAnalyse extends Draw {
         }
         //NST-sogc 20~40分钟
         else if (type == 'Sogc') {
+            //档案时长
+            const length = analysis.fhrbaselineMinute.length;
             // 基线选项
             score.sogcdata.bhrvalue = bhr;
-            if (bhr < 100)
+            if (bhr < 100 || (bhr>160&&length>30))
                 score.sogcdata.bhrscore = 0;
             else if (this.inRange(bhr, 100, 109) || bhr > 160)
                 score.sogcdata.bhrscore = 1;
             else if (this.inRange(bhr, 110, 160)) {
                 score.sogcdata.bhrscore = 2;
             }
-            // 振幅
+            // 变异
             score.sogcdata.ltvvalue = analysis.ltv;
             if (analysis.ltv < 5) {
-                score.sogcdata.ltvscore = 0;
+                if(length<40){
+                    score.sogcdata.ltvscore = 2;
+                }else if(this.inRange(length, 40, 80)){
+                    score.sogcdata.ltvscore = 1;
+                }else{
+                    score.sogcdata.ltvscore = 0;
+                }
             } else if (this.inRange(analysis.ltv, 5, 9) || analysis.ltv > 30) {
                 score.sogcdata.ltvscore = 1;
-            } else if (this.inRange(analysis.ltv, 10, 30)) {
+            } else if (this.inRange(analysis.ltv, 6, 25)) {
                 score.sogcdata.ltvscore = 2;
+            }
+            //正弦判断
+            if(analysis.isSinusoid){
+                score.sogcdata.ltvscore = 0;
             }
             // 加速
             let accnum = this.countAcc(analysis.start, analysis.end);
@@ -507,23 +535,179 @@ export class DrawAnalyse extends Draw {
             let vd = analysis.vdtimes = this.countDec(analysis.start, analysis.end, 'VD');//analysis.vdtimes;
             let ed = analysis.edtimes = this.countDec(analysis.start, analysis.end, 'ED');//analysis.edtimes;
             if (ld > 0) {
-                score.fischerdata.decscore = 0;
-                score.fischerdata.decvalue = 'LD';
+                score.sogcdata.decscore = 0;
+                score.sogcdata.decvalue = 'LD';
             } else if (vd > 0) {
-                score.fischerdata.decscore = 1;
-                score.fischerdata.decvalue = 'VD';
+                score.sogcdata.decscore = 1;
+                score.sogcdata.decvalue = 'VD';
+                analysis.dec.map(function (item) {
+                    if(item.type.toUpperCase() == 'VD'){
+                        if(this.inRange(item.duration,30,60)){
+                            score.sogcdata.decscore = 1;
+                            score.sogcdata.decvalue = 'VD';
+                        }else if(item.duration>60){
+                            score.sogcdata.decscore = 0;
+                            score.sogcdata.decvalue = 'VD';
+                        }
+                    }
+                })
             } else {
                 if (ed > 0) {
-                    score.fischerdata.decvalue = 'ED';
+                    score.sogcdata.decvalue = 'ED';
                 } else {
-                    score.fischerdata.decvalue = '无';
+                    score.sogcdata.decvalue = '无';
                 }
-                score.fischerdata.decscore = 2;
+                score.sogcdata.decscore = 2;
             }
+            if(score.sogcdata.bhrscore + score.sogcdata.accscore + score.sogcdata.decscore + score.sogcdata.ltvscore ==8){
+                score.sogcdata.total = 2;
+            }else if(score.sogcdata.bhrscore==0 || score.sogcdata.accscore==0 || score.sogcdata.decscore==0 || score.sogcdata.ltvscore){
+                score.sogcdata.total = 0;
+            }
+            score.sogcdata.total = 1;
         }
         //CST
         else if (type == 'Cst') {
-
+            // 基线选项
+            score.cstdata.bhrvalue = bhr;
+            if (bhr < 100 || bhr > 180) {
+                score.cstdata.bhrscore = 0;
+            } else if (this.inRange(bhr, 100, 109) || this.inRange(bhr, 161, 180)) {
+                score.cstdata.bhrscore = 1;
+            } else if (this.inRange(bhr, 110, 160)) {
+                score.cstdata.bhrscore = 2;
+            }
+            // 振幅变异
+            let zhenfu_tv = analysis.ltv;
+            score.cstdata.ltvvalue = zhenfu_tv;
+            if (zhenfu_tv < 5) {
+                score.cstdata.ltvscore = 0;
+            } else if (this.inRange(zhenfu_tv, 5, 9) || zhenfu_tv > 30) {
+                score.cstdata.ltvscore = 1;
+            } else if (this.inRange(zhenfu_tv, 10, 30)) {
+                score.cstdata.ltvscore = 2;
+            }
+            // 周期变异
+            let zhouqi_tv = analysis.stv;
+            score.cstdata.stvvalue = zhouqi_tv;
+            if (zhouqi_tv < 3) {
+                score.cstdata.stvscore = 0;
+            } else if (this.inRange(zhouqi_tv, 3, 6)) {
+                score.cstdata.stvscore = 1;
+            } else if (zhouqi_tv > 6) {
+                score.cstdata.stvscore = 2;
+            }
+            // 加速
+            let accnum = this.countAcc(analysis.start, analysis.end);
+            score.cstdata.accvalue = accnum;
+            if (accnum == 0) {
+                score.cstdata.accscore = 0;
+            } else if (this.cycleAcc()==1) {
+                score.cstdata.accscore = 1;
+            } else {
+                score.cstdata.accscore = 2;
+            }
+            // 减速
+            let ld = analysis.ldtimes = this.countDec(analysis.start, analysis.end, 'LD');//analysis.ldtimes;
+            let vd = analysis.vdtimes = this.countDec(analysis.start, analysis.end, 'VD');//analysis.vdtimes;
+            let ed = analysis.edtimes = this.countDec(analysis.start, analysis.end, 'ED');//analysis.edtimes;
+            if (ld > 0) {
+                score.cstdata.decscore = 0;
+                score.cstdata.decvalue = 'LD';
+            } else if (vd > 0) {
+                score.cstdata.decscore = 1;
+                score.cstdata.decvalue = 'VD';
+            } else {
+                if (ed > 0) {
+                    //判为其他
+                    score.cstdata.decvalue = 'ED';
+                    score.cstdata.decscore = 0;
+                } else {
+                    score.cstdata.decvalue = '无';
+                    score.cstdata.decscore = 2;
+                }
+            }
+            score.cstdata.total = score.cstdata.bhrscore + score.cstdata.accscore + score.cstdata.decscore + score.cstdata.ltvscore + score.cstdata.stvscore;
+        }
+        //CST-OCT sogc
+        else if (type == 'Cstoct') {
+            // 基线选项
+            score.cstoctdata.bhrvalue = bhr;
+            if (bhr < 100 || (bhr>160&&length>30))
+                score.cstoctdata.bhrscore = 0;
+            else if (this.inRange(bhr, 100, 109) || bhr > 160)
+                score.cstoctdata.bhrscore = 1;
+            else if (this.inRange(bhr, 110, 160)) {
+                score.cstoctdata.bhrscore = 2;
+            }
+            // 变异
+            score.cstoctdata.ltvvalue = analysis.ltv;
+            if (analysis.ltv < 5) {
+                if(length<40){
+                    score.cstoctdata.ltvscore = 2;
+                }else if(this.inRange(length, 40, 80)){
+                    score.cstoctdata.ltvscore = 1;
+                }else{
+                    score.cstoctdata.ltvscore = 0;
+                }
+            } else if (this.inRange(analysis.ltv, 5, 9) || analysis.ltv > 30) {
+                score.cstoctdata.ltvscore = 1;
+            } else if (this.inRange(analysis.ltv, 6, 25)) {
+                score.cstoctdata.ltvscore = 2;
+            }
+            //正弦判断
+            if(analysis.isSinusoid){
+                score.cstoctdata.sinusoidscore = 0;
+                score.cstoctdata.sinusoidvalue = 0;
+            }else{
+                score.cstoctdata.sinusoidscore = 2;
+                score.cstoctdata.sinusoidvalue = 2;
+            }
+            // 加速
+            let accnum = this.countAcc(analysis.start, analysis.end);
+            score.cstoctdata.accvalue = accnum;
+            if (accnum == 0) {
+                score.cstoctdata.accscore = 0;
+            } else if (this.inRange(accnum, 1, 2)) {
+                score.cstoctdata.accscore = 1;
+            } else if (accnum > 2) {
+                score.cstoctdata.accscore = 2;
+            }
+            // 减速
+            let ld = analysis.ldtimes = this.countDec(analysis.start, analysis.end, 'LD');//analysis.ldtimes;
+            let vd = analysis.vdtimes = this.countDec(analysis.start, analysis.end, 'VD');//analysis.vdtimes;
+            let ed = analysis.edtimes = this.countDec(analysis.start, analysis.end, 'ED');//analysis.edtimes;
+            if (ld > 0) {
+                score.cstoctdata.decscore = 0;
+                score.cstoctdata.decvalue = 'LD';
+            } else if (vd > 0) {
+                score.cstoctdata.decscore = 1;
+                score.cstoctdata.decvalue = 'VD';
+                analysis.dec.map(function (item) {
+                    if(item.type.toUpperCase() == 'VD'){
+                        if(this.inRange(item.duration,30,60)){
+                            score.cstoctdata.decscore = 1;
+                            score.cstoctdata.decvalue = 'VD';
+                        }else if(item.duration>60){
+                            score.cstoctdata.decscore = 0;
+                            score.cstoctdata.decvalue = 'VD';
+                        }
+                    }
+                })
+            } else {
+                if (ed > 0) {
+                    score.cstoctdata.decvalue = 'ED';
+                } else {
+                    score.cstoctdata.decvalue = '无';
+                }
+                score.cstoctdata.decscore = 2;
+            }
+            if(score.cstoctdata.bhrscore + score.cstoctdata.accscore + score.cstoctdata.decscore + score.cstoctdata.ltvscore ==8){
+                score.cstoctdata.total = 2;
+            }else if(score.cstoctdata.bhrscore==0 || score.cstoctdata.accscore==0 || score.cstoctdata.decscore==0 || score.cstoctdata.ltvscore){
+                score.cstoctdata.total = 0;
+            }
+            score.cstoctdata.total = 1;
         }
         return (this.analysisData = analysisData)
 
