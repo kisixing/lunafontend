@@ -1,5 +1,5 @@
 import React, { forwardRef, memo } from 'react';
-import { Table, Form, InputNumber } from 'antd';
+import { Table, Form, InputNumber, Input } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 
 
@@ -8,33 +8,34 @@ import { FormInstance } from 'antd/lib/form';
 
 interface IProps {
     name: string
-    dataSource: any
+    dataSource: any[] & { deformed: boolean }
     hidden: boolean
     disabled: boolean
     [x: string]: any
 }
-const T =  forwardRef<FormInstance, IProps>((props, ref) => {
+const T = forwardRef<FormInstance, IProps>((props, ref) => {
     const { hidden, dataSource, disabled } = props
+    const deformed = dataSource.deformed
     const columns: any = [
         {
             title: '项目',
             dataIndex: 'name',
-            render(a:any) {
+            render(a: any) {
                 return (
-                    <span style={{whiteSpace:'nowrap',}}>{a}</span>
+                    <span style={{ whiteSpace: 'nowrap', }}>{a}</span>
                 )
             }
         },
         {
-            title: '0分',
+            title: deformed ? '正常' : '0分',
             dataIndex: '0'
         },
         {
-            title: '1分',
+            title: deformed ? '可疑' : '1分',
             dataIndex: '1'
         },
         {
-            title: '2分',
+            title: deformed ? '异常' : '2分',
             dataIndex: '2'
         },
         {
@@ -43,24 +44,25 @@ const T =  forwardRef<FormInstance, IProps>((props, ref) => {
             render(a, { key }) {
                 return (
                     <Form.Item name={`${key}value`} style={{ margin: -8 }}>
-                        <InputNumber disabled={disabled} />
+                        <Input disabled={disabled} style={{ width: 80 }} />
                     </Form.Item>
                 )
             }
         },
-        {
+        deformed ? {} : {
             title: '得分',
             dataIndex: 'score',
             render(a, { key }) {
                 return (
                     <Form.Item name={`${key}score`} style={{ margin: -8 }} >
-                        <InputNumber disabled={disabled} />
+                        <InputNumber disabled={disabled} style={{ width: 80 }} />
                     </Form.Item>
                 )
             }
         },
 
-    ].map(_ => ({ ..._, align: 'center' }))
+    ]
+        .map(_ => ({ ..._, align: 'center' }))
 
     const [form] = Form.useForm()
     return (
@@ -76,8 +78,8 @@ const T =  forwardRef<FormInstance, IProps>((props, ref) => {
             }
 
         }}>
-            <Form.Item name="total" label="总分" style={{ position: 'absolute', top: -28, right: 16 }}>
-                <InputNumber disabled />
+            <Form.Item name="total" label={deformed ? '结果' : '总分'} style={{ position: 'absolute', top: -56, right: 64 }}>
+                <InputNumber disabled style={{ width: 50 }} />
             </Form.Item>
             <Table bordered size="small" pagination={false} columns={columns} dataSource={dataSource} />
         </Form>

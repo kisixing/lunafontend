@@ -10,9 +10,7 @@ interface IProps {
     setMark: any;
     interval: any;
     setInterval: any;
-    Fischer_ref: any;
-    Nst_ref: any;
-    Krebs_ref: any;
+    mapFormToMark: any;
     disabled: boolean;
     [x: string]: any;
 }

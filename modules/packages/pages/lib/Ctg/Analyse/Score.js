@@ -29,8 +29,7 @@ var ScoringMethod = function (props) {
     var docid = props.docid, ctgData = props.ctgData, fetal = props.fetal, setFetal = props.setFetal, disabled = props.disabled;
     var MARKS = props.MARKS, startTime = props.startTime, mark = props.mark, setMark = props.setMark, interval = props.interval, setInterval = props.setInterval, endTime = props.endTime;
     var onChange = function (e) {
-        var mark = e.target.value;
-        setMark(mark);
+        setMark(e);
     };
     var IntervalRadio = react_1.useMemo(function () {
         return (react_1.default.createElement("span", { style: { marginRight: 10 } },
@@ -58,19 +57,19 @@ var ScoringMethod = function (props) {
             "\u5206");
     };
     var R = react_1.useMemo(function () {
-        return (react_1.default.createElement(antd_1.Radio.Group, { disabled: !docid, onChange: onChange, value: mark, style: { marginBottom: 5 } }, MARKS.map(function (_) { return (react_1.default.createElement(antd_1.Radio, { value: _, key: _ },
-            _,
-            "\u5206\u6790\u6CD5")); })));
+        return (react_1.default.createElement(react_1.default.Fragment, null,
+            react_1.default.createElement("span", null, "\u65B9\u6CD5\uFF1A"),
+            react_1.default.createElement(antd_1.Select, { disabled: !docid, onChange: onChange, value: mark, style: { marginBottom: 5, width: 90 } }, MARKS.map(function (_) { return (react_1.default.createElement(antd_1.Select.Option, { value: _, key: _ }, _)); }))));
     }, [mark, docid]);
     return (react_1.default.createElement("div", { style: { height: '100%', background: '#fff' }, className: "bordered" },
         react_1.default.createElement("div", { className: "divider", style: { padding: '12px 24px', margin: 0 } },
             react_1.default.createElement(react_1.default.Fragment, null,
+                R,
                 IntervalRadio,
                 FetalSelect,
                 react_1.default.createElement(StartTime, null),
                 react_1.default.createElement(EndTime, null))),
         react_1.default.createElement("div", { style: { padding: '10px 24px 0' } },
-            R,
             react_1.default.createElement(methods_1.default, __assign({}, props, { disabled: disabled })))));
 };
 exports.default = ScoringMethod;

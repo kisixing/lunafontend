@@ -16,7 +16,8 @@ const limitMap: { [x in AnalyseType]: any } = {
     Nst: 20,
     Fischer: 20,
     Sogc: 20,
-    Cst: 20
+    Cst: 20,
+    Cstoct: 20
 }
 const getEmptyScore = (): ctg_exams_analyse_score => {
     return {
@@ -119,6 +120,9 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
     const Fischer_ref = useRef<FormInstance>()
     const Krebs_ref = useRef<FormInstance>()
     const Nst_ref = useRef<FormInstance>()
+    const Cst_ref = useRef<FormInstance>()
+    const Cstoct_ref = useRef<FormInstance>()
+    const Sogc_ref = useRef<FormInstance>()
     const analysis_ref = useRef<FormInstance>()
     const old_ref = useRef<{ [x: string]: any }>({})
     const hasInitAnalysed = useRef(false)
@@ -128,6 +132,9 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
         Fischer_ref,
         Krebs_ref,
         Nst_ref,
+        Cst_ref,
+        Cstoct_ref,
+        Sogc_ref,
         analysis_ref
     }
 
@@ -167,6 +174,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
             r.analysis.acc = analysisData.analysis.acc
             r.analysis.dec = analysisData.analysis.dec
         }
+        r.score = getEmptyScore()
         setInitData(r)
         setFormData(v.current.drawAnalyse.analyse(mark, startTime, endTime, r))
     }
@@ -195,7 +203,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
     const setFormData = (r: obvue.ctg_exams_analyse) => {
         if (!r) return;
         const { analysis, score } = r
-
+        console.log('form', analysis, score)
         const f = score[`${mark.toLowerCase()}data`]
         const cur: MutableRefObject<FormInstance> = mapFormToMark[`${mark}_ref`]
         cur.current && cur.current.setFieldsValue(f);
@@ -296,9 +304,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
         MARKS,
         reAnalyse,
         startTime, endTime, setStartTime, interval, setInterval,
-        Fischer_ref,
-        Nst_ref,
-        Krebs_ref,
+        mapFormToMark,
         analysis_ref,
         old_ref,
         analyseLoading,

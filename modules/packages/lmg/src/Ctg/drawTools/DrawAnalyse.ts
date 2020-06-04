@@ -174,7 +174,7 @@ export class DrawAnalyse extends Draw {
         const { analysisData } = this
         if (!analysisData) return accnum;
         const { analysis } = analysisData
-        analysis.acc.map(function (item) {
+        analysis.acc.map((item) => {
             if (item.index > end) {
                 return accnum;
             } else if (item.index >= start) {
@@ -190,7 +190,7 @@ export class DrawAnalyse extends Draw {
         const { analysisData } = this
         if (!analysisData) return decnum;
         const { analysis } = analysisData
-        analysis.dec.map(function (item) {
+        analysis.dec.map((item) => {
             if (item.index > end) {
                 return decnum;
             } else if (item.index >= start) {
@@ -206,11 +206,11 @@ export class DrawAnalyse extends Draw {
         const { analysisData } = this
         if (!analysisData) return 0;
         const { analysis } = analysisData
-        if(analysis.acc.length<3) return 0;
-        let base = analysis.acc[1].index - analysis.acc[0].index; 
-        for(let i = 2;i<analysis.acc.length;i++){
-            let diff = analysis.acc[i].index-analysis.acc[i-1].index;
-            if(diff>base+error || diff<base-error){
+        if (analysis.acc.length < 3) return 0;
+        let base = analysis.acc[1].index - analysis.acc[0].index;
+        for (let i = 2; i < analysis.acc.length; i++) {
+            let diff = analysis.acc[i].index - analysis.acc[i - 1].index;
+            if (diff > base + error || diff < base - error) {
                 return 1;
             }
         }
@@ -234,7 +234,7 @@ export class DrawAnalyse extends Draw {
         const { analysisData } = this
         if (!analysisData) return accnum;
         const { analysis } = analysisData
-        analysis.acc.map(function (item) {
+        analysis.acc.map((item) => {
             if (item.index > end) {
                 if (accnum == 0)
                     return accnum;
@@ -264,7 +264,7 @@ export class DrawAnalyse extends Draw {
         const { analysisData } = this
         if (!analysisData) return accnum;
         const { analysis } = analysisData
-        analysis.acc.map(function (item) {
+        analysis.acc.map((item) => {
             if (item.index > end) {
                 if (accnum == 0)
                     return accnum;
@@ -494,7 +494,7 @@ export class DrawAnalyse extends Draw {
             const length = analysis.fhrbaselineMinute.length;
             // 基线选项
             score.sogcdata.bhrvalue = bhr;
-            if (bhr < 100 || (bhr>160&&length>30))
+            if (bhr < 100 || (bhr > 160 && length > 30))
                 score.sogcdata.bhrscore = 0;
             else if (this.inRange(bhr, 100, 109) || bhr > 160)
                 score.sogcdata.bhrscore = 1;
@@ -504,11 +504,11 @@ export class DrawAnalyse extends Draw {
             // 变异
             score.sogcdata.ltvvalue = analysis.ltv;
             if (analysis.ltv < 5) {
-                if(length<40){
+                if (length < 40) {
                     score.sogcdata.ltvscore = 2;
-                }else if(this.inRange(length, 40, 80)){
+                } else if (this.inRange(length, 40, 80)) {
                     score.sogcdata.ltvscore = 1;
-                }else{
+                } else {
                     score.sogcdata.ltvscore = 0;
                 }
             } else if (this.inRange(analysis.ltv, 5, 9) || analysis.ltv > 30) {
@@ -517,7 +517,7 @@ export class DrawAnalyse extends Draw {
                 score.sogcdata.ltvscore = 2;
             }
             //正弦判断
-            if(analysis.isSinusoid){
+            if (analysis.isSinusoid) {
                 score.sogcdata.ltvscore = 0;
             }
             // 加速
@@ -540,12 +540,12 @@ export class DrawAnalyse extends Draw {
             } else if (vd > 0) {
                 score.sogcdata.decscore = 1;
                 score.sogcdata.decvalue = 'VD';
-                analysis.dec.map(function (item) {
-                    if(item.type.toUpperCase() == 'VD'){
-                        if(this.inRange(item.duration,30,60)){
+                analysis.dec.map((item) => {
+                    if (item.type.toUpperCase() == 'VD') {
+                        if (this.inRange(item.duration, 30, 60)) {
                             score.sogcdata.decscore = 1;
                             score.sogcdata.decvalue = 'VD';
-                        }else if(item.duration>60){
+                        } else if (item.duration > 60) {
                             score.sogcdata.decscore = 0;
                             score.sogcdata.decvalue = 'VD';
                         }
@@ -559,9 +559,9 @@ export class DrawAnalyse extends Draw {
                 }
                 score.sogcdata.decscore = 2;
             }
-            if(score.sogcdata.bhrscore + score.sogcdata.accscore + score.sogcdata.decscore + score.sogcdata.ltvscore ==8){
+            if (score.sogcdata.bhrscore + score.sogcdata.accscore + score.sogcdata.decscore + score.sogcdata.ltvscore == 8) {
                 score.sogcdata.total = 2;
-            }else if(score.sogcdata.bhrscore==0 || score.sogcdata.accscore==0 || score.sogcdata.decscore==0 || score.sogcdata.ltvscore){
+            } else if (score.sogcdata.bhrscore == 0 || score.sogcdata.accscore == 0 || score.sogcdata.decscore == 0 || score.sogcdata.ltvscore) {
                 score.sogcdata.total = 0;
             }
             score.sogcdata.total = 1;
@@ -602,7 +602,7 @@ export class DrawAnalyse extends Draw {
             score.cstdata.accvalue = accnum;
             if (accnum == 0) {
                 score.cstdata.accscore = 0;
-            } else if (this.cycleAcc()==1) {
+            } else if (this.cycleAcc() == 1) {
                 score.cstdata.accscore = 1;
             } else {
                 score.cstdata.accscore = 2;
@@ -633,7 +633,7 @@ export class DrawAnalyse extends Draw {
         else if (type == 'Cstoct') {
             // 基线选项
             score.cstoctdata.bhrvalue = bhr;
-            if (bhr < 100 || (bhr>160&&length>30))
+            if (bhr < 100 || (bhr > 160 && length > 30))
                 score.cstoctdata.bhrscore = 0;
             else if (this.inRange(bhr, 100, 109) || bhr > 160)
                 score.cstoctdata.bhrscore = 1;
@@ -643,11 +643,11 @@ export class DrawAnalyse extends Draw {
             // 变异
             score.cstoctdata.ltvvalue = analysis.ltv;
             if (analysis.ltv < 5) {
-                if(length<40){
+                if (length < 40) {
                     score.cstoctdata.ltvscore = 2;
-                }else if(this.inRange(length, 40, 80)){
+                } else if (this.inRange(length, 40, 80)) {
                     score.cstoctdata.ltvscore = 1;
-                }else{
+                } else {
                     score.cstoctdata.ltvscore = 0;
                 }
             } else if (this.inRange(analysis.ltv, 5, 9) || analysis.ltv > 30) {
@@ -656,10 +656,10 @@ export class DrawAnalyse extends Draw {
                 score.cstoctdata.ltvscore = 2;
             }
             //正弦判断
-            if(analysis.isSinusoid){
+            if (analysis.isSinusoid) {
                 score.cstoctdata.sinusoidscore = 0;
                 score.cstoctdata.sinusoidvalue = 0;
-            }else{
+            } else {
                 score.cstoctdata.sinusoidscore = 2;
                 score.cstoctdata.sinusoidvalue = 2;
             }
@@ -683,12 +683,12 @@ export class DrawAnalyse extends Draw {
             } else if (vd > 0) {
                 score.cstoctdata.decscore = 1;
                 score.cstoctdata.decvalue = 'VD';
-                analysis.dec.map(function (item) {
-                    if(item.type.toUpperCase() == 'VD'){
-                        if(this.inRange(item.duration,30,60)){
+                analysis.dec.map((item) => {
+                    if (item.type.toUpperCase() == 'VD') {
+                        if (this.inRange(item.duration, 30, 60)) {
                             score.cstoctdata.decscore = 1;
                             score.cstoctdata.decvalue = 'VD';
-                        }else if(item.duration>60){
+                        } else if (item.duration > 60) {
                             score.cstoctdata.decscore = 0;
                             score.cstoctdata.decvalue = 'VD';
                         }
@@ -702,9 +702,9 @@ export class DrawAnalyse extends Draw {
                 }
                 score.cstoctdata.decscore = 2;
             }
-            if(score.cstoctdata.bhrscore + score.cstoctdata.accscore + score.cstoctdata.decscore + score.cstoctdata.ltvscore ==8){
+            if (score.cstoctdata.bhrscore + score.cstoctdata.accscore + score.cstoctdata.decscore + score.cstoctdata.ltvscore == 8) {
                 score.cstoctdata.total = 2;
-            }else if(score.cstoctdata.bhrscore==0 || score.cstoctdata.accscore==0 || score.cstoctdata.decscore==0 || score.cstoctdata.ltvscore){
+            } else if (score.cstoctdata.bhrscore == 0 || score.cstoctdata.accscore == 0 || score.cstoctdata.decscore == 0 || score.cstoctdata.ltvscore) {
                 score.cstoctdata.total = 0;
             }
             score.cstoctdata.total = 1;

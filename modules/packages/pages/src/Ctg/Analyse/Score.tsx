@@ -12,9 +12,7 @@ interface IProps {
   startTime: any
   mark, setMark: any
   interval, setInterval: any
-  Fischer_ref: any
-  Nst_ref: any
-  Krebs_ref: any
+  mapFormToMark:any
   disabled: boolean
   [x: string]: any
 }
@@ -27,13 +25,13 @@ const ScoringMethod = (props: IProps) => {
     MARKS,
     startTime,
     mark, setMark,
-    interval, setInterval,endTime
+    interval, setInterval, endTime
   } = props
 
   const onChange = e => {
-    const mark = e.target.value
+    // const mark = e.target.value
 
-    setMark(mark)
+    setMark(e)
   };
 
 
@@ -76,18 +74,22 @@ const ScoringMethod = (props: IProps) => {
     return <span style={{ marginRight: 10 }}>开始时间：{(startTime / 240).toFixed(1)}分</span>
   }
   const EndTime = () => {
-    return <span>结束时间：{(endTime/240).toFixed(1)}分</span>
+    return <span>结束时间：{(endTime / 240).toFixed(1)}分</span>
   }
   const R = useMemo(
     () => {
       return (
-        <Radio.Group disabled={!docid} onChange={onChange} value={mark} style={{ marginBottom: 5 }}>
-          {
-            MARKS.map(_ => (
-              <Radio value={_} key={_}>{_}分析法</Radio>
-            ))
-          }
-        </Radio.Group>
+        <>
+          <span>方法：</span>
+          <Select disabled={!docid} onChange={onChange} value={mark} style={{ marginBottom: 5, width: 90 }}>
+            {
+              MARKS.map(_ => (
+                <Select.Option value={_} key={_}>{_}</Select.Option>
+              ))
+            }
+          </Select>
+        </>
+
       )
     },
     [mark, docid],
@@ -97,6 +99,9 @@ const ScoringMethod = (props: IProps) => {
       <div className="divider" style={{ padding: '12px 24px', margin: 0 }}>
         <>
           {
+            R
+          }
+          {
             IntervalRadio
           }
           {
@@ -104,12 +109,11 @@ const ScoringMethod = (props: IProps) => {
           }
           <StartTime />
           <EndTime />
+
         </>
       </div>
       <div style={{ padding: '10px 24px 0' }}>
-        {
-          R
-        }
+
         {/* <Form form={form} labelAlign="left" {...formItemLayout} style={{ width: '100%' }}>
           {
             activeItem.map(({ label, key, rules }) => (

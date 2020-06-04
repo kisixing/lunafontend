@@ -18,9 +18,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var antd_1 = require("antd");
 var react_1 = __importStar(require("react"));
 var react_pdf_1 = require("react-pdf");
-var antd_1 = require("antd");
 require("react-pdf/dist/Page/AnnotationLayer.css");
 var PreviewContent = function (props) {
     var pdfBase64 = props.pdfBase64, _a = props.isFull, isFull = _a === void 0 ? false : _a, wh = props.wh, _b = props.borderd, borderd = _b === void 0 ? true : _b, onDownload = props.onDownload;

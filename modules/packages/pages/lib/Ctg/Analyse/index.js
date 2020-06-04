@@ -62,7 +62,7 @@ exports.Ctg_Analyse = function (_a) {
     var _o = react_1.useState(''), pdfBase64 = _o[0], setPdfBase64 = _o[1];
     var _p = react_1.useState(false), padBase64Loading = _p[0], setPadBase64Loading = _p[1];
     var ref = react_1.useRef(null);
-    var _q = useAnalyse_1.default(ref, note, fetal, setFhr, ctgData), MARKS = _q.MARKS, reAnalyse = _q.reAnalyse, startTime = _q.startTime, endTime = _q.endTime, mark = _q.mark, setMark = _q.setMark, interval = _q.interval, setInterval = _q.setInterval, Fischer_ref = _q.Fischer_ref, Nst_ref = _q.Nst_ref, Krebs_ref = _q.Krebs_ref, analysis_ref = _q.analysis_ref, old_ref = _q.old_ref, analyseLoading = _q.analyseLoading, isToShort = _q.isToShort, autoFm = _q.autoFm, setAutoFm = _q.setAutoFm;
+    var _q = useAnalyse_1.default(ref, note, fetal, setFhr, ctgData), MARKS = _q.MARKS, reAnalyse = _q.reAnalyse, startTime = _q.startTime, endTime = _q.endTime, mark = _q.mark, setMark = _q.setMark, interval = _q.interval, setInterval = _q.setInterval, mapFormToMark = _q.mapFormToMark, analysis_ref = _q.analysis_ref, old_ref = _q.old_ref, analyseLoading = _q.analyseLoading, isToShort = _q.isToShort, autoFm = _q.autoFm, setAutoFm = _q.setAutoFm;
     var others = {
         MARKS: MARKS,
         startTime: startTime,
@@ -70,9 +70,7 @@ exports.Ctg_Analyse = function (_a) {
         setMark: setMark,
         interval: interval,
         setInterval: setInterval,
-        Fischer_ref: Fischer_ref,
-        Nst_ref: Nst_ref,
-        Krebs_ref: Krebs_ref,
+        mapFormToMark: mapFormToMark,
         old_ref: old_ref
     };
     var getrRequestData = function () {
@@ -135,10 +133,10 @@ exports.Ctg_Analyse = function (_a) {
     };
     var btnDisabled = !note || !disabled;
     return (react_1.default.createElement(Wrapper, null,
-        react_1.default.createElement("div", { style: { height: "calc(100% - 420px - 12px)", minHeight: 200, marginBottom: 12, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px', overflow: 'hidden' } },
+        react_1.default.createElement("div", { style: { height: "calc(100% - 500px - 12px)", minHeight: 200, marginBottom: 12, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px', overflow: 'hidden' } },
             react_1.default.createElement(lmg_1.Ctg, { suitType: 1, ref: ref, loading: loading, data: ctgData })),
-        react_1.default.createElement(antd_1.Row, { gutter: 12, style: { height: 420 } },
-            react_1.default.createElement(antd_1.Col, { span: 12 },
+        react_1.default.createElement(antd_1.Row, { gutter: 12, style: { height: 500 } },
+            react_1.default.createElement(antd_1.Col, { span: 14 },
                 react_1.default.createElement(Score_1.default, __assign({ disabled: disabled, endTime: endTime }, others, { fetal: fetal, setFetal: setFetal, ctgData: ctgData, docid: note, v: ref.current, className: "bordered" })),
                 react_1.default.createElement("div", { style: { position: 'absolute', right: 12, bottom: 0 } },
                     isToShort && react_1.default.createElement(antd_1.Alert, { message: "\u9009\u6BB5\u65F6\u95F4\u8FC7\u77ED", style: { display: 'inline-block', border: 0, padding: '1px 4px', marginRight: 10 } }),
@@ -146,7 +144,7 @@ exports.Ctg_Analyse = function (_a) {
                     react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, disabled: !note, onClick: function () { return setDisabled(!disabled); } }, disabled ? '修改评分' : '确认')),
                 react_1.default.createElement(antd_1.Checkbox, { checked: autoFm, onChange: function (e) { return setAutoFm(e.target.checked); }, style: { position: 'absolute', left: 18, bottom: 8 } }, "\u81EA\u52A8\u80CE\u52A8"),
                 react_1.default.createElement(antd_1.Button, { style: { position: 'absolute', right: 12, top: 16 }, size: "small", type: "primary", onClick: reAnalyse, loading: analyseLoading, disabled: !note || isToShort }, "\u91CD\u65B0\u5206\u6790")),
-            react_1.default.createElement(antd_1.Col, { span: 12 },
+            react_1.default.createElement(antd_1.Col, { span: 10 },
                 react_1.default.createElement(Analyse_1.default, { ref: analysis_ref }),
                 react_1.default.createElement("div", { style: { position: 'absolute', right: 12, bottom: 0 } },
                     react_1.default.createElement(antd_1.Button, { size: "small", onClick: function () {

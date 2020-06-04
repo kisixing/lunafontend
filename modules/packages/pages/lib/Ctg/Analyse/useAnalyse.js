@@ -72,7 +72,8 @@ var limitMap = {
     Nst: 20,
     Fischer: 20,
     Sogc: 20,
-    Cst: 20
+    Cst: 20,
+    Cstoct: 20
 };
 var getEmptyScore = function () {
     return {
@@ -83,10 +84,12 @@ var getEmptyScore = function () {
             accscore: 0,
             accvalue: 0,
             bhrvalue: 0,
+            decscore: 0,
+            decvalue: 0,
+            total: 0
         },
         ret: 0,
         msg: '',
-        cstdata: null,
         nstdata: {
             bhrscore: 0,
             ltvscore: 0,
@@ -129,6 +132,32 @@ var getEmptyScore = function () {
             stvvalue: 0,
             accvalue: 0,
             decvalue: '',
+        },
+        cstoctdata: {
+            bhrscore: 0,
+            ltvvalue: 0,
+            ltvscore: 0,
+            accscore: 0,
+            accvalue: 0,
+            bhrvalue: 0,
+            decscore: 0,
+            decvalue: 0,
+            sinusoidscore: 0,
+            sinusoidvalue: 0,
+            total: 0,
+        },
+        cstdata: {
+            bhrscore: 0,
+            ltvvalue: 0,
+            ltvscore: 0,
+            stvscore: 0,
+            stvvalue: 0,
+            accscore: 0,
+            accvalue: 0,
+            bhrvalue: 0,
+            decscore: 0,
+            decvalue: 0,
+            total: 0,
         }
     };
 };
@@ -144,6 +173,9 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
     var Fischer_ref = react_1.useRef();
     var Krebs_ref = react_1.useRef();
     var Nst_ref = react_1.useRef();
+    var Cst_ref = react_1.useRef();
+    var Cstoct_ref = react_1.useRef();
+    var Sogc_ref = react_1.useRef();
     var analysis_ref = react_1.useRef();
     var old_ref = react_1.useRef({});
     var hasInitAnalysed = react_1.useRef(false);
@@ -151,6 +183,9 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
         Fischer_ref: Fischer_ref,
         Krebs_ref: Krebs_ref,
         Nst_ref: Nst_ref,
+        Cst_ref: Cst_ref,
+        Cstoct_ref: Cstoct_ref,
+        Sogc_ref: Sogc_ref,
         analysis_ref: analysis_ref
     };
     function setFm(flag) {
@@ -190,6 +225,7 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
                         r.analysis.acc = analysisData.analysis.acc;
                         r.analysis.dec = analysisData.analysis.dec;
                     }
+                    r.score = getEmptyScore();
                     setInitData(r);
                     setFormData(v.current.drawAnalyse.analyse(mark, startTime, endTime, r));
                     return [2];
@@ -217,6 +253,7 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
         if (!r)
             return;
         var analysis = r.analysis, score = r.score;
+        console.log('form', analysis, score);
         var f = score[mark.toLowerCase() + "data"];
         var cur = mapFormToMark[mark + "_ref"];
         cur.current && cur.current.setFieldsValue(f);
@@ -293,9 +330,7 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
         MARKS: MARKS,
         reAnalyse: reAnalyse,
         startTime: startTime, endTime: endTime, setStartTime: setStartTime, interval: interval, setInterval: setInterval,
-        Fischer_ref: Fischer_ref,
-        Nst_ref: Nst_ref,
-        Krebs_ref: Krebs_ref,
+        mapFormToMark: mapFormToMark,
         analysis_ref: analysis_ref,
         old_ref: old_ref,
         analyseLoading: analyseLoading,

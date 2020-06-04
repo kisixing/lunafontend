@@ -24,9 +24,15 @@ declare const _default: (v: MutableRefObject<Suit>, docid: string, fetal: any, s
     setStartTime: import("react").Dispatch<import("react").SetStateAction<number>>;
     interval: number;
     setInterval: import("react").Dispatch<import("react").SetStateAction<number>>;
-    Fischer_ref: MutableRefObject<FormInstance>;
-    Nst_ref: MutableRefObject<FormInstance>;
-    Krebs_ref: MutableRefObject<FormInstance>;
+    mapFormToMark: {
+        Fischer_ref: MutableRefObject<FormInstance>;
+        Krebs_ref: MutableRefObject<FormInstance>;
+        Nst_ref: MutableRefObject<FormInstance>;
+        Cst_ref: MutableRefObject<FormInstance>;
+        Cstoct_ref: MutableRefObject<FormInstance>;
+        Sogc_ref: MutableRefObject<FormInstance>;
+        analysis_ref: MutableRefObject<FormInstance>;
+    };
     analysis_ref: MutableRefObject<FormInstance>;
     old_ref: MutableRefObject<{
         [x: string]: any;

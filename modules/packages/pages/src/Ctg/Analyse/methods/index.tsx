@@ -5,9 +5,7 @@ import { tableData } from "./tableData";
 interface IProps {
 
     mark: any
-    Fischer_ref: any
-    Nst_ref: any
-    Krebs_ref: any
+    mapFormToMark:any
     disabled: boolean
 }
 
@@ -19,7 +17,7 @@ const Methods = (props: IProps) => {
         <>
             {
                 Object.entries(tableData).map(([k, v]) => (
-                    <Table disabled={disabled} key={k} hidden={k !== mark} dataSource={v} ref={props[`${k}_ref`]} />
+                    <Table disabled={disabled} key={k} hidden={k !== mark} dataSource={v} ref={props.mapFormToMark[`${k}_ref`]} />
                 ))
             }
         </>

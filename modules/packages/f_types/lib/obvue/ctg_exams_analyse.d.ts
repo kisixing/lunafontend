@@ -101,7 +101,7 @@ export interface ctg_exams_analyse_score {
         accvalue: number;
         decvalue: string;
     };
-};
+}
 export interface _ctg_exams_analyse {
     analysis: {
         bhr: number;

@@ -64,9 +64,7 @@ export const Ctg_Analyse: FC<{
       endTime,
       mark, setMark,
       interval, setInterval,
-      Fischer_ref,
-      Nst_ref,
-      Krebs_ref,
+      mapFormToMark,
       analysis_ref,
       old_ref,
       analyseLoading,
@@ -83,9 +81,7 @@ export const Ctg_Analyse: FC<{
       setMark,
       interval,
       setInterval,
-      Fischer_ref,
-      Nst_ref,
-      Krebs_ref,
+      mapFormToMark,
       old_ref
     }
 
@@ -163,12 +159,12 @@ export const Ctg_Analyse: FC<{
     const btnDisabled = !note || !disabled
     return (
       <Wrapper >
-        <div style={{ height: `calc(100% - 420px - 12px)`, minHeight: 200, marginBottom: 12, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px', overflow: 'hidden' }}>
+        <div style={{ height: `calc(100% - 500px - 12px)`, minHeight: 200, marginBottom: 12, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px', overflow: 'hidden' }}>
           <Ctg suitType={1} ref={ref} loading={loading} data={ctgData} />
 
         </div>
-        <Row gutter={12} style={{ height: 420 }}>
-          <Col span={12} >
+        <Row gutter={12} style={{ height: 500 }}>
+          <Col span={14} >
             <Score disabled={disabled} endTime={endTime}  {...others} fetal={fetal} setFetal={setFetal} ctgData={ctgData} docid={note} v={ref.current} className="bordered" />
             <div style={{ position: 'absolute', right: 12, bottom: 0 }}>
               {isToShort && <Alert message="选段时间过短" style={{ display: 'inline-block', border: 0, padding: '1px 4px', marginRight: 10 }} />}
@@ -180,7 +176,7 @@ export const Ctg_Analyse: FC<{
             <Button style={{ position: 'absolute', right: 12, top: 16 }} size="small" type="primary" onClick={reAnalyse as any} loading={analyseLoading} disabled={!note || isToShort}>重新分析</Button>
 
           </Col>
-          <Col span={12}  >
+          <Col span={10}  >
             <Analyse ref={analysis_ref} />
             <div style={{ position: 'absolute', right: 12, bottom: 0 }}>
               <Button size="small" onClick={() => {

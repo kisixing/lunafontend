@@ -458,7 +458,7 @@ var DrawAnalyse = (function (_super) {
                     score.sogcdata.decvalue = 'VD';
                     analysis.dec.map(function (item) {
                         if (item.type.toUpperCase() == 'VD') {
-                            if (this.inRange(item.duration, 30, 60)) {
+                            if (_this.inRange(item.duration, 30, 60)) {
                                 score.sogcdata.decscore = 1;
                                 score.sogcdata.decvalue = 'VD';
                             }
@@ -611,7 +611,7 @@ var DrawAnalyse = (function (_super) {
                     score.cstoctdata.decvalue = 'VD';
                     analysis.dec.map(function (item) {
                         if (item.type.toUpperCase() == 'VD') {
-                            if (this.inRange(item.duration, 30, 60)) {
+                            if (_this.inRange(item.duration, 30, 60)) {
                                 score.cstoctdata.decscore = 1;
                                 score.cstoctdata.decvalue = 'VD';
                             }

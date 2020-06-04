@@ -22,6 +22,7 @@ var react_1 = __importStar(require("react"));
 var antd_1 = require("antd");
 var T = react_1.forwardRef(function (props, ref) {
     var hidden = props.hidden, dataSource = props.dataSource, disabled = props.disabled;
+    var deformed = dataSource.deformed;
     var columns = [
         {
             title: '项目',
@@ -31,15 +32,15 @@ var T = react_1.forwardRef(function (props, ref) {
             }
         },
         {
-            title: '0分',
+            title: deformed ? '正常' : '0分',
             dataIndex: '0'
         },
         {
-            title: '1分',
+            title: deformed ? '可疑' : '1分',
             dataIndex: '1'
         },
         {
-            title: '2分',
+            title: deformed ? '异常' : '2分',
             dataIndex: '2'
         },
         {
@@ -48,19 +49,20 @@ var T = react_1.forwardRef(function (props, ref) {
             render: function (a, _a) {
                 var key = _a.key;
                 return (react_1.default.createElement(antd_1.Form.Item, { name: key + "value", style: { margin: -8 } },
-                    react_1.default.createElement(antd_1.InputNumber, { disabled: disabled })));
+                    react_1.default.createElement(antd_1.Input, { disabled: disabled, style: { width: 80 } })));
             }
         },
-        {
+        deformed ? {} : {
             title: '得分',
             dataIndex: 'score',
             render: function (a, _a) {
                 var key = _a.key;
                 return (react_1.default.createElement(antd_1.Form.Item, { name: key + "score", style: { margin: -8 } },
-                    react_1.default.createElement(antd_1.InputNumber, { disabled: disabled })));
+                    react_1.default.createElement(antd_1.InputNumber, { disabled: disabled, style: { width: 80 } })));
             }
         },
-    ].map(function (_) { return (__assign(__assign({}, _), { align: 'center' })); });
+    ]
+        .map(function (_) { return (__assign(__assign({}, _), { align: 'center' })); });
     var form = antd_1.Form.useForm()[0];
     return (react_1.default.createElement(antd_1.Form, { ref: ref, form: form, size: "small", style: { display: hidden ? 'none' : 'block', position: 'relative' }, onValuesChange: function (a, b) {
             var vk = Object.entries(b);
@@ -76,8 +78,8 @@ var T = react_1.forwardRef(function (props, ref) {
                 form.setFieldsValue({ total: total });
             }
         } },
-        react_1.default.createElement(antd_1.Form.Item, { name: "total", label: "\u603B\u5206", style: { position: 'absolute', top: -28, right: 16 } },
-            react_1.default.createElement(antd_1.InputNumber, { disabled: true })),
+        react_1.default.createElement(antd_1.Form.Item, { name: "total", label: deformed ? '结果' : '总分', style: { position: 'absolute', top: -56, right: 64 } },
+            react_1.default.createElement(antd_1.InputNumber, { disabled: true, style: { width: 50 } })),
         react_1.default.createElement(antd_1.Table, { bordered: true, size: "small", pagination: false, columns: columns, dataSource: dataSource })));
 });
 exports.default = react_1.memo(T);
