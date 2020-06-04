@@ -45,63 +45,9 @@ export declare class DrawAnalyse extends Draw {
             };
             start: number;
             end: number;
+            isSinusoid: boolean;
         };
-        score?: {
-            sogcdata?: {
-                bhrscore: number;
-                ltvvalue: number;
-                ltvscore: number;
-                accscore: number;
-                accvalue: number;
-                bhrvalue: number;
-            };
-            ret: number;
-            msg: string;
-            cstdata?: null;
-            nstdata?: {
-                bhrscore: number;
-                ltvscore: number;
-                accdurationscore: number;
-                accamplscore: number;
-                fmscore: number;
-                total: number;
-                bhrvalue: number;
-                ltvvalue: number;
-                accdurationvalue: number;
-                accamplvalue: number;
-                fmvalue: number;
-            };
-            krebsdata?: {
-                ltvvalue: number;
-                bhrscore: number;
-                ltvscore: number;
-                stvscore: number;
-                accscore: number;
-                decscore: number;
-                fmscore: number;
-                total: number;
-                bhrvalue: number;
-                ltvalue: number;
-                stvvalue: number;
-                accvalue: number;
-                decvalue: string;
-                fmvalue: number;
-            };
-            fischerdata?: {
-                ltvvalue: number;
-                bhrscore: number;
-                ltvscore: number;
-                stvscore: number;
-                accscore: number;
-                decscore: number;
-                total: number;
-                bhrvalue: number;
-                ltvalue: number;
-                stvvalue: number;
-                accvalue: number;
-                decvalue: string;
-            };
-        };
+        score?: import("@lianmed/f_types/lib/obvue/ctg_exams_analyse").ctg_exams_analyse_score;
     }): {
         analysis?: {
             bhr: number;
@@ -123,68 +69,15 @@ export declare class DrawAnalyse extends Draw {
             };
             start: number;
             end: number;
+            isSinusoid: boolean;
         };
-        score?: {
-            sogcdata?: {
-                bhrscore: number;
-                ltvvalue: number;
-                ltvscore: number;
-                accscore: number;
-                accvalue: number;
-                bhrvalue: number;
-            };
-            ret: number;
-            msg: string;
-            cstdata?: null;
-            nstdata?: {
-                bhrscore: number;
-                ltvscore: number;
-                accdurationscore: number;
-                accamplscore: number;
-                fmscore: number;
-                total: number;
-                bhrvalue: number;
-                ltvvalue: number;
-                accdurationvalue: number;
-                accamplvalue: number;
-                fmvalue: number;
-            };
-            krebsdata?: {
-                ltvvalue: number;
-                bhrscore: number;
-                ltvscore: number;
-                stvscore: number;
-                accscore: number;
-                decscore: number;
-                fmscore: number;
-                total: number;
-                bhrvalue: number;
-                ltvalue: number;
-                stvvalue: number;
-                accvalue: number;
-                decvalue: string;
-                fmvalue: number;
-            };
-            fischerdata?: {
-                ltvvalue: number;
-                bhrscore: number;
-                ltvscore: number;
-                stvscore: number;
-                accscore: number;
-                decscore: number;
-                total: number;
-                bhrvalue: number;
-                ltvalue: number;
-                stvvalue: number;
-                accvalue: number;
-                decvalue: string;
-            };
-        };
+        score?: import("@lianmed/f_types/lib/obvue/ctg_exams_analyse").ctg_exams_analyse_score;
     };
     drawflag: (canvas: CanvasRenderingContext2D, x: number, y: number, index: number) => void;
     inRange: (value: number, min: number, max: number) => boolean;
     countAcc: (start: number, end: number) => number;
     countDec: (start: number, end: number, type: string) => number;
+    cycleAcc: () => 0 | 1;
     countFm: (start: number, end: number) => number;
     fhrDuration: (start: number, end: number) => number;
     fhrAmpl: (start: number, end: number) => number;
@@ -209,63 +102,9 @@ export declare class DrawAnalyse extends Draw {
             };
             start: number;
             end: number;
+            isSinusoid: boolean;
         };
-        score?: {
-            sogcdata?: {
-                bhrscore: number;
-                ltvvalue: number;
-                ltvscore: number;
-                accscore: number;
-                accvalue: number;
-                bhrvalue: number;
-            };
-            ret: number;
-            msg: string;
-            cstdata?: null;
-            nstdata?: {
-                bhrscore: number;
-                ltvscore: number;
-                accdurationscore: number;
-                accamplscore: number;
-                fmscore: number;
-                total: number;
-                bhrvalue: number;
-                ltvvalue: number;
-                accdurationvalue: number;
-                accamplvalue: number;
-                fmvalue: number;
-            };
-            krebsdata?: {
-                ltvvalue: number;
-                bhrscore: number;
-                ltvscore: number;
-                stvscore: number;
-                accscore: number;
-                decscore: number;
-                fmscore: number;
-                total: number;
-                bhrvalue: number;
-                ltvalue: number;
-                stvvalue: number;
-                accvalue: number;
-                decvalue: string;
-                fmvalue: number;
-            };
-            fischerdata?: {
-                ltvvalue: number;
-                bhrscore: number;
-                ltvscore: number;
-                stvscore: number;
-                accscore: number;
-                decscore: number;
-                total: number;
-                bhrvalue: number;
-                ltvalue: number;
-                stvvalue: number;
-                accvalue: number;
-                decvalue: string;
-            };
-        };
+        score?: import("@lianmed/f_types/lib/obvue/ctg_exams_analyse").ctg_exams_analyse_score;
     };
     revicePoint(x: number, y: number): string;
     refresh(): void;

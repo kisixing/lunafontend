@@ -1,8 +1,7 @@
 
-import React, { useState, useCallback, useLayoutEffect, useRef, useEffect } from 'react';
+import { Button, Empty, Pagination, Spin } from 'antd';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Document, Page } from 'react-pdf';
-import { Pagination, Spin, Button, Empty } from 'antd';
-import { FullscreenExitOutlined } from "@ant-design/icons";
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 
 // import workerSrc from './pdf.worker.min'

@@ -8,6 +8,7 @@ import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import { AnalyseType } from '@lianmed/lmg/lib/interface';
 import { tableData } from './methods/tableData';
 import store from "store";
+import { ctg_exams_analyse_score } from '@lianmed/f_types/lib/obvue/ctg_exams_analyse';
 const MARKS = Object.keys(tableData) as AnalyseType[]
 const AUTOFM_KEY = 'autofm'
 const limitMap: { [x in AnalyseType]: any } = {
@@ -17,7 +18,7 @@ const limitMap: { [x in AnalyseType]: any } = {
     Sogc: 20,
     Cst: 20
 }
-const getEmptyScore = () => {
+const getEmptyScore = (): ctg_exams_analyse_score => {
     return {
         sogcdata: {
             bhrscore: 0,
@@ -26,10 +27,13 @@ const getEmptyScore = () => {
             accscore: 0,
             accvalue: 0,
             bhrvalue: 0,
+            decscore: 0,
+            decvalue: 0,
+            total: 0
         },
+
         ret: 0,
         msg: '',
-        cstdata: null,
         nstdata: {
             bhrscore: 0,
             ltvscore: 0,
@@ -72,6 +76,32 @@ const getEmptyScore = () => {
             stvvalue: 0,
             accvalue: 0,
             decvalue: '',
+        },
+        cstoctdata: {
+            bhrscore: 0,
+            ltvvalue: 0,
+            ltvscore: 0,
+            accscore: 0,
+            accvalue: 0,
+            bhrvalue: 0,
+            decscore: 0,
+            decvalue: 0,
+            sinusoidscore: 0,
+            sinusoidvalue: 0,
+            total: 0,
+        },
+        cstdata: {
+            bhrscore: 0,
+            ltvvalue: 0,
+            ltvscore: 0,
+            stvscore: 0,
+            stvvalue: 0,
+            accscore: 0,
+            accvalue: 0,
+            bhrvalue: 0,
+            decscore: 0,
+            decvalue: 0,
+            total: 0,
         }
     }
 }
