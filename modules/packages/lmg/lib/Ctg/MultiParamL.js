@@ -47,8 +47,6 @@ exports.MultiParamL = function (props) {
                 react_1.default.createElement("div", { style: { display: 'inline-block', width: 14, height: 46, border: '2px solid red', position: 'relative' } },
                     react_1.default.createElement("div", { ref: ref, style: { background: 'blue', width: 14 - 4, position: 'absolute', bottom: 0 } })))), unit: "%", color: Suit_1.Suit.option.tococolor }),
         react_1.default.createElement(Gg, { title: "\u4F53\u6E29", small: true, value: ecgData[2] || '', unit: "\u2103" }),
-        react_1.default.createElement(Gg, { title: "\u5FC3\u7387", small: true, value: ecgData[3] || '', unit: "bpm" }),
-        react_1.default.createElement(Gg, { title: "\u547C\u5438", small: true, value: ecgData[4] || '', unit: "\u6B21/\u5206" }),
         react_1.default.createElement(antd_1.Table, { title: function () { return "\u8840\u538B(mmHg)\uFF1A" + ecgData[5]; }, rowKey: "id", size: "small", pagination: false, columns: columns, dataSource: bloodList })));
 };
 //# sourceMappingURL=MultiParamL.js.map

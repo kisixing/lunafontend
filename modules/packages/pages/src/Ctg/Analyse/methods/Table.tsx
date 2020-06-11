@@ -44,24 +44,25 @@ const T = forwardRef<FormInstance, IProps>((props, ref) => {
             render(a, { key }) {
                 return (
                     <Form.Item name={`${key}value`} style={{ margin: -8 }}>
-                        <Input disabled={disabled} style={{ width: 80 }} />
+                        <Input disabled={disabled} style={{ width: 60 }} />
                     </Form.Item>
                 )
             }
         },
-        deformed ? {} : {
+        deformed ? null : {
             title: '得分',
             dataIndex: 'score',
             render(a, { key }) {
                 return (
                     <Form.Item name={`${key}score`} style={{ margin: -8 }} >
-                        <InputNumber disabled={disabled} style={{ width: 80 }} />
+                        <InputNumber disabled={disabled} style={{ width: 60 }} />
                     </Form.Item>
                 )
             }
         },
 
     ]
+        .filter(_ => !!_)
         .map(_ => ({ ..._, align: 'center' }))
 
     const [form] = Form.useForm()
@@ -78,7 +79,7 @@ const T = forwardRef<FormInstance, IProps>((props, ref) => {
             }
 
         }}>
-            <Form.Item name="total" label={deformed ? '结果' : '总分'} style={{ position: 'absolute', top: -56, right: 64 }}>
+            <Form.Item name={deformed ? 'result' : 'total'} label={deformed ? '结果' : '总分'} style={{ position: 'absolute', top: -48, right: 100 }}>
                 <InputNumber disabled style={{ width: 50 }} />
             </Form.Item>
             <Table bordered size="small" pagination={false} columns={columns} dataSource={dataSource} />

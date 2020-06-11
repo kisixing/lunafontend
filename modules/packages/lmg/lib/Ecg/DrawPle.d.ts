@@ -1,6 +1,6 @@
 import Draw from "../Draw";
-import Queue from "./Queue";
 import { ICacheItem } from "../services/types";
+import Queue from "./Queue";
 export declare class DrawPle extends Draw {
     static Queue: typeof Queue;
     private ple_data;

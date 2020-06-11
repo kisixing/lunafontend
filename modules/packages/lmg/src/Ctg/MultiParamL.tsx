@@ -56,8 +56,8 @@ export const MultiParamL = (props: { ecgData: any[], p: Queue, bloodList: IBlood
                 </>
             )} unit="%" color={Suit.option.tococolor} />
             <Gg title="体温" small value={ecgData[2] || ''} unit="℃" />
-            <Gg title="心率" small value={ecgData[3] || ''} unit="bpm" />
-            <Gg title="呼吸" small value={ecgData[4] || ''} unit="次/分" />
+            {/* <Gg title="心率" small value={ecgData[3] || ''} unit="bpm" />
+            <Gg title="呼吸" small value={ecgData[4] || ''} unit="次/分" /> */}
             {/* <Gg title="血压SDM" small value={ecgData[5] || ''} unit="mmHg" /> */}
             {/* <div>实时袖带压：0</div> */}
             <Table title={() => `血压(mmHg)：${ecgData[5]}`} rowKey="id" size="small" pagination={false} columns={columns} dataSource={bloodList}>

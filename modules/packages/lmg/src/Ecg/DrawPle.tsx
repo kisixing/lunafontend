@@ -2,16 +2,15 @@
  * 
 */
 import Draw from "../Draw";
-import Queue from "./Queue";
-import { _R } from "@lianmed/utils";
-import { L_SCALE } from "./DrawEcg";
 import { ICacheItem } from "../services/types";
+import { L_SCALE } from "./DrawEcg";
+import Queue from "./Queue";
 // import { ICacheItem } from "../services/types";
-const BASE_INEVAL = 128;
-const adu = 52;
+// const BASE_INEVAL = 128;
+// const adu = 52;
 const samplingrate = 100;
 const points_one_times = 6;
-const points_one_second = 1000 * points_one_times / samplingrate;
+// const points_one_second = 1000 * points_one_times / samplingrate;
 const gride_width = 1;
 // const gx = points_one_times * ((gride_width * 5) / samplingrate);
 const gx = points_one_times * gride_width;
@@ -117,7 +116,7 @@ export class DrawPle extends Draw {
   // }
 
   initparm() {
-    const { width, context2D, ple_data } = this;
+    const { width, context2D } = this;
     context2D.strokeStyle = '#006003';
     context2D.font = 'bold 16px'
     context2D.textAlign = 'left';
@@ -127,7 +126,7 @@ export class DrawPle extends Draw {
       // alert(' width is limited');
     } else {
       this.max_times = Math.floor((width - x_start * 2) * L_SCALE / gx);
-      context2D.fillText('血氧', x_start - 30, baseY - 70)
+      context2D.fillText('pleth', x_start - 30, baseY - 70)
       context2D.fillText('100', x_start - 30, baseY - 50)
       context2D.fillText('0', x_start - 30, baseY)
     }

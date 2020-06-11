@@ -49,19 +49,20 @@ var T = react_1.forwardRef(function (props, ref) {
             render: function (a, _a) {
                 var key = _a.key;
                 return (react_1.default.createElement(antd_1.Form.Item, { name: key + "value", style: { margin: -8 } },
-                    react_1.default.createElement(antd_1.Input, { disabled: disabled, style: { width: 80 } })));
+                    react_1.default.createElement(antd_1.Input, { disabled: disabled, style: { width: 60 } })));
             }
         },
-        deformed ? {} : {
+        deformed ? null : {
             title: '得分',
             dataIndex: 'score',
             render: function (a, _a) {
                 var key = _a.key;
                 return (react_1.default.createElement(antd_1.Form.Item, { name: key + "score", style: { margin: -8 } },
-                    react_1.default.createElement(antd_1.InputNumber, { disabled: disabled, style: { width: 80 } })));
+                    react_1.default.createElement(antd_1.InputNumber, { disabled: disabled, style: { width: 60 } })));
             }
         },
     ]
+        .filter(function (_) { return !!_; })
         .map(function (_) { return (__assign(__assign({}, _), { align: 'center' })); });
     var form = antd_1.Form.useForm()[0];
     return (react_1.default.createElement(antd_1.Form, { ref: ref, form: form, size: "small", style: { display: hidden ? 'none' : 'block', position: 'relative' }, onValuesChange: function (a, b) {
@@ -78,7 +79,7 @@ var T = react_1.forwardRef(function (props, ref) {
                 form.setFieldsValue({ total: total });
             }
         } },
-        react_1.default.createElement(antd_1.Form.Item, { name: "total", label: deformed ? '结果' : '总分', style: { position: 'absolute', top: -56, right: 64 } },
+        react_1.default.createElement(antd_1.Form.Item, { name: deformed ? 'result' : 'total', label: deformed ? '结果' : '总分', style: { position: 'absolute', top: -48, right: 100 } },
             react_1.default.createElement(antd_1.InputNumber, { disabled: true, style: { width: 50 } })),
         react_1.default.createElement(antd_1.Table, { bordered: true, size: "small", pagination: false, columns: columns, dataSource: dataSource })));
 });

@@ -1,45 +1,7 @@
 import { AnalyseType } from "@lianmed/lmg/lib/interface"
 
 const tableData: { [x in AnalyseType]: any } = {
-    Nst: [
-        {
-            name: '心率基线(bpm)',
-            0: '<100',
-            1: '100~109,>160',
-            2: '110~160',
-            key: 'bhr',
-        },
-        {
-            name: '振幅变异(bpm)',
-            0: '<5',
-            1: '5~9,>30',
-            2: '10~30',
-            key: 'ltv',
 
-        },
-        {
-            name: '胎动FHR上升时间(s)',
-            0: '<10s',
-            1: '10~14s',
-            2: '>15s',
-            key: 'accduration',
-
-        },
-        {
-            name: '胎动FHR变化(bpm)',
-            0: '<10',
-            1: '10~14',
-            2: '>15',
-            key: 'accampl',
-        },
-        {
-            name: '胎动次数(次)',
-            0: '无',
-            1: '1~2',
-            2: '>3',
-            key: 'fm',
-        },
-    ],
     Fischer: [
         {
             name: '心率基线(bpm)',
@@ -77,6 +39,45 @@ const tableData: { [x in AnalyseType]: any } = {
             1: 'VD',
             2: '无，其它',
             key: 'dec',
+        },
+    ],
+    Nst: [
+        {
+            name: '心率基线(bpm)',
+            0: '<100',
+            1: '100~109,>160',
+            2: '110~160',
+            key: 'bhr',
+        },
+        {
+            name: '振幅变异(bpm)',
+            0: '<5',
+            1: '5~9,>30',
+            2: '10~30',
+            key: 'ltv',
+
+        },
+        {
+            name: '胎动FHR上升时间(s)',
+            0: '<10s',
+            1: '10~14s',
+            2: '>15s',
+            key: 'accduration',
+
+        },
+        {
+            name: '胎动FHR变化(bpm)',
+            0: '<10',
+            1: '10~14',
+            2: '>15',
+            key: 'accampl',
+        },
+        {
+            name: '胎动次数(次)',
+            0: '无',
+            1: '1~2',
+            2: '>3',
+            key: 'fm',
         },
     ],
     Krebs: [
@@ -145,7 +146,7 @@ const tableData: { [x in AnalyseType]: any } = {
             0: '<2',
             1: '2～6',
             2: '>6',
-            key: 'fm22',
+            key: 'stv',
         },
         {
             name: '加速',
@@ -196,14 +197,14 @@ const tableData: { [x in AnalyseType]: any } = {
             0: '≥2次40分钟内',
             1: '<2次40~80分钟',
             2: '<2次>80分钟',
-            key: 'acc1',
+            key: 'ltv',
         },
         {
             name: '处理',
             0: '观察或者进一步评估',
             1: '需要进一步评估',
             2: '全面评估胎儿状况、及时终止妊娠',
-            key: 'decsd',
+            key: 'ltv',
         },
 
     ],
@@ -239,16 +240,16 @@ const tableData: { [x in AnalyseType]: any } = {
         {
             name: '变减',
             0: '无',
-            1: '反复出现伴随小变异或中变异、延迟减速(>2min但<10min)、非特异性的变异减速',
+            1: '反复出现伴随小变异或中变异、延迟减速(>2分但<10分)、非特异性的变异减速',
             2: '反复出现伴随基线变异缺失',
-            key: 'dec1',
+            key: 'dec',
         },
         {
             name: '晚减',
             0: '无',
             1: '反复出现伴随中国变异',
             2: '反复出现伴随基线变异缺失',
-            key: 'dec2',
+            key: 'dec',
         },
         {
             name: '正弦曲线',
@@ -269,4 +270,7 @@ const tableData: { [x in AnalyseType]: any } = {
 }
 tableData.Sogc.deformed = true
 tableData.Cstoct.deformed = true
+delete tableData.Sogc
+delete tableData.Cst
+delete tableData.Cstoct
 export { tableData }

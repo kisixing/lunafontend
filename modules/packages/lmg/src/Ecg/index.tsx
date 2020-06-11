@@ -1,19 +1,8 @@
-import { Col, Row } from "antd";
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { Canvas, Div, Drawer, IProps } from "../interface";
 import useDraw from "../useDraw";
 import { DrawEcg } from './DrawEcg';
 
-const Gg = (props: { title?: string, value?: any, unit?: string }) => {
-  const { title, value, unit } = props
-  return (
-    <div style={{ display: 'flex', height: '70px', fontWeight: 'bold', fontFamily: 'arial', border: '1px dashed #ccc', borderTop: 'none' }}>
-      <div style={{ position: 'absolute', left: 10, top: 0, fontSize: 12 }}>{title}</div>
-      <div style={{ flex: 1, fontSize: 48, lineHeight: '74px', textAlign: 'center' }}>{value || ''}</div>
-      <div style={{ position: 'absolute', right: 10, bottom: 0, fontSize: 12, }}>{unit}</div>
-    </div>
-  )
-}
 
 
 export default (props: IProps) => {
@@ -28,19 +17,9 @@ export default (props: IProps) => {
   const canvasmonitor = useRef<Canvas>(null);
   const canvasPle = useRef<Canvas>(null);
 
-  const [ecgData, setEcgData] = useState(data.ecgdata)
 
 
-  useEffect(() => {
-    setEcgData(data.ecgdata)
 
-    const id = setInterval(() => {
-      setEcgData(data.ecgdata)
-    }, 2000)
-    return () => {
-      clearInterval(id)
-    }
-  }, [data])
   useDraw(data, box, () => {
     let instance = new DrawEcg({
       wrap: box.current,

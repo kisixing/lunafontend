@@ -17,13 +17,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var Draw_1 = __importDefault(require("../Draw"));
-var Queue_1 = __importDefault(require("./Queue"));
 var DrawEcg_1 = require("./DrawEcg");
-var BASE_INEVAL = 128;
-var adu = 52;
+var Queue_1 = __importDefault(require("./Queue"));
 var samplingrate = 100;
 var points_one_times = 6;
-var points_one_second = 1000 * points_one_times / samplingrate;
 var gride_width = 1;
 var gx = points_one_times * gride_width;
 var x_start = 40;
@@ -80,7 +77,7 @@ var DrawPle = (function (_super) {
         this.intervalIds.push(id);
     };
     DrawPle.prototype.initparm = function () {
-        var _a = this, width = _a.width, context2D = _a.context2D, ple_data = _a.ple_data;
+        var _a = this, width = _a.width, context2D = _a.context2D;
         context2D.strokeStyle = '#006003';
         context2D.font = 'bold 16px';
         context2D.textAlign = 'left';
@@ -90,7 +87,7 @@ var DrawPle = (function (_super) {
         }
         else {
             this.max_times = Math.floor((width - x_start * 2) * DrawEcg_1.L_SCALE / gx);
-            context2D.fillText('血氧', x_start - 30, baseY - 70);
+            context2D.fillText('pleth', x_start - 30, baseY - 70);
             context2D.fillText('100', x_start - 30, baseY - 50);
             context2D.fillText('0', x_start - 30, baseY);
         }

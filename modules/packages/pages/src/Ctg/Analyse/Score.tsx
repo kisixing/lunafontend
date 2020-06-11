@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Radio, Select } from 'antd';
+import { Select } from 'antd';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 
 import Methods from './methods'
@@ -12,7 +12,7 @@ interface IProps {
   startTime: any
   mark, setMark: any
   interval, setInterval: any
-  mapFormToMark:any
+  mapFormToMark: any
   disabled: boolean
   [x: string]: any
 }
@@ -95,8 +95,8 @@ const ScoringMethod = (props: IProps) => {
     [mark, docid],
   )
   return (
-    <div style={{ height: '100%', background: '#fff' }} className="bordered">
-      <div className="divider" style={{ padding: '12px 24px', margin: 0 }}>
+    <div style={{ height: '100%', background: '#fff',borderRight:0 }} className="bordered">
+      <div className="divider" style={{ padding: '8px 20px', margin: 0 }}>
         <>
           {
             R

@@ -12,7 +12,7 @@ import { DecType, AccPoint, DecPoint } from "@lianmed/f_types/lib/obvue/ctg_exam
 //     start?: number
 //     end?: number
 // }
-
+const resultMap = ['正常','可疑','异常']
 export class DrawAnalyse extends Draw {
     pointToInsert: { type: PointType, index: number }
     pointToEdit: AccPoint | DecPoint
@@ -565,6 +565,7 @@ export class DrawAnalyse extends Draw {
                 score.sogcdata.total = 0;
             }
             score.sogcdata.total = 1;
+            score.sogcdata.result = resultMap[score.sogcdata.total]
         }
         //CST
         else if (type == 'Cst') {
@@ -708,6 +709,8 @@ export class DrawAnalyse extends Draw {
                 score.cstoctdata.total = 0;
             }
             score.cstoctdata.total = 1;
+            score.sogcdata.result = resultMap[score.cstoctdata.total]
+
         }
         return (this.analysisData = analysisData)
 

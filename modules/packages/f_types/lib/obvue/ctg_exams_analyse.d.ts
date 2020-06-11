@@ -29,6 +29,7 @@ export interface ctg_exams_analyse_score {
         decscore: number;
         decvalue: string | number;
         total: number;
+        result: number | string
     };
     cstdata?: {
         bhrscore: number;
@@ -55,6 +56,7 @@ export interface ctg_exams_analyse_score {
         sinusoidscore: number;
         sinusoidvalue: number;
         total: number;
+        result: number | string
     };
     ret: number;
     msg: string;

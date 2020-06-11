@@ -286,9 +286,9 @@ export default class DrawCTG {
       if (toco[i] && toco[i] === -1) {
         continue
       }
-
+      // 荣总：@JunL @小帆 客户端划线大于100画100，数值保持原始数据
+      toco[i] = (toco[i] > 100 && toco[i] < 255) ? 100 : toco[i]
       if (toco[i - 2] === -1) {
-        console.log('sd', suit.canvasline.height - toco[i] * this.yspan)
         linecontext.moveTo(lastx, suit.canvasline.height - toco[i] * this.yspan);
         continue
       }
@@ -605,7 +605,6 @@ export default class DrawCTG {
     }
     //console.log('showcur',x,suit.data.index,suit.data.csspan,suit.data.fetalposition,suit);
     //datacontext.font = 'bold ' + fontsize + 'px arial';
-    let alarm = 0;
     let label = '';
     let span = '';
     let offsetfhr = '';
@@ -618,34 +617,10 @@ export default class DrawCTG {
       datacontext.fillStyle = suit.ctgconfig.fhrcolor[fetalIndex];
       let cv = fhr[fetalIndex] && fhr[fetalIndex][x]
 
-
       let curvalue = (typeof cv !== 'number' || cv < 1 || cv > 240) ? EMPTY_SYMBOL : cv.toString()
+      const isAlarm = this.suit.checkAlarm(fetalIndex, cv)
+      datacontext.fillStyle = isAlarm ? suit.ctgconfig.alarmcolor : suit.ctgconfig.fhrcolor[fetalIndex];
 
-      datacontext.fillStyle = suit.ctgconfig.alarmcolor;
-      if (suit.ctgconfig.alarm_enable && cv > suit.ctgconfig.alarm_high) {
-        if (eventemit) {
-          console.log('心率过高', cv);
-          this.suit.alarmHigh(fetalIndex);
-        }
-        alarm = 1;
-        this.suit.alarm = alarm;
-      } else if (suit.ctgconfig.alarm_enable && cv < suit.ctgconfig.alarm_low) {
-        if (eventemit) {
-          console.log('心率过低', cv, this.suit.ctgconfig.alarm_delay);
-          this.suit.alarmLow(fetalIndex);
-        }
-        alarm = 1;
-        this.suit.alarm = alarm;
-      }
-      else {
-        datacontext.fillStyle = suit.ctgconfig.fhrcolor[fetalIndex];
-      }
-      if (alarm == 0 && suit.ctgconfig.alarm_enable && this.suit.alarm == 1) {
-
-        console.log('恢复', cv, curvalue, alarm, this.suit.alarm, suit.ctgconfig.alarm_high < cv, suit.ctgconfig.alarm_low > cv, x);
-        this.suit.alarmOff(fetalIndex);
-        this.suit.alarm = alarm;
-      }
       //kisi todo 2019-11-14 增加3胎的备注
       //kisi 2019-12-08 对象修改到 suit.data
       //console.log('fetalposition',suit.data.fetalposition);
@@ -689,9 +664,6 @@ export default class DrawCTG {
     datacontext.font = `bold ${fontsize}px arial`;
     datacontext.fillText(`TOCO: ${tocoCurValue}`, 10, curpostion);
   };
-
-
-
 
 
   showfm = postion => {

@@ -86,7 +86,8 @@ var getEmptyScore = function () {
             bhrvalue: 0,
             decscore: 0,
             decvalue: 0,
-            total: 0
+            total: 0,
+            result: ''
         },
         ret: 0,
         msg: '',
@@ -145,6 +146,7 @@ var getEmptyScore = function () {
             sinusoidscore: 0,
             sinusoidvalue: 0,
             total: 0,
+            result: ''
         },
         cstdata: {
             bhrscore: 0,

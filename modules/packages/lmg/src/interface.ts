@@ -5,11 +5,11 @@ export interface IProps {
     mutableSuitObject?: { suit: (Drawer | any) };
     onReady?: (suit: Drawer) => void;
     loading?: boolean;
-    isFullscreen?:boolean
+    isFullscreen?: boolean
     audios?: string[]
     [x: string]: any
 }
-export type AnalyseType = 'Nst' | 'Krebs' | 'Fischer' | 'Sogc' | 'Cst';
+export type AnalyseType = 'Nst' | 'Krebs' | 'Fischer' | 'Sogc' | 'Cst' | 'Cstoct';
 export type PointType = 'EditAccPoint' | 'EditDecPoint' | 'MarkAccPoint' | 'MarkDecPoint' | 'other';
 
 

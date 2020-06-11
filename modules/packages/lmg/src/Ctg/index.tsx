@@ -1,4 +1,4 @@
-import React, { forwardRef, Ref, useImperativeHandle, useRef, useState, memo } from 'react';
+import React, { forwardRef, Ref, useImperativeHandle, useRef, memo } from 'react';
 import Ecg from "../Ecg";
 import { Canvas, Div, Drawer, IProps } from "../interface";
 import ScrollBar from '../ScrollBar';

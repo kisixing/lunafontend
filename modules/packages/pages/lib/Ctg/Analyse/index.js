@@ -76,7 +76,7 @@ exports.Ctg_Analyse = function (_a) {
     var getrRequestData = function () {
         var rightData = analysis_ref.current.getFieldsValue();
         var wave = rightData.wave, diagnosistxt = rightData.diagnosistxt, NST = rightData.NST, CST_OCT = rightData.CST_OCT, analyseData = __rest(rightData, ["wave", "diagnosistxt", "NST", "CST_OCT"]);
-        var curData = others[mark + "_ref"].current.getFieldsValue();
+        var curData = others.mapFormToMark[mark + "_ref"].current.getFieldsValue();
         var oldData = old_ref.current[mark] || {};
         var isedit = Object.entries(curData).find(function (_a) {
             var k = _a[0], v = _a[1];
@@ -133,10 +133,10 @@ exports.Ctg_Analyse = function (_a) {
     };
     var btnDisabled = !note || !disabled;
     return (react_1.default.createElement(Wrapper, null,
-        react_1.default.createElement("div", { style: { height: "calc(100% - 500px - 12px)", minHeight: 200, marginBottom: 12, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px', overflow: 'hidden' } },
+        react_1.default.createElement("div", { style: { height: "calc(100% - 460px - 12px)", minHeight: 200, marginBottom: 12, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px', overflow: 'hidden' } },
             react_1.default.createElement(lmg_1.Ctg, { suitType: 1, ref: ref, loading: loading, data: ctgData })),
-        react_1.default.createElement(antd_1.Row, { gutter: 12, style: { height: 500 } },
-            react_1.default.createElement(antd_1.Col, { span: 14 },
+        react_1.default.createElement(antd_1.Row, { style: { height: 460 } },
+            react_1.default.createElement(antd_1.Col, { span: 17 },
                 react_1.default.createElement(Score_1.default, __assign({ disabled: disabled, endTime: endTime }, others, { fetal: fetal, setFetal: setFetal, ctgData: ctgData, docid: note, v: ref.current, className: "bordered" })),
                 react_1.default.createElement("div", { style: { position: 'absolute', right: 12, bottom: 0 } },
                     isToShort && react_1.default.createElement(antd_1.Alert, { message: "\u9009\u6BB5\u65F6\u95F4\u8FC7\u77ED", style: { display: 'inline-block', border: 0, padding: '1px 4px', marginRight: 10 } }),
@@ -144,7 +144,7 @@ exports.Ctg_Analyse = function (_a) {
                     react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, disabled: !note, onClick: function () { return setDisabled(!disabled); } }, disabled ? '修改评分' : '确认')),
                 react_1.default.createElement(antd_1.Checkbox, { checked: autoFm, onChange: function (e) { return setAutoFm(e.target.checked); }, style: { position: 'absolute', left: 18, bottom: 8 } }, "\u81EA\u52A8\u80CE\u52A8"),
                 react_1.default.createElement(antd_1.Button, { style: { position: 'absolute', right: 12, top: 16 }, size: "small", type: "primary", onClick: reAnalyse, loading: analyseLoading, disabled: !note || isToShort }, "\u91CD\u65B0\u5206\u6790")),
-            react_1.default.createElement(antd_1.Col, { span: 10 },
+            react_1.default.createElement(antd_1.Col, { span: 7 },
                 react_1.default.createElement(Analyse_1.default, { ref: analysis_ref }),
                 react_1.default.createElement("div", { style: { position: 'absolute', right: 12, bottom: 0 } },
                     react_1.default.createElement(antd_1.Button, { size: "small", onClick: function () {

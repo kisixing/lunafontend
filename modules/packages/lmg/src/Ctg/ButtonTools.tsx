@@ -16,7 +16,6 @@ interface IProps {
 
 export const ButtonTools = (props: IProps) => {
     const { ctg, visible, className, data, audios } = props
-    const [activeList, setActiveList] = useState(new Set())
     const audio_ref1 = useRef<HTMLAudioElement>()
     const audio_ref2 = useRef<HTMLAudioElement>()
     const audio_ref3 = useRef<HTMLAudioElement>()
@@ -28,15 +27,15 @@ export const ButtonTools = (props: IProps) => {
         audio_ref3
     }
     const prefix = request.configure.prefix
-    const btns = [
-        {
-            text: '心音回放',
-            onClick: () => {
-                const lineTool = ctg.current.lineTool
-                lineTool && lineTool.toggleVisibility()
-            }
-        }
-    ]
+    // const btns = [
+    //     {
+    //         text: '心音回放',
+    //         onClick: () => {
+    //             const lineTool = ctg.current.lineTool
+    //             lineTool && lineTool.toggleVisibility()
+    //         }
+    //     }
+    // ]
     function stopPlay() {
         event.emit('ctg:replay', '', 0)
         clearInterval(timeoutId.current)

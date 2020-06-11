@@ -24,14 +24,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var request_1 = __importDefault(require("@lianmed/request"));
+var utils_1 = require("@lianmed/utils");
 var lodash_1 = require("lodash");
 var Draw_1 = __importDefault(require("../Draw"));
-var utils_1 = require("../services/utils");
+var utils_2 = require("../services/utils");
+var WsService_1 = require("../services/WsService");
 var bindEvents_1 = __importDefault(require("./bindEvents"));
 var DrawCTG_1 = __importDefault(require("./DrawCTG"));
 var DrawAnalyse_1 = require("./drawTools/DrawAnalyse");
 var DrawSelect_1 = require("./drawTools/DrawSelect");
-var utils_2 = require("@lianmed/utils");
 var sid = 0;
 var Suit = (function (_super) {
     __extends(Suit, _super);
@@ -52,7 +53,7 @@ var Suit = (function (_super) {
         _this.scollscale = 1;
         _this.buffersize = 16;
         _this.curr = -16;
-        _this.alarm = 0;
+        _this.alarmStatus = 0;
         _this.ctgconfig = {
             normalarea: 'rgb(224,255,255)',
             selectarea: 'rgba(192,192,192,0.5)',
@@ -285,7 +286,9 @@ var Suit = (function (_super) {
         this.barTool.setBarLeft(this.toolbarposition, false);
     };
     Suit.prototype.itemAlarm = function (text) {
-        utils_2.event.emit('item:alarm', this.data.id, 2, text);
+        if (this.ctgconfig.alarm_enable) {
+            utils_1.event.emit('item:alarm', this.data.id, 2, text);
+        }
     };
     Suit.prototype.alarmLow = function (fetalIndex) {
         var key = 'alarmLowCount' + fetalIndex;
@@ -309,9 +312,34 @@ var Suit = (function (_super) {
         }
     };
     Suit.prototype.alarmOff = function (fetalIndex) {
-        this.lazyEmit('alarmOff', '');
-        var key = 'alarmLowCount' + fetalIndex;
-        this[key] = [];
+        var _this = this;
+        if (typeof fetalIndex === 'number') {
+            this.lazyEmit('alarmOff', '');
+            var key = 'alarmLowCount' + fetalIndex;
+            this[key] = [];
+        }
+        else {
+            this.data && Array(this.data.fetal_num).fill(0).forEach(function (_, i) {
+                var key = 'alarmLowCount' + i;
+                _this[key] = [];
+            });
+        }
+    };
+    Suit.prototype.checkAlarm = function (fetalIndex, cv) {
+        if (cv <= 241 && cv > this.ctgconfig.alarm_high) {
+            console.log('心率过高', cv);
+            this.alarmHigh(fetalIndex);
+            return true;
+        }
+        else if (cv < this.ctgconfig.alarm_low && cv >= 29) {
+            console.log('心率过低', cv);
+            this.alarmLow(fetalIndex);
+            return true;
+        }
+        else {
+            this.alarmOff(fetalIndex);
+            return false;
+        }
     };
     Suit.prototype.destroy = function () {
         this.intervalIds.forEach(function (_) { return clearInterval(_); });
@@ -350,7 +378,7 @@ var Suit = (function (_super) {
         if (oriobj.docid) {
             var pureidarr = oriobj.docid.split('_');
             var pureid = pureidarr[2];
-            CTGDATA.starttime = utils_1.convertstarttime(pureid);
+            CTGDATA.starttime = utils_2.convertstarttime(pureid);
         }
         if (typeof oriobj.fetalposition != 'undefined' &&
             oriobj.fetalposition != null &&
@@ -403,7 +431,7 @@ var Suit = (function (_super) {
     Suit.prototype.drawdot = function () {
         if (this.data.starttime &&
             this.data.starttime != '' &&
-            this.data.status == 1 &&
+            this.data.status === WsService_1.BedStatus.Working &&
             this.data.index > 0 &&
             this.isOn) {
             if (isNaN(this.data.csspan))
@@ -469,7 +497,7 @@ var Suit = (function (_super) {
                 }
             }).finally(function () { return _this.requestflag = false; });
         }
-        utils_2.event.emit('suit:keepData');
+        utils_1.event.emit('suit:keepData');
     };
     Suit.prototype.initfhrdata = function (data, datacache, offindex) {
         Object.keys(data).forEach(function (key) {

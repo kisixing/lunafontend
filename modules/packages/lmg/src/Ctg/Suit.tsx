@@ -1,18 +1,17 @@
 import request from '@lianmed/request';
+import { event } from '@lianmed/utils';
 import { throttle } from 'lodash';
 import Draw from '../Draw';
+import { PointType } from '../interface';
 import ScrollEl from '../ScrollBar/ScrollEl';
 //var rulercolor = 'rgb(67,205,128)';
 import { IBarTool, TLineTool } from '../ScrollBar/useScroll';
 import { convertstarttime } from '../services/utils';
-import { ICacheItem } from '../services/WsService';
+import { BedStatus, ICacheItem } from '../services/WsService';
 import bindEvents from './bindEvents';
 import DrawCTG from './DrawCTG';
 import { DrawAnalyse } from './drawTools/DrawAnalyse';
 import { DrawSelect } from './drawTools/DrawSelect';
-import { PointType } from '../interface';
-import { event } from '@lianmed/utils';
-import { message } from 'antd';
 let sid = 0;
 type Canvas = HTMLCanvasElement;
 type Context = CanvasRenderingContext2D;
@@ -41,7 +40,7 @@ export class Suit extends Draw {
   scollscale = 1;
   buffersize = 16;
   curr = -16;
-  alarm = 0; //报警状态
+  alarmStatus = 0; //报警状态
   ctgconfig = {
     normalarea: 'rgb(224,255,255)',
     selectarea: 'rgba(192,192,192,0.5)',
@@ -54,7 +53,7 @@ export class Suit extends Draw {
     fhrcolor: ['green', 'blue', 'rgb(0,0,0)'],
     tococolor: 'rgb(0,0,0)',
     alarmcolor: 'rgb(255, 1, 1)',
-    fmpcolor:'darkgreen',
+    fmpcolor: 'darkgreen',
     alarm_enable: true,
     alarm_high: 160,
     alarm_low: 110,
@@ -324,7 +323,9 @@ export class Suit extends Draw {
     this.barTool.setBarLeft(this.toolbarposition, false);
   }
   itemAlarm(text: string) {
-    event.emit('item:alarm', this.data.id, 2, text)
+    if (this.ctgconfig.alarm_enable) {
+      event.emit('item:alarm', this.data.id, 2, text)
+    }
   }
   lazyEmit = throttle((type: string, ...args: any[]) => {
     // console.log(`Suit:${type}`)
@@ -353,18 +354,42 @@ export class Suit extends Draw {
     const arr: number[] = this[key]
     arr.push(0)
     if (arr.length >= 2 * this.ctgconfig.alarm_delay) {
-    console.log(`hh${fetalIndex}`,arr.length)
+      console.log(`hh${fetalIndex}`, arr.length)
 
       this.itemAlarm('心率过高')
       this.lazyEmit('alarmOn', '心率过高');
     }
   }
-  alarmOff(fetalIndex: number) {
-    this.lazyEmit('alarmOff', '');
-    const key = 'alarmLowCount' + fetalIndex
-    this[key] = []
-  }
+  alarmOff(fetalIndex?: number) {
+    if (typeof fetalIndex === 'number') {
+      this.lazyEmit('alarmOff', '');
+      const key = 'alarmLowCount' + fetalIndex
+      this[key] = []
+    } else {
+      this.data && Array(this.data.fetal_num).fill(0).forEach((_, i) => {
+        const key = 'alarmLowCount' + i
+        this[key] = []
+      })
+    }
 
+  }
+  checkAlarm(fetalIndex: number, cv: number) {
+    // 荣总：胎心率最大的计算范围是29~241
+    if (cv <= 241 && cv > this.ctgconfig.alarm_high) {
+      console.log('心率过高', cv);
+      this.alarmHigh(fetalIndex);
+      return true
+    } else if (cv < this.ctgconfig.alarm_low && cv >= 29) {
+      console.log('心率过低', cv);
+      this.alarmLow(fetalIndex);
+      return true
+    } else {
+      this.alarmOff(fetalIndex)
+      return false
+    }
+
+
+  }
 
   destroy() {
     this.intervalIds.forEach(_ => clearInterval(_));
@@ -486,7 +511,7 @@ export class Suit extends Draw {
     if (
       this.data.starttime &&
       this.data.starttime != '' &&
-      this.data.status == 1 &&
+      this.data.status === BedStatus.Working &&
       this.data.index > 0 &&
       this.isOn
     ) {

@@ -1,13 +1,13 @@
 /// <reference types="node" />
 /// <reference types="lodash" />
 import Draw from '../Draw';
+import { PointType } from '../interface';
 import ScrollEl from '../ScrollBar/ScrollEl';
 import { IBarTool, TLineTool } from '../ScrollBar/useScroll';
 import { ICacheItem } from '../services/WsService';
 import DrawCTG from './DrawCTG';
 import { DrawAnalyse } from './drawTools/DrawAnalyse';
 import { DrawSelect } from './drawTools/DrawSelect';
-import { PointType } from '../interface';
 declare type Canvas = HTMLCanvasElement;
 declare type Context = CanvasRenderingContext2D;
 export declare class Suit extends Draw {
@@ -37,7 +37,7 @@ export declare class Suit extends Draw {
     scollscale: number;
     buffersize: number;
     curr: number;
-    alarm: number;
+    alarmStatus: number;
     ctgconfig: {
         normalarea: string;
         selectarea: string;
@@ -88,7 +88,8 @@ export declare class Suit extends Draw {
     alarmLowCount: any[];
     alarmLow(fetalIndex: number): void;
     alarmHigh(fetalIndex: number): void;
-    alarmOff(fetalIndex: number): void;
+    alarmOff(fetalIndex?: number): void;
+    checkAlarm(fetalIndex: number, cv: number): boolean;
     destroy(): void;
     _resize(): void;
     setfetalposition(fhr1: any, fhr2: any, fhr3: any): void;

@@ -17,6 +17,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var Draw_1 = __importDefault(require("../../Draw"));
+var resultMap = ['正常', '可疑', '异常'];
 var DrawAnalyse = (function (_super) {
     __extends(DrawAnalyse, _super);
     function DrawAnalyse(wrap, canvas, suit) {
@@ -485,6 +486,7 @@ var DrawAnalyse = (function (_super) {
                     score.sogcdata.total = 0;
                 }
                 score.sogcdata.total = 1;
+                score.sogcdata.result = resultMap[score.sogcdata.total];
             }
             else if (type == 'Cst') {
                 score.cstdata.bhrvalue = bhr;
@@ -638,6 +640,7 @@ var DrawAnalyse = (function (_super) {
                     score.cstoctdata.total = 0;
                 }
                 score.cstoctdata.total = 1;
+                score.sogcdata.result = resultMap[score.cstoctdata.total];
             }
             return (_this.analysisData = analysisData);
         };

@@ -30,7 +30,8 @@ const getEmptyScore = (): ctg_exams_analyse_score => {
             bhrvalue: 0,
             decscore: 0,
             decvalue: 0,
-            total: 0
+            total: 0,
+            result: ''
         },
 
         ret: 0,
@@ -90,6 +91,7 @@ const getEmptyScore = (): ctg_exams_analyse_score => {
             sinusoidscore: 0,
             sinusoidvalue: 0,
             total: 0,
+            result: ''
         },
         cstdata: {
             bhrscore: 0,

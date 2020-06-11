@@ -39,7 +39,7 @@ var Item = function (props) {
             ['年龄', age],
             ['孕周', gestationalWeek],
             ['GP', GP],
-            ['开始时间', m.isValid ? m.format('HH:mm') : ''],
+            ['开始时间', (startTime && m.isValid) ? m.format('HH:mm') : ' '],
         ]
             .filter(function (_) { return !!_[1]; })
             .map(function (_a) {

@@ -256,7 +256,6 @@ var DrawCTG = (function () {
                     }
                 }
             }
-            var alarm = 0;
             var label = '';
             var span = '';
             var offsetfhr = '';
@@ -268,31 +267,8 @@ var DrawCTG = (function () {
                 datacontext.fillStyle = suit.ctgconfig.fhrcolor[fetalIndex];
                 var cv = fhr[fetalIndex] && fhr[fetalIndex][x];
                 var curvalue = (typeof cv !== 'number' || cv < 1 || cv > 240) ? EMPTY_SYMBOL : cv.toString();
-                datacontext.fillStyle = suit.ctgconfig.alarmcolor;
-                if (suit.ctgconfig.alarm_enable && cv > suit.ctgconfig.alarm_high) {
-                    if (eventemit) {
-                        console.log('心率过高', cv);
-                        _this.suit.alarmHigh(fetalIndex);
-                    }
-                    alarm = 1;
-                    _this.suit.alarm = alarm;
-                }
-                else if (suit.ctgconfig.alarm_enable && cv < suit.ctgconfig.alarm_low) {
-                    if (eventemit) {
-                        console.log('心率过低', cv, _this.suit.ctgconfig.alarm_delay);
-                        _this.suit.alarmLow(fetalIndex);
-                    }
-                    alarm = 1;
-                    _this.suit.alarm = alarm;
-                }
-                else {
-                    datacontext.fillStyle = suit.ctgconfig.fhrcolor[fetalIndex];
-                }
-                if (alarm == 0 && suit.ctgconfig.alarm_enable && _this.suit.alarm == 1) {
-                    console.log('恢复', cv, curvalue, alarm, _this.suit.alarm, suit.ctgconfig.alarm_high < cv, suit.ctgconfig.alarm_low > cv, x);
-                    _this.suit.alarmOff(fetalIndex);
-                    _this.suit.alarm = alarm;
-                }
+                var isAlarm = _this.suit.checkAlarm(fetalIndex, cv);
+                datacontext.fillStyle = isAlarm ? suit.ctgconfig.alarmcolor : suit.ctgconfig.fhrcolor[fetalIndex];
                 if (fetalIndex == 0) {
                     if (suit.data.fetalposition && typeof (suit.data.fetalposition.fhr1) != 'undefined') {
                         label = suit.data.fetalposition.fhr1;
@@ -534,8 +510,8 @@ var DrawCTG = (function () {
             if (toco[i] && toco[i] === -1) {
                 continue;
             }
+            toco[i] = (toco[i] > 100 && toco[i] < 255) ? 100 : toco[i];
             if (toco[i - 2] === -1) {
-                console.log('sd', suit.canvasline.height - toco[i] * this.yspan);
                 linecontext.moveTo(lastx, suit.canvasline.height - toco[i] * this.yspan);
                 continue;
             }

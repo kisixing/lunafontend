@@ -17,27 +17,17 @@ var antd_1 = require("antd");
 var utils_1 = require("@lianmed/utils");
 exports.ButtonTools = function (props) {
     var ctg = props.ctg, visible = props.visible, className = props.className, data = props.data, audios = props.audios;
-    var _a = react_1.useState(new Set()), activeList = _a[0], setActiveList = _a[1];
     var audio_ref1 = react_1.useRef();
     var audio_ref2 = react_1.useRef();
     var audio_ref3 = react_1.useRef();
     var timeoutId = react_1.useRef();
-    var _b = react_1.useState(''), replayKey = _b[0], setReplayKey = _b[1];
+    var _a = react_1.useState(''), replayKey = _a[0], setReplayKey = _a[1];
     var audioRefMap = {
         audio_ref1: audio_ref1,
         audio_ref2: audio_ref2,
         audio_ref3: audio_ref3
     };
     var prefix = request_1.default.configure.prefix;
-    var btns = [
-        {
-            text: '心音回放',
-            onClick: function () {
-                var lineTool = ctg.current.lineTool;
-                lineTool && lineTool.toggleVisibility();
-            }
-        }
-    ];
     function stopPlay() {
         utils_1.event.emit('ctg:replay', '', 0);
         clearInterval(timeoutId.current);
