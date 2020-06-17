@@ -37,10 +37,11 @@ const CTGChart = (docid: string, single = false) => {
     }, [ctgData])
 
     function setFhr(index: 1 | 2 | 3) {
-        const { fhr1, fhr2, fhr3 } = ctgData
+        const { fhr1 } = ctgData
         const key = `fhr${index}`
         const value = ctgData[`_${key}`]
-        const data = { ...ctgData, fhr1: fhr1 && fhr1.replace(regex, '0'), fhr2: fhr2 && fhr2.replace(regex, '0'), fhr3: fhr3 && fhr3.replace(regex, '0'), [key]: value }
+        const emptyData = Array(fhr1?fhr1.length:0).fill(0).join()
+        const data = { ...ctgData, fhr1: emptyData, fhr2: emptyData, fhr3: emptyData, [key]: value }
         console.log('setFhr', JSON.parse(JSON.stringify(data)), JSON.parse(JSON.stringify(ctgData)))
         setCtgData(data)
     }

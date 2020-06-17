@@ -62,7 +62,7 @@ exports.Ctg_Analyse = function (_a) {
     var _o = react_1.useState(''), pdfBase64 = _o[0], setPdfBase64 = _o[1];
     var _p = react_1.useState(false), padBase64Loading = _p[0], setPadBase64Loading = _p[1];
     var ref = react_1.useRef(null);
-    var _q = useAnalyse_1.default(ref, note, fetal, setFhr, ctgData), MARKS = _q.MARKS, reAnalyse = _q.reAnalyse, startTime = _q.startTime, endTime = _q.endTime, mark = _q.mark, setMark = _q.setMark, interval = _q.interval, setInterval = _q.setInterval, mapFormToMark = _q.mapFormToMark, analysis_ref = _q.analysis_ref, old_ref = _q.old_ref, analyseLoading = _q.analyseLoading, isToShort = _q.isToShort, autoFm = _q.autoFm, setAutoFm = _q.setAutoFm;
+    var _q = useAnalyse_1.default(ref, note, fetal, setFhr, ctgData), MARKS = _q.MARKS, reAnalyse = _q.reAnalyse, startTime = _q.startTime, endTime = _q.endTime, mark = _q.mark, setMark = _q.setMark, interval = _q.interval, setInterval = _q.setInterval, mapFormToMark = _q.mapFormToMark, analysis_ref = _q.analysis_ref, old_ref = _q.old_ref, analyseLoading = _q.analyseLoading, isToShort = _q.isToShort, autoFm = _q.autoFm, setAutoFm = _q.setAutoFm, initData = _q.initData;
     var others = {
         MARKS: MARKS,
         startTime: startTime,
@@ -153,8 +153,8 @@ exports.Ctg_Analyse = function (_a) {
                                 setVisible(true);
                                 setPdfBase64(r.pdfdata);
                             }).finally(function () { return setPadBase64Loading(false); });
-                        }, style: { marginBottom: 10 }, disabled: btnDisabled, loading: padBase64Loading }, "\u6253\u5370\u9884\u89C8"),
-                    react_1.default.createElement(antd_1.Button, { size: "small", type: "primary", onClick: submit, disabled: btnDisabled }, "\u4FDD\u5B58")))),
+                        }, style: { marginBottom: 10 }, disabled: btnDisabled || !initData, loading: padBase64Loading }, "\u6253\u5370\u9884\u89C8"),
+                    react_1.default.createElement(antd_1.Button, { size: "small", type: "primary", onClick: submit, disabled: btnDisabled || !initData }, "\u4FDD\u5B58")))),
         react_1.default.createElement(antd_1.Modal, { visible: visible, closable: false, okText: "\u6253\u5370", onCancel: function () { return setVisible(false); }, onOk: function () {
                 setVisible(false);
                 onDownload(getPrintUrl('/ctg-exams-analysis-pdf'));

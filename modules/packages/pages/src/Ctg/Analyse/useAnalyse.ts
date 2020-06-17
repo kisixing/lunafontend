@@ -141,7 +141,6 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
     }
 
     function setFm(flag = true) {
-        console.log('setFm')
         if (v.current && initData) {
             if (autoFm) {
                 const fmIndex = initData.analysis.fm || []
@@ -315,7 +314,8 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
             setAutoFm(s)
             store.set(AUTOFM_KEY, s)
         },
-        autoFm
+        autoFm,
+        initData
     }
 }
 

@@ -47,10 +47,11 @@ var CTGChart = function (docid, single) {
     }, [ctgData]);
     function setFhr(index) {
         var _a;
-        var fhr1 = ctgData.fhr1, fhr2 = ctgData.fhr2, fhr3 = ctgData.fhr3;
+        var fhr1 = ctgData.fhr1;
         var key = "fhr" + index;
         var value = ctgData["_" + key];
-        var data = __assign(__assign({}, ctgData), (_a = { fhr1: fhr1 && fhr1.replace(regex, '0'), fhr2: fhr2 && fhr2.replace(regex, '0'), fhr3: fhr3 && fhr3.replace(regex, '0') }, _a[key] = value, _a));
+        var emptyData = Array(fhr1 ? fhr1.length : 0).fill(0).join();
+        var data = __assign(__assign({}, ctgData), (_a = { fhr1: emptyData, fhr2: emptyData, fhr3: emptyData }, _a[key] = value, _a));
         console.log('setFhr', JSON.parse(JSON.stringify(data)), JSON.parse(JSON.stringify(ctgData)));
         setCtgData(data);
     }

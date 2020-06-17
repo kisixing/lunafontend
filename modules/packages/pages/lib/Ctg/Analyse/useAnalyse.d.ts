@@ -2,6 +2,7 @@ import { MutableRefObject } from 'react';
 import { FormInstance } from 'antd/lib/form';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import { AnalyseType } from '@lianmed/lmg/lib/interface';
+import { ctg_exams_analyse_score } from '@lianmed/f_types/lib/obvue/ctg_exams_analyse';
 declare const _default: (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (index: 2 | 1 | 3) => void, ctgData: {
     fhr1?: string;
     fhr2?: string;
@@ -41,5 +42,30 @@ declare const _default: (v: MutableRefObject<Suit>, docid: string, fetal: any, s
     isToShort: boolean;
     setAutoFm(s: boolean): void;
     autoFm: boolean;
+    initData: {
+        analysis?: {
+            bhr: number;
+            ltv: number;
+            stv: number;
+            edtimes: number;
+            ldtimes: number;
+            vdtimes: number;
+            acc: import("@lianmed/f_types/lib/obvue/ctg_exams_analyse").AccPoint[];
+            dec: import("@lianmed/f_types/lib/obvue/ctg_exams_analyse").DecPoint[];
+            fm: number[];
+            fhrbaselineMinute: number[];
+            ucdata: {
+                ucIndex: number[];
+                uctimes: number;
+                ucStrong: number;
+                uckeeptime: number;
+                ucdurationtime: number;
+            };
+            start: number;
+            end: number;
+            isSinusoid: boolean;
+        };
+        score?: ctg_exams_analyse_score;
+    };
 };
 export default _default;

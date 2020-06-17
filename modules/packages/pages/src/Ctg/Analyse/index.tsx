@@ -70,7 +70,8 @@ export const Ctg_Analyse: FC<{
       analyseLoading,
       isToShort,
       autoFm,
-      setAutoFm
+      setAutoFm,
+      initData
     } = useAnalyse(ref, note, fetal, setFhr, ctgData)
 
     const others = {
@@ -163,7 +164,7 @@ export const Ctg_Analyse: FC<{
           <Ctg suitType={1} ref={ref} loading={loading} data={ctgData} />
 
         </div>
-        <Row  style={{ height: 460 }}>
+        <Row style={{ height: 460 }}>
           <Col span={17} >
             <Score disabled={disabled} endTime={endTime}  {...others} fetal={fetal} setFetal={setFetal} ctgData={ctgData} docid={note} v={ref.current} className="bordered" />
             <div style={{ position: 'absolute', right: 12, bottom: 0 }}>
@@ -185,8 +186,8 @@ export const Ctg_Analyse: FC<{
                   setVisible(true)
                   setPdfBase64(r.pdfdata)
                 }).finally(() => setPadBase64Loading(false))
-              }} style={{ marginBottom: 10 }} disabled={btnDisabled} loading={padBase64Loading}>打印预览</Button>
-              <Button size="small" type="primary" onClick={submit} disabled={btnDisabled}>保存</Button>
+              }} style={{ marginBottom: 10 }} disabled={btnDisabled || !initData} loading={padBase64Loading}>打印预览</Button>
+              <Button size="small" type="primary" onClick={submit} disabled={btnDisabled || !initData}>保存</Button>
             </div>
 
           </Col>

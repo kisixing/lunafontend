@@ -192,7 +192,6 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
     };
     function setFm(flag) {
         if (flag === void 0) { flag = true; }
-        console.log('setFm');
         if (v.current && initData) {
             if (autoFm) {
                 var fmIndex = initData.analysis.fm || [];
@@ -341,7 +340,8 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
             setAutoFm(s);
             store_1.default.set(AUTOFM_KEY, s);
         },
-        autoFm: autoFm
+        autoFm: autoFm,
+        initData: initData
     };
 });
 //# sourceMappingURL=useAnalyse.js.map
