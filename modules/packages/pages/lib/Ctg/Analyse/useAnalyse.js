@@ -67,6 +67,7 @@ var tableData_1 = require("./methods/tableData");
 var store_1 = __importDefault(require("store"));
 var MARKS = Object.keys(tableData_1.tableData);
 var AUTOFM_KEY = 'autofm';
+var AUTOANALYSE_KEY = 'auto_analuse';
 var limitMap = {
     Krebs: 30,
     Nst: 20,
@@ -172,6 +173,7 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
     var _f = react_1.useState(0), endTime = _f[0], setEndTime = _f[1];
     var _g = react_1.useState(false), analyseLoading = _g[0], setAnalyseLoading = _g[1];
     var _h = react_1.useState(store_1.default.get(AUTOFM_KEY) || false), autoFm = _h[0], setAutoFm = _h[1];
+    var _j = react_1.useState(store_1.default.get(AUTOANALYSE_KEY) || false), autoAnalyse = _j[0], setAutoAnalyse = _j[1];
     var Fischer_ref = react_1.useRef();
     var Krebs_ref = react_1.useRef();
     var Nst_ref = react_1.useRef();
@@ -263,10 +265,10 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
         analysis_ref.current && analysis_ref.current.setFieldsValue(__assign(__assign({ stv: stv }, ucdata), others));
     };
     react_1.useEffect(function () {
-        remoteAnalyse();
-    }, [endTime, isToShort]);
+        autoAnalyse && remoteAnalyse();
+    }, [endTime, isToShort, autoAnalyse]);
     react_1.useEffect(function () {
-        var id = hasInitAnalysed.current ? 0 : window.setInterval(function () {
+        var id = (hasInitAnalysed.current) ? 0 : window.setInterval(function () {
             if (initData && v.current) {
                 clearInterval(id);
                 var r = v.current.drawAnalyse.analyse(mark, startTime, endTime, initData);
@@ -277,7 +279,7 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
         return function () {
             clearInterval(id);
         };
-    }, [initData, v.current, mark, startTime, endTime, setFormData]);
+    }, [initData, v.current, mark, startTime, endTime, setFormData, autoAnalyse]);
     var hardAnalyse = function () {
         setFormData(v.current.drawAnalyse.analyse(mark));
     };
@@ -341,7 +343,12 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
             store_1.default.set(AUTOFM_KEY, s);
         },
         autoFm: autoFm,
-        initData: initData
+        initData: initData,
+        autoAnalyse: autoAnalyse,
+        setAutoAnalyse: function (s) {
+            setAutoAnalyse(s);
+            store_1.default.set(AUTOANALYSE_KEY, s);
+        },
     };
 });
 //# sourceMappingURL=useAnalyse.js.map

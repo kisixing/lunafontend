@@ -62,7 +62,7 @@ exports.Ctg_Analyse = function (_a) {
     var _o = react_1.useState(''), pdfBase64 = _o[0], setPdfBase64 = _o[1];
     var _p = react_1.useState(false), padBase64Loading = _p[0], setPadBase64Loading = _p[1];
     var ref = react_1.useRef(null);
-    var _q = useAnalyse_1.default(ref, note, fetal, setFhr, ctgData), MARKS = _q.MARKS, reAnalyse = _q.reAnalyse, startTime = _q.startTime, endTime = _q.endTime, mark = _q.mark, setMark = _q.setMark, interval = _q.interval, setInterval = _q.setInterval, mapFormToMark = _q.mapFormToMark, analysis_ref = _q.analysis_ref, old_ref = _q.old_ref, analyseLoading = _q.analyseLoading, isToShort = _q.isToShort, autoFm = _q.autoFm, setAutoFm = _q.setAutoFm, initData = _q.initData;
+    var _q = useAnalyse_1.default(ref, note, fetal, setFhr, ctgData), MARKS = _q.MARKS, reAnalyse = _q.reAnalyse, startTime = _q.startTime, endTime = _q.endTime, mark = _q.mark, setMark = _q.setMark, interval = _q.interval, setInterval = _q.setInterval, mapFormToMark = _q.mapFormToMark, analysis_ref = _q.analysis_ref, old_ref = _q.old_ref, analyseLoading = _q.analyseLoading, isToShort = _q.isToShort, autoFm = _q.autoFm, setAutoFm = _q.setAutoFm, autoAnalyse = _q.autoAnalyse, setAutoAnalyse = _q.setAutoAnalyse, initData = _q.initData;
     var others = {
         MARKS: MARKS,
         startTime: startTime,
@@ -143,6 +143,7 @@ exports.Ctg_Analyse = function (_a) {
                     react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, onClick: history, disabled: btnDisabled }, "\u5386\u53F2\u5206\u6790"),
                     react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, disabled: !note, onClick: function () { return setDisabled(!disabled); } }, disabled ? '修改评分' : '确认')),
                 react_1.default.createElement(antd_1.Checkbox, { checked: autoFm, onChange: function (e) { return setAutoFm(e.target.checked); }, style: { position: 'absolute', left: 18, bottom: 8 } }, "\u81EA\u52A8\u80CE\u52A8"),
+                react_1.default.createElement(antd_1.Checkbox, { checked: autoAnalyse, onChange: function (e) { return setAutoAnalyse(e.target.checked); }, style: { position: 'absolute', left: 100, bottom: 8 } }, "\u5F39\u7A97\u65F6\u81EA\u52A8\u5206\u6790"),
                 react_1.default.createElement(antd_1.Button, { style: { position: 'absolute', right: 12, top: 16 }, size: "small", type: "primary", onClick: reAnalyse, loading: analyseLoading, disabled: !note || isToShort }, "\u91CD\u65B0\u5206\u6790")),
             react_1.default.createElement(antd_1.Col, { span: 7 },
                 react_1.default.createElement(Analyse_1.default, { ref: analysis_ref }),

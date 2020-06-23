@@ -71,6 +71,8 @@ export const Ctg_Analyse: FC<{
       isToShort,
       autoFm,
       setAutoFm,
+      autoAnalyse,
+      setAutoAnalyse,
       initData
     } = useAnalyse(ref, note, fetal, setFhr, ctgData)
 
@@ -174,6 +176,7 @@ export const Ctg_Analyse: FC<{
               <Button size="small" style={{ marginBottom: 10 }} disabled={!note} onClick={() => setDisabled(!disabled)}>{disabled ? '修改评分' : '确认'}</Button>
             </div>
             <Checkbox checked={autoFm} onChange={e => setAutoFm(e.target.checked)} style={{ position: 'absolute', left: 18, bottom: 8 }}>自动胎动</Checkbox>
+            <Checkbox checked={autoAnalyse} onChange={e => setAutoAnalyse(e.target.checked)} style={{ position: 'absolute', left: 100, bottom: 8 }}>弹窗时自动分析</Checkbox>
             <Button style={{ position: 'absolute', right: 12, top: 16 }} size="small" type="primary" onClick={reAnalyse as any} loading={analyseLoading} disabled={!note || isToShort}>重新分析</Button>
 
           </Col>

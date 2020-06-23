@@ -112,10 +112,9 @@ export class WsService extends EventEmitter {
 
         this.socket.close()
     }
-    refreshInterval = 2000
+    refreshInterval = 2500
     refreshTimeout = null
     refresh(name = 'default') {
-
         if (this.refreshTimeout) {
             return
         }

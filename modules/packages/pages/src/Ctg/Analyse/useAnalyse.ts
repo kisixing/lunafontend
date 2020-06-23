@@ -11,6 +11,7 @@ import store from "store";
 import { ctg_exams_analyse_score } from '@lianmed/f_types/lib/obvue/ctg_exams_analyse';
 const MARKS = Object.keys(tableData) as AnalyseType[]
 const AUTOFM_KEY = 'autofm'
+const AUTOANALYSE_KEY = 'auto_analuse'
 const limitMap: { [x in AnalyseType]: any } = {
     Krebs: 30,
     Nst: 20,
@@ -118,6 +119,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
     const [endTime, setEndTime] = useState(0)
     const [analyseLoading, setAnalyseLoading] = useState(false)
     const [autoFm, setAutoFm] = useState<boolean>(store.get(AUTOFM_KEY) || false)
+    const [autoAnalyse, setAutoAnalyse] = useState<boolean>(store.get(AUTOANALYSE_KEY) || false)
 
     const Fischer_ref = useRef<FormInstance>()
     const Krebs_ref = useRef<FormInstance>()
@@ -215,15 +217,15 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
     }
     useEffect(() => {
 
-        remoteAnalyse()
+        autoAnalyse && remoteAnalyse()
 
-    }, [endTime, isToShort])
+    }, [endTime, isToShort, autoAnalyse])
 
 
 
     useEffect(() => {
 
-        const id = hasInitAnalysed.current ? 0 : window.setInterval(() => {
+        const id = (hasInitAnalysed.current) ? 0 : window.setInterval(() => {
             if (initData && v.current) {
 
                 clearInterval(id)
@@ -236,7 +238,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
         return () => {
             clearInterval(id)
         }
-    }, [initData, v.current, mark, startTime, endTime, setFormData])
+    }, [initData, v.current, mark, startTime, endTime, setFormData, autoAnalyse])
 
 
     const hardAnalyse = () => {
@@ -315,7 +317,12 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
             store.set(AUTOFM_KEY, s)
         },
         autoFm,
-        initData
+        initData,
+        autoAnalyse,
+        setAutoAnalyse(s: boolean) {
+            setAutoAnalyse(s)
+            store.set(AUTOANALYSE_KEY, s)
+        },
     }
 }
 

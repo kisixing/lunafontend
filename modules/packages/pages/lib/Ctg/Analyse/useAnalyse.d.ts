@@ -67,5 +67,7 @@ declare const _default: (v: MutableRefObject<Suit>, docid: string, fetal: any, s
         };
         score?: ctg_exams_analyse_score;
     };
+    autoAnalyse: boolean;
+    setAutoAnalyse(s: boolean): void;
 };
 export default _default;
