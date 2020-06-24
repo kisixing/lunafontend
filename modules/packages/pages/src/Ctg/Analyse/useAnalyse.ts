@@ -12,6 +12,8 @@ import { ctg_exams_analyse_score } from '@lianmed/f_types/lib/obvue/ctg_exams_an
 const MARKS = Object.keys(tableData) as AnalyseType[]
 const AUTOFM_KEY = 'autofm'
 const AUTOANALYSE_KEY = 'auto_analuse'
+const MARK_KEY = 'analyse_mark'
+const INTERVAL_KEY = 'analyse_interval'
 const limitMap: { [x in AnalyseType]: any } = {
     Krebs: 30,
     Nst: 20,
@@ -112,11 +114,11 @@ const getEmptyScore = (): ctg_exams_analyse_score => {
 export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (index: 2 | 1 | 3) => void, ctgData: obvue.ctg_exams_data) => {
 
     const [initData, setInitData] = useState<obvue.ctg_exams_analyse>()
-    const [isToShort, setIsToShort] = useState(false)
-    const [mark, setMark] = useState(MARKS[0])
-    const [interval, setInterval] = useState(20)
+    // const [isToShort, setIsToShort] = useState(false)
+    const [mark, setMark] = useState(store.get(MARK_KEY) || MARKS[0])
+    const [interval, setInterval] = useState(store.get(INTERVAL_KEY) || 20)
     const [startTime, setStartTime] = useState(0)
-    const [endTime, setEndTime] = useState(0)
+    // const [endTime, setEndTime] = useState(0)
     const [analyseLoading, setAnalyseLoading] = useState(false)
     const [autoFm, setAutoFm] = useState<boolean>(store.get(AUTOFM_KEY) || false)
     const [autoAnalyse, setAutoAnalyse] = useState<boolean>(store.get(AUTOANALYSE_KEY) || false)
@@ -130,6 +132,9 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
     const analysis_ref = useRef<FormInstance>()
     const old_ref = useRef<{ [x: string]: any }>({})
     const hasInitAnalysed = useRef(false)
+    let endTime = (ctgData && ctgData.fhr1) ? (startTime + interval * 240 > ctgData.fhr1.length / 2 ? ctgData.fhr1.length / 2 : startTime + interval * 240) : 0
+    const diff = Math.round((endTime - startTime) / 240)
+    let isToShort = (diff < limitMap[mark] && endTime !== 0)
 
 
     const mapFormToMark = {
@@ -219,7 +224,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
 
         autoAnalyse && remoteAnalyse()
 
-    }, [endTime, isToShort, autoAnalyse])
+    }, [isToShort, autoAnalyse])
 
 
 
@@ -238,7 +243,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
         return () => {
             clearInterval(id)
         }
-    }, [initData, v.current, mark, startTime, endTime, setFormData, autoAnalyse])
+    }, [initData, v.current, mark, startTime, setFormData, autoAnalyse])
 
 
     const hardAnalyse = () => {
@@ -273,26 +278,36 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
     }, [fetal])
 
 
-    useEffect(() => {
-        if (ctgData && ctgData.fhr1) {
-            const value = startTime + interval * 240 > ctgData.fhr1.length / 2 ? ctgData.fhr1.length / 2 : startTime + interval * 240
-            setEndTime(value)
-        }
-    }, [startTime, interval, ctgData])
+    // useEffect(() => {
+    //     if (ctgData && ctgData.fhr1) {
+    //         const value = startTime + interval * 240 > ctgData.fhr1.length / 2 ? ctgData.fhr1.length / 2 : startTime + interval * 240
+    //         setEndTime(value)
+    //     }
+    // }, [startTime, interval, ctgData])
 
-    useEffect(() => {
-        const diff = Math.round((endTime - startTime) / 240)
-        if (diff < limitMap[mark] && endTime !== 0) {
-            setIsToShort(true)
-        } else {
-            setIsToShort(false)
-        }
-    }, [startTime, endTime, mark])
+    // useEffect(() => {
+    //     const diff = Math.round((endTime - startTime) / 240)
+    //     if (diff < limitMap[mark] && endTime !== 0) {
+    //         setIsToShort(true)
+    //     } else {
+    //         setIsToShort(false)
+    //     }
+    // }, [startTime, mark])
 
 
     useEffect(() => {
         v.current && hardAnalyse()
+        store.set(MARK_KEY, mark)
+
+        if (mark === 'Krebs') {
+            setInterval(30)
+        }
     }, [mark, v])
+
+    useEffect(() => {
+        store.set(INTERVAL_KEY, interval)
+
+    }, [interval])
     useEffect(() => {
         setFm()
 
@@ -302,6 +317,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
     return {
         setMark(m: AnalyseType) {
             setMark(m);
+
         },
         mark,
         MARKS,

@@ -68,6 +68,8 @@ var store_1 = __importDefault(require("store"));
 var MARKS = Object.keys(tableData_1.tableData);
 var AUTOFM_KEY = 'autofm';
 var AUTOANALYSE_KEY = 'auto_analuse';
+var MARK_KEY = 'analyse_mark';
+var INTERVAL_KEY = 'analyse_interval';
 var limitMap = {
     Krebs: 30,
     Nst: 20,
@@ -166,14 +168,12 @@ var getEmptyScore = function () {
 };
 exports.default = (function (v, docid, fetal, setFhr, ctgData) {
     var _a = react_1.useState(), initData = _a[0], setInitData = _a[1];
-    var _b = react_1.useState(false), isToShort = _b[0], setIsToShort = _b[1];
-    var _c = react_1.useState(MARKS[0]), mark = _c[0], setMark = _c[1];
-    var _d = react_1.useState(20), interval = _d[0], setInterval = _d[1];
-    var _e = react_1.useState(0), startTime = _e[0], setStartTime = _e[1];
-    var _f = react_1.useState(0), endTime = _f[0], setEndTime = _f[1];
-    var _g = react_1.useState(false), analyseLoading = _g[0], setAnalyseLoading = _g[1];
-    var _h = react_1.useState(store_1.default.get(AUTOFM_KEY) || false), autoFm = _h[0], setAutoFm = _h[1];
-    var _j = react_1.useState(store_1.default.get(AUTOANALYSE_KEY) || false), autoAnalyse = _j[0], setAutoAnalyse = _j[1];
+    var _b = react_1.useState(store_1.default.get(MARK_KEY) || MARKS[0]), mark = _b[0], setMark = _b[1];
+    var _c = react_1.useState(store_1.default.get(INTERVAL_KEY) || 20), interval = _c[0], setInterval = _c[1];
+    var _d = react_1.useState(0), startTime = _d[0], setStartTime = _d[1];
+    var _e = react_1.useState(false), analyseLoading = _e[0], setAnalyseLoading = _e[1];
+    var _f = react_1.useState(store_1.default.get(AUTOFM_KEY) || false), autoFm = _f[0], setAutoFm = _f[1];
+    var _g = react_1.useState(store_1.default.get(AUTOANALYSE_KEY) || false), autoAnalyse = _g[0], setAutoAnalyse = _g[1];
     var Fischer_ref = react_1.useRef();
     var Krebs_ref = react_1.useRef();
     var Nst_ref = react_1.useRef();
@@ -183,6 +183,9 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
     var analysis_ref = react_1.useRef();
     var old_ref = react_1.useRef({});
     var hasInitAnalysed = react_1.useRef(false);
+    var endTime = (ctgData && ctgData.fhr1) ? (startTime + interval * 240 > ctgData.fhr1.length / 2 ? ctgData.fhr1.length / 2 : startTime + interval * 240) : 0;
+    var diff = Math.round((endTime - startTime) / 240);
+    var isToShort = (diff < limitMap[mark] && endTime !== 0);
     var mapFormToMark = {
         Fischer_ref: Fischer_ref,
         Krebs_ref: Krebs_ref,
@@ -266,7 +269,7 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
     };
     react_1.useEffect(function () {
         autoAnalyse && remoteAnalyse();
-    }, [endTime, isToShort, autoAnalyse]);
+    }, [isToShort, autoAnalyse]);
     react_1.useEffect(function () {
         var id = (hasInitAnalysed.current) ? 0 : window.setInterval(function () {
             if (initData && v.current) {
@@ -279,7 +282,7 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
         return function () {
             clearInterval(id);
         };
-    }, [initData, v.current, mark, startTime, endTime, setFormData, autoAnalyse]);
+    }, [initData, v.current, mark, startTime, setFormData, autoAnalyse]);
     var hardAnalyse = function () {
         setFormData(v.current.drawAnalyse.analyse(mark));
     };
@@ -305,23 +308,15 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
         hasInitAnalysed.current = false;
     }, [fetal]);
     react_1.useEffect(function () {
-        if (ctgData && ctgData.fhr1) {
-            var value = startTime + interval * 240 > ctgData.fhr1.length / 2 ? ctgData.fhr1.length / 2 : startTime + interval * 240;
-            setEndTime(value);
-        }
-    }, [startTime, interval, ctgData]);
-    react_1.useEffect(function () {
-        var diff = Math.round((endTime - startTime) / 240);
-        if (diff < limitMap[mark] && endTime !== 0) {
-            setIsToShort(true);
-        }
-        else {
-            setIsToShort(false);
-        }
-    }, [startTime, endTime, mark]);
-    react_1.useEffect(function () {
         v.current && hardAnalyse();
+        store_1.default.set(MARK_KEY, mark);
+        if (mark === 'Krebs') {
+            setInterval(30);
+        }
     }, [mark, v]);
+    react_1.useEffect(function () {
+        store_1.default.set(INTERVAL_KEY, interval);
+    }, [interval]);
     react_1.useEffect(function () {
         setFm();
     }, [autoFm, initData]);

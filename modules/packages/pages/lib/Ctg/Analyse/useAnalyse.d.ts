@@ -17,14 +17,14 @@ declare const _default: (v: MutableRefObject<Suit>, docid: string, fetal: any, s
     _fhr3?: string;
 }) => {
     setMark(m: AnalyseType): void;
-    mark: AnalyseType;
+    mark: any;
     MARKS: AnalyseType[];
     reAnalyse: () => Promise<void>;
     startTime: number;
     endTime: number;
     setStartTime: import("react").Dispatch<import("react").SetStateAction<number>>;
-    interval: number;
-    setInterval: import("react").Dispatch<import("react").SetStateAction<number>>;
+    interval: any;
+    setInterval: import("react").Dispatch<any>;
     mapFormToMark: {
         Fischer_ref: MutableRefObject<FormInstance>;
         Krebs_ref: MutableRefObject<FormInstance>;
