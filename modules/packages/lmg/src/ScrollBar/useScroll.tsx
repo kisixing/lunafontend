@@ -33,9 +33,10 @@ function useScroll(
     bar = new ScrollEl(wrapper.current, { lockMovementY: true }).setStyles({
       background: '#4169E1',
       width: 10,
-      height: 6,
+      height: 12,
       bottom: 0
     })
+    // bar.el.classList.add('bar')
 
     const boxGrabCb = (e: MouseEvent) => {
       if (e.which !== 1) return e.preventDefault()

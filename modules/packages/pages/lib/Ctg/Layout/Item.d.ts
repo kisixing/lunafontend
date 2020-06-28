@@ -13,6 +13,7 @@ interface IProps {
     ismulti: boolean;
     docid: string;
     status: BedStatus;
+    onSelect?: (unitId: string) => void;
     outPadding: number;
     fullScreenId: string;
     itemHeight: number;

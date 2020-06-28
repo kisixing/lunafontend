@@ -154,7 +154,7 @@ exports.Ctg_Analyse = function (_a) {
                                 setVisible(true);
                                 setPdfBase64(r.pdfdata);
                             }).finally(function () { return setPadBase64Loading(false); });
-                        }, style: { marginBottom: 10 }, disabled: btnDisabled || !initData, loading: padBase64Loading }, "\u6253\u5370\u9884\u89C8"),
+                        }, style: { marginBottom: 10 }, type: "primary", disabled: btnDisabled || !initData, loading: padBase64Loading }, "\u6253\u5370\u9884\u89C8"),
                     react_1.default.createElement(antd_1.Button, { size: "small", type: "primary", onClick: submit, disabled: btnDisabled || !initData }, "\u4FDD\u5B58")))),
         react_1.default.createElement(antd_1.Modal, { visible: visible, closable: false, okText: "\u6253\u5370", onCancel: function () { return setVisible(false); }, onOk: function () {
                 setVisible(false);

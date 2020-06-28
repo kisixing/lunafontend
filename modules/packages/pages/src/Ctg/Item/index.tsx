@@ -27,6 +27,8 @@ interface IProps extends PropsWithChildren<{}> {
     themeColor?: string
     unitId: string
     isFullscreen: boolean
+    onSelect?: (unitId: string) => void
+
 }
 
 const Wrapper = styled.div`
@@ -44,15 +46,14 @@ const Wrapper = styled.div`
     }
 `
 const Item = (props: IProps) => {
-    const { data, bedname, onClose, onDoubleClick, loading, onSuitRead, themeColor = 'rgb(74, 20, 140)', unitId, isFullscreen } = props;
+    const { onSelect, data, bedname, onClose, onDoubleClick, loading, onSuitRead, themeColor = 'rgb(74, 20, 140)', unitId, isFullscreen } = props;
     const status = props.status === undefined ? data && data.status : props.status
     const ismulti = data && data.ismulti
     let { bedNO, GP, gestationalWeek, name, age, startTime } = props;
     const [suit, setSuit] = useState(null)
 
     const ref = useRef<Suit>()
-
-
+    console.log('ss ref',ref)
     // 床位信息
     const RenderTilte = () => {
         const m = moment(startTime)
@@ -98,7 +99,7 @@ const Item = (props: IProps) => {
                     showEcg={ismulti}
                     isFullscreen={isFullscreen}
                 ></L>
-                <Bar mutableSuit={ref}>
+                <Bar mutableSuit={ref} onSelect={onSelect} unitId={unitId}>
 
                     {
                         props.children

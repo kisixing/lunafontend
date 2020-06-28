@@ -40,7 +40,7 @@ var TimeSelect_1 = __importDefault(require("./TimeSelect"));
 var Preview = function (props) {
     var wh = props.wh, _a = props.empId, empId = _a === void 0 ? null : _a, onDownload = props.onDownload, others = __rest(props, ["wh", "empId", "onDownload"]);
     var _b = react_1.useState(''), pdfBase64 = _b[0], setPdfBase64 = _b[1];
-    var _c = react_1.useState(0), t = _c[0], setT = _c[1];
+    var _c = react_1.useState(''), t = _c[0], setT = _c[1];
     var _d = useDiagnosis_1.default(t), diagnosis = _d.diagnosis, setDiagnosis = _d.setDiagnosis;
     return (react_1.default.createElement("div", { style: { display: 'flex', height: '100%' } },
         react_1.default.createElement(PreviewContent_1.default, { pdfBase64: pdfBase64, wh: wh, onDownload: onDownload }),

@@ -6,7 +6,6 @@ declare const _default: (value: any, print_interval: number) => {
     endingTime: number;
     locking: boolean;
     customizable: boolean;
-    total: number;
     remoteSetStartingTime: (v: number) => void;
     remoteSetEndingTime: (v: number) => void;
     toggleLocking: () => void;

@@ -1,4 +1,4 @@
-import React, { forwardRef, Ref, useImperativeHandle, useRef, memo } from 'react';
+import React, { forwardRef, Ref, useImperativeHandle, useRef, memo, useState } from 'react';
 import Ecg from "../Ecg";
 import { Canvas, Div, Drawer, IProps } from "../interface";
 import ScrollBar from '../ScrollBar';
@@ -21,6 +21,13 @@ const Wrapper = styled.div`
   :hover .btns{
     display:block
   }
+  .bar {
+    opacity:0;
+    transition:opacity 0.5s;
+  }
+  :hover .bar{
+    opacity:1
+  }
   .box {
     flex:1
   }
@@ -39,6 +46,7 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
     ...others
   } = props
 
+  const [ctgReady, setCtgReady] = useState(false)
   const isV3 = false || data && (data.deviceType === 'V3')
 
   const barTool = useRef<IBarTool>(null)
@@ -72,6 +80,7 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
 
     onReady(instance)
     mutableSuitObject.suit = instance;
+    setCtgReady(true)
     return instance
   },
     () => {
@@ -89,7 +98,7 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
 
   useImperativeHandle(ref, () => {
     return ctg.current
-  })
+  }, [ctgReady])
   const canvasStyles: React.CSSProperties = { position: 'absolute' }
   return (
     <Wrapper style={{ flexDirection: isFullscreen ? 'row' : 'column-reverse' }}>

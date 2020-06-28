@@ -12,7 +12,7 @@ var icons_1 = require("@ant-design/icons");
 var antd_1 = require("antd");
 var Bar = function (props) {
     var _a = react_1.useState(false), showBar = _a[0], setShowBar = _a[1];
-    var mutableSuit = props.mutableSuit;
+    var mutableSuit = props.mutableSuit, onSelect = props.onSelect, unitId = props.unitId;
     var timeout = react_1.useRef(null);
     var autoHide = function () {
         clearTimeout(timeout.current);
@@ -22,6 +22,7 @@ var Bar = function (props) {
     };
     var toggleTool = function () {
         setShowBar(!showBar);
+        onSelect && onSelect(unitId);
         autoHide();
     };
     var fp = 12;

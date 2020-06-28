@@ -45,12 +45,16 @@ var useArchive_1 = __importDefault(require("./hooks/useArchive"));
 var usePrintConfig_1 = __importDefault(require("./hooks/usePrintConfig"));
 var useSave_1 = __importDefault(require("./hooks/useSave"));
 var useSign_1 = __importDefault(require("./hooks/useSign"));
+var message_1 = __importDefault(require("antd/lib/message"));
 var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n    .bottomBtns button {\n        margin-right: 10px \n    }\n    .bottomBtns button:last-child {\n        margin-right: 0px \n    }\n"], ["\n    .bottomBtns button {\n        margin-right: 10px \n    }\n    .bottomBtns button:last-child {\n        margin-right: 0px \n    }\n"])));
 var COEFFICIENT = 240;
 var Preview = function (props) {
     var onDownload = props.onDownload, docid = props.docid, print_interval = props.print_interval, diagnosis = props.diagnosis, onTotalChange = props.onTotalChange, pdfBase64 = props.pdfBase64, setPdfBase64 = props.setPdfBase64, _a = props.empId, empId = _a === void 0 ? null : _a, args = __rest(props, ["onDownload", "docid", "print_interval", "diagnosis", "onTotalChange", "pdfBase64", "setPdfBase64", "empId"]);
     var _b = react_1.useState(false), pdfBase64Loading = _b[0], setPdfBase64Loading = _b[1];
     var handlePreview = function () {
+        if ((endingTime - startingTime) / COEFFICIENT < print_interval) {
+            message_1.default.warn("\u65F6\u957F\u4E0D\u8DB3" + print_interval + "\u5206\u949F");
+        }
         setPdfBase64Loading(true);
         services_1.fetchCtgExamsPdf(__assign({ docid: docid,
             diagnosis: diagnosis, start: startingTime, end: endingTime, outputType: outputType }, args)).then(function (r) {
@@ -59,7 +63,8 @@ var Preview = function (props) {
         });
     };
     var _c = react_1.useState({ suit: null }), value = _c[0], setValue = _c[1];
-    var _d = usePrintConfig_1.default(value, print_interval), startingTime = _d.startingTime, endingTime = _d.endingTime, locking = _d.locking, total = _d.total, backward = _d.backward, forward = _d.forward, toggleLocking = _d.toggleLocking, selectAll = _d.selectAll, editable = _d.editable, outputType = _d.outputType, setOutputType = _d.setOutputType;
+    var _d = usePrintConfig_1.default(value, print_interval), startingTime = _d.startingTime, endingTime = _d.endingTime, locking = _d.locking, backward = _d.backward, forward = _d.forward, toggleLocking = _d.toggleLocking, selectAll = _d.selectAll, editable = _d.editable, outputType = _d.outputType, setOutputType = _d.setOutputType;
+    var total = dispalyTime(endingTime - startingTime);
     var _e = useArchive_1.default(docid), setBizSn = _e.setBizSn, bizSn = _e.bizSn, archive = _e.archive, archiveLoading = _e.archiveLoading, archived = _e.archived;
     var _f = useSign_1.default(bizSn, setPdfBase64, setBizSn, empId), fetchQrCode = _f.fetchQrCode, qrCodeBase64 = _f.qrCodeBase64, modalVisible = _f.modalVisible, qrCodeBase64Loading = _f.qrCodeBase64Loading, setModalVisible = _f.setModalVisible, signed = _f.signed;
     var _g = useSave_1.default(bizSn, setBizSn), caEnable = _g.caEnable, save = _g.save, saveLoading = _g.saveLoading, saved = _g.saved;
@@ -82,16 +87,13 @@ var Preview = function (props) {
                 react_1.default.createElement("div", { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
                     react_1.default.createElement("span", null,
                         react_1.default.createElement("span", null, "\u5F00\u59CB\u65F6\u95F4\uFF1A"),
-                        (startingTime / COEFFICIENT).toFixed(1),
-                        react_1.default.createElement("span", null, "\u5206")),
+                        dispalyTime(startingTime)),
                     react_1.default.createElement("span", null,
                         react_1.default.createElement("span", null, "\u7ED3\u675F\u65F6\u95F4\uFF1A"),
-                        (endingTime / COEFFICIENT).toFixed(1),
-                        react_1.default.createElement("span", null, "\u5206")),
+                        dispalyTime(endingTime)),
                     react_1.default.createElement("span", null,
                         react_1.default.createElement("span", null, "\u65F6\u957F\uFF1A"),
-                        total,
-                        react_1.default.createElement("span", null, "\u5206"))),
+                        dispalyTime(endingTime - startingTime))),
                 react_1.default.createElement("div", { style: { textAlign: 'left' } },
                     react_1.default.createElement("label", null, "\u80CE\u5FC3\u7387\u8303\u56F4\uFF1A"),
                     react_1.default.createElement(antd_1.Radio.Group, { value: outputType, onChange: setOutputType },
@@ -112,6 +114,12 @@ var Preview = function (props) {
                 react_1.default.createElement("img", { alt: "qrcode", src: qrCodeBase64 }))));
     }));
 };
+function dispalyTime(index) {
+    var allSeconds = (index / 4) || 0;
+    var s = allSeconds % 60;
+    var m = (allSeconds - s) / 60;
+    return m + "\u5206" + ~~s + "\u79D2";
+}
 exports.default = Preview;
 var templateObject_1;
 //# sourceMappingURL=TimeSelect.js.map

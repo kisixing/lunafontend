@@ -22,6 +22,7 @@ interface IProps {
   ismulti: boolean
   docid: string
   status: BedStatus
+  onSelect?: (unitId: string) => void
 
   outPadding: number
   fullScreenId: string
@@ -33,7 +34,7 @@ interface IProps {
 
 
 const WorkbenchItem = (props: IProps) => {
-  const { bordered, themeColor, itemData, onClose, loading = false, fullScreenId, itemHeight, itemSpan, outPadding, data, bedname, status, unitId } = props;
+  const { onSelect, bordered, themeColor, itemData, onClose, loading = false, fullScreenId, itemHeight, itemSpan, outPadding, data, bedname, status, unitId } = props;
   let { startTime, pregnancy } = props
 
   const [isFullscreen, setIsFullscreen] = useState(false)
@@ -100,6 +101,7 @@ const WorkbenchItem = (props: IProps) => {
         bedNO={pregnancy.bedNO}
         GP={pregnancy.GP}
         gestationalWeek={pregnancy.gestationalWeek}
+        onSelect={onSelect}
       >
         {
           props.children

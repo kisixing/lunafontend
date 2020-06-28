@@ -30,6 +30,7 @@ interface IProps {
     themeColor?: string;
     loading?: boolean;
     borderedId?: string;
+    onSelect?: (unitId: string) => void;
 }
 declare const _default: React.MemoExoticComponent<(props: IProps) => JSX.Element>;
 export default _default;

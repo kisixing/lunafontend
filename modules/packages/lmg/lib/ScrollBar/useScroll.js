@@ -15,7 +15,7 @@ function useScroll(box, wrapper) {
         bar = new ScrollEl_1.default(wrapper.current, { lockMovementY: true }).setStyles({
             background: '#4169E1',
             width: 10,
-            height: 6,
+            height: 12,
             bottom: 0
         });
         var boxGrabCb = function (e) {

@@ -47,9 +47,10 @@ var Loading_1 = require("./Loading");
 var Suit_1 = require("./Suit");
 var styled_components_1 = __importDefault(require("styled-components"));
 var MultiParam_1 = require("./MultiParam");
-var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  width:100%;\n  height:100%;\n  display:flex;\n  .btns{\n    display:none\n  }\n  :hover .btns{\n    display:block\n  }\n  .box {\n    flex:1\n  }\n"], ["\n  width:100%;\n  height:100%;\n  display:flex;\n  .btns{\n    display:none\n  }\n  :hover .btns{\n    display:block\n  }\n  .box {\n    flex:1\n  }\n"])));
+var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  width:100%;\n  height:100%;\n  display:flex;\n  .btns{\n    display:none\n  }\n  :hover .btns{\n    display:block\n  }\n  .bar {\n    opacity:0;\n    transition:opacity 0.5s;\n  }\n  :hover .bar{\n    opacity:1\n  }\n  .box {\n    flex:1\n  }\n"], ["\n  width:100%;\n  height:100%;\n  display:flex;\n  .btns{\n    display:none\n  }\n  :hover .btns{\n    display:block\n  }\n  .bar {\n    opacity:0;\n    transition:opacity 0.5s;\n  }\n  :hover .bar{\n    opacity:1\n  }\n  .box {\n    flex:1\n  }\n"])));
 exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
     var data = props.data, _a = props.mutableSuitObject, mutableSuitObject = _a === void 0 ? { suit: null } : _a, _b = props.suitType, suitType = _b === void 0 ? 0 : _b, _c = props.showEcg, showEcg = _c === void 0 ? false : _c, _d = props.loading, loading = _d === void 0 ? false : _d, _e = props.onReady, onReady = _e === void 0 ? function (s) { } : _e, audios = props.audios, isFullscreen = props.isFullscreen, others = __rest(props, ["data", "mutableSuitObject", "suitType", "showEcg", "loading", "onReady", "audios", "isFullscreen"]);
+    var _f = react_1.useState(false), ctgReady = _f[0], setCtgReady = _f[1];
     var isV3 = false || data && (data.deviceType === 'V3');
     var barTool = react_1.useRef(null);
     var canvasgrid = react_1.useRef(null);
@@ -66,6 +67,7 @@ exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
         var instance = ctg.current = new Suit_1.Suit(canvasgrid.current, canvasdata.current, canvasline.current, canvasselect.current, canvasanalyse.current, ctgBox.current, barTool.current, suitType);
         onReady(instance);
         mutableSuitObject.suit = instance;
+        setCtgReady(true);
         return instance;
     }, function () {
     });
@@ -73,7 +75,7 @@ exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
     WsService_1.useCheckNetwork(function (isOn) { return ctg.current && (ctg.current.isOn = isOn); });
     react_1.useImperativeHandle(ref, function () {
         return ctg.current;
-    });
+    }, [ctgReady]);
     var canvasStyles = { position: 'absolute' };
     return (react_1.default.createElement(Wrapper, { style: { flexDirection: isFullscreen ? 'row' : 'column-reverse' } },
         showEcg && react_1.default.createElement(MultiParam_1.MultiParam, { data: data, isFullScreen: isFullscreen }),

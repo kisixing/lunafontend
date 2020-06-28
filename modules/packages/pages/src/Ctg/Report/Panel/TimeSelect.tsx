@@ -7,6 +7,7 @@ import useArchive from "./hooks/useArchive";
 import usePrintConfig from "./hooks/usePrintConfig";
 import useSave from "./hooks/useSave";
 import useSign from "./hooks/useSign";
+import message from "antd/lib/message";
 const Wrapper = styled.div`
     .bottomBtns button {
         margin-right: 10px 
@@ -19,7 +20,7 @@ const COEFFICIENT = 240
 
 interface IProps extends IP {
     diagnosis: string
-    onTotalChange: (total: number) => void
+    onTotalChange: (total: string) => void
     pdfBase64: string
     setPdfBase64: (s: string) => void
     empId?: string
@@ -28,6 +29,9 @@ const Preview = (props: IProps) => {
     const { onDownload, docid, print_interval, diagnosis, onTotalChange, pdfBase64, setPdfBase64, empId = null, ...args } = props;
     const [pdfBase64Loading, setPdfBase64Loading] = useState(false)
     const handlePreview = () => {
+        if ((endingTime - startingTime) / COEFFICIENT < print_interval) {
+            message.warn(`时长不足${print_interval}分钟`)
+        }
         setPdfBase64Loading(true)
         fetchCtgExamsPdf({
             docid,
@@ -42,7 +46,6 @@ const Preview = (props: IProps) => {
         })
     }
 
-
     const [value, setValue] = useState<{ suit: any }>({ suit: null })
 
 
@@ -53,7 +56,6 @@ const Preview = (props: IProps) => {
         // customizable,
         // remoteSetStartingTime,
         // remoteSetEndingTime, 
-        total,
         backward,
         forward,
         toggleLocking,
@@ -64,6 +66,7 @@ const Preview = (props: IProps) => {
         // toggleCustomiz
     } = usePrintConfig(value, print_interval)
 
+    const total = dispalyTime(endingTime - startingTime)
 
     const { setBizSn, bizSn, archive, archiveLoading, archived } = useArchive(docid)
 
@@ -102,21 +105,19 @@ const Preview = (props: IProps) => {
                                     <span>
                                         <span>开始时间：</span>
 
-                                        {(startingTime / COEFFICIENT).toFixed(1)}
-                                        <span>分</span>
+                                        {dispalyTime(startingTime)}
 
                                     </span>
 
                                     <span>
                                         <span>结束时间：</span>
 
-                                        {(endingTime / COEFFICIENT).toFixed(1)}
-                                        <span>分</span>
+                                        {dispalyTime(endingTime)}
+
                                     </span>
                                     <span>
                                         <span>时长：</span>
-                                        {total}
-                                        <span>分</span>
+                                        {dispalyTime(endingTime - startingTime)}
                                     </span>
                                     {/* <Button type={locking ? 'danger' : 'primary'} onClick={toggleLocking} size="small">
                                         {
@@ -191,5 +192,11 @@ const Preview = (props: IProps) => {
         </Context.Consumer >
     );
 }
+function dispalyTime(index: number) {
+    const allSeconds = (index / 4) || 0
+    const s = allSeconds % 60
+    const m = (allSeconds - s) / 60
+    return `${m}分${~~s}秒`
 
+}
 export default Preview

@@ -189,7 +189,7 @@ export const Ctg_Analyse: FC<{
                   setVisible(true)
                   setPdfBase64(r.pdfdata)
                 }).finally(() => setPadBase64Loading(false))
-              }} style={{ marginBottom: 10 }} disabled={btnDisabled || !initData} loading={padBase64Loading}>打印预览</Button>
+              }} style={{ marginBottom: 10 }} type="primary" disabled={btnDisabled || !initData} loading={padBase64Loading}>打印预览</Button>
               <Button size="small" type="primary" onClick={submit} disabled={btnDisabled || !initData}>保存</Button>
             </div>
 

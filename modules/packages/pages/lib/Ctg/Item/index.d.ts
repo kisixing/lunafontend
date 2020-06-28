@@ -20,6 +20,7 @@ interface IProps extends PropsWithChildren<{}> {
     themeColor?: string;
     unitId: string;
     isFullscreen: boolean;
+    onSelect?: (unitId: string) => void;
 }
 declare const Item: (props: IProps) => JSX.Element;
 export default Item;

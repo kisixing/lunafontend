@@ -14,7 +14,7 @@ interface IProps extends IP {
 const Preview = (props: IProps) => {
   const { wh, empId = null, onDownload, ...others } = props;
   const [pdfBase64, setPdfBase64] = useState('')
-  const [t, setT] = useState(0)
+  const [t, setT] = useState('')
 
 
   const { diagnosis, setDiagnosis } = useDiagnosis(t)

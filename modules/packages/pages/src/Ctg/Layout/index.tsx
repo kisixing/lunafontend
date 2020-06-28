@@ -35,9 +35,10 @@ interface IProps {
   themeColor?: string
   loading?: boolean
   borderedId?: string
+  onSelect?: (unitId: string) => void
 }
 const Home = (props: IProps) => {
-  const { borderedId, loading, listLayout = [], fullScreenId, contentHeight, RenderIn, items, onClose, themeColor = 'skyblue' } = props;
+  const { onSelect,borderedId, loading, listLayout = [], fullScreenId, contentHeight, RenderIn, items, onClose, themeColor = 'skyblue' } = props;
   const wrap = useRef(null);
   const empty = useRef(null)
 
@@ -68,7 +69,7 @@ const Home = (props: IProps) => {
                   unitId={unitId}
                   bordered={borderedId === unitId}
                   key={id}
-
+                  onSelect={onSelect}
                   data={data}
 
                   ismulti={ismulti}

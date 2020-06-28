@@ -3,11 +3,11 @@ import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { Button } from 'antd';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 
+interface IProps { mutableSuit: React.MutableRefObject<Suit>, onSelect?: (unitId: string) => void, unitId: string, children: any }
 
-const Bar: FunctionComponent<{ mutableSuit: React.MutableRefObject<Suit> }> = function (props) {
+const Bar: FunctionComponent<IProps> = function (props) {
   const [showBar, setShowBar] = useState(false)
-  const { mutableSuit } = props
-
+  const { mutableSuit, onSelect, unitId } = props
 
 
   const timeout = useRef(null)
@@ -25,6 +25,7 @@ const Bar: FunctionComponent<{ mutableSuit: React.MutableRefObject<Suit> }> = fu
   };
   const toggleTool = () => {
     setShowBar(!showBar);
+    onSelect && onSelect(unitId)
     autoHide();
   };
 
@@ -75,4 +76,4 @@ const Bar: FunctionComponent<{ mutableSuit: React.MutableRefObject<Suit> }> = fu
   </>;
 }
 
-export default memo<any>(Bar)
+export default memo<IProps>(Bar)

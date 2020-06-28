@@ -2,7 +2,7 @@
 import { IProps as IP } from "../index";
 interface IProps extends IP {
     diagnosis: string;
-    onTotalChange: (total: number) => void;
+    onTotalChange: (total: string) => void;
     pdfBase64: string;
     setPdfBase64: (s: string) => void;
     empId?: string;
