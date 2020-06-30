@@ -109,7 +109,7 @@ export interface IBloodListItem {
     dia_bp: number;
     mean_bp: number;
     sys_bp: number;
-    time: string;
+    time?: string;
 }
 interface IBed {
     bed_no: number;

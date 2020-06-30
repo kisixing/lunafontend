@@ -57,7 +57,7 @@ function push_data_ecg(received_msg) {
                 temperature: "" + checkTemperature(temperature) + (temperature1 ? ('~' + checkTemperature(item.temperature1)) : ''),
                 heartRate: checkPulseRate(pulse_rate),
                 respRate: resp_rate,
-                bloodPress: checkBlood(cuff_bp)
+                bloodPress: target.ecgdata.bloodPress ? target.ecgdata.bloodPress : checkBlood(cuff_bp)
             };
         });
     }
