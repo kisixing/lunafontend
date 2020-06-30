@@ -48,7 +48,6 @@ const Wrapper = styled.div`
 const Item = (props: IProps) => {
     const { onSelect, data, bedname, onClose, onDoubleClick, loading, onSuitRead, themeColor = 'rgb(74, 20, 140)', unitId, isFullscreen } = props;
     const status = props.status === undefined ? data && data.status : props.status
-    const ismulti = data && data.ismulti
     let { bedNO, GP, gestationalWeek, name, age, startTime } = props;
     const [suit, setSuit] = useState(null)
 
@@ -96,7 +95,6 @@ const Item = (props: IProps) => {
                     onReady={onReady}
                     onDoubleClick={onDoubleClick}
                     loading={loading}
-                    showEcg={ismulti}
                     isFullscreen={isFullscreen}
                 ></L>
                 <Bar mutableSuit={ref} onSelect={onSelect} unitId={unitId}>

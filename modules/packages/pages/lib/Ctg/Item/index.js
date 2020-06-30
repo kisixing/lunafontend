@@ -27,7 +27,6 @@ var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObjec
 var Item = function (props) {
     var onSelect = props.onSelect, data = props.data, bedname = props.bedname, onClose = props.onClose, onDoubleClick = props.onDoubleClick, loading = props.loading, onSuitRead = props.onSuitRead, _a = props.themeColor, themeColor = _a === void 0 ? 'rgb(74, 20, 140)' : _a, unitId = props.unitId, isFullscreen = props.isFullscreen;
     var status = props.status === undefined ? data && data.status : props.status;
-    var ismulti = data && data.ismulti;
     var bedNO = props.bedNO, GP = props.GP, gestationalWeek = props.gestationalWeek, name = props.name, age = props.age, startTime = props.startTime;
     var _b = react_1.useState(null), suit = _b[0], setSuit = _b[1];
     var ref = react_1.useRef();
@@ -55,7 +54,7 @@ var Item = function (props) {
     var onReady = react_1.useCallback(function (suit) { setSuit(suit); onSuitRead && onSuitRead(suit); }, []);
     return (react_1.default.createElement(Wrapper, null,
         react_1.default.createElement(antd_1.Card, { size: "small", title: react_1.default.createElement(RenderTilte, null), style: { height: '100%' }, extra: react_1.default.createElement(Extra_1.default, { bedname: bedname, onClose: onClose, status: status, suit: suit, unitId: unitId }), headStyle: { background: themeColor, color: '#fff' }, bodyStyle: { padding: 0, height: 'calc(100% - 38px)' } },
-            react_1.default.createElement(lmg_1.Ctg, { ref: ref, data: data, onReady: onReady, onDoubleClick: onDoubleClick, loading: loading, showEcg: ismulti, isFullscreen: isFullscreen }),
+            react_1.default.createElement(lmg_1.Ctg, { ref: ref, data: data, onReady: onReady, onDoubleClick: onDoubleClick, loading: loading, isFullscreen: isFullscreen }),
             react_1.default.createElement(Bar_1.default, { mutableSuit: ref, onSelect: onSelect, unitId: unitId }, props.children))));
 };
 exports.default = Item;

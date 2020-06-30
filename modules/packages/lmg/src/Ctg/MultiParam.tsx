@@ -30,7 +30,7 @@ export const MultiParam = (props: { data: ICacheItem, isFullScreen: boolean }) =
 
 
     // const keys = ['脉率bpm', '血氧%', '体温℃', '心率bpm', '呼吸(次/分)', '血压(SDM)mmHg'];
-
+    const fontSize = 22
 
     return (
 
@@ -41,13 +41,14 @@ export const MultiParam = (props: { data: ICacheItem, isFullScreen: boolean }) =
                         (
                             <MultiParamL ecgData={ecgData} p={data.ple} bloodList={list} />
                         ) : (
-                            <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-around', fontSize: 10 }}>
+                            <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-around', fontSize: 12 }}>
 
-                                <span>脉率bpm{ecgData.pulseRate}</span>
-                                <span>血氧%{ecgData.bloodOxygen}</span>
-                                <span>体温℃{ecgData.temperature}</span>
-                                <span>呼吸(次/分){ecgData.respRate}</span>
-                                <span>血压(SDM)mmHg{ecgData.bloodPress}</span>
+                                <span><sup>脉率</sup> <span style={{ fontSize }}>{ecgData.pulseRate}</span><sup>bpm</sup></span>
+                                <span><sup>血氧</sup> <span style={{ fontSize }}>{ecgData.bloodOxygen}</span><sup>%</sup></span>
+                                <span><sup>体温</sup> <span style={{ fontSize }}>{ecgData.temperature}</span><sup>℃</sup></span>
+                                <span><sup>呼吸</sup> <span style={{ fontSize }}>{ecgData.respRate}</span><sup>次/分</sup></span>
+                                <span><sup>血压(SDM)</sup><span style={{ fontSize }}>{ecgData.bloodPress}</span><sup>mmHg</sup></span>
+
                             </div>
                         )
                 }

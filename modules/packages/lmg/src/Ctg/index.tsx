@@ -38,14 +38,14 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
     data,
     mutableSuitObject = { suit: null },
     suitType = 0,
-    showEcg = false,
     loading = false,
     onReady = (s: Drawer) => { },
     audios,
     isFullscreen,
     ...others
   } = props
-
+  // data.ecgdata = { bloodOxygen: 80, bloodPress: '120/120/120', heartRate: 80, respRate: 40, pulseRate: 80, temperature: 37 }
+  const ismulti = false || data.ismulti
   const [ctgReady, setCtgReady] = useState(false)
   const isV3 = false || data && (data.deviceType === 'V3')
 
@@ -103,7 +103,7 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
   return (
     <Wrapper style={{ flexDirection: isFullscreen ? 'row' : 'column-reverse' }}>
       {
-        showEcg && <MultiParam data={data} isFullScreen={isFullscreen} />
+        ismulti && <MultiParam data={data} isFullScreen={isFullscreen} />
       }
       <div className="box" ref={box} {...others}
         onMouseDownCapture={e => {
@@ -125,7 +125,7 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
             </div>
           )
         }
-        <div style={{ height: isV3 ? 0 : ((isFullscreen && showEcg) ? `calc(100% - 210px)` : '100%'), position: 'relative' }} ref={ctgBox}>
+        <div style={{ height: isV3 ? 0 : ((isFullscreen && ismulti) ? `calc(100% - 210px)` : '100%'), position: 'relative' }} ref={ctgBox}>
           <canvas style={canvasStyles} ref={canvasgrid} />
           <canvas style={canvasStyles} ref={canvasline} />
           <canvas style={canvasStyles} ref={canvasdata} />
@@ -137,7 +137,7 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
         </FancyCanvas> */}
         </div>
         {
-          showEcg && (isV3 || isFullscreen) && (
+          ismulti && (isV3 || isFullscreen) && (
             <div style={{ height: isV3 ? `100%` : (isFullscreen ? 210 : 0), overflow: 'hidden' }} >
               <Ecg isFullscreen={isFullscreen} data={data} onReady={e => ecg.current = e} />
             </div>
