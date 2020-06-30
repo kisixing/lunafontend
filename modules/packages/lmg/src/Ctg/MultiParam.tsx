@@ -4,7 +4,7 @@ import { MultiParamL } from "./MultiParamL";
 const border = '1px dashed #ccc'
 
 
-export const MultiParam = (props: { data: ICacheItem, isFullScreen: boolean}) => {
+export const MultiParam = (props: { data: ICacheItem, isFullScreen: boolean }) => {
 
     const {
         data,
@@ -29,12 +29,12 @@ export const MultiParam = (props: { data: ICacheItem, isFullScreen: boolean}) =>
     }, [data])
 
 
-    const keys = ['脉率bpm', '血氧%', '体温℃', '心率bpm', '呼吸(次/分)', '血压(SDM)mmHg'];
+    // const keys = ['脉率bpm', '血氧%', '体温℃', '心率bpm', '呼吸(次/分)', '血压(SDM)mmHg'];
 
 
     return (
 
-        !!(ecgData && ecgData.length || true) && (
+        !!(ecgData) && (
             <div style={{ width: isFullScreen ? 280 : '100%', height: isFullScreen ? 'auto' : '20%', maxHeight: isFullScreen ? 'unset' : 40, minHeight: isFullScreen ? 'auto' : 26, borderRight: isFullScreen && border }}>
                 {
                     isFullScreen ?
@@ -43,13 +43,11 @@ export const MultiParam = (props: { data: ICacheItem, isFullScreen: boolean}) =>
                         ) : (
                             <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-around', fontSize: 10 }}>
 
-                                {
-                                    keys.map((_, i) => {
-                                        return (
-                                            <span>{_}{ecgData[i]}</span>
-                                        )
-                                    })
-                                }
+                                <span>脉率bpm{ecgData.pulseRate}</span>
+                                <span>血氧%{ecgData.bloodOxygen}</span>
+                                <span>体温℃{ecgData.temperature}</span>
+                                <span>呼吸(次/分){ecgData.respRate}</span>
+                                <span>血压(SDM)mmHg{ecgData.bloodPress}</span>
                             </div>
                         )
                 }

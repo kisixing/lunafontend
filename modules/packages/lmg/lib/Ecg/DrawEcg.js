@@ -218,7 +218,6 @@ var DrawEcg = (function (_super) {
                 console.log('ecg', 'clear interval');
                 clearInterval(id);
             }
-            _this.DrawDatatext();
             if (!isNaN(_this.start) || _this.data.ecg.GetSize() > points_one_times * 5) {
                 _this.start = 1;
                 _this.drawsingle();

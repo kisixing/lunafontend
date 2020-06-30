@@ -48,7 +48,7 @@ function getEmptyCacheItem(base) {
         ismulti: false,
         ecg: new Queue_1.default(),
         ple: new Queue_1.default(240),
-        ecgdata: getMaxArray(),
+        ecgdata: null,
         is_include_volume: false,
         is_include_tocozero: false,
         realTime: true,

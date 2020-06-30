@@ -35,6 +35,14 @@ export interface ICacheItemPregnancy {
     name?: string;
     outpatientNO?: string;
 }
+export interface IMultiParamData {
+    bloodOxygen?: string | number;
+    pulseRate?: string | number;
+    heartRate?: string | number;
+    temperature?: string | number;
+    respRate?: string | number;
+    bloodPress?: string | number;
+}
 export interface ICacheItem {
     realTime?: boolean;
     id: string;
@@ -68,7 +76,7 @@ export interface ICacheItem {
     csspan?: number;
     ecg?: Queue;
     ple?: Queue;
-    ecgdata?: any[];
+    ecgdata?: IMultiParamData;
     ismulti?: boolean;
     bloodList?: IBloodListItem[];
     alarms: {

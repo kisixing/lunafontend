@@ -27,12 +27,22 @@ exports.MultiParam = function (props) {
             clearInterval(id);
         };
     }, [data]);
-    var keys = ['脉率bpm', '血氧%', '体温℃', '心率bpm', '呼吸(次/分)', '血压(SDM)mmHg'];
-    return (!!(ecgData && ecgData.length || true) && (react_1.default.createElement("div", { style: { width: isFullScreen ? 280 : '100%', height: isFullScreen ? 'auto' : '20%', maxHeight: isFullScreen ? 'unset' : 40, minHeight: isFullScreen ? 'auto' : 26, borderRight: isFullScreen && border } }, isFullScreen ?
-        (react_1.default.createElement(MultiParamL_1.MultiParamL, { ecgData: ecgData, p: data.ple, bloodList: list })) : (react_1.default.createElement("div", { style: { height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-around', fontSize: 10 } }, keys.map(function (_, i) {
-        return (react_1.default.createElement("span", null,
-            _,
-            ecgData[i]));
-    }))))));
+    return (!!(ecgData) && (react_1.default.createElement("div", { style: { width: isFullScreen ? 280 : '100%', height: isFullScreen ? 'auto' : '20%', maxHeight: isFullScreen ? 'unset' : 40, minHeight: isFullScreen ? 'auto' : 26, borderRight: isFullScreen && border } }, isFullScreen ?
+        (react_1.default.createElement(MultiParamL_1.MultiParamL, { ecgData: ecgData, p: data.ple, bloodList: list })) : (react_1.default.createElement("div", { style: { height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-around', fontSize: 10 } },
+        react_1.default.createElement("span", null,
+            "\u8109\u7387bpm",
+            ecgData.pulseRate),
+        react_1.default.createElement("span", null,
+            "\u8840\u6C27%",
+            ecgData.bloodOxygen),
+        react_1.default.createElement("span", null,
+            "\u4F53\u6E29\u2103",
+            ecgData.temperature),
+        react_1.default.createElement("span", null,
+            "\u547C\u5438(\u6B21/\u5206)",
+            ecgData.respRate),
+        react_1.default.createElement("span", null,
+            "\u8840\u538B(SDM)mmHg",
+            ecgData.bloodPress))))));
 };
 //# sourceMappingURL=MultiParam.js.map

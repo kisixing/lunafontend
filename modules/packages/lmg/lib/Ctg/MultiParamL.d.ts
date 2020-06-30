@@ -1,8 +1,8 @@
 /// <reference types="react" />
-import { IBloodListItem } from "../services/types";
+import { IBloodListItem, IMultiParamData } from "../services/types";
 import Queue from '../Ecg/Queue';
 export declare const MultiParamL: (props: {
-    ecgData: any[];
+    ecgData: IMultiParamData;
     p: Queue;
     bloodList: IBloodListItem[];
 }) => JSX.Element;

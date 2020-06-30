@@ -1,7 +1,7 @@
 import { Table } from 'antd';
 import { ColumnType } from 'antd/lib/table';
 import React, { useRef, useEffect } from 'react';
-import { IBloodListItem } from "../services/types";
+import { IBloodListItem, IMultiParamData } from "../services/types";
 import { Suit } from "./Suit";
 import Queue from '../Ecg/Queue';
 const border = '1px dashed #ccc'
@@ -18,10 +18,10 @@ const Gg = (props: { title?: string, value?: any, unit?: string, color?: string,
     )
 }
 
-export const MultiParamL = (props: { ecgData: any[], p: Queue, bloodList: IBloodListItem[] }) => {
+export const MultiParamL = (props: { ecgData: IMultiParamData, p: Queue, bloodList: IBloodListItem[] }) => {
     const ref = useRef<HTMLDivElement>()
     const {
-        ecgData = [],
+        ecgData = {},
         p,
         bloodList = [
             // { time: '测试时间', dia_bp: 110, mean_bp: 110, sys_bp: 110 }
@@ -46,21 +46,21 @@ export const MultiParamL = (props: { ecgData: any[], p: Queue, bloodList: IBlood
     return (
 
         <>
-            <Gg title="脉率" value={ecgData[0] || ''} unit="bpm" color={Suit.option.fhrcolor1} />
+            <Gg title="脉率" value={ecgData.pulseRate || ''} unit="bpm" color={Suit.option.fhrcolor1} />
             <Gg title="血氧" value={(
                 <>
-                    <span>{ecgData[1] || ''}</span>
+                    <span>{ecgData.bloodOxygen || ''}</span>
                     <div style={{ display: 'inline-block', width: 14, height: 46, border: '2px solid red', position: 'relative' }}>
                         <div ref={ref} style={{ background: 'blue',  width: 14 - 4, position: 'absolute', bottom: 0 }}></div>
                     </div>
                 </>
             )} unit="%" color={Suit.option.tococolor} />
-            <Gg title="体温" small value={ecgData[2] || ''} unit="℃" />
+            <Gg title="体温" small value={ecgData.temperature || ''} unit="℃" />
             {/* <Gg title="心率" small value={ecgData[3] || ''} unit="bpm" />
             <Gg title="呼吸" small value={ecgData[4] || ''} unit="次/分" /> */}
             {/* <Gg title="血压SDM" small value={ecgData[5] || ''} unit="mmHg" /> */}
             {/* <div>实时袖带压：0</div> */}
-            <Table title={() => `血压(mmHg)：${ecgData[5]}`} rowKey="id" size="small" pagination={false} columns={columns} dataSource={bloodList}>
+            <Table title={() => `血压(mmHg)：${ecgData.bloodPress}`} rowKey="id" size="small" pagination={false} columns={columns} dataSource={bloodList}>
 
             </Table>
         </>

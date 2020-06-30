@@ -22,13 +22,13 @@ var mapAlarmToText = {
 };
 function push_data_ecg(received_msg) {
     var datacache = this.datacache;
-    var ecgdata = received_msg.data;
+    var data = received_msg.data;
     var id = received_msg.device_no;
     var bi = received_msg.bed_no;
     var cachbi = id + '-' + bi;
     var target = datacache.get(cachbi);
     if (target) {
-        ecgdata.forEach(function (item) {
+        data.forEach(function (item) {
             item.ecg_arr = Array.isArray(item.ecg_arr) ? item.ecg_arr : [];
             item.ple_arr = Array.isArray(item.ple_arr) ? item.ple_arr : [];
             var ecg_arr = item.ecg_arr, ple_arr = item.ple_arr, pulse_rate = item.pulse_rate, sys_bp = item.sys_bp, dia_bp = item.dia_bp, mean_bp = item.mean_bp, temperature = item.temperature, temperature1 = item.temperature1, blood_oxygen = item.blood_oxygen, resp_rate = item.resp_rate, index = item.index, ecg = item.ecg, power = item.power, cuff_bp = item.cuff_bp, o = __rest(item, ["ecg_arr", "ple_arr", "pulse_rate", "sys_bp", "dia_bp", "mean_bp", "temperature", "temperature1", "blood_oxygen", "resp_rate", "index", "ecg", "power", "cuff_bp"]);
@@ -51,14 +51,14 @@ function push_data_ecg(received_msg) {
                 target.ple.EnQueue(ple_arr[i]);
                 target.ismulti = true;
             }
-            target.ecgdata = [
-                checkPulseRate(pulse_rate),
-                blood_oxygen,
-                "" + checkTemperature(temperature) + (temperature1 ? ('~' + checkTemperature(item.temperature1)) : ''),
-                checkPulseRate(pulse_rate),
-                resp_rate,
-                checkBlood(cuff_bp)
-            ];
+            target.ecgdata = {
+                pulseRate: checkPulseRate(pulse_rate),
+                bloodOxygen: blood_oxygen,
+                temperature: "" + checkTemperature(temperature) + (temperature1 ? ('~' + checkTemperature(item.temperature1)) : ''),
+                heartRate: checkPulseRate(pulse_rate),
+                respRate: resp_rate,
+                bloodPress: checkBlood(cuff_bp)
+            };
         });
     }
     else {

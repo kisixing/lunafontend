@@ -56,13 +56,13 @@ export function push_data_ecg(this: WsService, received_msg: IData) {
     const { datacache } = this
 
     //TODO 解析母亲应用层数据包
-    var ecgdata = received_msg.data;
+    var data = received_msg.data;
     var id = received_msg.device_no;
     var bi = received_msg.bed_no;
     var cachbi = id + '-' + bi;
     const target = datacache.get(cachbi)
     if (target) {
-        ecgdata.forEach(item => {
+        data.forEach(item => {
             item.ecg_arr = Array.isArray(item.ecg_arr) ? item.ecg_arr : []
             item.ple_arr = Array.isArray(item.ple_arr) ? item.ple_arr : []
 
@@ -91,15 +91,15 @@ export function push_data_ecg(this: WsService, received_msg: IData) {
 
 
 
-            target.ecgdata = [
-                checkPulseRate(pulse_rate),
-                blood_oxygen,
-                `${checkTemperature(temperature)}${temperature1 ? ('~' + checkTemperature(item.temperature1)) : ''}`,
-                checkPulseRate(pulse_rate),
-                resp_rate,
+            target.ecgdata = {
+                pulseRate: checkPulseRate(pulse_rate),
+                bloodOxygen: blood_oxygen,
+                temperature: `${checkTemperature(temperature)}${temperature1 ? ('~' + checkTemperature(item.temperature1)) : ''}`,
+                heartRate: checkPulseRate(pulse_rate),
+                respRate: resp_rate,
                 // `${checkBlood(sys_bp)}/${checkBlood(dia_bp)}/${checkBlood(mean_bp)}`,
-                checkBlood(cuff_bp)
-            ];
+                bloodPress: checkBlood(cuff_bp)
+            };
         })
 
     } else {

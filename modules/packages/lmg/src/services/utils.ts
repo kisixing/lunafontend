@@ -47,7 +47,7 @@ export function getEmptyCacheItem(base: { [x in keyof ICacheItem]?: ICacheItem[x
         ismulti: false,
         ecg: new Queue(),
         ple: new Queue(240),
-        ecgdata: getMaxArray(),
+        ecgdata: null,
         is_include_volume: false,
         is_include_tocozero: false,
         realTime: true,

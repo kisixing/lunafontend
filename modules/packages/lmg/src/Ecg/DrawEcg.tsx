@@ -272,7 +272,7 @@ export class DrawEcg extends Draw {
         console.log('ecg', 'clear interval');
         clearInterval(id);
       }
-      this.DrawDatatext();
+      // this.DrawDatatext();
       // const A = new Date().getTime();
       // this.current_time_millis = A;
       if (!isNaN(this.start) || this.data.ecg.GetSize() > points_one_times * 5) {
