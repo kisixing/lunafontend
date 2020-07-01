@@ -325,7 +325,6 @@ export default class DrawCTG {
         }
 
         if (fmp[i - 2] === -1) {
-          console.log('sd', suit.canvasline.height - fmp[i] * this.yspan)
           linecontext.moveTo(lastx, suit.canvasline.height - fmp[i] * this.yspan);
           continue
 

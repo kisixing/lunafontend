@@ -1,5 +1,6 @@
 import { WsService } from "../WsService";
 import { ICacheItem } from "../types";
+// import { event } from "@lianmed/utils";
 
 interface ICtgData {
     fhr: number
@@ -20,14 +21,19 @@ interface IData {
 
 
 export function pushData(target: ICacheItem, data: ICtgData) {
+
     const { index, toco, fm, fmp } = data
+    console.log('this', index)
     for (let fetal = 0; fetal < target.fetal_num; fetal++) {
+        if (fetal === 1) continue
         if (!target.fhr[fetal]) {
             continue;
         }
         const fhrKey = `fhr${fetal > 0 ? fetal + 1 : ''}`
-        if (data[fhrKey] == 0) continue;
-        target.fhr[fetal][data.index] = data[fhrKey]
+        const value = data[fhrKey]
+        if (value == 0) continue;
+ 
+        target.fhr[fetal][data.index] = value
     }
     target.toco[index] = toco;
     target.fm[index] = fm;
@@ -36,6 +42,39 @@ export function pushData(target: ICacheItem, data: ICtgData) {
 
 export function push_data_ctg(this: WsService, received_msg: IData) {
     const { datacache } = this
+
+
+
+
+    //    // alarm
+    //    const { alarm_high = 160, alarm_low = 110, alarm_delay = 0 } = this.settingData
+
+    //    const delayCount = alarm_delay * 4
+
+    //    const alarmKey = `${fhrKey}_alarm_count`
+    //    target[alarmKey] = target[alarmKey] || []
+    //    // 荣总：胎心率最大的计算范围是29~241
+    //    if (value <= 241 && value > alarm_high) {
+    //        target[alarmKey].push(1)
+    //    } else if (value < alarm_low && value >= 29) {
+    //        target[alarmKey].push(-1)
+    //    } else {
+    //        target[alarmKey] = []
+    //    }
+    //    const isHight = target[alarmKey].filter(_ => _ === 1).length > delayCount
+    //    const isLow = target[alarmKey].filter(_ => _ === -1).length > delayCount
+
+    //    if (isHight) {
+    //        event.emit('item:alarm', target.id, 2, '心率过高')
+    //    }
+    //    if (isLow) {
+    //        event.emit('item:alarm', target.id, 2, '心率过低')
+    //    }
+
+    //    // alarm
+
+
+
     //TODO 解析应用层数据包
     var data = received_msg.data;
     var id = received_msg.device_no;
@@ -58,7 +97,7 @@ export function push_data_ctg(this: WsService, received_msg: IData) {
         target.csspan = this.span;
     }
     for (let key in data) {
-        pushData(target, data[key])
+        pushData.call(this, target, data[key])
         if (target.start == -1) {
             target.start = data[key].index;
             target.past = data[key].index - 4800 > 0 ? data[key].index - 4800 : 0;

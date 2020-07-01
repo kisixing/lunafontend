@@ -82,6 +82,7 @@ const WorkbenchItem = (props: IProps) => {
     <Col
       span={itemSpan}
       ref={ref}
+      onClick={() => onSelect(unitId)}
       style={{ transition: 'background .6s', padding: outPadding, height: itemHeight, background: bordered ? 'black' : `var(--theme-${'light'}-color)`, position: 'relative' }}
     >
       <Ctg_Item
@@ -101,7 +102,7 @@ const WorkbenchItem = (props: IProps) => {
         bedNO={pregnancy.bedNO}
         GP={pregnancy.GP}
         gestationalWeek={pregnancy.gestationalWeek}
-        onSelect={onSelect}
+        onSelect={null}
       >
         {
           props.children

@@ -98,7 +98,7 @@ export function push_data_ecg(this: WsService, received_msg: IData) {
                 heartRate: checkPulseRate(pulse_rate),
                 respRate: resp_rate,
                 // `${checkBlood(sys_bp)}/${checkBlood(dia_bp)}/${checkBlood(mean_bp)}`,
-                bloodPress: target.ecgdata.bloodPress ? target.ecgdata.bloodPress : checkBlood(cuff_bp)
+                bloodPress: (target.ecgdata && target.ecgdata.bloodPress) ? target.ecgdata.bloodPress : checkBlood(cuff_bp)
             };
         })
 

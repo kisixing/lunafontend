@@ -2,14 +2,18 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 function pushData(target, data) {
     var index = data.index, toco = data.toco, fm = data.fm, fmp = data.fmp;
+    console.log('this', index);
     for (var fetal = 0; fetal < target.fetal_num; fetal++) {
+        if (fetal === 1)
+            continue;
         if (!target.fhr[fetal]) {
             continue;
         }
         var fhrKey = "fhr" + (fetal > 0 ? fetal + 1 : '');
-        if (data[fhrKey] == 0)
+        var value = data[fhrKey];
+        if (value == 0)
             continue;
-        target.fhr[fetal][data.index] = data[fhrKey];
+        target.fhr[fetal][data.index] = value;
     }
     target.toco[index] = toco;
     target.fm[index] = fm;
@@ -29,7 +33,7 @@ function push_data_ctg(received_msg) {
         target.csspan = this.span;
     }
     for (var key in data) {
-        pushData(target, data[key]);
+        pushData.call(this, target, data[key]);
         if (target.start == -1) {
             target.start = data[key].index;
             target.past = data[key].index - 4800 > 0 ? data[key].index - 4800 : 0;

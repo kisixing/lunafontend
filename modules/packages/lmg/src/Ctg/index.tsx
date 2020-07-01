@@ -45,7 +45,7 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
     ...others
   } = props
   // data.ecgdata = { bloodOxygen: 80, bloodPress: '120/120/120', heartRate: 80, respRate: 40, pulseRate: 80, temperature: 37 }
-  const ismulti = false || data.ismulti
+  const ismulti = false || (data && data.ismulti)
   const [ctgReady, setCtgReady] = useState(false)
   const isV3 = false || data && (data.deviceType === 'V3')
 

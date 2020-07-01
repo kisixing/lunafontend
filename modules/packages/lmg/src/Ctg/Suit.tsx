@@ -346,6 +346,7 @@ export class Suit extends Draw {
     if (arr.length >= 2 * this.ctgconfig.alarm_delay) {
       this.itemAlarm('心率过低')
       this.lazyEmit('alarmOn', '心率过低');
+      return true
     }
   }
   alarmHigh(fetalIndex: number) {
@@ -358,6 +359,7 @@ export class Suit extends Draw {
 
       this.itemAlarm('心率过高')
       this.lazyEmit('alarmOn', '心率过高');
+      return true
     }
   }
   alarmOff(fetalIndex?: number) {
@@ -516,11 +518,7 @@ export class Suit extends Draw {
       this.isOn
     ) {
       if (isNaN(this.data.csspan)) return;
-      this.curr =
-        (Math.floor(new Date().getTime() / 1000) -
-          Math.floor(new Date(this.data.starttime).getTime() / 1000)) *
-        4 +
-        this.data.csspan;
+      this.curr = (+new Date() - +new Date(this.data.starttime)) / 1000 * 4 + this.data.csspan;
       if (this.curr < 0) return;
       this.drawobj.drawdot(this.curr, true);
       this.rightViewPosition = this.curr;
