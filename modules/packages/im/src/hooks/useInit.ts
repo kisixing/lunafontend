@@ -190,7 +190,6 @@ export const useInit = () => {
                 },
                 onTextMessage(message) {
 
-                    console.log("onTextMessage", this, message)
                     // const { from, to } = message;
                     let { type } = message;
                     // const username = '';

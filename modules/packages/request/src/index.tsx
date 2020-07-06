@@ -32,7 +32,7 @@ class R extends Request {
     this.init(this.configure);
     // request拦截器, 改变url 或 options.
     this._request.interceptors.request.use((url, options) => {
-      (options.headers as any).Authorization = Authorization
+      (options.headers as any).Authorization = Authorization || store.get(TOKEN_KEY)
       return { url, options };
     });
     if (!this.responseInterceptrorUsed) {

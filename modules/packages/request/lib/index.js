@@ -58,7 +58,7 @@ var R = (function (_super) {
             Object.assign(_this.configure, configs, { Authorization: Authorization });
             _this.init(_this.configure);
             _this._request.interceptors.request.use(function (url, options) {
-                options.headers.Authorization = Authorization;
+                options.headers.Authorization = Authorization || store_1.default.get(utils_1.TOKEN_KEY);
                 return { url: url, options: options };
             });
             if (!_this.responseInterceptrorUsed) {

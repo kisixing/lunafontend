@@ -49,12 +49,7 @@ const Status = memo<IProps>(({ alarm2Text, status, alarm0Text, alarm1Text, unitI
     }, [unitId])
     useEffect(() => {
         call()
-
-        console.log('call', unitId)
-
         return () => {
-        console.log('clear', unitId)
-
             clearTimeout(intervalId.current)
         }
     }, [])

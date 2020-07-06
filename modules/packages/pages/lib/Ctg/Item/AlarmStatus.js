@@ -45,9 +45,7 @@ var Status = react_1.memo(function (_a) {
     }, [unitId]);
     react_1.useEffect(function () {
         call();
-        console.log('call', unitId);
         return function () {
-            console.log('clear', unitId);
             clearTimeout(intervalId.current);
         };
     }, []);
