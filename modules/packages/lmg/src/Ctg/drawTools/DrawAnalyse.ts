@@ -12,7 +12,18 @@ import { DecType, AccPoint, DecPoint } from "@lianmed/f_types/lib/obvue/ctg_exam
 //     start?: number
 //     end?: number
 // }
-const resultMap = ['正常','可疑','异常']
+const resultMap = ['正常', '可疑', '异常']
+
+function genDeformedScore(obj: Object) {
+    const keys = Object.keys(obj)
+    keys.forEach(k => {
+        const rm = k.match(/(.*)score$/)
+        if (rm) {
+            obj[k] = resultMap[obj[k]] ? resultMap[obj[k]] : obj[k];
+
+        }
+    })
+}
 export class DrawAnalyse extends Draw {
     pointToInsert: { type: PointType, index: number }
     pointToEdit: AccPoint | DecPoint
@@ -28,7 +39,7 @@ export class DrawAnalyse extends Draw {
     init() {
         this.analysisData = null
     }
-    setData(analyseData: obvue.ctg_exams_analyse, ) {
+    setData(analyseData: obvue.ctg_exams_analyse,) {
         this.analysisData = analyseData
     }
     drawBaseline(cur, color, yspan, xspan, max, basetop) {
@@ -678,26 +689,38 @@ export class DrawAnalyse extends Draw {
             let ld = analysis.ldtimes = this.countDec(analysis.start, analysis.end, 'LD');//analysis.ldtimes;
             let vd = analysis.vdtimes = this.countDec(analysis.start, analysis.end, 'VD');//analysis.vdtimes;
             let ed = analysis.edtimes = this.countDec(analysis.start, analysis.end, 'ED');//analysis.edtimes;
+            score.cstoctdata.ldvalue = ld
+            score.cstoctdata.vdvalue = vd
+            score.cstoctdata.edvalue = ed
             if (ld > 0) {
                 score.cstoctdata.decscore = 0;
                 score.cstoctdata.decvalue = 'LD';
+                score.cstoctdata.ldscore = 1
             } else if (vd > 0) {
                 score.cstoctdata.decscore = 1;
                 score.cstoctdata.decvalue = 'VD';
+                score.cstoctdata.vdscore = 1
+
                 analysis.dec.map((item) => {
                     if (item.type.toUpperCase() == 'VD') {
                         if (this.inRange(item.duration, 30, 60)) {
                             score.cstoctdata.decscore = 1;
                             score.cstoctdata.decvalue = 'VD';
+                            score.cstoctdata.vdscore = 1
+
                         } else if (item.duration > 60) {
                             score.cstoctdata.decscore = 0;
                             score.cstoctdata.decvalue = 'VD';
+                            score.cstoctdata.vdscore = 2
+
                         }
                     }
                 })
             } else {
                 if (ed > 0) {
                     score.cstoctdata.decvalue = 'ED';
+                    score.cstoctdata.edscore = 1
+
                 } else {
                     score.cstoctdata.decvalue = '无';
                 }
@@ -709,9 +732,12 @@ export class DrawAnalyse extends Draw {
                 score.cstoctdata.total = 0;
             }
             score.cstoctdata.total = 1;
-            score.sogcdata.result = resultMap[score.cstoctdata.total]
+            score.cstoctdata.result = resultMap[score.cstoctdata.total]
 
         }
+        genDeformedScore(score.cstoctdata)
+        genDeformedScore(score.sogcdata)
+        console.log('xxx', score)
         return (this.analysisData = analysisData)
 
     }
