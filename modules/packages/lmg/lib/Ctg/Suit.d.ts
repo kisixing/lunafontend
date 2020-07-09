@@ -10,6 +10,26 @@ import { DrawAnalyse } from './drawTools/DrawAnalyse';
 import { DrawSelect } from './drawTools/DrawSelect';
 declare type Canvas = HTMLCanvasElement;
 declare type Context = CanvasRenderingContext2D;
+declare const defaultCtgConfig: {
+    normalarea: string;
+    selectarea: string;
+    rule: string;
+    scale: string;
+    primarygrid: string;
+    secondarygrid: string;
+    fhrcolor: string[];
+    tococolor: string;
+    alarmcolor: string;
+    fmpcolor: string;
+    alarm_enable: boolean;
+    alarm_high: number;
+    alarm_low: number;
+    print_interval: number;
+    alarm_delay: number;
+};
+declare type TCtgConfig = {
+    [x in keyof typeof defaultCtgConfig]?: any;
+};
 export declare class Suit extends Draw {
     drawAnalyse: DrawAnalyse;
     drawSelect: DrawSelect;
@@ -38,23 +58,7 @@ export declare class Suit extends Draw {
     buffersize: number;
     curr: number;
     alarmStatus: number;
-    ctgconfig: {
-        normalarea: string;
-        selectarea: string;
-        rule: string;
-        scale: string;
-        primarygrid: string;
-        secondarygrid: string;
-        fhrcolor: string[];
-        tococolor: string;
-        alarmcolor: string;
-        fmpcolor: string;
-        alarm_enable: boolean;
-        alarm_high: number;
-        alarm_low: number;
-        print_interval: number;
-        alarm_delay: number;
-    };
+    ctgconfig: TCtgConfig;
     fetalposition: {
         fhr1: string;
         fhr2: string;
@@ -78,7 +82,7 @@ export declare class Suit extends Draw {
     get leftViewposition(): number;
     get rightViewPosition(): number;
     set rightViewPosition(value: number);
-    constructor(canvasgrid: Canvas, canvasdata: Canvas, canvasline: Canvas, canvasselect: Canvas, canvasanalyse: Canvas, wrap: HTMLElement, barTool: IBarTool, type: number);
+    constructor(canvasgrid: Canvas, canvasdata: Canvas, canvasline: Canvas, canvasselect: Canvas, canvasanalyse: Canvas, wrap: HTMLElement, barTool: IBarTool, type: number, ctgconfig: TCtgConfig);
     init(data: ICacheItem): void;
     createLine(): void;
     updateBarTool(): void;

@@ -75,7 +75,8 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
       canvasanalyse.current,
       ctgBox.current,
       barTool.current,
-      suitType
+      suitType,
+      {}
     )
 
     onReady(instance)

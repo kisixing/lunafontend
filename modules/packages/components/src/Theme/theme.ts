@@ -1,3 +1,6 @@
+import darkTheme from './dark'
+export const DARK_COLOR = "#1c1c1c"
+
 export default `
   a {
     color: var(--theme-color);
@@ -837,6 +840,12 @@ export default `
   .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
     background: var(--theme-shadow-color);
   }
+  .ant-table tbody > tr.ant-table-row-selected > td{
+    background:var(--theme-shadow-color);
+  }
+  .ant-table tbody > tr.ant-table-row:hover > td {
+    background:var(--theme-shadow-color);
+  }
   .ant-timeline-item-head-blue {
     color: var(--theme-color);
     border-color: var(--theme-color);
@@ -959,10 +968,26 @@ export default `
   .ant-upload.ant-upload-drag p.ant-upload-drag-icon .anticon {
     color: var(--theme-hover-color);
   }
-`.concat(
-  `
+`
+  .concat(
+    `
   .ant-layout {
-    background: var(--theme-light-color);
+    background: var(--customed-bg);
   }
   `
-);
+  )
+  ;
+
+export function configDark(base: string) {
+  return base
+    .concat(
+      `
+      :root {
+        --theme-bg:${DARK_COLOR};
+      }
+      `
+    )
+    .concat(
+      darkTheme
+    )
+}

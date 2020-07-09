@@ -1,8 +1,7 @@
 import BezierEasing from 'bezier-easing';
 import tinycolor from 'tinycolor2';
-import cssContent from './theme';
+import cssContent, { configDark, DARK_COLOR } from './theme';
 import { darken, lighten } from './colorManipulator';
-
 const tonalOffset = 0.2
 
 /* basic-easiing */
@@ -54,16 +53,24 @@ function getShadowColor(color, ratio = 9) {
 }
 
 export function getThemeColor(color) {
+
   const lightColor = lighten(color, tonalOffset * 4);
   const darkColor = darken(color, tonalOffset * 1.5);
-  return {
+  const result = {
     primaryColor: color,
     hoverColor: getHoverColor(color),
     activeColor: getActiveColor(color),
     shadowColor: getShadowColor(color),
     lightColor,
-    darkColor
+    darkColor,
+    isDark: false
   };
+  if (color === DARK_COLOR) {
+    result.isDark = true
+  }
+  console.log('theme color', color, result);
+  return result
+
 }
 
 // 判断是否是IE系列浏览器
@@ -103,7 +110,8 @@ const generateStyleHtml = (colorObj) => {
     hoverColor,
     shadowColor,
     lightColor,
-    darkColor
+    darkColor,
+    isDark
   } = colorObj;
   if (!IEVersion()) {
     const cssVar = `
@@ -114,10 +122,13 @@ const generateStyleHtml = (colorObj) => {
         --theme-shadow-color: ${shadowColor};
         --theme-light-color: ${lightColor};
         --theme-dark-color: ${darkColor};
-
+        --customed-bg:#F8F8FB;
+        --customed-color:#fff;
+        --customed-font:#5A6676;
+        --customed-border:#DBDBDB;
       }
     `;
-    return `${cssVar}\n${cssContent}`;
+    return `${cssVar}\n${isDark ? configDark(cssContent) : cssContent}`;
   }
   let IECSSContent = cssContent;
   IECSSContent = IECSSContent.replace(/var\(\-\-theme\-color\)/g, primaryColor);

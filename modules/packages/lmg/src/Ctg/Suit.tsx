@@ -15,6 +15,26 @@ import { DrawSelect } from './drawTools/DrawSelect';
 let sid = 0;
 type Canvas = HTMLCanvasElement;
 type Context = CanvasRenderingContext2D;
+const defaultCtgConfig = {
+  normalarea: 'rgb(224,255,255)',
+  selectarea: 'rgba(192,192,192,0.5)',
+  rule: 'rgba(0,51,102,1)',
+  scale: 'rgba(0,0,0,1)',
+  // primarygrid: 'rgba(144, 159, 180,1)',
+  // secondarygrid: 'rgba(221, 230, 237,1)',
+  primarygrid: 'red',
+  secondarygrid: '#F59997',
+  fhrcolor: ['green', 'blue', 'rgb(0,0,0)'],
+  tococolor: 'rgb(0,0,0)',
+  alarmcolor: 'rgb(255, 1, 1)',
+  fmpcolor: 'darkgreen',
+  alarm_enable: true,
+  alarm_high: 160,
+  alarm_low: 110,
+  print_interval: 20,
+  alarm_delay: 0
+}
+type TCtgConfig = { [x in keyof typeof defaultCtgConfig]?: any }
 export class Suit extends Draw {
   drawAnalyse: DrawAnalyse
   drawSelect: DrawSelect
@@ -41,25 +61,7 @@ export class Suit extends Draw {
   buffersize = 16;
   curr = -16;
   alarmStatus = 0; //报警状态
-  ctgconfig = {
-    normalarea: 'rgb(224,255,255)',
-    selectarea: 'rgba(192,192,192,0.5)',
-    rule: 'rgba(0,51,102,1)',
-    scale: 'rgba(0,0,0,1)',
-    // primarygrid: 'rgba(144, 159, 180,1)',
-    // secondarygrid: 'rgba(221, 230, 237,1)',
-    primarygrid: 'rgba(100, 100, 100, 1)',
-    secondarygrid: 'rgba(200, 200, 200, 1)',
-    fhrcolor: ['green', 'blue', 'rgb(0,0,0)'],
-    tococolor: 'rgb(0,0,0)',
-    alarmcolor: 'rgb(255, 1, 1)',
-    fmpcolor: 'darkgreen',
-    alarm_enable: true,
-    alarm_high: 160,
-    alarm_low: 110,
-    print_interval: 20,
-    alarm_delay: 0
-  };
+  ctgconfig: TCtgConfig = defaultCtgConfig;
   fetalposition = {
     fhr1: '',
     fhr2: '',
@@ -107,7 +109,8 @@ export class Suit extends Draw {
     canvasanalyse: Canvas,
     wrap: HTMLElement,
     barTool: IBarTool,
-    type: number
+    type: number,
+    ctgconfig: TCtgConfig
   ) {
     super(wrap);
     bindEvents.call(this);
@@ -123,6 +126,7 @@ export class Suit extends Draw {
     this.type = type;
     this.drawAnalyse = new DrawAnalyse(wrap, canvasanalyse, this)
     this.drawSelect = new DrawSelect(wrap, canvasselect, this)
+    Object.assign(this.ctgconfig, ctgconfig)
     if (this.option) {
       this.ctgconfig.tococolor = this.option.tococolor;
       this.ctgconfig.fhrcolor[0] = this.option.fhrcolor1;

@@ -10,7 +10,8 @@ import Bar from "./Bar";
 import "antd/lib/card/style/index.css"
 import "antd/lib/tag/style/index.css"
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
-interface IProps extends PropsWithChildren<{}> {
+import { ICtgLayoutTheme } from '../Layout/types';
+interface IProps extends PropsWithChildren<ICtgLayoutTheme> {
     status?: BedStatus
     data: ICacheItem
     bedname: string
@@ -46,13 +47,13 @@ const Wrapper = styled.div`
     }
 `
 const Item = (props: IProps) => {
-    const { onSelect, data, bedname, onClose, onDoubleClick, loading, onSuitRead, themeColor = 'rgb(74, 20, 140)', unitId, isFullscreen } = props;
+    const { onSelect, data, bedname, onClose, onDoubleClick, loading, onSuitRead, themeColor = 'rgb(74, 20, 140)', unitId, isFullscreen, headColor, fontColor } = props;
     const status = props.status === undefined ? data && data.status : props.status
     let { bedNO, GP, gestationalWeek, name, age, startTime } = props;
     const [suit, setSuit] = useState(null)
 
     const ref = useRef<Suit>()
-    console.log('ss ref',ref)
+    console.log('ss ref', ref)
     // 床位信息
     const RenderTilte = () => {
         const m = moment(startTime)
@@ -85,8 +86,8 @@ const Item = (props: IProps) => {
                 size="small"
                 title={<RenderTilte />}
                 style={{ height: '100%' }}
-                extra={<Extra bedname={bedname} onClose={onClose} status={status} suit={suit} unitId={unitId} />}
-                headStyle={{ background: themeColor, color: '#fff' }}
+                extra={<Extra fontColor={fontColor} bedname={bedname} onClose={onClose} status={status} suit={suit} unitId={unitId} />}
+                headStyle={{ background: headColor, color: fontColor }}
                 bodyStyle={{ padding: 0, height: 'calc(100% - 38px)' }}
             >
                 <L

@@ -1,40 +1,19 @@
-import React, { useRef, useCallback, useEffect, memo, useState } from 'react';
-import ReactDOM from 'react-dom';
-import { BedStatus, ICacheItem, ICacheItemPregnancy } from "@lianmed/lmg/lib/services/types";
-
-import { Col } from 'antd';
-import Ctg_Item from "../Item/index";
+import { BedStatus } from "@lianmed/lmg/lib/services/types";
 import { event } from "@lianmed/utils";
+import { Col } from 'antd';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
+import Ctg_Item from "../Item/index";
+import { ICtgLayoutItemProps } from "./types";
+
 
 type clickCb = ((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void)
 
-interface IProps {
-  loading: boolean
-  onClose: (data: any) => void
-  itemData: any
-  children: React.ReactNode
-  startTime: string
-  pregnancy: ICacheItemPregnancy
-
-  data: ICacheItem
-  bedname: string
-  unitId: string
-  ismulti: boolean
-  docid: string
-  status: BedStatus
-  onSelect?: (unitId: string) => void
-
-  outPadding: number
-  fullScreenId: string
-  itemHeight: number
-  itemSpan: number
-  themeColor: string
-  bordered?: boolean
-}
 
 
-const WorkbenchItem = (props: IProps) => {
-  const { onSelect, bordered, themeColor, itemData, onClose, loading = false, fullScreenId, itemHeight, itemSpan, outPadding, data, bedname, status, unitId } = props;
+
+const WorkbenchItem = (props: ICtgLayoutItemProps) => {
+  const { onSelect, bordered, activeColor, fontColor, itemData, onClose, loading = false, fullScreenId, itemHeight, itemSpan, outPadding, data, bedname, status, unitId, headColor, backgroundColor, borderedColor } = props;
   let { startTime, pregnancy } = props
 
   const [isFullscreen, setIsFullscreen] = useState(false)
@@ -83,11 +62,12 @@ const WorkbenchItem = (props: IProps) => {
       span={itemSpan}
       ref={ref}
       onClick={() => onSelect(unitId)}
-      style={{ transition: 'background .6s', padding: outPadding, height: itemHeight, background: bordered ? 'black' : `var(--theme-${'light'}-color)`, position: 'relative' }}
+      style={{ transition: 'background .6s', padding: outPadding, border: `1px solid ${borderedColor}`, height: itemHeight, background: bordered ? activeColor : backgroundColor, position: 'relative' }}
     >
       <Ctg_Item
+        fontColor={fontColor}
         isFullscreen={isFullscreen}
-        themeColor={themeColor}
+        themeColor={headColor}
         startTime={startTime}
         bedname={bedname}
         status={status}

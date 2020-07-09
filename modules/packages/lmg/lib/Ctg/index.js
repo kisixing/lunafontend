@@ -65,7 +65,7 @@ exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
     var ecg = react_1.useRef(null);
     var rightClickXy = react_1.useRef({ x: 0, y: 0 });
     useDraw_1.default(data, ctgBox, function () {
-        var instance = ctg.current = new Suit_1.Suit(canvasgrid.current, canvasdata.current, canvasline.current, canvasselect.current, canvasanalyse.current, ctgBox.current, barTool.current, suitType);
+        var instance = ctg.current = new Suit_1.Suit(canvasgrid.current, canvasdata.current, canvasline.current, canvasselect.current, canvasanalyse.current, ctgBox.current, barTool.current, suitType, {});
         onReady(instance);
         mutableSuitObject.suit = instance;
         setCtgReady(true);

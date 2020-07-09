@@ -2,14 +2,15 @@ import React, { useState, useEffect, useImperativeHandle } from 'react';
 import { GithubPicker } from 'react-color';
 import tinycolor from 'tinycolor2';
 import { getThemeColor, applyAntdTheme, placementSketchPicker } from './util';
-
+import { DARK_COLOR } from "./theme";
 // const colors = [
 //     '#b71c1c', '#e65100', '#ff6f00', '#bf360c', '#880e4f', '#33691e', '#006064', '#004d40',
 //     '#00838f', '#546e7a', '#5e35b1', '#1a237e', '#311b92', '#4a148c', '#827717', '#0d47a1'
 // ]
 const colors = [
     '#33691e', '#006064', '#d81b60', '#bc5100', '#1a237e',
-    '#4a148c', '#827717', '#0d47a1'
+    '#4a148c', '#827717', '#0d47a1',
+    DARK_COLOR
 ]
 
 interface IProps {
@@ -29,7 +30,7 @@ const A = (props: IProps, ref) => {
         toggle: handleClick,
         handleChange
     }));
-    
+
     const {
         primaryColor = '#1890ff',
         storageName = 'custom-antd-primary-color',

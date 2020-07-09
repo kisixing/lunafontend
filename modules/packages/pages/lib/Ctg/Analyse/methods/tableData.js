@@ -262,7 +262,4 @@ var tableData = {
 exports.tableData = tableData;
 tableData.Sogc.deformed = true;
 tableData.Cstoct.deformed = true;
-delete tableData.Sogc;
-delete tableData.Cst;
-delete tableData.Cstoct;
 //# sourceMappingURL=tableData.js.map

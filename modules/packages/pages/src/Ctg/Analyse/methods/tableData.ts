@@ -270,7 +270,7 @@ const tableData: { [x in AnalyseType]: any } = {
 }
 tableData.Sogc.deformed = true
 tableData.Cstoct.deformed = true
-delete tableData.Sogc
-delete tableData.Cst
-delete tableData.Cstoct
+// delete tableData.Sogc
+// delete tableData.Cst
+// delete tableData.Cstoct
 export { tableData }

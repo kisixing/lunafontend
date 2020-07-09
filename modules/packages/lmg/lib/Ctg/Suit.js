@@ -34,9 +34,26 @@ var DrawCTG_1 = __importDefault(require("./DrawCTG"));
 var DrawAnalyse_1 = require("./drawTools/DrawAnalyse");
 var DrawSelect_1 = require("./drawTools/DrawSelect");
 var sid = 0;
+var defaultCtgConfig = {
+    normalarea: 'rgb(224,255,255)',
+    selectarea: 'rgba(192,192,192,0.5)',
+    rule: 'rgba(0,51,102,1)',
+    scale: 'rgba(0,0,0,1)',
+    primarygrid: 'red',
+    secondarygrid: '#F59997',
+    fhrcolor: ['green', 'blue', 'rgb(0,0,0)'],
+    tococolor: 'rgb(0,0,0)',
+    alarmcolor: 'rgb(255, 1, 1)',
+    fmpcolor: 'darkgreen',
+    alarm_enable: true,
+    alarm_high: 160,
+    alarm_low: 110,
+    print_interval: 20,
+    alarm_delay: 0
+};
 var Suit = (function (_super) {
     __extends(Suit, _super);
-    function Suit(canvasgrid, canvasdata, canvasline, canvasselect, canvasanalyse, wrap, barTool, type) {
+    function Suit(canvasgrid, canvasdata, canvasline, canvasselect, canvasanalyse, wrap, barTool, type, ctgconfig) {
         var _this = _super.call(this, wrap) || this;
         _this.needScroll = false;
         _this.option = Suit.option;
@@ -54,23 +71,7 @@ var Suit = (function (_super) {
         _this.buffersize = 16;
         _this.curr = -16;
         _this.alarmStatus = 0;
-        _this.ctgconfig = {
-            normalarea: 'rgb(224,255,255)',
-            selectarea: 'rgba(192,192,192,0.5)',
-            rule: 'rgba(0,51,102,1)',
-            scale: 'rgba(0,0,0,1)',
-            primarygrid: 'rgba(100, 100, 100, 1)',
-            secondarygrid: 'rgba(200, 200, 200, 1)',
-            fhrcolor: ['green', 'blue', 'rgb(0,0,0)'],
-            tococolor: 'rgb(0,0,0)',
-            alarmcolor: 'rgb(255, 1, 1)',
-            fmpcolor: 'darkgreen',
-            alarm_enable: true,
-            alarm_high: 160,
-            alarm_low: 110,
-            print_interval: 20,
-            alarm_delay: 0
-        };
+        _this.ctgconfig = defaultCtgConfig;
         _this.fetalposition = {
             fhr1: '',
             fhr2: '',
@@ -104,6 +105,7 @@ var Suit = (function (_super) {
         _this.type = type;
         _this.drawAnalyse = new DrawAnalyse_1.DrawAnalyse(wrap, canvasanalyse, _this);
         _this.drawSelect = new DrawSelect_1.DrawSelect(wrap, canvasselect, _this);
+        Object.assign(_this.ctgconfig, ctgconfig);
         if (_this.option) {
             _this.ctgconfig.tococolor = _this.option.tococolor;
             _this.ctgconfig.fhrcolor[0] = _this.option.fhrcolor1;

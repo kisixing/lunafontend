@@ -3,7 +3,8 @@ import { ICacheItem, BedStatus } from "@lianmed/lmg/lib/services/WsService";
 import { Drawer } from '@lianmed/lmg/lib/interface';
 import "antd/lib/card/style/index.css";
 import "antd/lib/tag/style/index.css";
-interface IProps extends PropsWithChildren<{}> {
+import { ICtgLayoutTheme } from '../Layout/types';
+interface IProps extends PropsWithChildren<ICtgLayoutTheme> {
     status?: BedStatus;
     data: ICacheItem;
     bedname: string;
