@@ -44,18 +44,18 @@ const T = forwardRef<FormInstance, IProps>((props, ref) => {
             render(a, { key }) {
                 return (
                     <Form.Item name={`${key}value`} style={{ margin: -8 }}>
-                        <Input disabled={disabled} style={{ width: 60 }} />
+                        <Input disabled={disabled} style={{ width: 44 }} />
                     </Form.Item>
                 )
             }
         },
-        deformed ? null : {
+        false ? null : {
             title: '得分',
             dataIndex: 'score',
             render(a, { key }) {
                 return (
                     <Form.Item name={`${key}score`} style={{ margin: -8 }} >
-                        <InputNumber disabled={disabled} style={{ width: 60 }} />
+                        <InputNumber disabled={disabled} style={{ width: 44 }} />
                     </Form.Item>
                 )
             }

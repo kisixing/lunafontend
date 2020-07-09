@@ -138,6 +138,12 @@ var getEmptyScore = function () {
             decvalue: '',
         },
         cstoctdata: {
+            ldvalue: 0,
+            ldscore: 0,
+            vdscore: 0,
+            vdvalue: 0,
+            edscore: 0,
+            edvalue: 0,
             bhrscore: 0,
             ltvvalue: 0,
             ltvscore: 0,
@@ -272,7 +278,8 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
     }, [isToShort, autoAnalyse]);
     react_1.useEffect(function () {
         var id = (hasInitAnalysed.current) ? 0 : window.setInterval(function () {
-            if (initData && v.current) {
+            if (initData && v.current && !hasInitAnalysed.current) {
+                console.log('xxx', '---');
                 clearInterval(id);
                 var r = v.current.drawAnalyse.analyse(mark, startTime, endTime, initData);
                 hasInitAnalysed.current = true;

@@ -18,6 +18,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Draw_1 = __importDefault(require("../../Draw"));
 var resultMap = ['正常', '可疑', '异常'];
+function genDeformedScore(obj) {
+    var keys = Object.keys(obj);
+    keys.forEach(function (k) {
+        var rm = k.match(/(.*)score$/);
+        if (rm) {
+            obj[k] = resultMap[obj[k]] ? resultMap[obj[k]] : obj[k];
+        }
+    });
+}
 var DrawAnalyse = (function (_super) {
     __extends(DrawAnalyse, _super);
     function DrawAnalyse(wrap, canvas, suit) {
@@ -604,22 +613,29 @@ var DrawAnalyse = (function (_super) {
                 var ld = analysis.ldtimes = _this.countDec(analysis.start, analysis.end, 'LD');
                 var vd = analysis.vdtimes = _this.countDec(analysis.start, analysis.end, 'VD');
                 var ed = analysis.edtimes = _this.countDec(analysis.start, analysis.end, 'ED');
+                score.cstoctdata.ldvalue = ld;
+                score.cstoctdata.vdvalue = vd;
+                score.cstoctdata.edvalue = ed;
                 if (ld > 0) {
                     score.cstoctdata.decscore = 0;
                     score.cstoctdata.decvalue = 'LD';
+                    score.cstoctdata.ldscore = 1;
                 }
                 else if (vd > 0) {
                     score.cstoctdata.decscore = 1;
                     score.cstoctdata.decvalue = 'VD';
+                    score.cstoctdata.vdscore = 1;
                     analysis.dec.map(function (item) {
                         if (item.type.toUpperCase() == 'VD') {
                             if (_this.inRange(item.duration, 30, 60)) {
                                 score.cstoctdata.decscore = 1;
                                 score.cstoctdata.decvalue = 'VD';
+                                score.cstoctdata.vdscore = 1;
                             }
                             else if (item.duration > 60) {
                                 score.cstoctdata.decscore = 0;
                                 score.cstoctdata.decvalue = 'VD';
+                                score.cstoctdata.vdscore = 2;
                             }
                         }
                     });
@@ -627,6 +643,7 @@ var DrawAnalyse = (function (_super) {
                 else {
                     if (ed > 0) {
                         score.cstoctdata.decvalue = 'ED';
+                        score.cstoctdata.edscore = 1;
                     }
                     else {
                         score.cstoctdata.decvalue = '无';
@@ -640,8 +657,11 @@ var DrawAnalyse = (function (_super) {
                     score.cstoctdata.total = 0;
                 }
                 score.cstoctdata.total = 1;
-                score.sogcdata.result = resultMap[score.cstoctdata.total];
+                score.cstoctdata.result = resultMap[score.cstoctdata.total];
             }
+            genDeformedScore(score.cstoctdata);
+            genDeformedScore(score.sogcdata);
+            console.log('xxx', score);
             return (_this.analysisData = analysisData);
         };
         _this.suit = suit;

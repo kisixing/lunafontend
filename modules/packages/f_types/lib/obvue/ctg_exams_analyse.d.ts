@@ -53,6 +53,12 @@ export interface ctg_exams_analyse_score {
         bhrvalue: number;
         decscore: number;
         decvalue: string | number;
+        edscore: number;
+        edvalue: string | number;
+        ldscore: number;
+        ldvalue: string | number;
+        vdscore: number;
+        vdvalue: string | number;
         sinusoidscore: number;
         sinusoidvalue: number;
         total: number;

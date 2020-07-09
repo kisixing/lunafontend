@@ -83,6 +83,12 @@ const getEmptyScore = (): ctg_exams_analyse_score => {
             decvalue: '',
         },
         cstoctdata: {
+            ldvalue:0,
+            ldscore:0,
+            vdscore:0,
+            vdvalue:0,
+            edscore:0,
+            edvalue:0,
             bhrscore: 0,
             ltvvalue: 0,
             ltvscore: 0,
@@ -231,8 +237,9 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
     useEffect(() => {
 
         const id = (hasInitAnalysed.current) ? 0 : window.setInterval(() => {
-            if (initData && v.current) {
-
+            if (initData && v.current && !hasInitAnalysed.current) {
+                console.log('xxx','---');
+                
                 clearInterval(id)
                 let r = v.current.drawAnalyse.analyse(mark, startTime, endTime, initData)
                 hasInitAnalysed.current = true
