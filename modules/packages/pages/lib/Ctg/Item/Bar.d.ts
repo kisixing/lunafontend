@@ -1,6 +1,7 @@
 import React from 'react';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
-interface IProps {
+import { ICtgLayoutTheme } from '../Layout/types';
+interface IProps extends ICtgLayoutTheme {
     mutableSuit: React.MutableRefObject<Suit>;
     onSelect?: (unitId: string) => void;
     unitId: string;

@@ -83,6 +83,7 @@ const WorkbenchItem = (props: ICtgLayoutItemProps) => {
         GP={pregnancy.GP}
         gestationalWeek={pregnancy.gestationalWeek}
         onSelect={null}
+        backgroundColor={backgroundColor}
       >
         {
           props.children

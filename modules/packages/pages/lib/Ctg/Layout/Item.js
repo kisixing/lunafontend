@@ -70,7 +70,7 @@ var WorkbenchItem = function (props) {
         }
     }, [fullScreenId]);
     return (react_1.default.createElement(antd_1.Col, { span: itemSpan, ref: ref, onClick: function () { return onSelect(unitId); }, style: { transition: 'background .6s', padding: outPadding, border: "1px solid " + borderedColor, height: itemHeight, background: bordered ? activeColor : backgroundColor, position: 'relative' } },
-        react_1.default.createElement(index_1.default, { fontColor: fontColor, isFullscreen: isFullscreen, themeColor: headColor, startTime: startTime, bedname: bedname, status: status, data: data, onDoubleClick: fullScreenCb, loading: loading, onClose: onClose && (function () { return onClose(itemData); }), unitId: unitId, name: pregnancy.name, age: pregnancy.age, bedNO: pregnancy.bedNO, GP: pregnancy.GP, gestationalWeek: pregnancy.gestationalWeek, onSelect: null }, props.children)));
+        react_1.default.createElement(index_1.default, { fontColor: fontColor, isFullscreen: isFullscreen, themeColor: headColor, startTime: startTime, bedname: bedname, status: status, data: data, onDoubleClick: fullScreenCb, loading: loading, onClose: onClose && (function () { return onClose(itemData); }), unitId: unitId, name: pregnancy.name, age: pregnancy.age, bedNO: pregnancy.bedNO, GP: pregnancy.GP, gestationalWeek: pregnancy.gestationalWeek, onSelect: null, backgroundColor: backgroundColor }, props.children)));
 };
 exports.default = react_1.memo(WorkbenchItem);
 ;

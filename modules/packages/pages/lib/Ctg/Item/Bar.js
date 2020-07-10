@@ -12,7 +12,7 @@ var icons_1 = require("@ant-design/icons");
 var antd_1 = require("antd");
 var Bar = function (props) {
     var _a = react_1.useState(false), showBar = _a[0], setShowBar = _a[1];
-    var mutableSuit = props.mutableSuit, onSelect = props.onSelect, unitId = props.unitId;
+    var mutableSuit = props.mutableSuit, onSelect = props.onSelect, unitId = props.unitId, backgroundColor = props.backgroundColor;
     var timeout = react_1.useRef(null);
     var autoHide = function () {
         clearTimeout(timeout.current);
@@ -33,7 +33,7 @@ var Bar = function (props) {
                 bottom: 2 * fp,
                 height: 32,
                 width: showBar ? "calc(100% - " + 4 * fp + "px - 36px)" : 0,
-                background: '#fff',
+                background: backgroundColor,
                 borderRadius: 3,
                 boxShadow: '#aaa 3px 3px 5px 1px',
                 transition: 'width 0.2s ease-out',
@@ -46,7 +46,7 @@ var Bar = function (props) {
                 bottom: 2 * fp,
                 left: 2 * fp,
             } },
-            react_1.default.createElement(antd_1.Button, { icon: showBar ? react_1.default.createElement(icons_1.LeftOutlined, null) : react_1.default.createElement(icons_1.RightOutlined, null), shape: showBar ? 'circle' : null, style: { boxShadow: '#aaa 3px 3px 5px 1px' }, className: "btn", type: "primary", onClick: toggleTool })));
+            react_1.default.createElement(antd_1.Button, { icon: showBar ? react_1.default.createElement(icons_1.CloseOutlined, null) : react_1.default.createElement(icons_1.PlusOutlined, null), shape: 'circle', style: { boxShadow: '#aaa 3px 3px 5px 1px' }, className: "btn", type: "primary", onClick: toggleTool })));
 };
 exports.default = react_1.memo(Bar);
 //# sourceMappingURL=Bar.js.map

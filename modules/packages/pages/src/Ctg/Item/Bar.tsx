@@ -1,13 +1,14 @@
 import React, { useState, useRef, FunctionComponent, memo } from 'react';
-import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import { CloseOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button } from 'antd';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
+import { ICtgLayoutTheme } from '../Layout/types';
 
-interface IProps { mutableSuit: React.MutableRefObject<Suit>, onSelect?: (unitId: string) => void, unitId: string, children: any }
+interface IProps extends ICtgLayoutTheme { mutableSuit: React.MutableRefObject<Suit>, onSelect?: (unitId: string) => void, unitId: string, children: any }
 
 const Bar: FunctionComponent<IProps> = function (props) {
   const [showBar, setShowBar] = useState(false)
-  const { mutableSuit, onSelect, unitId } = props
+  const { mutableSuit, onSelect, unitId,backgroundColor } = props
 
 
   const timeout = useRef(null)
@@ -43,7 +44,7 @@ const Bar: FunctionComponent<IProps> = function (props) {
         // right: 3 * @float-padding + 60px,
         height: 32,
         width: showBar ? `calc(100% - ${4 * fp}px - 36px)` : 0,
-        background: '#fff',
+        background: backgroundColor,
         borderRadius: 3,
         boxShadow: '#aaa 3px 3px 5px 1px',
         transition: 'width 0.2s ease-out',
@@ -64,8 +65,8 @@ const Bar: FunctionComponent<IProps> = function (props) {
       }}
     >
       <Button
-        icon={showBar ? <LeftOutlined /> : <RightOutlined />}
-        shape={showBar ? 'circle' : null}
+        icon={showBar ? <CloseOutlined /> : <PlusOutlined />}
+        shape='circle'
         style={{ boxShadow: '#aaa 3px 3px 5px 1px' }}
         className="btn"
         type="primary"

@@ -36,40 +36,39 @@ export default `
 
 
 .ant-table {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    color: rgba(255,255,255,0.65);
-    font-variant: tabular-nums;
-    line-height: 1.5715;
-    list-style: none;
-    font-feature-settings: tnum;
-    position: relative;
-    z-index: 0;
-    clear: both;
-    font-size: 14px;
-    background: #141414;
-    border-radius: 2px
+    background: var(--customed-color);
+    color:var(--customed-font);
+}
+
+.ant-table.ant-table-small thead > tr > th {
+    background: var(--customed-color);
+    color:var(--customed-font);
+}
+
+.ant-pagination,.ant-pagination-item a{
+    color:var(--customed-font);
+}
+
+.ant-pagination-jump-prev .ant-pagination-item-container .ant-pagination-item-ellipsis, .ant-pagination-jump-next .ant-pagination-item-container .ant-pagination-item-ellipsis{
+    color:var(--customed-font);
+}
+.ant-form-item-label > label{
+    color:var(--customed-font);
+}
+
+.ant-btn-link-disabled, .ant-btn-link.disabled, .ant-btn-link[disabled], .ant-btn-link-disabled:hover, .ant-btn-link.disabled:hover, .ant-btn-link[disabled]:hover, .ant-btn-link-disabled:focus, .ant-btn-link.disabled:focus, .ant-btn-link[disabled]:focus, .ant-btn-link-disabled:active, .ant-btn-link.disabled:active, .ant-btn-link[disabled]:active, .ant-btn-link-disabled.active, .ant-btn-link.disabled.active, .ant-btn-link[disabled].active{
+    color:rgba(255,255,255,.2);
 }
 
 
-
-
-
-
-
-
-
-
-
-.ant-table-footer {
-    color: rgba(255,255,255,0.85);
-    background: rgba(255,255,255,0.04)
+.ant-table-footer,.ant-modal-header,.ant-modal-body,.ant-modal-title,.ant-layout-sider-light,.ant-menu {
+    color: var(--customed-font);
+    background: var(--customed-bg);
 }
 
 .ant-table-thead>tr>th {
-    color: rgba(255,255,255,0.85);
-    background: #1d1d1d;
+    color: var(--customed-font);
+    background: var(--customed-bg);
     border-bottom: 1px solid #303030;
 }
 

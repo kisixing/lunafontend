@@ -9,5 +9,5 @@ interface IProps {
     disabled: boolean;
     [x: string]: any;
 }
-declare const _default: React.MemoExoticComponent<React.ForwardRefExoticComponent<Pick<IProps, string | number> & React.RefAttributes<FormInstance>>>;
+declare const _default: React.MemoExoticComponent<React.ForwardRefExoticComponent<Pick<IProps, import("csstype").AnimationIterationCountProperty> & React.RefAttributes<FormInstance>>>;
 export default _default;

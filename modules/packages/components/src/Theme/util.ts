@@ -113,6 +113,7 @@ const generateStyleHtml = (colorObj) => {
     darkColor,
     isDark
   } = colorObj;
+  window['isDark'] = isDark
   if (!IEVersion()) {
     const cssVar = `
       :root {

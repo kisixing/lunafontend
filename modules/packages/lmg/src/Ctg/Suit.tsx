@@ -15,6 +15,7 @@ import { DrawSelect } from './drawTools/DrawSelect';
 let sid = 0;
 type Canvas = HTMLCanvasElement;
 type Context = CanvasRenderingContext2D;
+
 const defaultCtgConfig = {
   normalarea: 'rgb(224,255,255)',
   selectarea: 'rgba(192,192,192,0.5)',
@@ -35,6 +36,24 @@ const defaultCtgConfig = {
   alarm_delay: 0
 }
 type TCtgConfig = { [x in keyof typeof defaultCtgConfig]?: any }
+
+const lightConfig:TCtgConfig = {
+  
+  primarygrid: 'red',
+  secondarygrid: '#F59997',
+  rule: 'rgba(0,51,102,1)',
+  scale: 'rgba(0,0,0,1)',
+  normalarea: 'rgb(224,255,255)',
+
+}
+const darkConfig:TCtgConfig = {
+  primarygrid: '#8F464D',
+  secondarygrid: '#8F464D',
+  rule: '#bbb',
+  scale: '#bbb',
+  normalarea: '#447865',
+
+}
 export class Suit extends Draw {
   drawAnalyse: DrawAnalyse
   drawSelect: DrawSelect
@@ -61,7 +80,14 @@ export class Suit extends Draw {
   buffersize = 16;
   curr = -16;
   alarmStatus = 0; //报警状态
-  ctgconfig: TCtgConfig = defaultCtgConfig;
+  private _ctgconfig: TCtgConfig = defaultCtgConfig;
+  public get ctgconfig(): TCtgConfig {
+  
+    return Object.assign(this._ctgconfig,window['isDark']?darkConfig:lightConfig);
+  }
+  public set ctgconfig(value: TCtgConfig) {
+    this._ctgconfig = value;
+  }
   fetalposition = {
     fhr1: '',
     fhr2: '',

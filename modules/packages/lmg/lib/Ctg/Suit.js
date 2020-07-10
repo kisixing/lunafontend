@@ -51,6 +51,20 @@ var defaultCtgConfig = {
     print_interval: 20,
     alarm_delay: 0
 };
+var lightConfig = {
+    primarygrid: 'red',
+    secondarygrid: '#F59997',
+    rule: 'rgba(0,51,102,1)',
+    scale: 'rgba(0,0,0,1)',
+    normalarea: 'rgb(224,255,255)',
+};
+var darkConfig = {
+    primarygrid: '#8F464D',
+    secondarygrid: '#8F464D',
+    rule: '#bbb',
+    scale: '#bbb',
+    normalarea: '#447865',
+};
 var Suit = (function (_super) {
     __extends(Suit, _super);
     function Suit(canvasgrid, canvasdata, canvasline, canvasselect, canvasanalyse, wrap, barTool, type, ctgconfig) {
@@ -71,7 +85,7 @@ var Suit = (function (_super) {
         _this.buffersize = 16;
         _this.curr = -16;
         _this.alarmStatus = 0;
-        _this.ctgconfig = defaultCtgConfig;
+        _this._ctgconfig = defaultCtgConfig;
         _this.fetalposition = {
             fhr1: '',
             fhr2: '',
@@ -125,6 +139,16 @@ var Suit = (function (_super) {
         }
         return _this;
     }
+    Object.defineProperty(Suit.prototype, "ctgconfig", {
+        get: function () {
+            return Object.assign(this._ctgconfig, window['isDark'] ? darkConfig : lightConfig);
+        },
+        set: function (value) {
+            this._ctgconfig = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(Suit.prototype, "leftViewposition", {
         get: function () {
             return this.rightViewPosition >= this.width * 2 ? this.rightViewPosition - this.width * 2 : 0;

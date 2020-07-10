@@ -164,7 +164,7 @@ export default `
     border-color: var(--theme-active-color);
   }
   .ant-btn-link {
-    color: var(--theme-color);
+    color: var(--customed-font);
   }
   .ant-btn-link:hover,
   .ant-btn-link:focus {

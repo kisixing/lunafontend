@@ -58,7 +58,9 @@ export declare class Suit extends Draw {
     buffersize: number;
     curr: number;
     alarmStatus: number;
-    ctgconfig: TCtgConfig;
+    private _ctgconfig;
+    get ctgconfig(): TCtgConfig;
+    set ctgconfig(value: TCtgConfig);
     fetalposition: {
         fhr1: string;
         fhr2: string;
