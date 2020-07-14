@@ -974,6 +974,12 @@ export default `
   .ant-layout {
     background: var(--customed-bg);
   }
+  .ant-menu-item-group-title{
+    color:var(--customed-font);
+  }
+  .ant-btn-link:hover, .ant-btn-link:focus{
+    border-color:transparent;
+  }
   `
   )
   ;

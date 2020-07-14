@@ -296,4 +296,13 @@ tr.ant-table-expanded-row>td,tr.ant-table-expanded-row:hover>td {
 .ant-card-extra{
     color:var(--customed-font);
 }
+.ant-menu-inline, .ant-menu-vertical, .ant-menu-vertical-left{
+    border-right: 1px solid var(--customed-bg);
+
+}
+ .ant-btn-link:focus{
+    border-color:transparent;
+    background-color:transparent;
+    color:var(--customed-font);
+}
 `

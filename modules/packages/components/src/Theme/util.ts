@@ -127,6 +127,7 @@ const generateStyleHtml = (colorObj) => {
         --customed-color:#fff;
         --customed-font:#5A6676;
         --customed-border:#DBDBDB;
+        --customed-base-color:#007AFF;
       }
     `;
     return `${cssVar}\n${isDark ? configDark(cssContent) : cssContent}`;
