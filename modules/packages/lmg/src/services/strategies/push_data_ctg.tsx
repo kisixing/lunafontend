@@ -25,7 +25,6 @@ export function pushData(target: ICacheItem, data: ICtgData) {
     const { index, toco, fm, fmp } = data
     console.log('this', index)
     for (let fetal = 0; fetal < target.fetal_num; fetal++) {
-        if (fetal === 1) continue
         if (!target.fhr[fetal]) {
             continue;
         }
