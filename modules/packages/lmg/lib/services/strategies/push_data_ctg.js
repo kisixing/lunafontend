@@ -3,8 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 function pushData(target, data) {
     var index = data.index, toco = data.toco, fm = data.fm, fmp = data.fmp;
     for (var fetal = 0; fetal < target.fetal_num; fetal++) {
-        if (fetal === 1)
-            continue;
         if (!target.fhr[fetal]) {
             continue;
         }
