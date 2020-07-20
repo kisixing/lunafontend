@@ -42,14 +42,14 @@ export class DrawAnalyse extends Draw {
     setData(analyseData: obvue.ctg_exams_analyse,) {
         this.analysisData = analyseData
     }
-    drawBaseline(cur, color, yspan, xspan, max, basetop) {
+    drawBaseline(cur, show = true, color, yspan, xspan, max, basetop) {
 
         //清空分析画布
         let { context2D, width, height, analysisData: analyseData } = this;
         width = Math.floor(width)
         context2D && context2D.clearRect(0, 0, width, height)
 
-        if (!analyseData) {
+        if (!analyseData || !show) {
             return
         }
         const { analysis: { fhrbaselineMinute: baseline, start, end } } = analyseData
@@ -106,7 +106,7 @@ export class DrawAnalyse extends Draw {
 
         }
     }
-    analyse(type: AnalyseType, start?: number, end?: number, data = this.analysisData) {
+    analyse(type: AnalyseType, showBase = true, start?: number, end?: number, data = this.analysisData) {
         if (!data) return
         const { suit } = this
         this.setData(data)
@@ -121,7 +121,7 @@ export class DrawAnalyse extends Draw {
         //this.drawobj.drawdot(this.canvasline.width * 2, false);
         //kisi 2020-03-05 
         let newData = this.ctgscore(type)
-        suit.drawobj.drawdot(suit.rightViewPosition, false);
+        suit.drawobj.drawdot(suit.rightViewPosition, false, showBase);
         return newData
     }
     //kisi 2019-10-28 绘制 acc dec
@@ -362,6 +362,7 @@ export class DrawAnalyse extends Draw {
             analysis.ldtimes = this.countDec(analysis.start, analysis.end, 'LD');//analysis.ldtimes;
             analysis.vdtimes = this.countDec(analysis.start, analysis.end, 'VD');//analysis.vdtimes;
             analysis.edtimes = this.countDec(analysis.start, analysis.end, 'ED');//analysis.edtimes;
+            //@ts-ignore
             score.nstdata.total = score.nstdata.accamplscore + score.nstdata.accdurationscore + score.nstdata.bhrscore + score.nstdata.fmscore + score.nstdata.ltvscore;
             return this.analysisData = analysisData
         }
@@ -436,6 +437,7 @@ export class DrawAnalyse extends Draw {
             } else if (fmnum > 4) {
                 score.krebsdata.fmscore = 2;
             }
+            //@ts-ignore
             score.krebsdata.total = score.krebsdata.bhrscore + score.krebsdata.accscore + score.krebsdata.decscore + score.krebsdata.ltvscore + score.krebsdata.stvscore + score.krebsdata.fmscore;
         }
         //Fischer 20分钟
@@ -485,18 +487,19 @@ export class DrawAnalyse extends Draw {
             let ed = analysis.edtimes = this.countDec(analysis.start, analysis.end, 'ED');//analysis.edtimes;
             if (ld > 0) {
                 score.fischerdata.decscore = 0;
-                score.fischerdata.decvalue = 'LD';
+                score.fischerdata.decvalue = 0;
             } else if (vd > 0) {
                 score.fischerdata.decscore = 1;
-                score.fischerdata.decvalue = 'VD';
+                score.fischerdata.decvalue = 1;
             } else {
                 if (ed > 0) {
-                    score.fischerdata.decvalue = 'ED';
+                    score.fischerdata.decvalue = 2;
                 } else {
-                    score.fischerdata.decvalue = '无';
+                    score.fischerdata.decvalue = 2;
                 }
                 score.fischerdata.decscore = 2;
             }
+            //@ts-ignore
             score.fischerdata.total = score.fischerdata.bhrscore + score.fischerdata.accscore + score.fischerdata.decscore + score.fischerdata.ltvscore + score.fischerdata.stvscore;
         }
         //NST-sogc 20~40分钟
@@ -505,11 +508,11 @@ export class DrawAnalyse extends Draw {
             const length = analysis.fhrbaselineMinute.length;
             // 基线选项
             score.sogcdata.bhrvalue = bhr;
-            if (bhr < 100 || (bhr > 160 && length > 30))
+            if (this.inRange(bhr, 110, 160))
                 score.sogcdata.bhrscore = 0;
             else if (this.inRange(bhr, 100, 109) || bhr > 160)
                 score.sogcdata.bhrscore = 1;
-            else if (this.inRange(bhr, 110, 160)) {
+            else if (bhr < 100) {
                 score.sogcdata.bhrscore = 2;
             }
             // 变异
@@ -570,12 +573,13 @@ export class DrawAnalyse extends Draw {
                 }
                 score.sogcdata.decscore = 2;
             }
+            score.sogcdata.total = 1;
+            //@ts-ignore
             if (score.sogcdata.bhrscore + score.sogcdata.accscore + score.sogcdata.decscore + score.sogcdata.ltvscore == 8) {
                 score.sogcdata.total = 2;
             } else if (score.sogcdata.bhrscore == 0 || score.sogcdata.accscore == 0 || score.sogcdata.decscore == 0 || score.sogcdata.ltvscore) {
                 score.sogcdata.total = 0;
             }
-            score.sogcdata.total = 1;
             score.sogcdata.result = resultMap[score.sogcdata.total]
         }
         //CST
@@ -611,12 +615,15 @@ export class DrawAnalyse extends Draw {
             }
             // 加速
             let accnum = this.countAcc(analysis.start, analysis.end);
-            score.cstdata.accvalue = accnum;
+            // score.cstdata.accvalue = accnum;
             if (accnum == 0) {
                 score.cstdata.accscore = 0;
+                score.cstdata.accvalue = 0;
             } else if (this.cycleAcc() == 1) {
+                score.cstdata.accvalue = 1;
                 score.cstdata.accscore = 1;
             } else {
+                score.cstdata.accvalue = 2;
                 score.cstdata.accscore = 2;
             }
             // 减速
@@ -625,31 +632,31 @@ export class DrawAnalyse extends Draw {
             let ed = analysis.edtimes = this.countDec(analysis.start, analysis.end, 'ED');//analysis.edtimes;
             if (ld > 0) {
                 score.cstdata.decscore = 0;
-                score.cstdata.decvalue = 'LD';
+                score.cstdata.decvalue = 0.1; // 晚期
+            } else if (ed > 0) {
+                //判为其他
+                score.cstdata.decscore = 0;
+                score.cstdata.decvalue = 0.2;// 其他
             } else if (vd > 0) {
                 score.cstdata.decscore = 1;
-                score.cstdata.decvalue = 'VD';
+                score.cstdata.decvalue = 1;// 变异
             } else {
-                if (ed > 0) {
-                    //判为其他
-                    score.cstdata.decvalue = 'ED';
-                    score.cstdata.decscore = 0;
-                } else {
-                    score.cstdata.decvalue = '无';
-                    score.cstdata.decscore = 2;
-                }
+                score.cstdata.decscore = 2;
+                score.cstdata.decvalue = 2;// 无
             }
+
+            //@ts-ignore
             score.cstdata.total = score.cstdata.bhrscore + score.cstdata.accscore + score.cstdata.decscore + score.cstdata.ltvscore + score.cstdata.stvscore;
         }
         //CST-OCT sogc
         else if (type == 'Cstoct') {
             // 基线选项
             score.cstoctdata.bhrvalue = bhr;
-            if (bhr < 100 || (bhr > 160 && length > 30))
+            if (this.inRange(bhr, 110, 160))
                 score.cstoctdata.bhrscore = 0;
             else if (this.inRange(bhr, 100, 109) || bhr > 160)
                 score.cstoctdata.bhrscore = 1;
-            else if (this.inRange(bhr, 110, 160)) {
+            else if (bhr < 100) { // bhr < 100 || (bhr > 160 && length > 30)
                 score.cstoctdata.bhrscore = 2;
             }
             // 变异
@@ -726,18 +733,21 @@ export class DrawAnalyse extends Draw {
                 }
                 score.cstoctdata.decscore = 2;
             }
-            if (score.cstoctdata.bhrscore + score.cstoctdata.accscore + score.cstoctdata.decscore + score.cstoctdata.ltvscore == 8) {
+            score.cstoctdata.total = 1;
+            const { bhrscore, accscore, sinusoidscore, ltvscore, ldscore, edscore, vdscore } = score.cstoctdata
+            const all = [bhrscore, accscore, sinusoidscore, ltvscore, ldscore, edscore, vdscore]
+            //@ts-ignore
+            if (all.every(_ => _ === 2)) {
                 score.cstoctdata.total = 2;
-            } else if (score.cstoctdata.bhrscore == 0 || score.cstoctdata.accscore == 0 || score.cstoctdata.decscore == 0 || score.cstoctdata.ltvscore) {
+            } else if (all.some(_ => _ === 0)) {
                 score.cstoctdata.total = 0;
             }
-            score.cstoctdata.total = 1;
             score.cstoctdata.result = resultMap[score.cstoctdata.total]
 
         }
-        genDeformedScore(score.cstoctdata)
-        genDeformedScore(score.sogcdata)
-        console.log('xxx', score)
+        // genDeformedScore(score.cstoctdata)
+        // genDeformedScore(score.sogcdata)
+        console.log('xxx', analysisData)
         return (this.analysisData = analysisData)
 
     }

@@ -23,8 +23,8 @@ export declare class DrawAnalyse extends Draw {
     constructor(wrap: HTMLElement, canvas: HTMLCanvasElement, suit: Suit);
     init(): void;
     setData(analyseData: obvue.ctg_exams_analyse): void;
-    drawBaseline(cur: any, color: any, yspan: any, xspan: any, max: any, basetop: any): void;
-    analyse(type: AnalyseType, start?: number, end?: number, data?: {
+    drawBaseline(cur: any, show: boolean, color: any, yspan: any, xspan: any, max: any, basetop: any): void;
+    analyse(type: AnalyseType, showBase?: boolean, start?: number, end?: number, data?: {
         analysis?: {
             bhr: number;
             ltv: number;
@@ -77,7 +77,7 @@ export declare class DrawAnalyse extends Draw {
     inRange: (value: number, min: number, max: number) => boolean;
     countAcc: (start: number, end: number) => number;
     countDec: (start: number, end: number, type: string) => number;
-    cycleAcc: () => 1 | 0;
+    cycleAcc: () => 0 | 1;
     countFm: (start: number, end: number) => number;
     fhrDuration: (start: number, end: number) => number;
     fhrAmpl: (start: number, end: number) => number;

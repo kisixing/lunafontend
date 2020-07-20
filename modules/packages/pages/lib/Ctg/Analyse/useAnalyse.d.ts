@@ -69,5 +69,7 @@ declare const _default: (v: MutableRefObject<Suit>, docid: string, fetal: any, s
     };
     autoAnalyse: boolean;
     setAutoAnalyse(s: boolean): void;
+    showBase: boolean;
+    setShowBase(s: boolean): void;
 };
 export default _default;

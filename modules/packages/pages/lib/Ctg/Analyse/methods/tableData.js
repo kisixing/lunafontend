@@ -1,5 +1,31 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var react_1 = __importDefault(require("react"));
+var antd_1 = require("antd");
+function getDeformedOptions() {
+    return {
+        S: function (props) {
+            return (react_1.default.createElement(antd_1.Select, __assign({ style: { width: 80 } }, props),
+                react_1.default.createElement(antd_1.Select.Option, { value: 0 }, "\u6B63\u5E38"),
+                react_1.default.createElement(antd_1.Select.Option, { value: 1 }, "\u53EF\u7591"),
+                react_1.default.createElement(antd_1.Select.Option, { value: 2 }, "\u5F02\u5E38")));
+        }
+    };
+}
 var tableData = {
     Fischer: [
         {
@@ -36,6 +62,12 @@ var tableData = {
             1: 'VD',
             2: '无，其它',
             key: 'dec',
+            R: function (props) {
+                return (react_1.default.createElement(antd_1.Select, __assign({ style: { width: 100 } }, props),
+                    react_1.default.createElement(antd_1.Select.Option, { value: 0 }, "LD"),
+                    react_1.default.createElement(antd_1.Select.Option, { value: 1 }, "VD"),
+                    react_1.default.createElement(antd_1.Select.Option, { value: 2 }, "\u65E0\uFF0C\u5176\u5B83")));
+            }
         },
     ],
     Nst: [
@@ -57,21 +89,21 @@ var tableData = {
             name: '胎动FHR上升时间(s)',
             0: '<10s',
             1: '10~14s',
-            2: '>15s',
+            2: '≥115s',
             key: 'accduration',
         },
         {
             name: '胎动FHR变化(bpm)',
             0: '<10',
             1: '10~14',
-            2: '>15',
+            2: '≥15',
             key: 'accampl',
         },
         {
             name: '胎动次数(次)',
             0: '无',
             1: '1~2',
-            2: '>3',
+            2: '≥13',
             key: 'fm',
         },
     ],
@@ -147,6 +179,12 @@ var tableData = {
             1: '周期性',
             2: '散在性',
             key: 'acc',
+            R: function (props) {
+                return (react_1.default.createElement(antd_1.Select, __assign({ style: { width: 100 } }, props),
+                    react_1.default.createElement(antd_1.Select.Option, { value: 0 }, "\u65E0"),
+                    react_1.default.createElement(antd_1.Select.Option, { value: 1 }, "\u5468\u671F\u6027"),
+                    react_1.default.createElement(antd_1.Select.Option, { value: 2 }, "\u6563\u5728\u6027")));
+            }
         },
         {
             name: '减速',
@@ -154,6 +192,13 @@ var tableData = {
             1: '变异',
             2: '无',
             key: 'dec',
+            R: function (props) {
+                return (react_1.default.createElement(antd_1.Select, __assign({ style: { width: 100 } }, props),
+                    react_1.default.createElement(antd_1.Select.Option, { value: 0.1 }, "\u665A\u671F"),
+                    react_1.default.createElement(antd_1.Select.Option, { value: 0.2 }, "\u5176\u4ED6"),
+                    react_1.default.createElement(antd_1.Select.Option, { value: 1 }, "\u53D8\u5F02"),
+                    react_1.default.createElement(antd_1.Select.Option, { value: 2 }, "\u65E0")));
+            }
         },
     ],
     Sogc: [
@@ -185,7 +230,7 @@ var tableData = {
             2: '<2次>80分钟',
             key: 'acc',
         },
-    ],
+    ].map(function (_) { return (__assign(__assign({}, _), getDeformedOptions())); }),
     Cstoct: [
         {
             name: '基线',
@@ -236,7 +281,7 @@ var tableData = {
             2: '有',
             key: 'sinusoid',
         },
-    ],
+    ].map(function (_) { return (__assign(__assign({}, _), getDeformedOptions())); }),
 };
 exports.tableData = tableData;
 tableData.Sogc.deformed = true;

@@ -27,7 +27,7 @@ var CTGChart = function (docid, single) {
     var _a = react_1.useState(1), fetal = _a[0], setFetal = _a[1];
     var _b = react_1.useState(false), loading = _b[0], setLoading = _b[1];
     var _c = react_1.useState({ fetalnum: '1', docid: docid }), ctgData = _c[0], setCtgData = _c[1];
-    react_1.useEffect(function () {
+    function fetchData() {
         if (docid) {
             setLoading(true);
             request_1.default.get("/ctg-exams-data/" + docid).then(function (res) {
@@ -35,6 +35,9 @@ var CTGChart = function (docid, single) {
             }).finally(function () { return setLoading(false); });
             setFetal(1);
         }
+    }
+    react_1.useEffect(function () {
+        fetchData();
     }, [docid]);
     react_1.useEffect(function () {
         var fn = function (data) {
@@ -55,7 +58,7 @@ var CTGChart = function (docid, single) {
         console.log('setFhr', JSON.parse(JSON.stringify(data)), JSON.parse(JSON.stringify(ctgData)));
         setCtgData(data);
     }
-    return { ctgData: ctgData, loading: loading, setFhr: setFhr, fetal: fetal, setFetal: setFetal };
+    return { ctgData: ctgData, loading: loading, setFhr: setFhr, fetal: fetal, setFetal: setFetal, fetchData: fetchData };
 };
 exports.default = CTGChart;
 //# sourceMappingURL=useCtgData.js.map

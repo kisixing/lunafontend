@@ -1,4 +1,20 @@
+import React from "react";
 import { AnalyseType } from "@lianmed/lmg/lib/interface"
+import { Select } from "antd";
+
+function getDeformedOptions() {
+    return {
+        S: (props) => {
+            return (
+                <Select style={{ width: 80 }} {...props}>
+                    <Select.Option value={0}>正常</Select.Option>
+                    <Select.Option value={1}>可疑</Select.Option>
+                    <Select.Option value={2}>异常</Select.Option>
+                </Select>
+            )
+        }
+    }
+}
 
 const tableData: { [x in AnalyseType]: any } = {
 
@@ -39,6 +55,15 @@ const tableData: { [x in AnalyseType]: any } = {
             1: 'VD',
             2: '无，其它',
             key: 'dec',
+            R: (props) => {
+                return (
+                    <Select style={{ width: 100 }} {...props}>
+                        <Select.Option value={0}>LD</Select.Option>
+                        <Select.Option value={1}>VD</Select.Option>
+                        <Select.Option value={2}>无，其它</Select.Option>
+                    </Select>
+                )
+            }
         },
     ],
     Nst: [
@@ -61,7 +86,7 @@ const tableData: { [x in AnalyseType]: any } = {
             name: '胎动FHR上升时间(s)',
             0: '<10s',
             1: '10~14s',
-            2: '>15s',
+            2: '≥115s',
             key: 'accduration',
 
         },
@@ -69,14 +94,14 @@ const tableData: { [x in AnalyseType]: any } = {
             name: '胎动FHR变化(bpm)',
             0: '<10',
             1: '10~14',
-            2: '>15',
+            2: '≥15',
             key: 'accampl',
         },
         {
             name: '胎动次数(次)',
             0: '无',
             1: '1~2',
-            2: '>3',
+            2: '≥13',
             key: 'fm',
         },
     ],
@@ -154,6 +179,15 @@ const tableData: { [x in AnalyseType]: any } = {
             1: '周期性',
             2: '散在性',
             key: 'acc',
+            R: (props) => {
+                return (
+                    <Select style={{ width: 100 }} {...props}>
+                        <Select.Option value={0}>无</Select.Option>
+                        <Select.Option value={1}>周期性</Select.Option>
+                        <Select.Option value={2}>散在性</Select.Option>
+                    </Select>
+                )
+            }
         },
         {
             name: '减速',
@@ -161,9 +195,19 @@ const tableData: { [x in AnalyseType]: any } = {
             1: '变异',
             2: '无',
             key: 'dec',
+            R: (props) => {
+                return (
+                    <Select style={{ width: 100 }} {...props}>
+                        <Select.Option value={0.1}>晚期</Select.Option>
+                        <Select.Option value={0.2}>其他</Select.Option>
+                        <Select.Option value={1}>变异</Select.Option>
+                        <Select.Option value={2}>无</Select.Option>
+                    </Select>
+                )
+            }
         },
     ],
-    Sogc:[
+    Sogc: [
         {
             name: '基线',
             0: '110~160bpm',
@@ -208,7 +252,7 @@ const tableData: { [x in AnalyseType]: any } = {
         //     key: 'ltv',
         // },
 
-    ],
+    ].map(_ => ({ ..._, ...getDeformedOptions() })),
     Cstoct: [
         {
             name: '基线',
@@ -267,7 +311,7 @@ const tableData: { [x in AnalyseType]: any } = {
         //     key: 'dec',
         // },
 
-    ],
+    ].map(_ => ({ ..._, ...getDeformedOptions() })),
 }
 tableData.Sogc.deformed = true
 tableData.Cstoct.deformed = true

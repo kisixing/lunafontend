@@ -16,7 +16,8 @@ const CTGChart = (docid: string, single = false) => {
 
     const [loading, setLoading] = useState(false)
     const [ctgData, setCtgData] = useState<obvue.ctg_exams_data>({ fetalnum: '1', docid })
-    useEffect(() => {
+
+    function fetchData() {
         if (docid) {
             setLoading(true)
             request.get(`/ctg-exams-data/${docid}`).then(res => {
@@ -24,6 +25,9 @@ const CTGChart = (docid: string, single = false) => {
             }).finally(() => setLoading(false))
             setFetal(1)
         }
+    }
+    useEffect(() => {
+        fetchData()
     }, [docid])
 
     useEffect(() => {
@@ -40,12 +44,12 @@ const CTGChart = (docid: string, single = false) => {
         const { fhr1 } = ctgData
         const key = `fhr${index}`
         const value = ctgData[`_${key}`]
-        const emptyData = Array(fhr1?fhr1.length:0).fill(0).join()
+        const emptyData = Array(fhr1 ? fhr1.length : 0).fill(0).join()
         const data = { ...ctgData, fhr1: emptyData, fhr2: emptyData, fhr3: emptyData, [key]: value }
         console.log('setFhr', JSON.parse(JSON.stringify(data)), JSON.parse(JSON.stringify(ctgData)))
         setCtgData(data)
     }
-    return { ctgData, loading, setFhr, fetal, setFetal };
+    return { ctgData, loading, setFhr, fetal, setFetal, fetchData };
 }
 
 export default CTGChart

@@ -49,7 +49,7 @@ export const Ctg_Analyse: FC<{
 }) {
     note = note ? note : docid
     if (!note) return null
-    const { ctgData, loading, setFhr, fetal, setFetal } = useCtgData(note, true)
+    const { ctgData, loading, setFhr, fetal, setFetal, fetchData } = useCtgData(note, true)
     const [disabled, setDisabled] = useState(true)
     const [visible, setVisible] = useState(false)
     const [pdfBase64, setPdfBase64] = useState('')
@@ -73,6 +73,8 @@ export const Ctg_Analyse: FC<{
       setAutoFm,
       autoAnalyse,
       setAutoAnalyse,
+      showBase,
+      setShowBase,
       initData
     } = useAnalyse(ref, note, fetal, setFhr, ctgData)
 
@@ -140,8 +142,12 @@ export const Ctg_Analyse: FC<{
             const d = JSON.parse(diagnosis) || {}
             t = (
               <div>
-                <div>NST：<span>{d.NST}</span></div>
-                <div>CST/OCT：<span>{d.CST_OCT}</span></div>
+                {
+                  d.NST && <div>NST：<span>{d.NST}</span></div>
+                }
+                {
+                  d.CST_OCT && <div>CST/OCT：<span>{d.CST_OCT}</span></div>
+                }
                 <div>诊断：<span>{d.diagnosistxt}</span></div>
               </div>
             )
@@ -170,14 +176,18 @@ export const Ctg_Analyse: FC<{
           <Col span={17} >
             <Score disabled={disabled} endTime={endTime}  {...others} fetal={fetal} setFetal={setFetal} ctgData={ctgData} docid={note} v={ref.current} className="bordered" />
             <div style={{ position: 'absolute', right: 12, bottom: 0 }}>
-              {isToShort && <Alert message="选段时间过短" style={{ display: 'inline-block', border: 0, padding: '1px 4px', marginRight: 10 }} />}
+              {isToShort && <Alert message="选段时间过短" style={{ background: 'red', color: '#fff', display: 'inline-block', border: 0, padding: '1px 4px', marginRight: 10 }} />}
 
               <Button size="small" style={{ marginBottom: 10 }} onClick={history} disabled={btnDisabled}>历史分析</Button>
               <Button size="small" style={{ marginBottom: 10 }} disabled={!note} onClick={() => setDisabled(!disabled)}>{disabled ? '修改评分' : '确认'}</Button>
             </div>
             <Checkbox checked={autoFm} onChange={e => setAutoFm(e.target.checked)} style={{ position: 'absolute', left: 18, bottom: 8 }}>自动胎动</Checkbox>
             <Checkbox checked={autoAnalyse} onChange={e => setAutoAnalyse(e.target.checked)} style={{ position: 'absolute', left: 100, bottom: 8 }}>弹窗时自动分析</Checkbox>
-            <Button style={{ position: 'absolute', right: 12, top: 16 }} size="small" type="primary" onClick={reAnalyse as any} loading={analyseLoading} disabled={!note || isToShort}>重新分析</Button>
+            <Checkbox checked={showBase} onChange={e => setShowBase(e.target.checked)} style={{ position: 'absolute', left: 228, bottom: 8 }}>显示基线</Checkbox>
+            <div style={{ position: 'absolute', right: 20, top: 16 }}>
+              <Button size="small" type="primary" onClick={fetchData as any} loading={loading} >刷新数据</Button>
+              <Button size="small" type="primary" onClick={reAnalyse as any} loading={analyseLoading} disabled={!note || isToShort}>重新分析</Button>
+            </div>
 
           </Col>
           <Col span={7}  >

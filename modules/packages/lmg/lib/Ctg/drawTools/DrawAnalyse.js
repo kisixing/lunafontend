@@ -397,18 +397,18 @@ var DrawAnalyse = (function (_super) {
                 var ed = analysis.edtimes = _this.countDec(analysis.start, analysis.end, 'ED');
                 if (ld > 0) {
                     score.fischerdata.decscore = 0;
-                    score.fischerdata.decvalue = 'LD';
+                    score.fischerdata.decvalue = 0;
                 }
                 else if (vd > 0) {
                     score.fischerdata.decscore = 1;
-                    score.fischerdata.decvalue = 'VD';
+                    score.fischerdata.decvalue = 1;
                 }
                 else {
                     if (ed > 0) {
-                        score.fischerdata.decvalue = 'ED';
+                        score.fischerdata.decvalue = 2;
                     }
                     else {
-                        score.fischerdata.decvalue = '无';
+                        score.fischerdata.decvalue = 2;
                     }
                     score.fischerdata.decscore = 2;
                 }
@@ -417,11 +417,11 @@ var DrawAnalyse = (function (_super) {
             else if (type == 'Sogc') {
                 var length_1 = analysis.fhrbaselineMinute.length;
                 score.sogcdata.bhrvalue = bhr;
-                if (bhr < 100 || (bhr > 160 && length_1 > 30))
+                if (_this.inRange(bhr, 110, 160))
                     score.sogcdata.bhrscore = 0;
                 else if (_this.inRange(bhr, 100, 109) || bhr > 160)
                     score.sogcdata.bhrscore = 1;
-                else if (_this.inRange(bhr, 110, 160)) {
+                else if (bhr < 100) {
                     score.sogcdata.bhrscore = 2;
                 }
                 score.sogcdata.ltvvalue = analysis.ltv;
@@ -488,13 +488,13 @@ var DrawAnalyse = (function (_super) {
                     }
                     score.sogcdata.decscore = 2;
                 }
+                score.sogcdata.total = 1;
                 if (score.sogcdata.bhrscore + score.sogcdata.accscore + score.sogcdata.decscore + score.sogcdata.ltvscore == 8) {
                     score.sogcdata.total = 2;
                 }
                 else if (score.sogcdata.bhrscore == 0 || score.sogcdata.accscore == 0 || score.sogcdata.decscore == 0 || score.sogcdata.ltvscore) {
                     score.sogcdata.total = 0;
                 }
-                score.sogcdata.total = 1;
                 score.sogcdata.result = resultMap[score.sogcdata.total];
             }
             else if (type == 'Cst') {
@@ -531,14 +531,16 @@ var DrawAnalyse = (function (_super) {
                     score.cstdata.stvscore = 2;
                 }
                 var accnum = _this.countAcc(analysis.start, analysis.end);
-                score.cstdata.accvalue = accnum;
                 if (accnum == 0) {
                     score.cstdata.accscore = 0;
+                    score.cstdata.accvalue = 0;
                 }
                 else if (_this.cycleAcc() == 1) {
+                    score.cstdata.accvalue = 1;
                     score.cstdata.accscore = 1;
                 }
                 else {
+                    score.cstdata.accvalue = 2;
                     score.cstdata.accscore = 2;
                 }
                 var ld = analysis.ldtimes = _this.countDec(analysis.start, analysis.end, 'LD');
@@ -546,31 +548,29 @@ var DrawAnalyse = (function (_super) {
                 var ed = analysis.edtimes = _this.countDec(analysis.start, analysis.end, 'ED');
                 if (ld > 0) {
                     score.cstdata.decscore = 0;
-                    score.cstdata.decvalue = 'LD';
+                    score.cstdata.decvalue = 0.1;
+                }
+                else if (ed > 0) {
+                    score.cstdata.decscore = 0;
+                    score.cstdata.decvalue = 0.2;
                 }
                 else if (vd > 0) {
                     score.cstdata.decscore = 1;
-                    score.cstdata.decvalue = 'VD';
+                    score.cstdata.decvalue = 1;
                 }
                 else {
-                    if (ed > 0) {
-                        score.cstdata.decvalue = 'ED';
-                        score.cstdata.decscore = 0;
-                    }
-                    else {
-                        score.cstdata.decvalue = '无';
-                        score.cstdata.decscore = 2;
-                    }
+                    score.cstdata.decscore = 2;
+                    score.cstdata.decvalue = 2;
                 }
                 score.cstdata.total = score.cstdata.bhrscore + score.cstdata.accscore + score.cstdata.decscore + score.cstdata.ltvscore + score.cstdata.stvscore;
             }
             else if (type == 'Cstoct') {
                 score.cstoctdata.bhrvalue = bhr;
-                if (bhr < 100 || (bhr > 160 && length > 30))
+                if (_this.inRange(bhr, 110, 160))
                     score.cstoctdata.bhrscore = 0;
                 else if (_this.inRange(bhr, 100, 109) || bhr > 160)
                     score.cstoctdata.bhrscore = 1;
-                else if (_this.inRange(bhr, 110, 160)) {
+                else if (bhr < 100) {
                     score.cstoctdata.bhrscore = 2;
                 }
                 score.cstoctdata.ltvvalue = analysis.ltv;
@@ -650,18 +650,18 @@ var DrawAnalyse = (function (_super) {
                     }
                     score.cstoctdata.decscore = 2;
                 }
-                if (score.cstoctdata.bhrscore + score.cstoctdata.accscore + score.cstoctdata.decscore + score.cstoctdata.ltvscore == 8) {
+                score.cstoctdata.total = 1;
+                var _a = score.cstoctdata, bhrscore = _a.bhrscore, accscore = _a.accscore, sinusoidscore = _a.sinusoidscore, ltvscore = _a.ltvscore, ldscore = _a.ldscore, edscore = _a.edscore, vdscore = _a.vdscore;
+                var all = [bhrscore, accscore, sinusoidscore, ltvscore, ldscore, edscore, vdscore];
+                if (all.every(function (_) { return _ === 2; })) {
                     score.cstoctdata.total = 2;
                 }
-                else if (score.cstoctdata.bhrscore == 0 || score.cstoctdata.accscore == 0 || score.cstoctdata.decscore == 0 || score.cstoctdata.ltvscore) {
+                else if (all.some(function (_) { return _ === 0; })) {
                     score.cstoctdata.total = 0;
                 }
-                score.cstoctdata.total = 1;
                 score.cstoctdata.result = resultMap[score.cstoctdata.total];
             }
-            genDeformedScore(score.cstoctdata);
-            genDeformedScore(score.sogcdata);
-            console.log('xxx', score);
+            console.log('xxx', analysisData);
             return (_this.analysisData = analysisData);
         };
         _this.suit = suit;
@@ -673,11 +673,12 @@ var DrawAnalyse = (function (_super) {
     DrawAnalyse.prototype.setData = function (analyseData) {
         this.analysisData = analyseData;
     };
-    DrawAnalyse.prototype.drawBaseline = function (cur, color, yspan, xspan, max, basetop) {
+    DrawAnalyse.prototype.drawBaseline = function (cur, show, color, yspan, xspan, max, basetop) {
+        if (show === void 0) { show = true; }
         var _a = this, context2D = _a.context2D, width = _a.width, height = _a.height, analyseData = _a.analysisData;
         width = Math.floor(width);
         context2D && context2D.clearRect(0, 0, width, height);
-        if (!analyseData) {
+        if (!analyseData || !show) {
             return;
         }
         var _b = analyseData.analysis, baseline = _b.fhrbaselineMinute, start = _b.start, end = _b.end;
@@ -723,7 +724,8 @@ var DrawAnalyse = (function (_super) {
             context2D.stroke();
         }
     };
-    DrawAnalyse.prototype.analyse = function (type, start, end, data) {
+    DrawAnalyse.prototype.analyse = function (type, showBase, start, end, data) {
+        if (showBase === void 0) { showBase = true; }
         if (data === void 0) { data = this.analysisData; }
         if (!data)
             return;
@@ -736,7 +738,7 @@ var DrawAnalyse = (function (_super) {
         suit.drawSelect.$selectrpend = data.analysis.end = end;
         suit.drawSelect.$selectrpstart = data.analysis.start = start;
         var newData = this.ctgscore(type);
-        suit.drawobj.drawdot(suit.rightViewPosition, false);
+        suit.drawobj.drawdot(suit.rightViewPosition, false, showBase);
         return newData;
     };
     DrawAnalyse.prototype.revicePoint = function (x, y) {

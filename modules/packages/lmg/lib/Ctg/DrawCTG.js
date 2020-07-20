@@ -381,8 +381,9 @@ var DrawCTG = (function () {
     };
     DrawCTG.prototype.drawdotright = function (cur) {
     };
-    DrawCTG.prototype.drawdot = function (cur, isemit) {
+    DrawCTG.prototype.drawdot = function (cur, isemit, showBase) {
         if (isemit === void 0) { isemit = false; }
+        if (showBase === void 0) { showBase = true; }
         cur = Math.round(cur);
         var _a = this, suit = _a.suit, linecontext = _a.linecontext, max = _a.max;
         var drawAnalyse = suit.drawAnalyse;
@@ -584,7 +585,7 @@ var DrawCTG = (function () {
                 this.showfm(lastx);
             }
         }
-        drawAnalyse.drawBaseline(cur, 'black', this.yspan, this.xspan, max, this.basetop);
+        drawAnalyse.drawBaseline(cur, showBase, 'black', this.yspan, this.xspan, max, this.basetop);
     };
     DrawCTG.prototype.setscalestyle = function (context, color) {
         context.font = 'bold 10px consolas';

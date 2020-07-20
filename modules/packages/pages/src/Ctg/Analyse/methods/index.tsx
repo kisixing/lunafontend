@@ -17,7 +17,7 @@ const Methods = (props: IProps) => {
         <>
             {
                 Object.entries(tableData).map(([k, v]) => (
-                    <Table disabled={disabled} key={k} hidden={k !== mark} dataSource={v} ref={props.mapFormToMark[`${k}_ref`]} />
+                    <Table disabled={disabled} key={k} hidden={k !== mark} mark={mark} dataSource={v} ref={props.mapFormToMark[`${k}_ref`]} />
                 ))
             }
         </>
