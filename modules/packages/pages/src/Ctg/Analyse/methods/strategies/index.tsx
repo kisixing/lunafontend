@@ -4,6 +4,7 @@ import { Fischer } from "./Fischer";
 import { Krebs } from "./Krebs";
 import { Nst } from "./Nst";
 import { Sogc } from "./Sogc";
+import { obvue } from "@lianmed/f_types";
 
 
 const strategies = {
@@ -14,8 +15,9 @@ const strategies = {
     Nst,
     Sogc,
 }
-export default (key:string,oldData)=>{
+
+export default (key: string, oldData, initData: obvue.ctg_exams_analyse) => {
     const s = strategies[key]
-    return s && s(oldData);
+    return s && s(oldData,initData.analysis);
 
 }

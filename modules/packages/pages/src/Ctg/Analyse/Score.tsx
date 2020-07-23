@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Select } from 'antd';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
+import { obvue } from "@lianmed/f_types";
 
 import Methods from './methods'
 const intervals = [20, 30]
@@ -14,6 +15,8 @@ interface IProps {
   interval, setInterval: any
   mapFormToMark: any
   disabled: boolean
+  initData: obvue.ctg_exams_analyse
+
   [x: string]: any
 }
 

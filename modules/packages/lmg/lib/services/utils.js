@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var types_1 = require("./types");
 var Queue_1 = __importDefault(require("../Ecg/Queue"));
 exports.mapStatusToColor = (_a = {},
-    _a[types_1.BedStatus.Offline] = '#f4511e',
+    _a[types_1.BedStatus.Offline] = '#bdbdbd',
     _a[types_1.BedStatus.Stopped] = '#bdbdbd ',
     _a[types_1.BedStatus.OfflineStopped] = '#bdbdbd ',
     _a[types_1.BedStatus.Working] = '#43a047',

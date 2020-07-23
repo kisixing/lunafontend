@@ -14,8 +14,8 @@ var strategies = {
     Nst: Nst_1.Nst,
     Sogc: Sogc_1.Sogc,
 };
-exports.default = (function (key, oldData) {
+exports.default = (function (key, oldData, initData) {
     var s = strategies[key];
-    return s && s(oldData);
+    return s && s(oldData, initData.analysis);
 });
 //# sourceMappingURL=index.js.map

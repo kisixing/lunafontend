@@ -89,7 +89,7 @@ var tableData = {
             name: '胎动FHR上升时间(s)',
             0: '<10s',
             1: '10~14s',
-            2: '≥115s',
+            2: '≥15s',
             key: 'accduration',
         },
         {
@@ -103,7 +103,7 @@ var tableData = {
             name: '胎动次数(次)',
             0: '无',
             1: '1~2',
-            2: '≥13',
+            2: '≥3',
             key: 'fm',
         },
     ],
@@ -140,7 +140,7 @@ var tableData = {
             name: '减速(次)',
             0: '≥2',
             1: '1',
-            2: '无或早减',
+            2: '无或早期减速',
             key: 'dec',
         },
         {
@@ -189,28 +189,27 @@ var tableData = {
         {
             name: '减速',
             0: '晚期+其他',
-            1: '变异',
+            1: '变异减速',
             2: '无',
             key: 'dec',
             R: function (props) {
                 return (react_1.default.createElement(antd_1.Select, __assign({ style: { width: 100 } }, props),
-                    react_1.default.createElement(antd_1.Select.Option, { value: 0.1 }, "\u665A\u671F"),
-                    react_1.default.createElement(antd_1.Select.Option, { value: 0.2 }, "\u5176\u4ED6"),
-                    react_1.default.createElement(antd_1.Select.Option, { value: 1 }, "\u53D8\u5F02"),
+                    react_1.default.createElement(antd_1.Select.Option, { value: 0.1 }, "\u665A\u671F+\u5176\u4ED6"),
+                    react_1.default.createElement(antd_1.Select.Option, { value: 1 }, "\u57FA\u7EBF\u53D8\u5F02"),
                     react_1.default.createElement(antd_1.Select.Option, { value: 2 }, "\u65E0")));
             }
         },
     ],
     Sogc: [
         {
-            name: '基线',
+            name: '胎心基线',
             0: '110~160bpm',
             1: '100~109bpm、>160bpm、基线上升',
-            2: '极限过缓<100bpm、基线过速>160bpm、基线不确定',
+            2: '基线过缓<100bpm、基线过速>160bpm、基线不确定',
             key: 'bhr',
         },
         {
-            name: '变异',
+            name: '基线变异',
             0: '6~25次/分、≤5次/分<40分钟',
             1: '≤5次/分40~80分钟',
             2: '≤5次/分>80分钟、≥26次/分>10分钟、正弦型',
@@ -222,6 +221,12 @@ var tableData = {
             1: '变异减速30~60秒',
             2: '变异减速>60秒、晚期减速',
             key: 'dec',
+            R: function (props) {
+                return (react_1.default.createElement(antd_1.Select, __assign({ style: { width: 280 } }, props),
+                    react_1.default.createElement(antd_1.Select.Option, { value: 0 }, "\u65E0\u51CF\u901F\u6216\u5076\u53D1\u53D8\u5F02\u51CF\u901F\u5C0F\u4E8E30\u79D2"),
+                    react_1.default.createElement(antd_1.Select.Option, { value: 1 }, "\u53D8\u5F02\u51CF\u901F30~60\u79D2"),
+                    react_1.default.createElement(antd_1.Select.Option, { value: 2 }, "\u53D8\u5F02\u51CF\u901F\u5927\u4E8E60\u79D2\u3001\u665A\u671F\u51CF\u901F")));
+            }
         },
         {
             name: '加速',
@@ -233,14 +238,14 @@ var tableData = {
     ].map(function (_) { return (__assign(__assign({}, _), getDeformedOptions())); }),
     Cstoct: [
         {
-            name: '基线',
+            name: '胎心基线',
             0: '110~160bpm',
             1: '<110bpm不伴基线变异缺失、>160bpm',
             2: '<100bpm伴基线变异缺失',
             key: 'bhr',
         },
         {
-            name: '变异',
+            name: '基线变异',
             0: '6~25次/分(中变异)',
             1: '0次/分不伴反复出现的晚期减速、≤5次/分(小变异)、≥26次/分',
             2: '0次/分伴胎心过缓反复出现的变异减速或晚期减速',
@@ -248,38 +253,66 @@ var tableData = {
         },
         {
             name: '加速',
-            0: '有、无',
+            0: '有',
             1: '刺激胎儿后仍缺失',
             2: '无',
             key: 'acc',
+            R: function (props) {
+                return (react_1.default.createElement(antd_1.Select, __assign({ style: { width: 280 } }, props),
+                    react_1.default.createElement(antd_1.Select.Option, { value: 0 }, "\u6709"),
+                    react_1.default.createElement(antd_1.Select.Option, { value: 1 }, "\u523A\u6FC0\u80CE\u513F\u540E\u4ECD\u7F3A\u5931"),
+                    react_1.default.createElement(antd_1.Select.Option, { value: 2 }, "\u65E0")));
+            }
         },
         {
-            name: '早减',
-            0: '有、无',
-            1: '无',
-            2: '无',
+            name: '早期减速',
+            0: '有',
+            1: '',
+            2: '',
             key: 'ed',
+            R: function (props) {
+                return (react_1.default.createElement(antd_1.Select, __assign({ style: { width: 280 } }, props),
+                    react_1.default.createElement(antd_1.Select.Option, { value: 0 }, "\u6709"),
+                    react_1.default.createElement(antd_1.Select.Option, { value: 0 }, "\u65E0")));
+            }
         },
         {
-            name: '变减',
+            name: '变异减速',
             0: '无',
             1: '反复出现伴小变异或中变异、延迟减速(>2分但<10分)、非特异性的变异减速',
             2: '反复出现伴基线变异缺失',
             key: 'vd',
+            R: function (props) {
+                return (react_1.default.createElement(antd_1.Select, __assign({ style: { width: 280 } }, props),
+                    react_1.default.createElement(antd_1.Select.Option, { value: 0 }, "\u65E0"),
+                    react_1.default.createElement(antd_1.Select.Option, { value: 1 }, "\u53CD\u590D\u51FA\u73B0\u4F34\u5C0F\u53D8\u5F02\u6216\u4E2D\u53D8\u5F02\u3001\u5EF6\u8FDF\u51CF\u901F(\u5927\u4E8E2\u5206\u4F46\u5C0F\u4E8E10\u5206)\u3001\u975E\u7279\u5F02\u6027\u7684\u53D8\u5F02\u51CF\u901F"),
+                    react_1.default.createElement(antd_1.Select.Option, { value: 2 }, "\u53CD\u590D\u51FA\u73B0\u4F34\u57FA\u7EBF\u53D8\u5F02\u7F3A\u5931")));
+            }
         },
         {
-            name: '晚减',
+            name: '晚期减速',
             0: '无',
             1: '反复出现伴中变异',
             2: '反复出现伴基线变异缺失',
             key: 'ld',
+            R: function (props) {
+                return (react_1.default.createElement(antd_1.Select, __assign({ style: { width: 280 } }, props),
+                    react_1.default.createElement(antd_1.Select.Option, { value: 0 }, "\u65E0"),
+                    react_1.default.createElement(antd_1.Select.Option, { value: 1 }, "\u53CD\u590D\u51FA\u73B0\u4F34\u4E2D\u53D8\u5F02"),
+                    react_1.default.createElement(antd_1.Select.Option, { value: 2 }, "\u53CD\u590D\u51FA\u73B0\u4F34\u57FA\u7EBF\u53D8\u5F02\u7F3A\u5931")));
+            }
         },
         {
             name: '正弦曲线',
             0: '无',
-            1: '无',
+            1: '',
             2: '有',
             key: 'sinusoid',
+            R: function (props) {
+                return (react_1.default.createElement(antd_1.Select, __assign({ style: { width: 60 } }, props),
+                    react_1.default.createElement(antd_1.Select.Option, { value: 0 }, "\u65E0"),
+                    react_1.default.createElement(antd_1.Select.Option, { value: 2 }, "\u6709")));
+            }
         },
     ].map(function (_) { return (__assign(__assign({}, _), getDeformedOptions())); }),
 };

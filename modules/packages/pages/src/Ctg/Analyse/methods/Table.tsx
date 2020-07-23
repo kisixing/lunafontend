@@ -1,9 +1,10 @@
 import React, { forwardRef, memo } from 'react';
-import { Table, Form, InputNumber, Input, Select } from 'antd';
+import { Table, Form, InputNumber, Input } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import { AnalyseType } from '@lianmed/lmg/lib/interface';
 
 import strategies from "./strategies";
+import { obvue } from "@lianmed/f_types";
 
 
 
@@ -13,26 +14,28 @@ interface IProps {
     hidden: boolean
     disabled: boolean
     mark: AnalyseType
+    initData: obvue.ctg_exams_analyse
+
     [x: string]: any
 }
-function RenderResult({ k, m, disabled }: { k: string, m: AnalyseType, disabled: boolean }) {
-    console.log('zz', k, m, disabled)
-    if (m === 'Cst') {
-        if (k === 'acc') {
-            return (
-                <Select style={{ width: 100 }}>
-                    <Select.Option value="0">无</Select.Option>
-                    <Select.Option value="1">周期性</Select.Option>
-                    <Select.Option value="2">散在性</Select.Option>
-                </Select>
-            )
-        }
-    }
-    return <Input disabled={disabled} style={{ width: 44 }} />
-}
+// function RenderResult({ k, m, disabled }: { k: string, m: AnalyseType, disabled: boolean }) {
+//     console.log('zz', k, m, disabled)
+//     if (m === 'Cst') {
+//         if (k === 'acc') {
+//             return (
+//                 <Select style={{ width: 100 }}>
+//                     <Select.Option value="0">无</Select.Option>
+//                     <Select.Option value="1">周期性</Select.Option>
+//                     <Select.Option value="2">散在性</Select.Option>
+//                 </Select>
+//             )
+//         }
+//     }
+//     return <Input disabled={disabled} style={{ width: 44 }} />
+// }
 
 const T = forwardRef<FormInstance, IProps>((props, ref) => {
-    const { hidden, dataSource, disabled, mark } = props
+    const { hidden, dataSource, disabled, mark, initData } = props
     const deformed = dataSource.deformed
 
     const columns: any = [
@@ -57,7 +60,8 @@ const T = forwardRef<FormInstance, IProps>((props, ref) => {
             title: deformed ? '异常' : '2分',
             dataIndex: '2'
         },
-        deformed ? null : {
+        false ? null : {
+            width: deformed ? 300 : undefined,
             title: '结果',
             dataIndex: 'result',
             render(a, { key, R }) {
@@ -79,7 +83,7 @@ const T = forwardRef<FormInstance, IProps>((props, ref) => {
 
                     <Form.Item name={`${key}score`} style={{ margin: -8 }}>
                         {
-                            S ? <S disabled={disabled} /> : <InputNumber disabled={true} style={{ width: 44 }} />
+                            S ? <S disabled={true} /> : <InputNumber disabled={true} style={{ width: 44 }} />
 
                         }
                     </Form.Item>
@@ -104,7 +108,7 @@ const T = forwardRef<FormInstance, IProps>((props, ref) => {
             //         .reduce((a, b) => a + b, 0)
             //     form.setFieldsValue({ total })
             // }
-            const newData = strategies(mark, form.getFieldsValue())
+            const newData = strategies(mark, form.getFieldsValue(), initData)
             newData && form.setFieldsValue(newData)
 
         }}>

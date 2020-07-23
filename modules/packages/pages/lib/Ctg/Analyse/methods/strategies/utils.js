@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function inRange(value, min, max) {
+    var v = typeof value === 'string' ? Number(value) : value;
     var result = false;
-    if (value >= min && value <= max)
+    if (v >= min && v <= max)
         result = true;
     return result;
 }

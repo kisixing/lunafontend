@@ -2,7 +2,7 @@ import { BedStatus, ICacheItem, ICache } from './types'
 import Queue from "../Ecg/Queue";
 
 export const mapStatusToColor = {
-    [BedStatus.Offline]: '#f4511e',
+    [BedStatus.Offline]: '#bdbdbd',
     [BedStatus.Stopped]: '#bdbdbd ',
     [BedStatus.OfflineStopped]: '#bdbdbd ',
     [BedStatus.Working]: '#43a047',

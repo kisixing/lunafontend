@@ -1,6 +1,6 @@
-import { ctg_exams_analyse_score } from "@lianmed/f_types/lib/obvue/ctg_exams_analyse";
+import { ctg_exams_analyse_score, _ctg_exams_analyse } from "@lianmed/f_types/lib/obvue/ctg_exams_analyse";
 declare type TData = ctg_exams_analyse_score['sogcdata'];
-export declare function Sogc(_data: TData): {
+export declare function Sogc(_data: TData, analysis: _ctg_exams_analyse['analysis']): {
     bhrscore: string | number;
     ltvvalue: string | number;
     ltvscore: string | number;

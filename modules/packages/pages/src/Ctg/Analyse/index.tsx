@@ -109,7 +109,8 @@ export const Ctg_Analyse: FC<{
           type: mark,
           startTime: ref.current.drawAnalyse.analysisData.analysis.start,
           endTime: ref.current.drawAnalyse.analysisData.analysis.end
-        })
+        }),
+        fetalnum:fetal
       }
       return requestData
     }
@@ -174,7 +175,7 @@ export const Ctg_Analyse: FC<{
         </div>
         <Row style={{ height: 460 }}>
           <Col span={17} >
-            <Score disabled={disabled} endTime={endTime}  {...others} fetal={fetal} setFetal={setFetal} ctgData={ctgData} docid={note} v={ref.current} className="bordered" />
+            <Score disabled={disabled} endTime={endTime} initData={initData}  {...others} fetal={fetal} setFetal={setFetal} ctgData={ctgData} docid={note} v={ref.current} className="bordered" />
             <div style={{ position: 'absolute', right: 12, bottom: 0 }}>
               {isToShort && <Alert message="选段时间过短" style={{ background: 'red', color: '#fff', display: 'inline-block', border: 0, padding: '1px 4px', marginRight: 10 }} />}
 

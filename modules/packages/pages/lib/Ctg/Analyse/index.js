@@ -83,7 +83,7 @@ exports.Ctg_Analyse = function (_a) {
             return oldData[k] !== v;
         }) ? true : false;
         var identify = type === 'default' ? { note: note } : { id: id };
-        var requestData = __assign(__assign({}, identify), { diagnosis: JSON.stringify({ wave: wave, diagnosistxt: diagnosistxt, NST: NST, CST_OCT: CST_OCT }), result: JSON.stringify(__assign(__assign(__assign({}, analyseData), curData), { isedit: isedit, type: mark, startTime: ref.current.drawAnalyse.analysisData.analysis.start, endTime: ref.current.drawAnalyse.analysisData.analysis.end })) });
+        var requestData = __assign(__assign({}, identify), { diagnosis: JSON.stringify({ wave: wave, diagnosistxt: diagnosistxt, NST: NST, CST_OCT: CST_OCT }), result: JSON.stringify(__assign(__assign(__assign({}, analyseData), curData), { isedit: isedit, type: mark, startTime: ref.current.drawAnalyse.analysisData.analysis.start, endTime: ref.current.drawAnalyse.analysisData.analysis.end })), fetalnum: fetal });
         return requestData;
     };
     var getPrintUrl = function (path) {
@@ -137,7 +137,7 @@ exports.Ctg_Analyse = function (_a) {
             react_1.default.createElement(lmg_1.Ctg, { suitType: 1, ref: ref, loading: loading, data: ctgData })),
         react_1.default.createElement(antd_1.Row, { style: { height: 460 } },
             react_1.default.createElement(antd_1.Col, { span: 17 },
-                react_1.default.createElement(Score_1.default, __assign({ disabled: disabled, endTime: endTime }, others, { fetal: fetal, setFetal: setFetal, ctgData: ctgData, docid: note, v: ref.current, className: "bordered" })),
+                react_1.default.createElement(Score_1.default, __assign({ disabled: disabled, endTime: endTime, initData: initData }, others, { fetal: fetal, setFetal: setFetal, ctgData: ctgData, docid: note, v: ref.current, className: "bordered" })),
                 react_1.default.createElement("div", { style: { position: 'absolute', right: 12, bottom: 0 } },
                     isToShort && react_1.default.createElement(antd_1.Alert, { message: "\u9009\u6BB5\u65F6\u95F4\u8FC7\u77ED", style: { background: 'red', color: '#fff', display: 'inline-block', border: 0, padding: '1px 4px', marginRight: 10 } }),
                     react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, onClick: history, disabled: btnDisabled }, "\u5386\u53F2\u5206\u6790"),

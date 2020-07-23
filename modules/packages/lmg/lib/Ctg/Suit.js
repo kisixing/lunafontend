@@ -371,7 +371,7 @@ var Suit = (function (_super) {
             fhr: [[], [], []],
             toco: [],
             fm: [],
-            fetal_num: 2,
+            fetal_num: +oriobj.fetalnum || 1,
             index: 0,
             starttime: '',
             fetalposition: {},
