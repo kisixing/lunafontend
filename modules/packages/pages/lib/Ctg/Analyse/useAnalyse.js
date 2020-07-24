@@ -193,7 +193,7 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
     var hasInitAnalysed = react_1.useRef(false);
     var endTime = (ctgData && ctgData.fhr1) ? (startTime + interval * 240 > ctgData.fhr1.length / 2 ? ctgData.fhr1.length / 2 : startTime + interval * 240) : 0;
     var diff = Math.round((endTime - startTime) / 240);
-    var isToShort = (diff < limitMap[mark] && endTime !== 0);
+    var isToShort = false && (diff < limitMap[mark] && endTime !== 0);
     var mapFormToMark = {
         Fischer_ref: Fischer_ref,
         Krebs_ref: Krebs_ref,

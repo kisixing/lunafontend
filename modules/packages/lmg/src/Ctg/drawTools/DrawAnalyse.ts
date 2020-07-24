@@ -12,7 +12,7 @@ import { DecType, AccPoint, DecPoint } from "@lianmed/f_types/lib/obvue/ctg_exam
 //     start?: number
 //     end?: number
 // }
-const resultMap = ['正常', '可疑', '异常']
+const resultMap = ['正常', '可疑', '异常', '时长不足']
 
 // function genDeformedScore(obj: Object) {
 //     const keys = Object.keys(obj)
@@ -605,8 +605,10 @@ export class DrawAnalyse extends Draw {
             } else {
                 if (length > 80) {
                     score.sogcdata.accscore = 2;
-                } else {
+                } else if (this.inRange(length, 40, 80)) {
                     score.sogcdata.accscore = 1;
+                } else {
+                    score.sogcdata.accscore = 3;
                 }
             }
             // if (accnum == 0) {
@@ -620,32 +622,34 @@ export class DrawAnalyse extends Draw {
             let ld = analysis.ldtimes = this.countDec(analysis.start, analysis.end, 'LD');//analysis.ldtimes;
             let vd = analysis.vdtimes = this.countDec(analysis.start, analysis.end, 'VD');//analysis.vdtimes;
             let ed = analysis.edtimes = this.countDec(analysis.start, analysis.end, 'ED');//analysis.edtimes;
-            if (vd > 0) {
+            if (ed > 0) {
+                score.sogcdata.decvalue = 'ed';
+                score.sogcdata.decscore = 2;
+            } else if (vd > 0) {
                 const all = analysis.dec.filter(_ => _.type === 'vd')
                 const gt60 = all.find(_ => _.duration > 60)
                 const btw = all.find(_ => this.inRange(_.duration, 30, 60))
                 if (gt60) {
-                    score.sogcdata.decvalue = 2;
                     score.sogcdata.decscore = 2;
                 } else if (btw) {
-                    score.sogcdata.decvalue = 1;
                     score.sogcdata.decscore = 1;
                 }
-            } else if (ed > 0) {
-                score.sogcdata.decvalue = 2;
-                score.sogcdata.decscore = 2;
+                score.sogcdata.decvalue = 'vd';
+
             } else {
                 score.sogcdata.decscore = 0;
-                score.sogcdata.decvalue = 0;
+                score.sogcdata.decvalue = '无';
             }
-            score.sogcdata.total = 1;
+            score.sogcdata.total = 0;
             const { bhrscore, accscore, decscore, ltvscore } = score.sogcdata
             const all = [bhrscore, accscore, decscore, ltvscore]
 
-            if (all.every(_ => _ === 2)) {
+            if (all.some(_ => _ === 2)) {
                 score.sogcdata.total = 2;
-            } else if (all.every(_ => _ === 0)) {
-                score.sogcdata.total = 0;
+            } else if (all.some(_ => _ === 1)) {
+                score.sogcdata.total = 1;
+            } else if (all.some(_ => _ === 3)) {
+                score.sogcdata.total = 3;
             }
             score.sogcdata.result = resultMap[score.sogcdata.total]
         }
@@ -678,22 +682,22 @@ export class DrawAnalyse extends Draw {
             //正弦判断
             if (analysis.isSinusoid) {
                 score.cstoctdata.sinusoidscore = 0;
-                score.cstoctdata.sinusoidvalue = 0;
+                score.cstoctdata.sinusoidvalue = '无';
             } else {
                 score.cstoctdata.sinusoidscore = 2;
-                score.cstoctdata.sinusoidvalue = 2;
+                score.cstoctdata.sinusoidvalue = '有';
             }
             // 加速
             let accnum = this.countAcc(analysis.start, analysis.end);
             if (accnum == 0) {
                 score.cstoctdata.accscore = 0;
-                score.cstoctdata.accvalue = 0;
+                score.cstoctdata.accvalue = '有';
 
             } else if (this.inRange(accnum, 1, 2)) {
-                score.cstoctdata.accvalue = 1;
+                score.cstoctdata.accvalue = '刺激胎儿后仍缺失';
                 score.cstoctdata.accscore = 1;
             } else if (accnum > 2) {
-                score.cstoctdata.accvalue = 2;
+                score.cstoctdata.accvalue = '无';
                 score.cstoctdata.accscore = 2;
             }
             // 减速
@@ -737,14 +741,16 @@ export class DrawAnalyse extends Draw {
                 }
                 score.cstoctdata.decscore = 2;
             }
-            score.cstoctdata.total = 1;
+            score.cstoctdata.total = 0;
             const { bhrscore, accscore, sinusoidscore, ltvscore, ldscore, edscore, vdscore } = score.cstoctdata
             const all = [bhrscore, accscore, sinusoidscore, ltvscore, ldscore, edscore, vdscore]
             //@ts-ignore
-            if (all.every(_ => _ === 2)) {
+            if (all.some(_ => _ === 2)) {
                 score.cstoctdata.total = 2;
-            } else if (all.every(_ => _ === 0)) {
-                score.cstoctdata.total = 0;
+            } else if (all.some(_ => _ === 1)) {
+                score.cstoctdata.total = 1;
+            } else if (all.some(_ => _ === 3)) {
+                score.cstoctdata.total = 3;
             }
             score.cstoctdata.result = resultMap[score.cstoctdata.total]
 

@@ -17,7 +17,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var Draw_1 = __importDefault(require("../../Draw"));
-var resultMap = ['正常', '可疑', '异常'];
+var resultMap = ['正常', '可疑', '异常', '时长不足'];
 var DrawAnalyse = (function (_super) {
     __extends(DrawAnalyse, _super);
     function DrawAnalyse(wrap, canvas, suit) {
@@ -509,42 +509,47 @@ var DrawAnalyse = (function (_super) {
                     if (length_1 > 80) {
                         score.sogcdata.accscore = 2;
                     }
-                    else {
+                    else if (_this.inRange(length_1, 40, 80)) {
                         score.sogcdata.accscore = 1;
+                    }
+                    else {
+                        score.sogcdata.accscore = 3;
                     }
                 }
                 var ld = analysis.ldtimes = _this.countDec(analysis.start, analysis.end, 'LD');
                 var vd = analysis.vdtimes = _this.countDec(analysis.start, analysis.end, 'VD');
                 var ed = analysis.edtimes = _this.countDec(analysis.start, analysis.end, 'ED');
-                if (vd > 0) {
+                if (ed > 0) {
+                    score.sogcdata.decvalue = 'ed';
+                    score.sogcdata.decscore = 2;
+                }
+                else if (vd > 0) {
                     var all_1 = analysis.dec.filter(function (_) { return _.type === 'vd'; });
                     var gt60 = all_1.find(function (_) { return _.duration > 60; });
                     var btw = all_1.find(function (_) { return _this.inRange(_.duration, 30, 60); });
                     if (gt60) {
-                        score.sogcdata.decvalue = 2;
                         score.sogcdata.decscore = 2;
                     }
                     else if (btw) {
-                        score.sogcdata.decvalue = 1;
                         score.sogcdata.decscore = 1;
                     }
-                }
-                else if (ed > 0) {
-                    score.sogcdata.decvalue = 2;
-                    score.sogcdata.decscore = 2;
+                    score.sogcdata.decvalue = 'vd';
                 }
                 else {
                     score.sogcdata.decscore = 0;
-                    score.sogcdata.decvalue = 0;
+                    score.sogcdata.decvalue = '无';
                 }
-                score.sogcdata.total = 1;
+                score.sogcdata.total = 0;
                 var _a = score.sogcdata, bhrscore = _a.bhrscore, accscore = _a.accscore, decscore = _a.decscore, ltvscore = _a.ltvscore;
                 var all = [bhrscore, accscore, decscore, ltvscore];
-                if (all.every(function (_) { return _ === 2; })) {
+                if (all.some(function (_) { return _ === 2; })) {
                     score.sogcdata.total = 2;
                 }
-                else if (all.every(function (_) { return _ === 0; })) {
-                    score.sogcdata.total = 0;
+                else if (all.some(function (_) { return _ === 1; })) {
+                    score.sogcdata.total = 1;
+                }
+                else if (all.some(function (_) { return _ === 3; })) {
+                    score.sogcdata.total = 3;
                 }
                 score.sogcdata.result = resultMap[score.sogcdata.total];
             }
@@ -577,23 +582,23 @@ var DrawAnalyse = (function (_super) {
                 }
                 if (analysis.isSinusoid) {
                     score.cstoctdata.sinusoidscore = 0;
-                    score.cstoctdata.sinusoidvalue = 0;
+                    score.cstoctdata.sinusoidvalue = '无';
                 }
                 else {
                     score.cstoctdata.sinusoidscore = 2;
-                    score.cstoctdata.sinusoidvalue = 2;
+                    score.cstoctdata.sinusoidvalue = '有';
                 }
                 var accnum = _this.countAcc(analysis.start, analysis.end);
                 if (accnum == 0) {
                     score.cstoctdata.accscore = 0;
-                    score.cstoctdata.accvalue = 0;
+                    score.cstoctdata.accvalue = '有';
                 }
                 else if (_this.inRange(accnum, 1, 2)) {
-                    score.cstoctdata.accvalue = 1;
+                    score.cstoctdata.accvalue = '刺激胎儿后仍缺失';
                     score.cstoctdata.accscore = 1;
                 }
                 else if (accnum > 2) {
-                    score.cstoctdata.accvalue = 2;
+                    score.cstoctdata.accvalue = '无';
                     score.cstoctdata.accscore = 2;
                 }
                 var ld = analysis.ldtimes = _this.countDec(analysis.start, analysis.end, 'LD');
@@ -636,14 +641,17 @@ var DrawAnalyse = (function (_super) {
                     }
                     score.cstoctdata.decscore = 2;
                 }
-                score.cstoctdata.total = 1;
+                score.cstoctdata.total = 0;
                 var _b = score.cstoctdata, bhrscore = _b.bhrscore, accscore = _b.accscore, sinusoidscore = _b.sinusoidscore, ltvscore = _b.ltvscore, ldscore = _b.ldscore, edscore = _b.edscore, vdscore = _b.vdscore;
                 var all = [bhrscore, accscore, sinusoidscore, ltvscore, ldscore, edscore, vdscore];
-                if (all.every(function (_) { return _ === 2; })) {
+                if (all.some(function (_) { return _ === 2; })) {
                     score.cstoctdata.total = 2;
                 }
-                else if (all.every(function (_) { return _ === 0; })) {
-                    score.cstoctdata.total = 0;
+                else if (all.some(function (_) { return _ === 1; })) {
+                    score.cstoctdata.total = 1;
+                }
+                else if (all.some(function (_) { return _ === 3; })) {
+                    score.cstoctdata.total = 3;
                 }
                 score.cstoctdata.result = resultMap[score.cstoctdata.total];
             }

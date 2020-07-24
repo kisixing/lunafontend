@@ -8,4 +8,14 @@ function inRange(value, min, max) {
     return result;
 }
 exports.inRange = inRange;
+function getValue(v) {
+    var a = String(v);
+    var modified = a.startsWith('00');
+    return modified ? Number.parseInt(a) : false;
+}
+exports.getValue = getValue;
+function isModified(v) {
+    return typeof v === 'number';
+}
+exports.isModified = isModified;
 //# sourceMappingURL=utils.js.map

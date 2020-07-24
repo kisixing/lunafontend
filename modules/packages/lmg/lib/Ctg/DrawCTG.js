@@ -43,6 +43,7 @@ var DrawCTG = (function () {
         if (basetop === void 0) { basetop = 10; }
         if (min === void 0) { min = 50; }
         if (max === void 0) { max = 210; }
+        this.showBase = false;
         this.sethorizontal = function (length, startposition, drawtimespan) {
             if (drawtimespan === void 0) { drawtimespan = true; }
             var _a = _this, setrules = _a.setrules, gridcontext = _a.gridcontext, baseleft = _a.baseleft, min = _a.min, max = _a.max, xspan = _a.xspan;
@@ -383,7 +384,8 @@ var DrawCTG = (function () {
     };
     DrawCTG.prototype.drawdot = function (cur, isemit, showBase) {
         if (isemit === void 0) { isemit = false; }
-        if (showBase === void 0) { showBase = true; }
+        if (showBase === void 0) { showBase = undefined; }
+        typeof showBase !== 'undefined' && (this.showBase = showBase);
         cur = Math.round(cur);
         var _a = this, suit = _a.suit, linecontext = _a.linecontext, max = _a.max;
         var drawAnalyse = suit.drawAnalyse;
@@ -585,7 +587,7 @@ var DrawCTG = (function () {
                 this.showfm(lastx);
             }
         }
-        drawAnalyse.drawBaseline(cur, showBase, 'black', this.yspan, this.xspan, max, this.basetop);
+        drawAnalyse.drawBaseline(cur, this.showBase, 'black', this.yspan, this.xspan, max, this.basetop);
     };
     DrawCTG.prototype.setscalestyle = function (context, color) {
         context.font = 'bold 10px consolas';

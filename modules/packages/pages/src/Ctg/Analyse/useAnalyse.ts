@@ -142,7 +142,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
     const hasInitAnalysed = useRef(false)
     let endTime = (ctgData && ctgData.fhr1) ? (startTime + interval * 240 > ctgData.fhr1.length / 2 ? ctgData.fhr1.length / 2 : startTime + interval * 240) : 0
     const diff = Math.round((endTime - startTime) / 240)
-    let isToShort = (diff < limitMap[mark] && endTime !== 0)
+    let isToShort = false && (diff < limitMap[mark] && endTime !== 0)
 
 
     const mapFormToMark = {

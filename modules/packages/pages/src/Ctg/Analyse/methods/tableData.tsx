@@ -1,15 +1,32 @@
 import React from "react";
 import { AnalyseType } from "@lianmed/lmg/lib/interface"
 import { Select } from "antd";
+let id = 0
+function Opts({ m, ...o }: { m: any[][] }) {
 
-function getDeformedOptions() {
+    return (
+        <Select style={{ width: 280 }} {...o}>
+            {
+                m.map(([n, label]) => (
+                    <Select.Option value={`00${n},${label}`} key={`00${n},${label},${++id}`}>{label}</Select.Option>
+                ))
+            }
+
+        </Select>
+    )
+
+}
+function getDeformedOptions(timeChecked = false) {
     return {
         S: (props) => {
             return (
-                <Select style={{ width: 80 }} {...props}>
+                <Select style={{ width: 120 }} {...props}>
                     <Select.Option value={0}>正常</Select.Option>
                     <Select.Option value={1}>可疑</Select.Option>
                     <Select.Option value={2}>异常</Select.Option>
+                    {
+                        timeChecked ? <Select.Option value={3}>时长不足</Select.Option> : null
+                    }
                 </Select>
             )
         }
@@ -213,15 +230,23 @@ const tableData: { [x in AnalyseType]: any } = {
             1: '100~109bpm、>160bpm、基线上升',
             2: '基线过缓<100bpm、基线过速>160bpm、基线不确定',
             key: 'bhr',
-            // R: (props) => {
-            //     return (
-            //         <Select style={{ width: 100 }} {...props}>
-            //             <Select.Option value={0}>110~160bpm</Select.Option>
-            //             <Select.Option value={1}>100~109bpm、大于160bpm、基线上升</Select.Option>
-            //             <Select.Option value={2}>基线过缓小于00bpm、基线过速大于160bpm、基线不确定</Select.Option>
-            //         </Select>
-            //     )
-            // }
+            R: (props) => {
+                return (
+
+                    <Opts m={[
+                        [0.0, '110~160bpm'],
+                        [1.1, '100~109bpm'],
+                        [1.2, '大于160bpm'],
+                        [1.3, '基线上升'],
+                        [2.1, '基线过缓小于00bpm'],
+                        [2.2, '基线过速大于160bpm'],
+                        [2.3, '基线不确定'],
+                    ]} {...props} />
+
+
+
+                )
+            }
         },
         {
             name: '基线变异',
@@ -229,15 +254,18 @@ const tableData: { [x in AnalyseType]: any } = {
             1: '≤5次/分40~80分钟',
             2: '≤5次/分>80分钟、≥26次/分>10分钟、正弦型',
             key: 'ltv',
-            // R: (props) => {
-            //     return (
-            //         <Select style={{ width: 100 }} {...props}>
-            //             <Select.Option value={0}>6~25次/分、≤5次/分小于40分钟</Select.Option>
-            //             <Select.Option value={1}>≤5次/分40~80分钟</Select.Option>
-            //             <Select.Option value={2}>≤5次/分大于80分钟、≥26次/分大于10分钟、正弦型</Select.Option>
-            //         </Select>
-            //     )
-            // }
+            R: (props) => {
+                return (
+                    <Opts m={[
+                        [0.1, '6~25次/分'],
+                        [0.2, '≤5次/分小于40分钟'],
+                        [1.0, '≤5次/分40~80分钟'],
+                        [2.1, '≤5次/分大于80分钟'],
+                        [2.2, '≥26次/分大于10分钟'],
+                        [2.3, '正弦型'],
+                    ]} {...props} />
+                )
+            }
         },
         {
             name: '减速',
@@ -247,11 +275,13 @@ const tableData: { [x in AnalyseType]: any } = {
             key: 'dec',
             R: (props) => {
                 return (
-                    <Select style={{ width: 280 }} {...props}>
-                        <Select.Option value={0}>无减速或偶发变异减速小于30秒</Select.Option>
-                        <Select.Option value={1}>变异减速30~60秒</Select.Option>
-                        <Select.Option value={2}>变异减速大于60秒、晚期减速</Select.Option>
-                    </Select>
+                    <Opts m={[
+                        [0.1, '无减速'],
+                        [0.2, '偶发变异减速小于30秒'],
+                        [1.0, '变异减速30~60秒'],
+                        [2.1, '变异减速大于60秒'],
+                        [2.2, '晚期减速'],
+                    ]} {...props} />
                 )
             }
         },
@@ -262,15 +292,16 @@ const tableData: { [x in AnalyseType]: any } = {
             1: '<2次40~80分钟',
             2: '<2次>80分钟',
             key: 'acc',
-            // R: (props) => {
-            //     return (
-            //         <Select style={{ width: 100 }} {...props}>
-            //             <Select.Option value={0}>≥2次40分钟内</Select.Option>
-            //             <Select.Option value={1}>小于2次40~80分钟</Select.Option>
-            //             <Select.Option value={2}>小于2次大于80分钟</Select.Option>
-            //         </Select>
-            //     )
-            // }
+            timeChecked: true,
+            R: (props) => {
+                return (
+                    <Opts m={[
+                        [0, '≥2次40分钟内'],
+                        [1, '小于2次40~80分钟'],
+                        [2, '小于2次大于80分钟'],
+                    ]} {...props} />
+                )
+            }
         },
         // {
         //     name: '加速(<32周)',
@@ -287,7 +318,7 @@ const tableData: { [x in AnalyseType]: any } = {
         //     key: 'ltv',
         // },
 
-    ].map(_ => ({ ..._, ...getDeformedOptions() })),
+    ].map(_ => ({ ..._, ...getDeformedOptions(_.timeChecked) })),
     Cstoct: [
         {
             name: '胎心基线',
@@ -295,15 +326,17 @@ const tableData: { [x in AnalyseType]: any } = {
             1: '<110bpm不伴基线变异缺失、>160bpm',
             2: '<100bpm伴基线变异缺失',
             key: 'bhr',
-            // R: (props) => {
-            //     return (
-            //         <Select style={{ width: 100 }} {...props}>
-            //             <Select.Option value={0}>110~160bpm</Select.Option>
-            //             <Select.Option value={1}>小于110bpm不伴基线变异缺失、大于160bpm</Select.Option>
-            //             <Select.Option value={2}>小于100bpm伴基线变异缺失</Select.Option>
-            //         </Select>
-            //     )
-            // }
+            R: (props) => {
+                return (
+                    <Opts m={[
+                        [0.0, '110~160bpm'],
+                        [1.1, '小于110bpm不伴基线变异缺失'],
+                        [1.2, '大于160bpm'],
+                        [2.0, '小于100bpm伴基线变异缺失'],
+
+                    ]} {...props} />
+                )
+            }
         },
         {
             name: '基线变异',
@@ -311,15 +344,18 @@ const tableData: { [x in AnalyseType]: any } = {
             1: '0次/分不伴反复出现的晚期减速、≤5次/分(小变异)、≥26次/分',
             2: '0次/分伴胎心过缓反复出现的变异减速或晚期减速',
             key: 'ltv',
-            // R: (props) => {
-            //     return (
-            //         <Select style={{ width: 100 }} {...props}>
-            //             <Select.Option value={0}>6~25次/分(中变异)</Select.Option>
-            //             <Select.Option value={1}>0次/分不伴反复出现的晚期减速、≤5次/分(小变异)、≥26次/分</Select.Option>
-            //             <Select.Option value={2}>0次/分伴胎心过缓反复出现的变异减速或晚期减速</Select.Option>
-            //         </Select>
-            //     )
-            // }
+            R: (props) => {
+                return (
+                    <Opts m={[
+                        [0.0, '6~25次/分(中变异)'],
+                        [1.1, '0次/分不伴反复出现的晚期减速'],
+                        [1.2, '≤5次/分(小变异)'],
+                        [1.3, '≥26次/分'],
+                        [2.1, '0次/分伴胎心过缓反复出现的变异减速'],
+                        [2.2, '晚期减速'],
+                    ]} {...props} />
+                )
+            }
         },
         {
             name: '加速',
@@ -329,11 +365,12 @@ const tableData: { [x in AnalyseType]: any } = {
             key: 'acc',
             R: (props) => {
                 return (
-                    <Select style={{ width: 280 }} {...props}>
-                        <Select.Option value={0}>有</Select.Option>
-                        <Select.Option value={1}>刺激胎儿后仍缺失</Select.Option>
-                        <Select.Option value={2}>无</Select.Option>
-                    </Select>
+                    <Opts m={[
+                        [0, '有'],
+                        [1, '刺激胎儿后仍缺失'],
+                        [2, '无'],
+
+                    ]} {...props} />
                 )
             }
         },
@@ -345,10 +382,10 @@ const tableData: { [x in AnalyseType]: any } = {
             key: 'ed',
             R: (props) => {
                 return (
-                    <Select style={{ width: 280 }} {...props}>
-                        <Select.Option value={0}>有</Select.Option>
-                        <Select.Option value={0}>无</Select.Option>
-                    </Select>
+                    <Opts m={[
+                        [0.0, '有'],
+                        [0.0, '无'],
+                    ]} {...props} />
                 )
             }
         },
@@ -360,11 +397,13 @@ const tableData: { [x in AnalyseType]: any } = {
             key: 'vd',
             R: (props) => {
                 return (
-                    <Select style={{ width: 280 }} {...props}>
-                        <Select.Option value={0}>无</Select.Option>
-                        <Select.Option value={1}>反复出现伴小变异或中变异、延迟减速(大于2分但小于10分)、非特异性的变异减速</Select.Option>
-                        <Select.Option value={2}>反复出现伴基线变异缺失</Select.Option>
-                    </Select>
+                    <Opts m={[
+                        [0.0, '无'],
+                        [1.1, '反复出现伴小变异或中变异'],
+                        [1.2, '延迟减速(大于2分但小于10分)'],
+                        [1.3, '非特异性的变异减速'],
+                        [2.0, '反复出现伴基线变异缺失'],
+                    ]} {...props} />
                 )
             }
         },
@@ -376,11 +415,12 @@ const tableData: { [x in AnalyseType]: any } = {
             key: 'ld',
             R: (props) => {
                 return (
-                    <Select style={{ width: 280 }} {...props}>
-                        <Select.Option value={0}>无</Select.Option>
-                        <Select.Option value={1}>反复出现伴中变异</Select.Option>
-                        <Select.Option value={2}>反复出现伴基线变异缺失</Select.Option>
-                    </Select>
+                    <Opts m={[
+                        [0, '无'],
+                        [1, '反复出现伴中变异'],
+                        [2, '反复出现伴基线变异缺失'],
+
+                    ]} {...props} />
                 )
             }
         },
@@ -392,10 +432,11 @@ const tableData: { [x in AnalyseType]: any } = {
             key: 'sinusoid',
             R: (props) => {
                 return (
-                    <Select style={{ width: 60 }} {...props}>
-                        <Select.Option value={0}>无</Select.Option>
-                        <Select.Option value={2}>有</Select.Option>
-                    </Select>
+                    <Opts m={[
+                        [0, '无'],
+                        [2, '有'],
+
+                    ]} {...props} />
                 )
             }
         },

@@ -18,7 +18,8 @@ export default class DrawCTG {
     resize(): void;
     drawgrid(cur: any, drawtimespan?: boolean): void;
     drawdotright(cur: any): void;
-    drawdot(cur: any, isemit?: boolean, showBase?: boolean): void;
+    showBase: boolean;
+    drawdot(cur: any, isemit?: boolean, showBase?: any): void;
     sethorizontal: (length: number, startposition: number, drawtimespan?: boolean) => void;
     sethorizontalright: (length: number, startposition: number, drawtimespan?: boolean) => void;
     setvertical: (_maxline: number, startposition: number) => void;

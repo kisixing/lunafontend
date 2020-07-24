@@ -147,8 +147,9 @@ export default class DrawCTG {
     // }
     // linecontext.stroke();
   }
-
-  drawdot(cur, isemit = false, showBase = true) {
+  showBase = false
+  drawdot(cur, isemit = false, showBase = undefined) {
+    typeof showBase !== 'undefined' && (this.showBase = showBase)
     cur = Math.round(cur)
 
     const { suit, linecontext, max } = this;
@@ -359,7 +360,7 @@ export default class DrawCTG {
     }
     //kisi 2019-10-29 baseline
     //TODO
-    drawAnalyse.drawBaseline(cur, showBase, 'black', this.yspan, this.xspan, max, this.basetop)
+    drawAnalyse.drawBaseline(cur, this.showBase, 'black', this.yspan, this.xspan, max, this.basetop)
 
   }
 

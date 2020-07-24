@@ -4,7 +4,7 @@ import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import { obvue } from "@lianmed/f_types";
 
 import Methods from './methods'
-const intervals = [20, 30]
+const intervals = [20, 40, 80]
 interface IProps {
   ctgData: any;
   docid: string,
@@ -98,7 +98,7 @@ const ScoringMethod = (props: IProps) => {
     [mark, docid],
   )
   return (
-    <div style={{ height: '100%', background: '#fff',borderRight:0 }} className="bordered">
+    <div style={{ height: '100%', background: '#fff', borderRight: 0 }} className="bordered">
       <div className="divider" style={{ padding: '8px 20px', margin: 0 }}>
         <>
           {

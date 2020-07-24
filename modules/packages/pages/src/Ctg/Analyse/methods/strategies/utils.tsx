@@ -6,3 +6,11 @@ export function inRange(value: number | string, min: number, max: number): boole
         result = true;
     return result;
 }
+export function getValue(v: number | string): any {
+    const a = String(v)
+    const modified = a.startsWith('00');
+    return modified ? Number.parseInt(a) : false
+}
+export function isModified(v: any) {
+    return typeof v === 'number'
+}

@@ -4,57 +4,45 @@ var utils_1 = require("./utils");
 function Cstoct(_data, analysis) {
     var cstoctdata = JSON.parse(JSON.stringify(_data));
     var bhrvalue = cstoctdata.bhrvalue, accvalue = cstoctdata.accvalue, sinusoidvalue = cstoctdata.sinusoidvalue, ldvalue = cstoctdata.ldvalue, ltvvalue = cstoctdata.ltvvalue, edvalue = cstoctdata.edvalue, vdvalue = cstoctdata.vdvalue;
-    cstoctdata.bhrscore = bhrvalue;
-    cstoctdata.accscore = accvalue;
-    cstoctdata.sinusoidscore = sinusoidvalue;
-    cstoctdata.ltvscore = ldvalue;
-    cstoctdata.ldscore = ltvvalue;
-    cstoctdata.edscore = edvalue;
-    cstoctdata.vdscore = vdvalue;
-    var bhr = Number(bhrvalue) || 0;
-    var acc = Number(accvalue) || 0;
-    var ltv = Number(ltvvalue) || 0;
-    var sinusoid = Number(sinusoidvalue) || 0;
-    var ld = Number(ldvalue) || 0;
-    var ed = Number(edvalue) || 0;
-    var vd = Number(vdvalue) || 0;
-    if (utils_1.inRange(bhr, 110, 160))
-        cstoctdata.bhrscore = 0;
-    else if (utils_1.inRange(bhr, 100, 109) || bhr > 160)
-        cstoctdata.bhrscore = 1;
-    else if (bhr < 100) {
-        cstoctdata.bhrscore = 2;
+    var bhr = utils_1.getValue(bhrvalue);
+    var acc = utils_1.getValue(accvalue);
+    var ltv = utils_1.getValue(ltvvalue);
+    var sinusoid = utils_1.getValue(sinusoidvalue);
+    var ld = utils_1.getValue(ldvalue);
+    var ed = utils_1.getValue(edvalue);
+    var vd = utils_1.getValue(vdvalue);
+    if (utils_1.isModified(bhr)) {
+        cstoctdata.bhrscore = bhr;
     }
-    if (ltv < 5) {
-        if (length < 40) {
-            cstoctdata.ltvscore = 2;
-        }
-        else if (utils_1.inRange(length, 40, 80)) {
-            cstoctdata.ltvscore = 1;
-        }
-        else {
-            cstoctdata.ltvscore = 0;
-        }
+    if (utils_1.isModified(ltv)) {
+        cstoctdata.ltvscore = ltv;
     }
-    else if (utils_1.inRange(ltv, 5, 9) || ltv > 30) {
-        cstoctdata.ltvscore = 1;
+    if (utils_1.isModified(sinusoid)) {
+        cstoctdata.sinusoidscore = sinusoid;
     }
-    else if (utils_1.inRange(ltv, 6, 25)) {
-        cstoctdata.ltvscore = 2;
+    if (utils_1.isModified(acc)) {
+        cstoctdata.accscore = acc;
     }
-    cstoctdata.sinusoidscore = sinusoid;
-    cstoctdata.accvalue = acc;
-    cstoctdata.edscore = ed;
-    cstoctdata.ldscore = ld;
-    cstoctdata.vdscore = vd;
+    if (utils_1.isModified(ed)) {
+        cstoctdata.edscore = ed;
+    }
+    if (utils_1.isModified(ld)) {
+        cstoctdata.ldscore = ld;
+    }
+    if (utils_1.isModified(vd)) {
+        cstoctdata.vdscore = vd;
+    }
     var bhrscore = cstoctdata.bhrscore, accscore = cstoctdata.accscore, sinusoidscore = cstoctdata.sinusoidscore, ltvscore = cstoctdata.ltvscore, ldscore = cstoctdata.ldscore, edscore = cstoctdata.edscore, vdscore = cstoctdata.vdscore;
     var all = [bhrscore, accscore, sinusoidscore, ltvscore, ldscore, edscore, vdscore];
-    cstoctdata.result = '可疑';
-    if (all.every(function (_) { return _ === 2; })) {
+    cstoctdata.result = '正常';
+    if (all.some(function (_) { return _ === 2; })) {
         cstoctdata.result = '异常';
     }
-    else if (all.every(function (_) { return _ === 0; })) {
-        cstoctdata.result = '正常';
+    else if (all.some(function (_) { return _ === 1; })) {
+        cstoctdata.result = '可疑';
+    }
+    else if (all.some(function (_) { return _ === 3; })) {
+        cstoctdata.result = '时长不足';
     }
     return cstoctdata;
 }

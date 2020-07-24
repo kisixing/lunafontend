@@ -112,8 +112,8 @@ const T = forwardRef<FormInstance, IProps>((props, ref) => {
             newData && form.setFieldsValue(newData)
 
         }}>
-            <Form.Item name={deformed ? 'result' : 'total'} label={deformed ? '结果' : '总分'} style={{ position: 'absolute', top: -48, right: 200 }}>
-                <InputNumber disabled style={{ width: 50 }} />
+            <Form.Item name={deformed ? 'result' : 'total'} label={deformed ? '结果' : '总分'} style={{ position: 'absolute', top: -48, right: 260 }}>
+                <InputNumber disabled style={{ width: 120 }} />
             </Form.Item>
             <Table bordered size="small" pagination={false} columns={columns} dataSource={dataSource} />
         </Form>
