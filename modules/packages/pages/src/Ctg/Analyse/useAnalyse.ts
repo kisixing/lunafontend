@@ -178,7 +178,11 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
         return request.post(`/ctg-exams-analyse`, {
             data: { docid, mark, start: startTime, end: endTime, fetal, autoFm },
         })
-            .then((r: obvue.ctg_exams_analyse) => r)
+            .then((r: obvue.ctg_exams_analyse) => {
+                r.analysis.acc = r.analysis.acc && r.analysis.acc.map(_ => ({ ..._, duration: _.duration / 4 }))
+                r.analysis.dec = r.analysis.dec && r.analysis.dec.map(_ => ({ ..._, duration: _.duration / 4 }))
+                return r
+            })
             .finally(() => {
                 setAnalyseLoading(false)
             })

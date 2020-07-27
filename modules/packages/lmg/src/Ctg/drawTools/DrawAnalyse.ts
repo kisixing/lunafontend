@@ -127,6 +127,7 @@ export class DrawAnalyse extends Draw {
     //kisi 2019-10-28 绘制 acc dec
     //2020-03-04 用 linecanvas 绘制标记
     drawflag = (canvas: CanvasRenderingContext2D, x: number, y: number, index: number) => {
+
         this.mapXtoY[x] = { y: y + this.suit.drawobj.basetop, index }
         const { context2D, analysisData: analyseData } = this;
         if (!context2D || !analyseData) return
@@ -136,6 +137,10 @@ export class DrawAnalyse extends Draw {
         context2D.textAlign = 'left';
         context2D.textBaseline = 'top';
         let txt = '';
+        const baseY = this.suit.getBaseY(x) + (acc.find(_ => [index, index - 1].includes(_.index)) || dec.find(_ => [index, index - 1].includes(_.index)) || { ampl: 10 }).ampl
+        if (y === undefined && [index, index + 1].includes(38746)) {
+        }
+        y = y === undefined ? -baseY : y
         if (_acc.indexOf(index) > -1 || _acc.indexOf(index - 1) > -1) {
             const target = acc.find(_ => [index, index - 1].includes(_.index))
             target.x = x
@@ -487,15 +492,15 @@ export class DrawAnalyse extends Draw {
             let ed = analysis.edtimes = this.countDec(analysis.start, analysis.end, 'ED');//analysis.edtimes;
             if (ld > 0) {
                 score.fischerdata.decscore = 0;
-                score.fischerdata.decvalue = 0;
+                score.fischerdata.decvalue = 'LD';
             } else if (vd > 0) {
                 score.fischerdata.decscore = 1;
-                score.fischerdata.decvalue = 1;
+                score.fischerdata.decvalue = 'VD';
             } else {
                 if (ed > 0) {
-                    score.fischerdata.decvalue = 2;
+                    score.fischerdata.decvalue = 'ED';
                 } else {
-                    score.fischerdata.decvalue = 2;
+                    score.fischerdata.decvalue = '无';
                 }
                 score.fischerdata.decscore = 2;
             }
@@ -538,13 +543,13 @@ export class DrawAnalyse extends Draw {
             // score.cstdata.accvalue = accnum;
             if (accnum == 0) {
                 score.cstdata.accscore = 0;
-                score.cstdata.accvalue = 0;
+                score.cstdata.accvalue = '无';
             } else if (this.cycleAcc() == 1) {
-                score.cstdata.accvalue = 1;
                 score.cstdata.accscore = 1;
+                score.cstdata.accvalue = '周期性';
             } else {
-                score.cstdata.accvalue = 2;
                 score.cstdata.accscore = 2;
+                score.cstdata.accvalue = '散在性';
             }
             // 减速
             let ld = analysis.ldtimes = this.countDec(analysis.start, analysis.end, 'LD');//analysis.ldtimes;
@@ -552,17 +557,17 @@ export class DrawAnalyse extends Draw {
             let ed = analysis.edtimes = this.countDec(analysis.start, analysis.end, 'ED');//analysis.edtimes;
             if (ld > 0) {
                 score.cstdata.decscore = 0;
-                score.cstdata.decvalue = 0.1; // 晚期
+                score.cstdata.decvalue = '晚期'; // 晚期
             } else if (ed > 0) {
                 //判为其他
                 score.cstdata.decscore = 0;
-                score.cstdata.decvalue = 0.2;// 其他
+                score.cstdata.decvalue = '其他';// 其他
             } else if (vd > 0) {
                 score.cstdata.decscore = 1;
-                score.cstdata.decvalue = 1;// 变异
+                score.cstdata.decvalue = '变异减速';// 变异
             } else {
                 score.cstdata.decscore = 2;
-                score.cstdata.decvalue = 2;// 无
+                score.cstdata.decvalue = '无';// 无
             }
 
             //@ts-ignore
@@ -571,7 +576,7 @@ export class DrawAnalyse extends Draw {
         //NST-sogc 20~40分钟
         else if (type == 'Sogc') {
             //档案时长
-            const length = analysis.fhrbaselineMinute.length;
+            const length = analysis.length;
             // 基线选项
             score.sogcdata.bhrvalue = bhr;
             if (this.inRange(bhr, 110, 160))
@@ -592,7 +597,7 @@ export class DrawAnalyse extends Draw {
                     score.sogcdata.ltvscore = 2;
                 }
             } else if (analysis.ltv >= 26 || analysis.isSinusoid) {
-                score.sogcdata.ltvscore = 1;
+                score.sogcdata.ltvscore = 2;
             } else {
                 score.sogcdata.ltvscore = 0;
             }
@@ -626,7 +631,8 @@ export class DrawAnalyse extends Draw {
                 score.sogcdata.decvalue = 'ed';
                 score.sogcdata.decscore = 2;
             } else if (vd > 0) {
-                const all = analysis.dec.filter(_ => _.type === 'vd')
+                debugger
+                const all = analysis.dec.filter(_ => _.type === 'vd' && _.start >= analysis.start && _.end <= analysis.end)
                 const gt60 = all.find(_ => _.duration > 60)
                 const btw = all.find(_ => this.inRange(_.duration, 30, 60))
                 if (gt60) {

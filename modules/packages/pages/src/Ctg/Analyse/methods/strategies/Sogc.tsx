@@ -14,7 +14,7 @@ export function Sogc(_data: TData, analysis: _ctg_exams_analyse['analysis']) {
 
 
     //档案时长
-    const length = analysis.fhrbaselineMinute.length;
+    // const length = analysis.length;
     // 基线选项
     if (isModified(bhr)) {
         sogcdata.bhrscore = bhr;

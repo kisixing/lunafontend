@@ -7,8 +7,8 @@ function Cst(_data) {
     var bhr = Number(bhrvalue) || 0;
     var zhenfu_tv = Number(ltvvalue) || 0;
     var zhouqi_tv = Number(stvvalue) || 0;
-    var accnum = Number(accvalue) || 0;
-    var decnum = Number(decvalue) || 0;
+    var accnum = utils_1.getValue(accvalue);
+    var decnum = utils_1.getValue(decvalue);
     if (bhr < 100 || bhr > 180) {
         cstdata.bhrscore = 0;
     }
@@ -36,8 +36,12 @@ function Cst(_data) {
     else if (zhouqi_tv > 6) {
         cstdata.stvscore = 2;
     }
-    cstdata.accscore = accnum;
-    cstdata.decscore = ~~decnum;
+    if (utils_1.isModified(accnum)) {
+        cstdata.accscore = accnum;
+    }
+    if (utils_1.isModified(decnum)) {
+        cstdata.decscore = decnum;
+    }
     cstdata.total = cstdata.bhrscore + cstdata.accscore + cstdata.decscore + cstdata.ltvscore + cstdata.stvscore;
     return cstdata;
 }

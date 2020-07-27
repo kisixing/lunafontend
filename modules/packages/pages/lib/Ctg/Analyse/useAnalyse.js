@@ -223,7 +223,11 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
         return request_1.default.post("/ctg-exams-analyse", {
             data: { docid: docid, mark: mark, start: startTime, end: endTime, fetal: fetal, autoFm: autoFm },
         })
-            .then(function (r) { return r; })
+            .then(function (r) {
+            r.analysis.acc = r.analysis.acc && r.analysis.acc.map(function (_) { return (__assign(__assign({}, _), { duration: _.duration / 4 })); });
+            r.analysis.dec = r.analysis.dec && r.analysis.dec.map(function (_) { return (__assign(__assign({}, _), { duration: _.duration / 4 })); });
+            return r;
+        })
             .finally(function () {
             setAnalyseLoading(false);
         });

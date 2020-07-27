@@ -1,5 +1,6 @@
 declare const _default: (key: string, oldData: any, initData: {
     analysis?: {
+        length: number;
         bhr: number;
         ltv: number;
         stv: number;

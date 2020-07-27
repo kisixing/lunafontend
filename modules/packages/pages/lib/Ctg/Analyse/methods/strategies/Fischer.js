@@ -8,7 +8,7 @@ function Fischer(_data) {
     var zhenfu_tv = Number(ltvvalue) || 0;
     var zhouqi_tv = Number(stvvalue) || 0;
     var accnum = Number(accvalue) || 0;
-    var decnum = decvalue;
+    var decnum = utils_1.getValue(decvalue);
     if (bhr < 100 || bhr > 180) {
         fischerdata.bhrscore = 0;
     }
@@ -46,7 +46,9 @@ function Fischer(_data) {
     else if (accnum > 4) {
         fischerdata.accscore = 2;
     }
-    fischerdata.decscore = decnum;
+    if (utils_1.isModified(decnum)) {
+        fischerdata.decscore = decnum;
+    }
     fischerdata.total = fischerdata.bhrscore + fischerdata.accscore + fischerdata.decscore + fischerdata.ltvscore + fischerdata.stvscore;
     return fischerdata;
 }

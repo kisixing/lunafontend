@@ -44,6 +44,7 @@ declare const _default: (v: MutableRefObject<Suit>, docid: string, fetal: any, s
     autoFm: boolean;
     initData: {
         analysis?: {
+            length: number;
             bhr: number;
             ltv: number;
             stv: number;

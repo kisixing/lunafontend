@@ -1,5 +1,5 @@
 import { ctg_exams_analyse_score, } from "@lianmed/f_types/lib/obvue/ctg_exams_analyse";
-import { inRange } from "./utils";
+import { inRange, getValue, isModified } from "./utils";
 // function cycleAcc(accArr:AccPoint[]) {
 //     let error = 8;
 
@@ -21,8 +21,8 @@ export function Cst(_data: TData) {
     let bhr = Number(bhrvalue) || 0
     let zhenfu_tv = Number(ltvvalue) || 0
     let zhouqi_tv = Number(stvvalue) || 0
-    let accnum = Number(accvalue) || 0
-    let decnum = Number(decvalue) || 0
+    let accnum = getValue(accvalue)
+    let decnum = getValue(decvalue)
 
     // 基线选项
     if (bhr < 100 || bhr > 180) {
@@ -49,9 +49,13 @@ export function Cst(_data: TData) {
         cstdata.stvscore = 2;
     }
     // 加速
-    cstdata.accscore = accnum
+    if (isModified(accnum)) {
+        cstdata.accscore = accnum
+    }
     // 减速
-    cstdata.decscore = ~~decnum
+    if (isModified(decnum)) {
+        cstdata.decscore = decnum
+    }
     //@ts-ignore
     cstdata.total = cstdata.bhrscore + cstdata.accscore + cstdata.decscore + cstdata.ltvscore + cstdata.stvscore;
 

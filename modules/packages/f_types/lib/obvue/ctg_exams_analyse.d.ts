@@ -113,6 +113,7 @@ export interface ctg_exams_analyse_score {
 }
 export interface _ctg_exams_analyse {
     analysis: {
+        length:number;
         bhr: number;
         ltv: number;
         stv: number;

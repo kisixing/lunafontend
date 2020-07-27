@@ -659,6 +659,48 @@ export class Suit extends Draw {
 
     return null
   }
+  getBaseY(x: number) {
+    const { analysisData, mapBaselilneXtoY } = this.drawAnalyse
+    x = Math.round(x)
+
+    if (analysisData) {
+
+
+
+      const mKeys = Object.keys(mapBaselilneXtoY).map(_ => Number(_))
+      const leftIndex = mKeys.reduce((index, _) => {
+        const left = mKeys[index]
+        const right = mKeys[index + 1]
+        if (right === undefined) {
+          return
+        }
+        if (left <= x) {
+          if (x <= right) {
+            return index
+          } else {
+            return index + 1
+          }
+        } else {
+          return
+
+        }
+      }, 0)
+      // 线上的点
+      if (typeof leftIndex === 'number') {
+        const x1 = mKeys[leftIndex]
+        const x2 = mKeys[leftIndex + 1]
+        const y1 = mapBaselilneXtoY[x1]
+        const y2 = mapBaselilneXtoY[x2]
+        const k = (y2 - y1) / (x2 - x1)
+        const b = y1 - x1 * k
+        const baseY = x * k + b
+        return baseY
+      }
+
+    }
+
+    return null
+  }
   // public get reviceAnalyse(): DrawAnalyse['revicePoint'] {
   //   return this.drawAnalyse.revicePoint.bind(this.drawAnalyse)
   // }

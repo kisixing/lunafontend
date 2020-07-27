@@ -116,5 +116,6 @@ export declare class Suit extends Draw {
     getoffline(): void;
     initfhrdata(data: any, datacache: any, offindex: any): void;
     getPointType(x: number, y: number): PointType;
+    getBaseY(x: number): number;
 }
 export {};

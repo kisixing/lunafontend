@@ -74,11 +74,13 @@ const tableData: { [x in AnalyseType]: any } = {
             key: 'dec',
             R: (props) => {
                 return (
-                    <Select style={{ width: 100 }} {...props}>
-                        <Select.Option value={0}>LD</Select.Option>
-                        <Select.Option value={1}>VD</Select.Option>
-                        <Select.Option value={2}>无，其它</Select.Option>
-                    </Select>
+                    <Opts m={[
+                        [0, 'LD'],
+                        [1, 'VD'],
+                        [2.1, '无'],
+                        [2.2, '其它'],
+
+                    ]} {...props} />
                 )
             }
         },
@@ -198,11 +200,12 @@ const tableData: { [x in AnalyseType]: any } = {
             key: 'acc',
             R: (props) => {
                 return (
-                    <Select style={{ width: 100 }} {...props}>
-                        <Select.Option value={0}>无</Select.Option>
-                        <Select.Option value={1}>周期性</Select.Option>
-                        <Select.Option value={2}>散在性</Select.Option>
-                    </Select>
+                    <Opts m={[
+                        [0, '无'],
+                        [1, '周期性'],
+                        [2, '散在性'],
+
+                    ]} {...props} />
                 )
             }
         },
@@ -214,11 +217,13 @@ const tableData: { [x in AnalyseType]: any } = {
             key: 'dec',
             R: (props) => {
                 return (
-                    <Select style={{ width: 100 }} {...props}>
-                        <Select.Option value={0.1}>晚期+其他</Select.Option>
-                        <Select.Option value={1}>基线变异</Select.Option>
-                        <Select.Option value={2}>无</Select.Option>
-                    </Select>
+                    <Opts m={[
+                        [0.1, '晚期'],
+                        [0.2, '其他'],
+                        [1, '基线变异'],
+                        [2, '无'],
+
+                    ]} {...props} />
                 )
             }
         },

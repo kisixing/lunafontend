@@ -26,6 +26,7 @@ export declare class DrawAnalyse extends Draw {
     drawBaseline(cur: any, show: boolean, color: any, yspan: any, xspan: any, max: any, basetop: any): void;
     analyse(type: AnalyseType, showBase?: boolean, start?: number, end?: number, data?: {
         analysis?: {
+            length: number;
             bhr: number;
             ltv: number;
             stv: number;
@@ -50,6 +51,7 @@ export declare class DrawAnalyse extends Draw {
         score?: import("@lianmed/f_types/lib/obvue/ctg_exams_analyse").ctg_exams_analyse_score;
     }): {
         analysis?: {
+            length: number;
             bhr: number;
             ltv: number;
             stv: number;
@@ -77,12 +79,13 @@ export declare class DrawAnalyse extends Draw {
     inRange: (value: number, min: number, max: number) => boolean;
     countAcc: (start: number, end: number) => number;
     countDec: (start: number, end: number, type: string) => number;
-    cycleAcc: () => 1 | 0;
+    cycleAcc: () => 0 | 1;
     countFm: (start: number, end: number) => number;
     fhrDuration: (start: number, end: number) => number;
     fhrAmpl: (start: number, end: number) => number;
     ctgscore: (type: AnalyseType) => {
         analysis?: {
+            length: number;
             bhr: number;
             ltv: number;
             stv: number;

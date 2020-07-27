@@ -196,15 +196,19 @@ export default class DrawCTG {
         let inneri = i;
         if (i == start) {
           linecontext.moveTo(lastx, (max - fhr[fetal][start] - curfhroffset) * this.yspan + this.basetop);
+          true && this.suit.drawAnalyse.drawflag(this.linecontext, lastx, undefined, i);
           continue;
         }
         if (typeof (fhr[fetal][inneri]) != "undefined" && fhr[fetal][inneri] && fhr[fetal][inneri] != 0) {
           lasty = fhr[fetal][inneri];
         } else {
           if (fhr[fetal][inneri] + curfhroffset > this.max && fhr[fetal][inneri] + curfhroffset < this.min) {
+            true && this.suit.drawAnalyse.drawflag(this.linecontext, lastx, undefined, i);
             continue;
           }
           linecontext.moveTo(lastx, (max - 0 - curfhroffset) * this.yspan + this.basetop);
+          true && this.suit.drawAnalyse.drawflag(this.linecontext, lastx, undefined, i);
+
           continue;
         }
         if (i > 1 && (typeof (fhr[fetal][inneri - 2]) == "undefined" || fhr[fetal][inneri - 2] == 0 || Math.abs(lasty - fhr[fetal][inneri - 2]) > 30) || ((fhr[fetal][inneri - 2] + curfhroffset) < this.min) || ((fhr[fetal][inneri - 2] + curfhroffset) > this.max)) {

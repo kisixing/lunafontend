@@ -8,7 +8,6 @@ function Sogc(_data, analysis) {
     var acc = utils_1.getValue(accvalue);
     var dec = utils_1.getValue(decvalue);
     var ltv = utils_1.getValue(ltvvalue);
-    var length = analysis.fhrbaselineMinute.length;
     if (utils_1.isModified(bhr)) {
         sogcdata.bhrscore = bhr;
     }

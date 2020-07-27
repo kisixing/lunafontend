@@ -84,10 +84,12 @@ var tableData = {
             2: '无，其它',
             key: 'dec',
             R: function (props) {
-                return (react_1.default.createElement(antd_1.Select, __assign({ style: { width: 100 } }, props),
-                    react_1.default.createElement(antd_1.Select.Option, { value: 0 }, "LD"),
-                    react_1.default.createElement(antd_1.Select.Option, { value: 1 }, "VD"),
-                    react_1.default.createElement(antd_1.Select.Option, { value: 2 }, "\u65E0\uFF0C\u5176\u5B83")));
+                return (react_1.default.createElement(Opts, __assign({ m: [
+                        [0, 'LD'],
+                        [1, 'VD'],
+                        [2.1, '无'],
+                        [2.2, '其它'],
+                    ] }, props)));
             }
         },
     ],
@@ -201,10 +203,11 @@ var tableData = {
             2: '散在性',
             key: 'acc',
             R: function (props) {
-                return (react_1.default.createElement(antd_1.Select, __assign({ style: { width: 100 } }, props),
-                    react_1.default.createElement(antd_1.Select.Option, { value: 0 }, "\u65E0"),
-                    react_1.default.createElement(antd_1.Select.Option, { value: 1 }, "\u5468\u671F\u6027"),
-                    react_1.default.createElement(antd_1.Select.Option, { value: 2 }, "\u6563\u5728\u6027")));
+                return (react_1.default.createElement(Opts, __assign({ m: [
+                        [0, '无'],
+                        [1, '周期性'],
+                        [2, '散在性'],
+                    ] }, props)));
             }
         },
         {
@@ -214,10 +217,12 @@ var tableData = {
             2: '无',
             key: 'dec',
             R: function (props) {
-                return (react_1.default.createElement(antd_1.Select, __assign({ style: { width: 100 } }, props),
-                    react_1.default.createElement(antd_1.Select.Option, { value: 0.1 }, "\u665A\u671F+\u5176\u4ED6"),
-                    react_1.default.createElement(antd_1.Select.Option, { value: 1 }, "\u57FA\u7EBF\u53D8\u5F02"),
-                    react_1.default.createElement(antd_1.Select.Option, { value: 2 }, "\u65E0")));
+                return (react_1.default.createElement(Opts, __assign({ m: [
+                        [0.1, '晚期'],
+                        [0.2, '其他'],
+                        [1, '基线变异'],
+                        [2, '无'],
+                    ] }, props)));
             }
         },
     ],

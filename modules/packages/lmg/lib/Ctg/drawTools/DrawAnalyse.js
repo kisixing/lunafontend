@@ -35,6 +35,10 @@ var DrawAnalyse = (function (_super) {
             context2D.textAlign = 'left';
             context2D.textBaseline = 'top';
             var txt = '';
+            var baseY = _this.suit.getBaseY(x) + (acc.find(function (_) { return [index, index - 1].includes(_.index); }) || dec.find(function (_) { return [index, index - 1].includes(_.index); }) || { ampl: 10 }).ampl;
+            if (y === undefined && [index, index + 1].includes(38746)) {
+            }
+            y = y === undefined ? -baseY : y;
             if (_acc.indexOf(index) > -1 || _acc.indexOf(index - 1) > -1) {
                 var target = acc.find(function (_) { return [index, index - 1].includes(_.index); });
                 target.x = x;
@@ -388,18 +392,18 @@ var DrawAnalyse = (function (_super) {
                 var ed = analysis.edtimes = _this.countDec(analysis.start, analysis.end, 'ED');
                 if (ld > 0) {
                     score.fischerdata.decscore = 0;
-                    score.fischerdata.decvalue = 0;
+                    score.fischerdata.decvalue = 'LD';
                 }
                 else if (vd > 0) {
                     score.fischerdata.decscore = 1;
-                    score.fischerdata.decvalue = 1;
+                    score.fischerdata.decvalue = 'VD';
                 }
                 else {
                     if (ed > 0) {
-                        score.fischerdata.decvalue = 2;
+                        score.fischerdata.decvalue = 'ED';
                     }
                     else {
-                        score.fischerdata.decvalue = 2;
+                        score.fischerdata.decvalue = '无';
                     }
                     score.fischerdata.decscore = 2;
                 }
@@ -441,39 +445,39 @@ var DrawAnalyse = (function (_super) {
                 var accnum = _this.countAcc(analysis.start, analysis.end);
                 if (accnum == 0) {
                     score.cstdata.accscore = 0;
-                    score.cstdata.accvalue = 0;
+                    score.cstdata.accvalue = '无';
                 }
                 else if (_this.cycleAcc() == 1) {
-                    score.cstdata.accvalue = 1;
                     score.cstdata.accscore = 1;
+                    score.cstdata.accvalue = '周期性';
                 }
                 else {
-                    score.cstdata.accvalue = 2;
                     score.cstdata.accscore = 2;
+                    score.cstdata.accvalue = '散在性';
                 }
                 var ld = analysis.ldtimes = _this.countDec(analysis.start, analysis.end, 'LD');
                 var vd = analysis.vdtimes = _this.countDec(analysis.start, analysis.end, 'VD');
                 var ed = analysis.edtimes = _this.countDec(analysis.start, analysis.end, 'ED');
                 if (ld > 0) {
                     score.cstdata.decscore = 0;
-                    score.cstdata.decvalue = 0.1;
+                    score.cstdata.decvalue = '晚期';
                 }
                 else if (ed > 0) {
                     score.cstdata.decscore = 0;
-                    score.cstdata.decvalue = 0.2;
+                    score.cstdata.decvalue = '其他';
                 }
                 else if (vd > 0) {
                     score.cstdata.decscore = 1;
-                    score.cstdata.decvalue = 1;
+                    score.cstdata.decvalue = '变异减速';
                 }
                 else {
                     score.cstdata.decscore = 2;
-                    score.cstdata.decvalue = 2;
+                    score.cstdata.decvalue = '无';
                 }
                 score.cstdata.total = score.cstdata.bhrscore + score.cstdata.accscore + score.cstdata.decscore + score.cstdata.ltvscore + score.cstdata.stvscore;
             }
             else if (type == 'Sogc') {
-                var length_1 = analysis.fhrbaselineMinute.length;
+                var length_1 = analysis.length;
                 score.sogcdata.bhrvalue = bhr;
                 if (_this.inRange(bhr, 110, 160))
                     score.sogcdata.bhrscore = 0;
@@ -495,7 +499,7 @@ var DrawAnalyse = (function (_super) {
                     }
                 }
                 else if (analysis.ltv >= 26 || analysis.isSinusoid) {
-                    score.sogcdata.ltvscore = 1;
+                    score.sogcdata.ltvscore = 2;
                 }
                 else {
                     score.sogcdata.ltvscore = 0;
@@ -524,7 +528,8 @@ var DrawAnalyse = (function (_super) {
                     score.sogcdata.decscore = 2;
                 }
                 else if (vd > 0) {
-                    var all_1 = analysis.dec.filter(function (_) { return _.type === 'vd'; });
+                    debugger;
+                    var all_1 = analysis.dec.filter(function (_) { return _.type === 'vd' && _.start >= analysis.start && _.end <= analysis.end; });
                     var gt60 = all_1.find(function (_) { return _.duration > 60; });
                     var btw = all_1.find(function (_) { return _this.inRange(_.duration, 30, 60); });
                     if (gt60) {
