@@ -14,6 +14,7 @@ export default class DrawCTG {
     scalespan: number;
     starttime: string;
     fhroffset: number;
+    _fhroffset: number;
     constructor(suit: Suit, xspan?: number, yspan?: number, scalespan?: number, fhroffset?: number, baseleft?: number, basetop?: number, min?: number, max?: number);
     resize(): void;
     drawgrid(cur: any, drawtimespan?: boolean): void;

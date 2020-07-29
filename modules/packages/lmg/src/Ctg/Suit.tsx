@@ -142,8 +142,7 @@ export class Suit extends Draw {
   }
 
   init(data: ICacheItem) {
-    this.drawAnalyse.init()
-    this.drawSelect.init()
+
     if (!data) {
       return;
     }
@@ -162,6 +161,9 @@ export class Suit extends Draw {
         }
       }
     }
+    this.drawAnalyse.init()
+    this.drawSelect.init()
+
     this.drawSelect.clearselect();
     this.drawobj.showcur(0, false);
     if (this.type > 0) {
@@ -436,7 +438,6 @@ export class Suit extends Draw {
 
   //胎心数据处理
   InitFileData(oriobj) {
-    console.log('InitFileData')
     let CTGDATA = {
       fhr: [[], [], []],
       toco: [],
@@ -446,6 +447,7 @@ export class Suit extends Draw {
       starttime: '',
       fetalposition: {},
       analyse: { acc: [], dec: [], baseline: [], start: 0, end: 0 },
+      noOffset: oriobj.noOffset
     };
     if (oriobj.docid) {
       let pureidarr: string[] = oriobj.docid.split('_');

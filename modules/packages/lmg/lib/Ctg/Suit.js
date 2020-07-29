@@ -145,8 +145,6 @@ var Suit = (function (_super) {
     });
     Suit.prototype.init = function (data) {
         var _this = this;
-        this.drawAnalyse.init();
-        this.drawSelect.init();
         if (!data) {
             return;
         }
@@ -166,6 +164,8 @@ var Suit = (function (_super) {
                 }
             }
         }
+        this.drawAnalyse.init();
+        this.drawSelect.init();
         this.drawSelect.clearselect();
         this.drawobj.showcur(0, false);
         if (this.type > 0) {
@@ -366,7 +366,6 @@ var Suit = (function (_super) {
     };
     Suit.prototype.movescoller = function () { };
     Suit.prototype.InitFileData = function (oriobj) {
-        console.log('InitFileData');
         var CTGDATA = {
             fhr: [[], [], []],
             toco: [],
@@ -376,6 +375,7 @@ var Suit = (function (_super) {
             starttime: '',
             fetalposition: {},
             analyse: { acc: [], dec: [], baseline: [], start: 0, end: 0 },
+            noOffset: oriobj.noOffset
         };
         if (oriobj.docid) {
             var pureidarr = oriobj.docid.split('_');

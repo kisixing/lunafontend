@@ -46,6 +46,7 @@ export default class DrawCTG {
   scalespan: number;
   starttime: string;
   fhroffset: number;
+  _fhroffset: number;
   constructor(suit: Suit, xspan = 40, yspan = 1, scalespan = 30, fhroffset = -20, baseleft = 0, basetop = 10, min = 50, max = 210) {
     this.suit = suit;
     this.gridcontext = suit.contextgrid;
@@ -56,7 +57,7 @@ export default class DrawCTG {
     this.scalespan = scalespan;
     this.basetop = basetop;
     this.baseleft = baseleft;
-    this.fhroffset = fhroffset;
+    this._fhroffset = fhroffset;
     this.min = min;
     this.max = max;
     this.starttime = suit.starttime;
@@ -149,6 +150,8 @@ export default class DrawCTG {
   }
   showBase = false
   drawdot(cur, isemit = false, showBase = undefined) {
+    const noOffset = this.suit.data['noOffset']
+    this.fhroffset = noOffset ? 0 : this._fhroffset
     typeof showBase !== 'undefined' && (this.showBase = showBase)
     cur = Math.round(cur)
 
@@ -628,6 +631,7 @@ export default class DrawCTG {
       //kisi todo 2019-11-14 增加3胎的备注
       //kisi 2019-12-08 对象修改到 suit.data
       //console.log('fetalposition',suit.data.fetalposition);
+      const offsetStr = this.fhroffset ? this.fhroffset : ''
       if (fetalIndex == 0) {
         if (suit.data.fetalposition && typeof (suit.data.fetalposition.fhr1) != 'undefined') {
           label = suit.data.fetalposition.fhr1;
@@ -636,12 +640,12 @@ export default class DrawCTG {
         if (suit.data.fetalposition && typeof (suit.data.fetalposition.fhr2) != 'undefined') {
           label = suit.data.fetalposition.fhr2;
         }
-        offsetfhr = ' ' + this.fhroffset;
+        offsetfhr = ' ' + offsetStr;
       } else if (fetalIndex == 2) {
         if (suit.data.fetalposition && typeof (suit.data.fetalposition.fhr3) != 'undefined') {
           label = suit.data.fetalposition.fhr3;
         }
-        offsetfhr = ' ' + -this.fhroffset;
+        offsetfhr = ' -' + offsetStr;
       } else {
         label = '';
       }

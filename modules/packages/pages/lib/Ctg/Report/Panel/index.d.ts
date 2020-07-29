@@ -6,6 +6,8 @@ interface IProps extends IP {
         h: number;
     };
     empId?: string;
+    setFetal: any;
+    fetal: any;
 }
 declare const Preview: (props: IProps) => JSX.Element;
 export default Preview;

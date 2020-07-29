@@ -1,5 +1,4 @@
-import { RadioChangeEvent } from 'antd/lib/radio';
-declare const _default: (value: any, print_interval: number) => {
+declare const _default: (value: any, print_interval: number, fetal: number) => {
     editable: boolean;
     selectAll: () => void;
     startingTime: number;
@@ -13,6 +12,6 @@ declare const _default: (value: any, print_interval: number) => {
     backward: () => void;
     forward: () => void;
     outputType: string;
-    setOutputType: (e: RadioChangeEvent) => void;
+    setOutputType: (value: any) => void;
 };
 export default _default;

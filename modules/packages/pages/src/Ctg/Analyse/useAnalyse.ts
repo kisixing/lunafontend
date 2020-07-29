@@ -118,7 +118,7 @@ const getEmptyScore = (): ctg_exams_analyse_score => {
         }
     }
 }
-export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (index: 2 | 1 | 3) => void, ctgData: obvue.ctg_exams_data) => {
+export default (v: MutableRefObject<Suit>, docid: string, fetal: any, ctgData: obvue.ctg_exams_data) => {
 
     const [initData, setInitData] = useState<obvue.ctg_exams_analyse>()
     // const [isToShort, setIsToShort] = useState(false)
@@ -179,8 +179,6 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
             data: { docid, mark, start: startTime, end: endTime, fetal, autoFm },
         })
             .then((r: obvue.ctg_exams_analyse) => {
-                r.analysis.acc = r.analysis.acc && r.analysis.acc.map(_ => ({ ..._, duration: _.duration / 4 }))
-                r.analysis.dec = r.analysis.dec && r.analysis.dec.map(_ => ({ ..._, duration: _.duration / 4 }))
                 return r
             })
             .finally(() => {
@@ -275,7 +273,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
     }, [docid])
 
     useEffect(() => {
-        setFhr(fetal)
+        // setFhr(fetal)
         setInitData(null)
         hasInitAnalysed.current = false
     }, [fetal])

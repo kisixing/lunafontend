@@ -49,7 +49,7 @@ export const Ctg_Analyse: FC<{
 }) {
     note = note ? note : docid
     if (!note) return null
-    const { ctgData, loading, setFhr, fetal, setFetal, fetchData } = useCtgData(note, true)
+    const { ctgData, loading, fetal, setFetal, fetchData } = useCtgData(note, true)
     const [disabled, setDisabled] = useState(true)
     const [visible, setVisible] = useState(false)
     const [pdfBase64, setPdfBase64] = useState('')
@@ -76,7 +76,7 @@ export const Ctg_Analyse: FC<{
       showBase,
       setShowBase,
       initData
-    } = useAnalyse(ref, note, fetal, setFhr, ctgData)
+    } = useAnalyse(ref, note, fetal, ctgData)
 
     const others = {
       MARKS,
@@ -110,7 +110,7 @@ export const Ctg_Analyse: FC<{
           startTime: ref.current.drawAnalyse.analysisData.analysis.start,
           endTime: ref.current.drawAnalyse.analysisData.analysis.end
         }),
-        fetalnum:fetal
+        fetalnum: fetal
       }
       return requestData
     }

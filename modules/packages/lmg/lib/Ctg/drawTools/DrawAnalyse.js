@@ -12,6 +12,17 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -669,8 +680,10 @@ var DrawAnalyse = (function (_super) {
     DrawAnalyse.prototype.init = function () {
         this.analysisData = null;
     };
-    DrawAnalyse.prototype.setData = function (analyseData) {
-        this.analysisData = analyseData;
+    DrawAnalyse.prototype.setData = function (r) {
+        r.analysis.acc = r.analysis.acc && r.analysis.acc.map(function (_) { return (__assign(__assign({}, _), { duration: _.duration / 4 })); });
+        r.analysis.dec = r.analysis.dec && r.analysis.dec.map(function (_) { return (__assign(__assign({}, _), { duration: _.duration / 4 })); }).filter(function (_) { return _.reliability >= 90; });
+        this.analysisData = r;
     };
     DrawAnalyse.prototype.drawBaseline = function (cur, show, color, yspan, xspan, max, basetop) {
         if (show === void 0) { show = true; }
@@ -737,7 +750,7 @@ var DrawAnalyse = (function (_super) {
         suit.drawSelect.$selectrpend = data.analysis.end = end;
         suit.drawSelect.$selectrpstart = data.analysis.start = start;
         var newData = this.ctgscore(type);
-        suit.drawobj.drawdot(suit.rightViewPosition, false, showBase);
+        suit.drawobj.drawdot((suit.type > 0 && suit.viewposition < suit.width * 2) ? suit.width * 2 : suit.viewposition, false, showBase);
         return newData;
     };
     DrawAnalyse.prototype.revicePoint = function (x, y) {

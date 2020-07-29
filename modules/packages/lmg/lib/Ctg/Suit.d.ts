@@ -109,6 +109,7 @@ export declare class Suit extends Draw {
             start: number;
             end: number;
         };
+        noOffset: any;
     };
     drawdot(): void;
     timerCtg(dely: any): void;

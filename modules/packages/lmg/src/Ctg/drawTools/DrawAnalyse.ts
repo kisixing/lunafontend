@@ -39,8 +39,10 @@ export class DrawAnalyse extends Draw {
     init() {
         this.analysisData = null
     }
-    setData(analyseData: obvue.ctg_exams_analyse,) {
-        this.analysisData = analyseData
+    setData(r: obvue.ctg_exams_analyse,) {
+        r.analysis.acc = r.analysis.acc && r.analysis.acc.map(_ => ({ ..._, duration: _.duration / 4 }))
+        r.analysis.dec = r.analysis.dec && r.analysis.dec.map(_ => ({ ..._, duration: _.duration / 4 })).filter(_ => _.reliability >= 90)
+        this.analysisData = r
     }
     drawBaseline(cur, show = true, color, yspan, xspan, max, basetop) {
 
@@ -121,7 +123,7 @@ export class DrawAnalyse extends Draw {
         //this.drawobj.drawdot(this.canvasline.width * 2, false);
         //kisi 2020-03-05 
         let newData = this.ctgscore(type)
-        suit.drawobj.drawdot(suit.rightViewPosition, false, showBase);
+        suit.drawobj.drawdot((suit.type > 0 && suit.viewposition < suit.width * 2) ? suit.width * 2 : suit.viewposition, false, showBase);
         return newData
     }
     //kisi 2019-10-28 绘制 acc dec

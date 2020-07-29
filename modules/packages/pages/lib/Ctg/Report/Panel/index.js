@@ -45,7 +45,7 @@ var Preview = function (props) {
     return (react_1.default.createElement("div", { style: { display: 'flex', height: '100%' } },
         react_1.default.createElement(PreviewContent_1.default, { pdfBase64: pdfBase64, wh: wh, onDownload: onDownload }),
         react_1.default.createElement(Diagnosis_1.default, { value: diagnosis, onChange: setDiagnosis }),
-        react_1.default.createElement(TimeSelect_1.default, __assign({ empId: empId, diagnosis: diagnosis, onTotalChange: setT, onDownload: onDownload, pdfBase64: pdfBase64, setPdfBase64: setPdfBase64 }, others))));
+        react_1.default.createElement(TimeSelect_1.default, __assign({ empId: empId, diagnosis: diagnosis, onTotalChange: setT, onDownload: onDownload, pdfBase64: pdfBase64, setPdfBase64: setPdfBase64, fetalcount: props.fetalcount }, others))));
 };
 exports.default = Preview;
 //# sourceMappingURL=index.js.map

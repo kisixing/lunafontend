@@ -10,6 +10,8 @@ import { IProps as IP } from "../index";
 interface IProps extends IP {
   wh: { w: number, h: number }
   empId?: string
+  setFetal: any
+  fetal: any
 }
 const Preview = (props: IProps) => {
   const { wh, empId = null, onDownload, ...others } = props;
@@ -23,7 +25,9 @@ const Preview = (props: IProps) => {
     <div style={{ display: 'flex', height: '100%' }}>
       <PreviewContent pdfBase64={pdfBase64} wh={wh} onDownload={onDownload} />
       <Diagnosis value={diagnosis} onChange={setDiagnosis} />
-      <TimeSelect empId={empId} diagnosis={diagnosis} onTotalChange={setT} onDownload={onDownload} pdfBase64={pdfBase64} setPdfBase64={setPdfBase64} {...others} />
+      <TimeSelect empId={empId} diagnosis={diagnosis} onTotalChange={setT} onDownload={onDownload} pdfBase64={pdfBase64} setPdfBase64={setPdfBase64}
+        fetalcount={props.fetalcount}
+        {...others} />
     </div>
 
   );

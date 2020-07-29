@@ -173,7 +173,7 @@ var getEmptyScore = function () {
         }
     };
 };
-exports.default = (function (v, docid, fetal, setFhr, ctgData) {
+exports.default = (function (v, docid, fetal, ctgData) {
     var _a = react_1.useState(), initData = _a[0], setInitData = _a[1];
     var _b = react_1.useState(store_1.default.get(MARK_KEY) || MARKS[0]), mark = _b[0], setMark = _b[1];
     var _c = react_1.useState(store_1.default.get(INTERVAL_KEY) || 20), interval = _c[0], setInterval = _c[1];
@@ -224,8 +224,6 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
             data: { docid: docid, mark: mark, start: startTime, end: endTime, fetal: fetal, autoFm: autoFm },
         })
             .then(function (r) {
-            r.analysis.acc = r.analysis.acc && r.analysis.acc.map(function (_) { return (__assign(__assign({}, _), { duration: _.duration / 4 })); });
-            r.analysis.dec = r.analysis.dec && r.analysis.dec.map(function (_) { return (__assign(__assign({}, _), { duration: _.duration / 4 })); });
             return r;
         })
             .finally(function () {
@@ -309,7 +307,6 @@ exports.default = (function (v, docid, fetal, setFhr, ctgData) {
         setStartTime(0);
     }, [docid]);
     react_1.useEffect(function () {
-        setFhr(fetal);
         setInitData(null);
         hasInitAnalysed.current = false;
     }, [fetal]);

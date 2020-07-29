@@ -10,9 +10,9 @@ interface BasePoint {
     marked?: boolean;
     remove?: boolean;
     user?: boolean;
+    reliability: number;
 }
 export interface AccPoint extends BasePoint {
-    reliability: number;
 }
 export declare type DecType = 'ld' | 'ed' | 'vd';
 export interface DecPoint extends BasePoint {
