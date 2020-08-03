@@ -60,7 +60,7 @@ var CTGChart = function (docid, single) {
             var fhr1 = ctgData.fhr1;
             var key = "fhr" + index;
             var value = ctgData["_" + key];
-            var emptyData = Array(fhr1 ? fhr1.length : 0).fill(0).join();
+            var emptyData = Array(fhr1 ? fhr1.length : 0).fill(0).join('');
             data = (_a = { fhr1: emptyData, fhr2: emptyData, fhr3: emptyData }, _a[key] = value, _a);
         }
         else {
@@ -74,7 +74,6 @@ var CTGChart = function (docid, single) {
     react_1.useEffect(function () {
         setFhr(fetal);
     }, [fetal]);
-    console.log('ctgdata', ctgData);
     return { ctgData: ctgData, loading: loading, setFhr: setFhr, fetal: fetal, setFetal: setFetal, fetchData: fetchData };
 };
 exports.default = CTGChart;

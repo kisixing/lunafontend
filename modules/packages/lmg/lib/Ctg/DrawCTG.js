@@ -429,7 +429,6 @@ var DrawCTG = (function () {
                 var inneri = i_1;
                 if (i_1 == start) {
                     linecontext.moveTo(lastx, (max - fhr[fetal][start] - curfhroffset) * this.yspan + this.basetop);
-                    true && this.suit.drawAnalyse.drawflag(this.linecontext, lastx, undefined, i_1);
                     continue;
                 }
                 if (typeof (fhr[fetal][inneri]) != "undefined" && fhr[fetal][inneri] && fhr[fetal][inneri] != 0) {
@@ -437,11 +436,9 @@ var DrawCTG = (function () {
                 }
                 else {
                     if (fhr[fetal][inneri] + curfhroffset > this.max && fhr[fetal][inneri] + curfhroffset < this.min) {
-                        true && this.suit.drawAnalyse.drawflag(this.linecontext, lastx, undefined, i_1);
                         continue;
                     }
                     linecontext.moveTo(lastx, (max - 0 - curfhroffset) * this.yspan + this.basetop);
-                    true && this.suit.drawAnalyse.drawflag(this.linecontext, lastx, undefined, i_1);
                     continue;
                 }
                 if (i_1 > 1 && (typeof (fhr[fetal][inneri - 2]) == "undefined" || fhr[fetal][inneri - 2] == 0 || Math.abs(lasty - fhr[fetal][inneri - 2]) > 30) || ((fhr[fetal][inneri - 2] + curfhroffset) < this.min) || ((fhr[fetal][inneri - 2] + curfhroffset) > this.max)) {

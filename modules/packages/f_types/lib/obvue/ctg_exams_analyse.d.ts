@@ -10,7 +10,7 @@ interface BasePoint {
     marked?: boolean;
     remove?: boolean;
     user?: boolean;
-    reliability: number;
+    reliability?: number;
 }
 export interface AccPoint extends BasePoint {
 }

@@ -14,6 +14,7 @@ import { push_offline_data_ctg } from "./push_offline_data_ctg";
 import { endpoint_user_confirm_msg } from "./endpoint_user_confirm_msg";
 import { list_blood_pressure } from "./list_blood_pressure";
 import { WsService } from "../WsService";
+import { f0_strategies } from "./f0";
 export const strategies: { [x: string]: Function } = {
     start_work,
     end_work,
@@ -36,6 +37,7 @@ export const strategies: { [x: string]: Function } = {
     endpoint_user_confirm_msg,
 
     list_blood_pressure,
+    ...f0_strategies
 }
 
 export function getStrategies(context: WsService): { [x: string]: Function } {

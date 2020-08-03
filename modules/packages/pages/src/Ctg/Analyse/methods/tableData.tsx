@@ -381,7 +381,7 @@ const tableData: { [x in AnalyseType]: any } = {
         },
         {
             name: '早期减速',
-            0: '有',
+            0: '有/无',
             1: '',
             2: '',
             key: 'ed',

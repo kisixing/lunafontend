@@ -70,7 +70,7 @@ var F0ProService = (function (_super) {
     F0ProService.prototype.init = function (size) {
         var _this = this;
         var device_no = '';
-        this.datacache = new Map();
+        this.f0Datacache = new Map();
         for (var i = 0; i < size; i++) {
             var div = document.createElement("div");
             var bed_no = i + 1;
@@ -129,7 +129,7 @@ var F0ProService = (function (_super) {
                 var bed_no = '';
                 var device_no = '';
                 var cache = device_no + "-" + bed_no;
-                if (_this.datacache[cache].state == 0) {
+                if (_this.f0Datacache[cache].state == 0) {
                     _this.alloc(device_no, bed_no);
                 }
             };
@@ -142,7 +142,7 @@ var F0ProService = (function (_super) {
                 var bed_no = '';
                 var device_no = '';
                 var cache = device_no + "-" + bed_no;
-                if (_this.datacache[cache].state == 0) {
+                if (_this.f0Datacache[cache].state == 0) {
                     _this.start_work(device_no, bed_no);
                 }
             };
@@ -155,12 +155,13 @@ var F0ProService = (function (_super) {
                 var bed_no = '';
                 var device_no = '';
                 var cache = device_no + "-" + bed_no;
-                if (_this.datacache[cache].state == 0) {
+                if (_this.f0Datacache[cache].state == 0) {
                     _this.end_work(device_no, bed_no);
                 }
             };
             div.appendChild(bt);
-            this.datacache[cachdbi] = { 'fhr': [], 'toco': [], 'fm': [], 'curindex': 0, 'length': 0, 'start': -1, 'last': 0, 'past': 0, 'timestamp': 0, 'state': 0, 'status': 0 };
+            var item = { id: cachdbi, 'fhr': [], 'toco': [], 'fm': [], 'curindex': 0, 'length': 0, 'start': -1, 'last': 0, 'past': 0, 'timestamp': 0, 'state': 0, 'status': 0 };
+            this.f0Datacache.set(cachdbi, item);
         }
         this.enableoperater(0, 1, false);
         this.batchupdate();

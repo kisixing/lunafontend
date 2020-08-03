@@ -4,7 +4,7 @@ import { ICache } from './types';
 import { WsService } from "./WsService";
 export declare class F0ProService extends EventEmitter {
     static s: F0ProService;
-    datacache: ICache;
+    f0Datacache: ICache;
     wsService: WsService;
     private connection;
     private rxSubscriber;

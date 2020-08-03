@@ -6,6 +6,7 @@ export const mapStatusToColor = {
     [BedStatus.Stopped]: '#bdbdbd ',
     [BedStatus.OfflineStopped]: '#bdbdbd ',
     [BedStatus.Working]: '#43a047',
+    [BedStatus.Uncreated]: '#bdbdbd',
 
 };
 export const mapStatusToText = {
@@ -13,6 +14,7 @@ export const mapStatusToText = {
     [BedStatus.Stopped]: '停止',
     [BedStatus.OfflineStopped]: '停止',
     [BedStatus.Working]: '监护中',
+    [BedStatus.Uncreated]: '未创建',
 };
 
 

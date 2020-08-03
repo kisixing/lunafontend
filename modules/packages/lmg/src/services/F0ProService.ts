@@ -5,7 +5,7 @@ import { Observer } from 'rxjs/Observer'; // tslint:disable-line
 // import Storage from 'store';
 import { EventEmitter } from "@lianmed/utils";
 
-import { BedStatus, EWsEvents, EWsStatus, ICache, IDeviceType } from './types';
+import { BedStatus, EWsEvents, EWsStatus, ICache, IDeviceType, ICacheItem } from './types';
 import { WsService } from "./WsService";
 // import { message } from "antd";
 // const t_key = 'access_token'
@@ -13,7 +13,7 @@ import { WsService } from "./WsService";
 
 export class F0ProService extends EventEmitter {
     static s: F0ProService
-    datacache: ICache
+    f0Datacache: ICache
     wsService: WsService
     private connection: Promise<any>;
     private rxSubscriber: Observer<any>;
@@ -100,7 +100,7 @@ export class F0ProService extends EventEmitter {
 
     init(size) {
         var device_no = '';
-        this.datacache = new Map();
+        this.f0Datacache = new Map();
         for (var i = 0; i < size; i++) {
             var div = document.createElement("div");
             var bed_no = i + 1;
@@ -168,7 +168,7 @@ export class F0ProService extends EventEmitter {
                 var bed_no = '';
                 var device_no = '';
                 var cache = device_no + "-" + bed_no
-                if (this.datacache[cache].state == 0) {
+                if (this.f0Datacache[cache].state == 0) {
                     this.alloc(device_no, bed_no);
                 }
             };
@@ -183,7 +183,7 @@ export class F0ProService extends EventEmitter {
                 var bed_no = '';
                 var device_no = '';
                 var cache = device_no + "-" + bed_no
-                if (this.datacache[cache].state == 0) {
+                if (this.f0Datacache[cache].state == 0) {
                     this.start_work(device_no, bed_no);
                 }
             };
@@ -198,12 +198,14 @@ export class F0ProService extends EventEmitter {
                 var bed_no = '';
                 var device_no = '';
                 var cache = device_no + "-" + bed_no
-                if (this.datacache[cache].state == 0) {
+                if (this.f0Datacache[cache].state == 0) {
                     this.end_work(device_no, bed_no);
                 }
             };
             div.appendChild(bt);
-            this.datacache[cachdbi] = { 'fhr': [], 'toco': [], 'fm': [], 'curindex': 0, 'length': 0, 'start': -1, 'last': 0, 'past': 0, 'timestamp': 0, 'state': 0, 'status': 0 };
+            // getEmptyCacheItem
+            const item: ICacheItem = { id: cachdbi, 'fhr': [], 'toco': [], 'fm': [], 'curindex': 0, 'length': 0, 'start': -1, 'last': 0, 'past': 0, 'timestamp': 0, 'state': 0, 'status': 0 };
+            this.f0Datacache.set(cachdbi, item)
         }
         this.enableoperater(0, 1, false);
         this.batchupdate();

@@ -31,7 +31,7 @@ function Nst(_data) {
     else if (utils_1.inRange(fhr_uptime, 10, 14)) {
         nstdata.accdurationscore = 1;
     }
-    else if (fhr_uptime > 15) {
+    else if (fhr_uptime >= 15) {
         nstdata.accdurationscore = 2;
     }
     if (fhr_ampl < 10) {
@@ -40,7 +40,7 @@ function Nst(_data) {
     else if (utils_1.inRange(fhr_ampl, 10, 14)) {
         nstdata.accamplscore = 1;
     }
-    else if (fhr_ampl > 15) {
+    else if (fhr_ampl >= 15) {
         nstdata.accamplscore = 2;
     }
     nstdata.fmvalue = fmnum;
@@ -50,7 +50,7 @@ function Nst(_data) {
     else if (utils_1.inRange(fmnum, 1, 2)) {
         nstdata.fmscore = 1;
     }
-    else if (fmnum > 2) {
+    else if (fmnum >= 3) {
         nstdata.fmscore = 2;
     }
     nstdata.total = nstdata.accamplscore + nstdata.accdurationscore + nstdata.bhrscore + nstdata.fmscore + nstdata.ltvscore;

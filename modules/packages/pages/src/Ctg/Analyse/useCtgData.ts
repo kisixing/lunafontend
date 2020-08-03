@@ -51,7 +51,7 @@ const CTGChart = (docid: string, single = false) => {
             const { fhr1 } = ctgData
             const key = `fhr${index}`
             const value = ctgData[`_${key}`]
-            const emptyData = Array(fhr1 ? fhr1.length : 0).fill(0).join()
+            const emptyData = Array(fhr1 ? fhr1.length : 0).fill(0).join('')
             data = { fhr1: emptyData, fhr2: emptyData, fhr3: emptyData, [key]: value }
         } else {
             Array(Number(ctgData.fetalnum)).fill(0).forEach((_, i) => {
@@ -60,12 +60,11 @@ const CTGChart = (docid: string, single = false) => {
             })
 
         }
-        setCtgData({ ...ctgData, ...data,noOffset: !!index })
+        setCtgData({ ...ctgData, ...data, noOffset: !!index })
     }
     useEffect(() => {
         setFhr(fetal)
     }, [fetal])
-    console.log('ctgdata', ctgData)
     return { ctgData, loading, setFhr, fetal, setFetal, fetchData };
 }
 

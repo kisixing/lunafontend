@@ -12,6 +12,7 @@ var BedStatus;
     BedStatus[BedStatus["Stopped"] = 2] = "Stopped";
     BedStatus[BedStatus["Offline"] = 3] = "Offline";
     BedStatus[BedStatus["OfflineStopped"] = 4] = "OfflineStopped";
+    BedStatus[BedStatus["Uncreated"] = 5] = "Uncreated";
 })(BedStatus = exports.BedStatus || (exports.BedStatus = {}));
 var EWsEvents;
 (function (EWsEvents) {

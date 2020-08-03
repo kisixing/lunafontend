@@ -416,9 +416,11 @@ export class Suit extends Draw {
   }
   //kisi 2019-11-14 update fhr position
   setfetalposition(fhr1, fhr2, fhr3) {
-    this.data.fetalposition.fhr1 = fhr1;
-    this.data.fetalposition.fhr2 = fhr2;
-    this.data.fetalposition.fhr3 = fhr3;
+    if (this.data && this.data.fetalposition) {
+      this.data.fetalposition.fhr1 = fhr1;
+      this.data.fetalposition.fhr2 = fhr2;
+      this.data.fetalposition.fhr3 = fhr3;
+    }
   }
   //kisi 2019-12-08 update fhr position
   // setfetalpositionbyobj(position) {

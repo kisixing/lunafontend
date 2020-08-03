@@ -360,9 +360,11 @@ var Suit = (function (_super) {
         Object.values(this).forEach(function (_) { return _ && _.resize && _.resize(width, height); });
     };
     Suit.prototype.setfetalposition = function (fhr1, fhr2, fhr3) {
-        this.data.fetalposition.fhr1 = fhr1;
-        this.data.fetalposition.fhr2 = fhr2;
-        this.data.fetalposition.fhr3 = fhr3;
+        if (this.data && this.data.fetalposition) {
+            this.data.fetalposition.fhr1 = fhr1;
+            this.data.fetalposition.fhr2 = fhr2;
+            this.data.fetalposition.fhr3 = fhr3;
+        }
     };
     Suit.prototype.movescoller = function () { };
     Suit.prototype.InitFileData = function (oriobj) {

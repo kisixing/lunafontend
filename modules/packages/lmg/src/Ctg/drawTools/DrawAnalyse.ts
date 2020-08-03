@@ -39,9 +39,14 @@ export class DrawAnalyse extends Draw {
     init() {
         this.analysisData = null
     }
+    _acc: number[]
+    _dec: number[]
     setData(r: obvue.ctg_exams_analyse,) {
+        console.log('setData', r)
         r.analysis.acc = r.analysis.acc && r.analysis.acc.map(_ => ({ ..._, duration: _.duration / 4 }))
-        r.analysis.dec = r.analysis.dec && r.analysis.dec.map(_ => ({ ..._, duration: _.duration / 4 })).filter(_ => _.reliability >= 90)
+        r.analysis.dec = r.analysis.dec && r.analysis.dec.map(_ => ({ ..._, duration: _.duration / 4 })).filter(_ => _.reliability >= 90 || _.user)
+        this._acc = r.analysis.acc.map(_ => _.index)
+        this._dec = r.analysis.dec.map(_ => _.index)
         this.analysisData = r
     }
     drawBaseline(cur, show = true, color, yspan, xspan, max, basetop) {
@@ -134,15 +139,13 @@ export class DrawAnalyse extends Draw {
         const { context2D, analysisData: analyseData } = this;
         if (!context2D || !analyseData) return
         const { analysis: { acc, dec } } = analyseData
-        const _acc = acc.map(_ => _.index)
-        const _dec = dec.map(_ => _.index)
+        const _acc = this._acc
+        const _dec = this._dec
         context2D.textAlign = 'left';
         context2D.textBaseline = 'top';
         let txt = '';
-        const baseY = this.suit.getBaseY(x) + (acc.find(_ => [index, index - 1].includes(_.index)) || dec.find(_ => [index, index - 1].includes(_.index)) || { ampl: 10 }).ampl
-        if (y === undefined && [index, index + 1].includes(38746)) {
-        }
-        y = y === undefined ? -baseY : y
+        // const baseY = this.suit.getBaseY(x) + (acc.find(_ => [index, index - 1].includes(_.index)) || dec.find(_ => [index, index - 1].includes(_.index)) || { ampl: 10 }).ampl
+        // y = y === undefined ? -baseY : y
         if (_acc.indexOf(index) > -1 || _acc.indexOf(index - 1) > -1) {
             const target = acc.find(_ => [index, index - 1].includes(_.index))
             target.x = x
@@ -341,7 +344,7 @@ export class DrawAnalyse extends Draw {
                 score.nstdata.accdurationscore = 0;
             } else if (this.inRange(fhr_uptime, 10, 14)) {
                 score.nstdata.accdurationscore = 1;
-            } else if (fhr_uptime > 15) {
+            } else if (fhr_uptime >= 15) {
                 score.nstdata.accdurationscore = 2;
             }
             // 胎动fhr变化幅度
@@ -351,7 +354,7 @@ export class DrawAnalyse extends Draw {
                 score.nstdata.accamplscore = 0;
             } else if (this.inRange(fhr_ampl, 10, 14)) {
                 score.nstdata.accamplscore = 1;
-            } else if (fhr_ampl > 15) {
+            } else if (fhr_ampl >= 15) {
                 score.nstdata.accamplscore = 2;
             }
             // 胎动
@@ -361,7 +364,7 @@ export class DrawAnalyse extends Draw {
                 score.nstdata.fmscore = 0;
             } else if (this.inRange(fmnum, 1, 2)) {
                 score.nstdata.fmscore = 1;
-            } else if (fmnum > 2) {
+            } else if (fmnum >= 3) {
                 score.nstdata.fmscore = 2;
             }
             //kisi add 2020-04-26
@@ -712,9 +715,9 @@ export class DrawAnalyse extends Draw {
             let ld = analysis.ldtimes = this.countDec(analysis.start, analysis.end, 'LD');//analysis.ldtimes;
             let vd = analysis.vdtimes = this.countDec(analysis.start, analysis.end, 'VD');//analysis.vdtimes;
             let ed = analysis.edtimes = this.countDec(analysis.start, analysis.end, 'ED');//analysis.edtimes;
-            score.cstoctdata.ldvalue = ld
-            score.cstoctdata.vdvalue = vd
-            score.cstoctdata.edvalue = ed
+            score.cstoctdata.ldvalue = ld || '无'
+            score.cstoctdata.vdvalue = vd || '无'
+            score.cstoctdata.edvalue = ed || '无'
             if (ld > 0) {
                 score.cstoctdata.decscore = 0;
                 score.cstoctdata.decvalue = 'LD';

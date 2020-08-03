@@ -11,12 +11,14 @@ exports.mapStatusToColor = (_a = {},
     _a[types_1.BedStatus.Stopped] = '#bdbdbd ',
     _a[types_1.BedStatus.OfflineStopped] = '#bdbdbd ',
     _a[types_1.BedStatus.Working] = '#43a047',
+    _a[types_1.BedStatus.Uncreated] = '#bdbdbd',
     _a);
 exports.mapStatusToText = (_b = {},
     _b[types_1.BedStatus.Offline] = '离线',
     _b[types_1.BedStatus.Stopped] = '停止',
     _b[types_1.BedStatus.OfflineStopped] = '停止',
     _b[types_1.BedStatus.Working] = '监护中',
+    _b[types_1.BedStatus.Uncreated] = '未创建',
     _b);
 function getMaxArray() {
     return [];

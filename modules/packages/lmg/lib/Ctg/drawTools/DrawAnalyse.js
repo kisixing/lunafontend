@@ -41,15 +41,11 @@ var DrawAnalyse = (function (_super) {
             if (!context2D || !analyseData)
                 return;
             var _b = analyseData.analysis, acc = _b.acc, dec = _b.dec;
-            var _acc = acc.map(function (_) { return _.index; });
-            var _dec = dec.map(function (_) { return _.index; });
+            var _acc = _this._acc;
+            var _dec = _this._dec;
             context2D.textAlign = 'left';
             context2D.textBaseline = 'top';
             var txt = '';
-            var baseY = _this.suit.getBaseY(x) + (acc.find(function (_) { return [index, index - 1].includes(_.index); }) || dec.find(function (_) { return [index, index - 1].includes(_.index); }) || { ampl: 10 }).ampl;
-            if (y === undefined && [index, index + 1].includes(38746)) {
-            }
-            y = y === undefined ? -baseY : y;
             if (_acc.indexOf(index) > -1 || _acc.indexOf(index - 1) > -1) {
                 var target = acc.find(function (_) { return [index, index - 1].includes(_.index); });
                 target.x = x;
@@ -243,7 +239,7 @@ var DrawAnalyse = (function (_super) {
                 else if (_this.inRange(fhr_uptime, 10, 14)) {
                     score.nstdata.accdurationscore = 1;
                 }
-                else if (fhr_uptime > 15) {
+                else if (fhr_uptime >= 15) {
                     score.nstdata.accdurationscore = 2;
                 }
                 var fhr_ampl = _this.fhrAmpl(analysis.start, analysis.end);
@@ -255,7 +251,7 @@ var DrawAnalyse = (function (_super) {
                 else if (_this.inRange(fhr_ampl, 10, 14)) {
                     score.nstdata.accamplscore = 1;
                 }
-                else if (fhr_ampl > 15) {
+                else if (fhr_ampl >= 15) {
                     score.nstdata.accamplscore = 2;
                 }
                 var fmnum = _this.countFm(analysis.start, analysis.end);
@@ -266,7 +262,7 @@ var DrawAnalyse = (function (_super) {
                 else if (_this.inRange(fmnum, 1, 2)) {
                     score.nstdata.fmscore = 1;
                 }
-                else if (fmnum > 2) {
+                else if (fmnum >= 3) {
                     score.nstdata.fmscore = 2;
                 }
                 analysis.ldtimes = _this.countDec(analysis.start, analysis.end, 'LD');
@@ -620,9 +616,9 @@ var DrawAnalyse = (function (_super) {
                 var ld = analysis.ldtimes = _this.countDec(analysis.start, analysis.end, 'LD');
                 var vd = analysis.vdtimes = _this.countDec(analysis.start, analysis.end, 'VD');
                 var ed = analysis.edtimes = _this.countDec(analysis.start, analysis.end, 'ED');
-                score.cstoctdata.ldvalue = ld;
-                score.cstoctdata.vdvalue = vd;
-                score.cstoctdata.edvalue = ed;
+                score.cstoctdata.ldvalue = ld || '无';
+                score.cstoctdata.vdvalue = vd || '无';
+                score.cstoctdata.edvalue = ed || '无';
                 if (ld > 0) {
                     score.cstoctdata.decscore = 0;
                     score.cstoctdata.decvalue = 'LD';
@@ -681,8 +677,11 @@ var DrawAnalyse = (function (_super) {
         this.analysisData = null;
     };
     DrawAnalyse.prototype.setData = function (r) {
+        console.log('setData', r);
         r.analysis.acc = r.analysis.acc && r.analysis.acc.map(function (_) { return (__assign(__assign({}, _), { duration: _.duration / 4 })); });
-        r.analysis.dec = r.analysis.dec && r.analysis.dec.map(function (_) { return (__assign(__assign({}, _), { duration: _.duration / 4 })); }).filter(function (_) { return _.reliability >= 90; });
+        r.analysis.dec = r.analysis.dec && r.analysis.dec.map(function (_) { return (__assign(__assign({}, _), { duration: _.duration / 4 })); }).filter(function (_) { return _.reliability >= 90 || _.user; });
+        this._acc = r.analysis.acc.map(function (_) { return _.index; });
+        this._dec = r.analysis.dec.map(function (_) { return _.index; });
         this.analysisData = r;
     };
     DrawAnalyse.prototype.drawBaseline = function (cur, show, color, yspan, xspan, max, basetop) {

@@ -32,7 +32,7 @@ export function Nst(_data: TData) {
         nstdata.accdurationscore = 0;
     } else if (inRange(fhr_uptime, 10, 14)) {
         nstdata.accdurationscore = 1;
-    } else if (fhr_uptime > 15) {
+    } else if (fhr_uptime >= 15) {
         nstdata.accdurationscore = 2;
     }
     // 胎动fhr变化幅度
@@ -40,7 +40,7 @@ export function Nst(_data: TData) {
         nstdata.accamplscore = 0;
     } else if (inRange(fhr_ampl, 10, 14)) {
         nstdata.accamplscore = 1;
-    } else if (fhr_ampl > 15) {
+    } else if (fhr_ampl >= 15) {
         nstdata.accamplscore = 2;
     }
     // 胎动
@@ -49,7 +49,7 @@ export function Nst(_data: TData) {
         nstdata.fmscore = 0;
     } else if (inRange(fmnum, 1, 2)) {
         nstdata.fmscore = 1;
-    } else if (fmnum > 2) {
+    } else if (fmnum >= 3) {
         nstdata.fmscore = 2;
     }
     //kisi add 2020-04-26
