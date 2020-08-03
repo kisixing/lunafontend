@@ -172,8 +172,7 @@ export class Suit extends Draw {
   }
 
   init(data: ICacheItem) {
-    this.drawAnalyse.init()
-    this.drawSelect.init()
+
     if (!data) {
       return;
     }
@@ -192,6 +191,9 @@ export class Suit extends Draw {
         }
       }
     }
+    this.drawAnalyse.init()
+    this.drawSelect.init()
+
     this.drawSelect.clearselect();
     this.drawobj.showcur(0, false);
     if (this.type > 0) {
@@ -443,9 +445,11 @@ export class Suit extends Draw {
   }
   //kisi 2019-11-14 update fhr position
   setfetalposition(fhr1, fhr2, fhr3) {
-    this.data.fetalposition.fhr1 = fhr1;
-    this.data.fetalposition.fhr2 = fhr2;
-    this.data.fetalposition.fhr3 = fhr3;
+    if (this.data && this.data.fetalposition) {
+      this.data.fetalposition.fhr1 = fhr1;
+      this.data.fetalposition.fhr2 = fhr2;
+      this.data.fetalposition.fhr3 = fhr3;
+    }
   }
   //kisi 2019-12-08 update fhr position
   // setfetalpositionbyobj(position) {
@@ -465,16 +469,16 @@ export class Suit extends Draw {
 
   //胎心数据处理
   InitFileData(oriobj) {
-    console.log('InitFileData')
     let CTGDATA = {
       fhr: [[], [], []],
       toco: [],
       fm: [],
-      fetal_num: 2,
+      fetal_num: +oriobj.fetalnum || 1,
       index: 0,
       starttime: '',
       fetalposition: {},
       analyse: { acc: [], dec: [], baseline: [], start: 0, end: 0 },
+      noOffset: oriobj.noOffset
     };
     if (oriobj.docid) {
       let pureidarr: string[] = oriobj.docid.split('_');
@@ -682,6 +686,48 @@ export class Suit extends Draw {
         const type = (linePoint.y - baseY) < 0 ? 'MarkAccPoint' : 'MarkDecPoint'
         this.drawAnalyse.pointToInsert = { type, index: linePoint.index }
         return type
+      }
+
+    }
+
+    return null
+  }
+  getBaseY(x: number) {
+    const { analysisData, mapBaselilneXtoY } = this.drawAnalyse
+    x = Math.round(x)
+
+    if (analysisData) {
+
+
+
+      const mKeys = Object.keys(mapBaselilneXtoY).map(_ => Number(_))
+      const leftIndex = mKeys.reduce((index, _) => {
+        const left = mKeys[index]
+        const right = mKeys[index + 1]
+        if (right === undefined) {
+          return
+        }
+        if (left <= x) {
+          if (x <= right) {
+            return index
+          } else {
+            return index + 1
+          }
+        } else {
+          return
+
+        }
+      }, 0)
+      // 线上的点
+      if (typeof leftIndex === 'number') {
+        const x1 = mKeys[leftIndex]
+        const x2 = mKeys[leftIndex + 1]
+        const y1 = mapBaselilneXtoY[x1]
+        const y2 = mapBaselilneXtoY[x2]
+        const k = (y2 - y1) / (x2 - x1)
+        const b = y1 - x1 * k
+        const baseY = x * k + b
+        return baseY
       }
 
     }

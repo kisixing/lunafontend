@@ -43,6 +43,7 @@ var DrawCTG = (function () {
         if (basetop === void 0) { basetop = 10; }
         if (min === void 0) { min = 50; }
         if (max === void 0) { max = 210; }
+        this.showBase = false;
         this.sethorizontal = function (length, startposition, drawtimespan) {
             if (drawtimespan === void 0) { drawtimespan = true; }
             var _a = _this, setrules = _a.setrules, gridcontext = _a.gridcontext, baseleft = _a.baseleft, min = _a.min, max = _a.max, xspan = _a.xspan;
@@ -269,6 +270,7 @@ var DrawCTG = (function () {
                 var curvalue = (typeof cv !== 'number' || cv < 1 || cv > 240) ? EMPTY_SYMBOL : cv.toString();
                 var isAlarm = _this.suit.checkAlarm(fetalIndex, cv);
                 datacontext.fillStyle = isAlarm ? suit.ctgconfig.alarmcolor : suit.ctgconfig.fhrcolor[fetalIndex];
+                var offsetStr = _this.fhroffset ? _this.fhroffset : '';
                 if (fetalIndex == 0) {
                     if (suit.data.fetalposition && typeof (suit.data.fetalposition.fhr1) != 'undefined') {
                         label = suit.data.fetalposition.fhr1;
@@ -278,13 +280,13 @@ var DrawCTG = (function () {
                     if (suit.data.fetalposition && typeof (suit.data.fetalposition.fhr2) != 'undefined') {
                         label = suit.data.fetalposition.fhr2;
                     }
-                    offsetfhr = ' ' + _this.fhroffset;
+                    offsetfhr = ' ' + offsetStr;
                 }
                 else if (fetalIndex == 2) {
                     if (suit.data.fetalposition && typeof (suit.data.fetalposition.fhr3) != 'undefined') {
                         label = suit.data.fetalposition.fhr3;
                     }
-                    offsetfhr = ' ' + -_this.fhroffset;
+                    offsetfhr = ' -' + offsetStr;
                 }
                 else {
                     label = '';
@@ -328,7 +330,7 @@ var DrawCTG = (function () {
         this.scalespan = scalespan;
         this.basetop = basetop;
         this.baseleft = baseleft;
-        this.fhroffset = fhroffset;
+        this._fhroffset = fhroffset;
         this.min = min;
         this.max = max;
         this.starttime = suit.starttime;
@@ -381,8 +383,12 @@ var DrawCTG = (function () {
     };
     DrawCTG.prototype.drawdotright = function (cur) {
     };
-    DrawCTG.prototype.drawdot = function (cur, isemit) {
+    DrawCTG.prototype.drawdot = function (cur, isemit, showBase) {
         if (isemit === void 0) { isemit = false; }
+        if (showBase === void 0) { showBase = undefined; }
+        var noOffset = this.suit.data['noOffset'];
+        this.fhroffset = noOffset ? 0 : this._fhroffset;
+        typeof showBase !== 'undefined' && (this.showBase = showBase);
         cur = Math.round(cur);
         var _a = this, suit = _a.suit, linecontext = _a.linecontext, max = _a.max;
         var drawAnalyse = suit.drawAnalyse;
@@ -584,7 +590,7 @@ var DrawCTG = (function () {
                 this.showfm(lastx);
             }
         }
-        drawAnalyse.drawBaseline(cur, 'black', this.yspan, this.xspan, max, this.basetop);
+        drawAnalyse.drawBaseline(cur, this.showBase, 'black', this.yspan, this.xspan, max, this.basetop);
     };
     DrawCTG.prototype.setscalestyle = function (context, color) {
         context.font = 'bold 10px consolas';

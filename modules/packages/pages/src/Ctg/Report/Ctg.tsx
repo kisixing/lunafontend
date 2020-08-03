@@ -1,21 +1,20 @@
 import React from 'react';
 import { Ctg as L } from '@lianmed/lmg';
 import { Context } from './index';
-import useCtgData from "../Analyse/useCtgData";
 
 
 interface IProps {
-  docid: string
+  ctgData: any
+  loading:boolean
 }
 
 const Setting = (props: IProps) => {
 
-  const { ctgData, loading } = useCtgData(props.docid)
 
   return (
     <Context.Consumer>
       {(value: any) => (
-        <L suitType={2} loading={loading} data={ctgData} ref={value}></L>
+        <L suitType={2} loading={props.loading} data={props.ctgData} ref={value}></L>
       )}
     </Context.Consumer>
   );

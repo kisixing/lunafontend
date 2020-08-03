@@ -1,6 +1,7 @@
 /// <reference types="react" />
 interface IProps {
-    docid: string;
+    ctgData: any;
+    loading: boolean;
 }
 declare const Setting: (props: IProps) => JSX.Element;
 export default Setting;

@@ -4,12 +4,14 @@ export declare const mapStatusToColor: {
     2: string;
     4: string;
     1: string;
+    5: string;
 };
 export declare const mapStatusToText: {
     3: string;
     2: string;
     4: string;
     1: string;
+    5: string;
 };
 export declare function getMaxArray(): number[];
 export declare function getEmptyCacheItem(base: {

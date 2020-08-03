@@ -1,15 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = require("react");
-exports.default = (function (value, print_interval) {
+exports.default = (function (value, print_interval, fetal) {
     var _a = react_1.useState(0), startingTime = _a[0], setStartingTime = _a[1];
     var _b = react_1.useState(0), endingTime = _b[0], setEndingTime = _b[1];
     var _c = react_1.useState(false), locking = _c[0], setLocking = _c[1];
     var _d = react_1.useState(false), customizable = _d[0], setCustomizable = _d[1];
     var _e = react_1.useState(false), editable = _e[0], setEditable = _e[1];
     var _f = react_1.useState("180"), outputType = _f[0], _setOutputType = _f[1];
-    var setOutputType = function (e) {
-        _setOutputType(e.target.value);
+    var setOutputType = function (value) {
+        _setOutputType(value);
     };
     react_1.useEffect(function () {
         var current = value.current || {};
@@ -25,6 +25,11 @@ exports.default = (function (value, print_interval) {
             current.off && current.off('startTime', cb).off('endTime', cb);
         };
     }, [value]);
+    react_1.useEffect(function () {
+        setStartingTime(0);
+        setEndingTime(0);
+        setEditable(false);
+    }, [fetal]);
     var toggleLocking = function () {
         var nextV = !locking;
         setLocking(nextV);

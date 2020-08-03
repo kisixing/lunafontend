@@ -49,7 +49,7 @@ var message_1 = __importDefault(require("antd/lib/message"));
 var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n    .bottomBtns button {\n        margin-right: 10px \n    }\n    .bottomBtns button:last-child {\n        margin-right: 0px \n    }\n"], ["\n    .bottomBtns button {\n        margin-right: 10px \n    }\n    .bottomBtns button:last-child {\n        margin-right: 0px \n    }\n"])));
 var COEFFICIENT = 240;
 var Preview = function (props) {
-    var onDownload = props.onDownload, docid = props.docid, print_interval = props.print_interval, diagnosis = props.diagnosis, onTotalChange = props.onTotalChange, pdfBase64 = props.pdfBase64, setPdfBase64 = props.setPdfBase64, _a = props.empId, empId = _a === void 0 ? null : _a, args = __rest(props, ["onDownload", "docid", "print_interval", "diagnosis", "onTotalChange", "pdfBase64", "setPdfBase64", "empId"]);
+    var onDownload = props.onDownload, docid = props.docid, print_interval = props.print_interval, diagnosis = props.diagnosis, onTotalChange = props.onTotalChange, pdfBase64 = props.pdfBase64, setPdfBase64 = props.setPdfBase64, _a = props.empId, empId = _a === void 0 ? null : _a, fetal = props.fetal, setFetal = props.setFetal, args = __rest(props, ["onDownload", "docid", "print_interval", "diagnosis", "onTotalChange", "pdfBase64", "setPdfBase64", "empId", "fetal", "setFetal"]);
     var _b = react_1.useState(false), pdfBase64Loading = _b[0], setPdfBase64Loading = _b[1];
     var handlePreview = function () {
         if ((endingTime - startingTime) / COEFFICIENT < print_interval) {
@@ -57,20 +57,24 @@ var Preview = function (props) {
         }
         setPdfBase64Loading(true);
         services_1.fetchCtgExamsPdf(__assign({ docid: docid,
-            diagnosis: diagnosis, start: startingTime, end: endingTime, outputType: outputType }, args)).then(function (r) {
+            diagnosis: diagnosis, start: startingTime, end: endingTime, outputType: outputType, fetal: fetal }, args)).then(function (r) {
             setPdfBase64Loading(false);
             setPdfBase64(r);
         });
     };
     var _c = react_1.useState({ suit: null }), value = _c[0], setValue = _c[1];
-    var _d = usePrintConfig_1.default(value, print_interval), startingTime = _d.startingTime, endingTime = _d.endingTime, locking = _d.locking, backward = _d.backward, forward = _d.forward, toggleLocking = _d.toggleLocking, selectAll = _d.selectAll, editable = _d.editable, outputType = _d.outputType, setOutputType = _d.setOutputType;
+    var _d = usePrintConfig_1.default(value, print_interval, fetal), startingTime = _d.startingTime, endingTime = _d.endingTime, locking = _d.locking, backward = _d.backward, forward = _d.forward, toggleLocking = _d.toggleLocking, selectAll = _d.selectAll, editable = _d.editable, outputType = _d.outputType, setOutputType = _d.setOutputType;
     var total = dispalyTime(endingTime - startingTime);
     var _e = useArchive_1.default(docid), setBizSn = _e.setBizSn, bizSn = _e.bizSn, archive = _e.archive, archiveLoading = _e.archiveLoading, archived = _e.archived;
     var _f = useSign_1.default(bizSn, setPdfBase64, setBizSn, empId), fetchQrCode = _f.fetchQrCode, qrCodeBase64 = _f.qrCodeBase64, modalVisible = _f.modalVisible, qrCodeBase64Loading = _f.qrCodeBase64Loading, setModalVisible = _f.setModalVisible, signed = _f.signed;
     var _g = useSave_1.default(bizSn, setBizSn), caEnable = _g.caEnable, save = _g.save, saveLoading = _g.saveLoading, saved = _g.saved;
+    console.log('fetalcount', props.fetalcount);
     react_1.useEffect(function () {
         onTotalChange(total);
     }, [total]);
+    react_1.useEffect(function () {
+        setPdfBase64(null);
+    }, [fetal]);
     return (react_1.default.createElement(index_1.Context.Consumer, null, function (v) {
         setValue(v);
         return (react_1.default.createElement("div", { id: "modal_id", style: { display: 'flex', height: '100%' } },
@@ -96,9 +100,13 @@ var Preview = function (props) {
                         dispalyTime(endingTime - startingTime))),
                 react_1.default.createElement("div", { style: { textAlign: 'left' } },
                     react_1.default.createElement("label", null, "\u80CE\u5FC3\u7387\u8303\u56F4\uFF1A"),
-                    react_1.default.createElement(antd_1.Radio.Group, { value: outputType, onChange: setOutputType },
-                        react_1.default.createElement(antd_1.Radio, { value: "180" }, "90~180"),
-                        react_1.default.createElement(antd_1.Radio, { value: "210" }, "50~210"))),
+                    react_1.default.createElement(antd_1.Select, { value: outputType, onChange: setOutputType, disabled: locking },
+                        react_1.default.createElement(antd_1.Select.Option, { value: "180" }, "90~180"),
+                        react_1.default.createElement(antd_1.Select.Option, { value: "210" }, "50~210")),
+                    react_1.default.createElement("label", null, "\u80CE\u5FC3\u7387\uFF1A"),
+                    react_1.default.createElement(antd_1.Select, { value: fetal, onChange: function (v) { return setFetal(v); }, disabled: locking }, Array((props.fetalcount || 0) + 1).fill(0).map(function (_, i) {
+                        return react_1.default.createElement(antd_1.Select.Option, { key: i, value: i }, i == 0 ? '混合' : "FHR" + i);
+                    }))),
                 react_1.default.createElement("div", { style: { display: 'flex' }, className: "bottomBtns" },
                     react_1.default.createElement(antd_1.Button, { disabled: locking || !editable, block: true, type: "primary", loading: pdfBase64Loading, onClick: handlePreview },
                         react_1.default.createElement("span", null, "\u751F\u6210")),

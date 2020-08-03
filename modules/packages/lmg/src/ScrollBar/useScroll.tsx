@@ -34,7 +34,8 @@ function useScroll(
       background: '#4169E1',
       width: 10,
       height: 12,
-      bottom: 0
+      bottom: 0,
+      border: '1px solid #fff'
     })
     // bar.el.classList.add('bar')
 
@@ -117,7 +118,7 @@ function useScroll(
       },
 
       setBarLeft: bar.setLeft.bind(bar),
-      createRod(name, bg = '#aaa') {
+      createRod(name, bg = '#4169e1') {
         const ins = new ScrollEl(wrapper.current, { lockMovementY: true }).setStyles({
           width: 4,
           background: bg,
@@ -162,12 +163,13 @@ function useScroll(
             ins.forEach(i => i.setStyle('bottom', n + ins0.getRect().height))
           },
           addDot({ width = 4, height = 10, left = 0 }) {
-            const i = new ScrollEl(wrapper.current, { lockMovementY: true }).setStyles({
-              background: 'transparent',
-              border: `6px solid transparent`,
-              left,
-              height: 0
-            })
+            const i = new ScrollEl(wrapper.current, { lockMovementY: true })
+              .setStyles({
+                background: 'transparent',
+                border: `6px solid transparent`,
+                left,
+                height: 0
+              })
             ins.push(i)
             ins0.mates.push(i)
             return i

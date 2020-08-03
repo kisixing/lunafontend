@@ -1,13 +1,12 @@
 
 import { useState, useEffect, useCallback } from 'react';
-import { RadioChangeEvent } from 'antd/lib/radio';
 
 // const COEFFICIENT = 240
 
 
 
 
-export default (value, print_interval: number) => {
+export default (value, print_interval: number, fetal: number) => {
 
 
     // const [pdfBase64, setPdfBase64] = useState(`data:application/pdf;base64,${pdf}`)
@@ -17,8 +16,8 @@ export default (value, print_interval: number) => {
     const [customizable, setCustomizable] = useState(false)
     const [editable, setEditable] = useState(false)
     const [outputType, _setOutputType] = useState("180")
-    const setOutputType = (e: RadioChangeEvent) => {
-        _setOutputType(e.target.value)
+    const setOutputType = (value) => {
+        _setOutputType(value)
     }
 
 
@@ -45,7 +44,11 @@ export default (value, print_interval: number) => {
         };
     }, [value])
 
-
+    useEffect(() => {
+        setStartingTime(0)
+        setEndingTime(0)
+        setEditable(false)
+    }, [fetal])
     const toggleLocking = () => {
         const nextV = !locking
         setLocking(nextV)

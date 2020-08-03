@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var moment_1 = __importDefault(require("moment"));
-console.log('moment', moment_1.default);
 function formatDate(s) {
     if (s === void 0) { s = null; }
     var d;
@@ -17,4 +16,16 @@ function formatDate(s) {
     return moment_1.default(d).format('YYYY-MM-DD');
 }
 exports.formatDate = formatDate;
+function formatTime(s) {
+    if (s === void 0) { s = null; }
+    var d;
+    if (s && s._isAMomentObject) {
+        d = s;
+    }
+    else {
+        d = s ? new Date(s) : new Date();
+    }
+    return moment_1.default(d).format('YYYY-MM-DD HH:mm:ss');
+}
+exports.formatTime = formatTime;
 //# sourceMappingURL=moment.js.map

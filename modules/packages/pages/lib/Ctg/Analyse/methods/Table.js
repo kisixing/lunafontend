@@ -17,11 +17,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importStar(require("react"));
 var antd_1 = require("antd");
+var strategies_1 = __importDefault(require("./strategies"));
 var T = react_1.forwardRef(function (props, ref) {
-    var hidden = props.hidden, dataSource = props.dataSource, disabled = props.disabled;
+    var hidden = props.hidden, dataSource = props.dataSource, disabled = props.disabled, mark = props.mark, initData = props.initData;
     var deformed = dataSource.deformed;
     var columns = [
         {
@@ -43,22 +47,21 @@ var T = react_1.forwardRef(function (props, ref) {
             title: deformed ? '异常' : '2分',
             dataIndex: '2'
         },
-        {
+        false ? null : {
+            width: deformed ? 300 : undefined,
             title: '结果',
             dataIndex: 'result',
             render: function (a, _a) {
-                var key = _a.key;
-                return (react_1.default.createElement(antd_1.Form.Item, { name: key + "value", style: { margin: -8 } },
-                    react_1.default.createElement(antd_1.Input, { disabled: disabled, style: { width: 44 } })));
+                var key = _a.key, R = _a.R;
+                return (react_1.default.createElement(antd_1.Form.Item, { name: key + "value", style: { margin: -8 } }, R ? react_1.default.createElement(R, { disabled: disabled }) : react_1.default.createElement(antd_1.Input, { disabled: disabled, style: { width: 44 } })));
             }
         },
         false ? null : {
-            title: '得分',
+            title: deformed ? '类型' : '得分',
             dataIndex: 'score',
             render: function (a, _a) {
-                var key = _a.key;
-                return (react_1.default.createElement(antd_1.Form.Item, { name: key + "score", style: { margin: -8 } },
-                    react_1.default.createElement(antd_1.InputNumber, { disabled: disabled, style: { width: 44 } })));
+                var key = _a.key, S = _a.S;
+                return (react_1.default.createElement(antd_1.Form.Item, { name: key + "score", style: { margin: -8 } }, S ? react_1.default.createElement(S, { disabled: true }) : react_1.default.createElement(antd_1.InputNumber, { disabled: true, style: { width: 44 } })));
             }
         },
     ]
@@ -66,21 +69,11 @@ var T = react_1.forwardRef(function (props, ref) {
         .map(function (_) { return (__assign(__assign({}, _), { align: 'center' })); });
     var form = antd_1.Form.useForm()[0];
     return (react_1.default.createElement(antd_1.Form, { ref: ref, form: form, size: "small", style: { display: hidden ? 'none' : 'block', position: 'relative' }, onValuesChange: function (a, b) {
-            var vk = Object.entries(b);
-            var k = Object.keys(a)[0];
-            if (/score$/.test(k)) {
-                var total = vk
-                    .filter(function (_a) {
-                    var k = _a[0], v = _a[1];
-                    return /score$/.test(k);
-                })
-                    .map(function (_) { return _[1]; })
-                    .reduce(function (a, b) { return a + b; }, 0);
-                form.setFieldsValue({ total: total });
-            }
+            var newData = strategies_1.default(mark, form.getFieldsValue(), initData);
+            newData && form.setFieldsValue(newData);
         } },
-        react_1.default.createElement(antd_1.Form.Item, { name: deformed ? 'result' : 'total', label: deformed ? '结果' : '总分', style: { position: 'absolute', top: -48, right: 100 } },
-            react_1.default.createElement(antd_1.InputNumber, { disabled: true, style: { width: 50 } })),
+        react_1.default.createElement(antd_1.Form.Item, { name: deformed ? 'result' : 'total', label: deformed ? '结果' : '总分', style: { position: 'absolute', top: -48, right: 260 } },
+            react_1.default.createElement(antd_1.InputNumber, { disabled: true, style: { width: 120 } })),
         react_1.default.createElement(antd_1.Table, { bordered: true, size: "small", pagination: false, columns: columns, dataSource: dataSource })));
 });
 exports.default = react_1.memo(T);

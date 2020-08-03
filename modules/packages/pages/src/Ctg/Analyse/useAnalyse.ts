@@ -12,6 +12,7 @@ import { ctg_exams_analyse_score } from '@lianmed/f_types/lib/obvue/ctg_exams_an
 const MARKS = Object.keys(tableData) as AnalyseType[]
 const AUTOFM_KEY = 'autofm'
 const AUTOANALYSE_KEY = 'auto_analuse'
+const SHOW_BASE = 'show_base'
 const MARK_KEY = 'analyse_mark'
 const INTERVAL_KEY = 'analyse_interval'
 const limitMap: { [x in AnalyseType]: any } = {
@@ -83,12 +84,12 @@ const getEmptyScore = (): ctg_exams_analyse_score => {
             decvalue: '',
         },
         cstoctdata: {
-            ldvalue:0,
-            ldscore:0,
-            vdscore:0,
-            vdvalue:0,
-            edscore:0,
-            edvalue:0,
+            ldvalue: 0,
+            ldscore: 0,
+            vdscore: 0,
+            vdvalue: 0,
+            edscore: 0,
+            edvalue: 0,
             bhrscore: 0,
             ltvvalue: 0,
             ltvscore: 0,
@@ -117,7 +118,7 @@ const getEmptyScore = (): ctg_exams_analyse_score => {
         }
     }
 }
-export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (index: 2 | 1 | 3) => void, ctgData: obvue.ctg_exams_data) => {
+export default (v: MutableRefObject<Suit>, docid: string, fetal: any, ctgData: obvue.ctg_exams_data) => {
 
     const [initData, setInitData] = useState<obvue.ctg_exams_analyse>()
     // const [isToShort, setIsToShort] = useState(false)
@@ -128,6 +129,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
     const [analyseLoading, setAnalyseLoading] = useState(false)
     const [autoFm, setAutoFm] = useState<boolean>(store.get(AUTOFM_KEY) || false)
     const [autoAnalyse, setAutoAnalyse] = useState<boolean>(store.get(AUTOANALYSE_KEY) || false)
+    const [showBase, setShowBase] = useState<boolean>(true)
 
     const Fischer_ref = useRef<FormInstance>()
     const Krebs_ref = useRef<FormInstance>()
@@ -140,7 +142,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
     const hasInitAnalysed = useRef(false)
     let endTime = (ctgData && ctgData.fhr1) ? (startTime + interval * 240 > ctgData.fhr1.length / 2 ? ctgData.fhr1.length / 2 : startTime + interval * 240) : 0
     const diff = Math.round((endTime - startTime) / 240)
-    let isToShort = (diff < limitMap[mark] && endTime !== 0)
+    let isToShort = false && (diff < limitMap[mark] && endTime !== 0)
 
 
     const mapFormToMark = {
@@ -154,15 +156,16 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
     }
 
     function setFm(flag = true) {
+        console.log('fm', flag)
         if (v.current && initData) {
-            if (autoFm) {
+            if (flag) {
                 const fmIndex = initData.analysis.fm || []
                 const fm = v.current.data.fm
                 fmIndex.forEach(_ => {
                     fm[_] = 1
                     fm[_ - 1] = 1
                 })
-                flag && hardAnalyse()
+                hardAnalyse()
             }
         }
     }
@@ -175,7 +178,9 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
         return request.post(`/ctg-exams-analyse`, {
             data: { docid, mark, start: startTime, end: endTime, fetal, autoFm },
         })
-            .then((r: obvue.ctg_exams_analyse) => r)
+            .then((r: obvue.ctg_exams_analyse) => {
+                return r
+            })
             .finally(() => {
                 setAnalyseLoading(false)
             })
@@ -190,28 +195,9 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
         }
         r.score = getEmptyScore()
         setInitData(r)
-        setFormData(v.current.drawAnalyse.analyse(mark, startTime, endTime, r))
+        setFormData(v.current.drawAnalyse.analyse(mark, showBase, startTime, endTime, r))
     }
-    const remoteAnalyse = () => {
-        return new Promise((res) => {
-            if ((isToShort || initData || endTime === 0 || analyseLoading)) {
-                res()
 
-            } else {
-
-                fetchData()
-                    .then(r => {
-                        r.score = getEmptyScore()
-                        setInitData(r)
-                    })
-                    .finally(() => {
-                        res()
-                    })
-            }
-
-
-        })
-    }
 
 
     const setFormData = (r: obvue.ctg_exams_analyse) => {
@@ -228,9 +214,17 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
     }
     useEffect(() => {
 
-        autoAnalyse && remoteAnalyse()
 
-    }, [isToShort, autoAnalyse])
+        if (!(isToShort || initData || endTime === 0 || analyseLoading)) {
+            console.log('auto analyse', autoAnalyse);
+
+            autoAnalyse && fetchData()
+                .then(r => {
+                    r.score = getEmptyScore()
+                    setInitData(r)
+                })
+        }
+    }, [ctgData, analyseLoading, autoAnalyse, initData])
 
 
 
@@ -238,23 +232,23 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
 
         const id = (hasInitAnalysed.current) ? 0 : window.setInterval(() => {
             if (initData && v.current && !hasInitAnalysed.current) {
-                console.log('xxx','---');
-                
+                console.log('xxx', '---');
+
                 clearInterval(id)
-                let r = v.current.drawAnalyse.analyse(mark, startTime, endTime, initData)
+                let r = v.current.drawAnalyse.analyse(mark, showBase, startTime, endTime, initData)
                 hasInitAnalysed.current = true
                 setFormData(r)
-
+                setFm(autoFm)
             }
         }, 1000)
         return () => {
             clearInterval(id)
         }
-    }, [initData, v.current, mark, startTime, setFormData, autoAnalyse])
+    }, [initData, v.current, mark, startTime, setFormData, autoAnalyse, setFm, autoFm, showBase])
 
 
-    const hardAnalyse = () => {
-        setFormData(v.current.drawAnalyse.analyse(mark))
+    const hardAnalyse = (show = showBase) => {
+        setFormData(v.current.drawAnalyse.analyse(mark, show))
     }
     useEffect(() => {
         const s = (time) => {
@@ -279,7 +273,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
     }, [docid])
 
     useEffect(() => {
-        setFhr(fetal)
+        // setFhr(fetal)
         setInitData(null)
         hasInitAnalysed.current = false
     }, [fetal])
@@ -309,16 +303,16 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
         if (mark === 'Krebs') {
             setInterval(30)
         }
-    }, [mark, v])
+    }, [mark])
 
     useEffect(() => {
         store.set(INTERVAL_KEY, interval)
 
     }, [interval])
-    useEffect(() => {
-        setFm()
+    // useEffect(() => {
+    //     setFm()
 
-    }, [autoFm, initData])
+    // }, [autoFm, initData])
 
 
     return {
@@ -337,6 +331,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
         isToShort,
         setAutoFm(s: boolean) {
             setAutoFm(s)
+            setFm(s)
             store.set(AUTOFM_KEY, s)
         },
         autoFm,
@@ -345,6 +340,12 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (i
         setAutoAnalyse(s: boolean) {
             setAutoAnalyse(s)
             store.set(AUTOANALYSE_KEY, s)
+        },
+        showBase,
+        setShowBase(s: boolean) {
+            setShowBase(s)
+            store.set(SHOW_BASE, s)
+            hardAnalyse(s)
         },
     }
 }

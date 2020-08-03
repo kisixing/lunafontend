@@ -4,6 +4,7 @@ import Panel from './Panel';
 import { EventEmitter } from '@lianmed/utils';
 
 export const Context = React.createContext({})
+import useCtgData from "../Analyse/useCtgData";
 
 export interface IProps {
     age: string
@@ -26,6 +27,7 @@ const PrintPreview = (props: IProps) => {
         const { clientHeight, clientWidth } = inputEl.current;
         setWh({ h: clientHeight, w: clientWidth })
     }, [])
+    const { ctgData, loading, fetal, setFetal } = useCtgData(docid)
 
     const inputEl = useRef(null);
     const v = useRef<EventEmitter>(null);
@@ -41,7 +43,7 @@ const PrintPreview = (props: IProps) => {
         <Context.Provider value={v}>
             <div style={{ height: '100%' }} ref={inputEl}>
                 <div style={{ height: 240, textAlign: 'center' }}>
-                    <Panel wh={wh} {...props} empId={empId} />
+                    <Panel wh={wh} {...props} empId={empId} fetal={fetal} setFetal={setFetal} fetalcount={ctgData && Number(ctgData.fetalnum)} />
                 </div>
                 <div style={{
                     height: `calc(100% - 250px)`,
@@ -50,7 +52,7 @@ const PrintPreview = (props: IProps) => {
                     border: '1px solid #d9d9d9',
                     background: '#fff'
                 }}>
-                    <Ctg docid={docid} />
+                    <Ctg ctgData={ctgData} loading={loading} />
                 </div>
             </div>
 

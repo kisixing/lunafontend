@@ -8,7 +8,7 @@ interface IData {
 }
 
 export function push_devices(this: WsService, received_msg: IData) {
-    const { Working, Stopped, Offline, OfflineStopped } = this.BedStatus
+    const { Working, Stopped, Offline, OfflineStopped, Uncreated } = this.BedStatus
 
     const { datacache } = this
     var devlist = received_msg.data;
@@ -20,7 +20,7 @@ export function push_devices(this: WsService, received_msg: IData) {
             const { is_include_tocozero, is_include_volume, doc_id, fetal_num } = bedData
             var unitId = this.getUnitId(devdata.device_no, bedData.bed_no);
             const old = datacache.get(unitId)
-    
+
             if (!old || (old.docid !== doc_id)) {
 
                 const item = getEmptyCacheItem({ is_include_tocozero, is_include_volume, fetal_num, id: unitId, docid: doc_id })
@@ -36,8 +36,12 @@ export function push_devices(this: WsService, received_msg: IData) {
                     item.status = Stopped;
                 } else if (bedData.is_working == 2) {
                     item.status = Offline;
-                } else {
+                }
+                else if (bedData.is_working == 3) {
                     item.status = OfflineStopped;
+                }
+                else {
+                    item.status = Uncreated;
                 }
                 //debugger
                 if (bedData.pregnancy) {

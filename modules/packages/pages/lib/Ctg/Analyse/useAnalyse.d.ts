@@ -3,7 +3,7 @@ import { FormInstance } from 'antd/lib/form';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import { AnalyseType } from '@lianmed/lmg/lib/interface';
 import { ctg_exams_analyse_score } from '@lianmed/f_types/lib/obvue/ctg_exams_analyse';
-declare const _default: (v: MutableRefObject<Suit>, docid: string, fetal: any, setFhr: (index: 2 | 1 | 3) => void, ctgData: {
+declare const _default: (v: MutableRefObject<Suit>, docid: string, fetal: any, ctgData: {
     fhr1?: string;
     fhr2?: string;
     fhr3?: string;
@@ -44,6 +44,7 @@ declare const _default: (v: MutableRefObject<Suit>, docid: string, fetal: any, s
     autoFm: boolean;
     initData: {
         analysis?: {
+            length: number;
             bhr: number;
             ltv: number;
             stv: number;
@@ -69,5 +70,7 @@ declare const _default: (v: MutableRefObject<Suit>, docid: string, fetal: any, s
     };
     autoAnalyse: boolean;
     setAutoAnalyse(s: boolean): void;
+    showBase: boolean;
+    setShowBase(s: boolean): void;
 };
 export default _default;

@@ -171,8 +171,6 @@ var Suit = (function (_super) {
     });
     Suit.prototype.init = function (data) {
         var _this = this;
-        this.drawAnalyse.init();
-        this.drawSelect.init();
         if (!data) {
             return;
         }
@@ -192,6 +190,8 @@ var Suit = (function (_super) {
                 }
             }
         }
+        this.drawAnalyse.init();
+        this.drawSelect.init();
         this.drawSelect.clearselect();
         this.drawobj.showcur(0, false);
         if (this.type > 0) {
@@ -385,22 +385,24 @@ var Suit = (function (_super) {
         Object.values(this).forEach(function (_) { return _ && _.resize && _.resize(width, height); });
     };
     Suit.prototype.setfetalposition = function (fhr1, fhr2, fhr3) {
-        this.data.fetalposition.fhr1 = fhr1;
-        this.data.fetalposition.fhr2 = fhr2;
-        this.data.fetalposition.fhr3 = fhr3;
+        if (this.data && this.data.fetalposition) {
+            this.data.fetalposition.fhr1 = fhr1;
+            this.data.fetalposition.fhr2 = fhr2;
+            this.data.fetalposition.fhr3 = fhr3;
+        }
     };
     Suit.prototype.movescoller = function () { };
     Suit.prototype.InitFileData = function (oriobj) {
-        console.log('InitFileData');
         var CTGDATA = {
             fhr: [[], [], []],
             toco: [],
             fm: [],
-            fetal_num: 2,
+            fetal_num: +oriobj.fetalnum || 1,
             index: 0,
             starttime: '',
             fetalposition: {},
             analyse: { acc: [], dec: [], baseline: [], start: 0, end: 0 },
+            noOffset: oriobj.noOffset
         };
         if (oriobj.docid) {
             var pureidarr = oriobj.docid.split('_');
@@ -598,6 +600,42 @@ var Suit = (function (_super) {
                 var type = (linePoint.y - baseY) < 0 ? 'MarkAccPoint' : 'MarkDecPoint';
                 this.drawAnalyse.pointToInsert = { type: type, index: linePoint.index };
                 return type;
+            }
+        }
+        return null;
+    };
+    Suit.prototype.getBaseY = function (x) {
+        var _a = this.drawAnalyse, analysisData = _a.analysisData, mapBaselilneXtoY = _a.mapBaselilneXtoY;
+        x = Math.round(x);
+        if (analysisData) {
+            var mKeys_2 = Object.keys(mapBaselilneXtoY).map(function (_) { return Number(_); });
+            var leftIndex = mKeys_2.reduce(function (index, _) {
+                var left = mKeys_2[index];
+                var right = mKeys_2[index + 1];
+                if (right === undefined) {
+                    return;
+                }
+                if (left <= x) {
+                    if (x <= right) {
+                        return index;
+                    }
+                    else {
+                        return index + 1;
+                    }
+                }
+                else {
+                    return;
+                }
+            }, 0);
+            if (typeof leftIndex === 'number') {
+                var x1 = mKeys_2[leftIndex];
+                var x2 = mKeys_2[leftIndex + 1];
+                var y1 = mapBaselilneXtoY[x1];
+                var y2 = mapBaselilneXtoY[x2];
+                var k = (y2 - y1) / (x2 - x1);
+                var b = y1 - x1 * k;
+                var baseY = x * k + b;
+                return baseY;
             }
         }
         return null;

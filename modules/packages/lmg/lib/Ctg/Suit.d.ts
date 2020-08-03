@@ -115,6 +115,7 @@ export declare class Suit extends Draw {
             start: number;
             end: number;
         };
+        noOffset: any;
     };
     drawdot(): void;
     timerCtg(dely: any): void;
@@ -122,5 +123,6 @@ export declare class Suit extends Draw {
     getoffline(): void;
     initfhrdata(data: any, datacache: any, offindex: any): void;
     getPointType(x: number, y: number): PointType;
+    getBaseY(x: number): number;
 }
 export {};

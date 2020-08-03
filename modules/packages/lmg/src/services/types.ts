@@ -1,6 +1,6 @@
 import Queue from "../Ecg/Queue";
 
-export type TDeviceType = ('SR_K9' | 'SR_B5_B6' | 'V3' | 'F3')
+export type TDeviceType = ('SR_K9' | 'SR_B5_B6' | 'V3' | 'F3' | 'LM_F0_PRO')
 export type TAlarmType = 0 | 1 | 2
 type TF = 0 | 1
 
@@ -19,7 +19,8 @@ export enum BedStatus {
     Working = 1,
     Stopped,
     Offline,
-    OfflineStopped
+    OfflineStopped,
+    Uncreated
 }
 export enum EWsEvents {
     pong = "pong",
@@ -61,8 +62,8 @@ export interface ICacheItem {
     // fm?: Uint8Array;
     fhr: number[][];
     toco: number[];
-    fm: number[];
-    fmp: number[];
+    fm?: number[];
+    fmp?: number[];
 
     index?: number;
     length?: number;
@@ -90,7 +91,7 @@ export interface ICacheItem {
     ismulti?: boolean;
     bloodList?: IBloodListItem[]
 
-    alarms: {
+    alarms?: {
         alarm_pulse_rate?: TAlarmType
         alarm_sys_bp?: TAlarmType
         alarm_mean_bp?: TAlarmType
@@ -100,6 +101,9 @@ export interface ICacheItem {
         alarm_dia_bp?: TAlarmType
         alarm_offline_blood_oxygen?: TAlarmType
     }
+    curindex?: number
+    state?: number
+
 }
 export type ICache = Map<string, ICacheItem> & { clean?: (key: string) => void }
 export interface IDeviceType {

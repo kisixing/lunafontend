@@ -99,7 +99,7 @@ var Setting = react_1.forwardRef(function (props, ref) {
                         react_1.default.createElement(antd_1.Radio, { value: '正弦型' }, "\u6B63\u5F26\u578B"))),
                 react_1.default.createElement("div", { className: "divider" }, "\u8BCA\u65AD"),
                 react_1.default.createElement(antd_1.Form.Item, { wrapperCol: { xs: 24 }, style: { marginBottom: 0 }, name: "diagnosistxt" },
-                    react_1.default.createElement(antd_1.Input.TextArea, null))))));
+                    react_1.default.createElement(antd_1.Input.TextArea, { maxLength: 120, placeholder: "\u6700\u591A\u8F93\u5165120\u4E2A\u5B57" }))))));
 });
 exports.default = react_1.memo(Setting);
 //# sourceMappingURL=Analyse.js.map

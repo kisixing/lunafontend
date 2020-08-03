@@ -141,7 +141,7 @@ const Setting = forwardRef<FormInstance, { [x: string]: any }>((props, ref) => {
           <div className="divider" >诊断</div>
 
           <Form.Item wrapperCol={{ xs: 24 }} style={{ marginBottom: 0 }} name="diagnosistxt" >
-            <Input.TextArea />
+            <Input.TextArea maxLength={120} placeholder="最多输入120个字" />
           </Form.Item>
         </Form>
       </div>

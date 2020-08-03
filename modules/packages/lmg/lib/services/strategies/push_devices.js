@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var utils_1 = require("../utils");
 function push_devices(received_msg) {
-    var _a = this.BedStatus, Working = _a.Working, Stopped = _a.Stopped, Offline = _a.Offline, OfflineStopped = _a.OfflineStopped;
+    var _a = this.BedStatus, Working = _a.Working, Stopped = _a.Stopped, Offline = _a.Offline, OfflineStopped = _a.OfflineStopped, Uncreated = _a.Uncreated;
     var datacache = this.datacache;
     var devlist = received_msg.data;
     for (var i in devlist) {
@@ -28,8 +28,11 @@ function push_devices(received_msg) {
                 else if (bedData.is_working == 2) {
                     item.status = Offline;
                 }
-                else {
+                else if (bedData.is_working == 3) {
                     item.status = OfflineStopped;
+                }
+                else {
+                    item.status = Uncreated;
                 }
                 if (bedData.pregnancy) {
                     item.pregnancy = JSON.parse(bedData.pregnancy);

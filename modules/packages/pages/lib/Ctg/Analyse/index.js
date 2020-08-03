@@ -56,13 +56,13 @@ exports.Ctg_Analyse = function (_a) {
     note = note ? note : docid;
     if (!note)
         return null;
-    var _k = useCtgData_1.default(note, true), ctgData = _k.ctgData, loading = _k.loading, setFhr = _k.setFhr, fetal = _k.fetal, setFetal = _k.setFetal;
+    var _k = useCtgData_1.default(note, true), ctgData = _k.ctgData, loading = _k.loading, fetal = _k.fetal, setFetal = _k.setFetal, fetchData = _k.fetchData;
     var _l = react_1.useState(true), disabled = _l[0], setDisabled = _l[1];
     var _m = react_1.useState(false), visible = _m[0], setVisible = _m[1];
     var _o = react_1.useState(''), pdfBase64 = _o[0], setPdfBase64 = _o[1];
     var _p = react_1.useState(false), padBase64Loading = _p[0], setPadBase64Loading = _p[1];
     var ref = react_1.useRef(null);
-    var _q = useAnalyse_1.default(ref, note, fetal, setFhr, ctgData), MARKS = _q.MARKS, reAnalyse = _q.reAnalyse, startTime = _q.startTime, endTime = _q.endTime, mark = _q.mark, setMark = _q.setMark, interval = _q.interval, setInterval = _q.setInterval, mapFormToMark = _q.mapFormToMark, analysis_ref = _q.analysis_ref, old_ref = _q.old_ref, analyseLoading = _q.analyseLoading, isToShort = _q.isToShort, autoFm = _q.autoFm, setAutoFm = _q.setAutoFm, autoAnalyse = _q.autoAnalyse, setAutoAnalyse = _q.setAutoAnalyse, initData = _q.initData;
+    var _q = useAnalyse_1.default(ref, note, fetal, ctgData), MARKS = _q.MARKS, reAnalyse = _q.reAnalyse, startTime = _q.startTime, endTime = _q.endTime, mark = _q.mark, setMark = _q.setMark, interval = _q.interval, setInterval = _q.setInterval, mapFormToMark = _q.mapFormToMark, analysis_ref = _q.analysis_ref, old_ref = _q.old_ref, analyseLoading = _q.analyseLoading, isToShort = _q.isToShort, autoFm = _q.autoFm, setAutoFm = _q.setAutoFm, autoAnalyse = _q.autoAnalyse, setAutoAnalyse = _q.setAutoAnalyse, showBase = _q.showBase, setShowBase = _q.setShowBase, initData = _q.initData;
     var others = {
         MARKS: MARKS,
         startTime: startTime,
@@ -83,7 +83,7 @@ exports.Ctg_Analyse = function (_a) {
             return oldData[k] !== v;
         }) ? true : false;
         var identify = type === 'default' ? { note: note } : { id: id };
-        var requestData = __assign(__assign({}, identify), { diagnosis: JSON.stringify({ wave: wave, diagnosistxt: diagnosistxt, NST: NST, CST_OCT: CST_OCT }), result: JSON.stringify(__assign(__assign(__assign({}, analyseData), curData), { isedit: isedit, type: mark, startTime: ref.current.drawAnalyse.analysisData.analysis.start, endTime: ref.current.drawAnalyse.analysisData.analysis.end })) });
+        var requestData = __assign(__assign({}, identify), { diagnosis: JSON.stringify({ wave: wave, diagnosistxt: diagnosistxt, NST: NST, CST_OCT: CST_OCT }), result: JSON.stringify(__assign(__assign(__assign({}, analyseData), curData), { isedit: isedit, type: mark, startTime: ref.current.drawAnalyse.analysisData.analysis.start, endTime: ref.current.drawAnalyse.analysisData.analysis.end })), fetalnum: fetal });
         return requestData;
     };
     var getPrintUrl = function (path) {
@@ -108,10 +108,10 @@ exports.Ctg_Analyse = function (_a) {
                 try {
                     var d = JSON.parse(diagnosis) || {};
                     t = (react_1.default.createElement("div", null,
-                        react_1.default.createElement("div", null,
+                        d.NST && react_1.default.createElement("div", null,
                             "NST\uFF1A",
                             react_1.default.createElement("span", null, d.NST)),
-                        react_1.default.createElement("div", null,
+                        d.CST_OCT && react_1.default.createElement("div", null,
                             "CST/OCT\uFF1A",
                             react_1.default.createElement("span", null, d.CST_OCT)),
                         react_1.default.createElement("div", null,
@@ -137,14 +137,17 @@ exports.Ctg_Analyse = function (_a) {
             react_1.default.createElement(lmg_1.Ctg, { suitType: 1, ref: ref, loading: loading, data: ctgData })),
         react_1.default.createElement(antd_1.Row, { style: { height: 460 } },
             react_1.default.createElement(antd_1.Col, { span: 17 },
-                react_1.default.createElement(Score_1.default, __assign({ disabled: disabled, endTime: endTime }, others, { fetal: fetal, setFetal: setFetal, ctgData: ctgData, docid: note, v: ref.current, className: "bordered" })),
+                react_1.default.createElement(Score_1.default, __assign({ disabled: disabled, endTime: endTime, initData: initData }, others, { fetal: fetal, setFetal: setFetal, ctgData: ctgData, docid: note, v: ref.current, className: "bordered" })),
                 react_1.default.createElement("div", { style: { position: 'absolute', right: 12, bottom: 0 } },
-                    isToShort && react_1.default.createElement(antd_1.Alert, { message: "\u9009\u6BB5\u65F6\u95F4\u8FC7\u77ED", style: { display: 'inline-block', border: 0, padding: '1px 4px', marginRight: 10 } }),
+                    isToShort && react_1.default.createElement(antd_1.Alert, { message: "\u9009\u6BB5\u65F6\u95F4\u8FC7\u77ED", style: { background: 'red', color: '#fff', display: 'inline-block', border: 0, padding: '1px 4px', marginRight: 10 } }),
                     react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, onClick: history, disabled: btnDisabled }, "\u5386\u53F2\u5206\u6790"),
                     react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, disabled: !note, onClick: function () { return setDisabled(!disabled); } }, disabled ? '修改评分' : '确认')),
                 react_1.default.createElement(antd_1.Checkbox, { checked: autoFm, onChange: function (e) { return setAutoFm(e.target.checked); }, style: { position: 'absolute', left: 18, bottom: 8 } }, "\u81EA\u52A8\u80CE\u52A8"),
                 react_1.default.createElement(antd_1.Checkbox, { checked: autoAnalyse, onChange: function (e) { return setAutoAnalyse(e.target.checked); }, style: { position: 'absolute', left: 100, bottom: 8 } }, "\u5F39\u7A97\u65F6\u81EA\u52A8\u5206\u6790"),
-                react_1.default.createElement(antd_1.Button, { style: { position: 'absolute', right: 12, top: 16 }, size: "small", type: "primary", onClick: reAnalyse, loading: analyseLoading, disabled: !note || isToShort }, "\u91CD\u65B0\u5206\u6790")),
+                react_1.default.createElement(antd_1.Checkbox, { checked: showBase, onChange: function (e) { return setShowBase(e.target.checked); }, style: { position: 'absolute', left: 228, bottom: 8 } }, "\u663E\u793A\u57FA\u7EBF"),
+                react_1.default.createElement("div", { style: { position: 'absolute', right: 20, top: 16 } },
+                    react_1.default.createElement(antd_1.Button, { size: "small", type: "primary", onClick: fetchData, loading: loading }, "\u5237\u65B0\u6570\u636E"),
+                    react_1.default.createElement(antd_1.Button, { size: "small", type: "primary", onClick: reAnalyse, loading: analyseLoading, disabled: !note || isToShort }, "\u91CD\u65B0\u5206\u6790"))),
             react_1.default.createElement(antd_1.Col, { span: 7 },
                 react_1.default.createElement(Analyse_1.default, { ref: analysis_ref }),
                 react_1.default.createElement("div", { style: { position: 'absolute', right: 12, bottom: 0 } },

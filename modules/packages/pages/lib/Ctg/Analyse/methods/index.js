@@ -14,10 +14,10 @@ var react_1 = __importStar(require("react"));
 var Table_1 = __importDefault(require("./Table"));
 var tableData_1 = require("./tableData");
 var Methods = function (props) {
-    var mark = props.mark, disabled = props.disabled;
+    var mark = props.mark, disabled = props.disabled, initData = props.initData;
     return (react_1.default.createElement(react_1.default.Fragment, null, Object.entries(tableData_1.tableData).map(function (_a) {
         var k = _a[0], v = _a[1];
-        return (react_1.default.createElement(Table_1.default, { disabled: disabled, key: k, hidden: k !== mark, dataSource: v, ref: props.mapFormToMark[k + "_ref"] }));
+        return (react_1.default.createElement(Table_1.default, { initData: initData, disabled: disabled, key: k, hidden: k !== mark, mark: mark, dataSource: v, ref: props.mapFormToMark[k + "_ref"] }));
     })));
 };
 exports.default = react_1.memo(Methods);

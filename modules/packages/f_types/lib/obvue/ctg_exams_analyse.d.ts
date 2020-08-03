@@ -10,108 +10,110 @@ interface BasePoint {
     marked?: boolean;
     remove?: boolean;
     user?: boolean;
+    reliability?: number;
 }
 export interface AccPoint extends BasePoint {
-    reliability: number;
 }
 export declare type DecType = 'ld' | 'ed' | 'vd';
 export interface DecPoint extends BasePoint {
     type: DecType;
 }
+type numberOrString = number | string
 export interface ctg_exams_analyse_score {
     sogcdata?: {
-        bhrscore: number;
-        ltvvalue: number;
-        ltvscore: number;
-        accscore: number;
-        accvalue: number;
-        bhrvalue: number;
-        decscore: number;
-        decvalue: string | number;
-        total: number;
-        result: number | string
+        bhrscore: numberOrString;
+        ltvvalue: numberOrString;
+        ltvscore: numberOrString;
+        accscore: numberOrString;
+        accvalue: numberOrString;
+        bhrvalue: numberOrString;
+        decscore: numberOrString;
+        decvalue: numberOrString;
+        total: numberOrString;
+        result: numberOrString;
     };
     cstdata?: {
-        bhrscore: number;
-        ltvvalue: number;
-        ltvscore: number;
-        stvscore: number;
-        stvvalue: number;
-        accscore: number;
-        accvalue: number;
-        bhrvalue: number;
-        decscore: number;
-        decvalue: string | number;
-        total: number;
+        bhrscore: numberOrString;
+        ltvvalue: numberOrString;
+        ltvscore: numberOrString;
+        stvscore: numberOrString;
+        stvvalue: numberOrString;
+        accscore: numberOrString;
+        accvalue: numberOrString;
+        bhrvalue: numberOrString;
+        decscore: numberOrString;
+        decvalue: numberOrString;
+        total: numberOrString;
     };
     cstoctdata?: {
-        bhrscore: number;
-        ltvvalue: number;
-        ltvscore: number;
-        accscore: number;
-        accvalue: number;
-        bhrvalue: number;
-        decscore: number;
-        decvalue: string | number;
-        edscore: number;
-        edvalue: string | number;
-        ldscore: number;
-        ldvalue: string | number;
-        vdscore: number;
-        vdvalue: string | number;
-        sinusoidscore: number;
-        sinusoidvalue: number;
-        total: number;
-        result: number | string
+        bhrscore: numberOrString;
+        ltvvalue: numberOrString;
+        ltvscore: numberOrString;
+        accscore: numberOrString;
+        accvalue: numberOrString;
+        bhrvalue: numberOrString;
+        decscore: numberOrString;
+        decvalue: numberOrString;
+        edscore: numberOrString;
+        edvalue: numberOrString;
+        ldscore: numberOrString;
+        ldvalue: numberOrString;
+        vdscore: numberOrString;
+        vdvalue: numberOrString;
+        sinusoidscore: numberOrString;
+        sinusoidvalue: numberOrString;
+        total: numberOrString;
+        result: numberOrString;
     };
     ret: number;
     msg: string;
     nstdata?: {
-        bhrscore: number;
-        ltvscore: number;
-        accdurationscore: number;
-        accamplscore: number;
-        fmscore: number;
-        total: number;
-        bhrvalue: number;
-        ltvvalue: number;
-        accdurationvalue: number;
-        accamplvalue: number;
-        fmvalue: number;
+        bhrscore: numberOrString;
+        ltvscore: numberOrString;
+        accdurationscore: numberOrString;
+        accamplscore: numberOrString;
+        fmscore: numberOrString;
+        total: numberOrString;
+        bhrvalue: numberOrString;
+        ltvvalue: numberOrString;
+        accdurationvalue: numberOrString;
+        accamplvalue: numberOrString;
+        fmvalue: numberOrString;
     };
     krebsdata?: {
-        ltvvalue: number;
-        bhrscore: number;
-        ltvscore: number;
-        stvscore: number;
-        accscore: number;
-        decscore: number;
-        fmscore: number;
-        total: number;
-        bhrvalue: number;
-        ltvalue: number;
-        stvvalue: number;
-        accvalue: number;
-        decvalue: string;
-        fmvalue: number;
+        ltvvalue: numberOrString;
+        bhrscore: numberOrString;
+        ltvscore: numberOrString;
+        stvscore: numberOrString;
+        accscore: numberOrString;
+        decscore: numberOrString;
+        fmscore: numberOrString;
+        total: numberOrString;
+        bhrvalue: numberOrString;
+        ltvalue: numberOrString;
+        stvvalue: numberOrString;
+        accvalue: numberOrString;
+        decvalue: numberOrString;
+        fmvalue: numberOrString;
     };
     fischerdata?: {
-        ltvvalue: number;
-        bhrscore: number;
-        ltvscore: number;
-        stvscore: number;
-        accscore: number;
-        decscore: number;
-        total: number;
-        bhrvalue: number;
-        ltvalue: number;
-        stvvalue: number;
-        accvalue: number;
-        decvalue: string;
+        ltvvalue: numberOrString;
+        bhrscore: numberOrString;
+        ltvscore: numberOrString;
+        stvscore: numberOrString;
+        accscore: numberOrString;
+        decscore: numberOrString;
+        total: numberOrString;
+        bhrvalue: numberOrString;
+        ltvalue: numberOrString;
+        stvvalue: numberOrString;
+        accvalue: numberOrString;
+        decvalue: numberOrString;
     };
 }
 export interface _ctg_exams_analyse {
     analysis: {
+        length:number;
         bhr: number;
         ltv: number;
         stv: number;

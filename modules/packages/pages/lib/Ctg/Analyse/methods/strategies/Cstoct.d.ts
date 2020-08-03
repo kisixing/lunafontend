@@ -1,0 +1,23 @@
+import { ctg_exams_analyse_score, _ctg_exams_analyse } from "@lianmed/f_types/lib/obvue/ctg_exams_analyse";
+declare type TData = ctg_exams_analyse_score['cstoctdata'];
+export declare function Cstoct(_data: TData, analysis: _ctg_exams_analyse['analysis']): {
+    bhrscore: string | number;
+    ltvvalue: string | number;
+    ltvscore: string | number;
+    accscore: string | number;
+    accvalue: string | number;
+    bhrvalue: string | number;
+    decscore: string | number;
+    decvalue: string | number;
+    edscore: string | number;
+    edvalue: string | number;
+    ldscore: string | number;
+    ldvalue: string | number;
+    vdscore: string | number;
+    vdvalue: string | number;
+    sinusoidscore: string | number;
+    sinusoidvalue: string | number;
+    total: string | number;
+    result: string | number;
+};
+export {};

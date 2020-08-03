@@ -12,6 +12,7 @@ interface ICtgExamsPdf {
     outputType?: string
     start: number
     startdate: string
+    fetal:any
     
 }
 

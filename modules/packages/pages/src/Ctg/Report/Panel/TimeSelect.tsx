@@ -1,4 +1,4 @@
-import { Button, Modal, Radio } from 'antd';
+import { Button, Modal, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { fetchCtgExamsPdf } from '../../services';
@@ -24,9 +24,11 @@ interface IProps extends IP {
     pdfBase64: string
     setPdfBase64: (s: string) => void
     empId?: string
+    fetal: any;
+    setFetal: any;
 }
 const Preview = (props: IProps) => {
-    const { onDownload, docid, print_interval, diagnosis, onTotalChange, pdfBase64, setPdfBase64, empId = null, ...args } = props;
+    const { onDownload, docid, print_interval, diagnosis, onTotalChange, pdfBase64, setPdfBase64, empId = null, fetal, setFetal, ...args } = props;
     const [pdfBase64Loading, setPdfBase64Loading] = useState(false)
     const handlePreview = () => {
         if ((endingTime - startingTime) / COEFFICIENT < print_interval) {
@@ -39,6 +41,7 @@ const Preview = (props: IProps) => {
             start: startingTime,
             end: endingTime,
             outputType,
+            fetal:fetal,
             ...args
         }).then(r => {
             setPdfBase64Loading(false)
@@ -62,9 +65,9 @@ const Preview = (props: IProps) => {
         selectAll,
         editable,
         outputType,
-        setOutputType
+        setOutputType,
         // toggleCustomiz
-    } = usePrintConfig(value, print_interval)
+    } = usePrintConfig(value, print_interval,fetal)
 
     const total = dispalyTime(endingTime - startingTime)
 
@@ -73,10 +76,14 @@ const Preview = (props: IProps) => {
     const { fetchQrCode, qrCodeBase64, modalVisible, qrCodeBase64Loading, setModalVisible, signed } = useSign(bizSn, setPdfBase64, setBizSn, empId)
     const { caEnable, save, saveLoading, saved } = useSave(bizSn, setBizSn)
 
+    console.log('fetalcount',props.fetalcount)
 
     useEffect(() => {
         onTotalChange(total)
     }, [total])
+    useEffect(() => {
+        setPdfBase64(null)
+    }, [fetal])
     return (
         <Context.Consumer>
             {
@@ -148,10 +155,18 @@ const Preview = (props: IProps) => {
                                 </div> */}
                                 <div style={{ textAlign: 'left' }}>
                                     <label>胎心率范围：</label>
-                                    <Radio.Group value={outputType} onChange={setOutputType}>
-                                        <Radio value="180">90~180</Radio>
-                                        <Radio value="210">50~210</Radio>
-                                    </Radio.Group>
+                                    <Select value={outputType} onChange={setOutputType} disabled={locking}>
+                                        <Select.Option value="180">90~180</Select.Option>
+                                        <Select.Option value="210">50~210</Select.Option>
+                                    </Select>
+                                    <label>胎心率：</label>
+                                    <Select value={fetal} onChange={v => setFetal(v)} disabled={locking}>
+                                        {
+                                            Array((props.fetalcount || 0) + 1).fill(0).map((_, i) => {
+                                               return <Select.Option key={i} value={i}>{i == 0 ? '混合' : `FHR${i}`}</Select.Option>
+                                            })
+                                        }
+                                    </Select>
                                 </div>
                                 <div style={{ display: 'flex' }} className="bottomBtns">
                                     <Button disabled={locking || !editable} block type="primary" loading={pdfBase64Loading} onClick={handlePreview} >

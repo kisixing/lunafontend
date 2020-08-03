@@ -16,7 +16,8 @@ function useScroll(box, wrapper) {
             background: '#4169E1',
             width: 10,
             height: 12,
-            bottom: 0
+            bottom: 0,
+            border: '1px solid #fff'
         });
         var boxGrabCb = function (e) {
             if (e.which !== 1)
@@ -81,7 +82,7 @@ function useScroll(box, wrapper) {
             },
             setBarLeft: bar.setLeft.bind(bar),
             createRod: function (name, bg) {
-                if (bg === void 0) { bg = '#aaa'; }
+                if (bg === void 0) { bg = '#4169e1'; }
                 var ins = new ScrollEl_1.default(wrapper.current, { lockMovementY: true }).setStyles({
                     width: 4,
                     background: bg,
@@ -120,7 +121,8 @@ function useScroll(box, wrapper) {
                     },
                     addDot: function (_a) {
                         var _b = _a.width, width = _b === void 0 ? 4 : _b, _c = _a.height, height = _c === void 0 ? 10 : _c, _d = _a.left, left = _d === void 0 ? 0 : _d;
-                        var i = new ScrollEl_1.default(wrapper.current, { lockMovementY: true }).setStyles({
+                        var i = new ScrollEl_1.default(wrapper.current, { lockMovementY: true })
+                            .setStyles({
                             background: 'transparent',
                             border: "6px solid transparent",
                             left: left,
