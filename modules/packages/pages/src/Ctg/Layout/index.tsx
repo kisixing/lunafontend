@@ -27,6 +27,7 @@ export interface IItemData {
 
 interface IProps {
   RenderIn: any
+  RenderMaskIn?: any
   items: IItemData[]
   listLayout: number[],
   fullScreenId?: string,
@@ -38,7 +39,7 @@ interface IProps {
   onSelect?: (unitId: string) => void
 }
 const Home = (props: IProps) => {
-  const { onSelect,borderedId, loading, listLayout = [], fullScreenId, contentHeight, RenderIn, items, onClose, themeColor = 'skyblue' } = props;
+  const { onSelect, borderedId, loading, listLayout = [], fullScreenId, contentHeight, RenderIn, RenderMaskIn, items, onClose, themeColor = 'skyblue' } = props;
   const wrap = useRef(null);
   const empty = useRef(null)
 
@@ -71,7 +72,7 @@ const Home = (props: IProps) => {
                   key={id}
                   onSelect={onSelect}
                   data={data}
-
+                  RenderMaskIn={RenderMaskIn}
                   ismulti={ismulti}
                   docid={docid}
                   status={status}

@@ -14,7 +14,7 @@ var react_1 = __importStar(require("react"));
 var antd_1 = require("antd");
 var Item_1 = __importDefault(require("./Item"));
 var Home = function (props) {
-    var onSelect = props.onSelect, borderedId = props.borderedId, loading = props.loading, _a = props.listLayout, listLayout = _a === void 0 ? [] : _a, fullScreenId = props.fullScreenId, contentHeight = props.contentHeight, RenderIn = props.RenderIn, items = props.items, onClose = props.onClose, _b = props.themeColor, themeColor = _b === void 0 ? 'skyblue' : _b;
+    var onSelect = props.onSelect, borderedId = props.borderedId, loading = props.loading, _a = props.listLayout, listLayout = _a === void 0 ? [] : _a, fullScreenId = props.fullScreenId, contentHeight = props.contentHeight, RenderIn = props.RenderIn, RenderMaskIn = props.RenderMaskIn, items = props.items, onClose = props.onClose, _b = props.themeColor, themeColor = _b === void 0 ? 'skyblue' : _b;
     var wrap = react_1.useRef(null);
     var empty = react_1.useRef(null);
     var itemSpan = 24 / listLayout[1];
@@ -25,7 +25,7 @@ var Home = function (props) {
         var pregnancy = data.pregnancy, docid = data.docid, starttime = data.starttime, status = data.status, ismulti = data.ismulti;
         var safePregnancy = pregnancy || { age: null, name: null, bedNO: null, GP: null, gestationalWeek: null };
         var startTime = starttime;
-        return (react_1.default.createElement(Item_1.default, { onClose: onClose, themeColor: themeColor, itemData: item, bedname: bedname, unitId: unitId, bordered: borderedId === unitId, key: id, onSelect: onSelect, data: data, ismulti: ismulti, docid: docid, status: status, loading: false, pregnancy: safePregnancy, startTime: startTime, itemHeight: itemHeight, itemSpan: itemSpan, outPadding: outPadding, fullScreenId: fullScreenId }, RenderIn && react_1.default.createElement(RenderIn, { itemData: item })));
+        return (react_1.default.createElement(Item_1.default, { onClose: onClose, themeColor: themeColor, itemData: item, bedname: bedname, unitId: unitId, bordered: borderedId === unitId, key: id, onSelect: onSelect, data: data, RenderMaskIn: RenderMaskIn, ismulti: ismulti, docid: docid, status: status, loading: false, pregnancy: safePregnancy, startTime: startTime, itemHeight: itemHeight, itemSpan: itemSpan, outPadding: outPadding, fullScreenId: fullScreenId }, RenderIn && react_1.default.createElement(RenderIn, { itemData: item })));
     }) : (react_1.default.createElement("div", { ref: empty, style: { marginTop: 200, display: 'flex', justifyContent: 'center', width: '100%' } },
         react_1.default.createElement(antd_1.Empty, { description: "\u80CE\u76D1\u5DE5\u4F5C\u7AD9" }))))));
 };

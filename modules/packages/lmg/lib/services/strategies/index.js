@@ -25,8 +25,10 @@ var push_data_ctg_1 = require("./push_data_ctg");
 var push_data_ecg_1 = require("./push_data_ecg");
 var push_offline_data_ctg_1 = require("./push_offline_data_ctg");
 var endpoint_user_confirm_msg_1 = require("./endpoint_user_confirm_msg");
+var replace_probe_tip_1 = require("./replace_probe_tip");
 var list_blood_pressure_1 = require("./list_blood_pressure");
 var f0_1 = require("./f0");
+var utils_1 = require("../utils");
 exports.strategies = __assign({ start_work: start_work_1.start_work,
     end_work: end_work_1.end_work,
     heard: heard_1.heard,
@@ -41,7 +43,9 @@ exports.strategies = __assign({ start_work: start_work_1.start_work,
     push_data_ecg: push_data_ecg_1.push_data_ecg,
     push_offline_data_ctg: push_offline_data_ctg_1.push_offline_data_ctg,
     endpoint_user_confirm_msg: endpoint_user_confirm_msg_1.endpoint_user_confirm_msg,
-    list_blood_pressure: list_blood_pressure_1.list_blood_pressure }, f0_1.f0_strategies);
+    list_blood_pressure: list_blood_pressure_1.list_blood_pressure,
+    replace_probe_tip: replace_probe_tip_1.replace_probe_tip }, f0_1.f0_strategies);
+var exp = /(.*)_res$/;
 function getStrategies(context) {
     var entries = Object.entries(exports.strategies);
     return entries.reduce(function (r, _a) {
@@ -51,4 +55,24 @@ function getStrategies(context) {
     }, {});
 }
 exports.getStrategies = getStrategies;
+function requestInterceptror(mesName, mes) {
+    var obj = mesName.match(exp);
+    if (obj) {
+        var k = obj[1];
+        var res = this.requests[k];
+        if (res) {
+            (mes.data && mes.data.res === 0) ? res(mes.data) : utils_1.handleF0ProErr(k, mes.data.res);
+            this.requests[k] = null;
+        }
+        return true;
+    }
+}
+function handleMessage(mesName, mes) {
+    this.strategies = this.strategies || getStrategies(this);
+    if (!requestInterceptror.call(this, mesName, mes)) {
+        var strategy = this.strategies[mesName];
+        strategy && strategy(mes);
+    }
+}
+exports.handleMessage = handleMessage;
 //# sourceMappingURL=index.js.map

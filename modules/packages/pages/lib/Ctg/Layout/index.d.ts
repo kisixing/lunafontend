@@ -22,6 +22,7 @@ export interface IItemData {
 }
 interface IProps {
     RenderIn: any;
+    RenderMaskIn?: any;
     items: IItemData[];
     listLayout: number[];
     fullScreenId?: string;

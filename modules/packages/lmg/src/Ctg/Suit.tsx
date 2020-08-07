@@ -598,6 +598,7 @@ export class Suit extends Draw {
         } else if (key === 'fhr3') {
           if (datacache.fhr[2]) datacache.fhr[2][i] = data_to_push;
         } else if (key === 'toco') {
+          console.log('initfhrdata', data_to_push)
           datacache.toco[i] = data_to_push;
         } else if (key === 'fm') {
           datacache.fm[i] = data_to_push;

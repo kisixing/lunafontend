@@ -23,6 +23,7 @@ interface IProps {
   docid: string
   status: BedStatus
   onSelect?: (unitId: string) => void
+  RenderMaskIn: any
 
   outPadding: number
   fullScreenId: string
@@ -34,7 +35,7 @@ interface IProps {
 
 
 const WorkbenchItem = (props: IProps) => {
-  const { onSelect, bordered, themeColor, itemData, onClose, loading = false, fullScreenId, itemHeight, itemSpan, outPadding, data, bedname, status, unitId } = props;
+  const { onSelect, bordered, themeColor, RenderMaskIn,itemData, onClose, loading = false, fullScreenId, itemHeight, itemSpan, outPadding, data, bedname, status, unitId } = props;
   let { startTime, pregnancy } = props
 
   const [isFullscreen, setIsFullscreen] = useState(false)
@@ -94,7 +95,6 @@ const WorkbenchItem = (props: IProps) => {
         data={data}
         onDoubleClick={fullScreenCb}
         loading={loading}
-        // onClose={() => { event.emit('bedClose', unitId, status, isTodo, docid) }}
         onClose={onClose && (() => onClose(itemData))}
         unitId={unitId}
         name={pregnancy.name}
@@ -103,6 +103,7 @@ const WorkbenchItem = (props: IProps) => {
         GP={pregnancy.GP}
         gestationalWeek={pregnancy.gestationalWeek}
         onSelect={null}
+        RenderMaskIn={RenderMaskIn}
       >
         {
           props.children

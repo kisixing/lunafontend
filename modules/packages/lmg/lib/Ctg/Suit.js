@@ -520,6 +520,7 @@ var Suit = (function (_super) {
                         datacache.fhr[2][i] = data_to_push;
                 }
                 else if (key === 'toco') {
+                    console.log('initfhrdata', data_to_push);
                     datacache.toco[i] = data_to_push;
                 }
                 else if (key === 'fm') {

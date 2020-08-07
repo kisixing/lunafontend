@@ -21,6 +21,7 @@ interface IProps extends PropsWithChildren<{}> {
     unitId: string;
     isFullscreen: boolean;
     onSelect?: (unitId: string) => void;
+    RenderMaskIn: any;
 }
 declare const Item: (props: IProps) => JSX.Element;
 export default Item;

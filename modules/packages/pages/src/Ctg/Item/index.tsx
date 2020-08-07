@@ -28,7 +28,7 @@ interface IProps extends PropsWithChildren<{}> {
     unitId: string
     isFullscreen: boolean
     onSelect?: (unitId: string) => void
-
+    RenderMaskIn: any
 }
 
 const Wrapper = styled.div`
@@ -46,13 +46,14 @@ const Wrapper = styled.div`
     }
 `
 const Item = (props: IProps) => {
-    const { onSelect, data, bedname, onClose, onDoubleClick, loading, onSuitRead, themeColor = 'rgb(74, 20, 140)', unitId, isFullscreen } = props;
+    const { onSelect, data, bedname, onClose, onDoubleClick, loading, onSuitRead, RenderMaskIn, themeColor = 'rgb(74, 20, 140)', unitId, isFullscreen } = props;
     const status = props.status === undefined ? data && data.status : props.status
     let { bedNO, GP, gestationalWeek, name, age, startTime } = props;
     const [suit, setSuit] = useState(null)
+    const [maskVisible, setMaskVisible] = useState(false)
 
     const ref = useRef<Suit>()
-    console.log('ss ref',ref)
+    console.log('ss ref', ref)
     // 床位信息
     const RenderTilte = () => {
         const m = moment(startTime)
@@ -85,7 +86,7 @@ const Item = (props: IProps) => {
                 size="small"
                 title={<RenderTilte />}
                 style={{ height: '100%' }}
-                extra={<Extra bedname={bedname} onClose={onClose} status={status} suit={suit} unitId={unitId} />}
+                extra={<Extra bedname={bedname} onClose={!data.isF0Pro && onClose} status={status} suit={suit} unitId={unitId} />}
                 headStyle={{ background: themeColor, color: '#fff' }}
                 bodyStyle={{ padding: 0, height: 'calc(100% - 38px)' }}
             >
@@ -97,12 +98,22 @@ const Item = (props: IProps) => {
                     loading={loading}
                     isFullscreen={isFullscreen}
                 ></L>
-                <Bar mutableSuit={ref} onSelect={onSelect} unitId={unitId}>
+
+                <Bar mutableSuit={ref} onSelect={onSelect} unitId={unitId} setMaskVisible={setMaskVisible}>
 
                     {
                         props.children
                     }
                 </Bar>
+                {
+                    maskVisible && (
+                        <div style={{ background: 'rgba(0,0,0,.3)', position: 'absolute', left: 0, right: 0, bottom: 0, top: 0, margin: 'auto' }}>
+                            {
+                                RenderMaskIn && <RenderMaskIn setMaskVisible={setMaskVisible} mutableSuit={ref} data={data}/>
+                            }
+                        </div>
+                    )
+                }
             </Card>
         </Wrapper>
     );

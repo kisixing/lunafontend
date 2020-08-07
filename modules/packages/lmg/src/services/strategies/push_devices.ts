@@ -15,17 +15,18 @@ export function push_devices(this: WsService, received_msg: IData) {
     for (var i in devlist) {
         var devdata = devlist[i];
         if (!devdata) continue;
-        for (let bi in devdata.beds) {
-            const bedData = devdata.beds[bi]
-            const { is_include_tocozero, is_include_volume, doc_id, fetal_num } = bedData
-            var unitId = this.getUnitId(devdata.device_no, bedData.bed_no);
+        const { device_no, beds, device_type } = devdata
+        for (let bi in beds) {
+            const bedData = beds[bi]
+            const { is_include_tocozero, is_include_volume, is_include_toco, is_include_mother, doc_id, fetal_num, bed_no } = bedData
+            var unitId = this.getUnitId(device_no, bed_no);
+
             const old = datacache.get(unitId)
 
             if (!old || (old.docid !== doc_id)) {
 
-                const item = getEmptyCacheItem({ is_include_tocozero, is_include_volume, fetal_num, id: unitId, docid: doc_id })
+                const item = getEmptyCacheItem({ deviceType: device_type, device_no, bed_no, is_include_tocozero, is_include_toco, is_include_volume, fetal_num, id: unitId, docid: doc_id, ismulti: is_include_mother })
 
-                item.deviceType = devdata.device_type
 
                 datacache.set(unitId, item);
                 this.convertdocid(unitId, doc_id)
@@ -39,8 +40,7 @@ export function push_devices(this: WsService, received_msg: IData) {
                 }
                 else if (bedData.is_working == 3) {
                     item.status = OfflineStopped;
-                }
-                else {
+                } else {
                     item.status = Uncreated;
                 }
                 //debugger
@@ -50,9 +50,6 @@ export function push_devices(this: WsService, received_msg: IData) {
                 if (bedData.fetalposition) {
                     item.fetalposition = JSON.parse(bedData.fetalposition);
                 }
-                item.fetal_num = bedData.fetal_num;
-                if (bedData.is_include_mother)
-                    item.ismulti = true;
             }
         }
     }

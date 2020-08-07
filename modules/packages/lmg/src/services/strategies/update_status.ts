@@ -12,6 +12,7 @@ interface IData {
     fetal_num: number
     is_include_mother: boolean
     is_include_tocozero: boolean
+    is_include_toco: boolean
     is_include_volume: boolean
     disableStartWork: boolean
 }
@@ -23,10 +24,10 @@ interface IData {
 
 export function update_status(this: WsService, received_msg: IData) {
     const { datacache, BedStatus } = this
-    const { Working, Stopped, Offline, OfflineStopped } = BedStatus
+    const { Working, Stopped, Offline, OfflineStopped, Uncreated } = BedStatus
     // 状态机处理
     const { pregnancy, fetalposition, status, device_no, bed_no,
-        is_include_mother, is_include_tocozero, is_include_volume, fetal_num, disableStartWork
+        is_include_mother, is_include_tocozero, is_include_toco, is_include_volume, fetal_num, disableStartWork
     } = received_msg.data
 
     var unitId = this.getUnitId(device_no, bed_no);
@@ -40,6 +41,7 @@ export function update_status(this: WsService, received_msg: IData) {
 
     target.fetal_num = fetal_num
     target.is_include_tocozero = is_include_tocozero
+    target.is_include_toco = is_include_toco
     target.ismulti = is_include_mother
     target.is_include_volume = is_include_volume
     target.disableStartWork = disableStartWork
@@ -52,8 +54,11 @@ export function update_status(this: WsService, received_msg: IData) {
         target.status = Stopped;
     } else if (status == 2) {
         target.status = Offline;
-    } else {
+    }
+    else if (status == 3) {
         target.status = OfflineStopped;
+    } else {
+        target.status = Uncreated;
     }
     console.log('update_status', target)
     target.pregnancy = pregnancy ? JSON.parse(pregnancy) : null;

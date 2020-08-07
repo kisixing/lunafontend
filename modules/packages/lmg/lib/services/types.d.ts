@@ -24,6 +24,7 @@ export declare enum EWsEvents {
     explode = "explode",
     updateSubscriptionIfNecessary = "updateSubscriptionIfNecessary"
 }
+export declare type TWsReqeustType = 'allot_probe' | 'release_probe' | 'add_more_fhr_probe' | 'add_toco_probe' | 'replace_probe';
 export interface ICacheItemPregnancy {
     pvId?: string;
     GP?: string;
@@ -44,17 +45,20 @@ export interface IMultiParamData {
     respRate?: string | number;
     bloodPress?: string | number;
 }
-export interface ICacheItem {
+declare class _ICacheItem {
+    bed_no?: number;
+    device_no?: number;
     realTime?: boolean;
     id: string;
     volumeData?: IVolumeData;
     deviceType?: TDeviceType;
     is_include_volume?: boolean;
     is_include_tocozero?: boolean;
+    is_include_toco?: boolean;
     disableStartWork?: boolean;
     analyse?: any;
-    fhr: number[][];
-    toco: number[];
+    fhr?: number[][];
+    toco?: number[];
     fm?: number[];
     fmp?: number[];
     index?: number;
@@ -93,13 +97,19 @@ export interface ICacheItem {
     curindex?: number;
     state?: number;
 }
+export declare class ICacheItem extends _ICacheItem {
+    get isF0Pro(): boolean;
+    get hasToco(): boolean;
+    get hasPregnancy(): boolean;
+    constructor(args: _ICacheItem);
+}
 export declare type ICache = Map<string, ICacheItem> & {
     clean?: (key: string) => void;
 };
 export interface IDeviceType {
-    bed_no: number;
-    device_no: number;
-    device_type: TDeviceType;
+    bed_no?: number;
+    device_no?: number;
+    device_type?: TDeviceType;
 }
 export interface IDevice extends IDeviceType {
     ERP: string;
@@ -128,5 +138,6 @@ interface IBed {
     event_alarm_id: string;
     is_include_volume: boolean;
     is_include_tocozero: boolean;
+    is_include_toco: boolean;
 }
 export {};

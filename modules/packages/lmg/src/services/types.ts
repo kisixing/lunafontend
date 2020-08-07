@@ -1,5 +1,6 @@
 import Queue from "../Ecg/Queue";
 
+
 export type TDeviceType = ('SR_K9' | 'SR_B5_B6' | 'V3' | 'F3' | 'LM_F0_PRO')
 export type TAlarmType = 0 | 1 | 2
 type TF = 0 | 1
@@ -27,7 +28,7 @@ export enum EWsEvents {
     explode = "explode",
     updateSubscriptionIfNecessary = "updateSubscriptionIfNecessary"
 }
-
+export type TWsReqeustType = 'allot_probe' | 'release_probe' | 'add_more_fhr_probe' | 'add_toco_probe' | 'replace_probe'
 export interface ICacheItemPregnancy {
     pvId?: string
     GP?: string
@@ -48,20 +49,23 @@ export interface IMultiParamData {
     respRate?: string | number
     bloodPress?: string | number
 }
-export interface ICacheItem {
+class _ICacheItem {
+    bed_no?: number;
+    device_no?: number;
     realTime?: boolean
     id: string
     volumeData?: IVolumeData
     deviceType?: TDeviceType
     is_include_volume?: boolean
     is_include_tocozero?: boolean
+    is_include_toco?: boolean
     disableStartWork?: boolean
     analyse?: any;
     // fhr?: Uint8Array[];
     // toco?: Uint8Array;
     // fm?: Uint8Array;
-    fhr: number[][];
-    toco: number[];
+    fhr?: number[][];
+    toco?: number[];
     fm?: number[];
     fmp?: number[];
 
@@ -103,13 +107,27 @@ export interface ICacheItem {
     }
     curindex?: number
     state?: number
-
+}
+export class ICacheItem extends _ICacheItem {
+    public get isF0Pro(): boolean {
+        return this.deviceType === 'LM_F0_PRO';
+    }
+    public get hasToco(): boolean {
+        return this.toco && this.toco.length > 0;
+    }
+    public get hasPregnancy(): boolean {
+        return this.pregnancy && typeof this.pregnancy.id === 'number'
+    }
+    constructor(args: _ICacheItem) {
+        super()
+        Object.assign(this, args)
+    }
 }
 export type ICache = Map<string, ICacheItem> & { clean?: (key: string) => void }
 export interface IDeviceType {
-    bed_no: number;
-    device_no: number;
-    device_type: TDeviceType;
+    bed_no?: number;
+    device_no?: number;
+    device_type?: TDeviceType;
 }
 export interface IDevice extends IDeviceType {
     ERP: string;
@@ -142,5 +160,6 @@ interface IBed {
     event_alarm_id: string
     is_include_volume: boolean
     is_include_tocozero: boolean
+    is_include_toco: boolean
 }
 

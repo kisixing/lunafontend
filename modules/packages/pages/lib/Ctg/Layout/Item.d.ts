@@ -14,6 +14,7 @@ interface IProps {
     docid: string;
     status: BedStatus;
     onSelect?: (unitId: string) => void;
+    RenderMaskIn: any;
     outPadding: number;
     fullScreenId: string;
     itemHeight: number;

@@ -1,5 +1,6 @@
-import { BedStatus, ICacheItem, ICache } from './types'
+import { BedStatus, ICacheItem, ICache, TWsReqeustType } from './types'
 import Queue from "../Ecg/Queue";
+import message from 'antd/lib/message/index';
 
 export const mapStatusToColor = {
     [BedStatus.Offline]: '#bdbdbd',
@@ -16,17 +17,40 @@ export const mapStatusToText = {
     [BedStatus.Working]: '监护中',
     [BedStatus.Uncreated]: '未创建',
 };
-
+export const f0Pro_errText: { [x in TWsReqeustType]: { [x: number]: string } } = {
+    allot_probe: {
+        1: '创建监护失败，胎心探头不足',
+        2: '创建监护失败，宫缩探头不足'
+    },
+    release_probe: {
+        1: '添加失败，缺少可用宫缩探头'
+    },
+    add_more_fhr_probe: {
+        1: '添加失败，缺少可用宫缩探头'
+    },
+    add_toco_probe: {
+        1: '添加失败，缺少可用宫缩探头',
+        2: '添加失败，已存在宫缩探头'
+    },
+    replace_probe:{
+        1: '添加失败，缺少可用宫缩探头'
+    }
+}
+export const handleF0ProErr = (k: string, status: number | string) => {
+    if (f0Pro_errText[k] && f0Pro_errText[k][status]) {
+        message.info(f0Pro_errText[k][status])
+    }
+}
 
 // const MAX_SIZE = 4 * 3600 * 24 * 2
 export function getMaxArray() {
     // return new Uint8Array(MAX_SIZE)
     return [] as number[]
 }
-export function getEmptyCacheItem(base: { [x in keyof ICacheItem]?: ICacheItem[x] }): ICacheItem {
+export function getEmptyCacheItem(base: { [x in keyof ICacheItem]?: ICacheItem[x] }) {
     base.fetal_num = base.fetal_num ? base.fetal_num : 1
     const { fetal_num } = base
-    const item: ICacheItem = {
+    const item = new ICacheItem({
         id: '0',
         fhr: Array(fetal_num).fill(0).map(() => getMaxArray()),
         toco: getMaxArray(),
@@ -52,10 +76,12 @@ export function getEmptyCacheItem(base: { [x in keyof ICacheItem]?: ICacheItem[x
         ecgdata: null,
         is_include_volume: false,
         is_include_tocozero: false,
+        is_include_toco: false,
         realTime: true,
-        alarms: Object.create(null)
-    }
-    return Object.assign(Object.create(null), item, base)
+        alarms: Object.create(null),
+        ...base
+    })
+    return item
 }
 
 export function cleardata(datacache: ICache, curid: string, fetal_num: number) {

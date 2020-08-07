@@ -56,9 +56,10 @@ var WsService = (function (_super) {
         _this_1.pongTimeoutId = null;
         _this_1.log = console.log.bind(console, 'websocket');
         _this_1.datacache = new Map();
-        _this_1.strategies = strategies_1.getStrategies(_this_1);
         _this_1.BedStatus = types_1.BedStatus;
         _this_1.PENDDING_INTERVAL = SECOND * 30;
+        _this_1.requests = {};
+        _this_1.handleMessage = strategies_1.handleMessage;
         _this_1._current = [];
         _this_1.pongIndex = 0;
         _this_1.t = +new Date();
@@ -66,13 +67,16 @@ var WsService = (function (_super) {
         _this_1.refreshTimeout = null;
         _this_1.subscribeList = [];
         _this_1.connect = function () {
-            var _a = _this_1, datacache = _a.datacache, settingData = _a.settingData;
-            var ws_url = settingData.ws_url;
-            if (!ws_url)
-                return Promise.reject('错误的ws_url');
-            _this_1.socket = new WebSocket("ws://" + ws_url + "/?clientType=ctg-suit&token=eyJ1c2VybmFtZSI6ICJhZG1pbiIsInBhc3N3b3JkIjogImFkbWluIn0=");
-            var socket = _this_1.socket;
             return new Promise(function (res) {
+                var _a = _this_1, datacache = _a.datacache, settingData = _a.settingData;
+                var ws_url = settingData.ws_url;
+                if (!ws_url)
+                    return Promise.reject('错误的ws_url');
+                if (_this_1.socket && _this_1.socket.readyState === WebSocket.OPEN) {
+                    return;
+                }
+                _this_1.socket = new WebSocket("ws://" + ws_url + "/?clientType=ctg-suit&token=eyJ1c2VybmFtZSI6ICJhZG1pbiIsInBhc3N3b3JkIjogImFkbWluIn0=");
+                var socket = _this_1.socket;
                 _this_1.connectResolve = res;
                 socket.onerror = function () {
                     console.log('错误');
@@ -98,10 +102,23 @@ var WsService = (function (_super) {
                     }
                     if (received_msg) {
                         var mesName = received_msg.name;
-                        var strategy = _this_1.strategies[mesName];
-                        strategy && strategy(received_msg);
+                        _this_1.handleMessage(mesName, received_msg);
                     }
                 };
+                setTimeout(function () {
+                    console.log('goit');
+                    var received_msg = {
+                        "name": "replace_probe_tip",
+                        "device_no": 1001,
+                        "bed_no": 1,
+                        "data": {
+                            "mac": "EB:CI:SE:38:90:22",
+                            "isfhr": true
+                        }
+                    };
+                    var mesName = received_msg.name;
+                    _this_1.handleMessage(mesName, received_msg);
+                }, 2000);
                 return [datacache];
             });
         };
@@ -141,7 +158,8 @@ var WsService = (function (_super) {
     WsService.prototype.getCacheItem = function (data) {
         var datacache = this.datacache;
         var device_no = data.device_no, bed_no = data.bed_no;
-        var target = datacache.get(this.getUnitId(device_no, bed_no));
+        var key = this.getUnitId(device_no, bed_no);
+        var target = datacache.get(key);
         return target || null;
     };
     WsService.prototype.sendHeard = function () {
@@ -203,6 +221,16 @@ var WsService = (function (_super) {
             log('The socket is not open.');
         }
     };
+    WsService.prototype.sendAsync = function (type, message) {
+        var _this_1 = this;
+        return new Promise(function (res, rej) {
+            _this_1.send(message);
+            _this_1.requests[type] = res;
+            setTimeout(function () {
+                _this_1.requests[type] = null;
+            }, 5000);
+        });
+    };
     WsService.prototype.startwork = function (device_no, bed_no) {
         var message = "{\"name\":\"start_work\",\"data\":{\"device_no\":" + device_no + ",\"bed_no\":" + bed_no + "}}";
         this.send(message);
@@ -210,6 +238,39 @@ var WsService = (function (_super) {
     WsService.prototype.endwork = function (device_no, bed_no) {
         var message = "{\"name\":\"end_work\",\"data\":{\"device_no\":" + device_no + ",\"bed_no\":" + bed_no + "}}";
         this.send(message);
+    };
+    WsService.prototype.alloc = function (device_no, bed_no) {
+        var command = "{\"name\": \"allot_probe\",\"device_no\": " + device_no + ",\"bed_no\": " + bed_no + "}";
+        return this.sendAsync('allot_probe', command);
+    };
+    WsService.prototype.cancelalloc = function (device_no, bed_no) {
+        var command = "{\"name\": \"release_probe\",\"device_no\": " + device_no + ",\"bed_no\": " + bed_no + "}";
+        return this.sendAsync('release_probe', command);
+    };
+    WsService.prototype.add_fhr = function (device_no, bed_no, fetal_num) {
+        var command = "{\"name\": \"add_more_fhr_probe\",\"device_no\": " + device_no + ",\"bed_no\": " + bed_no + ",\"data\":{\"fetal_num\": " + fetal_num + "}}";
+        return this.sendAsync('add_more_fhr_probe', command);
+    };
+    WsService.prototype.add_toco = function (device_no, bed_no) {
+        var command = "{\"name\": \"add_toco_probe\",\"device_no\": " + device_no + ",\"bed_no\": " + bed_no + "}";
+        return this.sendAsync('add_toco_probe', command);
+    };
+    WsService.prototype.setTocozero = function (device_no, bed_no) {
+        var msg = JSON.stringify({
+            name: "toco_zero",
+            device_no: device_no,
+            bed_no: bed_no
+        });
+        this.send(msg);
+    };
+    WsService.prototype.replace_probe = function (device_no, bed_no, data) {
+        var command = JSON.stringify({
+            name: "replace_probe",
+            device_no: device_no,
+            bed_no: bed_no,
+            data: data
+        });
+        return this.sendAsync('replace_probe', command);
     };
     WsService.prototype._emit = function (name) {
         var value = [];
@@ -223,14 +284,6 @@ var WsService = (function (_super) {
         if (this.subscribeList && str.every(function (_) { return _this_1.subscribeList.includes(_); }) && this.subscribeList.every(function (_) { return str.includes(_); })) {
             return;
         }
-    };
-    WsService.prototype.setTocozero = function (device_no, bed_no) {
-        var msg = JSON.stringify({
-            name: "toco_zero",
-            device_no: device_no,
-            bed_no: bed_no
-        });
-        this.send(msg);
     };
     WsService.prototype.getVolume = function (device_no, bed_no) {
         var msg = JSON.stringify({

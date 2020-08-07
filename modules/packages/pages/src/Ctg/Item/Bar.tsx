@@ -3,11 +3,17 @@ import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { Button } from 'antd';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 
-interface IProps { mutableSuit: React.MutableRefObject<Suit>, onSelect?: (unitId: string) => void, unitId: string, children: any }
+interface IProps {
+  mutableSuit: React.MutableRefObject<Suit>,
+  onSelect?: (unitId: string) => void,
+  unitId: string,
+  children: any,
+  setMaskVisible: React.Dispatch<React.SetStateAction<boolean>>
+}
 
 const Bar: FunctionComponent<IProps> = function (props) {
   const [showBar, setShowBar] = useState(false)
-  const { mutableSuit, onSelect, unitId } = props
+  const { mutableSuit, onSelect, unitId, setMaskVisible } = props
 
 
   const timeout = useRef(null)
@@ -52,7 +58,7 @@ const Bar: FunctionComponent<IProps> = function (props) {
     >
       {
         React.Children.map(props.children, _ => {
-          return React.cloneElement(_ as any, { mutableSuit })
+          return React.cloneElement(_ as any, { mutableSuit, setMaskVisible })
         })
       }
     </div>

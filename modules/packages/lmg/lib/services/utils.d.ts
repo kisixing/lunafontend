@@ -1,4 +1,4 @@
-import { BedStatus, ICacheItem, ICache } from './types';
+import { BedStatus, ICacheItem, ICache, TWsReqeustType } from './types';
 export declare const mapStatusToColor: {
     3: string;
     2: string;
@@ -13,6 +13,12 @@ export declare const mapStatusToText: {
     1: string;
     5: string;
 };
+export declare const f0Pro_errText: {
+    [x in TWsReqeustType]: {
+        [x: number]: string;
+    };
+};
+export declare const handleF0ProErr: (k: string, status: string | number) => void;
 export declare function getMaxArray(): number[];
 export declare function getEmptyCacheItem(base: {
     [x in keyof ICacheItem]?: ICacheItem[x];

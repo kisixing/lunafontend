@@ -9,6 +9,7 @@ interface IData {
     fetal_num: number;
     is_include_mother: boolean;
     is_include_tocozero: boolean;
+    is_include_toco: boolean;
     is_include_volume: boolean;
     disableStartWork: boolean;
 }

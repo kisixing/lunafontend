@@ -8,4 +8,4 @@ function endpoint_user_confirm_msg(received_msg) {
     index_1.default.info(received_msg.data.content);
 }
 exports.endpoint_user_confirm_msg = endpoint_user_confirm_msg;
-//# sourceMappingURL=endpoint_user_confirm_msg.js.map
+//# sourceMappingURL=endpoint_user_confirm_msg copy.js.map

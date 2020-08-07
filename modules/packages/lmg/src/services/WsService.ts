@@ -2,8 +2,8 @@ import request from "@lianmed/request";
 import { event, EventEmitter } from "@lianmed/utils";
 import { throttle } from "lodash";
 import Queue from "../Ecg/Queue";
-import { getStrategies } from "./strategies";
-import { BedStatus, EWsEvents, EWsStatus, ICache, IDeviceType } from './types';
+import { getStrategies, handleMessage } from "./strategies";
+import { BedStatus, EWsEvents, EWsStatus, ICache, IDeviceType, TWsReqeustType } from './types';
 import { cleardata, convertstarttime, getEmptyCacheItem } from "./utils";
 export * from './types';
 export * from './useCheckNetwork';
@@ -37,9 +37,11 @@ export class WsService extends EventEmitter {
     settingData: { [x: string]: string }
     socket: WebSocket
     offrequest: number
-    strategies = getStrategies(this)
+    strategies: { [x: string]: Function }
     BedStatus = BedStatus
     PENDDING_INTERVAL = SECOND * 30
+    requests: { [x in TWsReqeustType]?: (value: unknown) => void } = {}
+    handleMessage = handleMessage
     private _current: string[] = [];
     public get current(): string[] {
         return this._current;
@@ -73,10 +75,11 @@ export class WsService extends EventEmitter {
     getUnitId(device_no: number | string, bed_no: number | string) {
         return `${device_no}-${bed_no}`
     }
-    getCacheItem(data: IDeviceType) {
+    getCacheItem(data: { device_no: any, bed_no: any }) {
         const { datacache } = this
         const { device_no, bed_no } = data
-        const target = datacache.get(this.getUnitId(device_no, bed_no))
+        const key = this.getUnitId(device_no, bed_no)
+        const target = datacache.get(key)
         return target || null
     }
     pongIndex = 0
@@ -142,6 +145,15 @@ export class WsService extends EventEmitter {
             log('The socket is not open.');
         }
     }
+    sendAsync(type: TWsReqeustType, message: string) {
+        return new Promise<{ res: number, [x: string]: any }>((res, rej) => {
+            this.send(message)
+            this.requests[type] = res
+            setTimeout(() => {
+                this.requests[type] = null
+            }, 5000);
+        })
+    }
     startwork(device_no: string, bed_no: string) {
         const message = `{"name":"start_work","data":{"device_no":${device_no},"bed_no":${bed_no}}}`;
         this.send(message);
@@ -149,6 +161,44 @@ export class WsService extends EventEmitter {
     endwork(device_no: string, bed_no: string) {
         const message = `{"name":"end_work","data":{"device_no":${device_no},"bed_no":${bed_no}}}`;
         this.send(message);
+    }
+    /**分配探头**/
+    alloc(device_no, bed_no) {
+        const command = `{"name": "allot_probe","device_no": ${device_no},"bed_no": ${bed_no}}`
+        return this.sendAsync('allot_probe', command);
+    }
+    /**取消探头分配**/
+    cancelalloc(device_no, bed_no) {
+        const command = `{"name": "release_probe","device_no": ${device_no},"bed_no": ${bed_no}}`
+        return this.sendAsync('release_probe', command);
+    }
+    //申请多胞胎
+    add_fhr(device_no, bed_no, fetal_num) {
+        const command = `{"name": "add_more_fhr_probe","device_no": ${device_no},"bed_no": ${bed_no},"data":{"fetal_num": ${fetal_num}}}`
+        return this.sendAsync('add_more_fhr_probe', command);
+    }
+    //添加宫缩
+    add_toco(device_no, bed_no) {
+        const command = `{"name": "add_toco_probe","device_no": ${device_no},"bed_no": ${bed_no}}`
+        return this.sendAsync('add_toco_probe', command);
+    }
+    setTocozero(device_no: number, bed_no: number) {
+        const msg = JSON.stringify({
+            name: "toco_zero",
+            device_no,
+            bed_no
+        })
+        this.send(msg)
+    }
+    replace_probe(device_no: number, bed_no: number, data: { isfhr: boolean, mac: string }) {
+        const command = JSON.stringify({
+            name: "replace_probe",
+            device_no,
+            bed_no,
+            data
+        })
+        return this.sendAsync('replace_probe', command);
+
     }
     _emit(name: string, ...value: any[]) {
         event.emit(`WsService:${name}`, ...value)
@@ -166,14 +216,7 @@ export class WsService extends EventEmitter {
         //     }
         // ))
     }
-    setTocozero(device_no: number, bed_no: number) {
-        const msg = JSON.stringify({
-            name: "toco_zero",
-            device_no,
-            bed_no
-        })
-        this.send(msg)
-    }
+
     getVolume(device_no: number, bed_no: number) {
         const msg = JSON.stringify({
             name: "getVolume",
@@ -310,16 +353,20 @@ export class WsService extends EventEmitter {
             offstart = false;
         }
     }
-    connect = (): Promise<ICache> => {
-        const { datacache, settingData } = this
-        const { ws_url } = settingData
-        if (!ws_url) return Promise.reject('错误的ws_url')
-        this.socket = new WebSocket(
-            `ws://${ws_url}/?clientType=ctg-suit&token=eyJ1c2VybmFtZSI6ICJhZG1pbiIsInBhc3N3b3JkIjogImFkbWluIn0=`,
-        );
-        const socket = this.socket;
+    connect = () => {
 
-        return new Promise(res => {
+
+        return new Promise<ICache>(res => {
+            const { datacache, settingData } = this
+            const { ws_url } = settingData
+            if (!ws_url) return Promise.reject('错误的ws_url')
+            if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+                return
+            }
+            this.socket = new WebSocket(
+                `ws://${ws_url}/?clientType=ctg-suit&token=eyJ1c2VybmFtZSI6ICJhZG1pbiIsInBhc3N3b3JkIjogImFkbWluIn0=`,
+            );
+            const socket = this.socket;
             this.connectResolve = res
             socket.onerror = () => {
                 console.log('错误')
@@ -353,20 +400,25 @@ export class WsService extends EventEmitter {
                 } catch (error) {
                     console.log('json parse error', error)
                 }
-
                 if (received_msg) {
                     const mesName = received_msg.name
-                    const strategy = this.strategies[mesName]
-                    // if (mesName === 'push_devices') {
-                        
-                    //     const t = received_msg.data.find(_ => _.device_no === 1)
-                    //     console.log('push',t);
-
-                    //     t && (t.device_type = 'V3')
-                    // }
-                    strategy && strategy(received_msg)
+                    this.handleMessage(mesName, received_msg)
                 }
             };
+            setTimeout(() => {
+                console.log('goit')
+                var received_msg = {
+                    "name": "replace_probe_tip",
+                    "device_no": 1001,
+                    "bed_no": 1,
+                    "data": {
+                        "mac": "EB:CI:SE:38:90:22",  //插入探头的蓝牙地址
+                        "isfhr": true  //插入探头是否为胎心探头
+                    }
+                }
+                const mesName = received_msg.name
+                this.handleMessage(mesName, received_msg)
+            }, 2000);
             return [datacache];
         });
     };

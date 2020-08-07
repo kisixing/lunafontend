@@ -1,7 +1,8 @@
 /// <reference types="node" />
 import { EventEmitter } from "@lianmed/utils";
 import Queue from "../Ecg/Queue";
-import { BedStatus, EWsEvents, EWsStatus, ICache, IDeviceType } from './types';
+import { handleMessage } from "./strategies";
+import { BedStatus, EWsEvents, EWsStatus, ICache, TWsReqeustType } from './types';
 export * from './types';
 export * from './useCheckNetwork';
 export * from './utils';
@@ -32,12 +33,19 @@ export declare class WsService extends EventEmitter {
     };
     BedStatus: typeof BedStatus;
     PENDDING_INTERVAL: number;
+    requests: {
+        [x in TWsReqeustType]?: (value: unknown) => void;
+    };
+    handleMessage: typeof handleMessage;
     private _current;
     get current(): string[];
     set current(value: string[]);
     constructor(settingData?: any);
     getUnitId(device_no: number | string, bed_no: number | string): string;
-    getCacheItem(data: IDeviceType): import("./types").ICacheItem;
+    getCacheItem(data: {
+        device_no: any;
+        bed_no: any;
+    }): import("./types").ICacheItem;
     pongIndex: number;
     sendHeard(): void;
     t: number;
@@ -48,12 +56,39 @@ export declare class WsService extends EventEmitter {
     refresh(name?: string): void;
     getDatacache(): Promise<ICache>;
     send(message: string): void;
+    sendAsync(type: TWsReqeustType, message: string): Promise<{
+        [x: string]: any;
+        res: number;
+    }>;
     startwork(device_no: string, bed_no: string): void;
     endwork(device_no: string, bed_no: string): void;
+    alloc(device_no: any, bed_no: any): Promise<{
+        [x: string]: any;
+        res: number;
+    }>;
+    cancelalloc(device_no: any, bed_no: any): Promise<{
+        [x: string]: any;
+        res: number;
+    }>;
+    add_fhr(device_no: any, bed_no: any, fetal_num: any): Promise<{
+        [x: string]: any;
+        res: number;
+    }>;
+    add_toco(device_no: any, bed_no: any): Promise<{
+        [x: string]: any;
+        res: number;
+    }>;
+    setTocozero(device_no: number, bed_no: number): void;
+    replace_probe(device_no: number, bed_no: number, data: {
+        isfhr: boolean;
+        mac: string;
+    }): Promise<{
+        [x: string]: any;
+        res: number;
+    }>;
     _emit(name: string, ...value: any[]): void;
     subscribeList: string[];
     subscribe(str: string[]): void;
-    setTocozero(device_no: number, bed_no: number): void;
     getVolume(device_no: number, bed_no: number): void;
     change_volume(device_no: number, bed_no: number, vol: number): void;
     mute_volume(device_no: number, bed_no: number, fetel_no: number, isMute: number): void;
