@@ -34,6 +34,7 @@ function push_devices(received_msg) {
                 else {
                     item.status = Uncreated;
                 }
+                console.log('zzx', bedData.is_working, unitId, item.status);
                 if (bedData.pregnancy) {
                     item.pregnancy = JSON.parse(bedData.pregnancy);
                 }

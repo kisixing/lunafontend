@@ -105,20 +105,6 @@ var WsService = (function (_super) {
                         _this_1.handleMessage(mesName, received_msg);
                     }
                 };
-                setTimeout(function () {
-                    console.log('goit');
-                    var received_msg = {
-                        "name": "replace_probe_tip",
-                        "device_no": 1001,
-                        "bed_no": 1,
-                        "data": {
-                            "mac": "EB:CI:SE:38:90:22",
-                            "isfhr": true
-                        }
-                    };
-                    var mesName = received_msg.name;
-                    _this_1.handleMessage(mesName, received_msg);
-                }, 2000);
                 return [datacache];
             });
         };

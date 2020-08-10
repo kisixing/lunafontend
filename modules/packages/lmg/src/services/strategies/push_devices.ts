@@ -43,6 +43,7 @@ export function push_devices(this: WsService, received_msg: IData) {
                 } else {
                     item.status = Uncreated;
                 }
+                console.log('zzx',bedData.is_working,unitId,item.status)
                 //debugger
                 if (bedData.pregnancy) {
                     item.pregnancy = JSON.parse(bedData.pregnancy);

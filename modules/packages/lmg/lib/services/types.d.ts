@@ -46,6 +46,7 @@ export interface IMultiParamData {
     bloodPress?: string | number;
 }
 declare class _ICacheItem {
+    replaceProbeTipData?: object;
     bed_no?: number;
     device_no?: number;
     realTime?: boolean;

@@ -12,9 +12,8 @@ interface IData {
 }
 
 export function replace_probe_tip(this: WsService, received_msg: IData) {
-
-    const { device_no, bed_no } = received_msg
+    const { device_no, bed_no, data } = received_msg
     var item = this.getCacheItem({ device_no, bed_no });
-
-    event.emit(`item_probetip`, device_no, bed_no, item && item.docid, received_msg.data)
+    item.replaceProbeTipData = data
+    event.emit(`item_probetip`, item.id, item && item.docid, data)
 }
