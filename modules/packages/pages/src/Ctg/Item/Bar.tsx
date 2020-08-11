@@ -53,7 +53,8 @@ const Bar: FunctionComponent<IProps> = function (props) {
         borderRadius: 3,
         boxShadow: '#aaa 3px 3px 5px 1px',
         transition: 'width 0.2s ease-out',
-        visibility: showBar ? 'visible' : 'hidden'
+        visibility: showBar ? 'visible' : 'hidden',
+        overflow:'hidden'
       }}
     >
       {

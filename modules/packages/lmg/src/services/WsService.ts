@@ -405,20 +405,20 @@ export class WsService extends EventEmitter {
                     this.handleMessage(mesName, received_msg)
                 }
             };
-            setTimeout(() => {
-                console.log('goit')
-                var received_msg = {
-                    "name": "replace_probe_tip",
-                    "device_no": 1001,
-                    "bed_no": 2,
-                    "data": {
-                        "mac": "EB:CI:SE:38:90:22",  //插入探头的蓝牙地址
-                        "isfhr": true  //插入探头是否为胎心探头
-                    }
-                }
-                const mesName = received_msg.name
-                this.handleMessage(mesName, received_msg)
-            }, 2000);
+            // setTimeout(() => {
+            //     console.log('goit')
+            //     var received_msg = {
+            //         "name": "replace_probe_tip",
+            //         "device_no": 1001,
+            //         "bed_no": 2,
+            //         "data": {
+            //             "mac": "EB:CI:SE:38:90:22",  //插入探头的蓝牙地址
+            //             "isfhr": true  //插入探头是否为胎心探头
+            //         }
+            //     }
+            //     const mesName = received_msg.name
+            //     this.handleMessage(mesName, received_msg)
+            // }, 4000);
             return [datacache];
         });
     };
