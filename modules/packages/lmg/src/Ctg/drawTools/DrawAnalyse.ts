@@ -43,8 +43,8 @@ export class DrawAnalyse extends Draw {
     _dec: number[]
     setData(r: obvue.ctg_exams_analyse,) {
         console.log('setData', r)
-        r.analysis.acc = r.analysis.acc && r.analysis.acc.map(_ => ({ ..._, duration: _.duration / 4 }))
-        r.analysis.dec = r.analysis.dec && r.analysis.dec.map(_ => ({ ..._, duration: _.duration / 4 })).filter(_ => _.reliability >= 90 || _.user)
+        r.analysis.acc = r.analysis.acc && r.analysis.acc.map(_ => ({ ..._, duration: _.dataClean ? _.duration : _.duration / 4, dataClean: true }))
+        r.analysis.dec = r.analysis.dec && r.analysis.dec.map(_ => ({ ..._, duration: _.dataClean ? _.duration : _.duration / 4, dataClean: true })).filter(_ => _.reliability >= 90 || _.user)
         this._acc = r.analysis.acc.map(_ => _.index)
         this._dec = r.analysis.dec.map(_ => _.index)
         this.analysisData = r
@@ -636,7 +636,6 @@ export class DrawAnalyse extends Draw {
                 score.sogcdata.decvalue = 'ed';
                 score.sogcdata.decscore = 2;
             } else if (vd > 0) {
-                debugger
                 const all = analysis.dec.filter(_ => _.type === 'vd' && _.start >= analysis.start && _.end <= analysis.end)
                 const gt60 = all.find(_ => _.duration > 60)
                 const btw = all.find(_ => this.inRange(_.duration, 30, 60))

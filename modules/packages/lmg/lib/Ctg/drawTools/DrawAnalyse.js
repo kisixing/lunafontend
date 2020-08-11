@@ -535,7 +535,6 @@ var DrawAnalyse = (function (_super) {
                     score.sogcdata.decscore = 2;
                 }
                 else if (vd > 0) {
-                    debugger;
                     var all_1 = analysis.dec.filter(function (_) { return _.type === 'vd' && _.start >= analysis.start && _.end <= analysis.end; });
                     var gt60 = all_1.find(function (_) { return _.duration > 60; });
                     var btw = all_1.find(function (_) { return _this.inRange(_.duration, 30, 60); });
@@ -678,8 +677,8 @@ var DrawAnalyse = (function (_super) {
     };
     DrawAnalyse.prototype.setData = function (r) {
         console.log('setData', r);
-        r.analysis.acc = r.analysis.acc && r.analysis.acc.map(function (_) { return (__assign(__assign({}, _), { duration: _.duration / 4 })); });
-        r.analysis.dec = r.analysis.dec && r.analysis.dec.map(function (_) { return (__assign(__assign({}, _), { duration: _.duration / 4 })); }).filter(function (_) { return _.reliability >= 90 || _.user; });
+        r.analysis.acc = r.analysis.acc && r.analysis.acc.map(function (_) { return (__assign(__assign({}, _), { duration: _.dataClean ? _.duration : _.duration / 4, dataClean: true })); });
+        r.analysis.dec = r.analysis.dec && r.analysis.dec.map(function (_) { return (__assign(__assign({}, _), { duration: _.dataClean ? _.duration : _.duration / 4, dataClean: true })); }).filter(function (_) { return _.reliability >= 90 || _.user; });
         this._acc = r.analysis.acc.map(function (_) { return _.index; });
         this._dec = r.analysis.dec.map(function (_) { return _.index; });
         this.analysisData = r;
