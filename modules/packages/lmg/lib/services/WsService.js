@@ -346,6 +346,7 @@ var WsService = (function (_super) {
             var target = datacache.get(curid);
             if (responseData && target) {
                 if (responseData['pregnancy'] == null) {
+                    console.log('cleardata clearbyrest', curid);
                     utils_2.cleardata(datacache, curid, target.fetal_num);
                 }
                 if (is_working == 0) {

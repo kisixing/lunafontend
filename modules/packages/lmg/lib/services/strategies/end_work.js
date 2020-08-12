@@ -6,6 +6,7 @@ function end_work(received_msg) {
     var curid = Number(devdata['device_no']) + '-' + Number(devdata['bed_no']);
     if (datacache.get(curid).pregnancy == null) {
         console.log('end_work', datacache.get(curid), devdata['doc_id']);
+        console.log('cleardata endwork clearbyrest', curid);
         this.clearbyrest(datacache.get(curid).docid, devdata.is_working);
     }
 }

@@ -22,6 +22,8 @@ export function start_work(this: WsService, received_msg: IData) {
     let unitId = this.getUnitId(device_no, bed_no);
     //TODO : 更新设备状态
     cleardata(datacache, unitId, devdata.fetal_num);
+    console.log('cleardata startwork', unitId)
+
     this.convertdocid(unitId, devdata.doc_id)
     const target = datacache.get(unitId);
     if (typeof (devdata.ismulti) != 'undefined') {

@@ -57,7 +57,7 @@ var Item = function (props) {
         react_1.default.createElement(antd_1.Card, { size: "small", title: react_1.default.createElement(RenderTilte, null), style: { height: '100%' }, extra: react_1.default.createElement(Extra_1.default, { bedname: bedname, onClose: !data.isF0Pro && onClose, status: status, suit: suit, unitId: unitId }), headStyle: { background: themeColor, color: '#fff' }, bodyStyle: { padding: 0, height: 'calc(100% - 38px)' } },
             react_1.default.createElement(lmg_1.Ctg, { ref: ref, data: data, onReady: onReady, onDoubleClick: onDoubleClick, loading: loading, isFullscreen: isFullscreen }),
             react_1.default.createElement(Bar_1.default, { mutableSuit: ref, onSelect: onSelect, unitId: unitId, setMaskVisible: setMaskVisible }, props.children),
-            maskVisible && (react_1.default.createElement("div", { style: { background: 'rgba(0,0,0,.3)', position: 'absolute', left: 0, right: 0, bottom: 0, top: 0, margin: 'auto' } }, RenderMaskIn && react_1.default.createElement(RenderMaskIn, { setMaskVisible: setMaskVisible, mutableSuit: ref, data: data }))))));
+            maskVisible && data.isF0Pro && (react_1.default.createElement("div", { style: { background: 'rgba(0,0,0,.3)', position: 'absolute', left: 0, right: 0, bottom: 0, top: 0, margin: 'auto' } }, RenderMaskIn && react_1.default.createElement(RenderMaskIn, { setMaskVisible: setMaskVisible, mutableSuit: ref, data: data }))))));
 };
 exports.default = Item;
 var templateObject_1;

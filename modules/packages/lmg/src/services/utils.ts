@@ -32,7 +32,7 @@ export const f0Pro_errText: { [x in TWsReqeustType]: { [x: number]: string } } =
         1: '添加失败，缺少可用宫缩探头',
         2: '添加失败，已存在宫缩探头'
     },
-    replace_probe:{
+    replace_probe: {
         1: '添加失败，缺少可用宫缩探头'
     }
 }
@@ -62,7 +62,7 @@ export function getEmptyCacheItem(base: { [x in keyof ICacheItem]?: ICacheItem[x
         last: 0,
         past: 0,
         timestamp: 0,
-        docid: '',
+        docid: 'INIT',
         status: BedStatus.Offline,
         orflag: true,
         starttime: '',
@@ -85,6 +85,7 @@ export function getEmptyCacheItem(base: { [x in keyof ICacheItem]?: ICacheItem[x
 }
 
 export function cleardata(datacache: ICache, curid: string, fetal_num: number) {
+    console.log('cleardata', curid)
     const target = datacache.get(curid)
     const empty = getEmptyCacheItem({ fetal_num, fhr: Array(fetal_num).fill(0).map(() => getMaxArray()), id: curid })
     // for (let fetal = 0; fetal < fetal_num; fetal++) {

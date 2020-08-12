@@ -299,6 +299,8 @@ export class WsService extends EventEmitter {
             const target = datacache.get(curid)
             if (responseData && target) {
                 if (responseData['pregnancy'] == null) {
+                    console.log('cleardata clearbyrest', curid)
+
                     cleardata(datacache, curid, target.fetal_num);
                 }
                 if (is_working == 0) {
