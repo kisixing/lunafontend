@@ -2,8 +2,8 @@ import request from "@lianmed/request";
 import { event, EventEmitter } from "@lianmed/utils";
 import { throttle } from "lodash";
 import Queue from "../Ecg/Queue";
-import { getStrategies, handleMessage } from "./strategies";
-import { BedStatus, EWsEvents, EWsStatus, ICache, IDeviceType, TWsReqeustType } from './types';
+import { handleMessage } from "./strategies";
+import { BedStatus, EWsEvents, EWsStatus, ICache, TWsReqeustType } from './types';
 import { cleardata, convertstarttime, getEmptyCacheItem } from "./utils";
 export * from './types';
 export * from './useCheckNetwork';
@@ -12,7 +12,6 @@ export * from './utils';
 
 const ANNOUNCE_INTERVAL = 1000
 const SECOND = 1000
-const { Working, Stopped, OfflineStopped } = BedStatus
 export const LIMIT_LENGTH = 4 * 3600 * 0.7
 
 
@@ -75,9 +74,17 @@ export class WsService extends EventEmitter {
     getUnitId(device_no: number | string, bed_no: number | string) {
         return `${device_no}-${bed_no}`
     }
-    getCacheItem(data: { device_no: any, bed_no: any }) {
+    getCacheItem(data: { device_no: any, bed_no: any } | string) {
         const { datacache } = this
-        const { device_no, bed_no } = data
+        let device_no, bed_no
+        if (typeof data === 'string') {
+            const arr = data.split('-')
+            device_no = Number(arr[0]) || null
+            bed_no = Number(arr[1]) || null
+        } else {
+            device_no = data.device_no
+            bed_no = data.bed_no
+        }
         const key = this.getUnitId(device_no, bed_no)
         const target = datacache.get(key)
         return target || null
@@ -200,6 +207,16 @@ export class WsService extends EventEmitter {
         return this.sendAsync('replace_probe', command);
 
     }
+    sendFocus(id: string) {
+        const target = this.getCacheItem(id)
+        const message = {
+            "name": "focus_on_bed",
+            "device_no": target && target.device_no,
+            "bed_no": target && target.bed_no
+        }
+
+        this.send(JSON.stringify(message))
+    }
     _emit(name: string, ...value: any[]) {
         event.emit(`WsService:${name}`, ...value)
     }
@@ -303,14 +320,17 @@ export class WsService extends EventEmitter {
 
                     cleardata(datacache, curid, target.fetal_num);
                 }
-                if (is_working == 0) {
-                    target.status = Working;
-                } else if (is_working === 3) {
-                    target.status = OfflineStopped;
 
-                } else {
-                    target.status = Stopped;
-                }
+                target.status = is_working + 1;
+
+                // if (is_working == 0) {
+                //     target.status = Working;
+                // } else if (is_working === 3) {
+                //     target.status = OfflineStopped;
+
+                // } else {
+                //     target.status = Stopped;
+                // }
                 //this.refresh('end_work');
             }
         })

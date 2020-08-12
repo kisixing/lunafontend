@@ -82,15 +82,7 @@ export function push_data_ctg(this: WsService, received_msg: IData) {
 
     if (!target) return
 
-    //kisi 2019-10-17 根据实时数据更新工作状态
-    //kisi 2019-10-17 
-    // if (tmpcache.status != Working) {
-    //     if (tmpcache.status == Stopped) {
-    //         cleardata(cachbi);
-    //     }
-    //     tmpcache.status = Working;
-    //     this.refresh('push_data_ctg)
-    // }
+
     if (isNaN(target.csspan)) {
         target.csspan = this.span;
     }

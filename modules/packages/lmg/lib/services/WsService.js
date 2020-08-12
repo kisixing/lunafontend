@@ -38,7 +38,6 @@ __export(require("./useCheckNetwork"));
 __export(require("./utils"));
 var ANNOUNCE_INTERVAL = 1000;
 var SECOND = 1000;
-var Working = types_1.BedStatus.Working, Stopped = types_1.BedStatus.Stopped, OfflineStopped = types_1.BedStatus.OfflineStopped;
 exports.LIMIT_LENGTH = 4 * 3600 * 0.7;
 var WsService = (function (_super) {
     __extends(WsService, _super);
@@ -143,7 +142,16 @@ var WsService = (function (_super) {
     };
     WsService.prototype.getCacheItem = function (data) {
         var datacache = this.datacache;
-        var device_no = data.device_no, bed_no = data.bed_no;
+        var device_no, bed_no;
+        if (typeof data === 'string') {
+            var arr = data.split('-');
+            device_no = Number(arr[0]) || null;
+            bed_no = Number(arr[1]) || null;
+        }
+        else {
+            device_no = data.device_no;
+            bed_no = data.bed_no;
+        }
         var key = this.getUnitId(device_no, bed_no);
         var target = datacache.get(key);
         return target || null;
@@ -258,6 +266,15 @@ var WsService = (function (_super) {
         });
         return this.sendAsync('replace_probe', command);
     };
+    WsService.prototype.sendFocus = function (id) {
+        var target = this.getCacheItem(id);
+        var message = {
+            "name": "focus_on_bed",
+            "device_no": target && target.device_no,
+            "bed_no": target && target.bed_no
+        };
+        this.send(JSON.stringify(message));
+    };
     WsService.prototype._emit = function (name) {
         var value = [];
         for (var _i = 1; _i < arguments.length; _i++) {
@@ -349,15 +366,7 @@ var WsService = (function (_super) {
                     console.log('cleardata clearbyrest', curid);
                     utils_2.cleardata(datacache, curid, target.fetal_num);
                 }
-                if (is_working == 0) {
-                    target.status = Working;
-                }
-                else if (is_working === 3) {
-                    target.status = OfflineStopped;
-                }
-                else {
-                    target.status = Stopped;
-                }
+                target.status = is_working + 1;
             }
         });
     };

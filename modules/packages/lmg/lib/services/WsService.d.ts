@@ -45,7 +45,7 @@ export declare class WsService extends EventEmitter {
     getCacheItem(data: {
         device_no: any;
         bed_no: any;
-    }): import("./types").ICacheItem;
+    } | string): import("./types").ICacheItem;
     pongIndex: number;
     sendHeard(): void;
     t: number;
@@ -86,6 +86,7 @@ export declare class WsService extends EventEmitter {
         [x: string]: any;
         res: number;
     }>;
+    sendFocus(id: string): void;
     _emit(name: string, ...value: any[]): void;
     subscribeList: string[];
     subscribe(str: string[]): void;

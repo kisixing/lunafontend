@@ -8,7 +8,6 @@ interface IData {
 }
 
 export function push_devices(this: WsService, received_msg: IData) {
-    const { Working, Stopped, Offline, OfflineStopped, Uncreated } = this.BedStatus
 
     const { datacache } = this
     var devlist = received_msg.data;
@@ -31,20 +30,19 @@ export function push_devices(this: WsService, received_msg: IData) {
                 datacache.set(unitId, item);
                 this.convertdocid(unitId, doc_id)
 
-                if (bedData.is_working == 0) {
-                    item.status = Working;
-                } else if (bedData.is_working == 1) {
-                    item.status = Stopped;
-                } else if (bedData.is_working == 2) {
-                    item.status = Offline;
-                }
-                else if (bedData.is_working == 3) {
-                    item.status = OfflineStopped;
-                } else {
-                    item.status = Uncreated;
-                }
-                console.log('zzx',bedData.is_working,unitId,item.status)
-                //debugger
+                item.status = bedData.is_working + 1
+                // if (bedData.is_working == 0) {
+                //     item.status = Working;
+                // } else if (bedData.is_working == 1) {
+                //     item.status = Stopped;
+                // } else if (bedData.is_working == 2) {
+                //     item.status = Offline;
+                // }
+                // else if (bedData.is_working == 3) {
+                //     item.status = OfflineStopped;
+                // } else {
+                //     item.status = Uncreated;
+                // }
                 if (bedData.pregnancy) {
                     item.pregnancy = JSON.parse(bedData.pregnancy);
                 }

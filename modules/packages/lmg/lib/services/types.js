@@ -66,6 +66,16 @@ var ICacheItem = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(ICacheItem.prototype, "status", {
+        get: function () {
+            return this._status;
+        },
+        set: function (remoteStatus) {
+            this._status = remoteStatus;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return ICacheItem;
 }(_ICacheItem));
 exports.ICacheItem = ICacheItem;

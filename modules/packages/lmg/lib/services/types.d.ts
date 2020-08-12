@@ -45,6 +45,40 @@ export interface IMultiParamData {
     respRate?: string | number;
     bloodPress?: string | number;
 }
+export interface IDeviceType {
+    bed_no?: number;
+    device_no?: number;
+    device_type?: TDeviceType;
+}
+export interface IDevice extends IDeviceType {
+    ERP: string;
+    beds: IBed[];
+    ecg_sampling_rate: number;
+    is_handshake_finish: boolean;
+    wifi_conn_state: boolean;
+}
+export interface IBloodListItem {
+    dia_bp: number;
+    mean_bp: number;
+    sys_bp: number;
+    time?: string;
+}
+interface IBed {
+    bed_no: number;
+    doc_id: string;
+    fetal_num: number;
+    is_include_mother: boolean;
+    is_working: number;
+    pregnancy: string;
+    fetalposition: string;
+    event_alarm_status: string;
+    vol2: number;
+    vol1: number;
+    event_alarm_id: string;
+    is_include_volume: boolean;
+    is_include_tocozero: boolean;
+    is_include_toco: boolean;
+}
 declare class _ICacheItem {
     replaceProbeTipData?: object;
     bed_no?: number;
@@ -102,43 +136,12 @@ export declare class ICacheItem extends _ICacheItem {
     get isF0Pro(): boolean;
     get hasToco(): boolean;
     get hasPregnancy(): boolean;
+    private _status;
+    get status(): BedStatus;
+    set status(remoteStatus: BedStatus);
     constructor(args: _ICacheItem);
 }
 export declare type ICache = Map<string, ICacheItem> & {
     clean?: (key: string) => void;
 };
-export interface IDeviceType {
-    bed_no?: number;
-    device_no?: number;
-    device_type?: TDeviceType;
-}
-export interface IDevice extends IDeviceType {
-    ERP: string;
-    beds: IBed[];
-    ecg_sampling_rate: number;
-    is_handshake_finish: boolean;
-    wifi_conn_state: boolean;
-}
-export interface IBloodListItem {
-    dia_bp: number;
-    mean_bp: number;
-    sys_bp: number;
-    time?: string;
-}
-interface IBed {
-    bed_no: number;
-    doc_id: string;
-    fetal_num: number;
-    is_include_mother: boolean;
-    is_working: number;
-    pregnancy: string;
-    fetalposition: string;
-    event_alarm_status: string;
-    vol2: number;
-    vol1: number;
-    event_alarm_id: string;
-    is_include_volume: boolean;
-    is_include_tocozero: boolean;
-    is_include_toco: boolean;
-}
 export {};

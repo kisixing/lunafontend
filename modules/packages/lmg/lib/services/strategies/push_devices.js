@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var utils_1 = require("../utils");
 function push_devices(received_msg) {
-    var _a = this.BedStatus, Working = _a.Working, Stopped = _a.Stopped, Offline = _a.Offline, OfflineStopped = _a.OfflineStopped, Uncreated = _a.Uncreated;
     var datacache = this.datacache;
     var devlist = received_msg.data;
     for (var i in devlist) {
@@ -19,22 +18,7 @@ function push_devices(received_msg) {
                 var item = utils_1.getEmptyCacheItem({ deviceType: device_type, device_no: device_no, bed_no: bed_no, is_include_tocozero: is_include_tocozero, is_include_toco: is_include_toco, is_include_volume: is_include_volume, fetal_num: fetal_num, id: unitId, docid: doc_id, ismulti: is_include_mother });
                 datacache.set(unitId, item);
                 this.convertdocid(unitId, doc_id);
-                if (bedData.is_working == 0) {
-                    item.status = Working;
-                }
-                else if (bedData.is_working == 1) {
-                    item.status = Stopped;
-                }
-                else if (bedData.is_working == 2) {
-                    item.status = Offline;
-                }
-                else if (bedData.is_working == 3) {
-                    item.status = OfflineStopped;
-                }
-                else {
-                    item.status = Uncreated;
-                }
-                console.log('zzx', bedData.is_working, unitId, item.status);
+                item.status = bedData.is_working + 1;
                 if (bedData.pregnancy) {
                     item.pregnancy = JSON.parse(bedData.pregnancy);
                 }

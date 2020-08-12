@@ -23,8 +23,7 @@ interface IData {
 }
 
 export function update_status(this: WsService, received_msg: IData) {
-    const { datacache, BedStatus } = this
-    const { Working, Stopped, Offline, OfflineStopped, Uncreated } = BedStatus
+    const { datacache } = this
     // 状态机处理
     const { pregnancy, fetalposition, status, device_no, bed_no,
         is_include_mother, is_include_tocozero, is_include_toco, is_include_volume, fetal_num, disableStartWork
@@ -48,18 +47,19 @@ export function update_status(this: WsService, received_msg: IData) {
     target.fhr = Array(fetal_num || 1).fill(0).map((_, i) => {
         return target.fhr[i] || getMaxArray()
     })
-    if (status == 0) {
-        target.status = Working;
-    } else if (status == 1) {
-        target.status = Stopped;
-    } else if (status == 2) {
-        target.status = Offline;
-    }
-    else if (status == 3) {
-        target.status = OfflineStopped;
-    } else {
-        target.status = Uncreated;
-    }
+    target.status = status+1
+    // if (status == 0) {
+    //     target.status = Working;
+    // } else if (status == 1) {
+    //     target.status = Stopped;
+    // } else if (status == 2) {
+    //     target.status = Offline;
+    // }
+    // else if (status == 3) {
+    //     target.status = OfflineStopped;
+    // } else {
+    //     target.status = Uncreated;
+    // }
     console.log('update_status', target)
     target.pregnancy = pregnancy ? JSON.parse(pregnancy) : null;
     target.fetalposition = fetalposition ? JSON.parse(fetalposition) : null;

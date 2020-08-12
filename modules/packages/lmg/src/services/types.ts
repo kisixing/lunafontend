@@ -1,5 +1,5 @@
 import Queue from "../Ecg/Queue";
-
+// import { WsService } from "./WsService";
 
 export type TDeviceType = ('SR_K9' | 'SR_B5_B6' | 'V3' | 'F3' | 'LM_F0_PRO')
 export type TAlarmType = 0 | 1 | 2
@@ -49,6 +49,46 @@ export interface IMultiParamData {
     respRate?: string | number
     bloodPress?: string | number
 }
+
+export interface IDeviceType {
+    bed_no?: number;
+    device_no?: number;
+    device_type?: TDeviceType;
+}
+export interface IDevice extends IDeviceType {
+    ERP: string;
+    beds: IBed[];
+
+    ecg_sampling_rate: number;
+    is_handshake_finish: boolean;
+    wifi_conn_state: boolean;
+}
+
+export interface IBloodListItem {
+    dia_bp: number
+    mean_bp: number
+    sys_bp: number
+    time?: string
+}
+interface IBed {
+    bed_no: number;
+    doc_id: string;
+    fetal_num: number;
+    is_include_mother: boolean;
+    is_working: number;
+    pregnancy: string;
+    fetalposition: string;
+
+
+    event_alarm_status: string
+    vol2: number
+    vol1: number
+    event_alarm_id: string
+    is_include_volume: boolean
+    is_include_tocozero: boolean
+    is_include_toco: boolean
+}
+
 class _ICacheItem {
     replaceProbeTipData?: object
     bed_no?: number;
@@ -119,48 +159,19 @@ export class ICacheItem extends _ICacheItem {
     public get hasPregnancy(): boolean {
         return this.pregnancy && typeof this.pregnancy.id === 'number'
     }
+    private _status: BedStatus;
+    public get status(): BedStatus {
+        return this._status;
+    }
+    public set status(remoteStatus: BedStatus) {
+        this._status = remoteStatus;
+    }
+
     constructor(args: _ICacheItem) {
         super()
         Object.assign(this, args)
     }
 }
+
+
 export type ICache = Map<string, ICacheItem> & { clean?: (key: string) => void }
-export interface IDeviceType {
-    bed_no?: number;
-    device_no?: number;
-    device_type?: TDeviceType;
-}
-export interface IDevice extends IDeviceType {
-    ERP: string;
-    beds: IBed[];
-
-    ecg_sampling_rate: number;
-    is_handshake_finish: boolean;
-    wifi_conn_state: boolean;
-}
-
-export interface IBloodListItem {
-    dia_bp: number
-    mean_bp: number
-    sys_bp: number
-    time?: string
-}
-interface IBed {
-    bed_no: number;
-    doc_id: string;
-    fetal_num: number;
-    is_include_mother: boolean;
-    is_working: number;
-    pregnancy: string;
-    fetalposition: string;
-
-
-    event_alarm_status: string
-    vol2: number
-    vol1: number
-    event_alarm_id: string
-    is_include_volume: boolean
-    is_include_tocozero: boolean
-    is_include_toco: boolean
-}
-
