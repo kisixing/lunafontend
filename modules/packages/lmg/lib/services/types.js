@@ -35,6 +35,7 @@ var EWsEvents;
 })(EWsEvents = exports.EWsEvents || (exports.EWsEvents = {}));
 var _ICacheItem = (function () {
     function _ICacheItem() {
+        this.batterylowArr = [];
     }
     return _ICacheItem;
 }());

@@ -80,6 +80,7 @@ interface IBed {
     is_include_toco: boolean;
 }
 declare class _ICacheItem {
+    batterylowArr: boolean[];
     replaceProbeTipData?: object;
     bed_no?: number;
     device_no?: number;

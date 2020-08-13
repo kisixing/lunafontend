@@ -15,6 +15,17 @@ interface IData {
     is_include_toco: boolean
     is_include_volume: boolean
     disableStartWork: boolean
+
+    event_alarm_id: "3"
+    event_alarm_status: "2"
+    isMute1: number
+    isMute2: number
+    isMute3: number
+    is_fhr_1_batterylow: boolean
+    is_fhr_2_batterylow: boolean
+    is_fhr_3_batterylow: boolean
+    mother_type: boolean
+    vol: number
 }
 
 interface IData {
@@ -26,7 +37,8 @@ export function update_status(this: WsService, received_msg: IData) {
     const { datacache } = this
     // 状态机处理
     const { pregnancy, fetalposition, status, device_no, bed_no,
-        is_include_mother, is_include_tocozero, is_include_toco, is_include_volume, fetal_num, disableStartWork
+        is_include_mother, is_include_tocozero, is_include_toco, is_include_volume, fetal_num, disableStartWork,
+        is_fhr_1_batterylow, is_fhr_2_batterylow, is_fhr_3_batterylow
     } = received_msg.data
 
     var unitId = this.getUnitId(device_no, bed_no);
@@ -37,17 +49,18 @@ export function update_status(this: WsService, received_msg: IData) {
     }
 
     const target = datacache.get(unitId)
-
     target.fetal_num = fetal_num
     target.is_include_tocozero = is_include_tocozero
     target.is_include_toco = is_include_toco
     target.ismulti = is_include_mother
     target.is_include_volume = is_include_volume
     target.disableStartWork = disableStartWork
+    target.batterylowArr = [is_fhr_1_batterylow, is_fhr_2_batterylow, is_fhr_3_batterylow]
+
     target.fhr = Array(fetal_num || 1).fill(0).map((_, i) => {
         return target.fhr[i] || getMaxArray()
     })
-    target.status = status+1
+    target.status = status + 1
     // if (status == 0) {
     //     target.status = Working;
     // } else if (status == 1) {
