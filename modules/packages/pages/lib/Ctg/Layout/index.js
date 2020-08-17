@@ -23,7 +23,7 @@ var Home = function (props) {
     return (react_1.default.createElement("div", { style: { height: '100%' }, ref: wrap }, loading ? (react_1.default.createElement(antd_1.Spin, { spinning: loading, size: "large", style: { paddingTop: 100, width: '100%' } })) : react_1.default.createElement(antd_1.Row, { justify: "start", align: "top", style: { padding: outPadding, maxHeight: contentHeight, overflowY: items.length > (listLayout[0] * listLayout[1]) ? 'scroll' : 'hidden' } }, items.length ? items.map(function (item) {
         var data = item.data, bedname = item.bedname, unitId = item.unitId, id = item.id;
         var pregnancy = data.pregnancy, docid = data.docid, starttime = data.starttime, status = data.status, ismulti = data.ismulti;
-        var safePregnancy = pregnancy || { age: null, name: null, bedNO: null, GP: null, gestationalWeek: null };
+        var safePregnancy = pregnancy || { age: null, name: null, bedNO: null, GP: null, gestationalWeek: null, telephone: null };
         var startTime = starttime;
         return (react_1.default.createElement(Item_1.default, { onClose: onClose, themeColor: themeColor, itemData: item, bedname: bedname, unitId: unitId, bordered: borderedId === unitId, key: id, onSelect: onSelect, data: data, RenderMaskIn: RenderMaskIn, ismulti: ismulti, docid: docid, status: status, loading: false, pregnancy: safePregnancy, startTime: startTime, itemHeight: itemHeight, itemSpan: itemSpan, outPadding: outPadding, fullScreenId: fullScreenId }, RenderIn && react_1.default.createElement(RenderIn, { itemData: item })));
     }) : (react_1.default.createElement("div", { ref: empty, style: { marginTop: 200, display: 'flex', justifyContent: 'center', width: '100%' } },

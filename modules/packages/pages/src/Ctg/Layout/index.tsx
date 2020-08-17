@@ -59,7 +59,7 @@ const Home = (props: IProps) => {
             {items.length ? items.map((item: any) => {
               const { data, bedname, unitId, id } = item;
               const { pregnancy, docid, starttime, status, ismulti } = data
-              const safePregnancy = pregnancy || { age: null, name: null, bedNO: null, GP: null, gestationalWeek: null }
+              const safePregnancy = pregnancy || { age: null, name: null, bedNO: null, GP: null, gestationalWeek: null, telephone: null }
               const startTime = starttime
               return (
                 <Item

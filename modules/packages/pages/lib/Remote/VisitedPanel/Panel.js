@@ -29,7 +29,7 @@ var Panel = function (_a) {
                 react_1.default.createElement("div", { className: "title" }, v.title))));
     };
     var Title = function () {
-        return (react_1.default.createElement(Wrapper, { style: { display: 'flex', width: 340, flexWrap: 'wrap' } }, visitedData.map(function (_) { return (react_1.default.createElement(B, { v: _, key: _.name })); })));
+        return (react_1.default.createElement(Wrapper, { style: { display: 'flex', maxWidth: 340, flexWrap: 'wrap' } }, visitedData.map(function (_) { return (react_1.default.createElement(B, { v: _, key: _.name })); })));
     };
     return (react_1.default.createElement(react_1.default.Fragment, null,
         react_1.default.createElement(tooltip_1.default, { placement: "rightBottom", title: react_1.default.createElement(Title, null) },

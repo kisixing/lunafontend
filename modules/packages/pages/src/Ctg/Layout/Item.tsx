@@ -35,7 +35,7 @@ interface IProps {
 
 
 const WorkbenchItem = (props: IProps) => {
-  const { onSelect, bordered, themeColor, RenderMaskIn,itemData, onClose, loading = false, fullScreenId, itemHeight, itemSpan, outPadding, data, bedname, status, unitId } = props;
+  const { onSelect, bordered, themeColor, RenderMaskIn, itemData, onClose, loading = false, fullScreenId, itemHeight, itemSpan, outPadding, data, bedname, status, unitId } = props;
   let { startTime, pregnancy } = props
 
   const [isFullscreen, setIsFullscreen] = useState(false)
@@ -83,7 +83,7 @@ const WorkbenchItem = (props: IProps) => {
     <Col
       span={itemSpan}
       ref={ref}
-      onClick={() => onSelect(unitId)}
+      onClick={() => onSelect && onSelect(unitId)}
       style={{ transition: 'background .6s', padding: outPadding, height: itemHeight, background: bordered ? 'black' : `var(--theme-${'light'}-color)`, position: 'relative' }}
     >
       <Ctg_Item
@@ -104,6 +104,7 @@ const WorkbenchItem = (props: IProps) => {
         gestationalWeek={pregnancy.gestationalWeek}
         onSelect={null}
         RenderMaskIn={RenderMaskIn}
+        telephone={pregnancy.telephone}
       >
         {
           props.children

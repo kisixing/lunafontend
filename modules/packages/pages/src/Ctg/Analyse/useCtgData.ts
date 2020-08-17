@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { event } from '@lianmed/utils'
 import request from "@lianmed/request";
 import { obvue } from '@lianmed/f_types';
-const regex = /./g
 
 
 function copyFhr(origin: obvue.ctg_exams_data, single: boolean): obvue.ctg_exams_data {

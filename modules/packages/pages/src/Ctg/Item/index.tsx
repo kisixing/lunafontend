@@ -15,8 +15,9 @@ interface IProps extends PropsWithChildren<{}> {
     data: ICacheItem
     bedname: string
     name: string
-    age: string
+    age: number
     bedNO: string
+    telephone?: string
     startTime: string
     GP: string,
     gestationalWeek: string,
@@ -46,7 +47,7 @@ const Wrapper = styled.div`
     }
 `
 const Item = (props: IProps) => {
-    const { onSelect, data, bedname, onClose, onDoubleClick, loading, onSuitRead, RenderMaskIn, themeColor = 'rgb(74, 20, 140)', unitId, isFullscreen } = props;
+    const { onSelect, data, bedname, onClose, onDoubleClick, telephone, loading, onSuitRead, RenderMaskIn, themeColor = 'rgb(74, 20, 140)', unitId, isFullscreen } = props;
     const status = props.status === undefined ? data && data.status : props.status
     let { bedNO, GP, gestationalWeek, name, age, startTime } = props;
     const [suit, setSuit] = useState(null)
@@ -63,9 +64,10 @@ const Item = (props: IProps) => {
                     [
                         ['姓名', name],
                         ['床号', bedNO],
-                        ['年龄', age],
+                        ['年龄', typeof age === 'number' && age.toString()],
                         ['孕周', gestationalWeek],
                         ['GP', GP],
+                        ['手机', telephone],
                         ['开始时间', (startTime && m.isValid) ? m.format('HH:mm') : ' '],
                     ]
                         .filter(_ => !!_[1])

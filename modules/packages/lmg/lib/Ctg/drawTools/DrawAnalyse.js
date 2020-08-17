@@ -527,7 +527,6 @@ var DrawAnalyse = (function (_super) {
                         score.sogcdata.accscore = 3;
                     }
                 }
-                var ld = analysis.ldtimes = _this.countDec(analysis.start, analysis.end, 'LD');
                 var vd = analysis.vdtimes = _this.countDec(analysis.start, analysis.end, 'VD');
                 var ed = analysis.edtimes = _this.countDec(analysis.start, analysis.end, 'ED');
                 if (ed > 0) {

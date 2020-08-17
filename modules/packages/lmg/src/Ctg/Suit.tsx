@@ -271,7 +271,6 @@ export class Suit extends Draw {
       this.drawobj.drawdot(this.rightViewPosition, false);
 
     });
-    console.log('yyyyyyyyyyyy--------emit')
 
     this.emit('afterInit')
   }
@@ -449,7 +448,8 @@ export class Suit extends Draw {
       starttime: '',
       fetalposition: {},
       analyse: { acc: [], dec: [], baseline: [], start: 0, end: 0 },
-      noOffset: oriobj.noOffset
+      noOffset: oriobj.noOffset,
+      selectBarHidden: oriobj.selectBarHidden,
     };
     if (oriobj.docid) {
       let pureidarr: string[] = oriobj.docid.split('_');
@@ -463,12 +463,7 @@ export class Suit extends Draw {
     ) {
       let positionobj = JSON.parse(oriobj.fetalposition);
       CTGDATA.fetalposition = positionobj;
-      console.log(
-        oriobj.fetalposition,
-        typeof this.data.fetalposition,
-        this.data.fetalposition,
-        this
-      );
+
     }
     Object.keys(oriobj).forEach(key => {
       let oridata = oriobj[key];

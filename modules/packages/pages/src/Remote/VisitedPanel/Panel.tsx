@@ -83,7 +83,7 @@ const Panel = ({ visitedData }: { visitedData: VisitedData }) => {
 
     const Title = () => {
         return (
-            <Wrapper style={{ display: 'flex', width: 340, flexWrap: 'wrap' }}>
+            <Wrapper style={{ display: 'flex', maxWidth: 340, flexWrap: 'wrap' }}>
                 {
                     visitedData.map(_ => (
                         <B v={_} key={_.name} />

@@ -43,8 +43,9 @@ export declare class WsService extends EventEmitter {
     constructor(settingData?: any);
     getUnitId(device_no: number | string, bed_no: number | string): string;
     getCacheItem(data: {
-        device_no: any;
-        bed_no: any;
+        device_no?: any;
+        bed_no?: any;
+        [x: string]: any;
     } | string): import("./types").ICacheItem;
     pongIndex: number;
     sendHeard(): void;

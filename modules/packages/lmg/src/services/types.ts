@@ -1,4 +1,5 @@
 import Queue from "../Ecg/Queue";
+import { bool } from "prop-types";
 // import { WsService } from "./WsService";
 
 export type TDeviceType = ('SR_K9' | 'SR_B5_B6' | 'V3' | 'F3' | 'LM_F0_PRO')
@@ -40,6 +41,7 @@ export interface ICacheItemPregnancy {
     inpatientNO?: string
     name?: string
     outpatientNO?: string
+    telephone?: string
 }
 export interface IMultiParamData {
     bloodOxygen?: string | number
@@ -90,6 +92,7 @@ interface IBed {
 }
 
 class _ICacheItem {
+    selectBarHidden: boolean
     batterylowArr: boolean[] = []
     replaceProbeTipData?: object
     bed_no?: number;

@@ -32,10 +32,6 @@ var _data = [
         name: 'remote',
         reload: true
     },
-    {
-        url: '/im/index.html',
-        name: 'im'
-    }
 ];
 var electron = (utils_1.isElectron && window.require('electron')) || {};
 var ipcRenderer = electron.ipcRenderer, remote = electron.remote;

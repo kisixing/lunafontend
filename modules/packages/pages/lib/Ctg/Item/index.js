@@ -25,7 +25,7 @@ require("antd/lib/card/style/index.css");
 require("antd/lib/tag/style/index.css");
 var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n    height: 100%;\n    user-select: none;\n    .ant-card-body:hover .btn{\n        opacity:1\n    }\n    .btn {\n        opacity: 0;\n    }\n    .ant-modal-root {\n        visibility:visible;\n        float:left;\n    }\n"], ["\n    height: 100%;\n    user-select: none;\n    .ant-card-body:hover .btn{\n        opacity:1\n    }\n    .btn {\n        opacity: 0;\n    }\n    .ant-modal-root {\n        visibility:visible;\n        float:left;\n    }\n"])));
 var Item = function (props) {
-    var onSelect = props.onSelect, data = props.data, bedname = props.bedname, onClose = props.onClose, onDoubleClick = props.onDoubleClick, loading = props.loading, onSuitRead = props.onSuitRead, RenderMaskIn = props.RenderMaskIn, _a = props.themeColor, themeColor = _a === void 0 ? 'rgb(74, 20, 140)' : _a, unitId = props.unitId, isFullscreen = props.isFullscreen;
+    var onSelect = props.onSelect, data = props.data, bedname = props.bedname, onClose = props.onClose, onDoubleClick = props.onDoubleClick, telephone = props.telephone, loading = props.loading, onSuitRead = props.onSuitRead, RenderMaskIn = props.RenderMaskIn, _a = props.themeColor, themeColor = _a === void 0 ? 'rgb(74, 20, 140)' : _a, unitId = props.unitId, isFullscreen = props.isFullscreen;
     var status = props.status === undefined ? data && data.status : props.status;
     var bedNO = props.bedNO, GP = props.GP, gestationalWeek = props.gestationalWeek, name = props.name, age = props.age, startTime = props.startTime;
     var _b = react_1.useState(null), suit = _b[0], setSuit = _b[1];
@@ -37,9 +37,10 @@ var Item = function (props) {
         var text = (react_1.default.createElement("span", null, [
             ['姓名', name],
             ['床号', bedNO],
-            ['年龄', age],
+            ['年龄', typeof age === 'number' && age.toString()],
             ['孕周', gestationalWeek],
             ['GP', GP],
+            ['手机', telephone],
             ['开始时间', (startTime && m.isValid) ? m.format('HH:mm') : ' '],
         ]
             .filter(function (_) { return !!_[1]; })

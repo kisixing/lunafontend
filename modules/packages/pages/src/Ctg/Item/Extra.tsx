@@ -25,7 +25,7 @@ const SB = styled(Button)`
 const Bed = memo<any>(({ bedname }) => {
     console.log('ggg');
 
-    return <span style={{ marginRight: '8px', color: '#fff' }}>{bedname}号</span>
+    return !!bedname && <span style={{ marginRight: '8px', color: '#fff' }}>{bedname}号</span>
 })
 // const Status = memo<any>(({ alarmStatus, status }) => {
 

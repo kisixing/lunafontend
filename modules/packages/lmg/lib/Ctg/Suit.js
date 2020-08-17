@@ -245,7 +245,6 @@ var Suit = (function (_super) {
             _this.drawSelect.showselect();
             _this.drawobj.drawdot(_this.rightViewPosition, false);
         });
-        console.log('yyyyyyyyyyyy--------emit');
         this.emit('afterInit');
     };
     Suit.prototype.createLine = function () {
@@ -377,7 +376,8 @@ var Suit = (function (_super) {
             starttime: '',
             fetalposition: {},
             analyse: { acc: [], dec: [], baseline: [], start: 0, end: 0 },
-            noOffset: oriobj.noOffset
+            noOffset: oriobj.noOffset,
+            selectBarHidden: oriobj.selectBarHidden,
         };
         if (oriobj.docid) {
             var pureidarr = oriobj.docid.split('_');
@@ -389,7 +389,6 @@ var Suit = (function (_super) {
             oriobj.fetalposition != '') {
             var positionobj = JSON.parse(oriobj.fetalposition);
             CTGDATA.fetalposition = positionobj;
-            console.log(oriobj.fetalposition, typeof this.data.fetalposition, this.data.fetalposition, this);
         }
         Object.keys(oriobj).forEach(function (key) {
             var oridata = oriobj[key];

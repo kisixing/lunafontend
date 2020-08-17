@@ -36,6 +36,7 @@ export interface ICacheItemPregnancy {
     inpatientNO?: string;
     name?: string;
     outpatientNO?: string;
+    telephone?: string;
 }
 export interface IMultiParamData {
     bloodOxygen?: string | number;
@@ -80,6 +81,7 @@ interface IBed {
     is_include_toco: boolean;
 }
 declare class _ICacheItem {
+    selectBarHidden: boolean;
     batterylowArr: boolean[];
     replaceProbeTipData?: object;
     bed_no?: number;

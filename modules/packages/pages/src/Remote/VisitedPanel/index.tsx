@@ -16,10 +16,10 @@ const _data: IDataItem[] = [
         name: 'remote',
         reload: true
     },
-    {
-        url: '/im/index.html',
-        name: 'im'
-    }
+    // {
+    //     url: '/im/index.html',
+    //     name: 'im'
+    // },
 
 ]
 

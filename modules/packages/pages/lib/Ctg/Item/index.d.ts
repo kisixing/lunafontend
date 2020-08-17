@@ -8,8 +8,9 @@ interface IProps extends PropsWithChildren<{}> {
     data: ICacheItem;
     bedname: string;
     name: string;
-    age: string;
+    age: number;
     bedNO: string;
+    telephone?: string;
     startTime: string;
     GP: string;
     gestationalWeek: string;

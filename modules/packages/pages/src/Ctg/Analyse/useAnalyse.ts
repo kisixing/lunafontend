@@ -223,6 +223,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, ctgData: o
                     r.score = getEmptyScore()
                     setInitData(r)
                 })
+                .finally(() => setAutoAnalyse(false))
         }
     }, [ctgData, analyseLoading, autoAnalyse, initData])
 

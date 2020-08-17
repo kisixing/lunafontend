@@ -44,7 +44,7 @@ export class DrawSelect extends Draw {
         this.selectflag && this.suit.drawobj.showcur(value);
         this.suit.emit('startTime', value);
     }
-    constructor(wrap: HTMLElement, canvas: HTMLCanvasElement, suit: Suit, ) {
+    constructor(wrap: HTMLElement, canvas: HTMLCanvasElement, suit: Suit,) {
         super(wrap, canvas)
         this.suit = suit
     }
@@ -185,7 +185,7 @@ export class DrawSelect extends Draw {
         const startingBar = (this.startingBar = barTool.createRod('开始'));
         const endingBar = (this.endingBar = barTool.createRod('结束'));
         const selectingBar = (this.selectingBar = barTool.createRod('选择'));
-        this.suit.type === 0 && selectingBar.setVisibility(false);
+        (this.suit.type === 0 || this.suit.data.selectBarHidden) && selectingBar.setVisibility(false);
         selectingBar.setLeft(0);
         startingBar.setLeft(0);
         //endingBar.setOffset(100)

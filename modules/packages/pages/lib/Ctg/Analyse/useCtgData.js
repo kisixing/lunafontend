@@ -17,7 +17,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = require("react");
 var utils_1 = require("@lianmed/utils");
 var request_1 = __importDefault(require("@lianmed/request"));
-var regex = /./g;
 function copyFhr(origin, single) {
     var fhr1 = origin.fhr1, fhr2 = origin.fhr2, fhr3 = origin.fhr3;
     var data = __assign(__assign({}, origin), { _fhr1: fhr1, _fhr2: fhr2, _fhr3: fhr3 });

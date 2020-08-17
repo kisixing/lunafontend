@@ -26,7 +26,7 @@ var SB = styled_components_1.default(antd_1.Button)(templateObject_1 || (templat
 var Bed = react_1.memo(function (_a) {
     var bedname = _a.bedname;
     console.log('ggg');
-    return react_1.default.createElement("span", { style: { marginRight: '8px', color: '#fff' } },
+    return !!bedname && react_1.default.createElement("span", { style: { marginRight: '8px', color: '#fff' } },
         bedname,
         "\u53F7");
 });

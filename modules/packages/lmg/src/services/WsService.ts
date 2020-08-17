@@ -74,7 +74,7 @@ export class WsService extends EventEmitter {
     getUnitId(device_no: number | string, bed_no: number | string) {
         return `${device_no}-${bed_no}`
     }
-    getCacheItem(data: { device_no: any, bed_no: any } | string) {
+    getCacheItem(data: { device_no?: any, bed_no?: any, [x: string]: any } | string) {
         const { datacache } = this
         let device_no, bed_no
         if (typeof data === 'string') {
