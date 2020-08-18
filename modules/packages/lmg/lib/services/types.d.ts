@@ -81,7 +81,7 @@ interface IBed {
     is_include_toco: boolean;
 }
 declare class _ICacheItem {
-    selectBarHidden: boolean;
+    selectBarHidden?: boolean;
     batterylowArr: boolean[];
     replaceProbeTipData?: object;
     bed_no?: number;

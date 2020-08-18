@@ -1,5 +1,4 @@
 import Queue from "../Ecg/Queue";
-import { bool } from "prop-types";
 // import { WsService } from "./WsService";
 
 export type TDeviceType = ('SR_K9' | 'SR_B5_B6' | 'V3' | 'F3' | 'LM_F0_PRO')
@@ -92,7 +91,7 @@ interface IBed {
 }
 
 class _ICacheItem {
-    selectBarHidden: boolean
+    selectBarHidden?: boolean
     batterylowArr: boolean[] = []
     replaceProbeTipData?: object
     bed_no?: number;

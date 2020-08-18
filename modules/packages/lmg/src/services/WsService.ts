@@ -122,7 +122,7 @@ export class WsService extends EventEmitter {
 
         this.socket.close()
     }
-    refreshInterval = 2500
+    refreshInterval = 1000
     refreshTimeout = null
     refresh(name = 'default') {
         if (this.refreshTimeout) {
@@ -427,7 +427,7 @@ export class WsService extends EventEmitter {
                     this.handleMessage(mesName, received_msg)
                 }
             };
-            // setTimeout(() => {
+            // window['aa']=() => {
             //     console.log('goit')
             //     var received_msg = {
             //         "name": "replace_probe_tip",
@@ -440,7 +440,7 @@ export class WsService extends EventEmitter {
             //     }
             //     const mesName = received_msg.name
             //     this.handleMessage(mesName, received_msg)
-            // }, 4000);
+            // }
             return [datacache];
         });
     };

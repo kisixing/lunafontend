@@ -7,10 +7,10 @@ function replace_probe_tip(received_msg) {
     if (!item)
         return;
     item.replaceProbeTipData = data;
-    utils_1.event.emit("item_probetip_wait_to_call", item.id, item && item.docid, data);
     utils_1.event.once("item_probetip_to_call:" + item.id, function (cb) {
         cb(data);
     });
+    utils_1.event.emit("item_probetip_wait_to_call", item.id, item && item.docid, data);
 }
 exports.replace_probe_tip = replace_probe_tip;
 //# sourceMappingURL=replace_probe_tip.js.map
