@@ -2,20 +2,17 @@ import { WsService } from "../WsService";
 
 interface IData {
     name: "end_work"
-    data: { is_working: number }
+    data: { is_working: number, bed_no: number, device_no: number, doc_id: string }
 }
 
 export function end_work(this: WsService, received_msg: IData) {
     const { datacache } = this
     //结束监护页
-    let devdata = received_msg.data;
-    let curid = Number(devdata['device_no']) + '-' + Number(devdata['bed_no']);
+    let { is_working, device_no, bed_no } = received_msg.data;
+    let curid = this.getUnitId(device_no, bed_no)
 
     if (datacache.get(curid).pregnancy == null) {
-        console.log('end_work', datacache.get(curid), devdata['doc_id']);
-        //cleardata(datacache, curid, datacache.get(curid).fetal_num);
-        console.log('cleardata endwork clearbyrest', curid)
 
-        this.clearbyrest(datacache.get(curid).docid, devdata.is_working);
+        this.clearbyrest(datacache.get(curid).docid, is_working);
     }
 }

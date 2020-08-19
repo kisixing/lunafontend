@@ -84,7 +84,7 @@ const WorkbenchItem = (props: IProps) => {
       span={itemSpan}
       ref={ref}
       onClick={() => onSelect && onSelect(unitId)}
-      style={{ transition: 'background .6s', padding: outPadding, height: itemHeight, background: bordered ? 'black' : `var(--theme-${'light'}-color)`, position: 'relative' }}
+      style={{ transition: 'all .3s', padding: outPadding, height: itemHeight, background: bordered ? 'black' : `var(--theme-${'light'}-color)`, position: 'relative' }}
     >
       <Ctg_Item
         isFullscreen={isFullscreen}

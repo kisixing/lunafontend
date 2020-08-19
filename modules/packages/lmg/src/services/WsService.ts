@@ -122,7 +122,7 @@ export class WsService extends EventEmitter {
 
         this.socket.close()
     }
-    refreshInterval = 1000
+    refreshInterval = 100
     refreshTimeout = null
     refresh(name = 'default') {
         if (this.refreshTimeout) {
@@ -316,7 +316,6 @@ export class WsService extends EventEmitter {
             const target = datacache.get(curid)
             if (responseData && target) {
                 if (responseData['pregnancy'] == null) {
-                    console.log('cleardata clearbyrest', curid)
 
                     cleardata(datacache, curid, target.fetal_num);
                 }

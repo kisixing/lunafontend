@@ -72,6 +72,8 @@ interface IBed {
     is_working: number;
     pregnancy: string;
     fetalposition: string;
+    disableStartWork?: boolean;
+    disableCreate?: boolean;
     event_alarm_status: string;
     vol2: number;
     vol1: number;
@@ -94,6 +96,7 @@ declare class _ICacheItem {
     is_include_tocozero?: boolean;
     is_include_toco?: boolean;
     disableStartWork?: boolean;
+    disableCreate?: boolean;
     analyse?: any;
     fhr?: number[][];
     toco?: number[];

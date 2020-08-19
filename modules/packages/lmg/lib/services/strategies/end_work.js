@@ -2,12 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 function end_work(received_msg) {
     var datacache = this.datacache;
-    var devdata = received_msg.data;
-    var curid = Number(devdata['device_no']) + '-' + Number(devdata['bed_no']);
+    var _a = received_msg.data, is_working = _a.is_working, device_no = _a.device_no, bed_no = _a.bed_no;
+    var curid = this.getUnitId(device_no, bed_no);
     if (datacache.get(curid).pregnancy == null) {
-        console.log('end_work', datacache.get(curid), devdata['doc_id']);
-        console.log('cleardata endwork clearbyrest', curid);
-        this.clearbyrest(datacache.get(curid).docid, devdata.is_working);
+        this.clearbyrest(datacache.get(curid).docid, is_working);
     }
 }
 exports.end_work = end_work;

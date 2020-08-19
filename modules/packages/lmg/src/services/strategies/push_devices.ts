@@ -17,14 +17,16 @@ export function push_devices(this: WsService, received_msg: IData) {
         const { device_no, beds, device_type } = devdata
         for (let bi in beds) {
             const bedData = beds[bi]
-            const { is_include_tocozero, is_include_volume, is_include_toco, is_include_mother, doc_id, fetal_num, bed_no } = bedData
+            const {
+                is_include_tocozero, is_include_volume, is_include_toco, is_include_mother, doc_id, fetal_num, bed_no, disableCreate, disableStartWork
+            } = bedData
             var unitId = this.getUnitId(device_no, bed_no);
 
             const old = datacache.get(unitId)
 
             if (!old || (old.docid !== doc_id)) {
 
-                const item = getEmptyCacheItem({ deviceType: device_type, device_no, bed_no, is_include_tocozero, is_include_toco, is_include_volume, fetal_num, id: unitId, docid: doc_id, ismulti: is_include_mother })
+                const item = getEmptyCacheItem({ deviceType: device_type, device_no, bed_no, is_include_tocozero, is_include_toco, is_include_volume, fetal_num, id: unitId, docid: doc_id, ismulti: is_include_mother, disableCreate, disableStartWork })
 
 
                 datacache.set(unitId, item);

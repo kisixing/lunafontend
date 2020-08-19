@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var utils_1 = require("../utils");
 function update_status(received_msg) {
     var datacache = this.datacache;
-    var _a = received_msg.data, pregnancy = _a.pregnancy, fetalposition = _a.fetalposition, status = _a.status, device_no = _a.device_no, bed_no = _a.bed_no, is_include_mother = _a.is_include_mother, is_include_tocozero = _a.is_include_tocozero, is_include_toco = _a.is_include_toco, is_include_volume = _a.is_include_volume, fetal_num = _a.fetal_num, disableStartWork = _a.disableStartWork, is_fhr_1_batterylow = _a.is_fhr_1_batterylow, is_fhr_2_batterylow = _a.is_fhr_2_batterylow, is_fhr_3_batterylow = _a.is_fhr_3_batterylow;
+    var _a = received_msg.data, pregnancy = _a.pregnancy, fetalposition = _a.fetalposition, status = _a.status, device_no = _a.device_no, bed_no = _a.bed_no, is_include_mother = _a.is_include_mother, is_include_tocozero = _a.is_include_tocozero, is_include_toco = _a.is_include_toco, is_include_volume = _a.is_include_volume, fetal_num = _a.fetal_num, disableCreate = _a.disableCreate, disableStartWork = _a.disableStartWork, is_fhr_1_batterylow = _a.is_fhr_1_batterylow, is_fhr_2_batterylow = _a.is_fhr_2_batterylow, is_fhr_3_batterylow = _a.is_fhr_3_batterylow, device_type = _a.device_type;
     var unitId = this.getUnitId(device_no, bed_no);
     if (!datacache.has(unitId)) {
         datacache.set(unitId, utils_1.getEmptyCacheItem({ id: unitId }));
@@ -15,7 +15,11 @@ function update_status(received_msg) {
     target.ismulti = is_include_mother;
     target.is_include_volume = is_include_volume;
     target.disableStartWork = disableStartWork;
+    target.disableCreate = disableCreate;
     target.batterylowArr = [is_fhr_1_batterylow, is_fhr_2_batterylow, is_fhr_3_batterylow];
+    target.device_no = device_no;
+    target.bed_no = bed_no;
+    target.deviceType = device_type;
     target.fhr = Array(fetal_num || 1).fill(0).map(function (_, i) {
         return target.fhr[i] || utils_1.getMaxArray();
     });

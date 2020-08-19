@@ -15,7 +15,6 @@ import { endpoint_user_confirm_msg } from "./endpoint_user_confirm_msg";
 import { replace_probe_tip } from "./replace_probe_tip";
 import { list_blood_pressure } from "./list_blood_pressure";
 import { WsService } from "../WsService";
-import { f0_strategies } from "./f0";
 import { handleF0ProErr } from "../utils";
 
 export const strategies: { [x: string]: Function } = {
@@ -41,7 +40,6 @@ export const strategies: { [x: string]: Function } = {
 
     list_blood_pressure,
     replace_probe_tip,
-    ...f0_strategies
 }
 const exp = /(.*)_res$/
 export function getStrategies(context: WsService): { [x: string]: Function } {

@@ -62,7 +62,7 @@ var WsService = (function (_super) {
         _this_1._current = [];
         _this_1.pongIndex = 0;
         _this_1.t = +new Date();
-        _this_1.refreshInterval = 1000;
+        _this_1.refreshInterval = 100;
         _this_1.refreshTimeout = null;
         _this_1.subscribeList = [];
         _this_1.connect = function () {
@@ -363,7 +363,6 @@ var WsService = (function (_super) {
             var target = datacache.get(curid);
             if (responseData && target) {
                 if (responseData['pregnancy'] == null) {
-                    console.log('cleardata clearbyrest', curid);
                     utils_2.cleardata(datacache, curid, target.fetal_num);
                 }
                 target.status = is_working + 1;

@@ -79,7 +79,8 @@ interface IBed {
     is_working: number;
     pregnancy: string;
     fetalposition: string;
-
+    disableStartWork?: boolean
+    disableCreate?: boolean
 
     event_alarm_status: string
     vol2: number
@@ -104,6 +105,7 @@ class _ICacheItem {
     is_include_tocozero?: boolean
     is_include_toco?: boolean
     disableStartWork?: boolean
+    disableCreate?: boolean
     analyse?: any;
     // fhr?: Uint8Array[];
     // toco?: Uint8Array;
@@ -167,6 +169,7 @@ export class ICacheItem extends _ICacheItem {
         return this._status;
     }
     public set status(remoteStatus: BedStatus) {
+
         this._status = remoteStatus;
     }
 

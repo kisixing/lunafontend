@@ -1,4 +1,5 @@
 import { WsService } from "../WsService";
+import { TDeviceType } from "../types";
 interface IData {
     bed_no: number;
     device_no: number;
@@ -12,6 +13,7 @@ interface IData {
     is_include_toco: boolean;
     is_include_volume: boolean;
     disableStartWork: boolean;
+    disableCreate: boolean;
     event_alarm_id: "3";
     event_alarm_status: "2";
     isMute1: number;
@@ -22,6 +24,7 @@ interface IData {
     is_fhr_3_batterylow: boolean;
     mother_type: boolean;
     vol: number;
+    device_type: TDeviceType;
 }
 interface IData {
     name: "update_status";
