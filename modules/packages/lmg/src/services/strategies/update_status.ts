@@ -21,26 +21,9 @@ export function update_status(this: WsService, received_msg: IMessage) {
     }
 
     const target = datacache.get(unitId)
-    const extendObj: _ICacheItem = others
+    const extendObj: _ICacheItem = { device_no, bed_no, ...others }
     Object.assign(target, extendObj)
     target.pregnancy = pregnancy ? JSON.parse(pregnancy) : null;
     target.fetalposition = fetalposition ? JSON.parse(fetalposition) : null;
-
-    // target.fhr = Array(fetal_num || 1).fill(0).map((_, i) => {
-    //     return target.fhr[i] || getMaxArray()
-    // })
-    // if (status == 0) {
-    //     target.status = Working;
-    // } else if (status == 1) {
-    //     target.status = Stopped;
-    // } else if (status == 2) {
-    //     target.status = Offline;
-    // }
-    // else if (status == 3) {
-    //     target.status = OfflineStopped;
-    // } else {
-    //     target.status = Uncreated;
-    // }
-
     this.refresh('update_status')
 }

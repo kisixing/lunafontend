@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __rest = (this && this.__rest) || function (s, e) {
     var t = {};
     for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
@@ -26,11 +37,9 @@ function push_devices(received_msg) {
             var unitId = this.getUnitId(device_no, bed_no);
             var old = datacache.get(unitId);
             if (!old || (old.doc_id !== doc_id)) {
-                var target = utils_1.getEmptyCacheItem({ id: unitId, doc_id: doc_id, device_type: device_type });
+                var target = utils_1.getEmptyCacheItem(__assign({ id: unitId, doc_id: doc_id, device_type: device_type, device_no: device_no, bed_no: bed_no }, others));
                 datacache.set(unitId, target);
                 this.convertdocid(unitId, doc_id);
-                var extendObj = others;
-                Object.assign(target, extendObj);
                 target.pregnancy = pregnancy ? JSON.parse(pregnancy) : null;
                 target.fetalposition = fetalposition ? JSON.parse(fetalposition) : null;
             }

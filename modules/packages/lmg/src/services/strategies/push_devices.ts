@@ -30,12 +30,10 @@ export function push_devices(this: WsService, received_msg: IData) {
 
             if (!old || (old.doc_id !== doc_id)) {
 
-                const target = getEmptyCacheItem({ id: unitId, doc_id, device_type })
+                const target = getEmptyCacheItem({ id: unitId, doc_id, device_type, device_no, bed_no,...others })
                 datacache.set(unitId, target);
                 this.convertdocid(unitId, doc_id)
 
-                const extendObj: _ICacheItem = others
-                Object.assign(target, extendObj)
                 target.pregnancy = pregnancy ? JSON.parse(pregnancy) : null;
                 target.fetalposition = fetalposition ? JSON.parse(fetalposition) : null;
             }

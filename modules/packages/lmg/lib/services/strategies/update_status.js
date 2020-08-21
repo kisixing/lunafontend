@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __rest = (this && this.__rest) || function (s, e) {
     var t = {};
     for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
@@ -20,7 +31,7 @@ function update_status(received_msg) {
         datacache.set(unitId, utils_1.getEmptyCacheItem({ id: unitId }));
     }
     var target = datacache.get(unitId);
-    var extendObj = others;
+    var extendObj = __assign({ device_no: device_no, bed_no: bed_no }, others);
     Object.assign(target, extendObj);
     target.pregnancy = pregnancy ? JSON.parse(pregnancy) : null;
     target.fetalposition = fetalposition ? JSON.parse(fetalposition) : null;
