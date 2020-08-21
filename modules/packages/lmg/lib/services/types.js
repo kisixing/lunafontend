@@ -35,10 +35,10 @@ var EWsEvents;
 })(EWsEvents = exports.EWsEvents || (exports.EWsEvents = {}));
 var _ICacheItem = (function () {
     function _ICacheItem() {
-        this.batterylowArr = [];
     }
     return _ICacheItem;
 }());
+exports._ICacheItem = _ICacheItem;
 var ICacheItem = (function (_super) {
     __extends(ICacheItem, _super);
     function ICacheItem(args) {
@@ -49,6 +49,55 @@ var ICacheItem = (function (_super) {
     Object.defineProperty(ICacheItem.prototype, "isF0Pro", {
         get: function () {
             return this.deviceType === 'LM_F0_PRO';
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ICacheItem.prototype, "batterylowArr", {
+        get: function () {
+            return [this.is_fhr_1_batterylow, this.is_fhr_2_batterylow, this.is_fhr_3_batterylow];
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ICacheItem.prototype, "MuteArr", {
+        get: function () {
+            return [this.isMute1, this.isMute2, this.isMute3].map(function (_) { return Boolean(_); });
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ICacheItem.prototype, "isWorking", {
+        get: function () {
+            return this.status === BedStatus.Working;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ICacheItem.prototype, "isStopped", {
+        get: function () {
+            return this.status === BedStatus.Stopped;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ICacheItem.prototype, "isOffline", {
+        get: function () {
+            return this.status === BedStatus.Offline;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ICacheItem.prototype, "isOfflineStopped", {
+        get: function () {
+            return this.status === BedStatus.OfflineStopped;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ICacheItem.prototype, "isUncreated", {
+        get: function () {
+            return this.status === BedStatus.Uncreated;
         },
         enumerable: true,
         configurable: true
@@ -69,10 +118,54 @@ var ICacheItem = (function (_super) {
     });
     Object.defineProperty(ICacheItem.prototype, "status", {
         get: function () {
-            return this._status;
+            return this._status + 1;
         },
         set: function (remoteStatus) {
             this._status = remoteStatus;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ICacheItem.prototype, "ismulti", {
+        get: function () {
+            return this.is_include_mother;
+        },
+        set: function (status) {
+            this.is_include_mother = status;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ICacheItem.prototype, "deviceType", {
+        get: function () {
+            return this.device_type;
+        },
+        set: function (type) {
+            this.device_type = type;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ICacheItem.prototype, "fetal_num", {
+        get: function () {
+            return this._fetal_num;
+        },
+        set: function (value) {
+            var _this = this;
+            this._fetal_num = value;
+            this.fhr = Array(value || 1).fill(0).map(function (_, i) {
+                return (_this.fhr && _this.fhr[i]) || [];
+            });
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ICacheItem.prototype, "docid", {
+        get: function () {
+            return this.doc_id;
+        },
+        set: function (value) {
+            this.doc_id = value;
         },
         enumerable: true,
         configurable: true

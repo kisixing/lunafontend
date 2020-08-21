@@ -64,7 +64,7 @@ export interface IBloodListItem {
     sys_bp: number;
     time?: string;
 }
-interface IBed {
+export interface IBed {
     bed_no: number;
     doc_id: string;
     fetal_num: number;
@@ -81,17 +81,26 @@ interface IBed {
     is_include_volume: boolean;
     is_include_tocozero: boolean;
     is_include_toco: boolean;
+    device_no: number;
+    status: number;
+    isMute1: number;
+    isMute2: number;
+    isMute3: number;
+    is_fhr_1_batterylow: boolean;
+    is_fhr_2_batterylow: boolean;
+    is_fhr_3_batterylow: boolean;
+    mother_type: boolean;
+    vol: number;
+    device_type: TDeviceType;
 }
-declare class _ICacheItem {
+export declare class _ICacheItem {
     selectBarHidden?: boolean;
-    batterylowArr: boolean[];
     replaceProbeTipData?: object;
     bed_no?: number;
     device_no?: number;
     realTime?: boolean;
-    id: string;
+    id?: string;
     volumeData?: IVolumeData;
-    deviceType?: TDeviceType;
     is_include_volume?: boolean;
     is_include_tocozero?: boolean;
     is_include_toco?: boolean;
@@ -108,7 +117,7 @@ declare class _ICacheItem {
     last?: number;
     past?: number;
     timestamp?: number;
-    docid?: string;
+    doc_id?: string;
     pregnancy?: ICacheItemPregnancy;
     fetalposition?: {
         fhr1: string;
@@ -123,7 +132,6 @@ declare class _ICacheItem {
     ecg?: Queue;
     ple?: Queue;
     ecgdata?: IMultiParamData;
-    ismulti?: boolean;
     bloodList?: IBloodListItem[];
     alarms?: {
         alarm_pulse_rate?: TAlarmType;
@@ -137,14 +145,39 @@ declare class _ICacheItem {
     };
     curindex?: number;
     state?: number;
+    is_fhr_1_batterylow?: boolean;
+    is_fhr_2_batterylow?: boolean;
+    is_fhr_3_batterylow?: boolean;
+    is_include_mother?: boolean;
+    isMute1?: number;
+    isMute2?: number;
+    isMute3?: number;
+    device_type?: TDeviceType;
+    vol?: number;
 }
 export declare class ICacheItem extends _ICacheItem {
     get isF0Pro(): boolean;
+    get batterylowArr(): boolean[];
+    get MuteArr(): boolean[];
+    get isWorking(): boolean;
+    get isStopped(): boolean;
+    get isOffline(): boolean;
+    get isOfflineStopped(): boolean;
+    get isUncreated(): boolean;
     get hasToco(): boolean;
     get hasPregnancy(): boolean;
     private _status;
     get status(): BedStatus;
     set status(remoteStatus: BedStatus);
+    get ismulti(): boolean;
+    set ismulti(status: boolean);
+    get deviceType(): TDeviceType;
+    set deviceType(type: TDeviceType);
+    private _fetal_num;
+    get fetal_num(): number;
+    set fetal_num(value: number);
+    get docid(): string;
+    set docid(value: string);
     constructor(args: _ICacheItem);
 }
 export declare type ICache = Map<string, ICacheItem> & {

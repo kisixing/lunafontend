@@ -269,7 +269,7 @@ exports.default = (function (v, docid, fetal, ctgData) {
                 r.score = getEmptyScore();
                 setInitData(r);
             })
-                .finally(function () { return setAutoAnalyse(false); });
+                .catch(function () { return setAutoAnalyse(false); });
         }
     }, [ctgData, analyseLoading, autoAnalyse, initData]);
     react_1.useEffect(function () {

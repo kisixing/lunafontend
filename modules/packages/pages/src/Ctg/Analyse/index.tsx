@@ -1,7 +1,7 @@
 import { Ctg } from '@lianmed/lmg';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import request from "@lianmed/request";
-import { Button, Col, Row, message, Modal, Alert, Checkbox } from 'antd';
+import { Button, Col, Row, message, Modal, Alert, Checkbox, Divider } from 'antd';
 import 'antd/dist/antd.css';
 import React, { useRef, useState, FC } from 'react';
 import styled from "styled-components";
@@ -140,16 +140,23 @@ export const Ctg_Analyse: FC<{
           const diagnosis = r[0].diagnosis;
           let t;
           try {
-            const d = JSON.parse(diagnosis) || {}
+            const data = JSON.parse(diagnosis) || {}
             t = (
               <div>
                 {
-                  d.NST && <div>NST：<span>{d.NST}</span></div>
+                  Array.isArray(data) && (data.map(d => {
+                    return <>
+                      <Divider></Divider>
+                      {
+                        d.NST && <div>NST：<span>{d.NST}</span></div>
+                      }
+                      {
+                        d.CST_OCT && <div>CST/OCT：<span>{d.CST_OCT}</span></div>
+                      }
+                      <div>诊断：<span>{d.diagnosistxt}</span></div>
+                    </>
+                  }))
                 }
-                {
-                  d.CST_OCT && <div>CST/OCT：<span>{d.CST_OCT}</span></div>
-                }
-                <div>诊断：<span>{d.diagnosistxt}</span></div>
               </div>
             )
           } catch (error) {

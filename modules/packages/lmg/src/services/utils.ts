@@ -51,7 +51,6 @@ export function getEmptyCacheItem(base: { [x in keyof ICacheItem]?: ICacheItem[x
     base.fetal_num = base.fetal_num ? base.fetal_num : 1
     const { fetal_num } = base
     const item = new ICacheItem({
-        batterylowArr:[],
         id: '0',
         fhr: Array(fetal_num).fill(0).map(() => getMaxArray()),
         toco: getMaxArray(),
@@ -64,7 +63,7 @@ export function getEmptyCacheItem(base: { [x in keyof ICacheItem]?: ICacheItem[x
         past: 0,
         timestamp: 0,
         docid: 'INIT',
-        status: BedStatus.Offline,
+        status: 0,
         orflag: true,
         starttime: '',
         pregnancy: null,

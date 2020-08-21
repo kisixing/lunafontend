@@ -1,4 +1,15 @@
 "use strict";
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var utils_1 = require("../utils");
 function push_devices(received_msg) {
@@ -11,20 +22,17 @@ function push_devices(received_msg) {
         var device_no = devdata.device_no, beds = devdata.beds, device_type = devdata.device_type;
         for (var bi in beds) {
             var bedData = beds[bi];
-            var is_include_tocozero = bedData.is_include_tocozero, is_include_volume = bedData.is_include_volume, is_include_toco = bedData.is_include_toco, is_include_mother = bedData.is_include_mother, doc_id = bedData.doc_id, fetal_num = bedData.fetal_num, bed_no = bedData.bed_no, disableCreate = bedData.disableCreate, disableStartWork = bedData.disableStartWork;
+            var pregnancy = bedData.pregnancy, fetalposition = bedData.fetalposition, bed_no = bedData.bed_no, doc_id = bedData.doc_id, others = __rest(bedData, ["pregnancy", "fetalposition", "bed_no", "doc_id"]);
             var unitId = this.getUnitId(device_no, bed_no);
             var old = datacache.get(unitId);
-            if (!old || (old.docid !== doc_id)) {
-                var item = utils_1.getEmptyCacheItem({ deviceType: device_type, device_no: device_no, bed_no: bed_no, is_include_tocozero: is_include_tocozero, is_include_toco: is_include_toco, is_include_volume: is_include_volume, fetal_num: fetal_num, id: unitId, docid: doc_id, ismulti: is_include_mother, disableCreate: disableCreate, disableStartWork: disableStartWork });
-                datacache.set(unitId, item);
+            if (!old || (old.doc_id !== doc_id)) {
+                var target = utils_1.getEmptyCacheItem({ id: unitId, doc_id: doc_id, device_type: device_type });
+                datacache.set(unitId, target);
                 this.convertdocid(unitId, doc_id);
-                item.status = bedData.is_working + 1;
-                if (bedData.pregnancy) {
-                    item.pregnancy = JSON.parse(bedData.pregnancy);
-                }
-                if (bedData.fetalposition) {
-                    item.fetalposition = JSON.parse(bedData.fetalposition);
-                }
+                var extendObj = others;
+                Object.assign(target, extendObj);
+                target.pregnancy = pregnancy ? JSON.parse(pregnancy) : null;
+                target.fetalposition = fetalposition ? JSON.parse(fetalposition) : null;
             }
         }
     }

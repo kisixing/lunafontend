@@ -63,7 +63,7 @@ exports.getMaxArray = getMaxArray;
 function getEmptyCacheItem(base) {
     base.fetal_num = base.fetal_num ? base.fetal_num : 1;
     var fetal_num = base.fetal_num;
-    var item = new types_1.ICacheItem(__assign({ batterylowArr: [], id: '0', fhr: Array(fetal_num).fill(0).map(function () { return getMaxArray(); }), toco: getMaxArray(), fm: getMaxArray(), fmp: getMaxArray(), index: 0, length: 0, start: -1, last: 0, past: 0, timestamp: 0, docid: 'INIT', status: types_1.BedStatus.Offline, orflag: true, starttime: '', pregnancy: null, fetalposition: { fhr1: '', fhr2: '', fhr3: '' }, fetal_num: 1, csspan: NaN, ismulti: false, ecg: new Queue_1.default(), ple: new Queue_1.default(240), ecgdata: null, is_include_volume: false, is_include_tocozero: false, is_include_toco: false, realTime: true, alarms: Object.create(null) }, base));
+    var item = new types_1.ICacheItem(__assign({ id: '0', fhr: Array(fetal_num).fill(0).map(function () { return getMaxArray(); }), toco: getMaxArray(), fm: getMaxArray(), fmp: getMaxArray(), index: 0, length: 0, start: -1, last: 0, past: 0, timestamp: 0, docid: 'INIT', status: 0, orflag: true, starttime: '', pregnancy: null, fetalposition: { fhr1: '', fhr2: '', fhr3: '' }, fetal_num: 1, csspan: NaN, ismulti: false, ecg: new Queue_1.default(), ple: new Queue_1.default(240), ecgdata: null, is_include_volume: false, is_include_tocozero: false, is_include_toco: false, realTime: true, alarms: Object.create(null) }, base));
     return item;
 }
 exports.getEmptyCacheItem = getEmptyCacheItem;

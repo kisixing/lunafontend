@@ -106,17 +106,20 @@ exports.Ctg_Analyse = function (_a) {
                 var diagnosis = r[0].diagnosis;
                 var t = void 0;
                 try {
-                    var d = JSON.parse(diagnosis) || {};
-                    t = (react_1.default.createElement("div", null,
-                        d.NST && react_1.default.createElement("div", null,
-                            "NST\uFF1A",
-                            react_1.default.createElement("span", null, d.NST)),
-                        d.CST_OCT && react_1.default.createElement("div", null,
-                            "CST/OCT\uFF1A",
-                            react_1.default.createElement("span", null, d.CST_OCT)),
-                        react_1.default.createElement("div", null,
-                            "\u8BCA\u65AD\uFF1A",
-                            react_1.default.createElement("span", null, d.diagnosistxt))));
+                    var data_1 = JSON.parse(diagnosis) || {};
+                    t = (react_1.default.createElement("div", null, Array.isArray(data_1) && (data_1.map(function (d) {
+                        return react_1.default.createElement(react_1.default.Fragment, null,
+                            react_1.default.createElement(antd_1.Divider, null),
+                            d.NST && react_1.default.createElement("div", null,
+                                "NST\uFF1A",
+                                react_1.default.createElement("span", null, d.NST)),
+                            d.CST_OCT && react_1.default.createElement("div", null,
+                                "CST/OCT\uFF1A",
+                                react_1.default.createElement("span", null, d.CST_OCT)),
+                            react_1.default.createElement("div", null,
+                                "\u8BCA\u65AD\uFF1A",
+                                react_1.default.createElement("span", null, d.diagnosistxt)));
+                    }))));
                 }
                 catch (error) {
                 }
