@@ -10,6 +10,7 @@ import Bar from "./Bar";
 import "antd/lib/card/style/index.css"
 import "antd/lib/tag/style/index.css"
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
+import { formatTime } from '@lianmed/utils';
 interface IProps extends PropsWithChildren<{}> {
     status?: BedStatus
     data: ICacheItem
@@ -68,7 +69,7 @@ const Item = (props: IProps) => {
                         ['孕周', gestationalWeek],
                         ['GP', GP],
                         ['手机', telephone],
-                        ['开始时间', (startTime && m.isValid) ? m.format('HH:mm') : ' '],
+                        ['开始时间', (startTime && m.isValid) ? formatTime(m) : ' '],
                     ]
                         .filter(_ => !!_[1])
                         .map(([a, b]) => <span key={a} style={{ marginRight: 12 }}>{a}：{b}</span>)

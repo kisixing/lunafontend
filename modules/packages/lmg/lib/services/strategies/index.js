@@ -14,7 +14,9 @@ var push_data_ctg_1 = require("./push_data_ctg");
 var push_data_ecg_1 = require("./push_data_ecg");
 var push_offline_data_ctg_1 = require("./push_offline_data_ctg");
 var endpoint_user_confirm_msg_1 = require("./endpoint_user_confirm_msg");
+var toast_1 = require("./toast");
 var replace_probe_tip_1 = require("./replace_probe_tip");
+var add_probe_tip_1 = require("./add_probe_tip");
 var list_blood_pressure_1 = require("./list_blood_pressure");
 var utils_1 = require("../utils");
 exports.strategies = {
@@ -32,8 +34,10 @@ exports.strategies = {
     push_data_ecg: push_data_ecg_1.push_data_ecg,
     push_offline_data_ctg: push_offline_data_ctg_1.push_offline_data_ctg,
     endpoint_user_confirm_msg: endpoint_user_confirm_msg_1.endpoint_user_confirm_msg,
+    toast: toast_1.toast,
     list_blood_pressure: list_blood_pressure_1.list_blood_pressure,
     replace_probe_tip: replace_probe_tip_1.replace_probe_tip,
+    add_probe_tip: add_probe_tip_1.add_probe_tip,
 };
 var exp = /(.*)_res$/;
 function getStrategies(context) {

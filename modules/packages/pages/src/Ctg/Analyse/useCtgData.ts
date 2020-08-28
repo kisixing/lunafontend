@@ -24,10 +24,13 @@ const CTGChart = (docid: string, single = false) => {
     function fetchData() {
         if (docid) {
             setLoading(true)
-            request.get(`/ctg-exams-data/${docid}`).then(res => {
+            return request.get(`/ctg-exams-data/${docid}`).then(res => {
                 res && setCtgData({ docid, ...res, ...(copyFhr(res, single)) })
+                single && setFetal(1)
             }).finally(() => setLoading(false))
-            single && setFetal(1)
+
+        }else{
+            return Promise.resolve()
         }
     }
     useEffect(() => {

@@ -34,10 +34,13 @@ var CTGChart = function (docid, single) {
     function fetchData() {
         if (docid) {
             setLoading(true);
-            request_1.default.get("/ctg-exams-data/" + docid).then(function (res) {
+            return request_1.default.get("/ctg-exams-data/" + docid).then(function (res) {
                 res && setCtgData(__assign(__assign({ docid: docid }, res), (copyFhr(res, single))));
+                single && setFetal(1);
             }).finally(function () { return setLoading(false); });
-            single && setFetal(1);
+        }
+        else {
+            return Promise.resolve();
         }
     }
     react_1.useEffect(function () {

@@ -294,9 +294,10 @@ var Suit = (function (_super) {
         this[key] = this[key] || [];
         var arr = this[key];
         arr.push(0);
+        var text = "FHR" + (fetalIndex + 1) + "\u5FC3\u7387\u8FC7\u9AD8";
         if (arr.length >= 2 * this.ctgconfig.alarm_delay) {
-            this.itemAlarm('心率过低');
-            this.lazyEmit('alarmOn', '心率过低');
+            this.itemAlarm(text);
+            this.lazyEmit('alarmOn', text);
             return true;
         }
     };
@@ -307,8 +308,9 @@ var Suit = (function (_super) {
         arr.push(0);
         if (arr.length >= 2 * this.ctgconfig.alarm_delay) {
             console.log("hh" + fetalIndex, arr.length);
-            this.itemAlarm('心率过高');
-            this.lazyEmit('alarmOn', '心率过高');
+            var text = "FHR" + (fetalIndex + 1) + "\u5FC3\u7387\u8FC7\u9AD8";
+            this.itemAlarm(text);
+            this.lazyEmit('alarmOn', text);
             return true;
         }
     };
@@ -327,19 +329,21 @@ var Suit = (function (_super) {
         }
     };
     Suit.prototype.checkAlarm = function (fetalIndex, cv) {
-        if (cv <= 241 && cv > this.ctgconfig.alarm_high) {
-            console.log('心率过高', cv);
-            this.alarmHigh(fetalIndex);
-            return true;
-        }
-        else if (cv < this.ctgconfig.alarm_low && cv >= 29) {
-            console.log('心率过低', cv);
-            this.alarmLow(fetalIndex);
-            return true;
-        }
-        else {
-            this.alarmOff(fetalIndex);
-            return false;
+        if (this.data.isWorking) {
+            if (cv <= 241 && cv > this.ctgconfig.alarm_high) {
+                console.log('心率过高', cv);
+                this.alarmHigh(fetalIndex);
+                return true;
+            }
+            else if (cv < this.ctgconfig.alarm_low && cv >= 29) {
+                console.log('心率过低', cv);
+                this.alarmLow(fetalIndex);
+                return true;
+            }
+            else {
+                this.alarmOff(fetalIndex);
+                return false;
+            }
         }
     };
     Suit.prototype.destroy = function () {

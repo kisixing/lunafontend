@@ -32,7 +32,7 @@ const Wrapper = styled.div`
 
 
 export const Ctg_Analyse: FC<{
-  onDownload: () => void, docid?: string, note?: string, id?: string, type?: 'default' | 'remote'
+  onDownload: (url: string) => void, docid?: string, note?: string, id?: string, type?: 'default' | 'remote'
   fetalcount?: number,
   gestationalWeek?: string,
   inpatientNO?: string,
@@ -54,7 +54,7 @@ export const Ctg_Analyse: FC<{
     const [visible, setVisible] = useState(false)
     const [pdfBase64, setPdfBase64] = useState('')
     const [padBase64Loading, setPadBase64Loading] = useState(false)
-
+    const isRemote = type === 'remote'
     const ref = useRef<Suit>(null)
 
     const {
@@ -89,16 +89,33 @@ export const Ctg_Analyse: FC<{
       mapFormToMark,
       old_ref
     }
+    function checkInput() {
+      const rightData = analysis_ref.current.getFieldsValue()
 
+      // 远程
+      if (isRemote && rightData) {
+        const { diagnosistxt, NST } = rightData
+
+        if (!NST) {
+          message.warn({ content: '请选择NST类型' })
+          return false
+        }
+        if (!diagnosistxt) {
+          message.warn({ content: '请填写诊断意见' })
+          return false
+        }
+      }
+      return true
+    }
     const getrRequestData = () => {
       const rightData = analysis_ref.current.getFieldsValue()
       const { wave, diagnosistxt, NST, CST_OCT, ...analyseData } = rightData
       const curData: { [x: string]: number } = others.mapFormToMark[`${mark}_ref`].current.getFieldsValue()
       const oldData: { [x: string]: number } = old_ref.current[mark] || {}
 
-
       const isedit = Object.entries(curData).find(([k, v]) => oldData[k] !== v) ? true : false
-      const identify = type === 'default' ? { note } : { id }
+      const identify = type === 'default' ? { note } : { id, note }
+      // const identify = { note }
       const requestData = {
         ...identify,
         diagnosis: JSON.stringify({ wave, diagnosistxt, NST, CST_OCT }),
@@ -115,17 +132,19 @@ export const Ctg_Analyse: FC<{
       return requestData
     }
     const getPrintUrl = (path: string) => {
+
       const url = `${path}?query=${encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(getrRequestData())))))}`
       console.log('url', url);
       return url
     }
 
     const submit = () => {
-
-      request.put(type === "default" ? '/ctg-exams-note' : '/serviceorders', { data: getrRequestData() }).then((r: any) => {
+      const ok = checkInput()
+      ok && request.put(type === "default" ? '/ctg-exams-note' : '/serviceorders', { data: getrRequestData() }).then((r: any) => {
         //TODO: 结果判断
         message.success('保存成功！', 3);
-        event.emit(ANALYSE_SUCCESS_TYPE, type == "default" ? note : id)
+        // event.emit(ANALYSE_SUCCESS_TYPE, type == "default" ? note : id)
+        event.emit(ANALYSE_SUCCESS_TYPE, note)
       })
     }
 
@@ -193,29 +212,31 @@ export const Ctg_Analyse: FC<{
             <Checkbox checked={autoAnalyse} onChange={e => setAutoAnalyse(e.target.checked)} style={{ position: 'absolute', left: 100, bottom: 8 }}>弹窗时自动分析</Checkbox>
             <Checkbox checked={showBase} onChange={e => setShowBase(e.target.checked)} style={{ position: 'absolute', left: 228, bottom: 8 }}>显示基线</Checkbox>
             <div style={{ position: 'absolute', right: 20, top: 16 }}>
-              <Button size="small" type="primary" onClick={fetchData as any} loading={loading} >刷新数据</Button>
+              <Button size="small" type="primary" onClick={() => fetchData().then(()=>reAnalyse)} loading={loading} >刷新数据</Button>
               <Button size="small" type="primary" onClick={reAnalyse as any} loading={analyseLoading} disabled={!note || isToShort}>重新分析</Button>
             </div>
 
           </Col>
           <Col span={7}  >
-            <Analyse ref={analysis_ref} />
+            <Analyse ref={analysis_ref} isRemote={isRemote} />
             <div style={{ position: 'absolute', right: 12, bottom: 0 }}>
               <Button size="small" onClick={() => {
-                setPadBase64Loading(true)
                 request.get(getPrintUrl('/ctg-exams-analysis-pdf-preview')).then(r => {
                   setVisible(true)
                   setPdfBase64(r.pdfdata)
                 }).finally(() => setPadBase64Loading(false))
+                setPadBase64Loading(true)
+
               }} style={{ marginBottom: 10 }} type="primary" disabled={btnDisabled || !initData} loading={padBase64Loading}>打印预览</Button>
               <Button size="small" type="primary" onClick={submit} disabled={btnDisabled || !initData}>保存</Button>
             </div>
 
           </Col>
         </Row>
-        <Modal visible={visible} closable={false} okText="打印" onCancel={() => setVisible(false)} onOk={() => {
-          setVisible(false)
+        <Modal visible={visible} closable={false} okText="打印" cancelText="取消" onCancel={() => setVisible(false)} onOk={() => {
           onDownload(getPrintUrl('/ctg-exams-analysis-pdf'))
+          setVisible(false)
+
         }}>
           <Document
             file={pdfBase64 ? `data:application/pdf;base64,${pdfBase64}` : null}

@@ -22,6 +22,7 @@ var react_1 = __importStar(require("react"));
 var antd_1 = require("antd");
 var utils_1 = require("@lianmed/utils");
 var Setting = react_1.forwardRef(function (props, ref) {
+    var isRemote = props.isRemote;
     var form = antd_1.Form.useForm()[0];
     react_1.useEffect(function () {
         var formData = form.getFieldsValue();
@@ -41,42 +42,52 @@ var Setting = react_1.forwardRef(function (props, ref) {
         react_1.default.createElement("div", null,
             react_1.default.createElement(antd_1.Form, { ref: ref, size: "small", style: { padding: '0px 12px' }, form: form, labelCol: { xs: 9 }, wrapperCol: { xs: 15 }, labelAlign: "left", onValuesChange: function (a, b) {
                     var keys = ['NST', 'CST_OCT'];
-                    var index = keys.indexOf(Object.keys(a)[0]);
+                    var _a = Object.entries(a)[0], k = _a[0], v = _a[1];
+                    var index = keys.indexOf(k);
+                    var old = b.diagnosistxt || '';
                     if (index === 0) {
-                        form.setFieldsValue({ CST_OCT: undefined });
+                        var r = /【NST：.*】/;
+                        var text_1 = "\u3010NST\uFF1A" + v + "\u3011";
+                        var diagnosistxt = r.test(old) ? old.replace(r, function () { return text_1; }) : old.concat(text_1);
+                        form.setFieldsValue({ CST_OCT: undefined, diagnosistxt: diagnosistxt });
                     }
                     else if (index === 1) {
-                        form.setFieldsValue({ NST: undefined });
+                        var r = /【CST\/OCT：.*】/;
+                        var text_2 = "\u3010CST/OCT\uFF1A" + v + "\u3011";
+                        var diagnosistxt = r.test(old) ? old.replace(r, function () { return text_2; }) : old.concat(text_2);
+                        form.setFieldsValue({ NST: undefined, diagnosistxt: diagnosistxt });
                     }
                 } },
                 react_1.default.createElement("div", { className: "divider" }, "\u5BAB\u7F29 "),
                 react_1.default.createElement(antd_1.Row, { style: { marginBottom: 4 } },
                     react_1.default.createElement(antd_1.Col, { span: 12 },
                         react_1.default.createElement(antd_1.Form.Item, { label: "\u5BAB\u7F29\u6B21\u6570", style: { marginBottom: 0 }, name: "uctimes" },
-                            react_1.default.createElement(antd_1.InputNumber, null))),
+                            react_1.default.createElement(antd_1.InputNumber, { disabled: true }))),
                     react_1.default.createElement(antd_1.Col, { span: 12 },
                         react_1.default.createElement(antd_1.Form.Item, { label: "\u5BAB\u7F29\u5F3A\u5EA6", style: { marginBottom: 0 }, name: "ucStrong" },
-                            react_1.default.createElement(antd_1.InputNumber, null)))),
+                            react_1.default.createElement(antd_1.InputNumber, { disabled: true })))),
                 react_1.default.createElement(antd_1.Row, null,
                     react_1.default.createElement(antd_1.Col, { span: 12 },
                         react_1.default.createElement(antd_1.Form.Item, { label: "\u95F4\u9694\u65F6\u95F4", style: { marginBottom: 0 }, name: "ucdurationtime" },
-                            react_1.default.createElement(antd_1.InputNumber, __assign({}, cFn('min'))))),
+                            react_1.default.createElement(antd_1.InputNumber, __assign({}, cFn('min'), { disabled: true })))),
                     react_1.default.createElement(antd_1.Col, { span: 12 },
                         react_1.default.createElement(antd_1.Form.Item, { label: "\u6301\u7EED\u65F6\u95F4", style: { marginBottom: 0 }, name: "uckeeptime" },
-                            react_1.default.createElement(antd_1.InputNumber, __assign({}, cFn('s')))))),
+                            react_1.default.createElement(antd_1.InputNumber, __assign({}, cFn('s'), { disabled: true }))))),
                 react_1.default.createElement("div", { className: "divider" }, "\u51CF\u901F"),
                 react_1.default.createElement(antd_1.Row, { style: { marginBottom: 4 } },
                     react_1.default.createElement(antd_1.Col, { span: 12 },
                         react_1.default.createElement(antd_1.Form.Item, { label: "\u65E9\u51CF", style: { marginBottom: 0 }, name: "edtimes" },
-                            react_1.default.createElement(antd_1.InputNumber, __assign({}, cFn('次'))))),
+                            react_1.default.createElement(antd_1.InputNumber, __assign({}, cFn('次'), { disabled: true })))),
                     react_1.default.createElement(antd_1.Col, { span: 12 },
                         react_1.default.createElement(antd_1.Form.Item, { label: "\u665A\u51CF", style: { marginBottom: 0 }, name: "ldtimes" },
-                            react_1.default.createElement(antd_1.InputNumber, __assign({}, cFn('次')))))),
+                            react_1.default.createElement(antd_1.InputNumber, __assign({}, cFn('次'), { disabled: true }))))),
                 react_1.default.createElement(antd_1.Row, null,
                     react_1.default.createElement(antd_1.Col, { span: 12 },
                         react_1.default.createElement(antd_1.Form.Item, { label: "\u53D8\u5F02\u51CF\u901F", style: { marginBottom: 0 }, name: "vdtimes" },
-                            react_1.default.createElement(antd_1.InputNumber, __assign({}, cFn('次')))))),
-                react_1.default.createElement("div", { className: "divider" }, "\u7C7B\u578B"),
+                            react_1.default.createElement(antd_1.InputNumber, __assign({}, cFn('次'), { disabled: true }))))),
+                react_1.default.createElement("div", { className: "divider" },
+                    isRemote && react_1.default.createElement("span", { style: { color: 'red' } }, "*"),
+                    react_1.default.createElement("span", null, "\u7C7B\u578B")),
                 react_1.default.createElement(antd_1.Form.Item, { label: "NST", labelCol: { xs: 4 }, wrapperCol: { xs: 20 }, style: { marginBottom: 0 }, name: 'NST' },
                     react_1.default.createElement(antd_1.Radio.Group, null,
                         react_1.default.createElement(antd_1.Radio, { value: '有反应' }, "\u6709\u53CD\u5E94"),
@@ -84,7 +95,7 @@ var Setting = react_1.forwardRef(function (props, ref) {
                         react_1.default.createElement(antd_1.Radio, { value: '可疑' }, "\u53EF\u7591"),
                         react_1.default.createElement(antd_1.Radio, { value: '不满意' }, "\u4E0D\u6EE1\u610F"))),
                 react_1.default.createElement(antd_1.Form.Item, { label: "CST/OCT", style: { marginBottom: 0 }, labelCol: { xs: 4 }, wrapperCol: { xs: 20 }, name: 'CST_OCT' },
-                    react_1.default.createElement(antd_1.Radio.Group, null,
+                    react_1.default.createElement(antd_1.Radio.Group, { disabled: isRemote },
                         react_1.default.createElement(antd_1.Radio, { value: '阴性' }, "\u9634\u6027"),
                         react_1.default.createElement(antd_1.Radio, { value: '阳性' }, "\u9633\u6027"),
                         react_1.default.createElement(antd_1.Radio, { value: '可疑' }, "\u53EF\u7591"),
@@ -97,7 +108,9 @@ var Setting = react_1.forwardRef(function (props, ref) {
                         react_1.default.createElement(antd_1.Radio, { value: '中波浪' }, "\u4E2D\u6CE2\u6D6A"),
                         react_1.default.createElement(antd_1.Radio, { value: '大波浪' }, "\u5927\u6CE2\u6D6A"),
                         react_1.default.createElement(antd_1.Radio, { value: '正弦型' }, "\u6B63\u5F26\u578B"))),
-                react_1.default.createElement("div", { className: "divider" }, "\u8BCA\u65AD"),
+                react_1.default.createElement("div", { className: "divider" },
+                    isRemote && react_1.default.createElement("span", { style: { color: 'red' } }, "*"),
+                    react_1.default.createElement("span", null, "\u8BCA\u65AD\u610F\u89C1")),
                 react_1.default.createElement(antd_1.Form.Item, { wrapperCol: { xs: 24 }, style: { marginBottom: 0 }, name: "diagnosistxt" },
                     react_1.default.createElement(antd_1.Input.TextArea, { maxLength: 120, placeholder: "\u6700\u591A\u8F93\u5165120\u4E2A\u5B57" }))))));
 });

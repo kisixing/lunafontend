@@ -1,7 +1,6 @@
 import { WsService } from "../WsService";
 import { event } from "@lianmed/utils";
 interface IData {
-    "name": "replace_probe_tip",
     "device_no": 1,
     "bed_no": 1,
     "data": {
@@ -11,16 +10,17 @@ interface IData {
 
 }
 
-export function replace_probe_tip(this: WsService, received_msg: IData) {
+export function add_probe_tip(this: WsService, received_msg: IData) {
 
     const { device_no, bed_no, data } = received_msg
     var item = this.getCacheItem({ device_no, bed_no });
     if (!item) return
-    item.replaceProbeTipData = data
+    item.addProbeTipData = data
+    console.log('item_probetip_to_call');
 
     event.once(`item_probetip_to_call:${item.id}`, cb => {
-        console.log('item_probetip_to_call 11');
-
+        console.log('item_probetip_to_call');
+        
         cb(data)
 
     })

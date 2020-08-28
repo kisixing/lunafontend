@@ -3,8 +3,8 @@ import { Form, Radio, Input, InputNumber, Row, Col } from 'antd';
 import { event } from '@lianmed/utils';
 import { FormInstance } from 'antd/lib/form';
 
-const Setting = forwardRef<FormInstance, { [x: string]: any }>((props, ref) => {
-
+const Setting = forwardRef<FormInstance, { isRemote: boolean }>((props, ref) => {
+  const { isRemote } = props
   const [form] = Form.useForm()
 
   useEffect(() => {
@@ -36,25 +36,37 @@ const Setting = forwardRef<FormInstance, { [x: string]: any }>((props, ref) => {
         </div> */}
         <Form ref={ref} size="small" style={{ padding: '0px 12px' }} form={form} labelCol={{ xs: 9 }} wrapperCol={{ xs: 15 }} labelAlign="left" onValuesChange={(a, b) => {
           const keys = ['NST', 'CST_OCT']
-          const index = keys.indexOf(Object.keys(a)[0])
+          const [k, v] = Object.entries(a)[0]
+          const index = keys.indexOf(k)
+          const old: string = b.diagnosistxt || ''
+
           if (index === 0) {
-            form.setFieldsValue({ CST_OCT: undefined })
+            const r = /【NST：.*】/
+            const text = `【NST：${v}】`
+            const diagnosistxt = r.test(old) ? old.replace(r, () => text) : old.concat(text)
+
+            form.setFieldsValue({ CST_OCT: undefined, diagnosistxt })
 
           } else if (index === 1) {
-            form.setFieldsValue({ NST: undefined })
+            const r = /【CST\/OCT：.*】/
+            const text = `【CST/OCT：${v}】`
+
+            const diagnosistxt = r.test(old) ? old.replace(r, () => text) : old.concat(text)
+
+            form.setFieldsValue({ NST: undefined, diagnosistxt })
 
           }
         }}>
-          <div className="divider"  >宫缩 </div>
+          <div className="divider" >宫缩 </div>
           <Row style={{ marginBottom: 4 }}>
             <Col span={12}>
-              <Form.Item label="宫缩次数" style={{ marginBottom: 0 }} name="uctimes">
-                <InputNumber />
+              <Form.Item label="宫缩次数" style={{ marginBottom: 0 }} name="uctimes" >
+                <InputNumber disabled />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item label="宫缩强度" style={{ marginBottom: 0 }} name="ucStrong">
-                <InputNumber />
+                <InputNumber disabled />
               </Form.Item>
             </Col>
 
@@ -64,12 +76,12 @@ const Setting = forwardRef<FormInstance, { [x: string]: any }>((props, ref) => {
 
             <Col span={12}>
               <Form.Item label="间隔时间" style={{ marginBottom: 0 }} name="ucdurationtime">
-                <InputNumber {...cFn('min')} />
+                <InputNumber {...cFn('min')} disabled />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item label="持续时间" style={{ marginBottom: 0 }} name="uckeeptime">
-                <InputNumber {...cFn('s')} />
+                <InputNumber {...cFn('s')} disabled />
               </Form.Item>
             </Col>
 
@@ -92,12 +104,12 @@ const Setting = forwardRef<FormInstance, { [x: string]: any }>((props, ref) => {
           <Row style={{ marginBottom: 4 }}>
             <Col span={12}>
               <Form.Item label="早减" style={{ marginBottom: 0 }} name="edtimes">
-                <InputNumber  {...cFn('次')} />
+                <InputNumber  {...cFn('次')} disabled />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item label="晚减" style={{ marginBottom: 0 }} name="ldtimes">
-                <InputNumber  {...cFn('次')} />
+                <InputNumber  {...cFn('次')} disabled />
               </Form.Item>
             </Col>
 
@@ -106,12 +118,15 @@ const Setting = forwardRef<FormInstance, { [x: string]: any }>((props, ref) => {
 
             <Col span={12}>
               <Form.Item label="变异减速" style={{ marginBottom: 0 }} name="vdtimes">
-                <InputNumber  {...cFn('次')} />
+                <InputNumber  {...cFn('次')} disabled />
               </Form.Item>
             </Col>
           </Row>
 
-          <div className="divider" >类型</div>
+          <div className="divider" >
+            {isRemote && <span style={{ color: 'red' }}>*</span>}
+            <span>类型</span>
+          </div>
           <Form.Item label="NST" labelCol={{ xs: 4 }} wrapperCol={{ xs: 20 }} style={{ marginBottom: 0 }} name='NST'>
             <Radio.Group>
               <Radio value={'有反应'}>有反应</Radio>
@@ -121,7 +136,7 @@ const Setting = forwardRef<FormInstance, { [x: string]: any }>((props, ref) => {
             </Radio.Group>
           </Form.Item>
           <Form.Item label="CST/OCT" style={{ marginBottom: 0 }} labelCol={{ xs: 4 }} wrapperCol={{ xs: 20 }} name='CST_OCT'>
-            <Radio.Group>
+            <Radio.Group disabled={isRemote}>
               <Radio value={'阴性'}>阴性</Radio>
               <Radio value={'阳性'}>阳性</Radio>
               <Radio value={'可疑'}>可疑</Radio>
@@ -138,7 +153,10 @@ const Setting = forwardRef<FormInstance, { [x: string]: any }>((props, ref) => {
               <Radio value={'正弦型'}>正弦型</Radio>
             </Radio.Group>
           </Form.Item>
-          <div className="divider" >诊断</div>
+          <div className="divider" >
+            {isRemote && <span style={{ color: 'red' }}>*</span>}
+            <span>诊断意见</span>
+          </div>
 
           <Form.Item wrapperCol={{ xs: 24 }} style={{ marginBottom: 0 }} name="diagnosistxt" >
             <Input.TextArea maxLength={120} placeholder="最多输入120个字" />

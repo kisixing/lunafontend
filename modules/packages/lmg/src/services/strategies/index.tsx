@@ -12,7 +12,9 @@ import { push_data_ctg } from "./push_data_ctg";
 import { push_data_ecg } from "./push_data_ecg";
 import { push_offline_data_ctg } from "./push_offline_data_ctg";
 import { endpoint_user_confirm_msg } from "./endpoint_user_confirm_msg";
+import { toast } from "./toast";
 import { replace_probe_tip } from "./replace_probe_tip";
+import { add_probe_tip } from "./add_probe_tip";
 import { list_blood_pressure } from "./list_blood_pressure";
 import { WsService } from "../WsService";
 import { handleF0ProErr } from "../utils";
@@ -37,9 +39,11 @@ export const strategies: { [x: string]: Function } = {
     push_offline_data_ctg,
 
     endpoint_user_confirm_msg,
-
+    toast,
+    
     list_blood_pressure,
     replace_probe_tip,
+    add_probe_tip,
 }
 const exp = /(.*)_res$/
 export function getStrategies(context: WsService): { [x: string]: Function } {

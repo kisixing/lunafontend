@@ -182,6 +182,7 @@ exports.default = (function (v, docid, fetal, ctgData) {
     var _f = react_1.useState(store_1.default.get(AUTOFM_KEY) || false), autoFm = _f[0], setAutoFm = _f[1];
     var _g = react_1.useState(store_1.default.get(AUTOANALYSE_KEY) || false), autoAnalyse = _g[0], setAutoAnalyse = _g[1];
     var _h = react_1.useState(true), showBase = _h[0], setShowBase = _h[1];
+    var _j = react_1.useState(0), tryCount = _j[0], setTryCount = _j[1];
     var Fischer_ref = react_1.useRef();
     var Krebs_ref = react_1.useRef();
     var Nst_ref = react_1.useRef();
@@ -262,16 +263,16 @@ exports.default = (function (v, docid, fetal, ctgData) {
         analysis_ref.current && analysis_ref.current.setFieldsValue(__assign(__assign({ stv: stv }, ucdata), others));
     };
     react_1.useEffect(function () {
-        if (!(isToShort || initData || endTime === 0 || analyseLoading)) {
+        if (!(isToShort || initData || endTime === 0 || analyseLoading || tryCount)) {
             console.log('auto analyse', autoAnalyse);
             autoAnalyse && fetchData()
                 .then(function (r) {
                 r.score = getEmptyScore();
                 setInitData(r);
             })
-                .catch(function () { return setAutoAnalyse(false); });
+                .finally(function () { return setTryCount(1); });
         }
-    }, [ctgData, analyseLoading, autoAnalyse, initData]);
+    }, [ctgData, analyseLoading, autoAnalyse, initData, tryCount]);
     react_1.useEffect(function () {
         var id = (hasInitAnalysed.current) ? 0 : window.setInterval(function () {
             if (initData && v.current && !hasInitAnalysed.current) {

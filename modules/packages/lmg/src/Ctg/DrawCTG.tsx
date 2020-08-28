@@ -645,7 +645,7 @@ export default class DrawCTG {
         if (suit.data.fetalposition && typeof (suit.data.fetalposition.fhr3) != 'undefined') {
           label = suit.data.fetalposition.fhr3;
         }
-        offsetfhr = ' +' + offsetStr;
+        offsetfhr = ' +' + Math.abs(offsetStr as number);
       } else {
         label = '';
       }

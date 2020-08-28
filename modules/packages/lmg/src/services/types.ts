@@ -109,6 +109,7 @@ export class _ICacheItem {
     selectBarHidden?: boolean
     // batterylowArr?: boolean[] = []
     replaceProbeTipData?: object
+    addProbeTipData?: object
     bed_no?: number;
     device_no?: number;
     realTime?: boolean
@@ -223,9 +224,9 @@ export class ICacheItem extends _ICacheItem {
     public get ismulti() {
         return this.is_include_mother;
     }
-    public set ismulti(status: boolean) {
+    public set ismulti(value: boolean) {
 
-        this.is_include_mother = status;
+        this.is_include_mother = value;
     }
     public get deviceType() {
         return this.device_type

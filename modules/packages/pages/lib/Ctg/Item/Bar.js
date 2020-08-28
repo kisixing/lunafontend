@@ -38,7 +38,6 @@ var Bar = function (props) {
                 boxShadow: '#aaa 3px 3px 5px 1px',
                 transition: 'width 0.2s ease-out',
                 visibility: showBar ? 'visible' : 'hidden',
-                overflow: 'hidden'
             } }, react_1.default.Children.map(props.children, function (_) {
             return react_1.default.cloneElement(_, { mutableSuit: mutableSuit, setMaskVisible: setMaskVisible });
         })),

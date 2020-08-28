@@ -130,7 +130,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, ctgData: o
     const [autoFm, setAutoFm] = useState<boolean>(store.get(AUTOFM_KEY) || false)
     const [autoAnalyse, setAutoAnalyse] = useState<boolean>(store.get(AUTOANALYSE_KEY) || false)
     const [showBase, setShowBase] = useState<boolean>(true)
-
+    const [tryCount, setTryCount] = useState(0)
     const Fischer_ref = useRef<FormInstance>()
     const Krebs_ref = useRef<FormInstance>()
     const Nst_ref = useRef<FormInstance>()
@@ -215,7 +215,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, ctgData: o
     useEffect(() => {
 
 
-        if (!(isToShort || initData || endTime === 0 || analyseLoading)) {
+        if (!(isToShort || initData || endTime === 0 || analyseLoading || tryCount)) {
             console.log('auto analyse', autoAnalyse);
 
             autoAnalyse && fetchData()
@@ -223,9 +223,9 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, ctgData: o
                     r.score = getEmptyScore()
                     setInitData(r)
                 })
-                .catch(() => setAutoAnalyse(false))
+                .finally(() => setTryCount(1))
         }
-    }, [ctgData, analyseLoading, autoAnalyse, initData])
+    }, [ctgData, analyseLoading, autoAnalyse, initData, tryCount])
 
 
 

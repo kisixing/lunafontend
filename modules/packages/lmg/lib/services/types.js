@@ -130,8 +130,8 @@ var ICacheItem = (function (_super) {
         get: function () {
             return this.is_include_mother;
         },
-        set: function (status) {
-            this.is_include_mother = status;
+        set: function (value) {
+            this.is_include_mother = value;
         },
         enumerable: true,
         configurable: true

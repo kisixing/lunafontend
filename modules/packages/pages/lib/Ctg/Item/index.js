@@ -23,6 +23,7 @@ var styled_components_1 = __importDefault(require("styled-components"));
 var Bar_1 = __importDefault(require("./Bar"));
 require("antd/lib/card/style/index.css");
 require("antd/lib/tag/style/index.css");
+var utils_1 = require("@lianmed/utils");
 var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n    height: 100%;\n    user-select: none;\n    .ant-card-body:hover .btn{\n        opacity:1\n    }\n    .btn {\n        opacity: 0;\n    }\n    .ant-modal-root {\n        visibility:visible;\n        float:left;\n    }\n"], ["\n    height: 100%;\n    user-select: none;\n    .ant-card-body:hover .btn{\n        opacity:1\n    }\n    .btn {\n        opacity: 0;\n    }\n    .ant-modal-root {\n        visibility:visible;\n        float:left;\n    }\n"])));
 var Item = function (props) {
     var onSelect = props.onSelect, data = props.data, bedname = props.bedname, onClose = props.onClose, onDoubleClick = props.onDoubleClick, telephone = props.telephone, loading = props.loading, onSuitRead = props.onSuitRead, RenderMaskIn = props.RenderMaskIn, _a = props.themeColor, themeColor = _a === void 0 ? 'rgb(74, 20, 140)' : _a, unitId = props.unitId, isFullscreen = props.isFullscreen;
@@ -41,7 +42,7 @@ var Item = function (props) {
             ['孕周', gestationalWeek],
             ['GP', GP],
             ['手机', telephone],
-            ['开始时间', (startTime && m.isValid) ? m.format('HH:mm') : ' '],
+            ['开始时间', (startTime && m.isValid) ? utils_1.formatTime(m) : ' '],
         ]
             .filter(function (_) { return !!_[1]; })
             .map(function (_a) {

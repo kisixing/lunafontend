@@ -123,6 +123,7 @@ export class Suit extends Draw {
     this.type = type;
     this.drawAnalyse = new DrawAnalyse(wrap, canvasanalyse, this)
     this.drawSelect = new DrawSelect(wrap, canvasselect, this)
+
     if (this.option) {
       this.ctgconfig.tococolor = this.option.tococolor;
       this.ctgconfig.fhrcolor[0] = this.option.fhrcolor1;
@@ -343,10 +344,11 @@ export class Suit extends Draw {
     this[key] = this[key] || []
     const arr: number[] = this[key]
     arr.push(0)
+    const text = `FHR${fetalIndex + 1}心率过高`
 
     if (arr.length >= 2 * this.ctgconfig.alarm_delay) {
-      this.itemAlarm('心率过低')
-      this.lazyEmit('alarmOn', '心率过低');
+      this.itemAlarm(text)
+      this.lazyEmit('alarmOn', text);
       return true
     }
   }
@@ -357,9 +359,9 @@ export class Suit extends Draw {
     arr.push(0)
     if (arr.length >= 2 * this.ctgconfig.alarm_delay) {
       console.log(`hh${fetalIndex}`, arr.length)
-
-      this.itemAlarm('心率过高')
-      this.lazyEmit('alarmOn', '心率过高');
+      const text = `FHR${fetalIndex + 1}心率过高`
+      this.itemAlarm(text)
+      this.lazyEmit('alarmOn', text);
       return true
     }
   }
@@ -377,19 +379,22 @@ export class Suit extends Draw {
 
   }
   checkAlarm(fetalIndex: number, cv: number) {
-    // 荣总：胎心率最大的计算范围是29~241
-    if (cv <= 241 && cv > this.ctgconfig.alarm_high) {
-      console.log('心率过高', cv);
-      this.alarmHigh(fetalIndex);
-      return true
-    } else if (cv < this.ctgconfig.alarm_low && cv >= 29) {
-      console.log('心率过低', cv);
-      this.alarmLow(fetalIndex);
-      return true
-    } else {
-      this.alarmOff(fetalIndex)
-      return false
+    if (this.data.isWorking) {
+      // 荣总：胎心率最大的计算范围是29~241
+      if (cv <= 241 && cv > this.ctgconfig.alarm_high) {
+        console.log('心率过高', cv);
+        this.alarmHigh(fetalIndex);
+        return true
+      } else if (cv < this.ctgconfig.alarm_low && cv >= 29) {
+        console.log('心率过低', cv);
+        this.alarmLow(fetalIndex);
+        return true
+      } else {
+        this.alarmOff(fetalIndex)
+        return false
+      }
     }
+
 
 
   }

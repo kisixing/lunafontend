@@ -80,13 +80,11 @@ export declare class WsService extends EventEmitter {
         res: number;
     }>;
     setTocozero(device_no: number, bed_no: number): void;
-    replace_probe(device_no: number, bed_no: number, data: {
-        isfhr: boolean;
-        mac: string;
-    }): Promise<{
+    replace_probe(device_no: number, bed_no: number): Promise<{
         [x: string]: any;
         res: number;
     }>;
+    add_probe(device_no: number, bed_no: number): void;
     sendFocus(id: string): void;
     _emit(name: string, ...value: any[]): void;
     subscribeList: string[];
@@ -98,7 +96,7 @@ export declare class WsService extends EventEmitter {
     convertdocid(unitId: string, doc_id: string): void;
     setcur(id: string, value: number): void;
     getoffline(queue: Queue, doc_id: string, offlineend: number, offstart: boolean): void;
-    clearbyrest(doc_id: string, is_working: number): void;
+    clearbyrest(curid: string, is_working: number): void;
     initfhrdata(data: any, datacache: any, offindex: any, queue: any, offstart: any): void;
     starttask(queue: any, offstart: any): void;
     connect: () => Promise<ICache>;

@@ -17,6 +17,6 @@ declare const CTGChart: (docid: string, single?: boolean) => {
     setFhr: (index: 0 | 2 | 1 | 3) => void;
     fetal: 0 | 2 | 1 | 3;
     setFetal: import("react").Dispatch<import("react").SetStateAction<0 | 2 | 1 | 3>>;
-    fetchData: () => void;
+    fetchData: () => Promise<void>;
 };
 export default CTGChart;

@@ -61,6 +61,7 @@ exports.Ctg_Analyse = function (_a) {
     var _m = react_1.useState(false), visible = _m[0], setVisible = _m[1];
     var _o = react_1.useState(''), pdfBase64 = _o[0], setPdfBase64 = _o[1];
     var _p = react_1.useState(false), padBase64Loading = _p[0], setPadBase64Loading = _p[1];
+    var isRemote = type === 'remote';
     var ref = react_1.useRef(null);
     var _q = useAnalyse_1.default(ref, note, fetal, ctgData), MARKS = _q.MARKS, reAnalyse = _q.reAnalyse, startTime = _q.startTime, endTime = _q.endTime, mark = _q.mark, setMark = _q.setMark, interval = _q.interval, setInterval = _q.setInterval, mapFormToMark = _q.mapFormToMark, analysis_ref = _q.analysis_ref, old_ref = _q.old_ref, analyseLoading = _q.analyseLoading, isToShort = _q.isToShort, autoFm = _q.autoFm, setAutoFm = _q.setAutoFm, autoAnalyse = _q.autoAnalyse, setAutoAnalyse = _q.setAutoAnalyse, showBase = _q.showBase, setShowBase = _q.setShowBase, initData = _q.initData;
     var others = {
@@ -73,6 +74,21 @@ exports.Ctg_Analyse = function (_a) {
         mapFormToMark: mapFormToMark,
         old_ref: old_ref
     };
+    function checkInput() {
+        var rightData = analysis_ref.current.getFieldsValue();
+        if (isRemote && rightData) {
+            var diagnosistxt = rightData.diagnosistxt, NST = rightData.NST;
+            if (!NST) {
+                antd_1.message.warn({ content: '请选择NST类型' });
+                return false;
+            }
+            if (!diagnosistxt) {
+                antd_1.message.warn({ content: '请填写诊断意见' });
+                return false;
+            }
+        }
+        return true;
+    }
     var getrRequestData = function () {
         var rightData = analysis_ref.current.getFieldsValue();
         var wave = rightData.wave, diagnosistxt = rightData.diagnosistxt, NST = rightData.NST, CST_OCT = rightData.CST_OCT, analyseData = __rest(rightData, ["wave", "diagnosistxt", "NST", "CST_OCT"]);
@@ -82,7 +98,7 @@ exports.Ctg_Analyse = function (_a) {
             var k = _a[0], v = _a[1];
             return oldData[k] !== v;
         }) ? true : false;
-        var identify = type === 'default' ? { note: note } : { id: id };
+        var identify = type === 'default' ? { note: note } : { id: id, note: note };
         var requestData = __assign(__assign({}, identify), { diagnosis: JSON.stringify({ wave: wave, diagnosistxt: diagnosistxt, NST: NST, CST_OCT: CST_OCT }), result: JSON.stringify(__assign(__assign(__assign({}, analyseData), curData), { isedit: isedit, type: mark, startTime: ref.current.drawAnalyse.analysisData.analysis.start, endTime: ref.current.drawAnalyse.analysisData.analysis.end })), fetalnum: fetal });
         return requestData;
     };
@@ -92,9 +108,10 @@ exports.Ctg_Analyse = function (_a) {
         return url;
     };
     var submit = function () {
-        request_1.default.put(type === "default" ? '/ctg-exams-note' : '/serviceorders', { data: getrRequestData() }).then(function (r) {
+        var ok = checkInput();
+        ok && request_1.default.put(type === "default" ? '/ctg-exams-note' : '/serviceorders', { data: getrRequestData() }).then(function (r) {
             antd_1.message.success('保存成功！', 3);
-            utils_1.event.emit(exports.ANALYSE_SUCCESS_TYPE, type == "default" ? note : id);
+            utils_1.event.emit(exports.ANALYSE_SUCCESS_TYPE, note);
         });
     };
     var history = function () {
@@ -149,22 +166,22 @@ exports.Ctg_Analyse = function (_a) {
                 react_1.default.createElement(antd_1.Checkbox, { checked: autoAnalyse, onChange: function (e) { return setAutoAnalyse(e.target.checked); }, style: { position: 'absolute', left: 100, bottom: 8 } }, "\u5F39\u7A97\u65F6\u81EA\u52A8\u5206\u6790"),
                 react_1.default.createElement(antd_1.Checkbox, { checked: showBase, onChange: function (e) { return setShowBase(e.target.checked); }, style: { position: 'absolute', left: 228, bottom: 8 } }, "\u663E\u793A\u57FA\u7EBF"),
                 react_1.default.createElement("div", { style: { position: 'absolute', right: 20, top: 16 } },
-                    react_1.default.createElement(antd_1.Button, { size: "small", type: "primary", onClick: fetchData, loading: loading }, "\u5237\u65B0\u6570\u636E"),
+                    react_1.default.createElement(antd_1.Button, { size: "small", type: "primary", onClick: function () { return fetchData().then(function () { return reAnalyse; }); }, loading: loading }, "\u5237\u65B0\u6570\u636E"),
                     react_1.default.createElement(antd_1.Button, { size: "small", type: "primary", onClick: reAnalyse, loading: analyseLoading, disabled: !note || isToShort }, "\u91CD\u65B0\u5206\u6790"))),
             react_1.default.createElement(antd_1.Col, { span: 7 },
-                react_1.default.createElement(Analyse_1.default, { ref: analysis_ref }),
+                react_1.default.createElement(Analyse_1.default, { ref: analysis_ref, isRemote: isRemote }),
                 react_1.default.createElement("div", { style: { position: 'absolute', right: 12, bottom: 0 } },
                     react_1.default.createElement(antd_1.Button, { size: "small", onClick: function () {
-                            setPadBase64Loading(true);
                             request_1.default.get(getPrintUrl('/ctg-exams-analysis-pdf-preview')).then(function (r) {
                                 setVisible(true);
                                 setPdfBase64(r.pdfdata);
                             }).finally(function () { return setPadBase64Loading(false); });
+                            setPadBase64Loading(true);
                         }, style: { marginBottom: 10 }, type: "primary", disabled: btnDisabled || !initData, loading: padBase64Loading }, "\u6253\u5370\u9884\u89C8"),
                     react_1.default.createElement(antd_1.Button, { size: "small", type: "primary", onClick: submit, disabled: btnDisabled || !initData }, "\u4FDD\u5B58")))),
-        react_1.default.createElement(antd_1.Modal, { visible: visible, closable: false, okText: "\u6253\u5370", onCancel: function () { return setVisible(false); }, onOk: function () {
-                setVisible(false);
+        react_1.default.createElement(antd_1.Modal, { visible: visible, closable: false, okText: "\u6253\u5370", cancelText: "\u53D6\u6D88", onCancel: function () { return setVisible(false); }, onOk: function () {
                 onDownload(getPrintUrl('/ctg-exams-analysis-pdf'));
+                setVisible(false);
             } },
             react_1.default.createElement(react_pdf_1.Document, { file: pdfBase64 ? "data:application/pdf;base64," + pdfBase64 : null, renderMode: "canvas" },
                 react_1.default.createElement(react_pdf_1.Page, { pageNumber: 1, scale: 0.8 })))));

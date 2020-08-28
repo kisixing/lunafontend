@@ -96,6 +96,7 @@ export interface IBed {
 export declare class _ICacheItem {
     selectBarHidden?: boolean;
     replaceProbeTipData?: object;
+    addProbeTipData?: object;
     bed_no?: number;
     device_no?: number;
     realTime?: boolean;
@@ -170,7 +171,7 @@ export declare class ICacheItem extends _ICacheItem {
     get status(): BedStatus;
     set status(remoteStatus: BedStatus);
     get ismulti(): boolean;
-    set ismulti(status: boolean);
+    set ismulti(value: boolean);
     get deviceType(): TDeviceType;
     set deviceType(type: TDeviceType);
     private _fetal_num;

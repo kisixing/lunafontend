@@ -257,14 +257,27 @@ var WsService = (function (_super) {
         });
         this.send(msg);
     };
-    WsService.prototype.replace_probe = function (device_no, bed_no, data) {
+    WsService.prototype.replace_probe = function (device_no, bed_no) {
+        var target = this.getCacheItem({ device_no: device_no, bed_no: bed_no });
         var command = JSON.stringify({
             name: "replace_probe",
             device_no: device_no,
             bed_no: bed_no,
-            data: data
+            data: target.replaceProbeTipData
         });
+        target.replaceProbeTipData = null;
         return this.sendAsync('replace_probe', command);
+    };
+    WsService.prototype.add_probe = function (device_no, bed_no) {
+        var target = this.getCacheItem({ device_no: device_no, bed_no: bed_no });
+        var command = JSON.stringify({
+            name: "add_probe",
+            device_no: device_no,
+            bed_no: bed_no,
+            data: target.addProbeTipData
+        });
+        target.addProbeTipData = null;
+        return this.send(command);
     };
     WsService.prototype.sendFocus = function (id) {
         var target = this.getCacheItem(id);
@@ -355,17 +368,18 @@ var WsService = (function (_super) {
             }
         });
     };
-    WsService.prototype.clearbyrest = function (doc_id, is_working) {
+    WsService.prototype.clearbyrest = function (curid, is_working) {
         var datacache = this.datacache;
-        request_1.default.get("/bedinfos?documentno.equals=" + doc_id).then(function (responseData) {
-            var vt = doc_id.split('_');
-            var curid = vt[0] + '-' + vt[1];
-            var target = datacache.get(curid);
+        var target = datacache.get(curid);
+        var docid = target.docid;
+        if (target.pregnancy)
+            return;
+        request_1.default.get("/bedinfos?documentno.equals=" + docid).then(function (responseData) {
             if (responseData && target) {
                 if (responseData['pregnancy'] == null) {
                     utils_2.cleardata(datacache, curid, target.fetal_num);
                 }
-                target.status = is_working + 1;
+                target.status = is_working;
             }
         });
     };

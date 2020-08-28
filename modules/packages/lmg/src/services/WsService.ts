@@ -197,15 +197,27 @@ export class WsService extends EventEmitter {
         })
         this.send(msg)
     }
-    replace_probe(device_no: number, bed_no: number, data: { isfhr: boolean, mac: string }) {
+    replace_probe(device_no: number, bed_no: number,) {
+        const target = this.getCacheItem({ device_no, bed_no })
         const command = JSON.stringify({
             name: "replace_probe",
             device_no,
             bed_no,
-            data
+            data: target.replaceProbeTipData
         })
+        target.replaceProbeTipData = null
         return this.sendAsync('replace_probe', command);
-
+    }
+    add_probe(device_no: number, bed_no: number,) {
+        const target = this.getCacheItem({ device_no, bed_no })
+        const command = JSON.stringify({
+            name: "add_probe",
+            device_no,
+            bed_no,
+            data: target.addProbeTipData
+        })
+        target.addProbeTipData = null
+        return this.send(command);
     }
     sendFocus(id: string) {
         const target = this.getCacheItem(id)
@@ -307,20 +319,20 @@ export class WsService extends EventEmitter {
         })
     }
 
-    clearbyrest(doc_id: string, is_working: number) {
+    clearbyrest(curid: string, is_working: number) {
         const { datacache } = this
+        const target = datacache.get(curid)
+        const { docid } = target
+        if (target.pregnancy) return
+        request.get(`/bedinfos?documentno.equals=${docid}`).then(responseData => {
 
-        request.get(`/bedinfos?documentno.equals=${doc_id}`).then(responseData => {
-            let vt = doc_id.split('_');
-            let curid = vt[0] + '-' + vt[1];
-            const target = datacache.get(curid)
             if (responseData && target) {
                 if (responseData['pregnancy'] == null) {
 
                     cleardata(datacache, curid, target.fetal_num);
                 }
 
-                target.status = is_working + 1;
+                target.status = is_working;
 
                 // if (is_working == 0) {
                 //     target.status = Working;
@@ -429,9 +441,9 @@ export class WsService extends EventEmitter {
             // window['aa']=() => {
             //     console.log('goit')
             //     var received_msg = {
-            //         "name": "replace_probe_tip",
+            //         "name": "add_probe_tip",
             //         "device_no": 1001,
-            //         "bed_no": 2,
+            //         "bed_no": 1,
             //         "data": {
             //             "mac": "EB:CI:SE:38:90:22",  //插入探头的蓝牙地址
             //             "isfhr": true  //插入探头是否为胎心探头
