@@ -360,7 +360,7 @@ var DrawCTG = (function () {
                 this.suit.barTool.setBarLeft(Math.floor(this.suit.toolbarposition * width / oldwidth), false);
             }
             else {
-                this.drawdot(width * 2);
+                this.drawdot(width * 2, false, true);
             }
         }
         else {
@@ -537,7 +537,7 @@ var DrawCTG = (function () {
             }
         }
         linecontext.stroke();
-        if (fmp) {
+        if (fmp && suit.ctgconfig.show_fetalmovement) {
             lastx = 0;
             lasty = 0;
             linecontext.beginPath();

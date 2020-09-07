@@ -8,12 +8,12 @@ import styled from "styled-components";
 import Analyse from './Analyse';
 import Score from './Score';
 import useAnalyse from './useAnalyse';
-import useCtgData from './useCtgData';
+import { useCtgData } from './useCtgData';
 import { event } from '@lianmed/utils';
 import { Document, Page } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 export const ANALYSE_SUCCESS_TYPE = "(●'◡'●)"
-
+export { useCtgData }
 const Wrapper = styled.div`
   height:100%;
   .divider {
@@ -56,6 +56,7 @@ export const Ctg_Analyse: FC<{
     const [padBase64Loading, setPadBase64Loading] = useState(false)
     const isRemote = type === 'remote'
     const ref = useRef<Suit>(null)
+    const wrap = useRef<HTMLDivElement>(null)
 
     const {
       MARKS,
@@ -127,7 +128,8 @@ export const Ctg_Analyse: FC<{
           startTime: ref.current.drawAnalyse.analysisData.analysis.start,
           endTime: ref.current.drawAnalyse.analysisData.analysis.end
         }),
-        fetalnum: fetal
+        fetalnum: fetal,
+        show_fetalmovement: window['obvue'] ? !!window['obvue'].setting.show_fetalmovement : true
       }
       return requestData
     }
@@ -194,7 +196,7 @@ export const Ctg_Analyse: FC<{
     }
     const btnDisabled = !note || !disabled
     return (
-      <Wrapper >
+      <Wrapper ref={wrap} >
         <div style={{ height: `calc(100% - 460px - 12px)`, minHeight: 200, marginBottom: 12, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px', overflow: 'hidden' }}>
           <Ctg suitType={1} ref={ref} loading={loading} data={ctgData} />
 
@@ -212,7 +214,7 @@ export const Ctg_Analyse: FC<{
             <Checkbox checked={autoAnalyse} onChange={e => setAutoAnalyse(e.target.checked)} style={{ position: 'absolute', left: 100, bottom: 8 }}>弹窗时自动分析</Checkbox>
             <Checkbox checked={showBase} onChange={e => setShowBase(e.target.checked)} style={{ position: 'absolute', left: 228, bottom: 8 }}>显示基线</Checkbox>
             <div style={{ position: 'absolute', right: 20, top: 16 }}>
-              <Button size="small" type="primary" onClick={() => fetchData().then(()=>reAnalyse)} loading={loading} >刷新数据</Button>
+              <Button size="small" type="primary" onClick={() => fetchData().then(() => reAnalyse)} loading={loading} >刷新数据</Button>
               <Button size="small" type="primary" onClick={reAnalyse as any} loading={analyseLoading} disabled={!note || isToShort}>重新分析</Button>
             </div>
 
@@ -233,7 +235,7 @@ export const Ctg_Analyse: FC<{
 
           </Col>
         </Row>
-        <Modal visible={visible} closable={false} okText="打印" cancelText="取消" onCancel={() => setVisible(false)} onOk={() => {
+        <Modal getContainer={false} centered visible={visible} closable={false} okText="打印" cancelText="取消" onCancel={() => setVisible(false)} onOk={() => {
           onDownload(getPrintUrl('/ctg-exams-analysis-pdf'))
           setVisible(false)
 

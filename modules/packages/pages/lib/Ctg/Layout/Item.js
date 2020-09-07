@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -23,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importStar(require("react"));
 var react_dom_1 = __importDefault(require("react-dom"));
-var types_1 = require("@lianmed/lmg/lib/services/types");
 var antd_1 = require("antd");
 var index_1 = __importDefault(require("../Item/index"));
 var utils_1 = require("@lianmed/utils");
@@ -31,16 +19,6 @@ var WorkbenchItem = function (props) {
     var onSelect = props.onSelect, bordered = props.bordered, themeColor = props.themeColor, RenderMaskIn = props.RenderMaskIn, itemData = props.itemData, onClose = props.onClose, _a = props.loading, loading = _a === void 0 ? false : _a, fullScreenId = props.fullScreenId, itemHeight = props.itemHeight, itemSpan = props.itemSpan, outPadding = props.outPadding, data = props.data, bedname = props.bedname, status = props.status, unitId = props.unitId;
     var startTime = props.startTime, pregnancy = props.pregnancy;
     var _b = react_1.useState(false), isFullscreen = _b[0], setIsFullscreen = _b[1];
-    var w = window;
-    var k = "spinfo_" + unitId;
-    var c = w[k] || (w[k] = {});
-    if ([types_1.BedStatus.Stopped, types_1.BedStatus.OfflineStopped].includes(status)) {
-        startTime = c.startTime;
-        pregnancy = c.pregnancy || {};
-    }
-    else {
-        Object.assign(c, { pregnancy: __assign(__assign({}, pregnancy), { pvId: null }), startTime: startTime });
-    }
     var ref = react_1.useRef(null);
     var fullScreenCb = react_1.useCallback(function (e) {
         var el = react_dom_1.default.findDOMNode(ref.current);

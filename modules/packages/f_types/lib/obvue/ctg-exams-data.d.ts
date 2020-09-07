@@ -10,4 +10,5 @@ export interface _ctg_exams_data {
     _fhr1: string;
     _fhr2: string;
     _fhr3: string;
+    selectBarHidden?: boolean
 }

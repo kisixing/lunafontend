@@ -17,6 +17,7 @@ var endpoint_user_confirm_msg_1 = require("./endpoint_user_confirm_msg");
 var toast_1 = require("./toast");
 var replace_probe_tip_1 = require("./replace_probe_tip");
 var add_probe_tip_1 = require("./add_probe_tip");
+var time_endwork_tip_1 = require("./time_endwork_tip");
 var list_blood_pressure_1 = require("./list_blood_pressure");
 var utils_1 = require("../utils");
 exports.strategies = {
@@ -38,6 +39,7 @@ exports.strategies = {
     list_blood_pressure: list_blood_pressure_1.list_blood_pressure,
     replace_probe_tip: replace_probe_tip_1.replace_probe_tip,
     add_probe_tip: add_probe_tip_1.add_probe_tip,
+    time_endwork_tip: time_endwork_tip_1.time_endwork_tip,
 };
 var exp = /(.*)_res$/;
 function getStrategies(context) {

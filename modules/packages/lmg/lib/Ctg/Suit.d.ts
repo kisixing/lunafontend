@@ -17,10 +17,10 @@ export declare class Suit extends Draw {
     isOn: boolean;
     emitInterval: number;
     static option: {
-        [x: string]: string;
+        [x: string]: any;
     };
     option: {
-        [x: string]: string;
+        [x: string]: any;
     };
     initFlag: boolean;
     sid: number;
@@ -54,6 +54,7 @@ export declare class Suit extends Draw {
         alarm_low: number;
         print_interval: number;
         alarm_delay: number;
+        show_fetalmovement: boolean;
     };
     fetalposition: {
         fhr1: string;
@@ -98,6 +99,7 @@ export declare class Suit extends Draw {
         fhr: any[][];
         toco: any[];
         fm: any[];
+        fmp: any[];
         fetal_num: number;
         index: number;
         starttime: string;
@@ -111,6 +113,7 @@ export declare class Suit extends Draw {
         };
         noOffset: any;
         selectBarHidden: any;
+        keepSelection: any;
     };
     drawdot(): void;
     timerCtg(dely: any): void;

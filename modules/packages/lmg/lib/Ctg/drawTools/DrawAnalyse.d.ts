@@ -26,6 +26,7 @@ export declare class DrawAnalyse extends Draw {
     _dec: number[];
     setData(r: obvue.ctg_exams_analyse): void;
     drawBaseline(cur: any, show: boolean, color: any, yspan: any, xspan: any, max: any, basetop: any): void;
+    showBase: boolean;
     analyse(type: AnalyseType, showBase?: boolean, start?: number, end?: number, data?: {
         analysis?: {
             length: number;
@@ -81,7 +82,7 @@ export declare class DrawAnalyse extends Draw {
     inRange: (value: number, min: number, max: number) => boolean;
     countAcc: (start: number, end: number) => number;
     countDec: (start: number, end: number, type: string) => number;
-    cycleAcc: () => 1 | 0;
+    cycleAcc: () => 0 | 1;
     countFm: (start: number, end: number) => number;
     fhrDuration: (start: number, end: number) => number;
     fhrAmpl: (start: number, end: number) => number;

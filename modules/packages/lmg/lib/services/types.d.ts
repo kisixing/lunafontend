@@ -95,8 +95,10 @@ export interface IBed {
 }
 export declare class _ICacheItem {
     selectBarHidden?: boolean;
+    keepSelection?: boolean;
     replaceProbeTipData?: object;
     addProbeTipData?: object;
+    timeEndworkTipData?: object;
     bed_no?: number;
     device_no?: number;
     realTime?: boolean;

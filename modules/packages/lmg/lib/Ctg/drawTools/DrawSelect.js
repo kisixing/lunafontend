@@ -175,6 +175,8 @@ var DrawSelect = (function (_super) {
     DrawSelect.prototype.createBar = function () {
         var _this = this;
         if (this.startingBar && this.endingBar && this.selectingBar) {
+            if (this.suit.data.keepSelection)
+                return;
             this.selectingBar.setLeft(0);
             this.startingBar.setLeft(0);
             return;

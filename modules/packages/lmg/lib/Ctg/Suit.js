@@ -69,7 +69,8 @@ var Suit = (function (_super) {
             alarm_high: 160,
             alarm_low: 110,
             print_interval: 20,
-            alarm_delay: 0
+            alarm_delay: 0,
+            show_fetalmovement: true
         };
         _this.fetalposition = {
             fhr1: '',
@@ -109,6 +110,7 @@ var Suit = (function (_super) {
             _this.ctgconfig.fhrcolor[0] = _this.option.fhrcolor1;
             _this.ctgconfig.fhrcolor[1] = _this.option.fhrcolor2;
             _this.ctgconfig.fhrcolor[2] = _this.option.fhrcolor3;
+            _this.ctgconfig.show_fetalmovement = _this.option.show_fetalmovement === undefined ? true : !!_this.option.show_fetalmovement;
             if (_this.option.alarm_enable == '0') {
                 _this.ctgconfig.alarm_enable = false;
             }
@@ -138,17 +140,17 @@ var Suit = (function (_super) {
             this.viewposition = value;
             this.emit('change:selectPoint', this.drawSelect.selectingBarPoint);
             this.updateBarTool();
-            this.drawobj.drawdot((this.type > 0 && this.viewposition < this.width * 2) ? this.width * 2 : this.viewposition);
+            this.drawobj.drawdot((this.type > 0 && this.viewposition < this.width * 2) ? this.width * 2 : this.viewposition, false, true);
         },
         enumerable: true,
         configurable: true
     });
     Suit.prototype.init = function (data) {
         var _this = this;
-        if (!data) {
+        if (!data || !(data.fhr || data.fhr1)) {
             return;
         }
-        this.initFlag = true;
+        var t = this.initFlag && data.keepSelection;
         var defaultinterval = 500;
         this.data = data;
         this.currentdot = data.index;
@@ -166,8 +168,8 @@ var Suit = (function (_super) {
         }
         this.drawAnalyse.init();
         this.drawSelect.init();
-        this.drawSelect.clearselect();
-        this.drawobj.showcur(0, false);
+        t || this.drawSelect.clearselect();
+        this.drawobj.showcur(t ? this.drawSelect.selectingBarPoint : 0, false);
         if (this.type > 0) {
             if (this.data.index > this.canvasline.width * 2) {
                 this.curr = this.canvasline.width * 2;
@@ -178,15 +180,14 @@ var Suit = (function (_super) {
                 else {
                     this.barTool.setBarWidth(100);
                 }
-                this.barTool.setBarLeft(0, false);
             }
             else {
                 this.barTool.setBarWidth(0);
-                this.barTool.setBarLeft(0, false);
                 this.curr = this.data.index;
             }
-            this.drawobj.drawdot(this.canvasline.width * 2, false);
-            this.rightViewPosition = this.curr;
+            t || (this.rightViewPosition = this.curr);
+            t || this.barTool.setBarLeft(0, false);
+            this.drawobj.drawdot((t && this.data.index > this.width * 2) ? this.rightViewPosition : this.canvasline.width * 2, false);
         }
         else {
             this.timerCtg(defaultinterval);
@@ -246,6 +247,7 @@ var Suit = (function (_super) {
             _this.drawobj.drawdot(_this.rightViewPosition, false);
         });
         this.emit('afterInit');
+        this.initFlag = true;
     };
     Suit.prototype.createLine = function () {
         if (this.rowline)
@@ -294,7 +296,7 @@ var Suit = (function (_super) {
         this[key] = this[key] || [];
         var arr = this[key];
         arr.push(0);
-        var text = "FHR" + (fetalIndex + 1) + "\u5FC3\u7387\u8FC7\u9AD8";
+        var text = "FHR" + (fetalIndex + 1) + "\u5FC3\u7387\u8FC7\u4F4E";
         if (arr.length >= 2 * this.ctgconfig.alarm_delay) {
             this.itemAlarm(text);
             this.lazyEmit('alarmOn', text);
@@ -359,8 +361,17 @@ var Suit = (function (_super) {
         this.barTool = null;
     };
     Suit.prototype._resize = function () {
+        var _this = this;
         var _a = this.wrap.getBoundingClientRect(), width = _a.width, height = _a.height;
-        Object.values(this).forEach(function (_) { return _ && _.resize && _.resize(width, height); });
+        if (this.type > 0 && width < 200) {
+            setTimeout(function () {
+                _this._resize();
+                utils_1.event.emit('fuckedResize');
+            }, 1000);
+        }
+        else {
+            Object.values(this).forEach(function (_) { return _ && _.resize && _.resize(width, height); });
+        }
     };
     Suit.prototype.setfetalposition = function (fhr1, fhr2, fhr3) {
         if (this.data && this.data.fetalposition) {
@@ -375,6 +386,7 @@ var Suit = (function (_super) {
             fhr: [[], [], []],
             toco: [],
             fm: [],
+            fmp: [],
             fetal_num: +oriobj.fetalnum || 1,
             index: 0,
             starttime: '',
@@ -382,6 +394,7 @@ var Suit = (function (_super) {
             analyse: { acc: [], dec: [], baseline: [], start: 0, end: 0 },
             noOffset: oriobj.noOffset,
             selectBarHidden: oriobj.selectBarHidden,
+            keepSelection: oriobj.keepSelection,
         };
         if (oriobj.docid) {
             var pureidarr = oriobj.docid.split('_');
@@ -429,6 +442,9 @@ var Suit = (function (_super) {
                 }
                 else if (key === 'fm') {
                     CTGDATA.fm[i] = data_to_push;
+                }
+                else if (key === 'fmp') {
+                    CTGDATA.fmp[i] = data_to_push > 18 ? 98 : (data_to_push + 80);
                 }
                 oridata = oridata.substring(2, oridata.length);
             }

@@ -28,7 +28,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var request_1 = __importDefault(require("@lianmed/request"));
 var utils_1 = require("@lianmed/utils");
-var lodash_1 = require("lodash");
 var Queue_1 = __importDefault(require("../Ecg/Queue"));
 var strategies_1 = require("./strategies");
 var types_1 = require("./types");
@@ -36,7 +35,6 @@ var utils_2 = require("./utils");
 __export(require("./types"));
 __export(require("./useCheckNetwork"));
 __export(require("./utils"));
-var ANNOUNCE_INTERVAL = 1000;
 var SECOND = 1000;
 exports.LIMIT_LENGTH = 4 * 3600 * 0.7;
 var WsService = (function (_super) {
@@ -103,6 +101,22 @@ var WsService = (function (_super) {
                         var mesName = received_msg.name;
                         _this_1.handleMessage(mesName, received_msg);
                     }
+                };
+                window['aa'] = function (id) {
+                    if (id === void 0) { id = '1001-1'; }
+                    var target = WsService._this.getCacheItem(id);
+                    console.log('goit');
+                    var received_msg = {
+                        "name": "time_endwork_tip",
+                        "device_no": target.device_no,
+                        "bed_no": target.bed_no,
+                        "data": {
+                            "mac": "EB:CI:SE:38:90:22",
+                            "isfhr": true
+                        }
+                    };
+                    var mesName = received_msg.name;
+                    _this_1.handleMessage(mesName, received_msg);
                 };
                 return [datacache];
             });
@@ -279,6 +293,17 @@ var WsService = (function (_super) {
         target.addProbeTipData = null;
         return this.send(command);
     };
+    WsService.prototype.delay_endwork = function (device_no, bed_no, delay_time) {
+        var target = this.getCacheItem({ device_no: device_no, bed_no: bed_no });
+        var command = JSON.stringify({
+            name: "delay_endwork",
+            device_no: device_no,
+            bed_no: bed_no,
+            data: { delay_time: delay_time }
+        });
+        target.addProbeTipData = null;
+        return this.send(command);
+    };
     WsService.prototype.sendFocus = function (id) {
         var target = this.getCacheItem(id);
         var message = {
@@ -349,9 +374,6 @@ var WsService = (function (_super) {
         }
         else if (value >= datacache.get(id).index) {
             datacache.get(id).index = value;
-            if (value > 20 * 240) {
-                announce(id);
-            }
         }
         if (value > datacache.get(id).last) {
         }
@@ -365,21 +387,6 @@ var WsService = (function (_super) {
             console.log(doc_id, offlineend, responseData, datacache.get(dbid).past);
             if (responseData) {
                 _this_1.initfhrdata(responseData, datacache.get(dbid), offlineend, queue, offstart);
-            }
-        });
-    };
-    WsService.prototype.clearbyrest = function (curid, is_working) {
-        var datacache = this.datacache;
-        var target = datacache.get(curid);
-        var docid = target.docid;
-        if (target.pregnancy)
-            return;
-        request_1.default.get("/bedinfos?documentno.equals=" + docid).then(function (responseData) {
-            if (responseData && target) {
-                if (responseData['pregnancy'] == null) {
-                    utils_2.cleardata(datacache, curid, target.fetal_num);
-                }
-                target.status = is_working;
             }
         });
     };
@@ -457,21 +464,4 @@ var WsService = (function (_super) {
     return WsService;
 }(utils_1.EventEmitter));
 exports.WsService = WsService;
-var announce = lodash_1.throttle(function (text) {
-    if (sp(text)) {
-        utils_1.event.emit('bed:announcer', "" + text);
-    }
-}, ANNOUNCE_INTERVAL);
-var timeoutKey = null;
-var spObj = {};
-function sp(key) {
-    if (!timeoutKey) {
-        timeoutKey = setTimeout(function () {
-            spObj = {};
-            timeoutKey = null;
-        }, SECOND * 60 * 20);
-    }
-    var old = spObj[key];
-    return old ? false : (spObj[key] = true);
-}
 //# sourceMappingURL=WsService.js.map

@@ -87,7 +87,7 @@ export default class DrawCTG {
         }
         this.suit.barTool.setBarLeft(Math.floor(this.suit.toolbarposition * width / oldwidth), false);
       } else {
-        this.drawdot(width * 2)
+        this.drawdot(width * 2,false,true)
       }
     } else {
       this.drawgrid(width * 2, false);
@@ -314,7 +314,7 @@ export default class DrawCTG {
       }
     }
     linecontext.stroke();
-    if (fmp) {
+    if (fmp && suit.ctgconfig.show_fetalmovement) {
       //draw fmp
       lastx = 0;
       lasty = 0;

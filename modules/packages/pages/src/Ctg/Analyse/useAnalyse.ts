@@ -215,17 +215,16 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, ctgData: o
     useEffect(() => {
 
 
-        if (!(isToShort || initData || endTime === 0 || analyseLoading || tryCount)) {
-            console.log('auto analyse', autoAnalyse);
-
-            autoAnalyse && fetchData()
+        if (!(isToShort || initData || endTime === 0 || analyseLoading || tryCount) && autoAnalyse) {
+            fetchData()
                 .then(r => {
                     r.score = getEmptyScore()
+                    v.current.resize()
                     setInitData(r)
                 })
                 .finally(() => setTryCount(1))
         }
-    }, [ctgData, analyseLoading, autoAnalyse, initData, tryCount])
+    }, [ctgData, analyseLoading, autoAnalyse, initData, tryCount, v])
 
 
 

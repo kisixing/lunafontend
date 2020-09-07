@@ -1,16 +1,15 @@
 import request from "@lianmed/request";
 import { event, EventEmitter } from "@lianmed/utils";
-import { throttle } from "lodash";
 import Queue from "../Ecg/Queue";
 import { handleMessage } from "./strategies";
 import { BedStatus, EWsEvents, EWsStatus, ICache, TWsReqeustType } from './types';
-import { cleardata, convertstarttime, getEmptyCacheItem } from "./utils";
+import { convertstarttime, getEmptyCacheItem } from "./utils";
 export * from './types';
 export * from './useCheckNetwork';
 export * from './utils';
 // import pingpong from "./pingpong";
 
-const ANNOUNCE_INTERVAL = 1000
+// const ANNOUNCE_INTERVAL = 1000
 const SECOND = 1000
 export const LIMIT_LENGTH = 4 * 3600 * 0.7
 
@@ -219,6 +218,17 @@ export class WsService extends EventEmitter {
         target.addProbeTipData = null
         return this.send(command);
     }
+    delay_endwork(device_no: number, bed_no: number, delay_time: number) {
+        const target = this.getCacheItem({ device_no, bed_no })
+        const command = JSON.stringify({
+            name: "delay_endwork",
+            device_no,
+            bed_no,
+            data: { delay_time }
+        })
+        target.addProbeTipData = null
+        return this.send(command);
+    }
     sendFocus(id: string) {
         const target = this.getCacheItem(id)
         const message = {
@@ -297,9 +307,9 @@ export class WsService extends EventEmitter {
         } else if (value >= datacache.get(id).index) {
 
             datacache.get(id).index = value;
-            if (value > 20 * 240) {
-                announce(id)
-            }
+            // if (value > 20 * 240) {
+            //     announce(id)
+            // }
         }
         if (value > datacache.get(id).last) {
             //datacache.get(id).last = value;
@@ -319,34 +329,7 @@ export class WsService extends EventEmitter {
         })
     }
 
-    clearbyrest(curid: string, is_working: number) {
-        const { datacache } = this
-        const target = datacache.get(curid)
-        const { docid } = target
-        if (target.pregnancy) return
-        request.get(`/bedinfos?documentno.equals=${docid}`).then(responseData => {
 
-            if (responseData && target) {
-                if (responseData['pregnancy'] == null) {
-
-                    cleardata(datacache, curid, target.fetal_num);
-                }
-
-                target.status = is_working;
-
-                // if (is_working == 0) {
-                //     target.status = Working;
-                // } else if (is_working === 3) {
-                //     target.status = OfflineStopped;
-
-                // } else {
-                //     target.status = Stopped;
-                // }
-                //this.refresh('end_work');
-            }
-        })
-
-    }
 
     initfhrdata(data, datacache, offindex, queue, offstart) {
         Object.keys(data).forEach(key => {
@@ -438,20 +421,21 @@ export class WsService extends EventEmitter {
                     this.handleMessage(mesName, received_msg)
                 }
             };
-            // window['aa']=() => {
-            //     console.log('goit')
-            //     var received_msg = {
-            //         "name": "add_probe_tip",
-            //         "device_no": 1001,
-            //         "bed_no": 1,
-            //         "data": {
-            //             "mac": "EB:CI:SE:38:90:22",  //插入探头的蓝牙地址
-            //             "isfhr": true  //插入探头是否为胎心探头
-            //         }
-            //     }
-            //     const mesName = received_msg.name
-            //     this.handleMessage(mesName, received_msg)
-            // }
+            window['aa'] = (id = '1001-1') => {
+                const target = WsService._this.getCacheItem(id)
+                console.log('goit');
+                var received_msg = {
+                    "name": "time_endwork_tip",
+                    "device_no": target.device_no,
+                    "bed_no": target.bed_no,
+                    "data": {
+                        "mac": "EB:CI:SE:38:90:22",  //插入探头的蓝牙地址
+                        "isfhr": true  //插入探头是否为胎心探头
+                    }
+                }
+                const mesName = received_msg.name
+                this.handleMessage(mesName, received_msg)
+            }
             return [datacache];
         });
     };
@@ -485,22 +469,22 @@ export class WsService extends EventEmitter {
         }, 60 * 1000 * 5)
     }
 }
-const announce = throttle((text) => {
-    if (sp(text)) {
-        event.emit('bed:announcer', `${text}`)
-    }
-}, ANNOUNCE_INTERVAL)
+// const announce = throttle((text) => {
+//     if (sp(text)) {
+//         event.emit('bed:announcer', `${text}`)
+//     }
+// }, ANNOUNCE_INTERVAL)
 
-let timeoutKey = null
-let spObj = {}
-function sp(key: string) {
-    if (!timeoutKey) {
-        timeoutKey = setTimeout(() => {
-            spObj = {}
-            timeoutKey = null
-        }, SECOND * 60 * 20);
-    }
-    const old = spObj[key]
-    return old ? false : (spObj[key] = true)
-}
+// let timeoutKey = null
+// let spObj = {}
+// function sp(key: string) {
+//     if (!timeoutKey) {
+//         timeoutKey = setTimeout(() => {
+//             spObj = {}
+//             timeoutKey = null
+//         }, SECOND * 60 * 20);
+//     }
+//     const old = spObj[key]
+//     return old ? false : (spObj[key] = true)
+// }
 

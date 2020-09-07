@@ -45,7 +45,8 @@ var styled_components_1 = __importDefault(require("styled-components"));
 var Analyse_1 = __importDefault(require("./Analyse"));
 var Score_1 = __importDefault(require("./Score"));
 var useAnalyse_1 = __importDefault(require("./useAnalyse"));
-var useCtgData_1 = __importDefault(require("./useCtgData"));
+var useCtgData_1 = require("./useCtgData");
+exports.useCtgData = useCtgData_1.useCtgData;
 var utils_1 = require("@lianmed/utils");
 var react_pdf_1 = require("react-pdf");
 require("react-pdf/dist/Page/AnnotationLayer.css");
@@ -56,13 +57,14 @@ exports.Ctg_Analyse = function (_a) {
     note = note ? note : docid;
     if (!note)
         return null;
-    var _k = useCtgData_1.default(note, true), ctgData = _k.ctgData, loading = _k.loading, fetal = _k.fetal, setFetal = _k.setFetal, fetchData = _k.fetchData;
+    var _k = useCtgData_1.useCtgData(note, true), ctgData = _k.ctgData, loading = _k.loading, fetal = _k.fetal, setFetal = _k.setFetal, fetchData = _k.fetchData;
     var _l = react_1.useState(true), disabled = _l[0], setDisabled = _l[1];
     var _m = react_1.useState(false), visible = _m[0], setVisible = _m[1];
     var _o = react_1.useState(''), pdfBase64 = _o[0], setPdfBase64 = _o[1];
     var _p = react_1.useState(false), padBase64Loading = _p[0], setPadBase64Loading = _p[1];
     var isRemote = type === 'remote';
     var ref = react_1.useRef(null);
+    var wrap = react_1.useRef(null);
     var _q = useAnalyse_1.default(ref, note, fetal, ctgData), MARKS = _q.MARKS, reAnalyse = _q.reAnalyse, startTime = _q.startTime, endTime = _q.endTime, mark = _q.mark, setMark = _q.setMark, interval = _q.interval, setInterval = _q.setInterval, mapFormToMark = _q.mapFormToMark, analysis_ref = _q.analysis_ref, old_ref = _q.old_ref, analyseLoading = _q.analyseLoading, isToShort = _q.isToShort, autoFm = _q.autoFm, setAutoFm = _q.setAutoFm, autoAnalyse = _q.autoAnalyse, setAutoAnalyse = _q.setAutoAnalyse, showBase = _q.showBase, setShowBase = _q.setShowBase, initData = _q.initData;
     var others = {
         MARKS: MARKS,
@@ -99,7 +101,7 @@ exports.Ctg_Analyse = function (_a) {
             return oldData[k] !== v;
         }) ? true : false;
         var identify = type === 'default' ? { note: note } : { id: id, note: note };
-        var requestData = __assign(__assign({}, identify), { diagnosis: JSON.stringify({ wave: wave, diagnosistxt: diagnosistxt, NST: NST, CST_OCT: CST_OCT }), result: JSON.stringify(__assign(__assign(__assign({}, analyseData), curData), { isedit: isedit, type: mark, startTime: ref.current.drawAnalyse.analysisData.analysis.start, endTime: ref.current.drawAnalyse.analysisData.analysis.end })), fetalnum: fetal });
+        var requestData = __assign(__assign({}, identify), { diagnosis: JSON.stringify({ wave: wave, diagnosistxt: diagnosistxt, NST: NST, CST_OCT: CST_OCT }), result: JSON.stringify(__assign(__assign(__assign({}, analyseData), curData), { isedit: isedit, type: mark, startTime: ref.current.drawAnalyse.analysisData.analysis.start, endTime: ref.current.drawAnalyse.analysisData.analysis.end })), fetalnum: fetal, show_fetalmovement: window['obvue'] ? !!window['obvue'].setting.show_fetalmovement : true });
         return requestData;
     };
     var getPrintUrl = function (path) {
@@ -152,7 +154,7 @@ exports.Ctg_Analyse = function (_a) {
         });
     };
     var btnDisabled = !note || !disabled;
-    return (react_1.default.createElement(Wrapper, null,
+    return (react_1.default.createElement(Wrapper, { ref: wrap },
         react_1.default.createElement("div", { style: { height: "calc(100% - 460px - 12px)", minHeight: 200, marginBottom: 12, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px', overflow: 'hidden' } },
             react_1.default.createElement(lmg_1.Ctg, { suitType: 1, ref: ref, loading: loading, data: ctgData })),
         react_1.default.createElement(antd_1.Row, { style: { height: 460 } },
@@ -179,7 +181,7 @@ exports.Ctg_Analyse = function (_a) {
                             setPadBase64Loading(true);
                         }, style: { marginBottom: 10 }, type: "primary", disabled: btnDisabled || !initData, loading: padBase64Loading }, "\u6253\u5370\u9884\u89C8"),
                     react_1.default.createElement(antd_1.Button, { size: "small", type: "primary", onClick: submit, disabled: btnDisabled || !initData }, "\u4FDD\u5B58")))),
-        react_1.default.createElement(antd_1.Modal, { visible: visible, closable: false, okText: "\u6253\u5370", cancelText: "\u53D6\u6D88", onCancel: function () { return setVisible(false); }, onOk: function () {
+        react_1.default.createElement(antd_1.Modal, { getContainer: false, centered: true, visible: visible, closable: false, okText: "\u6253\u5370", cancelText: "\u53D6\u6D88", onCancel: function () { return setVisible(false); }, onOk: function () {
                 onDownload(getPrintUrl('/ctg-exams-analysis-pdf'));
                 setVisible(false);
             } },

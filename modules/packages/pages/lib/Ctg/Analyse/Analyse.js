@@ -45,16 +45,18 @@ var Setting = react_1.forwardRef(function (props, ref) {
                     var _a = Object.entries(a)[0], k = _a[0], v = _a[1];
                     var index = keys.indexOf(k);
                     var old = b.diagnosistxt || '';
+                    var nstReg = /【NST：.*】/;
+                    var cstoctReg = /【CST\/OCT：.*】/;
                     if (index === 0) {
-                        var r = /【NST：.*】/;
                         var text_1 = "\u3010NST\uFF1A" + v + "\u3011";
-                        var diagnosistxt = r.test(old) ? old.replace(r, function () { return text_1; }) : old.concat(text_1);
+                        old = old.replace(cstoctReg, '');
+                        var diagnosistxt = nstReg.test(old) ? old.replace(nstReg, function () { return text_1; }) : old.concat(text_1);
                         form.setFieldsValue({ CST_OCT: undefined, diagnosistxt: diagnosistxt });
                     }
                     else if (index === 1) {
-                        var r = /【CST\/OCT：.*】/;
                         var text_2 = "\u3010CST/OCT\uFF1A" + v + "\u3011";
-                        var diagnosistxt = r.test(old) ? old.replace(r, function () { return text_2; }) : old.concat(text_2);
+                        old = old.replace(nstReg, '');
+                        var diagnosistxt = cstoctReg.test(old) ? old.replace(cstoctReg, function () { return text_2; }) : old.concat(text_2);
                         form.setFieldsValue({ NST: undefined, diagnosistxt: diagnosistxt });
                     }
                 } },

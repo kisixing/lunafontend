@@ -26,7 +26,7 @@ function copyFhr(origin, single) {
     }
     return data;
 }
-var CTGChart = function (docid, single) {
+exports.useCtgData = function (docid, single) {
     if (single === void 0) { single = false; }
     var _a = react_1.useState(0), fetal = _a[0], setFetal = _a[1];
     var _b = react_1.useState(false), loading = _b[0], setLoading = _b[1];
@@ -35,7 +35,7 @@ var CTGChart = function (docid, single) {
         if (docid) {
             setLoading(true);
             return request_1.default.get("/ctg-exams-data/" + docid).then(function (res) {
-                res && setCtgData(__assign(__assign({ docid: docid }, res), (copyFhr(res, single))));
+                res && setCtgData(__assign(__assign({ docid: docid, keepSelection: true }, res), (copyFhr(res, single))));
                 single && setFetal(1);
             }).finally(function () { return setLoading(false); });
         }
@@ -78,5 +78,5 @@ var CTGChart = function (docid, single) {
     }, [fetal]);
     return { ctgData: ctgData, loading: loading, setFhr: setFhr, fetal: fetal, setFetal: setFetal, fetchData: fetchData };
 };
-exports.default = CTGChart;
+exports.default = exports.useCtgData;
 //# sourceMappingURL=useCtgData.js.map

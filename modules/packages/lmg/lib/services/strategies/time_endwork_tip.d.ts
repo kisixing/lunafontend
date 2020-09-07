@@ -1,6 +1,6 @@
 import { WsService } from "../WsService";
 interface IData {
-    "name": "replace_probe_tip";
+    "name": "time_endwork_tip";
     "device_no": 1;
     "bed_no": 1;
     "data": {
@@ -8,5 +8,5 @@ interface IData {
         "isfhr": boolean;
     };
 }
-export declare function replace_probe_tip(this: WsService, received_msg: IData): void;
+export declare function time_endwork_tip(this: WsService, received_msg: IData): void;
 export {};

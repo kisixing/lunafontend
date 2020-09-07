@@ -159,7 +159,6 @@ export class DrawSelect extends Draw {
 
     }
 
-
     updateSelectCur() {
         const { suit } = this
         // if (!this.selectflag) {
@@ -176,6 +175,7 @@ export class DrawSelect extends Draw {
 
     createBar() {
         if (this.startingBar && this.endingBar && this.selectingBar) {
+            if (this.suit.data.keepSelection) return
             this.selectingBar.setLeft(0)
             this.startingBar.setLeft(0);
 

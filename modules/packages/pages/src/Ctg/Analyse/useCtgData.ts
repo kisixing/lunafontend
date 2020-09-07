@@ -15,7 +15,7 @@ function copyFhr(origin: obvue.ctg_exams_data, single: boolean): obvue.ctg_exams
     return data
 }
 
-const CTGChart = (docid: string, single = false) => {
+export const useCtgData = (docid: string, single = false) => {
     const [fetal, setFetal] = useState<0 | 1 | 2 | 3>(0)
 
     const [loading, setLoading] = useState(false)
@@ -25,7 +25,7 @@ const CTGChart = (docid: string, single = false) => {
         if (docid) {
             setLoading(true)
             return request.get(`/ctg-exams-data/${docid}`).then(res => {
-                res && setCtgData({ docid, ...res, ...(copyFhr(res, single)) })
+                res && setCtgData({ docid,keepSelection:true, ...res, ...(copyFhr(res, single)) })
                 single && setFetal(1)
             }).finally(() => setLoading(false))
 
@@ -70,4 +70,4 @@ const CTGChart = (docid: string, single = false) => {
     return { ctgData, loading, setFhr, fetal, setFetal, fetchData };
 }
 
-export default CTGChart
+export default useCtgData

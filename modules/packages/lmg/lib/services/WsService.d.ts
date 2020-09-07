@@ -85,6 +85,7 @@ export declare class WsService extends EventEmitter {
         res: number;
     }>;
     add_probe(device_no: number, bed_no: number): void;
+    delay_endwork(device_no: number, bed_no: number, delay_time: number): void;
     sendFocus(id: string): void;
     _emit(name: string, ...value: any[]): void;
     subscribeList: string[];
@@ -96,7 +97,6 @@ export declare class WsService extends EventEmitter {
     convertdocid(unitId: string, doc_id: string): void;
     setcur(id: string, value: number): void;
     getoffline(queue: Queue, doc_id: string, offlineend: number, offstart: boolean): void;
-    clearbyrest(curid: string, is_working: number): void;
     initfhrdata(data: any, datacache: any, offindex: any, queue: any, offstart: any): void;
     starttask(queue: any, offstart: any): void;
     connect: () => Promise<ICache>;

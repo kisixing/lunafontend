@@ -12,8 +12,8 @@ interface ICtgExamsPdf {
     outputType?: string
     start: number
     startdate: string
-    fetal:any
-    
+    fetal: any
+    show_fetalmovement: boolean
 }
 
 export const fetchCtgExamsPdf = async (data: ICtgExamsPdf) => {

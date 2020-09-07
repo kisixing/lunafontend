@@ -263,16 +263,16 @@ exports.default = (function (v, docid, fetal, ctgData) {
         analysis_ref.current && analysis_ref.current.setFieldsValue(__assign(__assign({ stv: stv }, ucdata), others));
     };
     react_1.useEffect(function () {
-        if (!(isToShort || initData || endTime === 0 || analyseLoading || tryCount)) {
-            console.log('auto analyse', autoAnalyse);
-            autoAnalyse && fetchData()
+        if (!(isToShort || initData || endTime === 0 || analyseLoading || tryCount) && autoAnalyse) {
+            fetchData()
                 .then(function (r) {
                 r.score = getEmptyScore();
+                v.current.resize();
                 setInitData(r);
             })
                 .finally(function () { return setTryCount(1); });
         }
-    }, [ctgData, analyseLoading, autoAnalyse, initData, tryCount]);
+    }, [ctgData, analyseLoading, autoAnalyse, initData, tryCount, v]);
     react_1.useEffect(function () {
         var id = (hasInitAnalysed.current) ? 0 : window.setInterval(function () {
             if (initData && v.current && !hasInitAnalysed.current) {

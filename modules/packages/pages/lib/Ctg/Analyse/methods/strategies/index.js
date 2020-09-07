@@ -16,6 +16,6 @@ var strategies = {
 };
 exports.default = (function (key, oldData, initData) {
     var s = strategies[key];
-    return s && s(oldData, initData.analysis);
+    return s && initData && s(oldData, initData.analysis);
 });
 //# sourceMappingURL=index.js.map

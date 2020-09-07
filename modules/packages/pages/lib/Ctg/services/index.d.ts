@@ -11,6 +11,7 @@ interface ICtgExamsPdf {
     start: number;
     startdate: string;
     fetal: any;
+    show_fetalmovement: boolean;
 }
 export declare const fetchCtgExamsPdf: (data: ICtgExamsPdf) => Promise<any>;
 export {};

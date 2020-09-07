@@ -107,9 +107,11 @@ export interface IBed {
 
 export class _ICacheItem {
     selectBarHidden?: boolean
+    keepSelection?: boolean
     // batterylowArr?: boolean[] = []
     replaceProbeTipData?: object
     addProbeTipData?: object
+    timeEndworkTipData?: object
     bed_no?: number;
     device_no?: number;
     realTime?: boolean

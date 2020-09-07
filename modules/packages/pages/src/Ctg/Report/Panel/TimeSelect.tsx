@@ -1,4 +1,5 @@
-import { Button, Modal, Select } from 'antd';
+import { Button, Modal } from 'antd';
+import message from "antd/lib/message";
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { fetchCtgExamsPdf } from '../../services';
@@ -7,7 +8,6 @@ import useArchive from "./hooks/useArchive";
 import usePrintConfig from "./hooks/usePrintConfig";
 import useSave from "./hooks/useSave";
 import useSign from "./hooks/useSign";
-import message from "antd/lib/message";
 const Wrapper = styled.div`
     .bottomBtns button {
         margin-right: 10px 
@@ -41,7 +41,8 @@ const Preview = (props: IProps) => {
             start: startingTime,
             end: endingTime,
             outputType,
-            fetal:fetal,
+            fetal: fetal,
+            show_fetalmovement: window['obvue'] ? !!window['obvue'].setting.show_fetalmovement : true,
             ...args
         }).then(r => {
             setPdfBase64Loading(false)
@@ -67,7 +68,7 @@ const Preview = (props: IProps) => {
         outputType,
         setOutputType,
         // toggleCustomiz
-    } = usePrintConfig(value, print_interval,fetal)
+    } = usePrintConfig(value, print_interval, fetal)
 
     const total = dispalyTime(endingTime - startingTime)
 
@@ -76,7 +77,7 @@ const Preview = (props: IProps) => {
     const { fetchQrCode, qrCodeBase64, modalVisible, qrCodeBase64Loading, setModalVisible, signed } = useSign(bizSn, setPdfBase64, setBizSn, empId)
     const { caEnable, save, saveLoading, saved } = useSave(bizSn, setBizSn)
 
-    console.log('fetalcount',props.fetalcount)
+    console.log('fetalcount', props.fetalcount)
 
     useEffect(() => {
         onTotalChange(total)
@@ -155,18 +156,18 @@ const Preview = (props: IProps) => {
                                 </div> */}
                                 <div style={{ textAlign: 'left' }}>
                                     <label>胎心率范围：</label>
-                                    <Select value={outputType} onChange={setOutputType} disabled={locking}>
-                                        <Select.Option value="180">90~180</Select.Option>
-                                        <Select.Option value="210">50~210</Select.Option>
-                                    </Select>
+                                    <select value={outputType} onChange={e => setOutputType(e.target.value)} disabled={locking}>
+                                        <option value="180">90~180</option>
+                                        <option value="210">50~210</option>
+                                    </select>
                                     <label>胎心率：</label>
-                                    <Select value={fetal} onChange={v => setFetal(v)} disabled={locking}>
+                                    <select value={fetal} onChange={v => setFetal(Number(v.target.value))} disabled={locking}>
                                         {
                                             Array((props.fetalcount || 0) + 1).fill(0).map((_, i) => {
-                                               return <Select.Option key={i} value={i}>{i == 0 ? '混合' : `FHR${i}`}</Select.Option>
+                                                return <option key={i} value={i}>{i == 0 ? '混合' : `FHR${i}`}</option>
                                             })
                                         }
-                                    </Select>
+                                    </select>
                                 </div>
                                 <div style={{ display: 'flex' }} className="bottomBtns">
                                     <Button disabled={locking || !editable} block type="primary" loading={pdfBase64Loading} onClick={handlePreview} >

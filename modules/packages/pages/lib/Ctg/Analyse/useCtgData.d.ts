@@ -1,5 +1,5 @@
 /// <reference types="react" />
-declare const CTGChart: (docid: string, single?: boolean) => {
+export declare const useCtgData: (docid: string, single?: boolean) => {
     ctgData: {
         fhr1?: string;
         fhr2?: string;
@@ -12,6 +12,7 @@ declare const CTGChart: (docid: string, single?: boolean) => {
         _fhr1?: string;
         _fhr2?: string;
         _fhr3?: string;
+        selectBarHidden?: boolean;
     };
     loading: boolean;
     setFhr: (index: 0 | 2 | 1 | 3) => void;
@@ -19,4 +20,4 @@ declare const CTGChart: (docid: string, single?: boolean) => {
     setFetal: import("react").Dispatch<import("react").SetStateAction<0 | 2 | 1 | 3>>;
     fetchData: () => Promise<void>;
 };
-export default CTGChart;
+export default useCtgData;

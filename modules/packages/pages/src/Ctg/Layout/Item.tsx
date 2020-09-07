@@ -39,15 +39,15 @@ const WorkbenchItem = (props: IProps) => {
   let { startTime, pregnancy } = props
 
   const [isFullscreen, setIsFullscreen] = useState(false)
-  let w: any = window
-  const k = `spinfo_${unitId}`
-  const c = w[k] || (w[k] = {})
-  if ([BedStatus.Stopped, BedStatus.OfflineStopped].includes(status)) {
-    startTime = c.startTime
-    pregnancy = c.pregnancy || {}
-  } else {
-    Object.assign(c, { pregnancy: { ...pregnancy, pvId: null }, startTime })
-  }
+  // let w: any = window
+  // const k = `spinfo_${unitId}`
+  // const c = w[k] || (w[k] = {})
+  // if ([BedStatus.Stopped, BedStatus.OfflineStopped].includes(status)) {
+  //   startTime = c.startTime
+  //   pregnancy = c.pregnancy || {}
+  // } else {
+  //   Object.assign(c, { pregnancy: { ...pregnancy, pvId: null }, startTime })
+  // }
 
   // -------------------
   const ref = useRef(null)

@@ -109,8 +109,8 @@ const Item = (props: IProps) => {
                     }
                 </Bar>
                 {
-                    maskVisible && data.isF0Pro && (
-                        <div style={{ background: 'rgba(0,0,0,.3)', position: 'absolute', left: 0, right: 0, bottom: 0, top: 0, margin: 'auto' }}>
+                    maskVisible && (
+                        <div style={{ background: 'rgba(0,0,0,.4)', position: 'absolute', left: 0, right: 0, bottom: 0, top: 0, margin: 'auto' }}>
                             {
                                 RenderMaskIn && <RenderMaskIn setMaskVisible={setMaskVisible} mutableSuit={ref} data={data} />
                             }

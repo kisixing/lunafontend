@@ -38,20 +38,22 @@ const Setting = forwardRef<FormInstance, { isRemote: boolean }>((props, ref) => 
           const keys = ['NST', 'CST_OCT']
           const [k, v] = Object.entries(a)[0]
           const index = keys.indexOf(k)
-          const old: string = b.diagnosistxt || ''
+          let old: string = b.diagnosistxt || ''
+          const nstReg = /【NST：.*】/
+          const cstoctReg = /【CST\/OCT：.*】/
 
           if (index === 0) {
-            const r = /【NST：.*】/
             const text = `【NST：${v}】`
-            const diagnosistxt = r.test(old) ? old.replace(r, () => text) : old.concat(text)
+            old = old.replace(cstoctReg, '')
+            const diagnosistxt = nstReg.test(old) ? old.replace(nstReg, () => text) : old.concat(text)
 
             form.setFieldsValue({ CST_OCT: undefined, diagnosistxt })
 
           } else if (index === 1) {
-            const r = /【CST\/OCT：.*】/
             const text = `【CST/OCT：${v}】`
 
-            const diagnosistxt = r.test(old) ? old.replace(r, () => text) : old.concat(text)
+            old = old.replace(nstReg, '')
+            const diagnosistxt = cstoctReg.test(old) ? old.replace(cstoctReg, () => text) : old.concat(text)
 
             form.setFieldsValue({ NST: undefined, diagnosistxt })
 

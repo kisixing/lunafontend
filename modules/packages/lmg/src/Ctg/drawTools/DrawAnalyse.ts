@@ -113,6 +113,8 @@ export class DrawAnalyse extends Draw {
 
         }
     }
+
+    showBase: boolean
     analyse(type: AnalyseType, showBase = true, start?: number, end?: number, data = this.analysisData) {
         if (!data) return
         const { suit } = this
@@ -252,31 +254,42 @@ export class DrawAnalyse extends Draw {
     fhrDuration = (start: number, end: number) => {
         let accnum = 0;
         let sum = 0;
-        const { analysisData } = this
-        if (!analysisData) return accnum;
+        const { analysisData, suit: { data } } = this
+        if (!analysisData || !data) return accnum;
         const { analysis } = analysisData
-        analysis.acc.map((item) => {
-            if (item.index > end) {
-                if (accnum == 0)
-                    return accnum;
-                else {
-                    return Math.ceil(sum / accnum / 4);
-                }
-            } else if (item.index >= start) {
-                if (item.marked) {
-                    if (item.duration != 0) {
-                        sum += item.duration;
-                        accnum++;
-                    }
-                    console.log(item.duration);
+
+        analysis.acc.forEach(_ => {
+            if (_.index >= start) {
+                if (_.reliability > 50) {
+                    sum += (_.index - _.start) > 0 ? _.index - _.start : 0
+                    accnum++
                 }
             }
         })
-        if (accnum == 0)
-            return accnum;
-        else {
-            return Math.ceil(sum / accnum / 4);
-        }
+        return accnum ? Math.ceil(sum / accnum / 4) : 0
+
+        // analysis.acc.map((item) => {
+        //     if (item.index > end) {
+        //         if (accnum == 0)
+        //             return accnum;
+        //         else {
+        //             return Math.ceil(sum / accnum / 4);
+        //         }
+        //     } else if (item.index >= start) {
+        //         if (item.marked) {
+        //             if (item.duration != 0) {
+        //                 sum += item.duration;
+        //                 accnum++;
+        //             }
+        //             console.log(item.duration);
+        //         }
+        //     }
+        // })
+        // if (accnum == 0)
+        //     return accnum;
+        // else {
+        //     return Math.ceil(sum / accnum / 4);
+        // }
     }
     //fm-fhr-ampl
     fhrAmpl = (start: number, end: number) => {

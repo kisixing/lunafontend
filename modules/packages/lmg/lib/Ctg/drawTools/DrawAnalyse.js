@@ -147,33 +147,19 @@ var DrawAnalyse = (function (_super) {
         _this.fhrDuration = function (start, end) {
             var accnum = 0;
             var sum = 0;
-            var analysisData = _this.analysisData;
-            if (!analysisData)
+            var _a = _this, analysisData = _a.analysisData, data = _a.suit.data;
+            if (!analysisData || !data)
                 return accnum;
             var analysis = analysisData.analysis;
-            analysis.acc.map(function (item) {
-                if (item.index > end) {
-                    if (accnum == 0)
-                        return accnum;
-                    else {
-                        return Math.ceil(sum / accnum / 4);
-                    }
-                }
-                else if (item.index >= start) {
-                    if (item.marked) {
-                        if (item.duration != 0) {
-                            sum += item.duration;
-                            accnum++;
-                        }
-                        console.log(item.duration);
+            analysis.acc.forEach(function (_) {
+                if (_.index >= start) {
+                    if (_.reliability > 50) {
+                        sum += (_.index - _.start) > 0 ? _.index - _.start : 0;
+                        accnum++;
                     }
                 }
             });
-            if (accnum == 0)
-                return accnum;
-            else {
-                return Math.ceil(sum / accnum / 4);
-            }
+            return accnum ? Math.ceil(sum / accnum / 4) : 0;
         };
         _this.fhrAmpl = function (start, end) {
             var accnum = 0;
