@@ -58,6 +58,9 @@ var PreviewContent = function (props) {
             setWidth(w);
         }
     }, [w, h]);
+    react_1.useEffect(function () {
+        setPageNumber(1);
+    }, [pdfBase64]);
     var content = pdfBase64 ? (react_1.default.createElement("div", { style: __assign({ width: width }, (isFullpage ? {
             position: 'absolute',
             top: 0,
