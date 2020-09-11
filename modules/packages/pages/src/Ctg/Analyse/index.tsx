@@ -69,7 +69,6 @@ export const Ctg_Analyse: FC<{
       analysis_ref,
       old_ref,
       analyseLoading,
-      isToShort,
       autoFm,
       setAutoFm,
       autoAnalyse,
@@ -125,8 +124,10 @@ export const Ctg_Analyse: FC<{
           ...curData,
           isedit,
           type: mark,
-          startTime: ref.current.drawAnalyse.analysisData.analysis.start,
-          endTime: ref.current.drawAnalyse.analysisData.analysis.end
+          startTime: startTime,
+          endTime: endTime
+          // startTime: ref.current.drawAnalyse.analysisData.analysis.start,
+          // endTime: ref.current.drawAnalyse.analysisData.analysis.end
         }),
         fetalnum: fetal,
         show_fetalmovement: window['obvue'] ? !!window['obvue'].setting.show_fetalmovement : true
@@ -175,6 +176,7 @@ export const Ctg_Analyse: FC<{
                         d.CST_OCT && <div>CST/OCT：<span>{d.CST_OCT}</span></div>
                       }
                       <div>诊断：<span>{d.diagnosistxt}</span></div>
+                      <div>时间：<span>{d.timestamp}</span></div>
                     </>
                   }))
                 }
@@ -205,7 +207,7 @@ export const Ctg_Analyse: FC<{
           <Col span={17} >
             <Score disabled={disabled} endTime={endTime} initData={initData}  {...others} fetal={fetal} setFetal={setFetal} ctgData={ctgData} docid={note} v={ref.current} className="bordered" />
             <div style={{ position: 'absolute', right: 12, bottom: 0 }}>
-              {isToShort && <Alert message="选段时间过短" style={{ background: 'red', color: '#fff', display: 'inline-block', border: 0, padding: '1px 4px', marginRight: 10 }} />}
+              {false && <Alert message="选段时间过短" style={{ background: 'red', color: '#fff', display: 'inline-block', border: 0, padding: '1px 4px', marginRight: 10 }} />}
 
               <Button size="small" style={{ marginBottom: 10 }} onClick={history} disabled={btnDisabled}>历史分析</Button>
               <Button size="small" style={{ marginBottom: 10 }} disabled={!note} onClick={() => setDisabled(!disabled)}>{disabled ? '修改评分' : '确认'}</Button>
@@ -214,8 +216,8 @@ export const Ctg_Analyse: FC<{
             <Checkbox checked={autoAnalyse} onChange={e => setAutoAnalyse(e.target.checked)} style={{ position: 'absolute', left: 100, bottom: 8 }}>弹窗时自动分析</Checkbox>
             <Checkbox checked={showBase} onChange={e => setShowBase(e.target.checked)} style={{ position: 'absolute', left: 228, bottom: 8 }}>显示基线</Checkbox>
             <div style={{ position: 'absolute', right: 20, top: 16 }}>
-              <Button size="small" type="primary" onClick={() => fetchData().then(() => reAnalyse)} loading={loading} >刷新数据</Button>
-              <Button size="small" type="primary" onClick={reAnalyse as any} loading={analyseLoading} disabled={!note || isToShort}>重新分析</Button>
+              <Button size="small" type="primary" onClick={() => fetchData()} loading={loading} >刷新数据</Button>
+              <Button size="small" type="primary" onClick={reAnalyse as any} loading={analyseLoading} disabled={!note}>重新分析</Button>
             </div>
 
           </Col>

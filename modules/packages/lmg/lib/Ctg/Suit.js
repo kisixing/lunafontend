@@ -246,7 +246,7 @@ var Suit = (function (_super) {
             _this.drawSelect.showselect();
             _this.drawobj.drawdot(_this.rightViewPosition, false);
         });
-        this.emit('afterInit');
+        utils_1.event.emit('suit:afterInit', this);
         this.initFlag = true;
     };
     Suit.prototype.createLine = function () {
@@ -361,13 +361,9 @@ var Suit = (function (_super) {
         this.barTool = null;
     };
     Suit.prototype._resize = function () {
-        var _this = this;
         var _a = this.wrap.getBoundingClientRect(), width = _a.width, height = _a.height;
         if (this.type > 0 && width < 200) {
-            setTimeout(function () {
-                _this._resize();
-                utils_1.event.emit('fuckedResize');
-            }, 1000);
+            Object.values(this).forEach(function (_) { return _ && _.resize && _.resize(width, height); });
         }
         else {
             Object.values(this).forEach(function (_) { return _ && _.resize && _.resize(width, height); });

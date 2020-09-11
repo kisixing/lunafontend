@@ -281,7 +281,7 @@ export class Suit extends Draw {
 
     });
 
-    this.emit('afterInit')
+    event.emit('suit:afterInit',this)
     this.initFlag = true;
 
   }
@@ -426,10 +426,11 @@ export class Suit extends Draw {
   _resize() {
     const { width, height } = this.wrap.getBoundingClientRect()
     if (this.type > 0 && width < 200) {
-      setTimeout(() => {
-        this._resize()
-        event.emit('fuckedResize')
-      }, 1000);
+      // setTimeout(() => {
+      //   this._resize()
+      //   event.emit('fuckedResize')
+      // }, 1000);
+      Object.values(this).forEach(_ => _ && _.resize && _.resize(width, height))
     } else {
       Object.values(this).forEach(_ => _ && _.resize && _.resize(width, height))
     }

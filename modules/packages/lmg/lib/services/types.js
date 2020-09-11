@@ -46,6 +46,32 @@ var ICacheItem = (function (_super) {
         Object.assign(_this, args);
         return _this;
     }
+    Object.defineProperty(ICacheItem.prototype, "pregnancy", {
+        get: function () {
+            return this._pregnancy;
+        },
+        set: function (value) {
+            if (typeof value !== 'string')
+                return;
+            this._pregnancy = value ? JSON.parse(value) : null;
+            ;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ICacheItem.prototype, "fetalposition", {
+        get: function () {
+            return this._fetalposition;
+        },
+        set: function (value) {
+            if (typeof value !== 'string')
+                return;
+            this._fetalposition = value ? JSON.parse(value) : null;
+            ;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(ICacheItem.prototype, "isF0Pro", {
         get: function () {
             return this.deviceType === 'LM_F0_PRO';
@@ -152,10 +178,14 @@ var ICacheItem = (function (_super) {
         },
         set: function (value) {
             var _this = this;
-            this._fetal_num = value;
-            this.fhr = Array(value || 1).fill(0).map(function (_, i) {
-                return (_this.fhr && _this.fhr[i]) || [];
-            });
+            setTimeout(function () {
+                if (_this.isF0Pro ? _this.isUncreated : _this.isStopped)
+                    return;
+                _this._fetal_num = value;
+                _this.fhr = Array(value || 1).fill(0).map(function (_, i) {
+                    return (_this.fhr && _this.fhr[i]) || [];
+                });
+            }, 0);
         },
         enumerable: true,
         configurable: true

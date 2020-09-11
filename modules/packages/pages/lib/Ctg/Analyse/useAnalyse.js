@@ -65,20 +65,13 @@ var react_1 = require("react");
 var request_1 = __importDefault(require("@lianmed/request"));
 var tableData_1 = require("./methods/tableData");
 var store_1 = __importDefault(require("store"));
+var utils_1 = require("@lianmed/utils");
 var MARKS = Object.keys(tableData_1.tableData);
 var AUTOFM_KEY = 'autofm';
 var AUTOANALYSE_KEY = 'auto_analuse';
 var SHOW_BASE = 'show_base';
 var MARK_KEY = 'analyse_mark';
 var INTERVAL_KEY = 'analyse_interval';
-var limitMap = {
-    Krebs: 30,
-    Nst: 20,
-    Fischer: 20,
-    Sogc: 20,
-    Cst: 20,
-    Cstoct: 20
-};
 var getEmptyScore = function () {
     return {
         sogcdata: {
@@ -193,8 +186,6 @@ exports.default = (function (v, docid, fetal, ctgData) {
     var old_ref = react_1.useRef({});
     var hasInitAnalysed = react_1.useRef(false);
     var endTime = (ctgData && ctgData.fhr1) ? (startTime + interval * 240 > ctgData.fhr1.length / 2 ? ctgData.fhr1.length / 2 : startTime + interval * 240) : 0;
-    var diff = Math.round((endTime - startTime) / 240);
-    var isToShort = false && (diff < limitMap[mark] && endTime !== 0);
     var mapFormToMark = {
         Fischer_ref: Fischer_ref,
         Krebs_ref: Krebs_ref,
@@ -204,9 +195,37 @@ exports.default = (function (v, docid, fetal, ctgData) {
         Sogc_ref: Sogc_ref,
         analysis_ref: analysis_ref
     };
+    react_1.useEffect(function () {
+        function initCb(d) {
+            d.resize();
+            if (!autoAnalyse)
+                return;
+            var index = d.data.index;
+            var e = (index) ? (startTime + interval * 240 > index ? index : startTime + interval * 240) : 0;
+            if (!initData) {
+                fetchData(e)
+                    .then(function (r) {
+                    r.score = getEmptyScore();
+                    v.current.resize();
+                    setInitData(r);
+                    v.current.drawAnalyse.analyse(mark, showBase, startTime, e, r);
+                })
+                    .finally(function () { return setTryCount(1); });
+            }
+            v.current.drawAnalyse.analyse(mark, showBase, startTime, endTime, initData);
+            setFm(autoFm);
+        }
+        utils_1.event
+            .on('suit:afterInit', initCb)
+            .on('suit:afterAnalyse', setFormData);
+        return function () {
+            utils_1.event
+                .off('suit:afterInit', initCb)
+                .off('suit:afterAnalyse', setFormData);
+        };
+    }, [showBase, autoFm, autoAnalyse, setFormData, initData, fetchData, ctgData]);
     function setFm(flag) {
         if (flag === void 0) { flag = true; }
-        console.log('fm', flag);
         if (v.current && initData) {
             if (flag) {
                 var fmIndex = initData.analysis.fm || [];
@@ -219,10 +238,11 @@ exports.default = (function (v, docid, fetal, ctgData) {
             }
         }
     }
-    var fetchData = function () {
+    function fetchData(e) {
+        if (e === void 0) { e = endTime; }
         setAnalyseLoading(true);
         return request_1.default.post("/ctg-exams-analyse", {
-            data: { docid: docid, mark: mark, start: startTime, end: endTime, fetal: fetal, autoFm: autoFm },
+            data: { docid: docid, mark: mark, start: startTime, end: e, fetal: fetal, autoFm: autoFm },
         })
             .then(function (r) {
             return r;
@@ -230,7 +250,7 @@ exports.default = (function (v, docid, fetal, ctgData) {
             .finally(function () {
             setAnalyseLoading(false);
         });
-    };
+    }
     var reAnalyse = function () { return __awaiter(void 0, void 0, void 0, function () {
         var r, analysisData;
         return __generator(this, function (_a) {
@@ -245,12 +265,12 @@ exports.default = (function (v, docid, fetal, ctgData) {
                     }
                     r.score = getEmptyScore();
                     setInitData(r);
-                    setFormData(v.current.drawAnalyse.analyse(mark, showBase, startTime, endTime, r));
+                    v.current.drawAnalyse.analyse(mark, showBase, startTime, endTime, r);
                     return [2];
             }
         });
     }); };
-    var setFormData = function (r) {
+    function setFormData(r) {
         if (!r)
             return;
         var analysis = r.analysis, score = r.score;
@@ -261,36 +281,10 @@ exports.default = (function (v, docid, fetal, ctgData) {
         old_ref.current[mark] = f;
         var stv = analysis.stv, ucdata = analysis.ucdata, acc = analysis.acc, dec = analysis.dec, fhrbaselineMinute = analysis.fhrbaselineMinute, others = __rest(analysis, ["stv", "ucdata", "acc", "dec", "fhrbaselineMinute"]);
         analysis_ref.current && analysis_ref.current.setFieldsValue(__assign(__assign({ stv: stv }, ucdata), others));
-    };
-    react_1.useEffect(function () {
-        if (!(isToShort || initData || endTime === 0 || analyseLoading || tryCount) && autoAnalyse) {
-            fetchData()
-                .then(function (r) {
-                r.score = getEmptyScore();
-                v.current.resize();
-                setInitData(r);
-            })
-                .finally(function () { return setTryCount(1); });
-        }
-    }, [ctgData, analyseLoading, autoAnalyse, initData, tryCount, v]);
-    react_1.useEffect(function () {
-        var id = (hasInitAnalysed.current) ? 0 : window.setInterval(function () {
-            if (initData && v.current && !hasInitAnalysed.current) {
-                console.log('xxx', '---');
-                clearInterval(id);
-                var r = v.current.drawAnalyse.analyse(mark, showBase, startTime, endTime, initData);
-                hasInitAnalysed.current = true;
-                setFormData(r);
-                setFm(autoFm);
-            }
-        }, 1000);
-        return function () {
-            clearInterval(id);
-        };
-    }, [initData, v.current, mark, startTime, setFormData, autoAnalyse, setFm, autoFm, showBase]);
+    }
     var hardAnalyse = function (show) {
         if (show === void 0) { show = showBase; }
-        setFormData(v.current.drawAnalyse.analyse(mark, show));
+        v.current.drawAnalyse.analyse(mark, show);
     };
     react_1.useEffect(function () {
         var s = function (time) {
@@ -334,7 +328,6 @@ exports.default = (function (v, docid, fetal, ctgData) {
         analysis_ref: analysis_ref,
         old_ref: old_ref,
         analyseLoading: analyseLoading,
-        isToShort: isToShort,
         setAutoFm: function (s) {
             setAutoFm(s);
             setFm(s);

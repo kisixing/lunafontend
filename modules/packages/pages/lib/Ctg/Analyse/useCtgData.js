@@ -28,15 +28,22 @@ function copyFhr(origin, single) {
 }
 exports.useCtgData = function (docid, single) {
     if (single === void 0) { single = false; }
-    var _a = react_1.useState(0), fetal = _a[0], setFetal = _a[1];
+    var _a = react_1.useState(1), fetal = _a[0], setFetal = _a[1];
     var _b = react_1.useState(false), loading = _b[0], setLoading = _b[1];
     var _c = react_1.useState({ fetalnum: '1', docid: docid }), ctgData = _c[0], setCtgData = _c[1];
     function fetchData() {
         if (docid) {
             setLoading(true);
             return request_1.default.get("/ctg-exams-data/" + docid).then(function (res) {
-                res && setCtgData(__assign(__assign({ docid: docid, keepSelection: true }, res), (copyFhr(res, single))));
-                single && setFetal(1);
+                if (!res)
+                    return;
+                var d = __assign(__assign({ docid: docid, keepSelection: true }, res), (copyFhr(res, single)));
+                if (single) {
+                    setFhr(1, d);
+                }
+                else {
+                    setCtgData(d);
+                }
             }).finally(function () { return setLoading(false); });
         }
         else {
@@ -55,23 +62,24 @@ exports.useCtgData = function (docid, single) {
             utils_1.event.off('analysis:setCtgData', fn);
         };
     }, [ctgData]);
-    function setFhr(index) {
+    function setFhr(index, from) {
         var _a;
+        if (from === void 0) { from = ctgData; }
         var data = {};
         if (index) {
-            var fhr1 = ctgData.fhr1;
+            var fhr1 = from.fhr1;
             var key = "fhr" + index;
-            var value = ctgData["_" + key];
+            var value = from["_" + key];
             var emptyData = Array(fhr1 ? fhr1.length : 0).fill(0).join('');
             data = (_a = { fhr1: emptyData, fhr2: emptyData, fhr3: emptyData }, _a[key] = value, _a);
         }
         else {
-            Array(Number(ctgData.fetalnum)).fill(0).forEach(function (_, i) {
+            Array(Number(from.fetalnum)).fill(0).forEach(function (_, i) {
                 i = i + 1;
-                data["fhr" + i] = ctgData["_fhr" + i];
+                data["fhr" + i] = from["_fhr" + i];
             });
         }
-        setCtgData(__assign(__assign(__assign({}, ctgData), data), { noOffset: !!index }));
+        setCtgData(__assign(__assign(__assign({}, from), data), { noOffset: !!index }));
     }
     react_1.useEffect(function () {
         setFhr(fetal);

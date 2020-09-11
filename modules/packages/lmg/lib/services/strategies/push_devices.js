@@ -33,15 +33,13 @@ function push_devices(received_msg) {
         var device_no = devdata.device_no, beds = devdata.beds, device_type = devdata.device_type;
         for (var bi in beds) {
             var bedData = beds[bi];
-            var pregnancy = bedData.pregnancy, fetalposition = bedData.fetalposition, bed_no = bedData.bed_no, doc_id = bedData.doc_id, others = __rest(bedData, ["pregnancy", "fetalposition", "bed_no", "doc_id"]);
+            var bed_no = bedData.bed_no, doc_id = bedData.doc_id, others = __rest(bedData, ["bed_no", "doc_id"]);
             var unitId = this.getUnitId(device_no, bed_no);
             var old = datacache.get(unitId);
             if (!old || (old.doc_id !== doc_id)) {
                 var target = utils_1.getEmptyCacheItem(__assign({ id: unitId, doc_id: doc_id, device_type: device_type, device_no: device_no, bed_no: bed_no }, others));
                 datacache.set(unitId, target);
                 this.convertdocid(unitId, doc_id);
-                target.pregnancy = pregnancy ? JSON.parse(pregnancy) : null;
-                target.fetalposition = fetalposition ? JSON.parse(fetalposition) : null;
             }
         }
     }

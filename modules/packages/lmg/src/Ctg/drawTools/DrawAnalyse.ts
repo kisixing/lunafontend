@@ -3,6 +3,7 @@ import Draw from "../../Draw";
 import { AnalyseType, PointType } from '../../interface';
 import { Suit } from "../Suit";
 import { DecType, AccPoint, DecPoint } from "@lianmed/f_types/lib/obvue/ctg_exams_analyse";
+import { event } from "@lianmed/utils";
 
 
 // export interface AnalyseData {
@@ -116,6 +117,7 @@ export class DrawAnalyse extends Draw {
 
     showBase: boolean
     analyse(type: AnalyseType, showBase = true, start?: number, end?: number, data = this.analysisData) {
+        console.log('form', type, showBase, start, end, data)
         if (!data) return
         const { suit } = this
         this.setData(data)
@@ -131,6 +133,7 @@ export class DrawAnalyse extends Draw {
         //kisi 2020-03-05 
         let newData = this.ctgscore(type)
         suit.drawobj.drawdot((suit.type > 0 && suit.viewposition < suit.width * 2) ? suit.width * 2 : suit.viewposition, false, showBase);
+        event.emit('suit:afterAnalyse', newData)
         return newData
     }
     //kisi 2019-10-28 绘制 acc dec
@@ -261,7 +264,7 @@ export class DrawAnalyse extends Draw {
         analysis.acc.forEach(_ => {
             if (_.index >= start) {
                 if (_.reliability > 50) {
-                    sum += (_.index - _.start) > 0 ? _.index - _.start : 0
+                    sum += (_.end - _.start) > 0 ? _.end - _.start : 0
                     accnum++
                 }
             }

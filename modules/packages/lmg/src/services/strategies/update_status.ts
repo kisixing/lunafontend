@@ -12,7 +12,7 @@ interface IMessage {
 export function update_status(this: WsService, received_msg: IMessage) {
     const { datacache } = this
     // 状态机处理
-    const { pregnancy, fetalposition, device_no, bed_no, ...others } = received_msg.data
+    const { device_no, bed_no, ...others } = received_msg.data
 
     var unitId = this.getUnitId(device_no, bed_no);
 
@@ -23,7 +23,6 @@ export function update_status(this: WsService, received_msg: IMessage) {
     const target = datacache.get(unitId)
     const extendObj: _ICacheItem = { device_no, bed_no, ...others }
     Object.assign(target, extendObj)
-    target.pregnancy = pregnancy ? JSON.parse(pregnancy) : null;
-    target.fetalposition = fetalposition ? JSON.parse(fetalposition) : null;
+
     this.refresh('update_status')
 }

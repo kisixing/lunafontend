@@ -28,6 +28,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var Draw_1 = __importDefault(require("../../Draw"));
+var utils_1 = require("@lianmed/utils");
 var resultMap = ['正常', '可疑', '异常', '时长不足'];
 var DrawAnalyse = (function (_super) {
     __extends(DrawAnalyse, _super);
@@ -154,7 +155,7 @@ var DrawAnalyse = (function (_super) {
             analysis.acc.forEach(function (_) {
                 if (_.index >= start) {
                     if (_.reliability > 50) {
-                        sum += (_.index - _.start) > 0 ? _.index - _.start : 0;
+                        sum += (_.end - _.start) > 0 ? _.end - _.start : 0;
                         accnum++;
                     }
                 }
@@ -722,6 +723,7 @@ var DrawAnalyse = (function (_super) {
     DrawAnalyse.prototype.analyse = function (type, showBase, start, end, data) {
         if (showBase === void 0) { showBase = true; }
         if (data === void 0) { data = this.analysisData; }
+        console.log('form', type, showBase, start, end, data);
         if (!data)
             return;
         var suit = this.suit;
@@ -734,6 +736,7 @@ var DrawAnalyse = (function (_super) {
         suit.drawSelect.$selectrpstart = data.analysis.start = start;
         var newData = this.ctgscore(type);
         suit.drawobj.drawdot((suit.type > 0 && suit.viewposition < suit.width * 2) ? suit.width * 2 : suit.viewposition, false, showBase);
+        utils_1.event.emit('suit:afterAnalyse', newData);
         return newData;
     };
     DrawAnalyse.prototype.revicePoint = function (x, y) {

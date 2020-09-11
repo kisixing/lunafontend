@@ -70,8 +70,8 @@ export interface IBed {
     fetal_num: number;
     is_include_mother: boolean;
     is_working: number;
-    pregnancy: string;
-    fetalposition: string;
+    pregnancy: string | any;
+    fetalposition: string | any;
     disableStartWork?: boolean;
     disableCreate?: boolean;
     event_alarm_status: string;
@@ -121,8 +121,8 @@ export declare class _ICacheItem {
     past?: number;
     timestamp?: number;
     doc_id?: string;
-    pregnancy?: ICacheItemPregnancy;
-    fetalposition?: {
+    _pregnancy?: ICacheItemPregnancy;
+    _fetalposition?: {
         fhr1: string;
         fhr2: string;
         fhr3: string;
@@ -159,6 +159,18 @@ export declare class _ICacheItem {
     vol?: number;
 }
 export declare class ICacheItem extends _ICacheItem {
+    get pregnancy(): ICacheItemPregnancy;
+    set pregnancy(value: ICacheItemPregnancy);
+    get fetalposition(): {
+        fhr1: string;
+        fhr2: string;
+        fhr3: string;
+    };
+    set fetalposition(value: {
+        fhr1: string;
+        fhr2: string;
+        fhr3: string;
+    });
     get isF0Pro(): boolean;
     get batterylowArr(): boolean[];
     get MuteArr(): boolean[];

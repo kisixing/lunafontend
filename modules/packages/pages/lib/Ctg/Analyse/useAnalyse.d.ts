@@ -40,7 +40,6 @@ declare const _default: (v: MutableRefObject<Suit>, docid: string, fetal: any, c
         [x: string]: any;
     }>;
     analyseLoading: boolean;
-    isToShort: boolean;
     setAutoFm(s: boolean): void;
     autoFm: boolean;
     initData: {

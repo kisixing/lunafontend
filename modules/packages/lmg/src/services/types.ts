@@ -77,8 +77,8 @@ export interface IBed {
     fetal_num: number;
     is_include_mother: boolean;
     is_working: number;
-    pregnancy: string;
-    fetalposition: string;
+    pregnancy: string | any;
+    fetalposition: string | any;
     disableStartWork?: boolean
     disableCreate?: boolean
 
@@ -139,8 +139,8 @@ export class _ICacheItem {
     timestamp?: number;
     doc_id?: string;
 
-    pregnancy?: ICacheItemPregnancy;
-    fetalposition?: {
+    _pregnancy?: ICacheItemPregnancy;
+    _fetalposition?: {
         fhr1: string,
         fhr2: string,
         fhr3: string
@@ -182,6 +182,29 @@ export class _ICacheItem {
 }
 export class ICacheItem extends _ICacheItem {
 
+    public get pregnancy(): ICacheItemPregnancy {
+        return this._pregnancy;
+    }
+    public set pregnancy(value: ICacheItemPregnancy) {
+        if (typeof value !== 'string') return
+        this._pregnancy = value ? JSON.parse(value) : null;;
+    }
+
+    public get fetalposition(): {
+        fhr1: string;
+        fhr2: string;
+        fhr3: string;
+    } {
+        return this._fetalposition;
+    }
+    public set fetalposition(value: {
+        fhr1: string;
+        fhr2: string;
+        fhr3: string;
+    }) {
+        if (typeof value !== 'string') return
+        this._fetalposition = value ? JSON.parse(value) : null;;
+    }
 
     public get isF0Pro() {
         return this.deviceType === 'LM_F0_PRO';
@@ -242,10 +265,13 @@ export class ICacheItem extends _ICacheItem {
         return this._fetal_num;
     }
     public set fetal_num(value: number) {
-        this._fetal_num = value;
-        this.fhr = Array(value || 1).fill(0).map((_, i) => {
-            return (this.fhr && this.fhr[i]) || []
-        })
+        setTimeout(() => {
+            if (this.isF0Pro ? this.isUncreated : this.isStopped) return
+            this._fetal_num = value;
+            this.fhr = Array(value || 1).fill(0).map((_, i) => {
+                return (this.fhr && this.fhr[i]) || []
+            })
+        }, 0);
     }
     public get docid(): string {
         return this.doc_id;

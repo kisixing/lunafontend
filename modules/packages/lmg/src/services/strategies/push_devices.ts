@@ -20,7 +20,7 @@ export function push_devices(this: WsService, received_msg: IData) {
 
 
             //
-            const { pregnancy, fetalposition, bed_no, doc_id, ...others } = bedData
+            const { bed_no, doc_id, ...others } = bedData
 
             var unitId = this.getUnitId(device_no, bed_no);
 
@@ -30,12 +30,10 @@ export function push_devices(this: WsService, received_msg: IData) {
 
             if (!old || (old.doc_id !== doc_id)) {
 
-                const target = getEmptyCacheItem({ id: unitId, doc_id, device_type, device_no, bed_no,...others })
+                const target = getEmptyCacheItem({ id: unitId, doc_id, device_type, device_no, bed_no, ...others })
                 datacache.set(unitId, target);
                 this.convertdocid(unitId, doc_id)
 
-                target.pregnancy = pregnancy ? JSON.parse(pregnancy) : null;
-                target.fetalposition = fetalposition ? JSON.parse(fetalposition) : null;
             }
         }
     }

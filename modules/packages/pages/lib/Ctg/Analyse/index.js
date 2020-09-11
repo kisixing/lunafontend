@@ -65,7 +65,7 @@ exports.Ctg_Analyse = function (_a) {
     var isRemote = type === 'remote';
     var ref = react_1.useRef(null);
     var wrap = react_1.useRef(null);
-    var _q = useAnalyse_1.default(ref, note, fetal, ctgData), MARKS = _q.MARKS, reAnalyse = _q.reAnalyse, startTime = _q.startTime, endTime = _q.endTime, mark = _q.mark, setMark = _q.setMark, interval = _q.interval, setInterval = _q.setInterval, mapFormToMark = _q.mapFormToMark, analysis_ref = _q.analysis_ref, old_ref = _q.old_ref, analyseLoading = _q.analyseLoading, isToShort = _q.isToShort, autoFm = _q.autoFm, setAutoFm = _q.setAutoFm, autoAnalyse = _q.autoAnalyse, setAutoAnalyse = _q.setAutoAnalyse, showBase = _q.showBase, setShowBase = _q.setShowBase, initData = _q.initData;
+    var _q = useAnalyse_1.default(ref, note, fetal, ctgData), MARKS = _q.MARKS, reAnalyse = _q.reAnalyse, startTime = _q.startTime, endTime = _q.endTime, mark = _q.mark, setMark = _q.setMark, interval = _q.interval, setInterval = _q.setInterval, mapFormToMark = _q.mapFormToMark, analysis_ref = _q.analysis_ref, old_ref = _q.old_ref, analyseLoading = _q.analyseLoading, autoFm = _q.autoFm, setAutoFm = _q.setAutoFm, autoAnalyse = _q.autoAnalyse, setAutoAnalyse = _q.setAutoAnalyse, showBase = _q.showBase, setShowBase = _q.setShowBase, initData = _q.initData;
     var others = {
         MARKS: MARKS,
         startTime: startTime,
@@ -101,7 +101,7 @@ exports.Ctg_Analyse = function (_a) {
             return oldData[k] !== v;
         }) ? true : false;
         var identify = type === 'default' ? { note: note } : { id: id, note: note };
-        var requestData = __assign(__assign({}, identify), { diagnosis: JSON.stringify({ wave: wave, diagnosistxt: diagnosistxt, NST: NST, CST_OCT: CST_OCT }), result: JSON.stringify(__assign(__assign(__assign({}, analyseData), curData), { isedit: isedit, type: mark, startTime: ref.current.drawAnalyse.analysisData.analysis.start, endTime: ref.current.drawAnalyse.analysisData.analysis.end })), fetalnum: fetal, show_fetalmovement: window['obvue'] ? !!window['obvue'].setting.show_fetalmovement : true });
+        var requestData = __assign(__assign({}, identify), { diagnosis: JSON.stringify({ wave: wave, diagnosistxt: diagnosistxt, NST: NST, CST_OCT: CST_OCT }), result: JSON.stringify(__assign(__assign(__assign({}, analyseData), curData), { isedit: isedit, type: mark, startTime: startTime, endTime: endTime })), fetalnum: fetal, show_fetalmovement: window['obvue'] ? !!window['obvue'].setting.show_fetalmovement : true });
         return requestData;
     };
     var getPrintUrl = function (path) {
@@ -137,7 +137,10 @@ exports.Ctg_Analyse = function (_a) {
                                 react_1.default.createElement("span", null, d.CST_OCT)),
                             react_1.default.createElement("div", null,
                                 "\u8BCA\u65AD\uFF1A",
-                                react_1.default.createElement("span", null, d.diagnosistxt)));
+                                react_1.default.createElement("span", null, d.diagnosistxt)),
+                            react_1.default.createElement("div", null,
+                                "\u65F6\u95F4\uFF1A",
+                                react_1.default.createElement("span", null, d.timestamp)));
                     }))));
                 }
                 catch (error) {
@@ -161,15 +164,15 @@ exports.Ctg_Analyse = function (_a) {
             react_1.default.createElement(antd_1.Col, { span: 17 },
                 react_1.default.createElement(Score_1.default, __assign({ disabled: disabled, endTime: endTime, initData: initData }, others, { fetal: fetal, setFetal: setFetal, ctgData: ctgData, docid: note, v: ref.current, className: "bordered" })),
                 react_1.default.createElement("div", { style: { position: 'absolute', right: 12, bottom: 0 } },
-                    isToShort && react_1.default.createElement(antd_1.Alert, { message: "\u9009\u6BB5\u65F6\u95F4\u8FC7\u77ED", style: { background: 'red', color: '#fff', display: 'inline-block', border: 0, padding: '1px 4px', marginRight: 10 } }),
+                    false && react_1.default.createElement(antd_1.Alert, { message: "\u9009\u6BB5\u65F6\u95F4\u8FC7\u77ED", style: { background: 'red', color: '#fff', display: 'inline-block', border: 0, padding: '1px 4px', marginRight: 10 } }),
                     react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, onClick: history, disabled: btnDisabled }, "\u5386\u53F2\u5206\u6790"),
                     react_1.default.createElement(antd_1.Button, { size: "small", style: { marginBottom: 10 }, disabled: !note, onClick: function () { return setDisabled(!disabled); } }, disabled ? '修改评分' : '确认')),
                 react_1.default.createElement(antd_1.Checkbox, { checked: autoFm, onChange: function (e) { return setAutoFm(e.target.checked); }, style: { position: 'absolute', left: 18, bottom: 8 } }, "\u81EA\u52A8\u80CE\u52A8"),
                 react_1.default.createElement(antd_1.Checkbox, { checked: autoAnalyse, onChange: function (e) { return setAutoAnalyse(e.target.checked); }, style: { position: 'absolute', left: 100, bottom: 8 } }, "\u5F39\u7A97\u65F6\u81EA\u52A8\u5206\u6790"),
                 react_1.default.createElement(antd_1.Checkbox, { checked: showBase, onChange: function (e) { return setShowBase(e.target.checked); }, style: { position: 'absolute', left: 228, bottom: 8 } }, "\u663E\u793A\u57FA\u7EBF"),
                 react_1.default.createElement("div", { style: { position: 'absolute', right: 20, top: 16 } },
-                    react_1.default.createElement(antd_1.Button, { size: "small", type: "primary", onClick: function () { return fetchData().then(function () { return reAnalyse; }); }, loading: loading }, "\u5237\u65B0\u6570\u636E"),
-                    react_1.default.createElement(antd_1.Button, { size: "small", type: "primary", onClick: reAnalyse, loading: analyseLoading, disabled: !note || isToShort }, "\u91CD\u65B0\u5206\u6790"))),
+                    react_1.default.createElement(antd_1.Button, { size: "small", type: "primary", onClick: function () { return fetchData(); }, loading: loading }, "\u5237\u65B0\u6570\u636E"),
+                    react_1.default.createElement(antd_1.Button, { size: "small", type: "primary", onClick: reAnalyse, loading: analyseLoading, disabled: !note }, "\u91CD\u65B0\u5206\u6790"))),
             react_1.default.createElement(antd_1.Col, { span: 7 },
                 react_1.default.createElement(Analyse_1.default, { ref: analysis_ref, isRemote: isRemote }),
                 react_1.default.createElement("div", { style: { position: 'absolute', right: 12, bottom: 0 } },
