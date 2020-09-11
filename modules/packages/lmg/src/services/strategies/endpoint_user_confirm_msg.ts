@@ -1,5 +1,5 @@
 import { WsService } from "../WsService";
-import { message } from "antd";
+import message from "antd/lib/message/index";
 interface IData {
     data: { title: string, content: string }
     ip: string

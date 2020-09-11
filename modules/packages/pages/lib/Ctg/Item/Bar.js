@@ -12,7 +12,11 @@ var icons_1 = require("@ant-design/icons");
 var antd_1 = require("antd");
 var Bar = function (props) {
     var _a = react_1.useState(false), showBar = _a[0], setShowBar = _a[1];
+<<<<<<< HEAD
     var mutableSuit = props.mutableSuit, onSelect = props.onSelect, unitId = props.unitId, backgroundColor = props.backgroundColor;
+=======
+    var mutableSuit = props.mutableSuit, onSelect = props.onSelect, unitId = props.unitId, setMaskVisible = props.setMaskVisible;
+>>>>>>> 7月三类评分
     var timeout = react_1.useRef(null);
     var autoHide = function () {
         clearTimeout(timeout.current);
@@ -37,9 +41,9 @@ var Bar = function (props) {
                 borderRadius: 3,
                 boxShadow: '#aaa 3px 3px 5px 1px',
                 transition: 'width 0.2s ease-out',
-                visibility: showBar ? 'visible' : 'hidden'
+                visibility: showBar ? 'visible' : 'hidden',
             } }, react_1.default.Children.map(props.children, function (_) {
-            return react_1.default.cloneElement(_, { mutableSuit: mutableSuit });
+            return react_1.default.cloneElement(_, { mutableSuit: mutableSuit, setMaskVisible: setMaskVisible });
         })),
         react_1.default.createElement("div", { style: {
                 position: 'absolute',

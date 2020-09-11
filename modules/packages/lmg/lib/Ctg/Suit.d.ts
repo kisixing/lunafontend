@@ -37,10 +37,10 @@ export declare class Suit extends Draw {
     isOn: boolean;
     emitInterval: number;
     static option: {
-        [x: string]: string;
+        [x: string]: any;
     };
     option: {
-        [x: string]: string;
+        [x: string]: any;
     };
     initFlag: boolean;
     sid: number;
@@ -58,9 +58,24 @@ export declare class Suit extends Draw {
     buffersize: number;
     curr: number;
     alarmStatus: number;
-    private _ctgconfig;
-    get ctgconfig(): TCtgConfig;
-    set ctgconfig(value: TCtgConfig);
+    ctgconfig: {
+        normalarea: string;
+        selectarea: string;
+        rule: string;
+        scale: string;
+        primarygrid: string;
+        secondarygrid: string;
+        fhrcolor: string[];
+        tococolor: string;
+        alarmcolor: string;
+        fmpcolor: string;
+        alarm_enable: boolean;
+        alarm_high: number;
+        alarm_low: number;
+        print_interval: number;
+        alarm_delay: number;
+        show_fetalmovement: boolean;
+    };
     fetalposition: {
         fhr1: string;
         fhr2: string;
@@ -104,6 +119,7 @@ export declare class Suit extends Draw {
         fhr: any[][];
         toco: any[];
         fm: any[];
+        fmp: any[];
         fetal_num: number;
         index: number;
         starttime: string;
@@ -116,6 +132,8 @@ export declare class Suit extends Draw {
             end: number;
         };
         noOffset: any;
+        selectBarHidden: any;
+        keepSelection: any;
     };
     drawdot(): void;
     timerCtg(dely: any): void;

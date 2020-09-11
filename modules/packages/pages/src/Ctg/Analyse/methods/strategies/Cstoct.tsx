@@ -1,5 +1,5 @@
 import { ctg_exams_analyse_score, _ctg_exams_analyse } from "@lianmed/f_types/lib/obvue/ctg_exams_analyse";
-import { inRange, getValue, isModified } from "./utils";
+import { getValue, isModified } from "./utils";
 type TData = ctg_exams_analyse_score['cstoctdata']
 export function Cstoct(_data: TData, analysis: _ctg_exams_analyse['analysis']) {
     const cstoctdata: TData = JSON.parse(JSON.stringify(_data))

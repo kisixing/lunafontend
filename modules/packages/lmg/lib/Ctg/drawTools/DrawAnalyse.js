@@ -28,6 +28,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var Draw_1 = __importDefault(require("../../Draw"));
+var utils_1 = require("@lianmed/utils");
 var resultMap = ['正常', '可疑', '异常', '时长不足'];
 var DrawAnalyse = (function (_super) {
     __extends(DrawAnalyse, _super);
@@ -147,33 +148,19 @@ var DrawAnalyse = (function (_super) {
         _this.fhrDuration = function (start, end) {
             var accnum = 0;
             var sum = 0;
-            var analysisData = _this.analysisData;
-            if (!analysisData)
+            var _a = _this, analysisData = _a.analysisData, data = _a.suit.data;
+            if (!analysisData || !data)
                 return accnum;
             var analysis = analysisData.analysis;
-            analysis.acc.map(function (item) {
-                if (item.index > end) {
-                    if (accnum == 0)
-                        return accnum;
-                    else {
-                        return Math.ceil(sum / accnum / 4);
-                    }
-                }
-                else if (item.index >= start) {
-                    if (item.marked) {
-                        if (item.duration != 0) {
-                            sum += item.duration;
-                            accnum++;
-                        }
-                        console.log(item.duration);
+            analysis.acc.forEach(function (_) {
+                if (_.index >= start) {
+                    if (_.reliability > 50) {
+                        sum += (_.end - _.start) > 0 ? _.end - _.start : 0;
+                        accnum++;
                     }
                 }
             });
-            if (accnum == 0)
-                return accnum;
-            else {
-                return Math.ceil(sum / accnum / 4);
-            }
+            return accnum ? Math.ceil(sum / accnum / 4) : 0;
         };
         _this.fhrAmpl = function (start, end) {
             var accnum = 0;
@@ -527,7 +514,6 @@ var DrawAnalyse = (function (_super) {
                         score.sogcdata.accscore = 3;
                     }
                 }
-                var ld = analysis.ldtimes = _this.countDec(analysis.start, analysis.end, 'LD');
                 var vd = analysis.vdtimes = _this.countDec(analysis.start, analysis.end, 'VD');
                 var ed = analysis.edtimes = _this.countDec(analysis.start, analysis.end, 'ED');
                 if (ed > 0) {
@@ -535,7 +521,6 @@ var DrawAnalyse = (function (_super) {
                     score.sogcdata.decscore = 2;
                 }
                 else if (vd > 0) {
-                    debugger;
                     var all_1 = analysis.dec.filter(function (_) { return _.type === 'vd' && _.start >= analysis.start && _.end <= analysis.end; });
                     var gt60 = all_1.find(function (_) { return _.duration > 60; });
                     var btw = all_1.find(function (_) { return _this.inRange(_.duration, 30, 60); });
@@ -678,8 +663,8 @@ var DrawAnalyse = (function (_super) {
     };
     DrawAnalyse.prototype.setData = function (r) {
         console.log('setData', r);
-        r.analysis.acc = r.analysis.acc && r.analysis.acc.map(function (_) { return (__assign(__assign({}, _), { duration: _.duration / 4 })); });
-        r.analysis.dec = r.analysis.dec && r.analysis.dec.map(function (_) { return (__assign(__assign({}, _), { duration: _.duration / 4 })); }).filter(function (_) { return _.reliability >= 90 || _.user; });
+        r.analysis.acc = r.analysis.acc && r.analysis.acc.map(function (_) { return (__assign(__assign({}, _), { duration: _.dataClean ? _.duration : _.duration / 4, dataClean: true })); });
+        r.analysis.dec = r.analysis.dec && r.analysis.dec.map(function (_) { return (__assign(__assign({}, _), { duration: _.dataClean ? _.duration : _.duration / 4, dataClean: true })); }).filter(function (_) { return _.reliability >= 90 || _.user; });
         this._acc = r.analysis.acc.map(function (_) { return _.index; });
         this._dec = r.analysis.dec.map(function (_) { return _.index; });
         this.analysisData = r;
@@ -738,6 +723,7 @@ var DrawAnalyse = (function (_super) {
     DrawAnalyse.prototype.analyse = function (type, showBase, start, end, data) {
         if (showBase === void 0) { showBase = true; }
         if (data === void 0) { data = this.analysisData; }
+        console.log('form', type, showBase, start, end, data);
         if (!data)
             return;
         var suit = this.suit;
@@ -750,6 +736,7 @@ var DrawAnalyse = (function (_super) {
         suit.drawSelect.$selectrpstart = data.analysis.start = start;
         var newData = this.ctgscore(type);
         suit.drawobj.drawdot((suit.type > 0 && suit.viewposition < suit.width * 2) ? suit.width * 2 : suit.viewposition, false, showBase);
+        utils_1.event.emit('suit:afterAnalyse', newData);
         return newData;
     };
     DrawAnalyse.prototype.revicePoint = function (x, y) {

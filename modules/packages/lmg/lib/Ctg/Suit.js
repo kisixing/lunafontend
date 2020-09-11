@@ -85,7 +85,28 @@ var Suit = (function (_super) {
         _this.buffersize = 16;
         _this.curr = -16;
         _this.alarmStatus = 0;
+<<<<<<< HEAD
         _this._ctgconfig = defaultCtgConfig;
+=======
+        _this.ctgconfig = {
+            normalarea: 'rgb(224,255,255)',
+            selectarea: 'rgba(192,192,192,0.5)',
+            rule: 'rgba(0,51,102,1)',
+            scale: 'rgba(0,0,0,1)',
+            primarygrid: 'rgba(100, 100, 100, 1)',
+            secondarygrid: 'rgba(200, 200, 200, 1)',
+            fhrcolor: ['green', 'blue', 'rgb(0,0,0)'],
+            tococolor: 'rgb(0,0,0)',
+            alarmcolor: 'rgb(255, 1, 1)',
+            fmpcolor: 'darkgreen',
+            alarm_enable: true,
+            alarm_high: 160,
+            alarm_low: 110,
+            print_interval: 20,
+            alarm_delay: 0,
+            show_fetalmovement: true
+        };
+>>>>>>> 7月三类评分
         _this.fetalposition = {
             fhr1: '',
             fhr2: '',
@@ -125,6 +146,7 @@ var Suit = (function (_super) {
             _this.ctgconfig.fhrcolor[0] = _this.option.fhrcolor1;
             _this.ctgconfig.fhrcolor[1] = _this.option.fhrcolor2;
             _this.ctgconfig.fhrcolor[2] = _this.option.fhrcolor3;
+            _this.ctgconfig.show_fetalmovement = _this.option.show_fetalmovement === undefined ? true : !!_this.option.show_fetalmovement;
             if (_this.option.alarm_enable == '0') {
                 _this.ctgconfig.alarm_enable = false;
             }
@@ -164,17 +186,17 @@ var Suit = (function (_super) {
             this.viewposition = value;
             this.emit('change:selectPoint', this.drawSelect.selectingBarPoint);
             this.updateBarTool();
-            this.drawobj.drawdot((this.type > 0 && this.viewposition < this.width * 2) ? this.width * 2 : this.viewposition);
+            this.drawobj.drawdot((this.type > 0 && this.viewposition < this.width * 2) ? this.width * 2 : this.viewposition, false);
         },
         enumerable: true,
         configurable: true
     });
     Suit.prototype.init = function (data) {
         var _this = this;
-        if (!data) {
+        if (!data || !(data.fhr || data.fhr1)) {
             return;
         }
-        this.initFlag = true;
+        var t = this.initFlag && data.keepSelection;
         var defaultinterval = 500;
         this.data = data;
         this.currentdot = data.index;
@@ -192,8 +214,8 @@ var Suit = (function (_super) {
         }
         this.drawAnalyse.init();
         this.drawSelect.init();
-        this.drawSelect.clearselect();
-        this.drawobj.showcur(0, false);
+        t || this.drawSelect.clearselect();
+        this.drawobj.showcur(t ? this.drawSelect.selectingBarPoint : 0, false);
         if (this.type > 0) {
             if (this.data.index > this.canvasline.width * 2) {
                 this.curr = this.canvasline.width * 2;
@@ -204,15 +226,14 @@ var Suit = (function (_super) {
                 else {
                     this.barTool.setBarWidth(100);
                 }
-                this.barTool.setBarLeft(0, false);
             }
             else {
                 this.barTool.setBarWidth(0);
-                this.barTool.setBarLeft(0, false);
                 this.curr = this.data.index;
             }
-            this.drawobj.drawdot(this.canvasline.width * 2, false);
-            this.rightViewPosition = this.curr;
+            t || (this.rightViewPosition = this.curr);
+            t || this.barTool.setBarLeft(0, false);
+            this.drawobj.drawdot((t && this.data.index > this.width * 2) ? this.rightViewPosition : this.canvasline.width * 2, false);
         }
         else {
             this.timerCtg(defaultinterval);
@@ -271,7 +292,12 @@ var Suit = (function (_super) {
             _this.drawSelect.showselect();
             _this.drawobj.drawdot(_this.rightViewPosition, false);
         });
+<<<<<<< HEAD
         this.emit('afterInit');
+=======
+        utils_1.event.emit('suit:afterInit', this);
+        this.initFlag = true;
+>>>>>>> 7月三类评分
     };
     Suit.prototype.createLine = function () {
         if (this.rowline)
@@ -320,9 +346,10 @@ var Suit = (function (_super) {
         this[key] = this[key] || [];
         var arr = this[key];
         arr.push(0);
+        var text = "FHR" + (fetalIndex + 1) + "\u5FC3\u7387\u8FC7\u4F4E";
         if (arr.length >= 2 * this.ctgconfig.alarm_delay) {
-            this.itemAlarm('心率过低');
-            this.lazyEmit('alarmOn', '心率过低');
+            this.itemAlarm(text);
+            this.lazyEmit('alarmOn', text);
             return true;
         }
     };
@@ -333,8 +360,9 @@ var Suit = (function (_super) {
         arr.push(0);
         if (arr.length >= 2 * this.ctgconfig.alarm_delay) {
             console.log("hh" + fetalIndex, arr.length);
-            this.itemAlarm('心率过高');
-            this.lazyEmit('alarmOn', '心率过高');
+            var text = "FHR" + (fetalIndex + 1) + "\u5FC3\u7387\u8FC7\u9AD8";
+            this.itemAlarm(text);
+            this.lazyEmit('alarmOn', text);
             return true;
         }
     };
@@ -353,19 +381,21 @@ var Suit = (function (_super) {
         }
     };
     Suit.prototype.checkAlarm = function (fetalIndex, cv) {
-        if (cv <= 241 && cv > this.ctgconfig.alarm_high) {
-            console.log('心率过高', cv);
-            this.alarmHigh(fetalIndex);
-            return true;
-        }
-        else if (cv < this.ctgconfig.alarm_low && cv >= 29) {
-            console.log('心率过低', cv);
-            this.alarmLow(fetalIndex);
-            return true;
-        }
-        else {
-            this.alarmOff(fetalIndex);
-            return false;
+        if (this.data.isWorking) {
+            if (cv <= 241 && cv > this.ctgconfig.alarm_high) {
+                console.log('心率过高', cv);
+                this.alarmHigh(fetalIndex);
+                return true;
+            }
+            else if (cv < this.ctgconfig.alarm_low && cv >= 29) {
+                console.log('心率过低', cv);
+                this.alarmLow(fetalIndex);
+                return true;
+            }
+            else {
+                this.alarmOff(fetalIndex);
+                return false;
+            }
         }
     };
     Suit.prototype.destroy = function () {
@@ -382,7 +412,12 @@ var Suit = (function (_super) {
     };
     Suit.prototype._resize = function () {
         var _a = this.wrap.getBoundingClientRect(), width = _a.width, height = _a.height;
-        Object.values(this).forEach(function (_) { return _ && _.resize && _.resize(width, height); });
+        if (this.type > 0 && width < 200) {
+            Object.values(this).forEach(function (_) { return _ && _.resize && _.resize(width, height); });
+        }
+        else {
+            Object.values(this).forEach(function (_) { return _ && _.resize && _.resize(width, height); });
+        }
     };
     Suit.prototype.setfetalposition = function (fhr1, fhr2, fhr3) {
         if (this.data && this.data.fetalposition) {
@@ -397,12 +432,15 @@ var Suit = (function (_super) {
             fhr: [[], [], []],
             toco: [],
             fm: [],
+            fmp: [],
             fetal_num: +oriobj.fetalnum || 1,
             index: 0,
             starttime: '',
             fetalposition: {},
             analyse: { acc: [], dec: [], baseline: [], start: 0, end: 0 },
-            noOffset: oriobj.noOffset
+            noOffset: oriobj.noOffset,
+            selectBarHidden: oriobj.selectBarHidden,
+            keepSelection: oriobj.keepSelection,
         };
         if (oriobj.docid) {
             var pureidarr = oriobj.docid.split('_');
@@ -414,7 +452,6 @@ var Suit = (function (_super) {
             oriobj.fetalposition != '') {
             var positionobj = JSON.parse(oriobj.fetalposition);
             CTGDATA.fetalposition = positionobj;
-            console.log(oriobj.fetalposition, typeof this.data.fetalposition, this.data.fetalposition, this);
         }
         Object.keys(oriobj).forEach(function (key) {
             var oridata = oriobj[key];
@@ -451,6 +488,9 @@ var Suit = (function (_super) {
                 }
                 else if (key === 'fm') {
                     CTGDATA.fm[i] = data_to_push;
+                }
+                else if (key === 'fmp') {
+                    CTGDATA.fmp[i] = data_to_push > 18 ? 98 : (data_to_push + 80);
                 }
                 oridata = oridata.substring(2, oridata.length);
             }
@@ -545,6 +585,7 @@ var Suit = (function (_super) {
                         datacache.fhr[2][i] = data_to_push;
                 }
                 else if (key === 'toco') {
+                    console.log('initfhrdata', data_to_push);
                     datacache.toco[i] = data_to_push;
                 }
                 else if (key === 'fm') {

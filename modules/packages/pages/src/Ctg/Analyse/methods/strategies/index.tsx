@@ -18,6 +18,6 @@ const strategies = {
 
 export default (key: string, oldData, initData: obvue.ctg_exams_analyse) => {
     const s = strategies[key]
-    return s && s(oldData,initData.analysis);
+    return s && initData && s(oldData, initData.analysis);
 
 }

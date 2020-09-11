@@ -22,27 +22,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importStar(require("react"));
-var antd_1 = require("antd");
 var methods_1 = __importDefault(require("./methods"));
 var intervals = [20, 40, 80];
 var ScoringMethod = function (props) {
     var docid = props.docid, ctgData = props.ctgData, fetal = props.fetal, setFetal = props.setFetal, disabled = props.disabled;
     var MARKS = props.MARKS, startTime = props.startTime, mark = props.mark, setMark = props.setMark, interval = props.interval, setInterval = props.setInterval, endTime = props.endTime;
     var onChange = function (e) {
-        setMark(e);
+        setMark(e.target.value);
     };
     var IntervalRadio = react_1.useMemo(function () {
         return (react_1.default.createElement("span", { style: { marginRight: 10 } },
             " \u65F6\u957F\uFF1A",
-            react_1.default.createElement(antd_1.Select, { disabled: !docid, onChange: function (e) {
-                    var i = Number(e) || 20;
+            react_1.default.createElement("select", { disabled: !docid, onChange: function (e) {
+                    var i = Number(e.target.value) || 20;
                     setInterval(i);
-                }, value: interval }, intervals.map(function (value) { return (react_1.default.createElement(antd_1.Select.Option, { value: value, key: value }, value + '分钟')); }))));
+                }, value: interval }, intervals.map(function (value) { return (react_1.default.createElement("option", { value: value, key: value }, value + '分钟')); }))));
     }, [interval, docid]);
     var FetalSelect = react_1.useMemo(function () {
         return (react_1.default.createElement("span", { style: { marginRight: 10 } },
             " \u80CE\u5FC3\u7387\uFF1A",
-            react_1.default.createElement(antd_1.Select, { disabled: !docid, onChange: setFetal, value: fetal }, Array(+ctgData.fetalnum).fill(0).map(function (_, i) { return (react_1.default.createElement(antd_1.Select.Option, { value: i + 1, key: i + 1 }, "FHR" + (i + 1))); }))));
+            react_1.default.createElement("select", { disabled: !docid, onChange: function (e) { return setFetal(e.target.value); }, value: fetal }, Array(+ctgData.fetalnum).fill(0).map(function (_, i) { return (react_1.default.createElement("option", { value: i + 1, key: i + 1 }, "FHR" + (i + 1))); }))));
     }, [ctgData, fetal, setFetal, docid]);
     var StartTime = function () {
         return react_1.default.createElement("span", { style: { marginRight: 10 } },
@@ -59,7 +58,7 @@ var ScoringMethod = function (props) {
     var R = react_1.useMemo(function () {
         return (react_1.default.createElement(react_1.default.Fragment, null,
             react_1.default.createElement("span", null, "\u65B9\u6CD5\uFF1A"),
-            react_1.default.createElement(antd_1.Select, { disabled: !docid, onChange: onChange, value: mark, style: { marginBottom: 5, width: 90 } }, MARKS.map(function (_) { return (react_1.default.createElement(antd_1.Select.Option, { value: _, key: _ }, _)); }))));
+            react_1.default.createElement("select", { disabled: !docid, onChange: onChange, value: mark, style: { marginBottom: 5, width: 90 } }, MARKS.map(function (_) { return (react_1.default.createElement("option", { value: _, key: _ }, _)); }))));
     }, [mark, docid]);
     return (react_1.default.createElement("div", { style: { height: '100%', background: '#fff', borderRight: 0 }, className: "bordered" },
         react_1.default.createElement("div", { className: "divider", style: { padding: '8px 20px', margin: 0 } },

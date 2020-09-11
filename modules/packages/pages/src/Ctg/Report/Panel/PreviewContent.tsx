@@ -53,7 +53,9 @@ const PreviewContent = props => {
             setWidth(w)
         }
     }, [w, h])
-
+useEffect(() => {
+    setPageNumber(1)
+}, [pdfBase64])
     const content = pdfBase64 ? (
         <div style={{
             width: width,

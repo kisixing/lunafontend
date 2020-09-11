@@ -1,5 +1,5 @@
-import { WsService } from "../WsService";
 import { IDevice } from "../types";
+import { WsService } from "../WsService";
 interface IData {
     name: "push_devices";
     data: IDevice[];

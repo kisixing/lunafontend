@@ -1,20 +1,8 @@
+import { IBed } from "../types";
 import { WsService } from "../WsService";
-interface IData {
-    bed_no: number;
-    device_no: number;
-    doc_id: string;
-    fetalposition: string;
-    pregnancy: string;
-    status: number;
-    fetal_num: number;
-    is_include_mother: boolean;
-    is_include_tocozero: boolean;
-    is_include_volume: boolean;
-    disableStartWork: boolean;
-}
-interface IData {
+interface IMessage {
     name: "update_status";
-    data: IData;
+    data: IBed;
 }
-export declare function update_status(this: WsService, received_msg: IData): void;
+export declare function update_status(this: WsService, received_msg: IMessage): void;
 export {};

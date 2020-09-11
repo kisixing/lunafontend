@@ -1,9 +1,8 @@
-import React, { useMemo } from 'react';
-import { Select } from 'antd';
-import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import { obvue } from "@lianmed/f_types";
+import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
+import React, { useMemo } from 'react';
+import Methods from './methods';
 
-import Methods from './methods'
 const intervals = [20, 40, 80]
 interface IProps {
   ctgData: any;
@@ -33,8 +32,7 @@ const ScoringMethod = (props: IProps) => {
 
   const onChange = e => {
     // const mark = e.target.value
-
-    setMark(e)
+    setMark(e.target.value)
   };
 
 
@@ -45,30 +43,30 @@ const ScoringMethod = (props: IProps) => {
   const IntervalRadio = useMemo(() => {
     return (
       <span style={{ marginRight: 10 }}> 时长：
-        <Select disabled={!docid} onChange={e => {
-          const i = Number(e) || 20
+        <select disabled={!docid} onChange={e => {
+          const i = Number(e.target.value) || 20
           setInterval(i)
 
         }} value={interval}>
           {
             intervals.map(value => (
-              <Select.Option value={value} key={value}>{value + '分钟'}</Select.Option>
+              <option value={value} key={value}>{value + '分钟'}</option>
             ))
           }
-        </Select>
+        </select>
       </span>
     )
   }, [interval, docid])
   const FetalSelect = useMemo(() => {
     return (
       <span style={{ marginRight: 10 }}> 胎心率：
-        <Select disabled={!docid} onChange={setFetal} value={fetal}>
+        <select disabled={!docid} onChange={e => setFetal(e.target.value)} value={fetal}>
           {
             Array(+ctgData.fetalnum).fill(0).map((_, i) => (
-              <Select.Option value={i + 1} key={i + 1}>{`FHR${i + 1}`}</Select.Option>
+              <option value={i + 1} key={i + 1}>{`FHR${i + 1}`}</option>
             ))
           }
-        </Select>
+        </select>
       </span>
     )
   }, [ctgData, fetal, setFetal, docid])
@@ -84,13 +82,15 @@ const ScoringMethod = (props: IProps) => {
       return (
         <>
           <span>方法：</span>
-          <Select disabled={!docid} onChange={onChange} value={mark} style={{ marginBottom: 5, width: 90 }}>
+
+
+          <select disabled={!docid} onChange={onChange} value={mark} style={{ marginBottom: 5, width: 90 }}>
             {
               MARKS.map(_ => (
-                <Select.Option value={_} key={_}>{_}</Select.Option>
+                <option value={_} key={_}>{_}</option>
               ))
             }
-          </Select>
+          </select>
         </>
 
       )

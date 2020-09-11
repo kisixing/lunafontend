@@ -1,14 +1,19 @@
 import React, { useState, useRef, FunctionComponent, memo } from 'react';
-import { CloseOutlined, PlusOutlined } from "@ant-design/icons";
+import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { Button } from 'antd';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
-import { ICtgLayoutTheme } from '../Layout/types';
 
-interface IProps extends ICtgLayoutTheme { mutableSuit: React.MutableRefObject<Suit>, onSelect?: (unitId: string) => void, unitId: string, children: any }
+interface IProps {
+  mutableSuit: React.MutableRefObject<Suit>,
+  onSelect?: (unitId: string) => void,
+  unitId: string,
+  children: any,
+  setMaskVisible: React.Dispatch<React.SetStateAction<boolean>>
+}
 
 const Bar: FunctionComponent<IProps> = function (props) {
   const [showBar, setShowBar] = useState(false)
-  const { mutableSuit, onSelect, unitId,backgroundColor } = props
+  const { mutableSuit, onSelect, unitId, setMaskVisible } = props
 
 
   const timeout = useRef(null)
@@ -44,16 +49,17 @@ const Bar: FunctionComponent<IProps> = function (props) {
         // right: 3 * @float-padding + 60px,
         height: 32,
         width: showBar ? `calc(100% - ${4 * fp}px - 36px)` : 0,
-        background: backgroundColor,
+        background: '#fff',
         borderRadius: 3,
         boxShadow: '#aaa 3px 3px 5px 1px',
         transition: 'width 0.2s ease-out',
-        visibility: showBar ? 'visible' : 'hidden'
+        visibility: showBar ? 'visible' : 'hidden',
+        // overflow:'hidden'
       }}
     >
       {
         React.Children.map(props.children, _ => {
-          return React.cloneElement(_ as any, { mutableSuit })
+          return React.cloneElement(_ as any, { mutableSuit, setMaskVisible })
         })
       }
     </div>
@@ -65,8 +71,8 @@ const Bar: FunctionComponent<IProps> = function (props) {
       }}
     >
       <Button
-        icon={showBar ? <CloseOutlined /> : <PlusOutlined />}
-        shape='circle'
+        icon={showBar ? <LeftOutlined /> : <RightOutlined />}
+        shape={showBar ? 'circle' : null}
         style={{ boxShadow: '#aaa 3px 3px 5px 1px' }}
         className="btn"
         type="primary"

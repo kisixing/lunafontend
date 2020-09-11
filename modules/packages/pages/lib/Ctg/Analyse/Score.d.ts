@@ -1,6 +1,6 @@
 /// <reference types="react" />
-import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import { obvue } from "@lianmed/f_types";
+import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 interface IProps {
     ctgData: any;
     docid: string;

@@ -6,6 +6,7 @@ interface IProps extends ICtgLayoutTheme {
     onSelect?: (unitId: string) => void;
     unitId: string;
     children: any;
+    setMaskVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 declare const _default: React.NamedExoticComponent<IProps>;
 export default _default;

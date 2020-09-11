@@ -9,8 +9,9 @@ interface IProps extends PropsWithChildren<ICtgLayoutTheme> {
     data: ICacheItem;
     bedname: string;
     name: string;
-    age: string;
+    age: number;
     bedNO: string;
+    telephone?: string;
     startTime: string;
     GP: string;
     gestationalWeek: string;
@@ -22,6 +23,7 @@ interface IProps extends PropsWithChildren<ICtgLayoutTheme> {
     unitId: string;
     isFullscreen: boolean;
     onSelect?: (unitId: string) => void;
+    RenderMaskIn: any;
 }
 declare const Item: (props: IProps) => JSX.Element;
 export default Item;

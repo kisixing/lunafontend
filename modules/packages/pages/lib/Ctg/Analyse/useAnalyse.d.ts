@@ -15,6 +15,7 @@ declare const _default: (v: MutableRefObject<Suit>, docid: string, fetal: any, c
     _fhr1?: string;
     _fhr2?: string;
     _fhr3?: string;
+    selectBarHidden?: boolean;
 }) => {
     setMark(m: AnalyseType): void;
     mark: any;
@@ -39,7 +40,6 @@ declare const _default: (v: MutableRefObject<Suit>, docid: string, fetal: any, c
         [x: string]: any;
     }>;
     analyseLoading: boolean;
-    isToShort: boolean;
     setAutoFm(s: boolean): void;
     autoFm: boolean;
     initData: {

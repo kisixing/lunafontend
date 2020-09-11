@@ -25,6 +25,9 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -32,11 +35,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 var antd_1 = require("antd");
+var message_1 = __importDefault(require("antd/lib/message"));
 var react_1 = __importStar(require("react"));
 var styled_components_1 = __importDefault(require("styled-components"));
 var services_1 = require("../../services");
@@ -45,7 +46,6 @@ var useArchive_1 = __importDefault(require("./hooks/useArchive"));
 var usePrintConfig_1 = __importDefault(require("./hooks/usePrintConfig"));
 var useSave_1 = __importDefault(require("./hooks/useSave"));
 var useSign_1 = __importDefault(require("./hooks/useSign"));
-var message_1 = __importDefault(require("antd/lib/message"));
 var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n    .bottomBtns button {\n        margin-right: 10px \n    }\n    .bottomBtns button:last-child {\n        margin-right: 0px \n    }\n"], ["\n    .bottomBtns button {\n        margin-right: 10px \n    }\n    .bottomBtns button:last-child {\n        margin-right: 0px \n    }\n"])));
 var COEFFICIENT = 240;
 var Preview = function (props) {
@@ -57,7 +57,7 @@ var Preview = function (props) {
         }
         setPdfBase64Loading(true);
         services_1.fetchCtgExamsPdf(__assign({ docid: docid,
-            diagnosis: diagnosis, start: startingTime, end: endingTime, outputType: outputType, fetal: fetal }, args)).then(function (r) {
+            diagnosis: diagnosis, start: startingTime, end: endingTime, outputType: outputType, fetal: fetal, show_fetalmovement: window['obvue'] ? !!window['obvue'].setting.show_fetalmovement : true }, args)).then(function (r) {
             setPdfBase64Loading(false);
             setPdfBase64(r);
         });
@@ -100,12 +100,12 @@ var Preview = function (props) {
                         dispalyTime(endingTime - startingTime))),
                 react_1.default.createElement("div", { style: { textAlign: 'left' } },
                     react_1.default.createElement("label", null, "\u80CE\u5FC3\u7387\u8303\u56F4\uFF1A"),
-                    react_1.default.createElement(antd_1.Select, { value: outputType, onChange: setOutputType, disabled: locking },
-                        react_1.default.createElement(antd_1.Select.Option, { value: "180" }, "90~180"),
-                        react_1.default.createElement(antd_1.Select.Option, { value: "210" }, "50~210")),
+                    react_1.default.createElement("select", { value: outputType, onChange: function (e) { return setOutputType(e.target.value); }, disabled: locking },
+                        react_1.default.createElement("option", { value: "180" }, "90~180"),
+                        react_1.default.createElement("option", { value: "210" }, "50~210")),
                     react_1.default.createElement("label", null, "\u80CE\u5FC3\u7387\uFF1A"),
-                    react_1.default.createElement(antd_1.Select, { value: fetal, onChange: function (v) { return setFetal(v); }, disabled: locking }, Array((props.fetalcount || 0) + 1).fill(0).map(function (_, i) {
-                        return react_1.default.createElement(antd_1.Select.Option, { key: i, value: i }, i == 0 ? '混合' : "FHR" + i);
+                    react_1.default.createElement("select", { value: fetal, onChange: function (v) { return setFetal(Number(v.target.value)); }, disabled: locking }, Array((props.fetalcount || 0) + 1).fill(0).map(function (_, i) {
+                        return react_1.default.createElement("option", { key: i, value: i }, i == 0 ? '混合' : "FHR" + i);
                     }))),
                 react_1.default.createElement("div", { style: { display: 'flex' }, className: "bottomBtns" },
                     react_1.default.createElement(antd_1.Button, { disabled: locking || !editable, block: true, type: "primary", loading: pdfBase64Loading, onClick: handlePreview },

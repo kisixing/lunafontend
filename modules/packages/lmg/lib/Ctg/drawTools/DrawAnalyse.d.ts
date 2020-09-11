@@ -26,6 +26,7 @@ export declare class DrawAnalyse extends Draw {
     _dec: number[];
     setData(r: obvue.ctg_exams_analyse): void;
     drawBaseline(cur: any, show: boolean, color: any, yspan: any, xspan: any, max: any, basetop: any): void;
+    showBase: boolean;
     analyse(type: AnalyseType, showBase?: boolean, start?: number, end?: number, data?: {
         analysis?: {
             length: number;

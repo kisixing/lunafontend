@@ -11,6 +11,7 @@ interface BasePoint {
     remove?: boolean;
     user?: boolean;
     reliability?: number;
+    dataClean?:boolean;
 }
 export interface AccPoint extends BasePoint {
 }

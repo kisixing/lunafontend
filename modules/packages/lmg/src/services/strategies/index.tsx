@@ -12,9 +12,14 @@ import { push_data_ctg } from "./push_data_ctg";
 import { push_data_ecg } from "./push_data_ecg";
 import { push_offline_data_ctg } from "./push_offline_data_ctg";
 import { endpoint_user_confirm_msg } from "./endpoint_user_confirm_msg";
+import { toast } from "./toast";
+import { replace_probe_tip } from "./replace_probe_tip";
+import { add_probe_tip } from "./add_probe_tip";
+import { time_endwork_tip } from "./time_endwork_tip";
 import { list_blood_pressure } from "./list_blood_pressure";
 import { WsService } from "../WsService";
-import { f0_strategies } from "./f0";
+import { handleF0ProErr } from "../utils";
+
 export const strategies: { [x: string]: Function } = {
     start_work,
     end_work,
@@ -35,15 +40,39 @@ export const strategies: { [x: string]: Function } = {
     push_offline_data_ctg,
 
     endpoint_user_confirm_msg,
+    toast,
 
     list_blood_pressure,
-    ...f0_strategies
-}
 
+    replace_probe_tip,
+    add_probe_tip,
+    time_endwork_tip,
+}
+const exp = /(.*)_res$/
 export function getStrategies(context: WsService): { [x: string]: Function } {
     const entries = Object.entries(strategies)
     return entries.reduce((r, [k, v]) => {
         r[k] = v.bind(context)
         return r
     }, {})
+}
+function requestInterceptror(this: WsService, mesName: string, mes: { data: any }) {
+    const obj = mesName.match(exp)
+    if (obj) {
+        const k = obj[1]
+        const res = this.requests[k]
+        if (res) {
+            (mes.data && mes.data.res === 0) ? res(mes.data) : handleF0ProErr(k, mes.data.res)
+            this.requests[k] = null
+        }
+        return true
+    }
+}
+export function handleMessage(this: WsService, mesName: string, mes: any) {
+
+    this.strategies = this.strategies || getStrategies(this)
+    if (!requestInterceptror.call(this, mesName, mes)) {
+        const strategy = this.strategies[mesName]
+        strategy && strategy(mes)
+    }
 }

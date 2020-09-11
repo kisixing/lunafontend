@@ -3,6 +3,7 @@ import Draw from "../../Draw";
 import { AnalyseType, PointType } from '../../interface';
 import { Suit } from "../Suit";
 import { DecType, AccPoint, DecPoint } from "@lianmed/f_types/lib/obvue/ctg_exams_analyse";
+import { event } from "@lianmed/utils";
 
 
 // export interface AnalyseData {
@@ -43,8 +44,8 @@ export class DrawAnalyse extends Draw {
     _dec: number[]
     setData(r: obvue.ctg_exams_analyse,) {
         console.log('setData', r)
-        r.analysis.acc = r.analysis.acc && r.analysis.acc.map(_ => ({ ..._, duration: _.duration / 4 }))
-        r.analysis.dec = r.analysis.dec && r.analysis.dec.map(_ => ({ ..._, duration: _.duration / 4 })).filter(_ => _.reliability >= 90 || _.user)
+        r.analysis.acc = r.analysis.acc && r.analysis.acc.map(_ => ({ ..._, duration: _.dataClean ? _.duration : _.duration / 4, dataClean: true }))
+        r.analysis.dec = r.analysis.dec && r.analysis.dec.map(_ => ({ ..._, duration: _.dataClean ? _.duration : _.duration / 4, dataClean: true })).filter(_ => _.reliability >= 90 || _.user)
         this._acc = r.analysis.acc.map(_ => _.index)
         this._dec = r.analysis.dec.map(_ => _.index)
         this.analysisData = r
@@ -113,7 +114,10 @@ export class DrawAnalyse extends Draw {
 
         }
     }
+
+    showBase: boolean
     analyse(type: AnalyseType, showBase = true, start?: number, end?: number, data = this.analysisData) {
+        console.log('form', type, showBase, start, end, data)
         if (!data) return
         const { suit } = this
         this.setData(data)
@@ -129,6 +133,7 @@ export class DrawAnalyse extends Draw {
         //kisi 2020-03-05 
         let newData = this.ctgscore(type)
         suit.drawobj.drawdot((suit.type > 0 && suit.viewposition < suit.width * 2) ? suit.width * 2 : suit.viewposition, false, showBase);
+        event.emit('suit:afterAnalyse', newData)
         return newData
     }
     //kisi 2019-10-28 绘制 acc dec
@@ -252,31 +257,42 @@ export class DrawAnalyse extends Draw {
     fhrDuration = (start: number, end: number) => {
         let accnum = 0;
         let sum = 0;
-        const { analysisData } = this
-        if (!analysisData) return accnum;
+        const { analysisData, suit: { data } } = this
+        if (!analysisData || !data) return accnum;
         const { analysis } = analysisData
-        analysis.acc.map((item) => {
-            if (item.index > end) {
-                if (accnum == 0)
-                    return accnum;
-                else {
-                    return Math.ceil(sum / accnum / 4);
-                }
-            } else if (item.index >= start) {
-                if (item.marked) {
-                    if (item.duration != 0) {
-                        sum += item.duration;
-                        accnum++;
-                    }
-                    console.log(item.duration);
+
+        analysis.acc.forEach(_ => {
+            if (_.index >= start) {
+                if (_.reliability > 50) {
+                    sum += (_.end - _.start) > 0 ? _.end - _.start : 0
+                    accnum++
                 }
             }
         })
-        if (accnum == 0)
-            return accnum;
-        else {
-            return Math.ceil(sum / accnum / 4);
-        }
+        return accnum ? Math.ceil(sum / accnum / 4) : 0
+
+        // analysis.acc.map((item) => {
+        //     if (item.index > end) {
+        //         if (accnum == 0)
+        //             return accnum;
+        //         else {
+        //             return Math.ceil(sum / accnum / 4);
+        //         }
+        //     } else if (item.index >= start) {
+        //         if (item.marked) {
+        //             if (item.duration != 0) {
+        //                 sum += item.duration;
+        //                 accnum++;
+        //             }
+        //             console.log(item.duration);
+        //         }
+        //     }
+        // })
+        // if (accnum == 0)
+        //     return accnum;
+        // else {
+        //     return Math.ceil(sum / accnum / 4);
+        // }
     }
     //fm-fhr-ampl
     fhrAmpl = (start: number, end: number) => {
@@ -629,14 +645,13 @@ export class DrawAnalyse extends Draw {
             //     score.sogcdata.accscore = 2;
             // }
             // 减速
-            let ld = analysis.ldtimes = this.countDec(analysis.start, analysis.end, 'LD');//analysis.ldtimes;
+            // let ld = analysis.ldtimes = this.countDec(analysis.start, analysis.end, 'LD');//analysis.ldtimes;
             let vd = analysis.vdtimes = this.countDec(analysis.start, analysis.end, 'VD');//analysis.vdtimes;
             let ed = analysis.edtimes = this.countDec(analysis.start, analysis.end, 'ED');//analysis.edtimes;
             if (ed > 0) {
                 score.sogcdata.decvalue = 'ed';
                 score.sogcdata.decscore = 2;
             } else if (vd > 0) {
-                debugger
                 const all = analysis.dec.filter(_ => _.type === 'vd' && _.start >= analysis.start && _.end <= analysis.end)
                 const gt60 = all.find(_ => _.duration > 60)
                 const btw = all.find(_ => this.inRange(_.duration, 30, 60))

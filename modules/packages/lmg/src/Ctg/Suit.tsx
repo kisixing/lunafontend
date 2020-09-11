@@ -61,7 +61,7 @@ export class Suit extends Draw {
   needScroll = false;
   isOn: boolean;
   emitInterval: number;
-  static option: { [x: string]: string };
+  static option: { [x: string]: any };
   option = Suit.option;
   initFlag = false;
   sid = sid++;
@@ -80,14 +80,26 @@ export class Suit extends Draw {
   buffersize = 16;
   curr = -16;
   alarmStatus = 0; //报警状态
-  private _ctgconfig: TCtgConfig = defaultCtgConfig;
-  public get ctgconfig(): TCtgConfig {
-  
-    return Object.assign(this._ctgconfig,window['isDark']?darkConfig:lightConfig);
-  }
-  public set ctgconfig(value: TCtgConfig) {
-    this._ctgconfig = value;
-  }
+  ctgconfig = {
+    normalarea: 'rgb(224,255,255)',
+    selectarea: 'rgba(192,192,192,0.5)',
+    rule: 'rgba(0,51,102,1)',
+    scale: 'rgba(0,0,0,1)',
+    // primarygrid: 'rgba(144, 159, 180,1)',
+    // secondarygrid: 'rgba(221, 230, 237,1)',
+    primarygrid: 'rgba(100, 100, 100, 1)',
+    secondarygrid: 'rgba(200, 200, 200, 1)',
+    fhrcolor: ['green', 'blue', 'rgb(0,0,0)'],
+    tococolor: 'rgb(0,0,0)',
+    alarmcolor: 'rgb(255, 1, 1)',
+    fmpcolor: 'darkgreen',
+    alarm_enable: true,
+    alarm_high: 160,
+    alarm_low: 110,
+    print_interval: 20,
+    alarm_delay: 0,
+    show_fetalmovement: true
+  };
   fetalposition = {
     fhr1: '',
     fhr2: '',
@@ -124,7 +136,7 @@ export class Suit extends Draw {
     this.emit('change:selectPoint', this.drawSelect.selectingBarPoint)
 
     this.updateBarTool();
-    this.drawobj.drawdot((this.type > 0 && this.viewposition < this.width * 2) ? this.width * 2 : this.viewposition);
+    this.drawobj.drawdot((this.type > 0 && this.viewposition < this.width * 2) ? this.width * 2 : this.viewposition, false,);
   }
 
   constructor(
@@ -152,12 +164,12 @@ export class Suit extends Draw {
     this.type = type;
     this.drawAnalyse = new DrawAnalyse(wrap, canvasanalyse, this)
     this.drawSelect = new DrawSelect(wrap, canvasselect, this)
-    Object.assign(this.ctgconfig, ctgconfig)
     if (this.option) {
       this.ctgconfig.tococolor = this.option.tococolor;
       this.ctgconfig.fhrcolor[0] = this.option.fhrcolor1;
       this.ctgconfig.fhrcolor[1] = this.option.fhrcolor2;
       this.ctgconfig.fhrcolor[2] = this.option.fhrcolor3;
+      this.ctgconfig.show_fetalmovement = this.option.show_fetalmovement === undefined ? true : !!this.option.show_fetalmovement
       if (this.option.alarm_enable == '0') {
         this.ctgconfig.alarm_enable = false;
       } else {
@@ -173,10 +185,14 @@ export class Suit extends Draw {
 
   init(data: ICacheItem) {
 
-    if (!data) {
+    if (!data || !(data.fhr || (data as any).fhr1)) {
       return;
     }
-    this.initFlag = true;
+
+    // if (data.keepSelection && this.data && this.data.fhr[0].length > 0) {
+    //   return
+    // }
+    const t = this.initFlag && data.keepSelection
     let defaultinterval = 500;
     this.data = data;
     this.currentdot = data.index;
@@ -194,8 +210,8 @@ export class Suit extends Draw {
     this.drawAnalyse.init()
     this.drawSelect.init()
 
-    this.drawSelect.clearselect();
-    this.drawobj.showcur(0, false);
+    t || this.drawSelect.clearselect();
+    this.drawobj.showcur(t ? this.drawSelect.selectingBarPoint : 0, false);
     if (this.type > 0) {
       //kisi 2019-10-29 测试增加analyse属性
       // console.log(this.data);
@@ -208,14 +224,16 @@ export class Suit extends Draw {
         } else {
           this.barTool.setBarWidth(100);
         }
-        this.barTool.setBarLeft(0, false);
+
       } else {
         this.barTool.setBarWidth(0);
-        this.barTool.setBarLeft(0, false);
+
         this.curr = this.data.index;
       }
-      this.drawobj.drawdot(this.canvasline.width * 2, false);
-      this.rightViewPosition = this.curr;
+
+      t || (this.rightViewPosition = this.curr);
+      t || this.barTool.setBarLeft(0, false);
+      this.drawobj.drawdot((t && this.data.index > this.width * 2) ? this.rightViewPosition : this.canvasline.width * 2, false);
     } else {
       this.timerCtg(defaultinterval);
     }
@@ -302,7 +320,9 @@ export class Suit extends Draw {
 
     });
 
-    this.emit('afterInit')
+    event.emit('suit:afterInit',this)
+    this.initFlag = true;
+
   }
   createLine() {
     if (this.rowline) return;
@@ -373,10 +393,11 @@ export class Suit extends Draw {
     this[key] = this[key] || []
     const arr: number[] = this[key]
     arr.push(0)
+    const text = `FHR${fetalIndex + 1}心率过低`
 
     if (arr.length >= 2 * this.ctgconfig.alarm_delay) {
-      this.itemAlarm('心率过低')
-      this.lazyEmit('alarmOn', '心率过低');
+      this.itemAlarm(text)
+      this.lazyEmit('alarmOn', text);
       return true
     }
   }
@@ -387,9 +408,9 @@ export class Suit extends Draw {
     arr.push(0)
     if (arr.length >= 2 * this.ctgconfig.alarm_delay) {
       console.log(`hh${fetalIndex}`, arr.length)
-
-      this.itemAlarm('心率过高')
-      this.lazyEmit('alarmOn', '心率过高');
+      const text = `FHR${fetalIndex + 1}心率过高`
+      this.itemAlarm(text)
+      this.lazyEmit('alarmOn', text);
       return true
     }
   }
@@ -407,19 +428,22 @@ export class Suit extends Draw {
 
   }
   checkAlarm(fetalIndex: number, cv: number) {
-    // 荣总：胎心率最大的计算范围是29~241
-    if (cv <= 241 && cv > this.ctgconfig.alarm_high) {
-      console.log('心率过高', cv);
-      this.alarmHigh(fetalIndex);
-      return true
-    } else if (cv < this.ctgconfig.alarm_low && cv >= 29) {
-      console.log('心率过低', cv);
-      this.alarmLow(fetalIndex);
-      return true
-    } else {
-      this.alarmOff(fetalIndex)
-      return false
+    if (this.data.isWorking) {
+      // 荣总：胎心率最大的计算范围是29~241
+      if (cv <= 241 && cv > this.ctgconfig.alarm_high) {
+        console.log('心率过高', cv);
+        this.alarmHigh(fetalIndex);
+        return true
+      } else if (cv < this.ctgconfig.alarm_low && cv >= 29) {
+        console.log('心率过低', cv);
+        this.alarmLow(fetalIndex);
+        return true
+      } else {
+        this.alarmOff(fetalIndex)
+        return false
+      }
     }
+
 
 
   }
@@ -440,8 +464,16 @@ export class Suit extends Draw {
   }
   _resize() {
     const { width, height } = this.wrap.getBoundingClientRect()
+    if (this.type > 0 && width < 200) {
+      // setTimeout(() => {
+      //   this._resize()
+      //   event.emit('fuckedResize')
+      // }, 1000);
+      Object.values(this).forEach(_ => _ && _.resize && _.resize(width, height))
+    } else {
+      Object.values(this).forEach(_ => _ && _.resize && _.resize(width, height))
+    }
 
-    Object.values(this).forEach(_ => _ && _.resize && _.resize(width, height))
   }
   //kisi 2019-11-14 update fhr position
   setfetalposition(fhr1, fhr2, fhr3) {
@@ -473,12 +505,15 @@ export class Suit extends Draw {
       fhr: [[], [], []],
       toco: [],
       fm: [],
+      fmp: [],
       fetal_num: +oriobj.fetalnum || 1,
       index: 0,
       starttime: '',
       fetalposition: {},
       analyse: { acc: [], dec: [], baseline: [], start: 0, end: 0 },
-      noOffset: oriobj.noOffset
+      noOffset: oriobj.noOffset,
+      selectBarHidden: oriobj.selectBarHidden,
+      keepSelection: oriobj.keepSelection,
     };
     if (oriobj.docid) {
       let pureidarr: string[] = oriobj.docid.split('_');
@@ -492,12 +527,7 @@ export class Suit extends Draw {
     ) {
       let positionobj = JSON.parse(oriobj.fetalposition);
       CTGDATA.fetalposition = positionobj;
-      console.log(
-        oriobj.fetalposition,
-        typeof this.data.fetalposition,
-        this.data.fetalposition,
-        this
-      );
+
     }
     Object.keys(oriobj).forEach(key => {
       let oridata = oriobj[key];
@@ -532,6 +562,8 @@ export class Suit extends Draw {
           CTGDATA.toco[i] = data_to_push;
         } else if (key === 'fm') {
           CTGDATA.fm[i] = data_to_push;
+        } else if (key === 'fmp') {
+          CTGDATA.fmp[i] = data_to_push > 18 ? 98 : (data_to_push + 80);
         }
         oridata = oridata.substring(2, oridata.length);
       }
@@ -627,6 +659,7 @@ export class Suit extends Draw {
         } else if (key === 'fhr3') {
           if (datacache.fhr[2]) datacache.fhr[2][i] = data_to_push;
         } else if (key === 'toco') {
+          console.log('initfhrdata', data_to_push)
           datacache.toco[i] = data_to_push;
         } else if (key === 'fm') {
           datacache.fm[i] = data_to_push;

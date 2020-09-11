@@ -1,17 +1,45 @@
-import { Empty, Row, Spin } from 'antd';
-import React, { memo, useRef } from 'react';
+import React, { useRef, memo } from 'react';
+import { Row, Empty, Spin } from 'antd';
 import Item from './Item';
-import { ICtgLayoutProps } from "./types";
+import { IPrenatalVisit, IPregnancy } from '@lianmed/f_types/lib/m';
 
+export interface IItemData {
+  data: {
+    pregnancy?: {
+      age: any
+      name: any
+      GP: any
+      gestationalWeek: any
+      bedNO: any
 
-const Home = (props: ICtgLayoutProps) => {
-  const { onSelect, borderedId, loading, listLayout = [], fullScreenId, contentHeight, RenderIn, items, onClose, themeColor = 'skyblue',
-    headColor = "#fff",
-    backgroundColor = "#f8f8f8",
-    borderedColor = "#DBDBDB",
-    fontColor = "#242741",
-    activeColor = '#1890ff'
-  } = props;
+    }
+    docid: string
+    starttime: string
+    status: any
+    ismulti: boolean
+  }
+  bedname: string
+  unitId: string
+  id: any
+  prenatalvisit?: IPrenatalVisit
+  pregnancy?: IPregnancy
+}
+
+interface IProps {
+  RenderIn: any
+  RenderMaskIn?: any
+  items: IItemData[]
+  listLayout: number[],
+  fullScreenId?: string,
+  onClose?: (data: any) => void
+  contentHeight: number
+  themeColor?: string
+  loading?: boolean
+  borderedId?: string
+  onSelect?: (unitId: string) => void
+}
+const Home = (props: IProps) => {
+  const { onSelect, borderedId, loading, listLayout = [], fullScreenId, contentHeight, RenderIn, RenderMaskIn, items, onClose, themeColor = 'skyblue' } = props;
   const wrap = useRef(null);
   const empty = useRef(null)
 
@@ -19,7 +47,7 @@ const Home = (props: ICtgLayoutProps) => {
   const outPadding = 6;
 
 
-  const itemHeight = (contentHeight ) / listLayout[0];
+  const itemHeight = (contentHeight - outPadding * 2) / listLayout[0];
 
 
   return (
@@ -27,16 +55,16 @@ const Home = (props: ICtgLayoutProps) => {
       {
         loading ? (
           <Spin spinning={loading} size="large" style={{ paddingTop: 100, width: '100%' }} />
-        ) : <Row justify="start" align="top" style={{ padding: 0, maxHeight: contentHeight, overflowY: items.length > (listLayout[0] * listLayout[1]) ? 'scroll' : 'hidden' }} >
+        ) : <Row justify="start" align="top" style={{ padding: outPadding, maxHeight: contentHeight, overflowY: items.length > (listLayout[0] * listLayout[1]) ? 'scroll' : 'hidden' }} >
             {items.length ? items.map((item: any) => {
               const { data, bedname, unitId, id } = item;
               const { pregnancy, docid, starttime, status, ismulti } = data
-              const safePregnancy = pregnancy || { age: null, name: null, bedNO: null, GP: null, gestationalWeek: null }
+              const safePregnancy = pregnancy || { age: null, name: null, bedNO: null, GP: null, gestationalWeek: null, telephone: null }
               const startTime = starttime
               return (
                 <Item
                   onClose={onClose}
-                  themeColor={headColor}
+                  themeColor={themeColor}
                   itemData={item}
                   bedname={bedname}
                   unitId={unitId}
@@ -44,22 +72,19 @@ const Home = (props: ICtgLayoutProps) => {
                   key={id}
                   onSelect={onSelect}
                   data={data}
-
+                  RenderMaskIn={RenderMaskIn}
                   ismulti={ismulti}
                   docid={docid}
                   status={status}
                   loading={false}
                   pregnancy={safePregnancy}
                   startTime={startTime}
+
                   itemHeight={itemHeight}
                   itemSpan={itemSpan}
                   outPadding={outPadding}
                   fullScreenId={fullScreenId}
-                  backgroundColor={backgroundColor}
-                  borderedColor={borderedColor}
-                  headColor={headColor}
-                  fontColor={fontColor}
-                  activeColor={activeColor}
+
                 >
 
                   {

@@ -1,18 +1,16 @@
 import request from "@lianmed/request";
 import { event, EventEmitter } from "@lianmed/utils";
-import { throttle } from "lodash";
 import Queue from "../Ecg/Queue";
-import { getStrategies } from "./strategies";
-import { BedStatus, EWsEvents, EWsStatus, ICache, IDeviceType } from './types';
-import { cleardata, convertstarttime, getEmptyCacheItem } from "./utils";
+import { handleMessage } from "./strategies";
+import { BedStatus, EWsEvents, EWsStatus, ICache, TWsReqeustType } from './types';
+import { convertstarttime, getEmptyCacheItem } from "./utils";
 export * from './types';
 export * from './useCheckNetwork';
 export * from './utils';
 // import pingpong from "./pingpong";
 
-const ANNOUNCE_INTERVAL = 1000
+// const ANNOUNCE_INTERVAL = 1000
 const SECOND = 1000
-const { Working, Stopped, OfflineStopped } = BedStatus
 export const LIMIT_LENGTH = 4 * 3600 * 0.7
 
 
@@ -37,9 +35,11 @@ export class WsService extends EventEmitter {
     settingData: { [x: string]: string }
     socket: WebSocket
     offrequest: number
-    strategies = getStrategies(this)
+    strategies: { [x: string]: Function }
     BedStatus = BedStatus
     PENDDING_INTERVAL = SECOND * 30
+    requests: { [x in TWsReqeustType]?: (value: unknown) => void } = {}
+    handleMessage = handleMessage
     private _current: string[] = [];
     public get current(): string[] {
         return this._current;
@@ -73,10 +73,19 @@ export class WsService extends EventEmitter {
     getUnitId(device_no: number | string, bed_no: number | string) {
         return `${device_no}-${bed_no}`
     }
-    getCacheItem(data: IDeviceType) {
+    getCacheItem(data: { device_no?: any, bed_no?: any, [x: string]: any } | string) {
         const { datacache } = this
-        const { device_no, bed_no } = data
-        const target = datacache.get(this.getUnitId(device_no, bed_no))
+        let device_no, bed_no
+        if (typeof data === 'string') {
+            const arr = data.split('-')
+            device_no = Number(arr[0]) || null
+            bed_no = Number(arr[1]) || null
+        } else {
+            device_no = data.device_no
+            bed_no = data.bed_no
+        }
+        const key = this.getUnitId(device_no, bed_no)
+        const target = datacache.get(key)
         return target || null
     }
     pongIndex = 0
@@ -112,7 +121,7 @@ export class WsService extends EventEmitter {
 
         this.socket.close()
     }
-    refreshInterval = 2500
+    refreshInterval = 100
     refreshTimeout = null
     refresh(name = 'default') {
         if (this.refreshTimeout) {
@@ -142,6 +151,15 @@ export class WsService extends EventEmitter {
             log('The socket is not open.');
         }
     }
+    sendAsync(type: TWsReqeustType, message: string) {
+        return new Promise<{ res: number, [x: string]: any }>((res, rej) => {
+            this.send(message)
+            this.requests[type] = res
+            setTimeout(() => {
+                this.requests[type] = null
+            }, 5000);
+        })
+    }
     startwork(device_no: string, bed_no: string) {
         const message = `{"name":"start_work","data":{"device_no":${device_no},"bed_no":${bed_no}}}`;
         this.send(message);
@@ -149,6 +167,77 @@ export class WsService extends EventEmitter {
     endwork(device_no: string, bed_no: string) {
         const message = `{"name":"end_work","data":{"device_no":${device_no},"bed_no":${bed_no}}}`;
         this.send(message);
+    }
+    /**分配探头**/
+    alloc(device_no, bed_no) {
+        const command = `{"name": "allot_probe","device_no": ${device_no},"bed_no": ${bed_no}}`
+        return this.sendAsync('allot_probe', command);
+    }
+    /**取消探头分配**/
+    cancelalloc(device_no, bed_no) {
+        const command = `{"name": "release_probe","device_no": ${device_no},"bed_no": ${bed_no}}`
+        return this.sendAsync('release_probe', command);
+    }
+    //申请多胞胎
+    add_fhr(device_no, bed_no, fetal_num) {
+        const command = `{"name": "add_more_fhr_probe","device_no": ${device_no},"bed_no": ${bed_no},"data":{"fetal_num": ${fetal_num}}}`
+        return this.sendAsync('add_more_fhr_probe', command);
+    }
+    //添加宫缩
+    add_toco(device_no, bed_no) {
+        const command = `{"name": "add_toco_probe","device_no": ${device_no},"bed_no": ${bed_no}}`
+        return this.sendAsync('add_toco_probe', command);
+    }
+    setTocozero(device_no: number, bed_no: number) {
+        const msg = JSON.stringify({
+            name: "toco_zero",
+            device_no,
+            bed_no
+        })
+        this.send(msg)
+    }
+    replace_probe(device_no: number, bed_no: number,) {
+        const target = this.getCacheItem({ device_no, bed_no })
+        const command = JSON.stringify({
+            name: "replace_probe",
+            device_no,
+            bed_no,
+            data: target.replaceProbeTipData
+        })
+        target.replaceProbeTipData = null
+        return this.sendAsync('replace_probe', command);
+    }
+    add_probe(device_no: number, bed_no: number,) {
+        const target = this.getCacheItem({ device_no, bed_no })
+        const command = JSON.stringify({
+            name: "add_probe",
+            device_no,
+            bed_no,
+            data: target.addProbeTipData
+        })
+        target.addProbeTipData = null
+        return this.send(command);
+    }
+    delay_endwork(device_no: number, bed_no: number, delay_time: number) {
+        const target = this.getCacheItem({ device_no, bed_no })
+        const command = JSON.stringify({
+            name: "delay_endwork",
+            device_no,
+            bed_no,
+            data: { delay_time }
+        })
+        target.addProbeTipData = null
+        return this.send(command);
+    }
+    sendFocus(id: string) {
+        const target = this.getCacheItem(id)
+        const message = {
+            "name": "focus_on_bed",
+            "device_no": target && target.device_no,
+            "bed_no": target && target.bed_no
+        }
+
+        this.send(JSON.stringify(message))
     }
     _emit(name: string, ...value: any[]) {
         event.emit(`WsService:${name}`, ...value)
@@ -166,14 +255,7 @@ export class WsService extends EventEmitter {
         //     }
         // ))
     }
-    setTocozero(device_no: number, bed_no: number) {
-        const msg = JSON.stringify({
-            name: "toco_zero",
-            device_no,
-            bed_no
-        })
-        this.send(msg)
-    }
+
     getVolume(device_no: number, bed_no: number) {
         const msg = JSON.stringify({
             name: "getVolume",
@@ -225,9 +307,9 @@ export class WsService extends EventEmitter {
         } else if (value >= datacache.get(id).index) {
 
             datacache.get(id).index = value;
-            if (value > 20 * 240) {
-                announce(id)
-            }
+            // if (value > 20 * 240) {
+            //     announce(id)
+            // }
         }
         if (value > datacache.get(id).last) {
             //datacache.get(id).last = value;
@@ -247,30 +329,7 @@ export class WsService extends EventEmitter {
         })
     }
 
-    clearbyrest(doc_id: string, is_working: number) {
-        const { datacache } = this
 
-        request.get(`/bedinfos?documentno.equals=${doc_id}`).then(responseData => {
-            let vt = doc_id.split('_');
-            let curid = vt[0] + '-' + vt[1];
-            const target = datacache.get(curid)
-            if (responseData && target) {
-                if (responseData['pregnancy'] == null) {
-                    cleardata(datacache, curid, target.fetal_num);
-                }
-                if (is_working == 0) {
-                    target.status = Working;
-                } else if (is_working === 3) {
-                    target.status = OfflineStopped;
-
-                } else {
-                    target.status = Stopped;
-                }
-                //this.refresh('end_work');
-            }
-        })
-
-    }
 
     initfhrdata(data, datacache, offindex, queue, offstart) {
         Object.keys(data).forEach(key => {
@@ -310,16 +369,20 @@ export class WsService extends EventEmitter {
             offstart = false;
         }
     }
-    connect = (): Promise<ICache> => {
-        const { datacache, settingData } = this
-        const { ws_url } = settingData
-        if (!ws_url) return Promise.reject('错误的ws_url')
-        this.socket = new WebSocket(
-            `ws://${ws_url}/?clientType=ctg-suit&token=eyJ1c2VybmFtZSI6ICJhZG1pbiIsInBhc3N3b3JkIjogImFkbWluIn0=`,
-        );
-        const socket = this.socket;
+    connect = () => {
 
-        return new Promise(res => {
+
+        return new Promise<ICache>(res => {
+            const { datacache, settingData } = this
+            const { ws_url } = settingData
+            if (!ws_url) return Promise.reject('错误的ws_url')
+            if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+                return
+            }
+            this.socket = new WebSocket(
+                `ws://${ws_url}/?clientType=ctg-suit&token=eyJ1c2VybmFtZSI6ICJhZG1pbiIsInBhc3N3b3JkIjogImFkbWluIn0=`,
+            );
+            const socket = this.socket;
             this.connectResolve = res
             socket.onerror = () => {
                 console.log('错误')
@@ -353,20 +416,26 @@ export class WsService extends EventEmitter {
                 } catch (error) {
                     console.log('json parse error', error)
                 }
-
                 if (received_msg) {
                     const mesName = received_msg.name
-                    const strategy = this.strategies[mesName]
-                    // if (mesName === 'push_devices') {
-                        
-                    //     const t = received_msg.data.find(_ => _.device_no === 1)
-                    //     console.log('push',t);
-
-                    //     t && (t.device_type = 'V3')
-                    // }
-                    strategy && strategy(received_msg)
+                    this.handleMessage(mesName, received_msg)
                 }
             };
+            window['aa'] = (id = '1001-1') => {
+                const target = WsService._this.getCacheItem(id)
+                console.log('goit');
+                var received_msg = {
+                    "name": "time_endwork_tip",
+                    "device_no": target.device_no,
+                    "bed_no": target.bed_no,
+                    "data": {
+                        "mac": "EB:CI:SE:38:90:22",  //插入探头的蓝牙地址
+                        "isfhr": true  //插入探头是否为胎心探头
+                    }
+                }
+                const mesName = received_msg.name
+                this.handleMessage(mesName, received_msg)
+            }
             return [datacache];
         });
     };
@@ -400,22 +469,22 @@ export class WsService extends EventEmitter {
         }, 60 * 1000 * 5)
     }
 }
-const announce = throttle((text) => {
-    if (sp(text)) {
-        event.emit('bed:announcer', `${text}`)
-    }
-}, ANNOUNCE_INTERVAL)
+// const announce = throttle((text) => {
+//     if (sp(text)) {
+//         event.emit('bed:announcer', `${text}`)
+//     }
+// }, ANNOUNCE_INTERVAL)
 
-let timeoutKey = null
-let spObj = {}
-function sp(key: string) {
-    if (!timeoutKey) {
-        timeoutKey = setTimeout(() => {
-            spObj = {}
-            timeoutKey = null
-        }, SECOND * 60 * 20);
-    }
-    const old = spObj[key]
-    return old ? false : (spObj[key] = true)
-}
+// let timeoutKey = null
+// let spObj = {}
+// function sp(key: string) {
+//     if (!timeoutKey) {
+//         timeoutKey = setTimeout(() => {
+//             spObj = {}
+//             timeoutKey = null
+//         }, SECOND * 60 * 20);
+//     }
+//     const old = spObj[key]
+//     return old ? false : (spObj[key] = true)
+// }
 

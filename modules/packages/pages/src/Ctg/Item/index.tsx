@@ -10,14 +10,15 @@ import Bar from "./Bar";
 import "antd/lib/card/style/index.css"
 import "antd/lib/tag/style/index.css"
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
-import { ICtgLayoutTheme } from '../Layout/types';
-interface IProps extends PropsWithChildren<ICtgLayoutTheme> {
+import { formatTime } from '@lianmed/utils';
+interface IProps extends PropsWithChildren<{}> {
     status?: BedStatus
     data: ICacheItem
     bedname: string
     name: string
-    age: string
+    age: number
     bedNO: string
+    telephone?: string
     startTime: string
     GP: string,
     gestationalWeek: string,
@@ -29,7 +30,7 @@ interface IProps extends PropsWithChildren<ICtgLayoutTheme> {
     unitId: string
     isFullscreen: boolean
     onSelect?: (unitId: string) => void
-
+    RenderMaskIn: any
 }
 
 const Wrapper = styled.div`
@@ -47,10 +48,11 @@ const Wrapper = styled.div`
     }
 `
 const Item = (props: IProps) => {
-    const { onSelect, data, bedname, onClose, onDoubleClick, loading, onSuitRead, themeColor = 'rgb(74, 20, 140)', unitId, isFullscreen, headColor, fontColor,backgroundColor } = props;
+    const { onSelect, data, bedname, onClose, onDoubleClick, telephone, loading, onSuitRead, RenderMaskIn, themeColor = 'rgb(74, 20, 140)', unitId, isFullscreen } = props;
     const status = props.status === undefined ? data && data.status : props.status
     let { bedNO, GP, gestationalWeek, name, age, startTime } = props;
     const [suit, setSuit] = useState(null)
+    const [maskVisible, setMaskVisible] = useState(false)
 
     const ref = useRef<Suit>()
     console.log('ss ref', ref)
@@ -63,10 +65,11 @@ const Item = (props: IProps) => {
                     [
                         ['姓名', name],
                         ['床号', bedNO],
-                        ['年龄', age],
+                        ['年龄', typeof age === 'number' && age.toString()],
                         ['孕周', gestationalWeek],
                         ['GP', GP],
-                        ['开始时间', (startTime && m.isValid) ? m.format('HH:mm') : ' '],
+                        ['手机', telephone],
+                        ['开始时间', (startTime && m.isValid) ? formatTime(m) : ' '],
                     ]
                         .filter(_ => !!_[1])
                         .map(([a, b]) => <span key={a} style={{ marginRight: 12 }}>{a}：{b}</span>)
@@ -86,8 +89,8 @@ const Item = (props: IProps) => {
                 size="small"
                 title={<RenderTilte />}
                 style={{ height: '100%' }}
-                extra={<Extra fontColor={fontColor} bedname={bedname} onClose={onClose} status={status} suit={suit} unitId={unitId} />}
-                headStyle={{ background: headColor, color: fontColor }}
+                extra={<Extra bedname={bedname} onClose={!data.isF0Pro && onClose} status={status} suit={suit} unitId={unitId} />}
+                headStyle={{ background: themeColor, color: '#fff' }}
                 bodyStyle={{ padding: 0, height: 'calc(100% - 38px)' }}
             >
                 <L
@@ -98,12 +101,22 @@ const Item = (props: IProps) => {
                     loading={loading}
                     isFullscreen={isFullscreen}
                 ></L>
-                <Bar backgroundColor={backgroundColor} mutableSuit={ref} onSelect={onSelect} unitId={unitId}>
+
+                <Bar mutableSuit={ref} onSelect={onSelect} unitId={unitId} setMaskVisible={setMaskVisible}>
 
                     {
                         props.children
                     }
                 </Bar>
+                {
+                    maskVisible && (
+                        <div style={{ background: 'rgba(0,0,0,.4)', position: 'absolute', left: 0, right: 0, bottom: 0, top: 0, margin: 'auto' }}>
+                            {
+                                RenderMaskIn && <RenderMaskIn setMaskVisible={setMaskVisible} mutableSuit={ref} data={data} />
+                            }
+                        </div>
+                    )
+                }
             </Card>
         </Wrapper>
     );

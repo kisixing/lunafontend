@@ -14,7 +14,6 @@ interface IData {
 }
 
 export function start_work(this: WsService, received_msg: IData) {
-    const { Working, Stopped } = this.BedStatus
     const { datacache } = this
     //开启监护页
     let devdata = received_msg.data;
@@ -22,15 +21,14 @@ export function start_work(this: WsService, received_msg: IData) {
     let unitId = this.getUnitId(device_no, bed_no);
     //TODO : 更新设备状态
     cleardata(datacache, unitId, devdata.fetal_num);
+    console.log('cleardata startwork', unitId)
+
     this.convertdocid(unitId, devdata.doc_id)
     const target = datacache.get(unitId);
     if (typeof (devdata.ismulti) != 'undefined') {
         target.ismulti = devdata.ismulti;
     }
-    if (devdata.is_working == 0) {
-        target.status = Working
-    } else {
-        target.status = Stopped
-    }
+    target.status = devdata.is_working
+
     this.refresh('start_work')
 }

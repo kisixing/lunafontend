@@ -1,48 +1,45 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var utils_1 = require("../utils");
 function push_devices(received_msg) {
-    var _a = this.BedStatus, Working = _a.Working, Stopped = _a.Stopped, Offline = _a.Offline, OfflineStopped = _a.OfflineStopped, Uncreated = _a.Uncreated;
     var datacache = this.datacache;
     var devlist = received_msg.data;
     for (var i in devlist) {
         var devdata = devlist[i];
         if (!devdata)
             continue;
-        for (var bi in devdata.beds) {
-            var bedData = devdata.beds[bi];
-            var is_include_tocozero = bedData.is_include_tocozero, is_include_volume = bedData.is_include_volume, doc_id = bedData.doc_id, fetal_num = bedData.fetal_num;
-            var unitId = this.getUnitId(devdata.device_no, bedData.bed_no);
+        var device_no = devdata.device_no, beds = devdata.beds, device_type = devdata.device_type;
+        for (var bi in beds) {
+            var bedData = beds[bi];
+            var bed_no = bedData.bed_no, doc_id = bedData.doc_id, others = __rest(bedData, ["bed_no", "doc_id"]);
+            var unitId = this.getUnitId(device_no, bed_no);
             var old = datacache.get(unitId);
-            if (!old || (old.docid !== doc_id)) {
-                var item = utils_1.getEmptyCacheItem({ is_include_tocozero: is_include_tocozero, is_include_volume: is_include_volume, fetal_num: fetal_num, id: unitId, docid: doc_id });
-                item.deviceType = devdata.device_type;
-                datacache.set(unitId, item);
+            if (!old || (old.doc_id !== doc_id)) {
+                var target = utils_1.getEmptyCacheItem(__assign({ id: unitId, doc_id: doc_id, device_type: device_type, device_no: device_no, bed_no: bed_no }, others));
+                datacache.set(unitId, target);
                 this.convertdocid(unitId, doc_id);
-                if (bedData.is_working == 0) {
-                    item.status = Working;
-                }
-                else if (bedData.is_working == 1) {
-                    item.status = Stopped;
-                }
-                else if (bedData.is_working == 2) {
-                    item.status = Offline;
-                }
-                else if (bedData.is_working == 3) {
-                    item.status = OfflineStopped;
-                }
-                else {
-                    item.status = Uncreated;
-                }
-                if (bedData.pregnancy) {
-                    item.pregnancy = JSON.parse(bedData.pregnancy);
-                }
-                if (bedData.fetalposition) {
-                    item.fetalposition = JSON.parse(bedData.fetalposition);
-                }
-                item.fetal_num = bedData.fetal_num;
-                if (bedData.is_include_mother)
-                    item.ismulti = true;
             }
         }
     }
