@@ -26,11 +26,7 @@ var SB = styled_components_1.default(antd_1.Button)(templateObject_1 || (templat
 var Bed = react_1.memo(function (_a) {
     var bedname = _a.bedname;
     console.log('ggg');
-<<<<<<< HEAD
-    return react_1.default.createElement("span", { style: { marginRight: '8px' } },
-=======
     return !!bedname && react_1.default.createElement("span", { style: { marginRight: '8px', color: '#fff' } },
->>>>>>> 7月三类评分
         bedname,
         "\u53F7");
 });

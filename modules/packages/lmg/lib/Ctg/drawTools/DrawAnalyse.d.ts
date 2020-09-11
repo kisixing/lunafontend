@@ -82,7 +82,7 @@ export declare class DrawAnalyse extends Draw {
     inRange: (value: number, min: number, max: number) => boolean;
     countAcc: (start: number, end: number) => number;
     countDec: (start: number, end: number, type: string) => number;
-    cycleAcc: () => 0 | 1;
+    cycleAcc: () => 1 | 0;
     countFm: (start: number, end: number) => number;
     fhrDuration: (start: number, end: number) => number;
     fhrAmpl: (start: number, end: number) => number;

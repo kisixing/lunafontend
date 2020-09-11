@@ -1,8 +1,4 @@
 import React from 'react';
-<<<<<<< HEAD
-import { ICtgLayoutProps } from "./types";
-declare const _default: React.MemoExoticComponent<(props: ICtgLayoutProps) => JSX.Element>;
-=======
 import { IPrenatalVisit, IPregnancy } from '@lianmed/f_types/lib/m';
 export interface IItemData {
     data: {
@@ -38,5 +34,4 @@ interface IProps {
     onSelect?: (unitId: string) => void;
 }
 declare const _default: React.MemoExoticComponent<(props: IProps) => JSX.Element>;
->>>>>>> 7月三类评分
 export default _default;

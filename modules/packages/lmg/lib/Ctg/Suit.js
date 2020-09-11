@@ -85,9 +85,6 @@ var Suit = (function (_super) {
         _this.buffersize = 16;
         _this.curr = -16;
         _this.alarmStatus = 0;
-<<<<<<< HEAD
-        _this._ctgconfig = defaultCtgConfig;
-=======
         _this.ctgconfig = {
             normalarea: 'rgb(224,255,255)',
             selectarea: 'rgba(192,192,192,0.5)',
@@ -106,7 +103,6 @@ var Suit = (function (_super) {
             alarm_delay: 0,
             show_fetalmovement: true
         };
->>>>>>> 7月三类评分
         _this.fetalposition = {
             fhr1: '',
             fhr2: '',
@@ -140,7 +136,6 @@ var Suit = (function (_super) {
         _this.type = type;
         _this.drawAnalyse = new DrawAnalyse_1.DrawAnalyse(wrap, canvasanalyse, _this);
         _this.drawSelect = new DrawSelect_1.DrawSelect(wrap, canvasselect, _this);
-        Object.assign(_this.ctgconfig, ctgconfig);
         if (_this.option) {
             _this.ctgconfig.tococolor = _this.option.tococolor;
             _this.ctgconfig.fhrcolor[0] = _this.option.fhrcolor1;
@@ -161,16 +156,6 @@ var Suit = (function (_super) {
         }
         return _this;
     }
-    Object.defineProperty(Suit.prototype, "ctgconfig", {
-        get: function () {
-            return Object.assign(this._ctgconfig, window['isDark'] ? darkConfig : lightConfig);
-        },
-        set: function (value) {
-            this._ctgconfig = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(Suit.prototype, "leftViewposition", {
         get: function () {
             return this.rightViewPosition >= this.width * 2 ? this.rightViewPosition - this.width * 2 : 0;
@@ -292,12 +277,8 @@ var Suit = (function (_super) {
             _this.drawSelect.showselect();
             _this.drawobj.drawdot(_this.rightViewPosition, false);
         });
-<<<<<<< HEAD
-        this.emit('afterInit');
-=======
         utils_1.event.emit('suit:afterInit', this);
         this.initFlag = true;
->>>>>>> 7月三类评分
     };
     Suit.prototype.createLine = function () {
         if (this.rowline)

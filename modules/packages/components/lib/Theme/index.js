@@ -29,7 +29,8 @@ exports.getThemeColor = util_1.getThemeColor;
 exports.changeAntdTheme = util_1.applyAntdTheme;
 var theme_1 = require("./theme");
 var colors = [
-    '#007AFF',
+    '#33691e', '#006064', '#d81b60', '#bc5100', '#1a237e',
+    '#4a148c', '#827717',
     theme_1.DARK_COLOR
 ];
 var A = function (props, ref) {
