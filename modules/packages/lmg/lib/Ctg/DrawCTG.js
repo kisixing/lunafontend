@@ -401,6 +401,9 @@ var DrawCTG = (function () {
         if (suit.type == 0) {
             this.showcur(cur, isemit);
         }
+        else {
+            this.showcur(0, isemit);
+        }
         var lastx = 0;
         var lasty = 0;
         linecontext.clearRect(0, 0, suit.canvasline.width, suit.canvasline.height);

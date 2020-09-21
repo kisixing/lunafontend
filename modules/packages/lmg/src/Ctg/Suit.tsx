@@ -281,7 +281,7 @@ export class Suit extends Draw {
 
     });
 
-    event.emit('suit:afterInit',this)
+    event.emit('suit:afterInit', this)
     this.initFlag = true;
 
   }
@@ -424,16 +424,19 @@ export class Suit extends Draw {
     this.barTool = null;
   }
   _resize() {
-    const { width, height } = this.wrap.getBoundingClientRect()
-    if (this.type > 0 && width < 200) {
-      // setTimeout(() => {
-      //   this._resize()
-      //   event.emit('fuckedResize')
-      // }, 1000);
-      Object.values(this).forEach(_ => _ && _.resize && _.resize(width, height))
-    } else {
-      Object.values(this).forEach(_ => _ && _.resize && _.resize(width, height))
+    if (this.wrap) {
+      const { width, height } = this.wrap.getBoundingClientRect()
+      if (this.type > 0 && width < 200) {
+        // setTimeout(() => {
+        //   this._resize()
+        //   event.emit('fuckedResize')
+        // }, 1000);
+        Object.values(this).forEach(_ => _ && _.resize && _.resize(width, height))
+      } else {
+        Object.values(this).forEach(_ => _ && _.resize && _.resize(width, height))
+      }
     }
+
 
   }
   //kisi 2019-11-14 update fhr position

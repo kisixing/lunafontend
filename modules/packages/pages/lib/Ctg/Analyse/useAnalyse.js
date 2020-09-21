@@ -175,7 +175,6 @@ exports.default = (function (v, docid, fetal, ctgData) {
     var _f = react_1.useState(store_1.default.get(AUTOFM_KEY) || false), autoFm = _f[0], setAutoFm = _f[1];
     var _g = react_1.useState(store_1.default.get(AUTOANALYSE_KEY) || false), autoAnalyse = _g[0], setAutoAnalyse = _g[1];
     var _h = react_1.useState(true), showBase = _h[0], setShowBase = _h[1];
-    var _j = react_1.useState(0), tryCount = _j[0], setTryCount = _j[1];
     var Fischer_ref = react_1.useRef();
     var Krebs_ref = react_1.useRef();
     var Nst_ref = react_1.useRef();
@@ -186,6 +185,10 @@ exports.default = (function (v, docid, fetal, ctgData) {
     var old_ref = react_1.useRef({});
     var hasInitAnalysed = react_1.useRef(false);
     var endTime = (ctgData && ctgData.fhr1) ? (startTime + interval * 240 > ctgData.fhr1.length / 2 ? ctgData.fhr1.length / 2 : startTime + interval * 240) : 0;
+    var hardAnalyse = react_1.useCallback(function hardAnalyse(show) {
+        if (show === void 0) { show = showBase; }
+        v.current.drawAnalyse.analyse(mark, show);
+    }, []);
     var mapFormToMark = {
         Fischer_ref: Fischer_ref,
         Krebs_ref: Krebs_ref,
@@ -197,23 +200,20 @@ exports.default = (function (v, docid, fetal, ctgData) {
     };
     react_1.useEffect(function () {
         function initCb(d) {
-            d.resize();
-            if (!autoAnalyse)
-                return;
-            var index = d.data.index;
-            var e = (index) ? (startTime + interval * 240 > index ? index : startTime + interval * 240) : 0;
-            if (!initData) {
-                fetchData(e)
-                    .then(function (r) {
-                    r.score = getEmptyScore();
-                    v.current.resize();
-                    setInitData(r);
-                    v.current.drawAnalyse.analyse(mark, showBase, startTime, e, r);
-                })
-                    .finally(function () { return setTryCount(1); });
-            }
-            v.current.drawAnalyse.analyse(mark, showBase, startTime, endTime, initData);
-            setFm(autoFm);
+            setTimeout(function () {
+                if (!autoAnalyse)
+                    return;
+                var index = d.data.index;
+                var e = (index) ? (startTime + interval * 240 > index ? index : startTime + interval * 240) : 0;
+                if (!initData) {
+                    fetchData(e)
+                        .then(function (r) {
+                        r.score = getEmptyScore();
+                        v.current.resize();
+                        setInitData(r);
+                    }).finally(function () { return d.resize(); });
+                }
+            }, 500);
         }
         utils_1.event
             .on('suit:afterInit', initCb)
@@ -224,20 +224,21 @@ exports.default = (function (v, docid, fetal, ctgData) {
                 .off('suit:afterAnalyse', setFormData);
         };
     }, [showBase, autoFm, autoAnalyse, setFormData, initData, fetchData, ctgData]);
-    function setFm(flag) {
-        if (flag === void 0) { flag = true; }
-        if (v.current && initData) {
-            if (flag) {
+    react_1.useEffect(function () {
+        if (initData) {
+            if (autoFm) {
                 var fmIndex = initData.analysis.fm || [];
                 var fm_1 = v.current.data.fm;
                 fmIndex.forEach(function (_) {
                     fm_1[_] = 1;
                     fm_1[_ - 1] = 1;
                 });
-                hardAnalyse();
             }
+            setTimeout(function () {
+                v.current.drawAnalyse.analyse(mark, showBase, startTime, endTime, initData);
+            }, 0);
         }
-    }
+    }, [initData, autoFm, hardAnalyse]);
     function fetchData(e) {
         if (e === void 0) { e = endTime; }
         setAnalyseLoading(true);
@@ -282,10 +283,6 @@ exports.default = (function (v, docid, fetal, ctgData) {
         var stv = analysis.stv, ucdata = analysis.ucdata, acc = analysis.acc, dec = analysis.dec, fhrbaselineMinute = analysis.fhrbaselineMinute, others = __rest(analysis, ["stv", "ucdata", "acc", "dec", "fhrbaselineMinute"]);
         analysis_ref.current && analysis_ref.current.setFieldsValue(__assign(__assign({ stv: stv }, ucdata), others));
     }
-    var hardAnalyse = function (show) {
-        if (show === void 0) { show = showBase; }
-        v.current.drawAnalyse.analyse(mark, show);
-    };
     react_1.useEffect(function () {
         var s = function (time) {
             time = time + 4800 <= v.current.data.index ? time : ((v.current.data.index - 4800) > 0 ? (v.current.data.index - 4800) : 0);
@@ -330,7 +327,6 @@ exports.default = (function (v, docid, fetal, ctgData) {
         analyseLoading: analyseLoading,
         setAutoFm: function (s) {
             setAutoFm(s);
-            setFm(s);
             store_1.default.set(AUTOFM_KEY, s);
         },
         autoFm: autoFm,
