@@ -39,7 +39,7 @@ exports.useCtgData = function (docid, single) {
                     return;
                 var d = __assign(__assign({ docid: docid, keepSelection: true }, res), (copyFhr(res, single)));
                 if (single) {
-                    setFhr(1, d);
+                    setFhr(fetal, d);
                 }
                 else {
                     setCtgData(d);

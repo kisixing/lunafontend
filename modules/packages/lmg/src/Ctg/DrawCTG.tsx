@@ -165,6 +165,9 @@ export default class DrawCTG {
     this.drawgrid(cur);
     if (suit.type == 0) {
       this.showcur(cur, isemit);
+    }else{
+      this.showcur(0, isemit);
+
     }
     var lastx = 0;
     var lasty = 0;

@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useRef, MutableRefObject } from 'react';
+import { useState, useEffect, useRef, MutableRefObject, useCallback } from 'react';
 import request from "@lianmed/request";
 import { _R } from "@lianmed/utils";
 import { FormInstance } from 'antd/lib/form';
@@ -132,7 +132,6 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, ctgData: o
     const [autoFm, setAutoFm] = useState<boolean>(store.get(AUTOFM_KEY) || false)
     const [autoAnalyse, setAutoAnalyse] = useState<boolean>(store.get(AUTOANALYSE_KEY) || false)
     const [showBase, setShowBase] = useState<boolean>(true)
-    const [tryCount, setTryCount] = useState(0)
     const Fischer_ref = useRef<FormInstance>()
     const Krebs_ref = useRef<FormInstance>()
     const Nst_ref = useRef<FormInstance>()
@@ -145,7 +144,12 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, ctgData: o
     let endTime = (ctgData && ctgData.fhr1) ? (startTime + interval * 240 > ctgData.fhr1.length / 2 ? ctgData.fhr1.length / 2 : startTime + interval * 240) : 0
     // const diff = Math.round((endTime - startTime) / 240)
 
-
+    const hardAnalyse = useCallback(
+        function hardAnalyse(show = showBase) {
+            v.current.drawAnalyse.analyse(mark, show)
+        },
+        [],
+    )
     const mapFormToMark = {
         Fischer_ref,
         Krebs_ref,
@@ -157,23 +161,27 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, ctgData: o
     }
     useEffect(() => {
         function initCb(d) {
-            d.resize()
-            if (!autoAnalyse) return
-            const index = d.data.index
-            let e = (index) ? (startTime + interval * 240 > index  ? index  : startTime + interval * 240) : 0
-            if (!initData) {
-                fetchData(e)
-                    .then(r => {
-                        r.score = getEmptyScore()
-                        v.current.resize()
-                        setInitData(r)
-                        v.current.drawAnalyse.analyse(mark, showBase, startTime, e, r)
-                    })
-                    .finally(() => setTryCount(1))
-            }
-            v.current.drawAnalyse.analyse(mark, showBase, startTime, endTime, initData,)
+            setTimeout(() => {
+                // d.resize()
+                if (!autoAnalyse) return
+                const index = d.data.index
+                let e = (index) ? (startTime + interval * 240 > index ? index : startTime + interval * 240) : 0
+                if (!initData) {
+                    fetchData(e)
+                        .then(r => {
 
-            setFm(autoFm)
+                            r.score = getEmptyScore()
+                            v.current.resize()
+                            setInitData(r)
+                            // v.current.drawAnalyse.analyse(mark, showBase, startTime, e, r)
+
+
+                        }).finally(() => d.resize())
+                }
+            }, 500);
+            // v.current.drawAnalyse.analyse(mark, showBase, startTime, endTime, initData,)
+
+
         }
         event
             .on('suit:afterInit', initCb)
@@ -185,19 +193,24 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, ctgData: o
 
         }
     }, [showBase, autoFm, autoAnalyse, setFormData, initData, fetchData, ctgData])
-    function setFm(flag = true) {
-        if (v.current && initData) {
-            if (flag) {
+
+    useEffect(() => {
+        if (initData) {
+            if (autoFm) {
                 const fmIndex = initData.analysis.fm || []
                 const fm = v.current.data.fm
                 fmIndex.forEach(_ => {
                     fm[_] = 1
                     fm[_ - 1] = 1
                 })
-                hardAnalyse()
             }
+            setTimeout(() => {
+                v.current.drawAnalyse.analyse(mark, showBase, startTime, endTime, initData,)
+            }, 0);
+
         }
-    }
+    }, [initData, autoFm, hardAnalyse])
+
 
     function fetchData(e = endTime) {
         // if(docid==undefined){
@@ -276,9 +289,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, ctgData: o
     // }, [initData, v.current, mark, startTime, setFormData, autoAnalyse, setFm, autoFm, showBase])
 
 
-    const hardAnalyse = (show = showBase) => {
-        v.current.drawAnalyse.analyse(mark, show)
-    }
+
     useEffect(() => {
         const s = (time) => {
             time = time + 4800 <= v.current.data.index ? time : ((v.current.data.index - 4800) > 0 ? (v.current.data.index - 4800) : 0)
@@ -355,7 +366,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, ctgData: o
         analyseLoading,
         setAutoFm(s: boolean) {
             setAutoFm(s)
-            setFm(s)
+
             store.set(AUTOFM_KEY, s)
         },
         autoFm,

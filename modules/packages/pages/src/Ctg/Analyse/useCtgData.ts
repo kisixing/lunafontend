@@ -28,7 +28,7 @@ export const useCtgData = (docid: string, single = false) => {
                 if (!res) return
                 const d = { docid, keepSelection: true, ...res, ...(copyFhr(res, single)) }
                 if (single) {
-                    setFhr(1, d)
+                    setFhr(fetal, d)
                 } else {
                     setCtgData(d)
                 }

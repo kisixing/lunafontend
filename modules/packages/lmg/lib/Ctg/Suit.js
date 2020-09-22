@@ -392,12 +392,14 @@ var Suit = (function (_super) {
         this.barTool = null;
     };
     Suit.prototype._resize = function () {
-        var _a = this.wrap.getBoundingClientRect(), width = _a.width, height = _a.height;
-        if (this.type > 0 && width < 200) {
-            Object.values(this).forEach(function (_) { return _ && _.resize && _.resize(width, height); });
-        }
-        else {
-            Object.values(this).forEach(function (_) { return _ && _.resize && _.resize(width, height); });
+        if (this.wrap) {
+            var _a = this.wrap.getBoundingClientRect(), width_1 = _a.width, height_1 = _a.height;
+            if (this.type > 0 && width_1 < 200) {
+                Object.values(this).forEach(function (_) { return _ && _.resize && _.resize(width_1, height_1); });
+            }
+            else {
+                Object.values(this).forEach(function (_) { return _ && _.resize && _.resize(width_1, height_1); });
+            }
         }
     };
     Suit.prototype.setfetalposition = function (fhr1, fhr2, fhr3) {
