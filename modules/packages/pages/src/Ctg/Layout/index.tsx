@@ -37,14 +37,15 @@ interface IProps {
   loading?: boolean
   borderedId?: string
   onSelect?: (unitId: string) => void
+  borderedColor?: string
 }
 const Home = (props: IProps) => {
-  const { onSelect, borderedId, loading, listLayout = [], fullScreenId, contentHeight, RenderIn, RenderMaskIn, items, onClose, themeColor = 'skyblue' } = props;
+  const { onSelect, borderedId, borderedColor = 'black', loading, listLayout = [], fullScreenId, contentHeight, RenderIn, RenderMaskIn, items, onClose, themeColor = 'skyblue' } = props;
   const wrap = useRef(null);
   const empty = useRef(null)
 
   const itemSpan = 24 / listLayout[1];
-  const outPadding = 6;
+  const outPadding = 4;
 
 
   const itemHeight = (contentHeight - outPadding * 2) / listLayout[0];
@@ -63,6 +64,7 @@ const Home = (props: IProps) => {
               const startTime = starttime
               return (
                 <Item
+                  borderedColor={borderedColor}
                   onClose={onClose}
                   themeColor={themeColor}
                   itemData={item}

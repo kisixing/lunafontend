@@ -9,7 +9,7 @@ import "antd/lib/card/style/index.css"
 import "antd/lib/tag/style/index.css"
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import { ICtgLayoutTheme } from '../Layout/types';
-interface IProps extends ICtgLayoutTheme{
+interface IProps extends ICtgLayoutTheme {
     status: BedStatus
     suit: Suit
     onClose?: (e: React.MouseEvent) => void
@@ -26,7 +26,7 @@ const SB = styled(Button)`
 const Bed = memo<any>(({ bedname }) => {
     console.log('ggg');
 
-    return !!bedname && <span style={{ marginRight: '8px', color: '#fff' }}>{bedname}号</span>
+    return !!bedname && <span style={{ marginRight: '8px', }}>{bedname}号</span>
 })
 // const Status = memo<any>(({ alarmStatus, status }) => {
 
@@ -40,7 +40,7 @@ const Bed = memo<any>(({ bedname }) => {
 
 
 const C = (props: IProps) => {
-    const { status, suit, onClose, bedname, unitId,fontColor } = props;
+    const { status, suit, onClose, bedname, unitId, fontColor } = props;
     const [alarmStatus] = useItemAlarm(suit)
 
     const close = useMemo(() =>
@@ -51,7 +51,7 @@ const C = (props: IProps) => {
                 icon={<CloseOutlined />}
                 size="small"
                 type="link"
-                style={{ color: fontColor }}
+                // style={{ color: fontColor }}
                 onClick={onClose}
             ></SB>
         )

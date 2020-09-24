@@ -98,7 +98,7 @@ const ScoringMethod = (props: IProps) => {
     [mark, docid],
   )
   return (
-    <div style={{ height: '100%', background: '#fff', borderRight: 0 }} className="bordered">
+    <div style={{ height: '100%',  borderRight: 0 }} className="bordered">
       <div className="divider" style={{ padding: '8px 20px', margin: 0 }}>
         <>
           {

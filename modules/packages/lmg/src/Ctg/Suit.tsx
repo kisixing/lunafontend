@@ -33,12 +33,14 @@ const defaultCtgConfig = {
   alarm_high: 160,
   alarm_low: 110,
   print_interval: 20,
-  alarm_delay: 0
+  alarm_delay: 0,
+  show_fetalmovement: true
+
 }
 type TCtgConfig = { [x in keyof typeof defaultCtgConfig]?: any }
 
-const lightConfig:TCtgConfig = {
-  
+const lightConfig: TCtgConfig = {
+
   primarygrid: 'red',
   secondarygrid: '#F59997',
   rule: 'rgba(0,51,102,1)',
@@ -46,7 +48,7 @@ const lightConfig:TCtgConfig = {
   normalarea: 'rgb(224,255,255)',
 
 }
-const darkConfig:TCtgConfig = {
+const darkConfig: TCtgConfig = {
   primarygrid: '#8F464D',
   secondarygrid: '#8F464D',
   rule: '#bbb',
@@ -60,7 +62,6 @@ export class Suit extends Draw {
 
   needScroll = false;
   isOn: boolean;
-  emitInterval: number;
   static option: { [x: string]: any };
   option = Suit.option;
   initFlag = false;
@@ -80,26 +81,34 @@ export class Suit extends Draw {
   buffersize = 16;
   curr = -16;
   alarmStatus = 0; //报警状态
-  ctgconfig = {
-    normalarea: 'rgb(224,255,255)',
-    selectarea: 'rgba(192,192,192,0.5)',
-    rule: 'rgba(0,51,102,1)',
-    scale: 'rgba(0,0,0,1)',
-    // primarygrid: 'rgba(144, 159, 180,1)',
-    // secondarygrid: 'rgba(221, 230, 237,1)',
-    primarygrid: 'rgba(100, 100, 100, 1)',
-    secondarygrid: 'rgba(200, 200, 200, 1)',
-    fhrcolor: ['green', 'blue', 'rgb(0,0,0)'],
-    tococolor: 'rgb(0,0,0)',
-    alarmcolor: 'rgb(255, 1, 1)',
-    fmpcolor: 'darkgreen',
-    alarm_enable: true,
-    alarm_high: 160,
-    alarm_low: 110,
-    print_interval: 20,
-    alarm_delay: 0,
-    show_fetalmovement: true
-  };
+  private _ctgconfig: TCtgConfig = defaultCtgConfig;
+  public get ctgconfig(): TCtgConfig {
+
+    return Object.assign(this._ctgconfig, window['isDark'] ? darkConfig : lightConfig);
+  }
+  public set ctgconfig(value: TCtgConfig) {
+    this._ctgconfig = value;
+  }
+  // ctgconfig = {
+  //   normalarea: 'rgb(224,255,255)',
+  //   selectarea: 'rgba(192,192,192,0.5)',
+  //   rule: 'rgba(0,51,102,1)',
+  //   scale: 'rgba(0,0,0,1)',
+  //   // primarygrid: 'rgba(144, 159, 180,1)',
+  //   // secondarygrid: 'rgba(221, 230, 237,1)',
+  //   primarygrid: 'rgba(100, 100, 100, 1)',
+  //   secondarygrid: 'rgba(200, 200, 200, 1)',
+  //   fhrcolor: ['green', 'blue', 'rgb(0,0,0)'],
+  //   tococolor: 'rgb(0,0,0)',
+  //   alarmcolor: 'rgb(255, 1, 1)',
+  //   fmpcolor: 'darkgreen',
+  //   alarm_enable: true,
+  //   alarm_high: 160,
+  //   alarm_low: 110,
+  //   print_interval: 20,
+  //   alarm_delay: 0,
+  //   show_fetalmovement: true
+  // };
   fetalposition = {
     fhr1: '',
     fhr2: '',
@@ -383,7 +392,7 @@ export class Suit extends Draw {
     this.emit(type, ...args);
     // console.log('alarmtype in',type,this)
     return true;
-  }, this.emitInterval || 0);
+  }, 0);
   alarmHighCount = []
   alarmLowCount = []
 

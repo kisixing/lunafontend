@@ -50,7 +50,7 @@ const PrintPreview = (props: IProps) => {
                     padding: 24,
                     marginTop: 12,
                     border: '1px solid #d9d9d9',
-                    background: '#fff'
+                    // background: '#fff'
                 }}>
                     <Ctg ctgData={ctgData} loading={loading} />
                 </div>

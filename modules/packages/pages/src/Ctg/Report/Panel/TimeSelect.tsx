@@ -94,7 +94,7 @@ const Preview = (props: IProps) => {
                         <div id="modal_id" style={{ display: 'flex', height: '100%' }}>
 
 
-                            <Wrapper style={{ width: 400, padding: 24, background: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-around', border: '1px solid #d9d9d9' }}>
+                            <Wrapper style={{ width: 400, padding: 24, display: 'flex', flexDirection: 'column', justifyContent: 'space-around', border: '1px solid #d9d9d9' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                     <div style={{ display: 'flex', alignItems: 'center' }}>
                                         <Button disabled={locking} onClick={forward} >向后选择</Button>

@@ -28,7 +28,7 @@ const Setting = forwardRef<FormInstance, { isRemote: boolean }>((props, ref) => 
 
 
   return (
-    <div style={{ height: '100%', background: '#fff' }} className="bordered">
+    <div style={{ height: '100%',  }} className="bordered">
       <div >
 
         {/* <div style={{ padding: '12px 24px', background: '#ddd' }}>

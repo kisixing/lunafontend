@@ -72,7 +72,6 @@ exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
         return instance;
     }, function () {
     });
-    console.log('isFullScreen', isFullscreen);
     WsService_1.useCheckNetwork(function (isOn) { return ctg.current && (ctg.current.isOn = isOn); });
     react_1.useImperativeHandle(ref, function () {
         return ctg.current;
@@ -91,7 +90,7 @@ exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
             } }),
             loading && (react_1.default.createElement("div", { style: { position: 'absolute', width: '100%', height: '100%', background: '#fff', zIndex: 1, opacity: .9 } },
                 react_1.default.createElement(Loading_1.Loading, { style: { margin: 'auto', position: 'absolute', left: 0, right: 0, bottom: 0, top: 0 } }))),
-            react_1.default.createElement("div", { style: { height: isV3 ? 0 : ((isFullscreen && ismulti) ? "calc(100% - 210px)" : '100%'), position: 'relative' }, ref: ctgBox },
+            react_1.default.createElement("div", { style: { height: isV3 ? 0 : ((isFullscreen && ismulti) ? "calc(100% - 210px)" : '100%'), position: 'relative', maxHeight: isFullscreen ? 500 : 'unset' }, ref: ctgBox },
                 react_1.default.createElement("canvas", { style: canvasStyles, ref: canvasgrid }),
                 react_1.default.createElement("canvas", { style: canvasStyles, ref: canvasline }),
                 react_1.default.createElement("canvas", { style: canvasStyles, ref: canvasdata }),

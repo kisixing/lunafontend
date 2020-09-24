@@ -45,7 +45,6 @@ var PrintPreview = function (props) {
                     padding: 24,
                     marginTop: 12,
                     border: '1px solid #d9d9d9',
-                    background: '#fff'
                 } },
                 react_1.default.createElement(Ctg_1.default, { ctgData: ctgData, loading: loading })))));
 };

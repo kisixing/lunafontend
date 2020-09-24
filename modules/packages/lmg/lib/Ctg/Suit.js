@@ -49,7 +49,8 @@ var defaultCtgConfig = {
     alarm_high: 160,
     alarm_low: 110,
     print_interval: 20,
-    alarm_delay: 0
+    alarm_delay: 0,
+    show_fetalmovement: true
 };
 var lightConfig = {
     primarygrid: 'red',
@@ -85,24 +86,7 @@ var Suit = (function (_super) {
         _this.buffersize = 16;
         _this.curr = -16;
         _this.alarmStatus = 0;
-        _this.ctgconfig = {
-            normalarea: 'rgb(224,255,255)',
-            selectarea: 'rgba(192,192,192,0.5)',
-            rule: 'rgba(0,51,102,1)',
-            scale: 'rgba(0,0,0,1)',
-            primarygrid: 'rgba(100, 100, 100, 1)',
-            secondarygrid: 'rgba(200, 200, 200, 1)',
-            fhrcolor: ['green', 'blue', 'rgb(0,0,0)'],
-            tococolor: 'rgb(0,0,0)',
-            alarmcolor: 'rgb(255, 1, 1)',
-            fmpcolor: 'darkgreen',
-            alarm_enable: true,
-            alarm_high: 160,
-            alarm_low: 110,
-            print_interval: 20,
-            alarm_delay: 0,
-            show_fetalmovement: true
-        };
+        _this._ctgconfig = defaultCtgConfig;
         _this.fetalposition = {
             fhr1: '',
             fhr2: '',
@@ -120,7 +104,7 @@ var Suit = (function (_super) {
             }
             _this.emit.apply(_this, __spreadArrays([type], args));
             return true;
-        }, _this.emitInterval || 0);
+        }, 0);
         _this.alarmHighCount = [];
         _this.alarmLowCount = [];
         bindEvents_1.default.call(_this);
@@ -156,6 +140,16 @@ var Suit = (function (_super) {
         }
         return _this;
     }
+    Object.defineProperty(Suit.prototype, "ctgconfig", {
+        get: function () {
+            return Object.assign(this._ctgconfig, window['isDark'] ? darkConfig : lightConfig);
+        },
+        set: function (value) {
+            this._ctgconfig = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(Suit.prototype, "leftViewposition", {
         get: function () {
             return this.rightViewPosition >= this.width * 2 ? this.rightViewPosition - this.width * 2 : 0;

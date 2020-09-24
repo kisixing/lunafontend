@@ -213,7 +213,7 @@ exports.default = (function (v, docid, fetal, ctgData) {
                         setInitData(r);
                     }).finally(function () { return d.resize(); });
                 }
-            }, 500);
+            }, 1000);
         }
         utils_1.event
             .on('suit:afterInit', initCb)

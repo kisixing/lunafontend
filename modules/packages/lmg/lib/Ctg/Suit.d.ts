@@ -26,6 +26,7 @@ declare const defaultCtgConfig: {
     alarm_low: number;
     print_interval: number;
     alarm_delay: number;
+    show_fetalmovement: boolean;
 };
 declare type TCtgConfig = {
     [x in keyof typeof defaultCtgConfig]?: any;
@@ -35,7 +36,6 @@ export declare class Suit extends Draw {
     drawSelect: DrawSelect;
     needScroll: boolean;
     isOn: boolean;
-    emitInterval: number;
     static option: {
         [x: string]: any;
     };
@@ -58,24 +58,9 @@ export declare class Suit extends Draw {
     buffersize: number;
     curr: number;
     alarmStatus: number;
-    ctgconfig: {
-        normalarea: string;
-        selectarea: string;
-        rule: string;
-        scale: string;
-        primarygrid: string;
-        secondarygrid: string;
-        fhrcolor: string[];
-        tococolor: string;
-        alarmcolor: string;
-        fmpcolor: string;
-        alarm_enable: boolean;
-        alarm_high: number;
-        alarm_low: number;
-        print_interval: number;
-        alarm_delay: number;
-        show_fetalmovement: boolean;
-    };
+    private _ctgconfig;
+    get ctgconfig(): TCtgConfig;
+    set ctgconfig(value: TCtgConfig);
     fetalposition: {
         fhr1: string;
         fhr2: string;

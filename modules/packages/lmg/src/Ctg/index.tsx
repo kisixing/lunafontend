@@ -94,7 +94,6 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
   //   ctg.current && ctg.current.resize()
   //   ecg.current && ecg.current.resize()
   // }, [ecgHeight])
-  console.log('isFullScreen', isFullscreen)
   useCheckNetwork(isOn => ctg.current && (ctg.current.isOn = isOn))
 
   useImperativeHandle(ref, () => {
@@ -116,6 +115,7 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
             rightClickXy.current.y = y
           }
         }}
+
       // onMouseEnter={() => staticType && setShowBtns(true)}
       // onMouseLeave={() => staticType && setShowBtns(false)}
       >
@@ -126,7 +126,7 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
             </div>
           )
         }
-        <div style={{ height: isV3 ? 0 : ((isFullscreen && ismulti) ? `calc(100% - 210px)` : '100%'), position: 'relative' }} ref={ctgBox}>
+        <div style={{ height: isV3 ? 0 : ((isFullscreen && ismulti) ? `calc(100% - 210px)` : '100%'), position: 'relative', maxHeight: isFullscreen ? 500 : 'unset' }} ref={ctgBox}>
           <canvas style={canvasStyles} ref={canvasgrid} />
           <canvas style={canvasStyles} ref={canvasline} />
           <canvas style={canvasStyles} ref={canvasdata} />

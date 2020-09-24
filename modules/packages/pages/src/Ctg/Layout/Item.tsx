@@ -31,11 +31,12 @@ interface IProps {
   itemSpan: number
   themeColor: string
   bordered?: boolean
+  borderedColor: string
 }
 
 
 const WorkbenchItem = (props: IProps) => {
-  const { onSelect, bordered, themeColor, RenderMaskIn, itemData, onClose, loading = false, fullScreenId, itemHeight, itemSpan, outPadding, data, bedname, status, unitId } = props;
+  const { onSelect, bordered, borderedColor, themeColor, RenderMaskIn, itemData, onClose, loading = false, fullScreenId, itemHeight, itemSpan, outPadding, data, bedname, status, unitId } = props;
   let { startTime, pregnancy } = props
 
   const [isFullscreen, setIsFullscreen] = useState(false)
@@ -84,7 +85,7 @@ const WorkbenchItem = (props: IProps) => {
       span={itemSpan}
       ref={ref}
       onClick={() => onSelect && onSelect(unitId)}
-      style={{ transition: 'all .3s', padding: outPadding, height: itemHeight, background: bordered ? 'black' : `var(--theme-${'light'}-color)`, position: 'relative' }}
+      style={{ transition: 'all .3s', padding: outPadding, height: itemHeight, background: bordered ? borderedColor : `var(--customed-${'bg'})`, position: 'relative' }}
     >
       <Ctg_Item
         isFullscreen={isFullscreen}

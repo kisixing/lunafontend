@@ -158,7 +158,7 @@ exports.Ctg_Analyse = function (_a) {
     };
     var btnDisabled = !note || !disabled;
     return (react_1.default.createElement(Wrapper, { ref: wrap },
-        react_1.default.createElement("div", { style: { height: "calc(100% - 460px - 12px)", minHeight: 200, marginBottom: 12, background: '#fff', boxShadow: '#ddd 0px 0px 2px 2px', overflow: 'hidden' } },
+        react_1.default.createElement("div", { style: { height: "calc(100% - 460px - 12px)", minHeight: 200, marginBottom: 12, boxShadow: '#ddd 0px 0px 2px 2px', overflow: 'hidden' } },
             react_1.default.createElement(lmg_1.Ctg, { suitType: 1, ref: ref, loading: loading, data: ctgData })),
         react_1.default.createElement(antd_1.Row, { style: { height: 460 } },
             react_1.default.createElement(antd_1.Col, { span: 17 },

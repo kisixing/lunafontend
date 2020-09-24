@@ -178,7 +178,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, ctgData: o
 
                         }).finally(() => d.resize())
                 }
-            }, 500);
+            }, 1000);
             // v.current.drawAnalyse.analyse(mark, showBase, startTime, endTime, initData,)
 
 

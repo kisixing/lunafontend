@@ -63,7 +63,7 @@ useEffect(() => {
                 position: 'absolute',
                 top: 0,
                 left: 0,
-                background: '#fff'
+                // background: '#fff'
             } : {})
         }
         }>
@@ -118,13 +118,13 @@ useEffect(() => {
                 )}
         </div >
     ) : (
-            <Empty style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'white', margin: 0 }} />
+            <Empty style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',margin: 0 }} />
         );
     return (
         <div style={{
             position: 'relative',
             flex: 1,
-            background: '#fff',
+            // background: '#fff',
             marginRight: 12,
             zIndex: 99,
             border: borderd && '1px solid #d9d9d9',

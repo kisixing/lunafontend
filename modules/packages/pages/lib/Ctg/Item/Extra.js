@@ -26,7 +26,7 @@ var SB = styled_components_1.default(antd_1.Button)(templateObject_1 || (templat
 var Bed = react_1.memo(function (_a) {
     var bedname = _a.bedname;
     console.log('ggg');
-    return !!bedname && react_1.default.createElement("span", { style: { marginRight: '8px', color: '#fff' } },
+    return !!bedname && react_1.default.createElement("span", { style: { marginRight: '8px', } },
         bedname,
         "\u53F7");
 });
@@ -35,7 +35,7 @@ var C = function (props) {
     var alarmStatus = useItemAlarm_1.default(suit)[0];
     var close = react_1.useMemo(function () {
         return onClose &&
-            (react_1.default.createElement(SB, { title: "\u5173\u95ED\u76D1\u62A4\u7A97\u53E3", icon: react_1.default.createElement(icons_1.CloseOutlined, null), size: "small", type: "link", style: { color: fontColor }, onClick: onClose }));
+            (react_1.default.createElement(SB, { title: "\u5173\u95ED\u76D1\u62A4\u7A97\u53E3", icon: react_1.default.createElement(icons_1.CloseOutlined, null), size: "small", type: "link", onClick: onClose }));
     }, [onClose]);
     return (react_1.default.createElement(react_1.default.Fragment, null,
         react_1.default.createElement(Bed, { bedname: bedname }),

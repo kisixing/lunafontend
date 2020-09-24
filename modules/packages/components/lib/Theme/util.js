@@ -57,6 +57,10 @@ function getThemeColor(color) {
     };
     if (color === theme_1.DARK_COLOR) {
         result.isDark = true;
+        result.primaryColor = '#007AFF';
+        result.hoverColor = getHoverColor('#007AFF');
+        result.activeColor = getActiveColor('#007AFF');
+        result.shadowColor = getShadowColor('#007AFF');
     }
     console.log('theme color', color, result);
     return result;
@@ -101,7 +105,7 @@ var generateStyleHtml = function (colorObj) {
     var activeColor = colorObj.activeColor, primaryColor = colorObj.primaryColor, hoverColor = colorObj.hoverColor, shadowColor = colorObj.shadowColor, lightColor = colorObj.lightColor, darkColor = colorObj.darkColor, isDark = colorObj.isDark;
     window['isDark'] = isDark;
     if (!IEVersion()) {
-        var cssVar = "\n      :root {\n        --theme-color: " + primaryColor + ";\n        --theme-hover-color: " + hoverColor + ";\n        --theme-active-color: " + activeColor + ";\n        --theme-shadow-color: " + shadowColor + ";\n        --theme-light-color: " + lightColor + ";\n        --theme-dark-color: " + darkColor + ";\n        --customed-bg:#F8F8FB;\n        --customed-color:#fff;\n        --customed-font:#5A6676;\n        --customed-border:#DBDBDB;\n        --customed-base-color:#007AFF;\n      }\n    ";
+        var cssVar = "\n      :root {\n        --theme-color: " + primaryColor + ";\n        --theme-hover-color: " + hoverColor + ";\n        --theme-active-color: " + activeColor + ";\n        --theme-shadow-color: " + shadowColor + ";\n        --theme-light-color: " + lightColor + ";\n        --theme-dark-color: " + darkColor + ";\n        --customed-bg:#eee;\n        --customed-color:#fff;\n        --customed-font:#5A6676;\n        --customed-border:#DBDBDB;\n        --customed-base-color:#007AFF;\n      }\n    ";
         return cssVar + "\n" + (isDark ? theme_1.configDark(theme_1.default) : theme_1.default);
     }
     var IECSSContent = theme_1.default;

@@ -60,7 +60,7 @@ var ScoringMethod = function (props) {
             react_1.default.createElement("span", null, "\u65B9\u6CD5\uFF1A"),
             react_1.default.createElement("select", { disabled: !docid, onChange: onChange, value: mark, style: { marginBottom: 5, width: 90 } }, MARKS.map(function (_) { return (react_1.default.createElement("option", { value: _, key: _ }, _)); }))));
     }, [mark, docid]);
-    return (react_1.default.createElement("div", { style: { height: '100%', background: '#fff', borderRight: 0 }, className: "bordered" },
+    return (react_1.default.createElement("div", { style: { height: '100%', borderRight: 0 }, className: "bordered" },
         react_1.default.createElement("div", { className: "divider", style: { padding: '8px 20px', margin: 0 } },
             react_1.default.createElement(react_1.default.Fragment, null,
                 R,

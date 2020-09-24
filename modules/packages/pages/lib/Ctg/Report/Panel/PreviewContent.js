@@ -65,7 +65,6 @@ var PreviewContent = function (props) {
             position: 'absolute',
             top: 0,
             left: 0,
-            background: '#fff'
         } : {})) },
         react_1.default.createElement(react_1.default.Fragment, null,
             react_1.default.createElement(react_pdf_1.Document, { ref: ref1, loading: react_1.default.createElement(antd_1.Spin, { style: { margin: '120px 0' } }), onLoadSuccess: onDocumentLoad, file: pdfBase64, renderMode: "canvas" },
@@ -76,11 +75,10 @@ var PreviewContent = function (props) {
                 react_1.default.createElement("span", null, "\u8FD4\u56DE")),
             onDownload && (react_1.default.createElement(antd_1.Button, { size: "large", type: "primary", onClick: onDownload },
                 react_1.default.createElement("span", null, "\u6253\u5370"))))) : (isFull || react_1.default.createElement("span", { style: { position: 'absolute', bottom: 36, right: 12, } },
-            react_1.default.createElement(antd_1.Button, { title: "\u5168\u5C4F", type: "primary", onClick: largen }, "\u653E\u5927\u9884\u89C8"))))) : (react_1.default.createElement(antd_1.Empty, { style: { height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'white', margin: 0 } }));
+            react_1.default.createElement(antd_1.Button, { title: "\u5168\u5C4F", type: "primary", onClick: largen }, "\u653E\u5927\u9884\u89C8"))))) : (react_1.default.createElement(antd_1.Empty, { style: { height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: 0 } }));
     return (react_1.default.createElement("div", { style: {
             position: 'relative',
             flex: 1,
-            background: '#fff',
             marginRight: 12,
             zIndex: 99,
             border: borderd && '1px solid #d9d9d9',

@@ -78,7 +78,7 @@ var Preview = function (props) {
     return (react_1.default.createElement(index_1.Context.Consumer, null, function (v) {
         setValue(v);
         return (react_1.default.createElement("div", { id: "modal_id", style: { display: 'flex', height: '100%' } },
-            react_1.default.createElement(Wrapper, { style: { width: 400, padding: 24, background: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-around', border: '1px solid #d9d9d9' } },
+            react_1.default.createElement(Wrapper, { style: { width: 400, padding: 24, display: 'flex', flexDirection: 'column', justifyContent: 'space-around', border: '1px solid #d9d9d9' } },
                 react_1.default.createElement("div", { style: { display: 'flex', justifyContent: 'space-between' } },
                     react_1.default.createElement("div", { style: { display: 'flex', alignItems: 'center' } },
                         react_1.default.createElement(antd_1.Button, { disabled: locking, onClick: forward }, "\u5411\u540E\u9009\u62E9")),

@@ -49,9 +49,9 @@ const Bar: FunctionComponent<IProps> = function (props) {
         // right: 3 * @float-padding + 60px,
         height: 32,
         width: showBar ? `calc(100% - ${4 * fp}px - 36px)` : 0,
-        background: '#fff',
+        background: 'var(--customed-color)',
         borderRadius: 3,
-        boxShadow: '#aaa 3px 3px 5px 1px',
+        boxShadow: '#bbb 3px 3px 5px 1px',
         transition: 'width 0.2s ease-out',
         visibility: showBar ? 'visible' : 'hidden',
         // overflow:'hidden'
@@ -73,7 +73,7 @@ const Bar: FunctionComponent<IProps> = function (props) {
       <Button
         icon={showBar ? <LeftOutlined /> : <RightOutlined />}
         shape={showBar ? 'circle' : null}
-        style={{ boxShadow: '#aaa 3px 3px 5px 1px' }}
+        style={{ boxShadow: '#bbb 3px 3px 5px 1px' }}
         className="btn"
         type="primary"
         onClick={toggleTool}

@@ -28,7 +28,7 @@ const Preview = (props: IProps) => {
     }, [selectV])
     const { value, onChange } = props
     return (
-        <div style={{ background: '#fff', width: 400, marginRight: 10, display: 'flex', flexDirection: 'column', position: 'relative' }}>
+        <div style={{  width: 400, marginRight: 10, display: 'flex', flexDirection: 'column', position: 'relative' }}>
             {/* <label>NST报告结果</label> */}
             {/* <Editor extendControls={[  
                 'separator',

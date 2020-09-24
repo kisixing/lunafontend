@@ -90,7 +90,7 @@ const Item = (props: IProps) => {
                 title={<RenderTilte />}
                 style={{ height: '100%' }}
                 extra={<Extra bedname={bedname} onClose={!data.isF0Pro && onClose} status={status} suit={suit} unitId={unitId} />}
-                headStyle={{ background: themeColor, color: '#fff' }}
+                // headStyle={{ background: themeColor, color: '#fff' }}
                 bodyStyle={{ padding: 0, height: 'calc(100% - 38px)' }}
             >
                 <L

@@ -67,6 +67,10 @@ export function getThemeColor(color) {
   };
   if (color === DARK_COLOR) {
     result.isDark = true
+    result.primaryColor = '#007AFF'
+    result.hoverColor = getHoverColor('#007AFF')
+    result.activeColor = getActiveColor('#007AFF')
+    result.shadowColor = getShadowColor('#007AFF')
   }
   console.log('theme color', color, result);
   return result
@@ -123,7 +127,7 @@ const generateStyleHtml = (colorObj) => {
         --theme-shadow-color: ${shadowColor};
         --theme-light-color: ${lightColor};
         --theme-dark-color: ${darkColor};
-        --customed-bg:#F8F8FB;
+        --customed-bg:#eee;
         --customed-color:#fff;
         --customed-font:#5A6676;
         --customed-border:#DBDBDB;

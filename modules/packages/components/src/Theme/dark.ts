@@ -5,34 +5,15 @@ export default `
     --customed-font:#ABABAB;
     --customed-border:#3C3C3C;
 }
-.ant-btn-primary{
-  background: #333;
-  color:#9D9D9D;
-}
-.ant-btn-primary:hover{
-  background: var(--theme-hover-color);
-  color:#9D9D9D;
+
+.ant-modal-content{
+    background-color:var(--customed-color);
+    color:#aaa;
 }
 
- .ant-btn:active, .ant-btn:focus{
-  background: #333;
-  color:#9D9D9D;
-  border-color:#fff;
-}
 
-.ant-btn-link {
-    color: var(--theme-light-color);
-  }
-  .ant-btn-link:hover,
-  .ant-btn-link:focus {
-    color: var(--theme-hover-color);
-    border-color: var(--theme-hover-color);
-  }
-  .ant-btn-link:active,
-  .ant-btn-link.active {
-    color: var(--theme-active-color);
-    border-color: var(--theme-active-color);
-  }
+
+
 
 
 .ant-table {
@@ -56,12 +37,11 @@ export default `
     color:var(--customed-font);
 }
 
-.ant-btn-link-disabled, .ant-btn-link.disabled, .ant-btn-link[disabled], .ant-btn-link-disabled:hover, .ant-btn-link.disabled:hover, .ant-btn-link[disabled]:hover, .ant-btn-link-disabled:focus, .ant-btn-link.disabled:focus, .ant-btn-link[disabled]:focus, .ant-btn-link-disabled:active, .ant-btn-link.disabled:active, .ant-btn-link[disabled]:active, .ant-btn-link-disabled.active, .ant-btn-link.disabled.active, .ant-btn-link[disabled].active{
-    color:rgba(255,255,255,.2);
-}
 
 
-.ant-table-footer,.ant-modal-header,.ant-modal-body,.ant-modal-title,.ant-layout-sider-light,.ant-menu {
+
+
+.ant-table-footer,.ant-modal-header,.ant-modal-confirm-body .ant-modal-confirm-content,.ant-modal-confirm-body .ant-modal-confirm-title,.ant-modal-body,.ant-modal-title,.ant-layout-sider-light,.ant-menu {
     color: var(--customed-font);
     background: var(--customed-bg);
 }
@@ -166,22 +146,12 @@ td.ant-table-column-sort {
     box-shadow: 0 3px 6px -4px rgba(0,0,0,0.48),0 6px 16px 0 rgba(0,0,0,0.32),0 9px 28px 8px rgba(0,0,0,0.2)
 }
 
-.ant-table-filter-dropdown-btns {
-    background-color: #1f1f1f;
-    border-top: 1px solid #303030
-}
 
 
 
 
 
-.ant-table-selection-extra .anticon {
-    color: #bfbfbf
-}
 
-.ant-table-selection-extra .anticon:hover {
-    color: #a6a6a6
-}
 
 
 
@@ -300,9 +270,5 @@ tr.ant-table-expanded-row>td,tr.ant-table-expanded-row:hover>td {
     border-right: 1px solid var(--customed-bg);
 
 }
- .ant-btn-link:focus{
-    border-color:transparent;
-    background-color:transparent;
-    color:var(--customed-font);
-}
+
 `

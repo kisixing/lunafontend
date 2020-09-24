@@ -28,7 +28,7 @@ var Preview = function (props) {
         onChange(target.content);
     }, [selectV]);
     var value = props.value, onChange = props.onChange;
-    return (react_1.default.createElement("div", { style: { background: '#fff', width: 400, marginRight: 10, display: 'flex', flexDirection: 'column', position: 'relative' } },
+    return (react_1.default.createElement("div", { style: { width: 400, marginRight: 10, display: 'flex', flexDirection: 'column', position: 'relative' } },
         react_1.default.createElement(antd_1.Input.TextArea, { value: value, onChange: function (e) { return onChange(e.target.value); }, style: { height: 240, lineHeight: 2 } }),
         react_1.default.createElement(antd_1.Select, { value: selectV, size: "small", style: { width: 120, position: 'absolute', right: 10, bottom: 10 }, onChange: setSelectV }, tpls.map(function (_a) {
             var title = _a.title, content = _a.content, id = _a.id;
