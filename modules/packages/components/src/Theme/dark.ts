@@ -270,5 +270,14 @@ tr.ant-table-expanded-row>td,tr.ant-table-expanded-row:hover>td {
     border-right: 1px solid var(--customed-bg);
 
 }
+.ant-radio-wrapper,
+.ant-dropdown-menu-item, 
+.ant-dropdown-menu-submenu-title,
+.ant-slider-mark-text-active,
+.ant-form,
+.ant-empty-normal
+{
+    color:var(--customed-font)
+}
 
 `
