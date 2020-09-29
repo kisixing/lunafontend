@@ -4,7 +4,7 @@ var utils_1 = require("@lianmed/utils");
 function add_probe_tip(received_msg) {
     var device_no = received_msg.device_no, bed_no = received_msg.bed_no, data = received_msg.data;
     var item = this.getCacheItem({ device_no: device_no, bed_no: bed_no });
-    if (!item)
+    if (!item || !this.settingData.f0pro)
         return;
     item.addProbeTipData = data;
     console.log('item_probetip_to_call');

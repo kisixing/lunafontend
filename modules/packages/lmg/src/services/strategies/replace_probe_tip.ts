@@ -15,7 +15,7 @@ export function replace_probe_tip(this: WsService, received_msg: IData) {
 
     const { device_no, bed_no, data } = received_msg
     var item = this.getCacheItem({ device_no, bed_no });
-    if (!item) return
+    if (!item || !this.settingData.f0pro) return
     item.replaceProbeTipData = data
 
     event.once(`item_probetip_to_call:${item.id}`, cb => {
