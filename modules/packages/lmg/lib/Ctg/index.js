@@ -52,7 +52,7 @@ exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
     var data = props.data, _a = props.mutableSuitObject, mutableSuitObject = _a === void 0 ? { suit: null } : _a, _b = props.suitType, suitType = _b === void 0 ? 0 : _b, _c = props.loading, loading = _c === void 0 ? false : _c, _d = props.onReady, onReady = _d === void 0 ? function (s) { } : _d, audios = props.audios, isFullscreen = props.isFullscreen, others = __rest(props, ["data", "mutableSuitObject", "suitType", "loading", "onReady", "audios", "isFullscreen"]);
     var ismulti = false || (data && data.ismulti);
     var _e = react_1.useState(false), ctgReady = _e[0], setCtgReady = _e[1];
-    var isV3 = false || data && (data.deviceType === 'V3');
+    var isV3 = false || (data && (data.deviceType === 'V3'));
     var barTool = react_1.useRef(null);
     var canvasgrid = react_1.useRef(null);
     var canvasdata = react_1.useRef(null);

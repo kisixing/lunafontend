@@ -121,16 +121,17 @@ export declare class _ICacheItem {
     past?: number;
     timestamp?: number;
     doc_id?: string;
+    isauto_blood_pressure: number;
     _pregnancy?: ICacheItemPregnancy;
     _fetalposition?: {
         fhr1: string;
         fhr2: string;
         fhr3: string;
     };
-    status?: BedStatus;
+    _status?: BedStatus;
     orflag?: boolean;
     starttime?: string;
-    fetal_num?: number;
+    _fetal_num?: number;
     csspan?: number;
     ecg?: Queue;
     ple?: Queue;
@@ -172,6 +173,7 @@ export declare class ICacheItem extends _ICacheItem {
         fhr3: string;
     });
     get isF0Pro(): boolean;
+    get isV3(): boolean;
     get batterylowArr(): boolean[];
     get MuteArr(): boolean[];
     get isWorking(): boolean;
@@ -181,14 +183,12 @@ export declare class ICacheItem extends _ICacheItem {
     get isUncreated(): boolean;
     get hasToco(): boolean;
     get hasPregnancy(): boolean;
-    private _status;
     get status(): BedStatus;
     set status(remoteStatus: BedStatus);
     get ismulti(): boolean;
     set ismulti(value: boolean);
     get deviceType(): TDeviceType;
     set deviceType(type: TDeviceType);
-    private _fetal_num;
     get fetal_num(): number;
     set fetal_num(value: number);
     get docid(): string;

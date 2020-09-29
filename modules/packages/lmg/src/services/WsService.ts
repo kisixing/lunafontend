@@ -239,6 +239,19 @@ export class WsService extends EventEmitter {
 
         this.send(JSON.stringify(message))
     }
+    //0单次测量开始，1 单次测量停止，2 定时测量，3 关闭定时测量
+    sendBloodPressure(id: string, isAuto: 0 | 1 | 2 | 3, time = 0) {
+        const target = this.getCacheItem(id)
+        const message = {
+            name: "blood_pressure",
+            device_no: target && target.device_no,
+            bed_no: target && target.bed_no,
+            time,
+            isAuto
+        }
+
+        this.send(JSON.stringify(message))
+    }
     _emit(name: string, ...value: any[]) {
         event.emit(`WsService:${name}`, ...value)
     }
@@ -425,13 +438,17 @@ export class WsService extends EventEmitter {
                 const target = WsService._this.getCacheItem(id)
                 console.log('goit');
                 var received_msg = {
-                    "name": "time_endwork_tip",
+                    "name": "list_blood_pressure",
                     "device_no": target.device_no,
                     "bed_no": target.bed_no,
-                    "data": {
-                        "mac": "EB:CI:SE:38:90:22",  //插入探头的蓝牙地址
-                        "isfhr": true  //插入探头是否为胎心探头
-                    }
+                    "data": [
+                        {
+                            dia_bp: 1,
+                            mean_bp: 2,
+                            sys_bp: 3,
+                            time: 'string',
+                        }
+                    ]
                 }
                 const mesName = received_msg.name
                 this.handleMessage(mesName, received_msg)

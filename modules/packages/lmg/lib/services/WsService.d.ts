@@ -87,6 +87,7 @@ export declare class WsService extends EventEmitter {
     add_probe(device_no: number, bed_no: number): void;
     delay_endwork(device_no: number, bed_no: number, delay_time: number): void;
     sendFocus(id: string): void;
+    sendBloodPressure(id: string, isAuto: 0 | 1 | 2 | 3, time?: number): void;
     _emit(name: string, ...value: any[]): void;
     subscribeList: string[];
     subscribe(str: string[]): void;

@@ -138,17 +138,17 @@ export class _ICacheItem {
     past?: number;
     timestamp?: number;
     doc_id?: string;
-
+    isauto_blood_pressure: number
     _pregnancy?: ICacheItemPregnancy;
     _fetalposition?: {
         fhr1: string,
         fhr2: string,
         fhr3: string
     };
-    status?: BedStatus;
+    _status?: BedStatus;
     orflag?: boolean;
     starttime?: string;
-    fetal_num?: number;
+    _fetal_num?: number;
     csspan?: number;
     ecg?: Queue;
     ple?: Queue;
@@ -209,6 +209,9 @@ export class ICacheItem extends _ICacheItem {
     public get isF0Pro() {
         return this.deviceType === 'LM_F0_PRO';
     }
+    public get isV3() {
+        return this.deviceType === 'V3';
+    }
     public get batterylowArr() {
         return [this.is_fhr_1_batterylow, this.is_fhr_2_batterylow, this.is_fhr_3_batterylow]
     }
@@ -238,13 +241,15 @@ export class ICacheItem extends _ICacheItem {
     public get hasPregnancy(): boolean {
         return this.pregnancy && typeof this.pregnancy.id === 'number'
     }
-    private _status: BedStatus;
     public get status(): BedStatus {
         return this._status + 1;
     }
     public set status(remoteStatus: BedStatus) {
 
         this._status = remoteStatus;
+        if (!this.isWorking) {
+            this.timeEndworkTipData = null
+        }
     }
     public get ismulti() {
         return this.is_include_mother;
@@ -260,7 +265,6 @@ export class ICacheItem extends _ICacheItem {
 
         this.device_type = type;
     }
-    private _fetal_num: number;
     public get fetal_num(): number {
         return this._fetal_num;
     }

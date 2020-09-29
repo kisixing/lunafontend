@@ -41,10 +41,14 @@ type TCtgConfig = { [x in keyof typeof defaultCtgConfig]?: any }
 
 const lightConfig: TCtgConfig = {
 
-  primarygrid: 'red',
-  secondarygrid: '#F59997',
-  rule: 'rgba(0,51,102,1)',
+  // primarygrid: 'blue',
+  // secondarygrid: '#F59997',
+  // rule: 'rgba(0,51,102,1)',
+  primarygrid: '#6b6100',
+  secondarygrid: '#d6cd81',
+  rule: '#827717',
   scale: 'rgba(0,0,0,1)',
+
   normalarea: 'rgb(224,255,255)',
 
 }

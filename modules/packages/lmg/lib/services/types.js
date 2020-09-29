@@ -79,6 +79,13 @@ var ICacheItem = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(ICacheItem.prototype, "isV3", {
+        get: function () {
+            return this.deviceType === 'V3';
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(ICacheItem.prototype, "batterylowArr", {
         get: function () {
             return [this.is_fhr_1_batterylow, this.is_fhr_2_batterylow, this.is_fhr_3_batterylow];
@@ -148,6 +155,9 @@ var ICacheItem = (function (_super) {
         },
         set: function (remoteStatus) {
             this._status = remoteStatus;
+            if (!this.isWorking) {
+                this.timeEndworkTipData = null;
+            }
         },
         enumerable: true,
         configurable: true

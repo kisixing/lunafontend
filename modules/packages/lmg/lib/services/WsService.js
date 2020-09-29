@@ -107,13 +107,17 @@ var WsService = (function (_super) {
                     var target = WsService._this.getCacheItem(id);
                     console.log('goit');
                     var received_msg = {
-                        "name": "time_endwork_tip",
+                        "name": "list_blood_pressure",
                         "device_no": target.device_no,
                         "bed_no": target.bed_no,
-                        "data": {
-                            "mac": "EB:CI:SE:38:90:22",
-                            "isfhr": true
-                        }
+                        "data": [
+                            {
+                                dia_bp: 1,
+                                mean_bp: 2,
+                                sys_bp: 3,
+                                time: 'string',
+                            }
+                        ]
                     };
                     var mesName = received_msg.name;
                     _this_1.handleMessage(mesName, received_msg);
@@ -310,6 +314,18 @@ var WsService = (function (_super) {
             "name": "focus_on_bed",
             "device_no": target && target.device_no,
             "bed_no": target && target.bed_no
+        };
+        this.send(JSON.stringify(message));
+    };
+    WsService.prototype.sendBloodPressure = function (id, isAuto, time) {
+        if (time === void 0) { time = 0; }
+        var target = this.getCacheItem(id);
+        var message = {
+            name: "blood_pressure",
+            device_no: target && target.device_no,
+            bed_no: target && target.bed_no,
+            time: time,
+            isAuto: isAuto
         };
         this.send(JSON.stringify(message));
     };
