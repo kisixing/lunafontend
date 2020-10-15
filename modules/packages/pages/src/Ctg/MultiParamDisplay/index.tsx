@@ -67,9 +67,7 @@ export const MultiParamDisplay = (props: IProps) => {
     // const v = useMemo(() => { return {} }, []);
     return (
         <div style={{ height: '100%', overflowY: 'scroll' }}>
-            <div ref={ref1} style={{ width: '100%', height: 300 }}></div>
-            <div ref={ref2} style={{ width: '100%', height: 300 }}></div>
-            <div ref={ref3} style={{ width: '100%', height: 300 }}></div>
+            <div style={{ fontSize: 18, fontWeight: 'bold', color: 'var(--customed-font)', textIndent: 6 }}>血压</div>
             <Table size="small" style={{ margin: '0 10%' }}
                 columns={[
                     { dataIndex: 'sbp', title: '收缩压' },
@@ -82,6 +80,9 @@ export const MultiParamDisplay = (props: IProps) => {
             >
 
             </Table>
+            <div ref={ref1} style={{ width: '100%', height: 300 }}></div>
+            <div ref={ref2} style={{ width: '100%', height: 300 }}></div>
+            <div ref={ref3} style={{ width: '100%', height: 300 }}></div>
         </div>
     );
 }

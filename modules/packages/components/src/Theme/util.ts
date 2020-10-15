@@ -127,11 +127,12 @@ const generateStyleHtml = (colorObj) => {
         --theme-shadow-color: ${shadowColor};
         --theme-light-color: ${lightColor};
         --theme-dark-color: ${darkColor};
-        --customed-bg:#eee;
-        --customed-color:#fff;
-        --customed-font:#5A6676;
-        --customed-border:#DBDBDB;
-        --customed-base-color:#007AFF;
+        --customed-base-color:${isDark ? '#2C2C2C' : primaryColor};
+        --customed-base-font:${isDark ? primaryColor : '#fff'};
+        --customed-bg:${isDark ? '#3C3C3C' : '#eee'};
+        --customed-color:${isDark ? '#2C2C2C' : '#fff'};
+        --customed-font:${isDark ? '#ABABAB' : '#333'};
+        --customed-border:${isDark ? '#3C3C3C' : '#DBDBDB'};
       }
     `;
     return `${cssVar}\n${isDark ? configDark(cssContent) : cssContent}`;

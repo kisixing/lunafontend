@@ -91,6 +91,7 @@ export declare class WsService extends EventEmitter {
     _emit(name: string, ...value: any[]): void;
     subscribeList: string[];
     subscribe(str: string[]): void;
+    sendCommon(name: string, device_no: number, bed_no: number): void;
     getVolume(device_no: number, bed_no: number): void;
     change_volume(device_no: number, bed_no: number, vol: number): void;
     mute_volume(device_no: number, bed_no: number, fetel_no: number, isMute: number): void;

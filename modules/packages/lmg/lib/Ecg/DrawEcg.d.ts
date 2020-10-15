@@ -48,5 +48,6 @@ export declare class DrawEcg extends Draw {
     drawsingle(): void;
     clearcanvans(): void;
     GetYStarts(C: any): any[];
+    clear: any;
 }
 export {};

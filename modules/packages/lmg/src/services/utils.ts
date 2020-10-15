@@ -73,10 +73,6 @@ export function getEmptyCacheItem(base: { [x in keyof ICacheItem]?: ICacheItem[x
         ismulti: false,
         ecg: new Queue(),
         ple: new Queue(240),
-        ecgdata: null,
-        is_include_volume: false,
-        is_include_tocozero: false,
-        is_include_toco: false,
         realTime: true,
         alarms: Object.create(null),
         ...base
@@ -87,11 +83,13 @@ export function getEmptyCacheItem(base: { [x in keyof ICacheItem]?: ICacheItem[x
 export function cleardata(datacache: ICache, curid: string, fetal_num: number) {
     console.log('cleardata', curid)
     const target = datacache.get(curid)
-    const empty = getEmptyCacheItem({ fetal_num, fhr: Array(fetal_num).fill(0).map(() => getMaxArray()), id: curid })
+    const empty = getEmptyCacheItem({ fetal_num, fhr: Array(fetal_num).fill(0).map(() => getMaxArray()), id: curid, bloodList: [] })
     // for (let fetal = 0; fetal < fetal_num; fetal++) {
     //     empty.fhr[fetal] = [];
     // }
     if (target) {
+        target.ecg.MakeEmpty()
+        target.ple.MakeEmpty()
         Object.assign(target, empty)
     } else {
         datacache.set(curid, empty);

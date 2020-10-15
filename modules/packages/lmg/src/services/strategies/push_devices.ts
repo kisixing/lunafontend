@@ -1,4 +1,4 @@
-import { IDevice, _ICacheItem } from "../types";
+import { ICacheItem, IDevice, _ICacheItem } from "../types";
 import { getEmptyCacheItem } from "../utils";
 import { WsService } from "../WsService";
 
@@ -8,6 +8,7 @@ interface IData {
 }
 
 export function push_devices(this: WsService, received_msg: IData) {
+    const bpList: ICacheItem[] = []
 
     const { datacache } = this
     var devlist = received_msg.data;
@@ -17,7 +18,6 @@ export function push_devices(this: WsService, received_msg: IData) {
         const { device_no, beds, device_type } = devdata
         for (let bi in beds) {
             const bedData = beds[bi]
-
 
             //
             const { bed_no, doc_id, ...others } = bedData
@@ -33,10 +33,15 @@ export function push_devices(this: WsService, received_msg: IData) {
                 const target = getEmptyCacheItem({ id: unitId, doc_id, device_type, device_no, bed_no, ...others })
                 datacache.set(unitId, target);
                 this.convertdocid(unitId, doc_id)
-
+                if (target.isV3) {
+                    bpList.push(target)
+                }
             }
         }
     }
+    setTimeout(() => {
+        bpList.forEach(_ => this.sendCommon('list_blood_pressure', _.device_no, _.bed_no))
+    }, 1000);
     this.isReady && this.refresh()
     this.connectResolve(datacache)
     this.emit('read', datacache)

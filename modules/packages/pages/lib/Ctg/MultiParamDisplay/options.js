@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getOptions1 = function (data, date, title, name, unit, color, min, max) {
+exports.getOptions1 = function (data, date, title, name, unit, sColor, min, max) {
+    var color = window['isDark'] ? '#ababab' : '#333';
     return {
         tooltip: {
             trigger: 'axis',
@@ -11,6 +12,7 @@ exports.getOptions1 = function (data, date, title, name, unit, color, min, max) 
         title: {
             left: 'left',
             text: title,
+            textStyle: { color: color }
         },
         toolbox: {
             feature: {
@@ -24,7 +26,8 @@ exports.getOptions1 = function (data, date, title, name, unit, color, min, max) 
         xAxis: {
             type: 'category',
             boundaryGap: false,
-            data: date
+            data: date,
+            axisLabel: { color: color }
         },
         yAxis: [
             {
@@ -32,7 +35,8 @@ exports.getOptions1 = function (data, date, title, name, unit, color, min, max) 
                 boundaryGap: [0, '20%'],
                 name: name + unit,
                 min: min,
-                max: max
+                max: max,
+                axisLabel: { color: color }
             }
         ],
         dataZoom: [{
@@ -61,7 +65,7 @@ exports.getOptions1 = function (data, date, title, name, unit, color, min, max) 
                 symbol: 'none',
                 sampling: 'average',
                 itemStyle: {
-                    color: color
+                    color: sColor
                 },
                 data: data
             }

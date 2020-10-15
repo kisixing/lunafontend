@@ -1,4 +1,4 @@
-export declare const getOptions1: (data: any[], date: any[], title: string, name: string, unit: string, color: string, min: number, max: number) => {
+export declare const getOptions1: (data: any[], date: any[], title: string, name: string, unit: string, sColor: string, min: number, max: number) => {
     tooltip: {
         trigger: string;
         position: (pt: any) => any[];
@@ -6,6 +6,9 @@ export declare const getOptions1: (data: any[], date: any[], title: string, name
     title: {
         left: string;
         text: string;
+        textStyle: {
+            color: string;
+        };
     };
     toolbox: {
         feature: {
@@ -20,13 +23,19 @@ export declare const getOptions1: (data: any[], date: any[], title: string, name
         type: string;
         boundaryGap: boolean;
         data: any[];
+        axisLabel: {
+            color: string;
+        };
     };
     yAxis: {
         type: string;
-        boundaryGap: import("csstype").AnimationIterationCountProperty[];
+        boundaryGap: (string | number)[];
         name: string;
         min: number;
         max: number;
+        axisLabel: {
+            color: string;
+        };
     }[];
     dataZoom: ({
         type: string;

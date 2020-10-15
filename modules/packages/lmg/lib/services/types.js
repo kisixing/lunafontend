@@ -43,6 +43,7 @@ var ICacheItem = (function (_super) {
     __extends(ICacheItem, _super);
     function ICacheItem(args) {
         var _this = _super.call(this) || this;
+        _this.ecgdata = {};
         Object.assign(_this, args);
         return _this;
     }

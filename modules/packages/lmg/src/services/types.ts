@@ -89,6 +89,7 @@ export interface IBed {
     is_include_volume: boolean
     is_include_tocozero: boolean
     is_include_toco: boolean
+    is_include_blood_pressure: boolean
 
 
     // 
@@ -120,6 +121,7 @@ export class _ICacheItem {
     is_include_volume?: boolean
     is_include_tocozero?: boolean
     is_include_toco?: boolean
+    is_include_blood_pressure?: boolean
     disableStartWork?: boolean
     disableCreate?: boolean
     analyse?: any;
@@ -138,7 +140,7 @@ export class _ICacheItem {
     past?: number;
     timestamp?: number;
     doc_id?: string;
-    isauto_blood_pressure: number
+    isauto_blood_pressure?: number
     _pregnancy?: ICacheItemPregnancy;
     _fetalposition?: {
         fhr1: string,
@@ -286,6 +288,7 @@ export class ICacheItem extends _ICacheItem {
 
     constructor(args: _ICacheItem) {
         super()
+        this.ecgdata = {}
         Object.assign(this, args)
     }
 }

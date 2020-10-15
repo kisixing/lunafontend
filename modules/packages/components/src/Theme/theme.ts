@@ -164,7 +164,7 @@ export default `
     border-color: var(--theme-active-color);
   }
   .ant-btn-link {
-    color: var(--customed-font);
+    color: var(--theme-color);
   }
   .ant-btn-link:hover,
   .ant-btn-link:focus {
@@ -975,7 +975,7 @@ export default `
     background: var(--customed-bg);
   }
   .ant-menu-item-group-title{
-    color:var(--customed-font);
+    color: var(--theme-color);
   }
   .ant-btn-link:hover, .ant-btn-link:focus{
     border-color:transparent;
@@ -990,6 +990,9 @@ export function configDark(base: string) {
       `
       :root {
         --theme-bg:${DARK_COLOR};
+      }
+      body {
+        color:var(--customed-font)
       }
       `
     )

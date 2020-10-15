@@ -65,6 +65,7 @@ var PreviewContent = function (props) {
             position: 'absolute',
             top: 0,
             left: 0,
+            background: '#fff',
         } : {})) },
         react_1.default.createElement(react_1.default.Fragment, null,
             react_1.default.createElement(react_pdf_1.Document, { ref: ref1, loading: react_1.default.createElement(antd_1.Spin, { style: { margin: '120px 0' } }), onLoadSuccess: onDocumentLoad, file: pdfBase64, renderMode: "canvas" },

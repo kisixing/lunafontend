@@ -51,11 +51,17 @@ var DrawEcg = (function (_super) {
         _this.max_times = 135;
         _this.start = NaN;
         _this.intervalIds = [];
+        _this.clear = (function () {
+            this.drawPle.clear();
+            this.current_times = 0;
+            this.linectx.clearRect(x_start - 10, 0, this.width, this.height);
+        }).bind(_this);
         var canvas = args.canvas, canvasline = args.canvasline, canvasmonitor = args.canvasmonitor, canvasPle = args.canvasPle;
         _this.drawPle = new DrawPle_1.DrawPle(args.wrap, canvasPle);
         canvas.style.letterSpacing = '5px';
         Object.assign(_this, __assign(__assign({}, args), { ctx: canvas.getContext('2d'), linectx: canvasline.getContext('2d'), datactx: canvasmonitor.getContext('2d'), plectx: canvasPle.getContext('2d') }));
         _this.ecg();
+        utils_1.event.on('start_work', _this.clear);
         return _this;
     }
     Object.defineProperty(DrawEcg.prototype, "current_times", {
@@ -95,6 +101,7 @@ var DrawEcg = (function (_super) {
         this.canvasline = null;
         this.canvasmonitor = null;
         this.drawPle.destroy();
+        utils_1.event.off('start_work', this.clear);
     };
     DrawEcg.prototype.ecg = function () {
         this.addfilltext();
@@ -106,6 +113,7 @@ var DrawEcg = (function (_super) {
         var _a = this, ctx = _a.ctx, canvas = _a.canvas;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.font = 'bold 14px';
+        ctx.fillStyle = '#999';
         ctx.fillText('' + 'I' + '', 10, 10);
         var scale = 1;
         ctx.strokeStyle = '#006003';

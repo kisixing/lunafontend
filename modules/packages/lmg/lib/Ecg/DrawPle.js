@@ -80,6 +80,7 @@ var DrawPle = (function (_super) {
         var _a = this, width = _a.width, context2D = _a.context2D;
         context2D.strokeStyle = '#006003';
         context2D.font = 'bold 16px';
+        context2D.fillStyle = '#999';
         context2D.textAlign = 'left';
         context2D.textBaseline = 'top';
         context2D.lineJoin = 'round';
@@ -87,9 +88,9 @@ var DrawPle = (function (_super) {
         }
         else {
             this.max_times = Math.floor((width - x_start * 2) * DrawEcg_1.L_SCALE / gx);
-            context2D.fillText('pleth', x_start - 30, baseY - 70);
-            context2D.fillText('100', x_start - 30, baseY - 50);
-            context2D.fillText('0', x_start - 30, baseY);
+            context2D.fillText('pleth', x_start - 34, baseY - 70);
+            context2D.fillText('100', x_start - 34, baseY - 50);
+            context2D.fillText('0', x_start - 34, baseY);
         }
         this.current_times = 0;
     };
@@ -133,6 +134,10 @@ var DrawPle = (function (_super) {
         else {
             context2D.clearRect(x_start - 10, 0, x_start + 20, this.height);
         }
+    };
+    DrawPle.prototype.clear = function () {
+        this.context2D.clearRect(x_start - 10, 0, this.width, this.height);
+        this.current_times = 0;
     };
     DrawPle.Queue = Queue_1.default;
     return DrawPle;

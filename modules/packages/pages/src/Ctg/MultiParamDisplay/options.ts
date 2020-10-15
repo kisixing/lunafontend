@@ -1,4 +1,5 @@
-export const getOptions1 = (data: any[], date: any[], title: string, name: string, unit: string, color: string, min: number, max: number) => {
+export const getOptions1 = (data: any[], date: any[], title: string, name: string, unit: string, sColor: string, min: number, max: number) => {
+    const color = window['isDark'] ? '#ababab' : '#333'
     return {
         tooltip: {
             trigger: 'axis',
@@ -9,6 +10,7 @@ export const getOptions1 = (data: any[], date: any[], title: string, name: strin
         title: {
             left: 'left',
             text: title,
+            textStyle: { color }
         },
         // legend: {
         //     data: [name]
@@ -25,7 +27,8 @@ export const getOptions1 = (data: any[], date: any[], title: string, name: strin
         xAxis: {
             type: 'category',
             boundaryGap: false,
-            data: date
+            data: date,
+            axisLabel: { color }
         },
         yAxis: [
             {
@@ -33,7 +36,9 @@ export const getOptions1 = (data: any[], date: any[], title: string, name: strin
                 boundaryGap: [0, '20%'],
                 name: name + unit,
                 min,
-                max
+                max,
+                axisLabel: { color }
+
             }
         ],
         dataZoom: [{
@@ -65,7 +70,7 @@ export const getOptions1 = (data: any[], date: any[], title: string, name: strin
                 symbol: 'none',
                 sampling: 'average',
                 itemStyle: {
-                    color: color
+                    color: sColor
                 },
                 data: data
             }

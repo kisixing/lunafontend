@@ -1,6 +1,6 @@
 import Draw from "../Draw";
 import Queue from "./Queue";
-import { _R } from "@lianmed/utils";
+import { event, _R } from "@lianmed/utils";
 import { DrawPle } from "./DrawPle";
 import { ICacheItem } from "../services/types";
 export const L_SCALE = 1
@@ -76,6 +76,7 @@ export class DrawEcg extends Draw {
       plectx: canvasPle.getContext('2d')
     });
     this.ecg();
+    event.on('start_work', this.clear)
   }
   init(data: ICacheItem) {
 
@@ -109,6 +110,8 @@ export class DrawEcg extends Draw {
     this.canvasline = null;
     this.canvasmonitor = null;
     this.drawPle.destroy()
+    event.off('start_work', this.clear)
+
   }
   ecg() {
     this.addfilltext();
@@ -122,6 +125,8 @@ export class DrawEcg extends Draw {
     const { ctx, canvas } = this;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.font = 'bold 14px';
+    ctx.fillStyle = '#999'
+
     ctx.fillText('' + 'I' + '', 10, 10);
     let scale = 1;
     ctx.strokeStyle = '#006003';
@@ -316,6 +321,9 @@ export class DrawEcg extends Draw {
     isstop = true;
     if (this.data.ecg.IsEmpty()) {
       this.start = NaN;
+
+
+
       isstop = false;
       return;
     }
@@ -330,7 +338,7 @@ export class DrawEcg extends Draw {
     for (let J = 0; J < points_one_times; J++) {
       let ecgdot = this.data.ecg.DeQueue();
       if (ecgdot == 1) {
-      console.log('drawsingle invalid++')
+        console.log('drawsingle invalid++')
 
         invalid++;
       } else {
@@ -410,4 +418,10 @@ export class DrawEcg extends Draw {
     }
     return B;
   }
+  clear = (function (this: DrawEcg) {
+    this.drawPle.clear()
+    this.current_times = 0;
+    this.linectx.clearRect(x_start - 10, 0, this.width, this.height)
+  }).bind(this)
+
 }

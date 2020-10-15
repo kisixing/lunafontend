@@ -24,6 +24,8 @@ var __rest = (this && this.__rest) || function (s, e) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var utils_1 = require("../utils");
 function push_devices(received_msg) {
+    var _this = this;
+    var bpList = [];
     var datacache = this.datacache;
     var devlist = received_msg.data;
     for (var i in devlist) {
@@ -40,9 +42,15 @@ function push_devices(received_msg) {
                 var target = utils_1.getEmptyCacheItem(__assign({ id: unitId, doc_id: doc_id, device_type: device_type, device_no: device_no, bed_no: bed_no }, others));
                 datacache.set(unitId, target);
                 this.convertdocid(unitId, doc_id);
+                if (target.isV3) {
+                    bpList.push(target);
+                }
             }
         }
     }
+    setTimeout(function () {
+        bpList.forEach(function (_) { return _this.sendCommon('list_blood_pressure', _.device_no, _.bed_no); });
+    }, 1000);
     this.isReady && this.refresh();
     this.connectResolve(datacache);
     this.emit('read', datacache);

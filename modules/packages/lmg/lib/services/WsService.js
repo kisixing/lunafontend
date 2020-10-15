@@ -103,21 +103,25 @@ var WsService = (function (_super) {
                     }
                 };
                 window['aa'] = function (id) {
-                    if (id === void 0) { id = '1001-1'; }
+                    if (id === void 0) { id = '1001-2'; }
                     var target = WsService._this.getCacheItem(id);
                     console.log('goit');
                     var received_msg = {
-                        "name": "list_blood_pressure",
-                        "device_no": target.device_no,
-                        "bed_no": target.bed_no,
-                        "data": [
-                            {
-                                dia_bp: 1,
-                                mean_bp: 2,
-                                sys_bp: 3,
-                                time: 'string',
-                            }
-                        ]
+                        "name": "update_status",
+                        data: {
+                            doc_id: "28_1_201013075145",
+                            event_alarm_id: "3",
+                            event_alarm_status: "2",
+                            fetal_num: 1,
+                            fetalposition: "{}",
+                            is_include_mother: true,
+                            is_include_tocozero: false,
+                            is_include_volume: true,
+                            is_working: 0,
+                            pregnancy: "",
+                            "device_no": target.device_no,
+                            "bed_no": target.bed_no,
+                        }
                     };
                     var mesName = received_msg.name;
                     _this_1.handleMessage(mesName, received_msg);
@@ -245,6 +249,7 @@ var WsService = (function (_super) {
     };
     WsService.prototype.startwork = function (device_no, bed_no) {
         var message = "{\"name\":\"start_work\",\"data\":{\"device_no\":" + device_no + ",\"bed_no\":" + bed_no + "}}";
+        utils_1.event.emit('start_work', this.getUnitId(device_no, bed_no));
         this.send(message);
     };
     WsService.prototype.endwork = function (device_no, bed_no) {
@@ -309,6 +314,8 @@ var WsService = (function (_super) {
         return this.send(command);
     };
     WsService.prototype.sendFocus = function (id) {
+        if (!this.settingData.f0pro)
+            return;
         var target = this.getCacheItem(id);
         var message = {
             "name": "focus_on_bed",
@@ -341,6 +348,14 @@ var WsService = (function (_super) {
         if (this.subscribeList && str.every(function (_) { return _this_1.subscribeList.includes(_); }) && this.subscribeList.every(function (_) { return str.includes(_); })) {
             return;
         }
+    };
+    WsService.prototype.sendCommon = function (name, device_no, bed_no) {
+        var msg = JSON.stringify({
+            name: name,
+            device_no: device_no,
+            bed_no: bed_no
+        });
+        this.send(msg);
     };
     WsService.prototype.getVolume = function (device_no, bed_no) {
         var msg = JSON.stringify({

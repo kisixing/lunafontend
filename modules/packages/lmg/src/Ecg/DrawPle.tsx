@@ -119,6 +119,7 @@ export class DrawPle extends Draw {
     const { width, context2D } = this;
     context2D.strokeStyle = '#006003';
     context2D.font = 'bold 16px'
+    context2D.fillStyle = '#999'
     context2D.textAlign = 'left';
     context2D.textBaseline = 'top'
     context2D.lineJoin = 'round'
@@ -126,9 +127,9 @@ export class DrawPle extends Draw {
       // alert(' width is limited');
     } else {
       this.max_times = Math.floor((width - x_start * 2) * L_SCALE / gx);
-      context2D.fillText('pleth', x_start - 30, baseY - 70)
-      context2D.fillText('100', x_start - 30, baseY - 50)
-      context2D.fillText('0', x_start - 30, baseY)
+      context2D.fillText('pleth', x_start - 34, baseY - 70)
+      context2D.fillText('100', x_start - 34, baseY - 50)
+      context2D.fillText('0', x_start - 34, baseY)
     }
     // console.log('ecg-width', canvas.width);
     this.current_times = 0;
@@ -206,6 +207,11 @@ export class DrawPle extends Draw {
     } else {
       context2D.clearRect(x_start - 10, 0, x_start + 20, this.height);
     }
+  }
+  clear() {
+    this.context2D.clearRect(x_start - 10, 0, this.width, this.height)
+    this.current_times = 0;
+
   }
 
 

@@ -1,10 +1,4 @@
 export default `
-:root {
-    --customed-bg:#3C3C3C;
-    --customed-color:#2C2C2C;
-    --customed-font:#ABABAB;
-    --customed-border:#3C3C3C;
-}
 
 .ant-modal-content{
     background-color:var(--customed-color);

@@ -81,6 +81,7 @@ export interface IBed {
     is_include_volume: boolean;
     is_include_tocozero: boolean;
     is_include_toco: boolean;
+    is_include_blood_pressure: boolean;
     device_no: number;
     status: number;
     isMute1: number;
@@ -107,6 +108,7 @@ export declare class _ICacheItem {
     is_include_volume?: boolean;
     is_include_tocozero?: boolean;
     is_include_toco?: boolean;
+    is_include_blood_pressure?: boolean;
     disableStartWork?: boolean;
     disableCreate?: boolean;
     analyse?: any;
@@ -121,7 +123,7 @@ export declare class _ICacheItem {
     past?: number;
     timestamp?: number;
     doc_id?: string;
-    isauto_blood_pressure: number;
+    isauto_blood_pressure?: number;
     _pregnancy?: ICacheItemPregnancy;
     _fetalposition?: {
         fhr1: string;

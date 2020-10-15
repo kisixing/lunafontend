@@ -63,15 +63,17 @@ exports.getMaxArray = getMaxArray;
 function getEmptyCacheItem(base) {
     base.fetal_num = base.fetal_num ? base.fetal_num : 1;
     var fetal_num = base.fetal_num;
-    var item = new types_1.ICacheItem(__assign({ id: '0', fhr: Array(fetal_num).fill(0).map(function () { return getMaxArray(); }), toco: getMaxArray(), fm: getMaxArray(), fmp: getMaxArray(), index: 0, length: 0, start: -1, last: 0, past: 0, timestamp: 0, docid: 'INIT', status: 0, orflag: true, starttime: '', pregnancy: null, fetalposition: { fhr1: '', fhr2: '', fhr3: '' }, fetal_num: 1, csspan: NaN, ismulti: false, ecg: new Queue_1.default(), ple: new Queue_1.default(240), ecgdata: null, is_include_volume: false, is_include_tocozero: false, is_include_toco: false, realTime: true, alarms: Object.create(null) }, base));
+    var item = new types_1.ICacheItem(__assign({ id: '0', fhr: Array(fetal_num).fill(0).map(function () { return getMaxArray(); }), toco: getMaxArray(), fm: getMaxArray(), fmp: getMaxArray(), index: 0, length: 0, start: -1, last: 0, past: 0, timestamp: 0, docid: 'INIT', status: 0, orflag: true, starttime: '', pregnancy: null, fetalposition: { fhr1: '', fhr2: '', fhr3: '' }, fetal_num: 1, csspan: NaN, ismulti: false, ecg: new Queue_1.default(), ple: new Queue_1.default(240), realTime: true, alarms: Object.create(null) }, base));
     return item;
 }
 exports.getEmptyCacheItem = getEmptyCacheItem;
 function cleardata(datacache, curid, fetal_num) {
     console.log('cleardata', curid);
     var target = datacache.get(curid);
-    var empty = getEmptyCacheItem({ fetal_num: fetal_num, fhr: Array(fetal_num).fill(0).map(function () { return getMaxArray(); }), id: curid });
+    var empty = getEmptyCacheItem({ fetal_num: fetal_num, fhr: Array(fetal_num).fill(0).map(function () { return getMaxArray(); }), id: curid, bloodList: [] });
     if (target) {
+        target.ecg.MakeEmpty();
+        target.ple.MakeEmpty();
         Object.assign(target, empty);
     }
     else {

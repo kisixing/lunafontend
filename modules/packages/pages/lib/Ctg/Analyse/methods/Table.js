@@ -72,7 +72,7 @@ var T = react_1.forwardRef(function (props, ref) {
             var newData = strategies_1.default(mark, form.getFieldsValue(), initData);
             newData && form.setFieldsValue(newData);
         } },
-        react_1.default.createElement(antd_1.Form.Item, { name: deformed ? 'result' : 'total', label: deformed ? '结果' : '总分', style: { position: 'absolute', top: -48, right: 260 } },
+        react_1.default.createElement(antd_1.Form.Item, { name: deformed ? 'result' : 'total', label: deformed ? '结果' : '总分', style: { position: 'absolute', top: -44, right: 260 } },
             react_1.default.createElement(antd_1.InputNumber, { disabled: true, style: { width: 120 } })),
         react_1.default.createElement(antd_1.Table, { bordered: true, size: "small", pagination: false, columns: columns, dataSource: dataSource })));
 });

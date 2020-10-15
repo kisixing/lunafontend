@@ -162,6 +162,7 @@ export class WsService extends EventEmitter {
     }
     startwork(device_no: string, bed_no: string) {
         const message = `{"name":"start_work","data":{"device_no":${device_no},"bed_no":${bed_no}}}`;
+        event.emit('start_work', this.getUnitId(device_no, bed_no))
         this.send(message);
     }
     endwork(device_no: string, bed_no: string) {
@@ -230,6 +231,7 @@ export class WsService extends EventEmitter {
         return this.send(command);
     }
     sendFocus(id: string) {
+        if (!this.settingData.f0pro) return
         const target = this.getCacheItem(id)
         const message = {
             "name": "focus_on_bed",
@@ -269,6 +271,14 @@ export class WsService extends EventEmitter {
         // ))
     }
 
+    sendCommon(name: string, device_no: number, bed_no: number) {
+        const msg = JSON.stringify({
+            name,
+            device_no,
+            bed_no
+        })
+        this.send(msg)
+    }
     getVolume(device_no: number, bed_no: number) {
         const msg = JSON.stringify({
             name: "getVolume",
@@ -434,21 +444,28 @@ export class WsService extends EventEmitter {
                     this.handleMessage(mesName, received_msg)
                 }
             };
-            window['aa'] = (id = '1001-1') => {
+            window['aa'] = (id = '1001-2') => {
                 const target = WsService._this.getCacheItem(id)
                 console.log('goit');
                 var received_msg = {
-                    "name": "list_blood_pressure",
-                    "device_no": target.device_no,
-                    "bed_no": target.bed_no,
-                    "data": [
-                        {
-                            dia_bp: 1,
-                            mean_bp: 2,
-                            sys_bp: 3,
-                            time: 'string',
-                        }
-                    ]
+                    "name": "update_status",
+
+
+                    data: {
+                        doc_id: "28_1_201013075145",
+                        event_alarm_id: "3",
+                        event_alarm_status: "2",
+                        fetal_num: 1,
+                        fetalposition: "{}",
+                        is_include_mother: true,
+                        is_include_tocozero: false,
+                        is_include_volume: true,
+                        is_working: 0,
+                        pregnancy: "",
+                        "device_no": target.device_no,
+                        "bed_no": target.bed_no,
+                    }
+
                 }
                 const mesName = received_msg.name
                 this.handleMessage(mesName, received_msg)

@@ -18,7 +18,7 @@ const Wrapper = styled.div`
   height:100%;
   .divider {
     border-radius:2px;
-    background:linear-gradient(45deg, #e0e0e0, transparent) !important;
+    background:linear-gradient(45deg, #e0e0e0, #fff) !important;
     padding-left:20px;
     margin: 8px 0;
   }
@@ -215,7 +215,7 @@ export const Ctg_Analyse: FC<{
             <Checkbox checked={autoFm} onChange={e => setAutoFm(e.target.checked)} style={{ position: 'absolute', left: 18, bottom: 8 }}>自动胎动</Checkbox>
             <Checkbox checked={autoAnalyse} onChange={e => setAutoAnalyse(e.target.checked)} style={{ position: 'absolute', left: 100, bottom: 8 }}>弹窗时自动分析</Checkbox>
             <Checkbox checked={showBase} onChange={e => setShowBase(e.target.checked)} style={{ position: 'absolute', left: 228, bottom: 8 }}>显示基线</Checkbox>
-            <div style={{ position: 'absolute', right: 20, top: 16 }}>
+            <div style={{ position: 'absolute', right: 20, top: 12 }}>
               <Button size="small" type="primary" onClick={() => fetchData()} loading={loading} >刷新数据</Button>
               <Button size="small" type="primary" onClick={reAnalyse as any} loading={analyseLoading} disabled={!note}>重新分析</Button>
             </div>

@@ -20,4 +20,5 @@ export declare class DrawPle extends Draw {
     initparm(): void;
     drawsingle(): void;
     clearcanvans(): void;
+    clear(): void;
 }

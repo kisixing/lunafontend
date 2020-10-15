@@ -51,7 +51,7 @@ var utils_1 = require("@lianmed/utils");
 var react_pdf_1 = require("react-pdf");
 require("react-pdf/dist/Page/AnnotationLayer.css");
 exports.ANALYSE_SUCCESS_TYPE = "(●'◡'●)";
-var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  height:100%;\n  .divider {\n    border-radius:2px;\n    background:linear-gradient(45deg, #e0e0e0, transparent) !important;\n    padding-left:20px;\n    margin: 8px 0;\n  }\n  button {\n    margin:0 6px 6px 0\n  }\n  .bordered {\n    border: 1px solid #ddd;\n  }\n"], ["\n  height:100%;\n  .divider {\n    border-radius:2px;\n    background:linear-gradient(45deg, #e0e0e0, transparent) !important;\n    padding-left:20px;\n    margin: 8px 0;\n  }\n  button {\n    margin:0 6px 6px 0\n  }\n  .bordered {\n    border: 1px solid #ddd;\n  }\n"])));
+var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  height:100%;\n  .divider {\n    border-radius:2px;\n    background:linear-gradient(45deg, #e0e0e0, #fff) !important;\n    padding-left:20px;\n    margin: 8px 0;\n  }\n  button {\n    margin:0 6px 6px 0\n  }\n  .bordered {\n    border: 1px solid #ddd;\n  }\n"], ["\n  height:100%;\n  .divider {\n    border-radius:2px;\n    background:linear-gradient(45deg, #e0e0e0, #fff) !important;\n    padding-left:20px;\n    margin: 8px 0;\n  }\n  button {\n    margin:0 6px 6px 0\n  }\n  .bordered {\n    border: 1px solid #ddd;\n  }\n"])));
 exports.Ctg_Analyse = function (_a) {
     var docid = _a.docid, _b = _a.type, type = _b === void 0 ? "default" : _b, id = _a.id, note = _a.note, _c = _a.onDownload, onDownload = _c === void 0 ? function (url) { } : _c, _d = _a.age, age = _d === void 0 ? 0 : _d, _e = _a.fetalcount, fetalcount = _e === void 0 ? 0 : _e, _f = _a.gestationalWeek, gestationalWeek = _f === void 0 ? '' : _f, _g = _a.inpatientNO, inpatientNO = _g === void 0 ? '' : _g, _h = _a.name, name = _h === void 0 ? '' : _h, _j = _a.startdate, startdate = _j === void 0 ? '' : _j;
     note = note ? note : docid;
@@ -170,7 +170,7 @@ exports.Ctg_Analyse = function (_a) {
                 react_1.default.createElement(antd_1.Checkbox, { checked: autoFm, onChange: function (e) { return setAutoFm(e.target.checked); }, style: { position: 'absolute', left: 18, bottom: 8 } }, "\u81EA\u52A8\u80CE\u52A8"),
                 react_1.default.createElement(antd_1.Checkbox, { checked: autoAnalyse, onChange: function (e) { return setAutoAnalyse(e.target.checked); }, style: { position: 'absolute', left: 100, bottom: 8 } }, "\u5F39\u7A97\u65F6\u81EA\u52A8\u5206\u6790"),
                 react_1.default.createElement(antd_1.Checkbox, { checked: showBase, onChange: function (e) { return setShowBase(e.target.checked); }, style: { position: 'absolute', left: 228, bottom: 8 } }, "\u663E\u793A\u57FA\u7EBF"),
-                react_1.default.createElement("div", { style: { position: 'absolute', right: 20, top: 16 } },
+                react_1.default.createElement("div", { style: { position: 'absolute', right: 20, top: 12 } },
                     react_1.default.createElement(antd_1.Button, { size: "small", type: "primary", onClick: function () { return fetchData(); }, loading: loading }, "\u5237\u65B0\u6570\u636E"),
                     react_1.default.createElement(antd_1.Button, { size: "small", type: "primary", onClick: reAnalyse, loading: analyseLoading, disabled: !note }, "\u91CD\u65B0\u5206\u6790"))),
             react_1.default.createElement(antd_1.Col, { span: 7 },

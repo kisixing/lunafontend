@@ -59,14 +59,15 @@ exports.MultiParamDisplay = function (props) {
         });
     }, []);
     return (react_1.default.createElement("div", { style: { height: '100%', overflowY: 'scroll' } },
-        react_1.default.createElement("div", { ref: ref1, style: { width: '100%', height: 300 } }),
-        react_1.default.createElement("div", { ref: ref2, style: { width: '100%', height: 300 } }),
-        react_1.default.createElement("div", { ref: ref3, style: { width: '100%', height: 300 } }),
+        react_1.default.createElement("div", { style: { fontSize: 18, fontWeight: 'bold', color: 'var(--customed-font)', textIndent: 6 } }, "\u8840\u538B"),
         react_1.default.createElement(antd_1.Table, { size: "small", style: { margin: '0 10%' }, columns: [
                 { dataIndex: 'sbp', title: '收缩压' },
                 { dataIndex: 'dbp', title: '舒张压' },
                 { dataIndex: 'map', title: '平均压' },
                 { dataIndex: 'time', title: '时间' },
-            ].map(function (_) { return (__assign(__assign({}, _), { align: 'center' })); }), dataSource: pressures, pagination: { pageSize: 6 } })));
+            ].map(function (_) { return (__assign(__assign({}, _), { align: 'center' })); }), dataSource: pressures, pagination: { pageSize: 6 } }),
+        react_1.default.createElement("div", { ref: ref1, style: { width: '100%', height: 300 } }),
+        react_1.default.createElement("div", { ref: ref2, style: { width: '100%', height: 300 } }),
+        react_1.default.createElement("div", { ref: ref3, style: { width: '100%', height: 300 } })));
 };
 //# sourceMappingURL=index.js.map

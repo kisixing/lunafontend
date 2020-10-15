@@ -103,7 +103,7 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
   return (
     <Wrapper style={{ flexDirection: isFullscreen ? 'row' : 'column-reverse' }}>
       {
-        ismulti && <MultiParam data={data} isFullScreen={isFullscreen} />
+        <MultiParam data={data} isFullScreen={isFullscreen} />
       }
       <div className="box" ref={box} {...others}
         onMouseDownCapture={e => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ICacheItem } from "../services/types";
 import { MultiParamL } from "./MultiParamL";
 import styled from "styled-components";
@@ -12,8 +12,10 @@ const Wrap = styled.div`
     font-size: 12px;
     .aa {
       position:relative;
+      transition:all .2s;
     }
-    .aa::after {
+
+    .aab::after {
         content: "";
         position: absolute;
         z-index: -1;
@@ -25,7 +27,7 @@ const Wrap = styled.div`
         background-color: rgba(79,192,141,0.5);
         z-index:1;
       }
-      .aa:hover::after {
+      .aab:hover::after {
         top: 0%;
       }
 `
@@ -36,18 +38,32 @@ export const MultiParam = (props: { data: ICacheItem, isFullScreen: boolean }) =
         isFullScreen,
     } = props
 
+
+    const ref = useRef<HTMLDivElement>(null)
     if (!data || !data.realTime) return null
     const [ecgData, setEcgData] = useState(data && data.ecgdata)
+    const [ismulti, setIsmulti] = useState(false)
     const [list, setList] = useState([])
-
+    let fontSize = 12
+    if (ref.current) {
+        if (ref.current.clientWidth < 630) {
+            fontSize = 12
+        } else {
+            fontSize = 22
+        }
+    }
     useEffect(() => {
         setEcgData(data.ecgdata)
         setList(data.bloodList)
-        const id = setInterval(() => {
-            setEcgData(data.ecgdata)
-            setList(data.bloodList)
+        setIsmulti(data.ismulti)
 
+        const id = setInterval(() => {
+            setEcgData(JSON.parse(JSON.stringify(data.ecgdata || {})))
+            setList(data.bloodList)
+            setIsmulti(data.ismulti)
         }, 1000)
+
+
         return () => {
             clearInterval(id)
         }
@@ -55,23 +71,22 @@ export const MultiParam = (props: { data: ICacheItem, isFullScreen: boolean }) =
 
 
     // const keys = ['脉率bpm', '血氧%', '体温℃', '心率bpm', '呼吸(次/分)', '血压(SDM)mmHg'];
-    const fontSize = 22
 
     return (
 
-        !!(ecgData) && (
-            <div style={{ width: isFullScreen ? 280 : '100%', height: isFullScreen ? 'auto' : '20%', maxHeight: isFullScreen ? 'unset' : 40, minHeight: isFullScreen ? 'auto' : 26, borderRight: isFullScreen && border }}>
+        !!(ecgData) && ismulti && (
+            <div ref={ref} style={{ width: isFullScreen ? 280 : '100%', height: isFullScreen ? 'auto' : '20%', maxHeight: isFullScreen ? 'unset' : 40, minHeight: isFullScreen ? 'auto' : 26, borderRight: isFullScreen && border }}>
                 {
                     isFullScreen ?
                         (
                             <MultiParamL ecgData={ecgData} p={data.ple} bloodList={list} />
                         ) : (
                             <Wrap>
-                                <span className="aa"><sup>脉率</sup> <span  style={{ fontSize }}>{ecgData.pulseRate}</span><sup>bpm</sup></span>
-                                <span className="aa"><sup>血氧</sup> <span  style={{ fontSize }}>{ecgData.bloodOxygen}</span><sup>%</sup></span>
-                                <span className="aa"><sup>体温</sup> <span  style={{ fontSize }}>{ecgData.temperature}</span><sup>℃</sup></span>
-                                <span className="aa"><sup>呼吸</sup> <span  style={{ fontSize }}>{ecgData.respRate}</span><sup>次/分</sup></span>
-                                <span className="aa"><sup>血压(SDM)</sup><span  style={{ fontSize }}>{ecgData.bloodPress}</span><sup>mmHg</sup></span>
+                                <span style={{ fontSize }} className="aa"><span>脉率</span> <span >{ecgData.pulseRate}</span><span>bpm</span></span>
+                                <span style={{ fontSize }} className="aa"><span>血氧</span> <span >{ecgData.bloodOxygen}</span><span>%</span></span>
+                                <span style={{ fontSize }} className="aa"><span>体温</span> <span >{ecgData.temperature}</span><span>℃</span></span>
+                                <span style={{ fontSize }} className="aa"><span>呼吸</span> <span >{ecgData.respRate}</span><span>次/分</span></span>
+                                <span style={{ fontSize }} className="aa"><span>血压(SDM)</span><span >{ecgData.bloodPress}</span><span>mmHg</span></span>
                             </Wrap>
                         )
                 }

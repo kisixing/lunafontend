@@ -78,7 +78,7 @@ exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
     }, [ctgReady]);
     var canvasStyles = { position: 'absolute' };
     return (react_1.default.createElement(Wrapper, { style: { flexDirection: isFullscreen ? 'row' : 'column-reverse' } },
-        ismulti && react_1.default.createElement(MultiParam_1.MultiParam, { data: data, isFullScreen: isFullscreen }),
+        react_1.default.createElement(MultiParam_1.MultiParam, { data: data, isFullScreen: isFullscreen }),
         react_1.default.createElement("div", __assign({ className: "box", ref: box }, others, { onMouseDownCapture: function (e) {
                 var x = e.nativeEvent.offsetX;
                 var y = e.nativeEvent.offsetY;
