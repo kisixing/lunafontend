@@ -21,6 +21,9 @@ exports.default = (function (response) {
     if (!response) {
         return null;
     }
+    if (response.bodyUsed) {
+        return null;
+    }
     var copy = response.clone();
     var status = copy.status, statusText = copy.statusText, url = copy.url;
     var data = null;

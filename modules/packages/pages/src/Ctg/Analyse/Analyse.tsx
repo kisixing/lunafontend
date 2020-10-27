@@ -2,9 +2,14 @@ import React, { useEffect, forwardRef, memo } from 'react';
 import { Form, Radio, Input, InputNumber, Row, Col } from 'antd';
 import { event } from '@lianmed/utils';
 import { FormInstance } from 'antd/lib/form';
-
-const Setting = forwardRef<FormInstance, { isRemote: boolean }>((props, ref) => {
-  const { isRemote } = props
+import "antd/lib/input-number/style/index.css";
+import "antd/lib/form/style/index.css";
+import "antd/lib/input/style/index.css";
+// import "antd/lib/Row/style/index.css";
+// import "antd/lib/Col/style/index.css";
+import "antd/lib/Radio/style/index.css";
+const Setting = forwardRef<FormInstance, { isRemote?: boolean, disabled?: boolean }>((props, ref) => {
+  const { isRemote, disabled = true } = props
   const [form] = Form.useForm()
 
   useEffect(() => {
@@ -28,7 +33,7 @@ const Setting = forwardRef<FormInstance, { isRemote: boolean }>((props, ref) => 
 
 
   return (
-    <div style={{ height: '100%',  }} className="bordered">
+    <div style={{ height: '100%', }} className="bordered">
       <div >
 
         {/* <div style={{ padding: '12px 24px', background: '#ddd' }}>
@@ -63,12 +68,12 @@ const Setting = forwardRef<FormInstance, { isRemote: boolean }>((props, ref) => 
           <Row style={{ marginBottom: 4 }}>
             <Col span={12}>
               <Form.Item label="宫缩次数" style={{ marginBottom: 0 }} name="uctimes" >
-                <InputNumber disabled />
+                <InputNumber disabled={disabled} />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item label="宫缩强度" style={{ marginBottom: 0 }} name="ucStrong">
-                <InputNumber disabled />
+                <InputNumber disabled={disabled} />
               </Form.Item>
             </Col>
 
@@ -78,12 +83,12 @@ const Setting = forwardRef<FormInstance, { isRemote: boolean }>((props, ref) => 
 
             <Col span={12}>
               <Form.Item label="间隔时间" style={{ marginBottom: 0 }} name="ucdurationtime">
-                <InputNumber {...cFn('min')} disabled />
+                <InputNumber {...cFn('min')} disabled={disabled} />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item label="持续时间" style={{ marginBottom: 0 }} name="uckeeptime">
-                <InputNumber {...cFn('s')} disabled />
+                <InputNumber {...cFn('s')} disabled={disabled} />
               </Form.Item>
             </Col>
 
@@ -106,12 +111,12 @@ const Setting = forwardRef<FormInstance, { isRemote: boolean }>((props, ref) => 
           <Row style={{ marginBottom: 4 }}>
             <Col span={12}>
               <Form.Item label="早减" style={{ marginBottom: 0 }} name="edtimes">
-                <InputNumber  {...cFn('次')} disabled />
+                <InputNumber  {...cFn('次')} disabled={disabled} />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item label="晚减" style={{ marginBottom: 0 }} name="ldtimes">
-                <InputNumber  {...cFn('次')} disabled />
+                <InputNumber  {...cFn('次')} disabled={disabled} />
               </Form.Item>
             </Col>
 
@@ -120,7 +125,7 @@ const Setting = forwardRef<FormInstance, { isRemote: boolean }>((props, ref) => 
 
             <Col span={12}>
               <Form.Item label="变异减速" style={{ marginBottom: 0 }} name="vdtimes">
-                <InputNumber  {...cFn('次')} disabled />
+                <InputNumber  {...cFn('次')} disabled={disabled} />
               </Form.Item>
             </Col>
           </Row>

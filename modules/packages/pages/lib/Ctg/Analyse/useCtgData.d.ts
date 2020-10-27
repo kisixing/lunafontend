@@ -1,5 +1,5 @@
 /// <reference types="react" />
-export declare const useCtgData: (docid: string, single?: boolean) => {
+export declare const useCtgData: (docid?: string, single?: boolean) => {
     ctgData: {
         fhr1?: string;
         fhr2?: string;
@@ -28,7 +28,7 @@ export declare const useCtgData: (docid: string, single?: boolean) => {
         _fhr2?: string;
         _fhr3?: string;
         selectBarHidden?: boolean;
-    }) => void;
+    }, isFirst?: boolean) => void;
     fetal: 2 | 1 | 3;
     setFetal: import("react").Dispatch<import("react").SetStateAction<2 | 1 | 3>>;
     fetchData: () => Promise<void>;

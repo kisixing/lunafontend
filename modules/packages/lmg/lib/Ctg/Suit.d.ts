@@ -34,6 +34,7 @@ declare type TCtgConfig = {
 export declare class Suit extends Draw {
     drawAnalyse: DrawAnalyse;
     drawSelect: DrawSelect;
+    get isTrueTime(): boolean;
     needScroll: boolean;
     isOn: boolean;
     static option: {
@@ -85,6 +86,7 @@ export declare class Suit extends Draw {
     get rightViewPosition(): number;
     set rightViewPosition(value: number);
     constructor(canvasgrid: Canvas, canvasdata: Canvas, canvasline: Canvas, canvasselect: Canvas, canvasanalyse: Canvas, wrap: HTMLElement, barTool: IBarTool, type: number, ctgconfig: TCtgConfig);
+    onMov(): void;
     init(data: ICacheItem): void;
     createLine(): void;
     updateBarTool(): void;
@@ -101,6 +103,7 @@ export declare class Suit extends Draw {
     setfetalposition(fhr1: any, fhr2: any, fhr3: any): void;
     movescoller(): void;
     InitFileData(oriobj: any): {
+        docid: any;
         fhr: any[][];
         toco: any[];
         fm: any[];
@@ -122,9 +125,11 @@ export declare class Suit extends Draw {
     };
     drawdot(): void;
     timerCtg(dely: any): void;
+    checkdragtimestamp(): boolean;
     onStatusChange(status: boolean): boolean | void;
     getoffline(): void;
     initfhrdata(data: any, datacache: any, offindex: any): void;
+    isCheckBaelinePoint: boolean;
     getPointType(x: number, y: number): PointType;
     getBaseY(x: number): number;
 }

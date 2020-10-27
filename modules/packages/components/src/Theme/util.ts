@@ -1,6 +1,6 @@
 import BezierEasing from 'bezier-easing';
 import tinycolor from 'tinycolor2';
-import cssContent, { configDark, DARK_COLOR } from './theme';
+import cssContent, { configDark, DARK_COLOR, FUCK_COLOR } from './theme';
 import { darken, lighten } from './colorManipulator';
 const tonalOffset = 0.2
 
@@ -63,7 +63,8 @@ export function getThemeColor(color) {
     shadowColor: getShadowColor(color),
     lightColor,
     darkColor,
-    isDark: false
+    isDark: false,
+    isFucked:color === FUCK_COLOR
   };
   if (color === DARK_COLOR) {
     result.isDark = true
@@ -115,9 +116,11 @@ const generateStyleHtml = (colorObj) => {
     shadowColor,
     lightColor,
     darkColor,
-    isDark
+    isDark,
+    isFucked
   } = colorObj;
   window['isDark'] = isDark
+  window['isFucked'] = isFucked
   if (!IEVersion()) {
     const cssVar = `
       :root {

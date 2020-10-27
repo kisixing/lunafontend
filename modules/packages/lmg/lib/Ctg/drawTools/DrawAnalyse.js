@@ -34,8 +34,10 @@ var DrawAnalyse = (function (_super) {
     __extends(DrawAnalyse, _super);
     function DrawAnalyse(wrap, canvas, suit) {
         var _this = _super.call(this, wrap, canvas) || this;
+        _this.baselinePointIndex = -1;
         _this.mapXtoY = {};
         _this.mapBaselilneXtoY = {};
+        _this.mapBaselilneXtoIndex = {};
         _this.drawflag = function (canvas, x, y, index) {
             _this.mapXtoY[x] = { y: y + _this.suit.drawobj.basetop, index: index };
             var _a = _this, context2D = _a.context2D, analyseData = _a.analysisData;
@@ -669,12 +671,12 @@ var DrawAnalyse = (function (_super) {
         this._dec = r.analysis.dec.map(function (_) { return _.index; });
         this.analysisData = r;
     };
-    DrawAnalyse.prototype.drawBaseline = function (cur, show, color, yspan, xspan, max, basetop) {
-        if (show === void 0) { show = true; }
+    DrawAnalyse.prototype.drawBaseline = function (cur, color, yspan, xspan, max, basetop) {
+        console.log('base', cur);
         var _a = this, context2D = _a.context2D, width = _a.width, height = _a.height, analyseData = _a.analysisData;
         width = Math.floor(width);
         context2D && context2D.clearRect(0, 0, width, height);
-        if (!analyseData || !show) {
+        if (!analyseData || !this.showBase) {
             return;
         }
         var _b = analyseData.analysis, baseline = _b.fhrbaselineMinute, start = _b.start, end = _b.end;
@@ -684,6 +686,7 @@ var DrawAnalyse = (function (_super) {
         context2D.beginPath();
         context2D.strokeStyle = color;
         context2D.lineWidth = 2;
+        this.mapBaselilneXtoY = {};
         if (true) {
             var baselineoff = 0;
             var firstindex = Math.floor(leftViewposition / (xspan * 6));
@@ -696,6 +699,7 @@ var DrawAnalyse = (function (_super) {
                 if ((i) % (xspan * 6) == 0) {
                     lastx = Math.floor((i - leftViewposition) / 2);
                     context2D.lineTo(lastx, (max - curfhroffset - baseline[baselineoff]) * yspan + basetop);
+                    this.mapBaselilneXtoIndex[lastx] = baselineoff;
                     this.mapBaselilneXtoY[lastx] = (max - curfhroffset - baseline[baselineoff]) * yspan + basetop;
                 }
             }
@@ -720,10 +724,14 @@ var DrawAnalyse = (function (_super) {
             context2D.stroke();
         }
     };
-    DrawAnalyse.prototype.analyse = function (type, showBase, start, end, data) {
-        if (showBase === void 0) { showBase = true; }
+    DrawAnalyse.prototype.analyse = function (type, start, end, data) {
         if (data === void 0) { data = this.analysisData; }
-        console.log('form', type, showBase, start, end, data);
+        if (type) {
+            this.type = type;
+        }
+        else {
+            type = this.type;
+        }
         if (!data)
             return;
         var suit = this.suit;
@@ -735,7 +743,7 @@ var DrawAnalyse = (function (_super) {
         suit.drawSelect.$selectrpend = data.analysis.end = end;
         suit.drawSelect.$selectrpstart = data.analysis.start = start;
         var newData = this.ctgscore(type);
-        suit.drawobj.drawdot((suit.type > 0 && suit.viewposition < suit.width * 2) ? suit.width * 2 : suit.viewposition, false, showBase);
+        suit.drawobj.drawdot((suit.type > 0 && suit.viewposition < suit.width * 2) ? suit.width * 2 : suit.viewposition, false);
         utils_1.event.emit('suit:afterAnalyse', newData);
         return newData;
     };
@@ -752,8 +760,7 @@ var DrawAnalyse = (function (_super) {
         return null;
     };
     DrawAnalyse.prototype.refresh = function () {
-        this.suit.emit('suit:analyseMark');
-        this.suit.drawobj.drawdot(this.suit.viewposition < this.width * 2 ? this.width * 2 : this.suit.viewposition);
+        this.analyse();
     };
     DrawAnalyse.prototype.markAccPoint = function () {
         if (!this.analysisData)
@@ -786,6 +793,16 @@ var DrawAnalyse = (function (_super) {
             acc.splice(index, 1);
         }
         this.refresh();
+    };
+    DrawAnalyse.prototype.editBaselinePoint = function (n) {
+        if (n === void 0) { n = 0; }
+        if (!this.analysisData)
+            return;
+        var fhrbaselineMinute = this.analysisData.analysis.fhrbaselineMinute;
+        var index = this.baselinePointIndex;
+        fhrbaselineMinute[index] = fhrbaselineMinute[index] + n;
+        this.refresh();
+        this.baselinePointIndex = -1;
     };
     DrawAnalyse.prototype.markDecPoint = function (type) {
         if (!this.analysisData)

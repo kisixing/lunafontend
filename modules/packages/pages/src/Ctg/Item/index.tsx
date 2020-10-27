@@ -54,8 +54,7 @@ const Item = (props: IProps) => {
     const [suit, setSuit] = useState(null)
     const [maskVisible, setMaskVisible] = useState(false)
 
-    const ref = useRef<Suit>()
-    console.log('ss ref', ref)
+    const ref = useRef<Promise<Suit>>()
     // 床位信息
     const RenderTilte = () => {
         const m = moment(startTime)
@@ -90,7 +89,7 @@ const Item = (props: IProps) => {
                 title={<RenderTilte />}
                 style={{ height: '100%' }}
                 extra={<Extra bedname={bedname} onClose={!data.isF0Pro && onClose} status={status} suit={suit} unitId={unitId} />}
-                // headStyle={{ background: themeColor, color: '#fff' }}
+                headStyle={{ background: themeColor, color: '#fff' }}
                 bodyStyle={{ padding: 0, height: 'calc(100% - 38px)' }}
             >
                 <L

@@ -114,27 +114,27 @@ export interface ctg_exams_analyse_score {
 }
 export interface _ctg_exams_analyse {
     analysis: {
-        length:number;
-        bhr: number;
-        ltv: number;
-        stv: number;
-        edtimes: number;
-        ldtimes: number;
-        vdtimes: number;
-        acc: AccPoint[];
-        dec: DecPoint[];
-        fm: number[];
-        fhrbaselineMinute: number[];
-        ucdata: {
+        length?:number;
+        bhr?: number;
+        ltv?: number;
+        stv?: number;
+        edtimes?: number;
+        ldtimes?: number;
+        vdtimes?: number;
+        acc?: AccPoint[];
+        dec?: DecPoint[];
+        fm?: number[];
+        fhrbaselineMinute?: number[];
+        ucdata?: {
             ucIndex: number[];
             uctimes: number;
             ucStrong: number;
             uckeeptime: number;
             ucdurationtime: number;
         };
-        start: number;
-        end: number;
-        isSinusoid: boolean;
+        start?: number;
+        end?: number;
+        isSinusoid?: boolean;
     };
     score: ctg_exams_analyse_score
 }

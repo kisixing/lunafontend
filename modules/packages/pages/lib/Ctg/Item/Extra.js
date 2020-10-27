@@ -26,12 +26,12 @@ var SB = styled_components_1.default(antd_1.Button)(templateObject_1 || (templat
 var Bed = react_1.memo(function (_a) {
     var bedname = _a.bedname;
     console.log('ggg');
-    return !!bedname && react_1.default.createElement("span", { style: { marginRight: '8px', } },
+    return !!bedname && react_1.default.createElement("span", { style: { marginRight: '8px', color: '#fff' } },
         bedname,
         "\u53F7");
 });
 var C = function (props) {
-    var status = props.status, suit = props.suit, onClose = props.onClose, bedname = props.bedname, unitId = props.unitId, fontColor = props.fontColor;
+    var status = props.status, suit = props.suit, onClose = props.onClose, bedname = props.bedname, unitId = props.unitId;
     var alarmStatus = useItemAlarm_1.default(suit)[0];
     var close = react_1.useMemo(function () {
         return onClose &&

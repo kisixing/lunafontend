@@ -1,5 +1,4 @@
 import { obvue } from "@lianmed/f_types";
-import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import React, { useMemo } from 'react';
 import Methods from './methods';
 
@@ -7,7 +6,6 @@ const intervals = [20, 40, 80]
 interface IProps {
   ctgData: any;
   docid: string,
-  v: Suit
   MARKS: any
   startTime: any
   mark, setMark: any

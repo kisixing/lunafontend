@@ -41,12 +41,15 @@ type TCtgConfig = { [x in keyof typeof defaultCtgConfig]?: any }
 
 const lightConfig: TCtgConfig = {
 
-  // primarygrid: 'blue',
-  // secondarygrid: '#F59997',
-  // rule: 'rgba(0,51,102,1)',
-  primarygrid: '#6b6100',
-  secondarygrid: '#d6cd81',
-  rule: '#827717',
+
+  rule: 'rgba(0,51,102,1)',
+  primarygrid: 'rgba(100, 100, 100, 1)',
+  secondarygrid: 'rgba(200, 200, 200, 1)',
+
+
+  // primarygrid: '#6b6100',
+  // secondarygrid: '#d6cd81',
+  // rule: '#827717',
   scale: 'rgba(0,0,0,1)',
 
   normalarea: 'rgb(224,255,255)',
@@ -63,7 +66,9 @@ const darkConfig: TCtgConfig = {
 export class Suit extends Draw {
   drawAnalyse: DrawAnalyse
   drawSelect: DrawSelect
-
+  get isTrueTime() {
+    return this.type === 0
+  }
   needScroll = false;
   isOn: boolean;
   static option: { [x: string]: any };
@@ -88,7 +93,11 @@ export class Suit extends Draw {
   private _ctgconfig: TCtgConfig = defaultCtgConfig;
   public get ctgconfig(): TCtgConfig {
 
-    return Object.assign(this._ctgconfig, window['isDark'] ? darkConfig : lightConfig);
+    return Object.assign(this._ctgconfig, window['isDark'] ? darkConfig : lightConfig, !window['isFucked'] ? {} : {
+      primarygrid: '#6b6100',
+      secondarygrid: '#d6cd81',
+      rule: '#827717',
+    });
   }
   public set ctgconfig(value: TCtgConfig) {
     this._ctgconfig = value;
@@ -195,7 +204,10 @@ export class Suit extends Draw {
       this.ctgconfig.alarm_delay = Number(this.option.alarm_delay) || 0
     }
   }
+  onMov() {
+    this.getoffline();
 
+  }
   init(data: ICacheItem) {
 
     if (!data || !(data.fhr || (data as any).fhr1)) {
@@ -251,7 +263,7 @@ export class Suit extends Draw {
       this.timerCtg(defaultinterval);
     }
     this.barTool.watch(value => {
-      this.getoffline();
+      this.onMov()
 
       //显示历史数据
       //kisi 优化拖动赋值
@@ -276,7 +288,8 @@ export class Suit extends Draw {
       this.drawobj.drawdot(this.rightViewPosition, false);
     });
     this.barTool.watchGrab(value => {
-      this.getoffline();
+      this.onMov()
+
 
 
       let _viewposition;
@@ -387,13 +400,15 @@ export class Suit extends Draw {
     this.barTool.setBarLeft(this.toolbarposition, false);
   }
   itemAlarm(text: string) {
-    if (this.ctgconfig.alarm_enable) {
+    if (this.ctgconfig.alarm_enable && this.checkdragtimestamp()) {
       event.emit('item:alarm', this.data.id, 2, text)
     }
   }
   lazyEmit = throttle((type: string, ...args: any[]) => {
     // console.log(`Suit:${type}`)
-    this.emit(type, ...args);
+
+    // this.emit(type, ...args);
+
     // console.log('alarmtype in',type,this)
     return true;
   }, 0);
@@ -518,6 +533,7 @@ export class Suit extends Draw {
   //胎心数据处理
   InitFileData(oriobj) {
     let CTGDATA = {
+      docid: oriobj.docid,
       fhr: [[], [], []],
       toco: [],
       fm: [],
@@ -627,8 +643,7 @@ export class Suit extends Draw {
       if (!this) {
         clearInterval(id);
       }
-      var curstamp = new Date().getTime();
-      if (curstamp - this.dragtimestamp > this.interval) {
+      if (this.checkdragtimestamp()) {
         if (this.drawSelect.selectstartposition != 0) {
           this.drawSelect.startingBar.setLeft(0);
         }
@@ -637,7 +652,10 @@ export class Suit extends Draw {
     }, dely);
     this.intervalIds.push(id);
   }
-
+  checkdragtimestamp() {
+    var curstamp = new Date().getTime();
+    return curstamp - this.dragtimestamp > this.interval
+  }
   onStatusChange(status: boolean): boolean | void {
     return status;
   }
@@ -684,57 +702,66 @@ export class Suit extends Draw {
       }
     });
   }
-
+  isCheckBaelinePoint = false
   getPointType(x: number, y: number): PointType {
     const { analysisData, mapXtoY, mapBaselilneXtoY } = this.drawAnalyse
     x = Math.round(x)
-    console.log('ll', mapXtoY, analysisData, mapBaselilneXtoY, x, y);
+    const mKeys = Object.keys(mapBaselilneXtoY).map(_ => Number(_))
+    const edge = 10;
+
 
     if (analysisData) {
-      const edge = 10;
-      const { analysis: { acc, dec } } = analysisData
-
-      let target = acc.find(_ => (x < _.x + edge) && (x >= _.x)) || dec.find(_ => (x < _.x + edge * 2) && (x >= _.x))
-      console.log('click', x, y, target)
-      // 标记文字
-      if (target && (y <= (target.y + 2 * edge) && y > (target.y))) {
-        const isDec = 'type' in target
-        this.drawAnalyse.pointToEdit = target
-        return isDec ? 'EditDecPoint' : 'EditAccPoint'
-      }
-      const linePoint = mapXtoY[x]
-
-      const mKeys = Object.keys(mapBaselilneXtoY).map(_ => Number(_))
-      const leftIndex = mKeys.reduce((index, _) => {
-        const left = mKeys[index]
-        const right = mKeys[index + 1]
-        if (right === undefined) {
-          return
+      if (this.isCheckBaelinePoint) {
+        const idx = mKeys.findIndex(_ => Math.abs(x - _) <= edge && Math.abs(y - mapBaselilneXtoY[_]) <= edge)
+        if (idx > -1) {
+          this.drawAnalyse.baselinePointIndex = this.drawAnalyse.mapBaselilneXtoIndex[mKeys[idx]]
+          console.log('idx', this.drawAnalyse.baselinePointIndex, mapBaselilneXtoY)
+          return 'BaselinePoint'
         }
-        if (left <= x) {
-          if (x <= right) {
-            return index
-          } else {
-            return index + 1
+      } else {
+        const { analysis: { acc, dec } } = analysisData
+
+        let target = acc.find(_ => (x < _.x + edge) && (x >= _.x)) || dec.find(_ => (x < _.x + edge * 2) && (x >= _.x))
+        console.log('click', x, y, target)
+        // 标记文字
+        if (target && (y <= (target.y + 2 * edge) && y > (target.y))) {
+          const isDec = 'type' in target
+          this.drawAnalyse.pointToEdit = target
+          return isDec ? 'EditDecPoint' : 'EditAccPoint'
+        }
+        const linePoint = mapXtoY[x]
+
+        const leftIndex = mKeys.reduce((index, _) => {
+          const left = mKeys[index]
+          const right = mKeys[index + 1]
+          if (right === undefined) {
+            return
           }
-        } else {
-          return
+          if (left <= x) {
+            if (x <= right) {
+              return index
+            } else {
+              return index + 1
+            }
+          } else {
+            return
 
+          }
+        }, 0)
+        console.log('click', x, y, linePoint)
+        // 线上的点
+        if (typeof leftIndex === 'number' && linePoint && Math.abs(y - linePoint.y) < 8) {
+          const x1 = mKeys[leftIndex]
+          const x2 = mKeys[leftIndex + 1]
+          const y1 = mapBaselilneXtoY[x1]
+          const y2 = mapBaselilneXtoY[x2]
+          const k = (y2 - y1) / (x2 - x1)
+          const b = y1 - x1 * k
+          const baseY = x * k + b
+          const type = (linePoint.y - baseY) < 0 ? 'MarkAccPoint' : 'MarkDecPoint'
+          this.drawAnalyse.pointToInsert = { type, index: linePoint.index }
+          return type
         }
-      }, 0)
-      console.log('click', x, y, linePoint)
-      // 线上的点
-      if (typeof leftIndex === 'number' && linePoint && Math.abs(y - linePoint.y) < 8) {
-        const x1 = mKeys[leftIndex]
-        const x2 = mKeys[leftIndex + 1]
-        const y1 = mapBaselilneXtoY[x1]
-        const y2 = mapBaselilneXtoY[x2]
-        const k = (y2 - y1) / (x2 - x1)
-        const b = y1 - x1 * k
-        const baseY = x * k + b
-        const type = (linePoint.y - baseY) < 0 ? 'MarkAccPoint' : 'MarkDecPoint'
-        this.drawAnalyse.pointToInsert = { type, index: linePoint.index }
-        return type
       }
 
     }

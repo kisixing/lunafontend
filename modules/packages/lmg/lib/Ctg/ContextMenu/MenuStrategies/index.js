@@ -8,11 +8,13 @@ var MarkAccPoint_1 = __importDefault(require("./MarkAccPoint"));
 var MarkDecPoint_1 = __importDefault(require("./MarkDecPoint"));
 var EditAccPoint_1 = __importDefault(require("./EditAccPoint"));
 var EditDecPoint_1 = __importDefault(require("./EditDecPoint"));
+var BaselinePoint_1 = __importDefault(require("./BaselinePoint"));
 var m = {
     MarkAccPoint: MarkAccPoint_1.default,
     MarkDecPoint: MarkDecPoint_1.default,
     EditAccPoint: EditAccPoint_1.default,
-    EditDecPoint: EditDecPoint_1.default
+    EditDecPoint: EditDecPoint_1.default,
+    BaselinePoint: BaselinePoint_1.default
 };
 exports.default = (function (props) {
     var pType = props.pType;

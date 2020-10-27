@@ -49,9 +49,8 @@ var styled_components_1 = __importDefault(require("styled-components"));
 var MultiParam_1 = require("./MultiParam");
 var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  width:100%;\n  height:100%;\n  display:flex;\n  .btns{\n    display:none\n  }\n  :hover .btns{\n    display:block\n  }\n  .bar {\n    opacity:0;\n    transition:opacity 0.5s;\n  }\n  :hover .bar{\n    opacity:1\n  }\n  .box {\n    flex:1\n  }\n"], ["\n  width:100%;\n  height:100%;\n  display:flex;\n  .btns{\n    display:none\n  }\n  :hover .btns{\n    display:block\n  }\n  .bar {\n    opacity:0;\n    transition:opacity 0.5s;\n  }\n  :hover .bar{\n    opacity:1\n  }\n  .box {\n    flex:1\n  }\n"])));
 exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
-    var data = props.data, _a = props.mutableSuitObject, mutableSuitObject = _a === void 0 ? { suit: null } : _a, _b = props.suitType, suitType = _b === void 0 ? 0 : _b, _c = props.loading, loading = _c === void 0 ? false : _c, _d = props.onReady, onReady = _d === void 0 ? function (s) { } : _d, audios = props.audios, isFullscreen = props.isFullscreen, others = __rest(props, ["data", "mutableSuitObject", "suitType", "loading", "onReady", "audios", "isFullscreen"]);
+    var data = props.data, _a = props.mutableSuitObject, mutableSuitObject = _a === void 0 ? { suit: null } : _a, _b = props.suitType, suitType = _b === void 0 ? 0 : _b, _c = props.loading, loading = _c === void 0 ? false : _c, _d = props.onReady, onReady = _d === void 0 ? function (s) { } : _d, audios = props.audios, isFullscreen = props.isFullscreen, style = props.style, others = __rest(props, ["data", "mutableSuitObject", "suitType", "loading", "onReady", "audios", "isFullscreen", "style"]);
     var ismulti = false || (data && data.ismulti);
-    var _e = react_1.useState(false), ctgReady = _e[0], setCtgReady = _e[1];
     var isV3 = false || (data && (data.deviceType === 'V3'));
     var barTool = react_1.useRef(null);
     var canvasgrid = react_1.useRef(null);
@@ -64,20 +63,22 @@ exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
     var ctg = react_1.useRef(null);
     var ecg = react_1.useRef(null);
     var rightClickXy = react_1.useRef({ x: 0, y: 0 });
+    var resolveSs = react_1.useRef();
+    var ss = react_1.useMemo(function () { return new Promise(function (res, rej) { resolveSs.current = res; }); }, []);
+    var resolveDd = react_1.useRef();
+    var dd = react_1.useMemo(function () { return new Promise(function (res, rej) { resolveDd.current = res; }); }, []);
     useDraw_1.default(data, ctgBox, function () {
         var instance = ctg.current = new Suit_1.Suit(canvasgrid.current, canvasdata.current, canvasline.current, canvasselect.current, canvasanalyse.current, ctgBox.current, barTool.current, suitType, {});
         onReady(instance);
         mutableSuitObject.suit = instance;
-        setCtgReady(true);
         return instance;
-    }, function () {
-    });
+    }, resolveSs, resolveDd);
     WsService_1.useCheckNetwork(function (isOn) { return ctg.current && (ctg.current.isOn = isOn); });
     react_1.useImperativeHandle(ref, function () {
-        return ctg.current;
-    }, [ctgReady]);
+        return Promise.all([ss, dd]).then(function () { return ss; });
+    }, []);
     var canvasStyles = { position: 'absolute' };
-    return (react_1.default.createElement(Wrapper, { style: { flexDirection: isFullscreen ? 'row' : 'column-reverse' } },
+    return (react_1.default.createElement(Wrapper, { style: __assign({ flexDirection: isFullscreen ? 'row' : 'column-reverse' }, (style || {})) },
         react_1.default.createElement(MultiParam_1.MultiParam, { data: data, isFullScreen: isFullscreen }),
         react_1.default.createElement("div", __assign({ className: "box", ref: box }, others, { onMouseDownCapture: function (e) {
                 var x = e.nativeEvent.offsetX;
@@ -90,7 +91,7 @@ exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
             } }),
             loading && (react_1.default.createElement("div", { style: { position: 'absolute', width: '100%', height: '100%', background: '#fff', zIndex: 1, opacity: .9 } },
                 react_1.default.createElement(Loading_1.Loading, { style: { margin: 'auto', position: 'absolute', left: 0, right: 0, bottom: 0, top: 0 } }))),
-            react_1.default.createElement("div", { style: { height: isV3 ? 0 : ((isFullscreen && ismulti) ? "calc(100% - 210px)" : '100%'), position: 'relative', maxHeight: isFullscreen ? 500 : 'unset' }, ref: ctgBox },
+            react_1.default.createElement("div", { style: { height: isV3 ? 0 : ((isFullscreen && ismulti) ? "calc(98% - 210px)" : '98%'), position: 'relative', maxHeight: isFullscreen ? 500 : 'unset' }, ref: ctgBox },
                 react_1.default.createElement("canvas", { style: canvasStyles, ref: canvasgrid }),
                 react_1.default.createElement("canvas", { style: canvasStyles, ref: canvasline }),
                 react_1.default.createElement("canvas", { style: canvasStyles, ref: canvasdata }),

@@ -9,6 +9,15 @@ export interface _prenatal_visitspage {
     diagnosis: null;
     diagnosisCode: null;
     gynecologicalExam: null;
+    ctgLable: {
+        exception: null
+        id: 297
+        prenatalVisitId: 50472
+        remarks: number
+        result: number
+        status: number
+        userId: 3
+    }
     pregnancy: {
         id: number;
         outpatientNO: null;

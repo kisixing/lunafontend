@@ -1,10 +1,10 @@
-import React, { useState, useRef, FunctionComponent, memo } from 'react';
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
-import { Button } from 'antd';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
+import { Button } from 'antd';
+import React, { FunctionComponent, memo, useRef, useState } from 'react';
 
 interface IProps {
-  mutableSuit: React.MutableRefObject<Suit>,
+  mutableSuit: React.MutableRefObject<Promise<Suit>>,
   onSelect?: (unitId: string) => void,
   unitId: string,
   children: any,

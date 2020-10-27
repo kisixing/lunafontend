@@ -55,7 +55,7 @@ export const Ctg_Analyse: FC<{
     const [pdfBase64, setPdfBase64] = useState('')
     const [padBase64Loading, setPadBase64Loading] = useState(false)
     const isRemote = type === 'remote'
-    const ref = useRef<Suit>(null)
+    const ref = useRef<Promise<Suit>>(null)
     const wrap = useRef<HTMLDivElement>(null)
 
     const {
@@ -118,7 +118,8 @@ export const Ctg_Analyse: FC<{
       // const identify = { note }
       const requestData = {
         ...identify,
-        diagnosis: JSON.stringify({ wave, diagnosistxt, NST, CST_OCT }),
+        diagnosis: JSON.stringify(rightData),
+        analysis:JSON.stringify(initData),
         result: JSON.stringify({
           ...analyseData,
           ...curData,
@@ -133,6 +134,31 @@ export const Ctg_Analyse: FC<{
         show_fetalmovement: window['obvue'] ? !!window['obvue'].setting.show_fetalmovement : true
       }
       return requestData
+      // const rightData = analysis_ref.current.getFieldsValue()
+      // const { wave, diagnosistxt, NST, CST_OCT, ...analyseData } = rightData
+      // const curData: { [x: string]: number } = others.mapFormToMark[`${mark}_ref`].current.getFieldsValue()
+      // const oldData: { [x: string]: number } = old_ref.current[mark] || {}
+
+      // const isedit = Object.entries(curData).find(([k, v]) => oldData[k] !== v) ? true : false
+      // const identify = type === 'default' ? { note } : { id, note }
+      // // const identify = { note }
+      // const requestData = {
+      //   ...identify,
+      //   diagnosis: JSON.stringify({ wave, diagnosistxt, NST, CST_OCT }),
+      //   result: JSON.stringify({
+      //     ...analyseData,
+      //     ...curData,
+      //     isedit,
+      //     type: mark,
+      //     startTime: startTime,
+      //     endTime: endTime
+      //     // startTime: ref.current.drawAnalyse.analysisData.analysis.start,
+      //     // endTime: ref.current.drawAnalyse.analysisData.analysis.end
+      //   }),
+      //   fetalnum: fetal,
+      //   show_fetalmovement: window['obvue'] ? !!window['obvue'].setting.show_fetalmovement : true
+      // }
+      // return requestData
     }
     const getPrintUrl = (path: string) => {
 
@@ -143,7 +169,8 @@ export const Ctg_Analyse: FC<{
 
     const submit = () => {
       const ok = checkInput()
-      ok && request.put(type === "default" ? '/ctg-exams-note' : '/serviceorders', { data: getrRequestData() }).then((r: any) => {
+      const flag = type === "default"
+      ok && request[flag ? 'post' : 'put'](flag ? '/diagnosis-histories' : '/serviceorders', { data: getrRequestData() }).then((r: any) => {
         //TODO: 结果判断
         message.success('保存成功！', 3);
         // event.emit(ANALYSE_SUCCESS_TYPE, type == "default" ? note : id)
@@ -199,13 +226,13 @@ export const Ctg_Analyse: FC<{
     const btnDisabled = !note || !disabled
     return (
       <Wrapper ref={wrap} >
-        <div style={{ height: `calc(100% - 460px - 12px)`, minHeight: 200, marginBottom: 12,  boxShadow: '#ddd 0px 0px 2px 2px', overflow: 'hidden' }}>
+        <div style={{ height: `calc(100% - 460px - 12px)`, minHeight: 200, marginBottom: 12, boxShadow: '#ddd 0px 0px 2px 2px', overflow: 'hidden' }}>
           <Ctg suitType={1} ref={ref} loading={loading} data={ctgData} />
 
         </div>
         <Row style={{ height: 460 }}>
           <Col span={17} >
-            <Score disabled={disabled} endTime={endTime} initData={initData}  {...others} fetal={fetal} setFetal={setFetal} ctgData={ctgData} docid={note} v={ref.current} className="bordered" />
+            <Score disabled={disabled} endTime={endTime} initData={initData}  {...others} fetal={fetal} setFetal={setFetal} ctgData={ctgData} docid={note} className="bordered" />
             <div style={{ position: 'absolute', right: 12, bottom: 0 }}>
               {false && <Alert message="选段时间过短" style={{ background: 'red', color: '#fff', display: 'inline-block', border: 0, padding: '1px 4px', marginRight: 10 }} />}
 

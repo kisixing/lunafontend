@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var maps = ['', '2', '3'];
 function get_data_ctg(received_msg) {
     var datacache = this.datacache;
     var ctgdata = received_msg.data;
@@ -10,12 +11,7 @@ function get_data_ctg(received_msg) {
         var tmpcache = datacache.get(cachbi);
         for (var key in ctgdata) {
             for (var fetal = 0; fetal < tmpcache.fetal_num; fetal++) {
-                if (fetal == 0) {
-                    tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr;
-                }
-                else {
-                    tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr2;
-                }
+                tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key]["fhr" + maps[fetal]];
             }
             tmpcache.toco[ctgdata[key].index] = ctgdata[key].toco;
             tmpcache.fm[ctgdata[key].index] = ctgdata[key].fm;

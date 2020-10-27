@@ -6,6 +6,7 @@ export declare function getThemeColor(color: any): {
     lightColor: string;
     darkColor: string;
     isDark: boolean;
+    isFucked: boolean;
 };
 export declare function applyAntdTheme(colorObj: any): void;
 export declare function placementSketchPicker(placement: any): {

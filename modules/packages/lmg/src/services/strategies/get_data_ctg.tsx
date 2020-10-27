@@ -15,7 +15,7 @@ interface IData {
     device_no: number
     name: "get_data_ctg"
 }
-
+const maps = ['','2','3']
 export function get_data_ctg(this: WsService, received_msg: IData) {
     const { datacache } = this
 
@@ -28,11 +28,12 @@ export function get_data_ctg(this: WsService, received_msg: IData) {
         var tmpcache = datacache.get(cachbi);
         for (let key in ctgdata) {
             for (let fetal = 0; fetal < tmpcache.fetal_num; fetal++) {
-                if (fetal == 0) {
-                    tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr;
-                } else {
-                    tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr2;
-                }
+                // if (fetal == 0) {
+                //     tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr;
+                // } else {
+                //     tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key].fhr2;
+                // }
+                tmpcache.fhr[fetal][ctgdata[key].index] = ctgdata[key][`fhr${maps[fetal]}`];
             }
             tmpcache.toco[ctgdata[key].index] = ctgdata[key].toco;
             tmpcache.fm[ctgdata[key].index] = ctgdata[key].fm;

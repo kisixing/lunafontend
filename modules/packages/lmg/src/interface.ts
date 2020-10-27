@@ -1,5 +1,5 @@
 import { ICacheItem } from "./services/types";
-
+import { CSSProperties } from "react";
 export interface IProps {
     data: ICacheItem;
     mutableSuitObject?: { suit: (Drawer | any) };
@@ -7,10 +7,11 @@ export interface IProps {
     loading?: boolean;
     isFullscreen?: boolean
     audios?: string[]
+    style?: CSSProperties
     [x: string]: any
 }
 export type AnalyseType = 'Nst' | 'Krebs' | 'Fischer' | 'Sogc' | 'Cst' | 'Cstoct';
-export type PointType = 'EditAccPoint' | 'EditDecPoint' | 'MarkAccPoint' | 'MarkDecPoint' | 'other';
+export type PointType = 'EditAccPoint' | 'EditDecPoint' | 'MarkAccPoint' | 'MarkDecPoint' | 'BaselinePoint' |'other';
 
 
 export interface Drawer {

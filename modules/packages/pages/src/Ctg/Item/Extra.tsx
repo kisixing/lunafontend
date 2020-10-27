@@ -26,7 +26,7 @@ const SB = styled(Button)`
 const Bed = memo<any>(({ bedname }) => {
     console.log('ggg');
 
-    return !!bedname && <span style={{ marginRight: '8px', }}>{bedname}号</span>
+    return !!bedname && <span style={{ marginRight: '8px', color: '#fff' }}>{bedname}号</span>
 })
 // const Status = memo<any>(({ alarmStatus, status }) => {
 
@@ -40,7 +40,7 @@ const Bed = memo<any>(({ bedname }) => {
 
 
 const C = (props: IProps) => {
-    const { status, suit, onClose, bedname, unitId, fontColor } = props;
+    const { status, suit, onClose, bedname, unitId, /**fontColor */ } = props;
     const [alarmStatus] = useItemAlarm(suit)
 
     const close = useMemo(() =>

@@ -37,9 +37,9 @@ exports.useCtgData = function (docid, single) {
             return request_1.default.get("/ctg-exams-data/" + docid).then(function (res) {
                 if (!res)
                     return;
-                var d = __assign(__assign({ docid: docid, keepSelection: true }, res), (copyFhr(res, single)));
+                var d = __assign(__assign({ docid: docid, keepSelection: false }, res), (copyFhr(res, single)));
                 if (single) {
-                    setFhr(fetal, d);
+                    setFhr(fetal, d, true);
                 }
                 else {
                     setCtgData(d);
@@ -62,9 +62,10 @@ exports.useCtgData = function (docid, single) {
             utils_1.event.off('analysis:setCtgData', fn);
         };
     }, [ctgData]);
-    function setFhr(index, from) {
+    function setFhr(index, from, isFirst) {
         var _a;
         if (from === void 0) { from = ctgData; }
+        if (isFirst === void 0) { isFirst = false; }
         var data = {};
         if (index) {
             var fhr1 = from.fhr1;
@@ -79,7 +80,7 @@ exports.useCtgData = function (docid, single) {
                 data["fhr" + i] = from["_fhr" + i];
             });
         }
-        setCtgData(__assign(__assign(__assign({}, from), data), { noOffset: !!index }));
+        setCtgData(__assign(__assign(__assign({}, from), data), { noOffset: !!index, keepSelection: !isFirst }));
     }
     react_1.useEffect(function () {
         setFhr(fetal);

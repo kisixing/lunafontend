@@ -1,4 +1,4 @@
-import React, { forwardRef, Ref, useImperativeHandle, useRef, memo, useState } from 'react';
+import React, { forwardRef, Ref, useImperativeHandle, useRef, memo, useState, useMemo } from 'react';
 import Ecg from "../Ecg";
 import { Canvas, Div, Drawer, IProps } from "../interface";
 import ScrollBar from '../ScrollBar';
@@ -32,21 +32,21 @@ const Wrapper = styled.div`
     flex:1
   }
 `
-export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
+export default memo(forwardRef((props: IProps, ref: Ref<Promise<Suit>>) => {
 
   const {
     data,
     mutableSuitObject = { suit: null },
     suitType = 0,
     loading = false,
-    onReady = (s: Drawer) => { },
+    onReady = (s: Drawer,) => { },
     audios,
     isFullscreen,
+    style,
     ...others
   } = props
   // data.ecgdata = { bloodOxygen: 80, bloodPress: '120/120/120', heartRate: 80, respRate: 40, pulseRate: 80, temperature: 37 }
   const ismulti = false || (data && data.ismulti)
-  const [ctgReady, setCtgReady] = useState(false)
   const isV3 = false || (data && (data.deviceType === 'V3'))
 
   const barTool = useRef<IBarTool>(null)
@@ -65,6 +65,10 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
 
   const rightClickXy = useRef<{ x: number, y: number }>({ x: 0, y: 0 });
 
+  const resolveSs = useRef<(s: Suit) => void>()
+  const ss = useMemo(() => new Promise<Suit>((res, rej) => { resolveSs.current = res }), [])
+  const resolveDd = useRef<any>()
+  const dd = useMemo(() => new Promise((res, rej) => { resolveDd.current = res }), [])
 
   useDraw(data, ctgBox, () => {
     const instance = ctg.current = new Suit(
@@ -81,15 +85,9 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
 
     onReady(instance)
     mutableSuitObject.suit = instance;
-    setCtgReady(true)
     return instance
   },
-    () => {
-      // const { height } = box.current.getBoundingClientRect();
-      // const h = height / 5;
-      // const t = h > 40 ? (h > 120 ? 210 : 40) : (26)
-      // setEcgHeight(t)
-    })
+    resolveSs, resolveDd)
   // useLayoutEffect(() => {
   //   ctg.current && ctg.current.resize()
   //   ecg.current && ecg.current.resize()
@@ -97,11 +95,11 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
   useCheckNetwork(isOn => ctg.current && (ctg.current.isOn = isOn))
 
   useImperativeHandle(ref, () => {
-    return ctg.current
-  }, [ctgReady])
+    return Promise.all([ss, dd]).then(() => ss)
+  }, [])
   const canvasStyles: React.CSSProperties = { position: 'absolute' }
   return (
-    <Wrapper style={{ flexDirection: isFullscreen ? 'row' : 'column-reverse' }}>
+    <Wrapper style={{ flexDirection: isFullscreen ? 'row' : 'column-reverse', ...(style || {}) }}>
       {
         <MultiParam data={data} isFullScreen={isFullscreen} />
       }
@@ -126,7 +124,7 @@ export default memo(forwardRef((props: IProps, ref: Ref<Suit>) => {
             </div>
           )
         }
-        <div style={{ height: isV3 ? 0 : ((isFullscreen && ismulti) ? `calc(100% - 210px)` : '100%'), position: 'relative', maxHeight: isFullscreen ? 500 : 'unset' }} ref={ctgBox}>
+        <div style={{ height: isV3 ? 0 : ((isFullscreen && ismulti) ? `calc(98% - 210px)` : '98%'), position: 'relative', maxHeight: isFullscreen ? 500 : 'unset' }} ref={ctgBox}>
           <canvas style={canvasStyles} ref={canvasgrid} />
           <canvas style={canvasStyles} ref={canvasline} />
           <canvas style={canvasStyles} ref={canvasdata} />

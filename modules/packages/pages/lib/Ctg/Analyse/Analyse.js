@@ -21,8 +21,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importStar(require("react"));
 var antd_1 = require("antd");
 var utils_1 = require("@lianmed/utils");
+require("antd/lib/input-number/style/index.css");
+require("antd/lib/form/style/index.css");
+require("antd/lib/input/style/index.css");
+require("antd/lib/Radio/style/index.css");
 var Setting = react_1.forwardRef(function (props, ref) {
-    var isRemote = props.isRemote;
+    var isRemote = props.isRemote, _a = props.disabled, disabled = _a === void 0 ? true : _a;
     var form = antd_1.Form.useForm()[0];
     react_1.useEffect(function () {
         var formData = form.getFieldsValue();
@@ -64,29 +68,29 @@ var Setting = react_1.forwardRef(function (props, ref) {
                 react_1.default.createElement(antd_1.Row, { style: { marginBottom: 4 } },
                     react_1.default.createElement(antd_1.Col, { span: 12 },
                         react_1.default.createElement(antd_1.Form.Item, { label: "\u5BAB\u7F29\u6B21\u6570", style: { marginBottom: 0 }, name: "uctimes" },
-                            react_1.default.createElement(antd_1.InputNumber, { disabled: true }))),
+                            react_1.default.createElement(antd_1.InputNumber, { disabled: disabled }))),
                     react_1.default.createElement(antd_1.Col, { span: 12 },
                         react_1.default.createElement(antd_1.Form.Item, { label: "\u5BAB\u7F29\u5F3A\u5EA6", style: { marginBottom: 0 }, name: "ucStrong" },
-                            react_1.default.createElement(antd_1.InputNumber, { disabled: true })))),
+                            react_1.default.createElement(antd_1.InputNumber, { disabled: disabled })))),
                 react_1.default.createElement(antd_1.Row, null,
                     react_1.default.createElement(antd_1.Col, { span: 12 },
                         react_1.default.createElement(antd_1.Form.Item, { label: "\u95F4\u9694\u65F6\u95F4", style: { marginBottom: 0 }, name: "ucdurationtime" },
-                            react_1.default.createElement(antd_1.InputNumber, __assign({}, cFn('min'), { disabled: true })))),
+                            react_1.default.createElement(antd_1.InputNumber, __assign({}, cFn('min'), { disabled: disabled })))),
                     react_1.default.createElement(antd_1.Col, { span: 12 },
                         react_1.default.createElement(antd_1.Form.Item, { label: "\u6301\u7EED\u65F6\u95F4", style: { marginBottom: 0 }, name: "uckeeptime" },
-                            react_1.default.createElement(antd_1.InputNumber, __assign({}, cFn('s'), { disabled: true }))))),
+                            react_1.default.createElement(antd_1.InputNumber, __assign({}, cFn('s'), { disabled: disabled }))))),
                 react_1.default.createElement("div", { className: "divider" }, "\u51CF\u901F"),
                 react_1.default.createElement(antd_1.Row, { style: { marginBottom: 4 } },
                     react_1.default.createElement(antd_1.Col, { span: 12 },
                         react_1.default.createElement(antd_1.Form.Item, { label: "\u65E9\u51CF", style: { marginBottom: 0 }, name: "edtimes" },
-                            react_1.default.createElement(antd_1.InputNumber, __assign({}, cFn('次'), { disabled: true })))),
+                            react_1.default.createElement(antd_1.InputNumber, __assign({}, cFn('次'), { disabled: disabled })))),
                     react_1.default.createElement(antd_1.Col, { span: 12 },
                         react_1.default.createElement(antd_1.Form.Item, { label: "\u665A\u51CF", style: { marginBottom: 0 }, name: "ldtimes" },
-                            react_1.default.createElement(antd_1.InputNumber, __assign({}, cFn('次'), { disabled: true }))))),
+                            react_1.default.createElement(antd_1.InputNumber, __assign({}, cFn('次'), { disabled: disabled }))))),
                 react_1.default.createElement(antd_1.Row, null,
                     react_1.default.createElement(antd_1.Col, { span: 12 },
                         react_1.default.createElement(antd_1.Form.Item, { label: "\u53D8\u5F02\u51CF\u901F", style: { marginBottom: 0 }, name: "vdtimes" },
-                            react_1.default.createElement(antd_1.InputNumber, __assign({}, cFn('次'), { disabled: true }))))),
+                            react_1.default.createElement(antd_1.InputNumber, __assign({}, cFn('次'), { disabled: disabled }))))),
                 react_1.default.createElement("div", { className: "divider" },
                     isRemote && react_1.default.createElement("span", { style: { color: 'red' } }, "*"),
                     react_1.default.createElement("span", null, "\u7C7B\u578B")),

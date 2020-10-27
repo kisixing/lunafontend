@@ -23,11 +23,15 @@ export default (response: Response): ErrData => {
   if (!response) {
     return null;
   }
+  if (response.bodyUsed) {
+    return null
+  }
   const copy = response.clone();
+
   const { status, statusText, url } = copy;
   let data = null;
   try {
-    data = copy.json().catch(e => {});
+    data = copy.json().catch(e => { });
   } catch (e) {
     console.error('error response without data', copy.body);
   }

@@ -32,7 +32,6 @@ var Item = function (props) {
     var _b = react_1.useState(null), suit = _b[0], setSuit = _b[1];
     var _c = react_1.useState(false), maskVisible = _c[0], setMaskVisible = _c[1];
     var ref = react_1.useRef();
-    console.log('ss ref', ref);
     var RenderTilte = function () {
         var m = moment_1.default(startTime);
         var text = (react_1.default.createElement("span", null, [
@@ -56,7 +55,7 @@ var Item = function (props) {
     };
     var onReady = react_1.useCallback(function (suit) { setSuit(suit); onSuitRead && onSuitRead(suit); }, []);
     return (react_1.default.createElement(Wrapper, null,
-        react_1.default.createElement(antd_1.Card, { size: "small", title: react_1.default.createElement(RenderTilte, null), style: { height: '100%' }, extra: react_1.default.createElement(Extra_1.default, { bedname: bedname, onClose: !data.isF0Pro && onClose, status: status, suit: suit, unitId: unitId }), bodyStyle: { padding: 0, height: 'calc(100% - 38px)' } },
+        react_1.default.createElement(antd_1.Card, { size: "small", title: react_1.default.createElement(RenderTilte, null), style: { height: '100%' }, extra: react_1.default.createElement(Extra_1.default, { bedname: bedname, onClose: !data.isF0Pro && onClose, status: status, suit: suit, unitId: unitId }), headStyle: { background: themeColor, color: '#fff' }, bodyStyle: { padding: 0, height: 'calc(100% - 38px)' } },
             react_1.default.createElement(lmg_1.Ctg, { ref: ref, data: data, onReady: onReady, onDoubleClick: onDoubleClick, loading: loading, isFullscreen: isFullscreen }),
             react_1.default.createElement(Bar_1.default, { mutableSuit: ref, onSelect: onSelect, unitId: unitId, setMaskVisible: setMaskVisible }, props.children),
             maskVisible && (react_1.default.createElement("div", { style: { background: 'rgba(0,0,0,.4)', position: 'absolute', left: 0, right: 0, bottom: 0, top: 0, margin: 'auto' } }, RenderMaskIn && react_1.default.createElement(RenderMaskIn, { setMaskVisible: setMaskVisible, mutableSuit: ref, data: data }))))));

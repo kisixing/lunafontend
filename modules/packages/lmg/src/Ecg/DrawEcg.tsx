@@ -418,10 +418,12 @@ export class DrawEcg extends Draw {
     }
     return B;
   }
-  clear = (function (this: DrawEcg) {
-    this.drawPle.clear()
-    this.current_times = 0;
-    this.linectx.clearRect(x_start - 10, 0, this.width, this.height)
+  clear = (function (this: DrawEcg, id: string) {
+    if (this.data && this.data.id === id) {
+      this.drawPle.clear()
+      this.current_times = 0;
+      this.linectx.clearRect(x_start - 10, 0, this.width, this.height)
+    }
   }).bind(this)
 
 }

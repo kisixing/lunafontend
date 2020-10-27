@@ -15,7 +15,7 @@ function copyFhr(origin: obvue.ctg_exams_data, single: boolean): obvue.ctg_exams
     return data
 }
 
-export const useCtgData = (docid: string, single = false) => {
+export const useCtgData = (docid?: string, single = false) => {
     const [fetal, setFetal] = useState<1 | 2 | 3>(1)
 
     const [loading, setLoading] = useState(false)
@@ -26,9 +26,9 @@ export const useCtgData = (docid: string, single = false) => {
             setLoading(true)
             return request.get(`/ctg-exams-data/${docid}`).then(res => {
                 if (!res) return
-                const d = { docid, keepSelection: true, ...res, ...(copyFhr(res, single)) }
+                const d = { docid, keepSelection: false, ...res, ...(copyFhr(res, single)) }
                 if (single) {
-                    setFhr(fetal, d)
+                    setFhr(fetal, d, true)
                 } else {
                     setCtgData(d)
                 }
@@ -53,7 +53,7 @@ export const useCtgData = (docid: string, single = false) => {
         }
     }, [ctgData])
 
-    function setFhr(index: 0 | 1 | 2 | 3, from = ctgData) {
+    function setFhr(index: 0 | 1 | 2 | 3, from = ctgData, isFirst = false) {
         let data: any = {}
         if (index) {
             const { fhr1 } = from
@@ -68,7 +68,7 @@ export const useCtgData = (docid: string, single = false) => {
             })
 
         }
-        setCtgData({ ...from, ...data, noOffset: !!index })
+        setCtgData({ ...from, ...data, noOffset: !!index, keepSelection: !isFirst })
     }
     useEffect(() => {
         setFhr(fetal)

@@ -7,9 +7,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var react_1 = __importStar(require("react"));
 var icons_1 = require("@ant-design/icons");
 var antd_1 = require("antd");
+var react_1 = __importStar(require("react"));
 var Bar = function (props) {
     var _a = react_1.useState(false), showBar = _a[0], setShowBar = _a[1];
     var mutableSuit = props.mutableSuit, onSelect = props.onSelect, unitId = props.unitId, setMaskVisible = props.setMaskVisible;

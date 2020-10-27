@@ -1,5 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var old_lineWidth = 1 || 0.8;
+var old_dash = [2, 2];
 function formatDate(date, format) {
     if (!date)
         return;
@@ -43,7 +45,6 @@ var DrawCTG = (function () {
         if (basetop === void 0) { basetop = 10; }
         if (min === void 0) { min = 50; }
         if (max === void 0) { max = 210; }
-        this.showBase = false;
         this.sethorizontal = function (length, startposition, drawtimespan) {
             if (drawtimespan === void 0) { drawtimespan = true; }
             var _a = _this, setrules = _a.setrules, gridcontext = _a.gridcontext, baseleft = _a.baseleft, min = _a.min, max = _a.max, xspan = _a.xspan;
@@ -65,8 +66,10 @@ var DrawCTG = (function () {
                 var ioff = i + offseti;
                 gridcontext.beginPath();
                 gridcontext.strokeStyle = _this.suit.ctgconfig.secondarygrid;
-                gridcontext.lineWidth = 0.8;
+                gridcontext.setLineDash(old_dash);
+                gridcontext.lineWidth = old_lineWidth;
                 if (ioff % 3 == primaryflag) {
+                    gridcontext.setLineDash([]);
                     gridcontext.strokeStyle = _this.suit.ctgconfig.primarygrid;
                 }
                 if (startposition == 0) {
@@ -121,6 +124,7 @@ var DrawCTG = (function () {
                 gridcontext.moveTo(xspan * i - offsetlpx + baseleft - offsetpx, 0 + _this.basetop);
                 gridcontext.lineTo(xspan * i - offsetlpx + baseleft - offsetpx, (max - min) * _this.yspan + _this.basetop);
                 gridcontext.stroke();
+                gridcontext.setLineDash([]);
                 if (ioff % 6 == primaryscaleflag) {
                     setrules(xspan * (i + 3) + baseleft - offsetlpx - offsetpx);
                 }
@@ -146,8 +150,10 @@ var DrawCTG = (function () {
                 var ioff = i + offseti;
                 gridcontext.beginPath();
                 gridcontext.strokeStyle = _this.suit.ctgconfig.secondarygrid;
-                gridcontext.lineWidth = 0.8;
+                gridcontext.setLineDash(old_dash);
+                gridcontext.lineWidth = old_lineWidth;
                 if (ioff % 3 == primaryflag) {
+                    gridcontext.setLineDash([]);
                     gridcontext.strokeStyle = _this.suit.ctgconfig.primarygrid;
                 }
                 if (ioff % 6 == primaryscaleflag) {
@@ -184,6 +190,7 @@ var DrawCTG = (function () {
                 gridcontext.moveTo(xspan * i + baseleft - 40 + lineoff + offsetpx, 0 + _this.basetop);
                 gridcontext.lineTo(xspan * i + baseleft - 40 + lineoff + offsetpx, (max - min) * _this.yspan + _this.basetop);
                 gridcontext.stroke();
+                gridcontext.setLineDash([]);
                 if (ioff % 6 == primaryscaleflag) {
                     setrules(xspan * (i + 3) + baseleft - offsetpx);
                 }
@@ -193,27 +200,31 @@ var DrawCTG = (function () {
             var _a = _this, gridcontext = _a.gridcontext, baseleft = _a.baseleft, min = _a.min, max = _a.max;
             for (var i = 0; i < (max - min) / 10 + 1; i++) {
                 gridcontext.beginPath();
-                gridcontext.lineWidth = 0.8;
+                gridcontext.lineWidth = old_lineWidth;
                 if (i % 3 == 0) {
                     gridcontext.strokeStyle = _this.suit.ctgconfig.primarygrid;
                 }
                 else {
                     gridcontext.strokeStyle = _this.suit.ctgconfig.secondarygrid;
+                    gridcontext.setLineDash(old_dash);
                 }
                 gridcontext.moveTo(baseleft, _this.yspan * i * 10 + _this.basetop);
                 gridcontext.lineTo(_maxline, _this.yspan * i * 10 + _this.basetop);
                 gridcontext.stroke();
+                gridcontext.setLineDash([]);
             }
             for (var i = 0; i < 12; i++) {
                 gridcontext.beginPath();
-                gridcontext.lineWidth = 0.8;
+                gridcontext.lineWidth = old_lineWidth;
                 gridcontext.strokeStyle = _this.suit.ctgconfig.primarygrid;
                 if (i % 2 == 1) {
                     gridcontext.strokeStyle = _this.suit.ctgconfig.secondarygrid;
+                    gridcontext.setLineDash(old_dash);
                 }
                 gridcontext.moveTo(baseleft, (max - min + i * 10) * _this.yspan + _this.scalespan + _this.basetop);
                 gridcontext.lineTo(_maxline, (max - min + i * 10) * _this.yspan + _this.scalespan + _this.basetop);
                 gridcontext.stroke();
+                gridcontext.setLineDash([]);
             }
         };
         this.setrules = function (x) {
@@ -372,6 +383,7 @@ var DrawCTG = (function () {
     };
     DrawCTG.prototype.drawgrid = function (cur, drawtimespan) {
         if (drawtimespan === void 0) { drawtimespan = true; }
+        cur = cur < this.suit.width * 2 ? this.suit.width * 2 : cur;
         var _a = this, suit = _a.suit, sethorizontal = _a.sethorizontal, setvertical = _a.setvertical, gridcontext = _a.gridcontext;
         var cwidth = suit.canvasline.width;
         var cheight = suit.canvasline.height;
@@ -383,12 +395,13 @@ var DrawCTG = (function () {
     };
     DrawCTG.prototype.drawdotright = function (cur) {
     };
-    DrawCTG.prototype.drawdot = function (cur, isemit, showBase) {
+    DrawCTG.prototype.drawdot = function (cur, isemit) {
         if (isemit === void 0) { isemit = false; }
-        if (showBase === void 0) { showBase = undefined; }
+        console.log('fuck cur', cur);
+        if (!this.suit.data)
+            return;
         var noOffset = this.suit.data['noOffset'];
         this.fhroffset = noOffset ? 0 : this._fhroffset;
-        typeof showBase !== 'undefined' && (this.showBase = showBase);
         cur = Math.round(cur);
         var _a = this, suit = _a.suit, linecontext = _a.linecontext, max = _a.max;
         var drawAnalyse = suit.drawAnalyse;
@@ -398,7 +411,7 @@ var DrawCTG = (function () {
             return;
         }
         this.drawgrid(cur);
-        if (suit.type == 0) {
+        if (suit.isTrueTime) {
             this.showcur(cur, isemit);
         }
         else {
@@ -408,6 +421,7 @@ var DrawCTG = (function () {
         var lasty = 0;
         linecontext.clearRect(0, 0, suit.canvasline.width, suit.canvasline.height);
         var start = cur - suit.canvasline.width * 2 > 0 ? cur - suit.canvasline.width * 2 : 0;
+        var fixedAtRight = start === 0 && suit.isTrueTime;
         var alarmstate = 0;
         for (var fetal = 0; fetal < suit.data.fetal_num; fetal++) {
             linecontext.beginPath();
@@ -423,7 +437,7 @@ var DrawCTG = (function () {
             for (var i_1 = start; i_1 < cur; i_1++) {
                 if (i_1 % 2 == 1)
                     continue;
-                if (start == 0) {
+                if (fixedAtRight) {
                     lastx = Math.floor((suit.canvasline.width * 2 - cur + i_1) / 2);
                 }
                 else {
@@ -510,7 +524,7 @@ var DrawCTG = (function () {
         for (var i = start; i < cur - 2; i++) {
             if (i % 2 == 1)
                 continue;
-            if (start == 0) {
+            if (fixedAtRight) {
                 lastx = Math.floor((suit.canvasline.width * 2 - cur + i) / 2);
             }
             else {
@@ -549,7 +563,7 @@ var DrawCTG = (function () {
             for (var i = start; i < cur - 2; i++) {
                 if (i % 2 == 1)
                     continue;
-                if (start == 0) {
+                if (fixedAtRight) {
                     lastx = Math.floor((suit.canvasline.width * 2 - cur + i) / 2);
                 }
                 else {
@@ -582,7 +596,7 @@ var DrawCTG = (function () {
         for (var i = start; i < cur; i++) {
             if (i % 2 == 1)
                 continue;
-            if (start == 0) {
+            if (fixedAtRight) {
                 lastx = Math.floor((suit.canvasline.width * 2 - cur + i) / 2);
             }
             else {
@@ -593,7 +607,7 @@ var DrawCTG = (function () {
                 this.showfm(lastx);
             }
         }
-        drawAnalyse.drawBaseline(cur, this.showBase, 'black', this.yspan, this.xspan, max, this.basetop);
+        drawAnalyse.drawBaseline(cur, 'black', this.yspan, this.xspan, max, this.basetop);
     };
     DrawCTG.prototype.setscalestyle = function (context, color) {
         context.font = 'bold 10px consolas';

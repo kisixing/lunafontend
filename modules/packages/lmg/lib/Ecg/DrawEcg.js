@@ -51,10 +51,12 @@ var DrawEcg = (function (_super) {
         _this.max_times = 135;
         _this.start = NaN;
         _this.intervalIds = [];
-        _this.clear = (function () {
-            this.drawPle.clear();
-            this.current_times = 0;
-            this.linectx.clearRect(x_start - 10, 0, this.width, this.height);
+        _this.clear = (function (id) {
+            if (this.data && this.data.id === id) {
+                this.drawPle.clear();
+                this.current_times = 0;
+                this.linectx.clearRect(x_start - 10, 0, this.width, this.height);
+            }
         }).bind(_this);
         var canvas = args.canvas, canvasline = args.canvasline, canvasmonitor = args.canvasmonitor, canvasPle = args.canvasPle;
         _this.drawPle = new DrawPle_1.DrawPle(args.wrap, canvasPle);

@@ -29,7 +29,7 @@ export declare const getOptions1: (data: any[], date: any[], title: string, name
     };
     yAxis: {
         type: string;
-        boundaryGap: (string | number)[];
+        boundaryGap: import("csstype").AnimationIterationCountProperty[];
         name: string;
         min: number;
         max: number;

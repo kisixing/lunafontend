@@ -12,13 +12,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -53,9 +46,9 @@ var defaultCtgConfig = {
     show_fetalmovement: true
 };
 var lightConfig = {
-    primarygrid: '#6b6100',
-    secondarygrid: '#d6cd81',
-    rule: '#827717',
+    rule: 'rgba(0,51,102,1)',
+    primarygrid: 'rgba(100, 100, 100, 1)',
+    secondarygrid: 'rgba(200, 200, 200, 1)',
     scale: 'rgba(0,0,0,1)',
     normalarea: 'rgb(224,255,255)',
 };
@@ -102,11 +95,11 @@ var Suit = (function (_super) {
             for (var _i = 1; _i < arguments.length; _i++) {
                 args[_i - 1] = arguments[_i];
             }
-            _this.emit.apply(_this, __spreadArrays([type], args));
             return true;
         }, 0);
         _this.alarmHighCount = [];
         _this.alarmLowCount = [];
+        _this.isCheckBaelinePoint = false;
         bindEvents_1.default.call(_this);
         _this.wrap = wrap;
         _this.canvasgrid = canvasgrid;
@@ -140,9 +133,20 @@ var Suit = (function (_super) {
         }
         return _this;
     }
+    Object.defineProperty(Suit.prototype, "isTrueTime", {
+        get: function () {
+            return this.type === 0;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(Suit.prototype, "ctgconfig", {
         get: function () {
-            return Object.assign(this._ctgconfig, window['isDark'] ? darkConfig : lightConfig);
+            return Object.assign(this._ctgconfig, window['isDark'] ? darkConfig : lightConfig, !window['isFucked'] ? {} : {
+                primarygrid: '#6b6100',
+                secondarygrid: '#d6cd81',
+                rule: '#827717',
+            });
         },
         set: function (value) {
             this._ctgconfig = value;
@@ -170,6 +174,9 @@ var Suit = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Suit.prototype.onMov = function () {
+        this.getoffline();
+    };
     Suit.prototype.init = function (data) {
         var _this = this;
         if (!data || !(data.fhr || data.fhr1)) {
@@ -218,7 +225,7 @@ var Suit = (function (_super) {
             this.timerCtg(defaultinterval);
         }
         this.barTool.watch(function (value) {
-            _this.getoffline();
+            _this.onMov();
             _this.toolbarposition = value;
             _this.dragtimestamp = new Date().getTime();
             var len = 100;
@@ -236,7 +243,7 @@ var Suit = (function (_super) {
             _this.drawobj.drawdot(_this.rightViewPosition, false);
         });
         this.barTool.watchGrab(function (value) {
-            _this.getoffline();
+            _this.onMov();
             var _viewposition;
             value = ~~value * 2;
             if (_this.data.index < _this.canvasline.width * 2) {
@@ -312,7 +319,7 @@ var Suit = (function (_super) {
         this.barTool.setBarLeft(this.toolbarposition, false);
     };
     Suit.prototype.itemAlarm = function (text) {
-        if (this.ctgconfig.alarm_enable) {
+        if (this.ctgconfig.alarm_enable && this.checkdragtimestamp()) {
             utils_1.event.emit('item:alarm', this.data.id, 2, text);
         }
     };
@@ -406,6 +413,7 @@ var Suit = (function (_super) {
     Suit.prototype.movescoller = function () { };
     Suit.prototype.InitFileData = function (oriobj) {
         var CTGDATA = {
+            docid: oriobj.docid,
             fhr: [[], [], []],
             toco: [],
             fm: [],
@@ -513,8 +521,7 @@ var Suit = (function (_super) {
             if (!_this) {
                 clearInterval(id);
             }
-            var curstamp = new Date().getTime();
-            if (curstamp - _this.dragtimestamp > _this.interval) {
+            if (_this.checkdragtimestamp()) {
                 if (_this.drawSelect.selectstartposition != 0) {
                     _this.drawSelect.startingBar.setLeft(0);
                 }
@@ -522,6 +529,10 @@ var Suit = (function (_super) {
             }
         }, dely);
         this.intervalIds.push(id);
+    };
+    Suit.prototype.checkdragtimestamp = function () {
+        var curstamp = new Date().getTime();
+        return curstamp - this.dragtimestamp > this.interval;
     };
     Suit.prototype.onStatusChange = function (status) {
         return status;
@@ -575,18 +586,66 @@ var Suit = (function (_super) {
     Suit.prototype.getPointType = function (x, y) {
         var _a = this.drawAnalyse, analysisData = _a.analysisData, mapXtoY = _a.mapXtoY, mapBaselilneXtoY = _a.mapBaselilneXtoY;
         x = Math.round(x);
-        console.log('ll', mapXtoY, analysisData, mapBaselilneXtoY, x, y);
+        var mKeys = Object.keys(mapBaselilneXtoY).map(function (_) { return Number(_); });
+        var edge = 10;
         if (analysisData) {
-            var edge_1 = 10;
-            var _b = analysisData.analysis, acc = _b.acc, dec = _b.dec;
-            var target = acc.find(function (_) { return (x < _.x + edge_1) && (x >= _.x); }) || dec.find(function (_) { return (x < _.x + edge_1 * 2) && (x >= _.x); });
-            console.log('click', x, y, target);
-            if (target && (y <= (target.y + 2 * edge_1) && y > (target.y))) {
-                var isDec = 'type' in target;
-                this.drawAnalyse.pointToEdit = target;
-                return isDec ? 'EditDecPoint' : 'EditAccPoint';
+            if (this.isCheckBaelinePoint) {
+                var idx = mKeys.findIndex(function (_) { return Math.abs(x - _) <= edge && Math.abs(y - mapBaselilneXtoY[_]) <= edge; });
+                if (idx > -1) {
+                    this.drawAnalyse.baselinePointIndex = this.drawAnalyse.mapBaselilneXtoIndex[mKeys[idx]];
+                    console.log('idx', this.drawAnalyse.baselinePointIndex, mapBaselilneXtoY);
+                    return 'BaselinePoint';
+                }
             }
-            var linePoint = mapXtoY[x];
+            else {
+                var _b = analysisData.analysis, acc = _b.acc, dec = _b.dec;
+                var target = acc.find(function (_) { return (x < _.x + edge) && (x >= _.x); }) || dec.find(function (_) { return (x < _.x + edge * 2) && (x >= _.x); });
+                console.log('click', x, y, target);
+                if (target && (y <= (target.y + 2 * edge) && y > (target.y))) {
+                    var isDec = 'type' in target;
+                    this.drawAnalyse.pointToEdit = target;
+                    return isDec ? 'EditDecPoint' : 'EditAccPoint';
+                }
+                var linePoint = mapXtoY[x];
+                var leftIndex = mKeys.reduce(function (index, _) {
+                    var left = mKeys[index];
+                    var right = mKeys[index + 1];
+                    if (right === undefined) {
+                        return;
+                    }
+                    if (left <= x) {
+                        if (x <= right) {
+                            return index;
+                        }
+                        else {
+                            return index + 1;
+                        }
+                    }
+                    else {
+                        return;
+                    }
+                }, 0);
+                console.log('click', x, y, linePoint);
+                if (typeof leftIndex === 'number' && linePoint && Math.abs(y - linePoint.y) < 8) {
+                    var x1 = mKeys[leftIndex];
+                    var x2 = mKeys[leftIndex + 1];
+                    var y1 = mapBaselilneXtoY[x1];
+                    var y2 = mapBaselilneXtoY[x2];
+                    var k = (y2 - y1) / (x2 - x1);
+                    var b = y1 - x1 * k;
+                    var baseY = x * k + b;
+                    var type = (linePoint.y - baseY) < 0 ? 'MarkAccPoint' : 'MarkDecPoint';
+                    this.drawAnalyse.pointToInsert = { type: type, index: linePoint.index };
+                    return type;
+                }
+            }
+        }
+        return null;
+    };
+    Suit.prototype.getBaseY = function (x) {
+        var _a = this.drawAnalyse, analysisData = _a.analysisData, mapBaselilneXtoY = _a.mapBaselilneXtoY;
+        x = Math.round(x);
+        if (analysisData) {
             var mKeys_1 = Object.keys(mapBaselilneXtoY).map(function (_) { return Number(_); });
             var leftIndex = mKeys_1.reduce(function (index, _) {
                 var left = mKeys_1[index];
@@ -606,48 +665,9 @@ var Suit = (function (_super) {
                     return;
                 }
             }, 0);
-            console.log('click', x, y, linePoint);
-            if (typeof leftIndex === 'number' && linePoint && Math.abs(y - linePoint.y) < 8) {
+            if (typeof leftIndex === 'number') {
                 var x1 = mKeys_1[leftIndex];
                 var x2 = mKeys_1[leftIndex + 1];
-                var y1 = mapBaselilneXtoY[x1];
-                var y2 = mapBaselilneXtoY[x2];
-                var k = (y2 - y1) / (x2 - x1);
-                var b = y1 - x1 * k;
-                var baseY = x * k + b;
-                var type = (linePoint.y - baseY) < 0 ? 'MarkAccPoint' : 'MarkDecPoint';
-                this.drawAnalyse.pointToInsert = { type: type, index: linePoint.index };
-                return type;
-            }
-        }
-        return null;
-    };
-    Suit.prototype.getBaseY = function (x) {
-        var _a = this.drawAnalyse, analysisData = _a.analysisData, mapBaselilneXtoY = _a.mapBaselilneXtoY;
-        x = Math.round(x);
-        if (analysisData) {
-            var mKeys_2 = Object.keys(mapBaselilneXtoY).map(function (_) { return Number(_); });
-            var leftIndex = mKeys_2.reduce(function (index, _) {
-                var left = mKeys_2[index];
-                var right = mKeys_2[index + 1];
-                if (right === undefined) {
-                    return;
-                }
-                if (left <= x) {
-                    if (x <= right) {
-                        return index;
-                    }
-                    else {
-                        return index + 1;
-                    }
-                }
-                else {
-                    return;
-                }
-            }, 0);
-            if (typeof leftIndex === 'number') {
-                var x1 = mKeys_2[leftIndex];
-                var x2 = mKeys_2[leftIndex + 1];
                 var y1 = mapBaselilneXtoY[x1];
                 var y2 = mapBaselilneXtoY[x2];
                 var k = (y2 - y1) / (x2 - x1);

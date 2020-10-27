@@ -166,7 +166,7 @@ var getEmptyScore = function () {
         }
     };
 };
-exports.default = (function (v, docid, fetal, ctgData) {
+exports.default = (function (suit, docid, fetal, ctgData) {
     var _a = react_1.useState(), initData = _a[0], setInitData = _a[1];
     var _b = react_1.useState(store_1.default.get(MARK_KEY) || MARKS[0]), mark = _b[0], setMark = _b[1];
     var _c = react_1.useState(store_1.default.get(INTERVAL_KEY) || 20), interval = _c[0], setInterval = _c[1];
@@ -185,10 +185,11 @@ exports.default = (function (v, docid, fetal, ctgData) {
     var old_ref = react_1.useRef({});
     var hasInitAnalysed = react_1.useRef(false);
     var endTime = (ctgData && ctgData.fhr1) ? (startTime + interval * 240 > ctgData.fhr1.length / 2 ? ctgData.fhr1.length / 2 : startTime + interval * 240) : 0;
-    var hardAnalyse = react_1.useCallback(function hardAnalyse(show) {
-        if (show === void 0) { show = showBase; }
-        v.current.drawAnalyse.analyse(mark, show);
-    }, []);
+    var hardAnalyse = react_1.useCallback(function hardAnalyse() {
+        suit.current.then(function (s) {
+            s.drawAnalyse.analyse(mark);
+        });
+    }, [mark]);
     var mapFormToMark = {
         Fischer_ref: Fischer_ref,
         Krebs_ref: Krebs_ref,
@@ -209,7 +210,7 @@ exports.default = (function (v, docid, fetal, ctgData) {
                     fetchData(e)
                         .then(function (r) {
                         r.score = getEmptyScore();
-                        v.current.resize();
+                        suit.current.then(function (s) { return s.resize(); });
                         setInitData(r);
                     }).finally(function () { return d.resize(); });
                 }
@@ -223,24 +224,12 @@ exports.default = (function (v, docid, fetal, ctgData) {
                 .off('suit:afterInit', initCb)
                 .off('suit:afterAnalyse', setFormData);
         };
-    }, [showBase, autoFm, autoAnalyse, setFormData, initData, fetchData, ctgData]);
-    react_1.useEffect(function () {
-        if (initData) {
-            if (autoFm) {
-                var fmIndex = initData.analysis.fm || [];
-                var fm_1 = v.current.data.fm;
-                fmIndex.forEach(function (_) {
-                    fm_1[_] = 1;
-                    fm_1[_ - 1] = 1;
-                });
-            }
-            setTimeout(function () {
-                v.current.drawAnalyse.analyse(mark, showBase, startTime, endTime, initData);
-            }, 0);
-        }
-    }, [initData, autoFm, hardAnalyse]);
+    }, [showBase, autoAnalyse, setFormData, initData, fetchData, ctgData]);
     function fetchData(e) {
         if (e === void 0) { e = endTime; }
+        if ((e - startTime) <= 10) {
+            return Promise.reject();
+        }
         setAnalyseLoading(true);
         return request_1.default.post("/ctg-exams-analyse", {
             data: { docid: docid, mark: mark, start: startTime, end: e, fetal: fetal, autoFm: autoFm },
@@ -253,20 +242,30 @@ exports.default = (function (v, docid, fetal, ctgData) {
         });
     }
     var reAnalyse = function () { return __awaiter(void 0, void 0, void 0, function () {
-        var r, analysisData;
+        var r;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4, fetchData()];
                 case 1:
                     r = _a.sent();
-                    analysisData = v.current.drawAnalyse.analysisData;
-                    if (analysisData) {
-                        r.analysis.acc = analysisData.analysis.acc;
-                        r.analysis.dec = analysisData.analysis.dec;
-                    }
-                    r.score = getEmptyScore();
-                    setInitData(r);
-                    v.current.drawAnalyse.analyse(mark, showBase, startTime, endTime, r);
+                    suit.current.then(function (s) {
+                        var analysisData = s.drawAnalyse.analysisData;
+                        if (analysisData) {
+                            r.analysis.acc = analysisData.analysis.acc;
+                            r.analysis.dec = analysisData.analysis.dec;
+                        }
+                        r.score = getEmptyScore();
+                        setInitData(r);
+                        if (autoFm) {
+                            var fmIndex = r.analysis.fm || [];
+                            var fm_1 = s.data.fm;
+                            fmIndex.forEach(function (_) {
+                                fm_1[_] = 1;
+                                fm_1[_ - 1] = 1;
+                            });
+                        }
+                        s.drawAnalyse.analyse(mark, startTime, endTime, r);
+                    });
                     return [2];
             }
         });
@@ -275,7 +274,7 @@ exports.default = (function (v, docid, fetal, ctgData) {
         if (!r)
             return;
         var analysis = r.analysis, score = r.score;
-        console.log('form', analysis, score);
+        setInitData(r);
         var f = score[mark.toLowerCase() + "data"];
         var cur = mapFormToMark[mark + "_ref"];
         cur.current && cur.current.setFieldsValue(f);
@@ -285,14 +284,20 @@ exports.default = (function (v, docid, fetal, ctgData) {
     }
     react_1.useEffect(function () {
         var s = function (time) {
-            time = time + 4800 <= v.current.data.index ? time : ((v.current.data.index - 4800) > 0 ? (v.current.data.index - 4800) : 0);
-            docid && setStartTime(time);
+            suit.current.then(function (ins) {
+                time = time + 4800 <= ins.data.index ? time : ((ins.data.index - 4800) > 0 ? (ins.data.index - 4800) : 0);
+                docid && setStartTime(time);
+            });
         };
-        v.current && v.current.on('change:selectPoint', s).on('suit:analyseMark', hardAnalyse);
+        suit.current.then(function (ins) {
+            ins.on('change:selectPoint', s).on('suit:analyseMark', hardAnalyse);
+        });
         return function () {
-            v.current && v.current.off('change:selectPoint', s).off('suit:analyseMark', hardAnalyse);
+            suit.current.then(function (ins) {
+                ins.off('change:selectPoint', s).off('suit:analyseMark', hardAnalyse);
+            });
         };
-    }, [interval, v.current, docid, hardAnalyse]);
+    }, [interval, docid, hardAnalyse]);
     react_1.useEffect(function () {
         Object.values(mapFormToMark).forEach(function (f) { return f.current && f.current.resetFields(); });
         hasInitAnalysed.current = false;
@@ -304,30 +309,42 @@ exports.default = (function (v, docid, fetal, ctgData) {
         hasInitAnalysed.current = false;
     }, [fetal]);
     react_1.useEffect(function () {
-        v.current && hardAnalyse();
-        store_1.default.set(MARK_KEY, mark);
-        if (mark === 'Krebs') {
-            setInterval(30);
-        }
+        hardAnalyse();
     }, [mark]);
     react_1.useEffect(function () {
-        store_1.default.set(INTERVAL_KEY, interval);
-    }, [interval]);
+        reAnalyse();
+    }, [interval, fetal]);
     return {
         setMark: function (m) {
             setMark(m);
+            store_1.default.set(MARK_KEY, m);
         },
         mark: mark,
         MARKS: MARKS,
         reAnalyse: reAnalyse,
-        startTime: startTime, endTime: endTime, setStartTime: setStartTime, interval: interval, setInterval: setInterval,
+        startTime: startTime, endTime: endTime, setStartTime: setStartTime, interval: interval,
+        setInterval: function (i) {
+            store_1.default.set(INTERVAL_KEY, i);
+            setInterval(i);
+        },
         mapFormToMark: mapFormToMark,
         analysis_ref: analysis_ref,
         old_ref: old_ref,
         analyseLoading: analyseLoading,
-        setAutoFm: function (s) {
-            setAutoFm(s);
-            store_1.default.set(AUTOFM_KEY, s);
+        setAutoFm: function (flag) {
+            setAutoFm(flag);
+            store_1.default.set(AUTOFM_KEY, flag);
+            suit.current.then(function (s) {
+                if (flag) {
+                    var fmIndex = initData.analysis.fm || [];
+                    var fm_2 = s.data.fm;
+                    fmIndex.forEach(function (_) {
+                        fm_2[_] = 1;
+                        fm_2[_ - 1] = 1;
+                    });
+                }
+                s.drawAnalyse.analyse(mark, startTime, endTime, initData);
+            });
         },
         autoFm: autoFm,
         initData: initData,
@@ -339,8 +356,9 @@ exports.default = (function (v, docid, fetal, ctgData) {
         showBase: showBase,
         setShowBase: function (s) {
             setShowBase(s);
+            suit.current.then(function (ins) { return ins.drawAnalyse.showBase = s; });
             store_1.default.set(SHOW_BASE, s);
-            hardAnalyse(s);
+            hardAnalyse();
         },
     };
 });

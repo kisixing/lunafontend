@@ -3,7 +3,7 @@ import { FormInstance } from 'antd/lib/form';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import { AnalyseType } from '@lianmed/lmg/lib/interface';
 import { ctg_exams_analyse_score } from '@lianmed/f_types/lib/obvue/ctg_exams_analyse';
-declare const _default: (v: MutableRefObject<Suit>, docid: string, fetal: any, ctgData: {
+declare const _default: (suit: MutableRefObject<Promise<Suit>>, docid: string, fetal: any, ctgData: {
     fhr1?: string;
     fhr2?: string;
     fhr3?: string;
@@ -25,7 +25,7 @@ declare const _default: (v: MutableRefObject<Suit>, docid: string, fetal: any, c
     endTime: number;
     setStartTime: import("react").Dispatch<import("react").SetStateAction<number>>;
     interval: any;
-    setInterval: import("react").Dispatch<any>;
+    setInterval(i: any): void;
     mapFormToMark: {
         Fischer_ref: MutableRefObject<FormInstance>;
         Krebs_ref: MutableRefObject<FormInstance>;
@@ -40,31 +40,31 @@ declare const _default: (v: MutableRefObject<Suit>, docid: string, fetal: any, c
         [x: string]: any;
     }>;
     analyseLoading: boolean;
-    setAutoFm(s: boolean): void;
+    setAutoFm(flag: boolean): void;
     autoFm: boolean;
     initData: {
         analysis?: {
-            length: number;
-            bhr: number;
-            ltv: number;
-            stv: number;
-            edtimes: number;
-            ldtimes: number;
-            vdtimes: number;
-            acc: import("@lianmed/f_types/lib/obvue/ctg_exams_analyse").AccPoint[];
-            dec: import("@lianmed/f_types/lib/obvue/ctg_exams_analyse").DecPoint[];
-            fm: number[];
-            fhrbaselineMinute: number[];
-            ucdata: {
+            length?: number;
+            bhr?: number;
+            ltv?: number;
+            stv?: number;
+            edtimes?: number;
+            ldtimes?: number;
+            vdtimes?: number;
+            acc?: import("@lianmed/f_types/lib/obvue/ctg_exams_analyse").AccPoint[];
+            dec?: import("@lianmed/f_types/lib/obvue/ctg_exams_analyse").DecPoint[];
+            fm?: number[];
+            fhrbaselineMinute?: number[];
+            ucdata?: {
                 ucIndex: number[];
                 uctimes: number;
                 ucStrong: number;
                 uckeeptime: number;
                 ucdurationtime: number;
             };
-            start: number;
-            end: number;
-            isSinusoid: boolean;
+            start?: number;
+            end?: number;
+            isSinusoid?: boolean;
         };
         score?: ctg_exams_analyse_score;
     };

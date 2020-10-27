@@ -120,7 +120,7 @@ const getEmptyScore = (): ctg_exams_analyse_score => {
         }
     }
 }
-export default (v: MutableRefObject<Suit>, docid: string, fetal: any, ctgData: obvue.ctg_exams_data) => {
+export default (suit: MutableRefObject<Promise<Suit>>, docid: string, fetal: any, ctgData: obvue.ctg_exams_data) => {
 
     const [initData, setInitData] = useState<obvue.ctg_exams_analyse>()
     // const [isToShort, setIsToShort] = useState(false)
@@ -145,10 +145,14 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, ctgData: o
     // const diff = Math.round((endTime - startTime) / 240)
 
     const hardAnalyse = useCallback(
-        function hardAnalyse(show = showBase) {
-            v.current.drawAnalyse.analyse(mark, show)
+        function hardAnalyse() {
+
+            suit.current.then(s => {
+                s.drawAnalyse.analyse(mark)
+            })
+
         },
-        [],
+        [mark],
     )
     const mapFormToMark = {
         Fischer_ref,
@@ -171,15 +175,13 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, ctgData: o
                         .then(r => {
 
                             r.score = getEmptyScore()
-                            v.current.resize()
+                            suit.current.then(s => s.resize())
                             setInitData(r)
-                            // v.current.drawAnalyse.analyse(mark, showBase, startTime, e, r)
 
 
                         }).finally(() => d.resize())
                 }
             }, 1000);
-            // v.current.drawAnalyse.analyse(mark, showBase, startTime, endTime, initData,)
 
 
         }
@@ -192,30 +194,18 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, ctgData: o
                 .off('suit:afterAnalyse', setFormData)
 
         }
-    }, [showBase, autoFm, autoAnalyse, setFormData, initData, fetchData, ctgData])
+    }, [showBase, autoAnalyse, setFormData, initData, fetchData, ctgData])
 
-    useEffect(() => {
-        if (initData) {
-            if (autoFm) {
-                const fmIndex = initData.analysis.fm || []
-                const fm = v.current.data.fm
-                fmIndex.forEach(_ => {
-                    fm[_] = 1
-                    fm[_ - 1] = 1
-                })
-            }
-            setTimeout(() => {
-                v.current.drawAnalyse.analyse(mark, showBase, startTime, endTime, initData,)
-            }, 0);
 
-        }
-    }, [initData, autoFm, hardAnalyse])
 
 
     function fetchData(e = endTime) {
         // if(docid==undefined){
         //     return;
         // }
+        if ((e - startTime) <= 10) {
+            return Promise.reject()
+        }
         setAnalyseLoading(true)
         return request.post(`/ctg-exams-analyse`, {
             data: { docid, mark, start: startTime, end: e, fetal, autoFm },
@@ -230,14 +220,25 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, ctgData: o
 
     const reAnalyse = async () => {
         const r = await fetchData()
-        const analysisData = v.current.drawAnalyse.analysisData
-        if (analysisData) {
-            r.analysis.acc = analysisData.analysis.acc
-            r.analysis.dec = analysisData.analysis.dec
-        }
-        r.score = getEmptyScore()
-        setInitData(r)
-        v.current.drawAnalyse.analyse(mark, showBase, startTime, endTime, r)
+        suit.current.then(s => {
+            const analysisData = s.drawAnalyse.analysisData
+            if (analysisData) {
+                r.analysis.acc = analysisData.analysis.acc
+                r.analysis.dec = analysisData.analysis.dec
+            }
+            r.score = getEmptyScore()
+            setInitData(r)
+            if (autoFm) {
+                const fmIndex = r.analysis.fm || []
+                const fm = s.data.fm
+                fmIndex.forEach(_ => {
+                    fm[_] = 1
+                    fm[_ - 1] = 1
+                })
+            }
+            s.drawAnalyse.analyse(mark, startTime, endTime, r)
+        })
+
     }
 
 
@@ -245,7 +246,7 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, ctgData: o
     function setFormData(r: obvue.ctg_exams_analyse) {
         if (!r) return;
         const { analysis, score } = r
-        console.log('form', analysis, score)
+        setInitData(r)
         const f = score[`${mark.toLowerCase()}data`]
         const cur: MutableRefObject<FormInstance> = mapFormToMark[`${mark}_ref`]
         cur.current && cur.current.setFieldsValue(f);
@@ -254,56 +255,30 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, ctgData: o
         const { stv, ucdata, acc, dec, fhrbaselineMinute, ...others } = analysis
         analysis_ref.current && analysis_ref.current.setFieldsValue({ stv, ...ucdata, ...others })
     }
-    // useEffect(() => {
 
-
-    //     if (!(initData || endTime === 0 || analyseLoading || tryCount) && autoAnalyse) {
-    //         fetchData()
-    //             .then(r => {
-    //                 r.score = getEmptyScore()
-    //                 v.current.resize()
-    //                 setInitData(r)
-    //             })
-    //             .finally(() => setTryCount(1))
-    //     }
-    // }, [ctgData, analyseLoading, autoAnalyse, initData, tryCount, v])
-
-
-
-    // useEffect(() => {
-
-    //     const id = (hasInitAnalysed.current) ? 0 : window.setInterval(() => {
-    //         if (initData && v.current && !hasInitAnalysed.current) {
-    //             console.log('xxx', '---');
-
-    //             clearInterval(id)
-    //             let r = v.current.drawAnalyse.analyse(mark, showBase, startTime, endTime, initData)
-    //             hasInitAnalysed.current = true
-    //             setFormData(r)
-    //             setFm(autoFm)
-    //         }
-    //     }, 1000)
-    //     return () => {
-    //         clearInterval(id)
-    //     }
-    // }, [initData, v.current, mark, startTime, setFormData, autoAnalyse, setFm, autoFm, showBase])
 
 
 
     useEffect(() => {
+
         const s = (time) => {
-            time = time + 4800 <= v.current.data.index ? time : ((v.current.data.index - 4800) > 0 ? (v.current.data.index - 4800) : 0)
-            docid && setStartTime(time)
+
+            suit.current.then(ins => {
+                time = time + 4800 <= ins.data.index ? time : ((ins.data.index - 4800) > 0 ? (ins.data.index - 4800) : 0)
+                docid && setStartTime(time)
+            })
         }
 
-
-        v.current && v.current.on('change:selectPoint', s).on('suit:analyseMark', hardAnalyse)
+        suit.current.then(ins => {
+            ins.on('change:selectPoint', s).on('suit:analyseMark', hardAnalyse)
+        })
         return () => {
-
-            v.current && v.current.off('change:selectPoint', s).off('suit:analyseMark', hardAnalyse)
+            suit.current.then(ins => {
+                ins.off('change:selectPoint', s).off('suit:analyseMark', hardAnalyse)
+            })
 
         };
-    }, [interval, v.current, docid, hardAnalyse])
+    }, [interval, docid, hardAnalyse])
 
     useEffect(() => {
         Object.values(mapFormToMark).forEach(f => f.current && f.current.resetFields())
@@ -337,37 +312,52 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, ctgData: o
 
 
     useEffect(() => {
-        v.current && hardAnalyse()
-        store.set(MARK_KEY, mark)
-
-        if (mark === 'Krebs') {
-            setInterval(30)
-        }
+        // v.current && hardAnalyse()
+        hardAnalyse()
+        // if (mark === 'Krebs') {
+        //     setInterval(30)
+        // }
     }, [mark])
 
     useEffect(() => {
-        store.set(INTERVAL_KEY, interval)
-
-    }, [interval])
+        reAnalyse()
+    }, [interval, fetal])
 
 
     return {
         setMark(m: AnalyseType) {
             setMark(m);
+            store.set(MARK_KEY, m)
 
         },
         mark,
         MARKS,
         reAnalyse,
-        startTime, endTime, setStartTime, interval, setInterval,
+        startTime, endTime, setStartTime, interval,
+        setInterval(i) {
+            store.set(INTERVAL_KEY, i)
+            setInterval(i)
+        },
         mapFormToMark,
         analysis_ref,
         old_ref,
         analyseLoading,
-        setAutoFm(s: boolean) {
-            setAutoFm(s)
+        setAutoFm(flag: boolean) {
+            setAutoFm(flag)
 
-            store.set(AUTOFM_KEY, s)
+            store.set(AUTOFM_KEY, flag)
+            suit.current.then(s => {
+                if (flag) {
+                    const fmIndex = initData.analysis.fm || []
+                    const fm = s.data.fm
+                    fmIndex.forEach(_ => {
+                        fm[_] = 1
+                        fm[_ - 1] = 1
+                    })
+                }
+                s.drawAnalyse.analyse(mark, startTime, endTime, initData,)
+
+            })
         },
         autoFm,
         initData,
@@ -379,8 +369,9 @@ export default (v: MutableRefObject<Suit>, docid: string, fetal: any, ctgData: o
         showBase,
         setShowBase(s: boolean) {
             setShowBase(s)
+            suit.current.then(ins => ins.drawAnalyse.showBase = s)
             store.set(SHOW_BASE, s)
-            hardAnalyse(s)
+            hardAnalyse()
         },
     }
 }

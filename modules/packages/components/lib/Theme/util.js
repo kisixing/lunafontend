@@ -53,7 +53,8 @@ function getThemeColor(color) {
         shadowColor: getShadowColor(color),
         lightColor: lightColor,
         darkColor: darkColor,
-        isDark: false
+        isDark: false,
+        isFucked: color === theme_1.FUCK_COLOR
     };
     if (color === theme_1.DARK_COLOR) {
         result.isDark = true;
@@ -102,8 +103,9 @@ function IEVersion() {
     }
 }
 var generateStyleHtml = function (colorObj) {
-    var activeColor = colorObj.activeColor, primaryColor = colorObj.primaryColor, hoverColor = colorObj.hoverColor, shadowColor = colorObj.shadowColor, lightColor = colorObj.lightColor, darkColor = colorObj.darkColor, isDark = colorObj.isDark;
+    var activeColor = colorObj.activeColor, primaryColor = colorObj.primaryColor, hoverColor = colorObj.hoverColor, shadowColor = colorObj.shadowColor, lightColor = colorObj.lightColor, darkColor = colorObj.darkColor, isDark = colorObj.isDark, isFucked = colorObj.isFucked;
     window['isDark'] = isDark;
+    window['isFucked'] = isFucked;
     if (!IEVersion()) {
         var cssVar = "\n      :root {\n        --theme-color: " + primaryColor + ";\n        --theme-hover-color: " + hoverColor + ";\n        --theme-active-color: " + activeColor + ";\n        --theme-shadow-color: " + shadowColor + ";\n        --theme-light-color: " + lightColor + ";\n        --theme-dark-color: " + darkColor + ";\n        --customed-base-color:" + (isDark ? '#2C2C2C' : primaryColor) + ";\n        --customed-base-font:" + (isDark ? primaryColor : '#fff') + ";\n        --customed-bg:" + (isDark ? '#3C3C3C' : '#eee') + ";\n        --customed-color:" + (isDark ? '#2C2C2C' : '#fff') + ";\n        --customed-font:" + (isDark ? '#ABABAB' : '#333') + ";\n        --customed-border:" + (isDark ? '#3C3C3C' : '#DBDBDB') + ";\n      }\n    ";
         return cssVar + "\n" + (isDark ? theme_1.configDark(theme_1.default) : theme_1.default);

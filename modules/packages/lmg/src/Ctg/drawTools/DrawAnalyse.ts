@@ -28,8 +28,10 @@ const resultMap = ['正常', '可疑', '异常', '时长不足']
 export class DrawAnalyse extends Draw {
     pointToInsert: { type: PointType, index: number }
     pointToEdit: AccPoint | DecPoint
+    baselinePointIndex = -1
     mapXtoY: { [x: string]: { y: number, index: number } } = {}
     mapBaselilneXtoY: { [x: string]: number } = {}
+    mapBaselilneXtoIndex: { [x: string]: number } = {}
     // private _analyseData: AnalyseData
     analysisData: obvue.ctg_exams_analyse
     suit: Suit
@@ -50,14 +52,14 @@ export class DrawAnalyse extends Draw {
         this._dec = r.analysis.dec.map(_ => _.index)
         this.analysisData = r
     }
-    drawBaseline(cur, show = true, color, yspan, xspan, max, basetop) {
-
+    drawBaseline(cur, color, yspan, xspan, max, basetop) {
+        console.log('base', cur)
         //清空分析画布
         let { context2D, width, height, analysisData: analyseData } = this;
         width = Math.floor(width)
         context2D && context2D.clearRect(0, 0, width, height)
 
-        if (!analyseData || !show) {
+        if (!analyseData || !this.showBase) {
             return
         }
         const { analysis: { fhrbaselineMinute: baseline, start, end } } = analyseData
@@ -71,6 +73,7 @@ export class DrawAnalyse extends Draw {
         context2D.lineWidth = 2;
         //if (leftViewposition <= analyseData.start && cur > analyseData.start) {
         //kisi 2020-03-05 基线是完整分析曲线每分钟一一对应
+        this.mapBaselilneXtoY = {}
         if (true) {
             let baselineoff = 0;
             let firstindex = Math.floor(leftViewposition / (xspan * 6));
@@ -87,6 +90,8 @@ export class DrawAnalyse extends Draw {
                     lastx = Math.floor((i - leftViewposition) / 2);
 
                     context2D.lineTo(lastx, (max - curfhroffset - baseline[baselineoff]) * yspan + basetop);
+
+                    this.mapBaselilneXtoIndex[lastx] = baselineoff
                     this.mapBaselilneXtoY[lastx] = (max - curfhroffset - baseline[baselineoff]) * yspan + basetop
                 }
             }
@@ -116,8 +121,13 @@ export class DrawAnalyse extends Draw {
     }
 
     showBase: boolean
-    analyse(type: AnalyseType, showBase = true, start?: number, end?: number, data = this.analysisData) {
-        console.log('form', type, showBase, start, end, data)
+    type: AnalyseType
+    analyse(type?: AnalyseType, start?: number, end?: number, data = this.analysisData) {
+        if (type) {
+            this.type = type
+        } else {
+            type = this.type
+        }
         if (!data) return
         const { suit } = this
         this.setData(data)
@@ -132,7 +142,7 @@ export class DrawAnalyse extends Draw {
         //this.drawobj.drawdot(this.canvasline.width * 2, false);
         //kisi 2020-03-05 
         let newData = this.ctgscore(type)
-        suit.drawobj.drawdot((suit.type > 0 && suit.viewposition < suit.width * 2) ? suit.width * 2 : suit.viewposition, false, showBase);
+        suit.drawobj.drawdot((suit.type > 0 && suit.viewposition < suit.width * 2) ? suit.width * 2 : suit.viewposition, false);
         event.emit('suit:afterAnalyse', newData)
         return newData
     }
@@ -801,8 +811,9 @@ export class DrawAnalyse extends Draw {
         return null
     }
     refresh() {
-        this.suit.emit('suit:analyseMark')
-        this.suit.drawobj.drawdot(this.suit.viewposition < this.width * 2 ? this.width * 2 : this.suit.viewposition);
+        // this.suit.emit('suit:analyseMark')
+        this.analyse()
+        // this.suit.drawobj.drawdot(this.suit.viewposition < this.width * 2 ? this.width * 2 : this.suit.viewposition);
     }
 
     markAccPoint() {
@@ -834,6 +845,16 @@ export class DrawAnalyse extends Draw {
             acc.splice(index, 1)
         }
         this.refresh()
+    }
+    editBaselinePoint(n = 0) {
+        if (!this.analysisData) return
+        const { analysis: { fhrbaselineMinute } } = this.analysisData
+
+        const index = this.baselinePointIndex
+        fhrbaselineMinute[index] = fhrbaselineMinute[index] + n
+
+        this.refresh()
+        this.baselinePointIndex = -1
     }
     markDecPoint(type: DecType) {
         if (!this.analysisData) return

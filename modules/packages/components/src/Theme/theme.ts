@@ -1,6 +1,6 @@
 import darkTheme from './dark'
 export const DARK_COLOR = "#1c1c1c"
-
+export const FUCK_COLOR = '#827717'
 export default `
   a {
     color: var(--theme-color);

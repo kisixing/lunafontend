@@ -1,6 +1,7 @@
 import { Suit } from './Suit';
 
-
+const old_lineWidth = 1 || 0.8
+const old_dash = [2, 2]
 function formatDate(date: any, format) {
   if (!date) return;
   if (!format) format = 'yyyy-MM-dd';
@@ -87,7 +88,7 @@ export default class DrawCTG {
         }
         this.suit.barTool.setBarLeft(Math.floor(this.suit.toolbarposition * width / oldwidth), false);
       } else {
-        this.drawdot(width * 2,false,true)
+        this.drawdot(width * 2, false, true)
       }
     } else {
       this.drawgrid(width * 2, false);
@@ -97,6 +98,8 @@ export default class DrawCTG {
     }
   }
   drawgrid(cur, drawtimespan = true) {
+    // fixed at right
+    cur = cur < this.suit.width * 2 ? this.suit.width * 2 : cur
     const { suit, sethorizontal, setvertical, gridcontext } = this;
     let cwidth = suit.canvasline.width;
     let cheight = suit.canvasline.height;
@@ -148,11 +151,12 @@ export default class DrawCTG {
     // }
     // linecontext.stroke();
   }
-  showBase = false
-  drawdot(cur, isemit = false, showBase = undefined) {
+  drawdot(cur, isemit = false) {
+    console.log('fuck cur', cur)
+
+    if (!this.suit.data) return
     const noOffset = this.suit.data['noOffset']
     this.fhroffset = noOffset ? 0 : this._fhroffset
-    typeof showBase !== 'undefined' && (this.showBase = showBase)
     cur = Math.round(cur)
 
     const { suit, linecontext, max } = this;
@@ -163,9 +167,9 @@ export default class DrawCTG {
       return;
     }
     this.drawgrid(cur);
-    if (suit.type == 0) {
+    if (suit.isTrueTime) {
       this.showcur(cur, isemit);
-    }else{
+    } else {
       this.showcur(0, isemit);
 
     }
@@ -175,6 +179,8 @@ export default class DrawCTG {
 
     // 0.5 s 一个点,一个像素画两个点
     var start = cur - suit.canvasline.width * 2 > 0 ? cur - suit.canvasline.width * 2 : 0;
+    //fixed at right
+    const fixedAtRight = start === 0 && suit.isTrueTime
     //Draw FHR multiply
     let alarmstate = 0;
     //kisi 2019-12-08 fetalcount 修改为 fetal_num
@@ -194,8 +200,11 @@ export default class DrawCTG {
       }
       for (let i = start; i < cur; i++) {
         if (i % 2 == 1) continue;
-        if (start == 0) {
+        // draw fixed at right
+        if (fixedAtRight) {
           lastx = Math.floor((suit.canvasline.width * 2 - cur + i) / 2);
+
+
         } else {
           lastx = Math.floor((i - start) / 2);
         }
@@ -289,7 +298,7 @@ export default class DrawCTG {
     linecontext.lineWidth = 1;
     for (var i = start; i < cur - 2; i++) {
       if (i % 2 == 1) continue;
-      if (start == 0) {
+      if (fixedAtRight) {
         lastx = Math.floor((suit.canvasline.width * 2 - cur + i) / 2);
       } else {
         lastx = Math.floor((i - start) / 2);
@@ -326,7 +335,7 @@ export default class DrawCTG {
       linecontext.lineWidth = 1;
       for (var i = start; i < cur - 2; i++) {
         if (i % 2 == 1) continue;
-        if (start == 0) {
+        if (fixedAtRight) {
           lastx = Math.floor((suit.canvasline.width * 2 - cur + i) / 2);
         } else {
           lastx = Math.floor((i - start) / 2);
@@ -358,7 +367,7 @@ export default class DrawCTG {
     //kisi 2019-10-10 fm 128 判断
     for (var i = start; i < cur; i++) {
       if (i % 2 == 1) continue;
-      if (start == 0) {
+      if (fixedAtRight) {
         lastx = Math.floor((suit.canvasline.width * 2 - cur + i) / 2);
       } else {
         lastx = Math.floor((i - start) / 2);
@@ -370,7 +379,7 @@ export default class DrawCTG {
     }
     //kisi 2019-10-29 baseline
     //TODO
-    drawAnalyse.drawBaseline(cur, this.showBase, 'black', this.yspan, this.xspan, max, this.basetop)
+    drawAnalyse.drawBaseline(cur, 'black', this.yspan, this.xspan, max, this.basetop)
 
   }
 
@@ -399,8 +408,12 @@ export default class DrawCTG {
       var ioff = i + offseti;
       gridcontext.beginPath();
       gridcontext.strokeStyle = this.suit.ctgconfig.secondarygrid;
-      gridcontext.lineWidth = 0.8;
+      gridcontext.setLineDash(old_dash);
+
+      gridcontext.lineWidth = old_lineWidth;
       if (ioff % 3 == primaryflag) {
+        gridcontext.setLineDash([]);
+
         gridcontext.strokeStyle = this.suit.ctgconfig.primarygrid;
       }
       if (startposition == 0) {
@@ -462,11 +475,14 @@ export default class DrawCTG {
       gridcontext.moveTo(xspan * i - offsetlpx + baseleft - offsetpx, 0 + this.basetop);
       gridcontext.lineTo(xspan * i - offsetlpx + baseleft - offsetpx, (max - min) * this.yspan + this.basetop);
       //console.log(length,offsetlpx,xspan * i - offsetlpx+ baseleft - offsetpx,offsetpx);
+
       gridcontext.stroke();
+      gridcontext.setLineDash([]);
       if (ioff % 6 == primaryscaleflag) {
         setrules(xspan * (i + 3) + baseleft - offsetlpx - offsetpx);
       }
     }
+
   };
   sethorizontalright = (length: number, startposition: number, drawtimespan = true) => {
     const { setrules, gridcontext, baseleft, min, max, xspan } = this;
@@ -489,8 +505,12 @@ export default class DrawCTG {
       var ioff = i + offseti;
       gridcontext.beginPath();
       gridcontext.strokeStyle = this.suit.ctgconfig.secondarygrid;
-      gridcontext.lineWidth = 0.8;
+      gridcontext.setLineDash(old_dash);
+
+      gridcontext.lineWidth = old_lineWidth;
       if (ioff % 3 == primaryflag) {
+        gridcontext.setLineDash([]);
+
         gridcontext.strokeStyle = this.suit.ctgconfig.primarygrid;
       }
       if (ioff % 6 == primaryscaleflag) {
@@ -530,36 +550,47 @@ export default class DrawCTG {
       gridcontext.lineTo(xspan * i + baseleft - 40 + lineoff + offsetpx, (max - min) * this.yspan + this.basetop);
       //console.log((max - min) * this.yspan);
       gridcontext.stroke();
+      gridcontext.setLineDash([]);
+
       if (ioff % 6 == primaryscaleflag) {
         setrules(xspan * (i + 3) + baseleft - offsetpx);
       }
     }
+
   };
   setvertical = (_maxline: number, startposition: number) => {
     const { gridcontext, baseleft, min, max } = this;
     for (var i = 0; i < (max - min) / 10 + 1; i++) {
       gridcontext.beginPath();
-      gridcontext.lineWidth = 0.8;
+      gridcontext.lineWidth = old_lineWidth;
       if (i % 3 == 0) {
         gridcontext.strokeStyle = this.suit.ctgconfig.primarygrid;
       } else {
         gridcontext.strokeStyle = this.suit.ctgconfig.secondarygrid; // 横轴浅线
+        gridcontext.setLineDash(old_dash);
       }
       gridcontext.moveTo(baseleft, this.yspan * i * 10 + this.basetop);
       gridcontext.lineTo(_maxline, this.yspan * i * 10 + this.basetop);
       gridcontext.stroke();
+      gridcontext.setLineDash([]);
+
     }
     for (var i = 0; i < 12; i++) {
       gridcontext.beginPath();
-      gridcontext.lineWidth = 0.8;
+      gridcontext.lineWidth = old_lineWidth;
       gridcontext.strokeStyle = this.suit.ctgconfig.primarygrid;
       if (i % 2 == 1) {
         gridcontext.strokeStyle = this.suit.ctgconfig.secondarygrid;
+        gridcontext.setLineDash(old_dash);
+
       }
       gridcontext.moveTo(baseleft, (max - min + i * 10) * this.yspan + this.scalespan + this.basetop);
       gridcontext.lineTo(_maxline, (max - min + i * 10) * this.yspan + this.scalespan + this.basetop);
       gridcontext.stroke();
+      gridcontext.setLineDash([]);
+
     }
+
   };
   setscalestyle(context, color) {
     context.font = 'bold 10px consolas';

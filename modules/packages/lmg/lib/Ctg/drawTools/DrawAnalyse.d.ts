@@ -9,6 +9,7 @@ export declare class DrawAnalyse extends Draw {
         index: number;
     };
     pointToEdit: AccPoint | DecPoint;
+    baselinePointIndex: number;
     mapXtoY: {
         [x: string]: {
             y: number;
@@ -18,6 +19,9 @@ export declare class DrawAnalyse extends Draw {
     mapBaselilneXtoY: {
         [x: string]: number;
     };
+    mapBaselilneXtoIndex: {
+        [x: string]: number;
+    };
     analysisData: obvue.ctg_exams_analyse;
     suit: Suit;
     constructor(wrap: HTMLElement, canvas: HTMLCanvasElement, suit: Suit);
@@ -25,56 +29,57 @@ export declare class DrawAnalyse extends Draw {
     _acc: number[];
     _dec: number[];
     setData(r: obvue.ctg_exams_analyse): void;
-    drawBaseline(cur: any, show: boolean, color: any, yspan: any, xspan: any, max: any, basetop: any): void;
+    drawBaseline(cur: any, color: any, yspan: any, xspan: any, max: any, basetop: any): void;
     showBase: boolean;
-    analyse(type: AnalyseType, showBase?: boolean, start?: number, end?: number, data?: {
+    type: AnalyseType;
+    analyse(type?: AnalyseType, start?: number, end?: number, data?: {
         analysis?: {
-            length: number;
-            bhr: number;
-            ltv: number;
-            stv: number;
-            edtimes: number;
-            ldtimes: number;
-            vdtimes: number;
-            acc: AccPoint[];
-            dec: DecPoint[];
-            fm: number[];
-            fhrbaselineMinute: number[];
-            ucdata: {
+            length?: number;
+            bhr?: number;
+            ltv?: number;
+            stv?: number;
+            edtimes?: number;
+            ldtimes?: number;
+            vdtimes?: number;
+            acc?: AccPoint[];
+            dec?: DecPoint[];
+            fm?: number[];
+            fhrbaselineMinute?: number[];
+            ucdata?: {
                 ucIndex: number[];
                 uctimes: number;
                 ucStrong: number;
                 uckeeptime: number;
                 ucdurationtime: number;
             };
-            start: number;
-            end: number;
-            isSinusoid: boolean;
+            start?: number;
+            end?: number;
+            isSinusoid?: boolean;
         };
         score?: import("@lianmed/f_types/lib/obvue/ctg_exams_analyse").ctg_exams_analyse_score;
     }): {
         analysis?: {
-            length: number;
-            bhr: number;
-            ltv: number;
-            stv: number;
-            edtimes: number;
-            ldtimes: number;
-            vdtimes: number;
-            acc: AccPoint[];
-            dec: DecPoint[];
-            fm: number[];
-            fhrbaselineMinute: number[];
-            ucdata: {
+            length?: number;
+            bhr?: number;
+            ltv?: number;
+            stv?: number;
+            edtimes?: number;
+            ldtimes?: number;
+            vdtimes?: number;
+            acc?: AccPoint[];
+            dec?: DecPoint[];
+            fm?: number[];
+            fhrbaselineMinute?: number[];
+            ucdata?: {
                 ucIndex: number[];
                 uctimes: number;
                 ucStrong: number;
                 uckeeptime: number;
                 ucdurationtime: number;
             };
-            start: number;
-            end: number;
-            isSinusoid: boolean;
+            start?: number;
+            end?: number;
+            isSinusoid?: boolean;
         };
         score?: import("@lianmed/f_types/lib/obvue/ctg_exams_analyse").ctg_exams_analyse_score;
     };
@@ -82,33 +87,33 @@ export declare class DrawAnalyse extends Draw {
     inRange: (value: number, min: number, max: number) => boolean;
     countAcc: (start: number, end: number) => number;
     countDec: (start: number, end: number, type: string) => number;
-    cycleAcc: () => 0 | 1;
+    cycleAcc: () => 1 | 0;
     countFm: (start: number, end: number) => number;
     fhrDuration: (start: number, end: number) => number;
     fhrAmpl: (start: number, end: number) => number;
     ctgscore: (type: AnalyseType) => {
         analysis?: {
-            length: number;
-            bhr: number;
-            ltv: number;
-            stv: number;
-            edtimes: number;
-            ldtimes: number;
-            vdtimes: number;
-            acc: AccPoint[];
-            dec: DecPoint[];
-            fm: number[];
-            fhrbaselineMinute: number[];
-            ucdata: {
+            length?: number;
+            bhr?: number;
+            ltv?: number;
+            stv?: number;
+            edtimes?: number;
+            ldtimes?: number;
+            vdtimes?: number;
+            acc?: AccPoint[];
+            dec?: DecPoint[];
+            fm?: number[];
+            fhrbaselineMinute?: number[];
+            ucdata?: {
                 ucIndex: number[];
                 uctimes: number;
                 ucStrong: number;
                 uckeeptime: number;
                 ucdurationtime: number;
             };
-            start: number;
-            end: number;
-            isSinusoid: boolean;
+            start?: number;
+            end?: number;
+            isSinusoid?: boolean;
         };
         score?: import("@lianmed/f_types/lib/obvue/ctg_exams_analyse").ctg_exams_analyse_score;
     };
@@ -116,6 +121,7 @@ export declare class DrawAnalyse extends Draw {
     refresh(): void;
     markAccPoint(): void;
     editAccPoint(marked?: boolean): void;
+    editBaselinePoint(n?: number): void;
     markDecPoint(type: DecType): void;
     editDecPoint(type: DecType): void;
 }

@@ -4,17 +4,17 @@ import { ResizeObserver } from "@lianmed/utils";
 import { Drawer } from "./interface";
 
 
-export default (data: any, box: any, onReady: () => Drawer, onResize?: () => void) => {
+export default (data: any, box: any, onReady: () => Drawer, resolveSs?: React.MutableRefObject<(v: any) => void>, resolveDd?: React.MutableRefObject<(v: any) => void>) => {
 
 
     const suit = useRef<Drawer>(null)
 
     useEffect(() => {
         let instance = suit.current = onReady()
+        resolveSs.current(instance)
         let resizeObserver = new ResizeObserver(() => {
-  console.log('suit render resize');
 
-            onResize && onResize()
+            // onResize && onResize()
             instance.resize()
             window.hasOwnProperty('ResizeObserver') || setTimeout(instance.resize.bind(instance), 300)
         });
@@ -29,8 +29,8 @@ export default (data: any, box: any, onReady: () => Drawer, onResize?: () => voi
 
     useEffect(() => {
         const current = suit.current
-        console.log('yyyyyyyyyyyyyyyyy init',current)
         current && current.init(data)
+        data && resolveDd.current(data)
     }, [data])
 
     return {}
