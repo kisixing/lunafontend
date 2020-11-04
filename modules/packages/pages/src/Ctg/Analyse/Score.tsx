@@ -1,4 +1,5 @@
 import { obvue } from "@lianmed/f_types";
+import { Button } from "antd";
 import React, { useMemo } from 'react';
 import Methods from './methods';
 
@@ -10,23 +11,42 @@ interface IProps {
   startTime: any
   mark, setMark: any
   interval, setInterval: any
-  mapFormToMark: any
   disabled: boolean
   initData: obvue.ctg_exams_analyse
+  fetchData: Function
+  reAnalyse: Function
+  loading: boolean
+  analyseLoading: boolean
+  showHistory: boolean,
+  fetal: any,
+  setFetal: any,
+  endTime: any,
+  mapFormToMark: any
 
-  [x: string]: any
 }
 
 const ScoringMethod = (props: IProps) => {
-  const { docid, ctgData, fetal, setFetal, disabled } = props;
-
-
   const {
+    docid,
+    ctgData,
+    fetal,
+    setFetal,
+    disabled,
+    loading,
+    analyseLoading,
+    fetchData,
+    reAnalyse,
+    showHistory,
     MARKS,
     startTime,
-    mark, setMark,
-    interval, setInterval, endTime
-  } = props
+    mark,
+    setMark,
+    interval,
+    setInterval, endTime
+  } = props;
+
+
+
 
   const onChange = e => {
     // const mark = e.target.value
@@ -73,7 +93,7 @@ const ScoringMethod = (props: IProps) => {
     return <span style={{ marginRight: 10 }}>开始时间：{(startTime / 240).toFixed(1)}分</span>
   }
   const EndTime = () => {
-    return <span>结束时间：{(endTime / 240).toFixed(1)}分</span>
+    return <span style={{ marginRight: 10 }}>结束时间：{(endTime / 240).toFixed(1)}分</span>
   }
   const R = useMemo(
     () => {
@@ -82,7 +102,7 @@ const ScoringMethod = (props: IProps) => {
           <span>方法：</span>
 
 
-          <select disabled={!docid} onChange={onChange} value={mark} style={{ marginBottom: 5, width: 90 }}>
+          <select disabled={!docid} onChange={onChange} value={mark} style={{ width: 90 }}>
             {
               MARKS.map(_ => (
                 <option value={_} key={_}>{_}</option>
@@ -96,9 +116,11 @@ const ScoringMethod = (props: IProps) => {
     [mark, docid],
   )
   return (
-    <div style={{ height: '100%',  borderRight: 0 }} className="bordered">
-      <div className="divider" style={{ padding: '8px 20px', margin: 0 }}>
-        <>
+    <div style={{ borderRight: 0 }} className="bordered">
+      <div className="divider" style={{ padding: '8px 20px', margin: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+          <StartTime />
+          <EndTime />
           {
             R
           }
@@ -108,12 +130,22 @@ const ScoringMethod = (props: IProps) => {
           {
             FetalSelect
           }
-          <StartTime />
-          <EndTime />
-
-        </>
+          {
+            showHistory && <span>
+              分析版本：
+              <select>
+                <option value="1">v1</option>
+                <option value="2">v2</option>
+              </select>
+            </span>
+          }
+        </div>
+        <div>
+          <Button size="small" type="primary" onClick={() => fetchData()} loading={loading} >刷新数据</Button>
+          <Button size="small" type="primary" onClick={reAnalyse as any} loading={analyseLoading} >重新分析</Button>
+        </div>
       </div>
-      <div style={{ padding: '10px 24px 0' }}>
+      <div style={{ padding: 0, border: 0 }}>
 
         {/* <Form form={form} labelAlign="left" {...formItemLayout} style={{ width: '100%' }}>
           {

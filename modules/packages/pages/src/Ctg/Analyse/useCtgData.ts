@@ -24,7 +24,7 @@ export const useCtgData = (docid?: string, single = false) => {
     function fetchData() {
         if (docid) {
             setLoading(true)
-            return request.get(`/ctg-exams-data/${docid}`).then(res => {
+            return request.get<any>(`/ctg-exams-data/${docid}`).then(res => {
                 if (!res) return
                 const d = { docid, keepSelection: false, ...res, ...(copyFhr(res, single)) }
                 if (single) {

@@ -84,6 +84,7 @@ export declare class Suit extends Draw {
     toolbarposition: number;
     get leftViewposition(): number;
     get rightViewPosition(): number;
+    getAnalyseEndTime(interval: number): number;
     set rightViewPosition(value: number);
     constructor(canvasgrid: Canvas, canvasdata: Canvas, canvasline: Canvas, canvasselect: Canvas, canvasanalyse: Canvas, wrap: HTMLElement, barTool: IBarTool, type: number, ctgconfig: TCtgConfig);
     onMov(): void;
@@ -128,7 +129,7 @@ export declare class Suit extends Draw {
     checkdragtimestamp(): boolean;
     onStatusChange(status: boolean): boolean | void;
     getoffline(): void;
-    initfhrdata(data: any, datacache: any, offindex: any): void;
+    initfhrdata(data: any, localData: any, offindex: any): void;
     isCheckBaelinePoint: boolean;
     getPointType(x: number, y: number): PointType;
     getBaseY(x: number): number;

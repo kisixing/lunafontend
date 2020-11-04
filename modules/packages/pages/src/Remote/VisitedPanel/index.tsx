@@ -61,7 +61,7 @@ export default (props: IProps) => {
                 if (!isAbs) {
                     url = request.configToLocation(absUrl, { prefix: `${remote_url}/api` })
                 }
-                return request.get('', { prefix: absUrl, hideErr: true, headers: { Origin: url, Accept: 'text/html' } }).then(raw => {
+                return request.get<string>('', { prefix: absUrl, hideErr: true, headers: { Origin: url, Accept: 'text/html' } }).then(raw => {
                     if (raw) {
                         let iconUrl = ''
                         const origin = new URL(absUrl).origin

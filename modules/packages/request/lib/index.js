@@ -23,6 +23,17 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -111,20 +122,55 @@ var R = (function (_super) {
             store_1.default.remove(utils_1.TOKEN_KEY);
             res();
         }); };
+        _this.configFromLocation = function (url) {
+            if (url === void 0) { url = location.href; }
+            var _ = new URL(url);
+            var key = _.searchParams.get(SEARCH_KEY);
+            var c;
+            if (key) {
+                var jsonStr = decrypt(key, SEARCH_KEY).toString(crypto_js_1.enc.Utf8);
+                c = JSON.parse(jsonStr);
+                _this.config(c);
+            }
+            return c;
+        };
+        _this.fetchPage = function (model, data, keyMap) {
+            if (keyMap === void 0) { keyMap = {}; }
+            var r = _this._request;
+            var current = data.current, pageSize = data.pageSize, otherParams = __rest(data, ["current", "pageSize"]);
+            var momentHandleKey = ['mtod_', 'mtot_'];
+            var momentHandleFn = [utils_1.formatDate, utils_1.formatTime];
+            var params = __assign(__assign({}, (Object.entries(otherParams).reduce(function (p, _a) {
+                var k = _a[0], v = _a[1];
+                var momentHandleIdx = 0;
+                var isMonent = v && v._isAMomentObject && ((momentHandleIdx = momentHandleKey.findIndex(function (_) { return k.startsWith(_); })) > -1);
+                k = isMonent ? k.slice(5) : k;
+                k = keyMap[k] || k;
+                v = (isMonent) ? momentHandleFn[momentHandleIdx](v) : v;
+                v = v === null ? undefined : v;
+                p["" + k] = v;
+                return p;
+            }, {}))), { page: (current - 1) || 0, size: pageSize });
+            return Promise.all([
+                r.get("/" + model + "page", {
+                    params: params,
+                }),
+                r.get("/" + model + "/count", {
+                    params: params,
+                }).catch(function () { return 20; })
+            ]).then(function (arr) {
+                return {
+                    data: arr[0],
+                    pagination: {
+                        total: arr[1],
+                        current: current,
+                        pageSize: pageSize
+                    }
+                };
+            });
+        };
         return _this;
     }
-    R.prototype.configFromLocation = function (url) {
-        if (url === void 0) { url = location.href; }
-        var _ = new URL(url);
-        var key = _.searchParams.get(SEARCH_KEY);
-        var c;
-        if (key) {
-            var jsonStr = decrypt(key, SEARCH_KEY).toString(crypto_js_1.enc.Utf8);
-            c = JSON.parse(jsonStr);
-            this.config(c);
-        }
-        return c;
-    };
     R.prototype.configToLocation = function (url, attachment) {
         if (url === void 0) { url = location.href; }
         if (attachment === void 0) { attachment = {}; }
@@ -137,10 +183,12 @@ var R = (function (_super) {
     return R;
 }(Request_1.default));
 var r = new R();
-var get = r.get, post = r.post, put = r.put, config = r.config;
+var get = r.get, post = r.post, put = r.put, config = r.config, fetchPage = r.fetchPage, del = r.delete;
 exports.get = get;
 exports.post = post;
 exports.put = put;
 exports.config = config;
+exports.fetchPage = fetchPage;
+exports.del = del;
 exports.default = r;
 //# sourceMappingURL=index.js.map

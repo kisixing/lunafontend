@@ -1,5 +1,5 @@
-import React, { forwardRef, memo } from 'react';
-import { Table, Form, InputNumber, Input } from 'antd';
+import React, { forwardRef, memo, useEffect } from 'react';
+import { Table, Form, InputNumber, Input, Checkbox } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import { AnalyseType } from '@lianmed/lmg/lib/interface';
 
@@ -62,7 +62,11 @@ const T = forwardRef<FormInstance, IProps>((props, ref) => {
         },
         false ? null : {
             width: deformed ? 300 : undefined,
-            title: '结果',
+            title: (
+                <Form.Item name={deformed ? 'result' : 'total'} label={deformed ? '结果' : '总分'} style={{ margin: '0 32px', display: 'flex', justifyContent: 'center' }}>
+                    <InputNumber disabled style={{ width: 120, marginRight: 24 }} />
+                </Form.Item>
+            ),
             dataIndex: 'result',
             render(a, { key, R }) {
                 return (
@@ -81,7 +85,7 @@ const T = forwardRef<FormInstance, IProps>((props, ref) => {
             render(a, { key, S }) {
                 return (
 
-                    <Form.Item name={`${key}score`} style={{ margin: -8 }}>
+                    <Form.Item name={`${key}score`} style={{ margin: -8, padding: '0 8px' }}>
                         {
                             S ? <S disabled={true} /> : <InputNumber disabled={true} style={{ width: 44 }} />
 
@@ -97,23 +101,32 @@ const T = forwardRef<FormInstance, IProps>((props, ref) => {
         .map(_ => ({ ..._, align: 'center' }))
 
     const [form] = Form.useForm()
-    return (
-        <Form ref={ref} form={form} size="small" style={{ display: hidden ? 'none' : 'block', position: 'relative' }} onValuesChange={(a, b) => {
-            // const vk = Object.entries(b)
-            // const k = Object.keys(a)[0]
-            // if (/score$/.test(k)) {
-            //     const total = vk
-            //         .filter(([k, v]) => /score$/.test(k))
-            //         .map(_ => _[1])
-            //         .reduce((a, b) => a + b, 0)
-            //     form.setFieldsValue({ total })
-            // }
-            const newData = strategies(mark, form.getFieldsValue(), initData)
-            newData && form.setFieldsValue(newData)
+    useEffect(() => {
+        console.log('sst', form)
 
-        }}>
-            <Form.Item name={deformed ? 'result' : 'total'} label={deformed ? '结果' : '总分'} style={{ position: 'absolute', top: -44, right: 260 }}>
+    }, [])
+    return (
+        <Form ref={ref} form={form} size="small" style={{ display: hidden ? 'none' : 'block', position: 'relative' }}
+            initialValues={{ deformed }}
+            onValuesChange={(a, b) => {
+                // const vk = Object.entries(b)
+                // const k = Object.keys(a)[0]
+                // if (/score$/.test(k)) {
+                //     const total = vk
+                //         .filter(([k, v]) => /score$/.test(k))
+                //         .map(_ => _[1])
+                //         .reduce((a, b) => a + b, 0)
+                //     form.setFieldsValue({ total })
+                // }
+                const newData = strategies(mark, form.getFieldsValue(), initData)
+                newData && form.setFieldsValue(newData)
+
+            }}>
+            {/* <Form.Item name={deformed ? 'result' : 'total'} label={deformed ? '结果' : '总分'} style={{ position: 'absolute', top: -44, right: 260 }}>
                 <InputNumber disabled style={{ width: 120 }} />
+            </Form.Item> */}
+            <Form.Item name={'deformed'} style={{ display: 'none', visibility: 'hidden' }} valuePropName="checked">
+                <Checkbox />
             </Form.Item>
             <Table bordered size="small" pagination={false} columns={columns} dataSource={dataSource} />
         </Form>

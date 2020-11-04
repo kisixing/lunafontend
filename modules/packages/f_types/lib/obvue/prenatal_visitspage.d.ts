@@ -10,13 +10,14 @@ export interface _prenatal_visitspage {
     diagnosisCode: null;
     gynecologicalExam: null;
     ctgLable: {
-        exception: null
-        id: 297
-        prenatalVisitId: 50472
-        remarks: number
-        result: number
-        status: number
-        userId: 3
+        exception: number;
+        favorites: number;
+        id: number;
+        prenatalVisitId: number;
+        remarks: number;
+        result: number;
+        status: number;
+        userId: number;
     }
     pregnancy: {
         id: number;

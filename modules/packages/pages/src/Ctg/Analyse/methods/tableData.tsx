@@ -5,7 +5,7 @@ let id = 0
 function Opts({ m, ...o }: { m: any[][] }) {
 
     return (
-        <Select style={{ width: 280 }} {...o}>
+        <Select style={{ width: 260 }} {...o}>
             {
                 m.map(([n, label]) => (
                     <Select.Option value={`00${n},${label}`} key={`00${n},${label},${++id}`}>{label}</Select.Option>
@@ -20,7 +20,7 @@ function getDeformedOptions(timeChecked = false) {
     return {
         S: (props) => {
             return (
-                <Select style={{ width: 120 }} {...props}>
+                <Select style={{ width: 100 }} {...props}>
                     <Select.Option value={0}>正常</Select.Option>
                     <Select.Option value={1}>可疑</Select.Option>
                     <Select.Option value={2}>异常</Select.Option>

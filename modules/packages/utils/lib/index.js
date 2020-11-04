@@ -19,8 +19,7 @@ __export(require("./fn"));
 __export(require("rxjs"));
 __export(require("./constant"));
 __export(require("./stomp"));
-var hooks_1 = require("./hooks");
-exports.Hooks = hooks_1.Hooks;
+__export(require("./hooks"));
 var resize_observer_polyfill_1 = require("resize-observer-polyfill");
 exports.ResizeObserver = resize_observer_polyfill_1.default;
 //# sourceMappingURL=index.js.map

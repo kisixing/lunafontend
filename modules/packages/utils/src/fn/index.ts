@@ -1,2 +1,2 @@
 
-export { formatDate, formatTime } from './moment'
+export { formatDate, formatTime, getMomentObj } from './moment'

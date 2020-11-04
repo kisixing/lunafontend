@@ -49,7 +49,8 @@ var T = react_1.forwardRef(function (props, ref) {
         },
         false ? null : {
             width: deformed ? 300 : undefined,
-            title: '结果',
+            title: (react_1.default.createElement(antd_1.Form.Item, { name: deformed ? 'result' : 'total', label: deformed ? '结果' : '总分', style: { margin: '0 32px', display: 'flex', justifyContent: 'center' } },
+                react_1.default.createElement(antd_1.InputNumber, { disabled: true, style: { width: 120, marginRight: 24 } }))),
             dataIndex: 'result',
             render: function (a, _a) {
                 var key = _a.key, R = _a.R;
@@ -61,19 +62,22 @@ var T = react_1.forwardRef(function (props, ref) {
             dataIndex: 'score',
             render: function (a, _a) {
                 var key = _a.key, S = _a.S;
-                return (react_1.default.createElement(antd_1.Form.Item, { name: key + "score", style: { margin: -8 } }, S ? react_1.default.createElement(S, { disabled: true }) : react_1.default.createElement(antd_1.InputNumber, { disabled: true, style: { width: 44 } })));
+                return (react_1.default.createElement(antd_1.Form.Item, { name: key + "score", style: { margin: -8, padding: '0 8px' } }, S ? react_1.default.createElement(S, { disabled: true }) : react_1.default.createElement(antd_1.InputNumber, { disabled: true, style: { width: 44 } })));
             }
         },
     ]
         .filter(function (_) { return !!_; })
         .map(function (_) { return (__assign(__assign({}, _), { align: 'center' })); });
     var form = antd_1.Form.useForm()[0];
-    return (react_1.default.createElement(antd_1.Form, { ref: ref, form: form, size: "small", style: { display: hidden ? 'none' : 'block', position: 'relative' }, onValuesChange: function (a, b) {
+    react_1.useEffect(function () {
+        console.log('sst', form);
+    }, []);
+    return (react_1.default.createElement(antd_1.Form, { ref: ref, form: form, size: "small", style: { display: hidden ? 'none' : 'block', position: 'relative' }, initialValues: { deformed: deformed }, onValuesChange: function (a, b) {
             var newData = strategies_1.default(mark, form.getFieldsValue(), initData);
             newData && form.setFieldsValue(newData);
         } },
-        react_1.default.createElement(antd_1.Form.Item, { name: deformed ? 'result' : 'total', label: deformed ? '结果' : '总分', style: { position: 'absolute', top: -44, right: 260 } },
-            react_1.default.createElement(antd_1.InputNumber, { disabled: true, style: { width: 120 } })),
+        react_1.default.createElement(antd_1.Form.Item, { name: 'deformed', style: { display: 'none', visibility: 'hidden' }, valuePropName: "checked" },
+            react_1.default.createElement(antd_1.Checkbox, null)),
         react_1.default.createElement(antd_1.Table, { bordered: true, size: "small", pagination: false, columns: columns, dataSource: dataSource })));
 });
 exports.default = react_1.memo(T);

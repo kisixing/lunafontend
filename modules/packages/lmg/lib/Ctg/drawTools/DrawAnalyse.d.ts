@@ -32,6 +32,7 @@ export declare class DrawAnalyse extends Draw {
     drawBaseline(cur: any, color: any, yspan: any, xspan: any, max: any, basetop: any): void;
     showBase: boolean;
     type: AnalyseType;
+    autoFm: boolean;
     analyse(type?: AnalyseType, start?: number, end?: number, data?: {
         analysis?: {
             length?: number;
@@ -54,7 +55,11 @@ export declare class DrawAnalyse extends Draw {
             };
             start?: number;
             end?: number;
-            isSinusoid?: boolean;
+            sinusoid?: boolean;
+            _fhr_uptime: number;
+            _acc_num: number;
+            _dec_num: number;
+            _baseline_avg: number;
         };
         score?: import("@lianmed/f_types/lib/obvue/ctg_exams_analyse").ctg_exams_analyse_score;
     }): {
@@ -79,7 +84,11 @@ export declare class DrawAnalyse extends Draw {
             };
             start?: number;
             end?: number;
-            isSinusoid?: boolean;
+            sinusoid?: boolean;
+            _fhr_uptime: number;
+            _acc_num: number;
+            _dec_num: number;
+            _baseline_avg: number;
         };
         score?: import("@lianmed/f_types/lib/obvue/ctg_exams_analyse").ctg_exams_analyse_score;
     };
@@ -113,7 +122,11 @@ export declare class DrawAnalyse extends Draw {
             };
             start?: number;
             end?: number;
-            isSinusoid?: boolean;
+            sinusoid?: boolean;
+            _fhr_uptime: number;
+            _acc_num: number;
+            _dec_num: number;
+            _baseline_avg: number;
         };
         score?: import("@lianmed/f_types/lib/obvue/ctg_exams_analyse").ctg_exams_analyse_score;
     };

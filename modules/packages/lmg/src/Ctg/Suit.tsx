@@ -152,6 +152,12 @@ export class Suit extends Draw {
   get rightViewPosition() {
     return this.viewposition;
   }
+  getAnalyseEndTime(interval: number) {
+    const len = this.data.fhr[0].length
+    const startTime = this.drawSelect.selectingBarPoint
+    const targetEndTime = startTime + interval * 240
+    return len ? (Math.min(targetEndTime, len) || 0) : 0
+  }
   set rightViewPosition(value: number) {
     this.viewposition = value;
 
@@ -173,6 +179,7 @@ export class Suit extends Draw {
     ctgconfig: TCtgConfig
   ) {
     super(wrap);
+    console.log('suit', this)
     bindEvents.call(this);
     this.wrap = wrap;
     this.canvasgrid = canvasgrid;
@@ -435,7 +442,6 @@ export class Suit extends Draw {
     const arr: number[] = this[key]
     arr.push(0)
     if (arr.length >= 2 * this.ctgconfig.alarm_delay) {
-      console.log(`hh${fetalIndex}`, arr.length)
       const text = `FHR${fetalIndex + 1}心率过高`
       this.itemAlarm(text)
       this.lazyEmit('alarmOn', text);
@@ -459,11 +465,9 @@ export class Suit extends Draw {
     if (this.data.isWorking) {
       // 荣总：胎心率最大的计算范围是29~241
       if (cv <= 241 && cv > this.ctgconfig.alarm_high) {
-        console.log('心率过高', cv);
         this.alarmHigh(fetalIndex);
         return true
       } else if (cv < this.ctgconfig.alarm_low && cv >= 29) {
-        console.log('心率过低', cv);
         this.alarmLow(fetalIndex);
         return true
       } else {
@@ -677,7 +681,7 @@ export class Suit extends Draw {
 
   }
 
-  initfhrdata(data, datacache, offindex) {
+  initfhrdata(data, localData, offindex) {
     Object.keys(data).forEach(key => {
       let oridata = data[key] as string;
       if (!oridata) {
@@ -687,19 +691,20 @@ export class Suit extends Draw {
         let hexBits = oridata.substring(0, 2);
         let data_to_push = parseInt(hexBits, 16);
         if (key === 'fhr1') {
-          datacache.fhr[0][i] = data_to_push;
+          localData.fhr[0][i] = data_to_push;
         } else if (key === 'fhr2') {
-          if (datacache.fhr[1]) datacache.fhr[1][i] = data_to_push;
+          if (localData.fhr[1]) localData.fhr[1][i] = data_to_push;
         } else if (key === 'fhr3') {
-          if (datacache.fhr[2]) datacache.fhr[2][i] = data_to_push;
+          if (localData.fhr[2]) localData.fhr[2][i] = data_to_push;
         } else if (key === 'toco') {
-          console.log('initfhrdata', data_to_push)
-          datacache.toco[i] = data_to_push;
+          localData.toco[i] = data_to_push;
         } else if (key === 'fm') {
-          datacache.fm[i] = data_to_push;
+          localData.fm[i] = data_to_push;
         }
+
         oridata = oridata.substring(2, oridata.length);
       }
+
     });
   }
   isCheckBaelinePoint = false

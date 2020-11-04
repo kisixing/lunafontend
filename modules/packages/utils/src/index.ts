@@ -5,6 +5,6 @@ export * from './fn'
 export * from 'rxjs'
 export * from './constant'
 export * from './stomp'
-export { Hooks } from "./hooks";
+export * from "./hooks";
 export { default as ResizeObserver } from 'resize-observer-polyfill';
 export { _R, qrcode }

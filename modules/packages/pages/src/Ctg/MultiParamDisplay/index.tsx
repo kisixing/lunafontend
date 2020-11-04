@@ -32,7 +32,7 @@ export const MultiParamDisplay = (props: IProps) => {
         var myChart1 = echarts.init(ref1.current);
         var myChart2 = echarts.init(ref2.current);
         var myChart3 = echarts.init(ref3.current);
-        get(`/ctg-exams-mother-data/${'1801_1_200524200942' && docid}`).then(r => {
+        get<any>(`/ctg-exams-mother-data/${'1801_1_200524200942' && docid}`).then(r => {
             let { normals, pressures } = r
             normals = normals || []
             pressures = pressures || []

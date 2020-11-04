@@ -10,8 +10,9 @@ import { tableData } from './methods/tableData';
 import store from "store";
 import { ctg_exams_analyse_score } from '@lianmed/f_types/lib/obvue/ctg_exams_analyse';
 import { event } from '@lianmed/utils';
-
-const MARKS = Object.keys(tableData) as AnalyseType[]
+import { historyItem } from "./data";
+import { queryHistory } from './service';
+export const MARKS = Object.keys(tableData) as AnalyseType[]
 const AUTOFM_KEY = 'autofm'
 const AUTOANALYSE_KEY = 'auto_analuse'
 const SHOW_BASE = 'show_base'
@@ -130,8 +131,13 @@ export default (suit: MutableRefObject<Promise<Suit>>, docid: string, fetal: any
     // const [endTime, setEndTime] = useState(0)
     const [analyseLoading, setAnalyseLoading] = useState(false)
     const [autoFm, setAutoFm] = useState<boolean>(store.get(AUTOFM_KEY) || false)
+    const [showBase, setShowBase] = useState<boolean>(store.get(SHOW_BASE))
     const [autoAnalyse, setAutoAnalyse] = useState<boolean>(store.get(AUTOANALYSE_KEY) || false)
-    const [showBase, setShowBase] = useState<boolean>(true)
+    const [currentHistory, setCurrentHistory] = useState<historyItem>({})
+    const [isEditBase, setIsEditBase] = useState(false)
+    const [historyList, setHistoryList] = useState<historyItem[]>([])
+    const [fakeHistoryLoading, setFakeHistoryLoading] = useState(false)
+
     const Fischer_ref = useRef<FormInstance>()
     const Krebs_ref = useRef<FormInstance>()
     const Nst_ref = useRef<FormInstance>()
@@ -140,19 +146,25 @@ export default (suit: MutableRefObject<Promise<Suit>>, docid: string, fetal: any
     const Sogc_ref = useRef<FormInstance>()
     const analysis_ref = useRef<FormInstance>()
     const old_ref = useRef<{ [x: string]: any }>({})
-    const hasInitAnalysed = useRef(false)
     let endTime = (ctgData && ctgData.fhr1) ? (startTime + interval * 240 > ctgData.fhr1.length / 2 ? ctgData.fhr1.length / 2 : startTime + interval * 240) : 0
     // const diff = Math.round((endTime - startTime) / 240)
+
+    function fetchHistoryList() {
+
+        queryHistory({ note: docid }).then(data => {
+            setHistoryList(data)
+        })
+    }
+
 
     const hardAnalyse = useCallback(
         function hardAnalyse() {
 
             suit.current.then(s => {
-                s.drawAnalyse.analyse(mark)
+                s.drawAnalyse.analyse()
             })
-
         },
-        [mark],
+        [],
     )
     const mapFormToMark = {
         Fischer_ref,
@@ -163,81 +175,50 @@ export default (suit: MutableRefObject<Promise<Suit>>, docid: string, fetal: any
         Sogc_ref,
         analysis_ref
     }
-    useEffect(() => {
-        function initCb(d) {
-            setTimeout(() => {
-                // d.resize()
-                if (!autoAnalyse) return
-                const index = d.data.index
-                let e = (index) ? (startTime + interval * 240 > index ? index : startTime + interval * 240) : 0
-                if (!initData) {
-                    fetchData(e)
-                        .then(r => {
-
-                            r.score = getEmptyScore()
-                            suit.current.then(s => s.resize())
-                            setInitData(r)
-
-
-                        }).finally(() => d.resize())
-                }
-            }, 1000);
-
-
-        }
-        event
-            .on('suit:afterInit', initCb)
-            .on('suit:afterAnalyse', setFormData)
-        return () => {
-            event
-                .off('suit:afterInit', initCb)
-                .off('suit:afterAnalyse', setFormData)
-
-        }
-    }, [showBase, autoAnalyse, setFormData, initData, fetchData, ctgData])
 
 
 
 
-    function fetchData(e = endTime) {
-        // if(docid==undefined){
-        //     return;
-        // }
-        if ((e - startTime) <= 10) {
-            return Promise.reject()
-        }
-        setAnalyseLoading(true)
-        return request.post(`/ctg-exams-analyse`, {
-            data: { docid, mark, start: startTime, end: e, fetal, autoFm },
+
+    function fetchData(e?: number) {
+        return suit.current.then(s => {
+            e = e ? e : s.getAnalyseEndTime(interval)
+            if ((e - startTime) <= 10) {
+                return Promise.reject()
+            }
+            setAnalyseLoading(true)
+            return request.post(`/ctg-exams-analyse`, {
+                data: { docid, mark, start: startTime, end: e, fetal, autoFm },
+            })
+                .then((r: obvue.ctg_exams_analyse) => {
+                    return r
+                })
+                .finally(() => {
+                    setAnalyseLoading(false)
+                })
         })
-            .then((r: obvue.ctg_exams_analyse) => {
-                return r
-            })
-            .finally(() => {
-                setAnalyseLoading(false)
-            })
     }
 
-    const reAnalyse = async () => {
-        const r = await fetchData()
-        suit.current.then(s => {
-            const analysisData = s.drawAnalyse.analysisData
-            if (analysisData) {
-                r.analysis.acc = analysisData.analysis.acc
-                r.analysis.dec = analysisData.analysis.dec
-            }
-            r.score = getEmptyScore()
-            setInitData(r)
-            if (autoFm) {
-                const fmIndex = r.analysis.fm || []
-                const fm = s.data.fm
-                fmIndex.forEach(_ => {
-                    fm[_] = 1
-                    fm[_ - 1] = 1
+    const reAnalyse = () => {
+        fetchData()
+            .then(r => {
+                suit.current.then(s => {
+                    const analysisData = s.drawAnalyse.analysisData
+                    if (analysisData) {
+                        r.analysis.acc = analysisData.analysis.acc
+                        r.analysis.dec = analysisData.analysis.dec
+                    }
+                    r.score = getEmptyScore()
+
+                    setInitData(r)
+                    setCurrentHistory(null)
+                    s.drawAnalyse.showBase = showBase
+                    s.drawAnalyse.autoFm = autoFm
+                    s.drawAnalyse.analyse(mark, startTime, s.getAnalyseEndTime(interval), r)
                 })
-            }
-            s.drawAnalyse.analyse(mark, startTime, endTime, r)
-        })
+            })
+            .catch(() => { })
+
 
     }
 
@@ -251,13 +232,26 @@ export default (suit: MutableRefObject<Promise<Suit>>, docid: string, fetal: any
         const cur: MutableRefObject<FormInstance> = mapFormToMark[`${mark}_ref`]
         cur.current && cur.current.setFieldsValue(f);
         old_ref.current[mark] = f
-
+        console.log('setFormData', analysis, score)
         const { stv, ucdata, acc, dec, fhrbaselineMinute, ...others } = analysis
         analysis_ref.current && analysis_ref.current.setFieldsValue({ stv, ...ucdata, ...others })
     }
 
 
+    useEffect(() => {
+        function initCb() {
+            autoAnalyse && reAnalyse()
+        }
+        event
+            .on('suit:afterInit', initCb)
+            .on('suit:afterAnalyse', setFormData)
+        return () => {
+            event
+                .off('suit:afterInit', initCb)
+                .off('suit:afterAnalyse', setFormData)
 
+        }
+    }, [autoAnalyse, initData, setFormData])
 
     useEffect(() => {
 
@@ -270,73 +264,47 @@ export default (suit: MutableRefObject<Promise<Suit>>, docid: string, fetal: any
         }
 
         suit.current.then(ins => {
-            ins.on('change:selectPoint', s).on('suit:analyseMark', hardAnalyse)
+            ins.on('change:selectPoint', s)
         })
         return () => {
             suit.current.then(ins => {
-                ins.off('change:selectPoint', s).off('suit:analyseMark', hardAnalyse)
+                ins.off('change:selectPoint', s)
             })
 
         };
-    }, [interval, docid, hardAnalyse])
+    }, [interval, docid])
 
     useEffect(() => {
-        Object.values(mapFormToMark).forEach(f => f.current && f.current.resetFields())
-        hasInitAnalysed.current = false
-        setInitData(null)
+        reset()
         setStartTime(0)
-    }, [docid])
-
-    useEffect(() => {
-        // setFhr(fetal)
+        fetchHistoryList()
+        autoAnalyse && reAnalyse()
+        console.log('docid', autoAnalyse)
+    }, [docid, autoAnalyse])
+    function reset() {
+        Object.values(mapFormToMark).forEach(f => f.current && f.current.resetFields())
         setInitData(null)
-        hasInitAnalysed.current = false
-    }, [fetal])
+    }
 
-
-    // useEffect(() => {
-    //     if (ctgData && ctgData.fhr1) {
-    //         const value = startTime + interval * 240 > ctgData.fhr1.length / 2 ? ctgData.fhr1.length / 2 : startTime + interval * 240
-    //         setEndTime(value)
-    //     }
-    // }, [startTime, interval, ctgData])
-
-    // useEffect(() => {
-    //     const diff = Math.round((endTime - startTime) / 240)
-    //     if (diff < limitMap[mark] && endTime !== 0) {
-    //         setIsToShort(true)
-    //     } else {
-    //         setIsToShort(false)
-    //     }
-    // }, [startTime, mark])
-
-
-    useEffect(() => {
-        // v.current && hardAnalyse()
-        hardAnalyse()
-        // if (mark === 'Krebs') {
-        //     setInterval(30)
-        // }
-    }, [mark])
-
-    useEffect(() => {
-        reAnalyse()
-    }, [interval, fetal])
 
 
     return {
         setMark(m: AnalyseType) {
             setMark(m);
             store.set(MARK_KEY, m)
+            suit.current.then(ins => {
+                ins.drawAnalyse.type = m
+                hardAnalyse()
+            })
 
         },
         mark,
-        MARKS,
         reAnalyse,
         startTime, endTime, setStartTime, interval,
         setInterval(i) {
             store.set(INTERVAL_KEY, i)
             setInterval(i)
+            reAnalyse()
         },
         mapFormToMark,
         analysis_ref,
@@ -347,14 +315,8 @@ export default (suit: MutableRefObject<Promise<Suit>>, docid: string, fetal: any
 
             store.set(AUTOFM_KEY, flag)
             suit.current.then(s => {
-                if (flag) {
-                    const fmIndex = initData.analysis.fm || []
-                    const fm = s.data.fm
-                    fmIndex.forEach(_ => {
-                        fm[_] = 1
-                        fm[_ - 1] = 1
-                    })
-                }
+
+                s.drawAnalyse.autoFm = flag
                 s.drawAnalyse.analyse(mark, startTime, endTime, initData,)
 
             })
@@ -373,6 +335,49 @@ export default (suit: MutableRefObject<Promise<Suit>>, docid: string, fetal: any
             store.set(SHOW_BASE, s)
             hardAnalyse()
         },
+        setFetalCb() {
+            reset()
+
+            if (autoAnalyse) {
+
+                reAnalyse()
+            }
+        },
+        fakeHistoryLoading,
+        setCurrentHistory(i: historyItem) {
+            setCurrentHistory(i)
+            setFakeHistoryLoading(true)
+            setTimeout(() => {
+                setFakeHistoryLoading(false)
+            }, 700);
+            const { diagnosis, analysis, result } = i
+            if (analysis) {
+                suit.current?.then(s => {
+                    // s.drawAnalyse.showBase = true
+                    // s.drawAnalyse.autoFm = true
+                    analysis_ref.current?.setFieldsValue(diagnosis)
+                    s.drawAnalyse.analyse(result?.type as any, result?.startTime, result?.endTime, analysis)
+                    // suit.isCheckBaelinePoint = true
+                })
+            }
+        },
+        historyList,
+        currentHistory,
+        isEditBase,
+        setIsEditBase(flag: boolean) {
+            suit.current.then(s => {
+                setIsEditBase(flag)
+                s.isCheckBaelinePoint = flag
+                if (flag && !showBase) {
+                    setShowBase(true)
+                    s.drawAnalyse.showBase = true
+                    store.set(SHOW_BASE, true)
+                    hardAnalyse()
+                }
+            })
+
+        },
+        fetchHistoryList
     }
 }
 

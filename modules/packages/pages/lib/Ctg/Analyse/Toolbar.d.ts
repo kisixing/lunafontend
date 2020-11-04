@@ -1,0 +1,35 @@
+import 'antd/dist/antd.css';
+import { FC } from 'react';
+import 'react-pdf/dist/Page/AnnotationLayer.css';
+import { useCtgData } from './useCtgData';
+export declare const ANALYSE_SUCCESS_TYPE = "(\u25CF'\u25E1'\u25CF)";
+export { useCtgData };
+export interface IToolbarProps {
+    type: any;
+    id: any;
+    note: any;
+    onDownload: any;
+    showHistory: any;
+    mapFormToMark: any;
+    startTime: any;
+    endTime: any;
+    mark: any;
+    analysis_ref: any;
+    old_ref: any;
+    autoFm: any;
+    setAutoFm: any;
+    autoAnalyse: any;
+    setAutoAnalyse: any;
+    showBase: any;
+    setShowBase: any;
+    initData: any;
+    currentHistory: any;
+    isEditBase: any;
+    setIsEditBase: any;
+    fetchHistoryList: any;
+    fetal: any;
+    setDisabled: any;
+    disabled: any;
+}
+export declare const Ctg_Analyse: FC<IToolbarProps>;
+export default Ctg_Analyse;

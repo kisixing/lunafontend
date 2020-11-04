@@ -7,5 +7,6 @@ import "antd/lib/Radio/style/index.css";
 declare const _default: React.MemoExoticComponent<React.ForwardRefExoticComponent<{
     isRemote?: boolean;
     disabled?: boolean;
+    showHistory: boolean;
 } & React.RefAttributes<FormInstance>>>;
 export default _default;

@@ -40,7 +40,7 @@ export function Sogc(_data: TData, analysis: _ctg_exams_analyse['analysis']) {
     //     } else {
     //         sogcdata.ltvscore = 2;
     //     }
-    // } else if (ltv >= 26 || analysis.isSinusoid) {
+    // } else if (ltv >= 26 || analysis.sinusoid) {
     //     sogcdata.ltvscore = 1;
     // } else {
     //     sogcdata.ltvscore = 0;
@@ -48,7 +48,7 @@ export function Sogc(_data: TData, analysis: _ctg_exams_analyse['analysis']) {
 
     //正弦判断
 
-    // if (analysis.isSinusoid) {
+    // if (analysis.sinusoid) {
     //     sogcdata.ltvscore = 0;
     // }
 

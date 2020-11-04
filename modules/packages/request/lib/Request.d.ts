@@ -1,6 +1,6 @@
 import { RequestMethod } from 'umi-request';
 import { Iconfig, RequestOptions } from './types';
-declare type RequestType = (url: string, options?: RequestOptions) => Promise<any>;
+declare type RequestType = <T>(url: string, options?: RequestOptions) => Promise<T>;
 export default class Request {
     _request: RequestMethod;
     constructor();

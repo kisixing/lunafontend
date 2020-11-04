@@ -11,7 +11,7 @@ interface BasePoint {
     remove?: boolean;
     user?: boolean;
     reliability?: number;
-    dataClean?:boolean;
+    dataClean?: boolean;
 }
 export interface AccPoint extends BasePoint {
 }
@@ -114,7 +114,7 @@ export interface ctg_exams_analyse_score {
 }
 export interface _ctg_exams_analyse {
     analysis: {
-        length?:number;
+        length?: number;
         bhr?: number;
         ltv?: number;
         stv?: number;
@@ -134,7 +134,11 @@ export interface _ctg_exams_analyse {
         };
         start?: number;
         end?: number;
-        isSinusoid?: boolean;
+        sinusoid?: boolean;
+        _fhr_uptime: number
+        _acc_num: number
+        _dec_num: number
+        _baseline_avg:number
     };
     score: ctg_exams_analyse_score
 }

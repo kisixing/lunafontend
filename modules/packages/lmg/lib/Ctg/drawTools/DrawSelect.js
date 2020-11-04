@@ -107,12 +107,15 @@ var DrawSelect = (function (_super) {
             return this.selectrpend;
         },
         set: function (value) {
+            var _this = this;
             this.selectrpend = value;
             var absLen = (value - this.suit.leftViewposition) / 2;
-            this.endingBar.setLeft(absLen, false);
             this.showselect();
             this.selectflag && this.suit.drawobj.showcur(value);
             this.suit.emit('endTime', value);
+            setTimeout(function () {
+                _this.endingBar.setLeft(absLen, false);
+            }, 10);
         },
         enumerable: true,
         configurable: true

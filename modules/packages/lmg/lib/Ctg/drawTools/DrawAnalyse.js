@@ -38,6 +38,7 @@ var DrawAnalyse = (function (_super) {
         _this.mapXtoY = {};
         _this.mapBaselilneXtoY = {};
         _this.mapBaselilneXtoIndex = {};
+        _this.autoFm = false;
         _this.drawflag = function (canvas, x, y, index) {
             _this.mapXtoY[x] = { y: y + _this.suit.drawobj.basetop, index: index };
             var _a = _this, context2D = _a.context2D, analyseData = _a.analysisData;
@@ -69,7 +70,6 @@ var DrawAnalyse = (function (_super) {
                 }
             }
             else if (_dec.indexOf(index) > -1 || _dec.indexOf(index - 1) > -1) {
-                console.log('drawflag', x, y);
                 var target = dec.find(function (_) { return [index, index - 1].includes(_.index); });
                 target.x = x;
                 target.y = y;
@@ -200,6 +200,14 @@ var DrawAnalyse = (function (_super) {
                 return null;
             analysisData = JSON.parse(JSON.stringify(analysisData));
             var analysis = analysisData.analysis, score = analysisData.score;
+            var fhrbaselineMinute = analysis.fhrbaselineMinute;
+            var fhr_uptime = analysis._fhr_uptime = _this.fhrDuration(analysis.start, analysis.end);
+            var acc_num = analysis._acc_num = _this.countAcc(analysis.start, analysis.end);
+            var vdtimes = analysis.vdtimes = _this.countDec(analysis.start, analysis.end, 'VD');
+            var ldtimes = analysis.ldtimes = _this.countDec(analysis.start, analysis.end, 'LD');
+            var edtimes = analysis.edtimes = _this.countDec(analysis.start, analysis.end, 'ED');
+            analysis._baseline_avg = ~~(fhrbaselineMinute.reduce(function (a, b) { return a + b; }, 0) / fhrbaselineMinute.length);
+            analysis._dec_num = ldtimes + vdtimes + edtimes;
             var bhr = analysis.bhr;
             if (type == 'Nst') {
                 score.nstdata.bhrvalue = bhr;
@@ -220,7 +228,6 @@ var DrawAnalyse = (function (_super) {
                 else if (_this.inRange(analysis.ltv, 10, 30)) {
                     score.nstdata.ltvscore = 2;
                 }
-                var fhr_uptime = _this.fhrDuration(analysis.start, analysis.end);
                 score.nstdata.accdurationvalue = fhr_uptime;
                 if (fhr_uptime < 10) {
                     score.nstdata.accdurationscore = 0;
@@ -254,9 +261,6 @@ var DrawAnalyse = (function (_super) {
                 else if (fmnum >= 3) {
                     score.nstdata.fmscore = 2;
                 }
-                analysis.ldtimes = _this.countDec(analysis.start, analysis.end, 'LD');
-                analysis.vdtimes = _this.countDec(analysis.start, analysis.end, 'VD');
-                analysis.edtimes = _this.countDec(analysis.start, analysis.end, 'ED');
                 score.nstdata.total = score.nstdata.accamplscore + score.nstdata.accdurationscore + score.nstdata.bhrscore + score.nstdata.fmscore + score.nstdata.ltvscore;
                 return _this.analysisData = analysisData;
             }
@@ -293,22 +297,17 @@ var DrawAnalyse = (function (_super) {
                 else if (zhouqi_tv > 6) {
                     score.krebsdata.stvscore = 2;
                 }
-                var accnum = _this.countAcc(analysis.start, analysis.end);
-                score.krebsdata.accvalue = accnum;
-                if (accnum == 0) {
+                score.krebsdata.accvalue = acc_num;
+                if (acc_num == 0) {
                     score.krebsdata.accscore = 0;
                 }
-                else if (_this.inRange(accnum, 1, 4)) {
+                else if (_this.inRange(acc_num, 1, 4)) {
                     score.krebsdata.accscore = 1;
                 }
-                else if (accnum > 4) {
+                else if (acc_num > 4) {
                     score.krebsdata.accscore = 2;
                 }
-                var ld = analysis.ldtimes = _this.countDec(analysis.start, analysis.end, 'LD');
-                var vd = analysis.vdtimes = _this.countDec(analysis.start, analysis.end, 'VD');
-                var ed = analysis.edtimes = _this.countDec(analysis.start, analysis.end, 'ED');
-                console.log(ld, vd, ed);
-                var sum = ld + vd;
+                var sum = ldtimes + vdtimes;
                 if (sum > 1) {
                     score.krebsdata.decscore = 0;
                     score.krebsdata.decvalue = sum + "";
@@ -319,7 +318,7 @@ var DrawAnalyse = (function (_super) {
                 }
                 else {
                     score.krebsdata.decscore = 2;
-                    if (ed > 0) {
+                    if (edtimes > 0) {
                         score.krebsdata.decvalue = "早减";
                     }
                     else {
@@ -372,30 +371,26 @@ var DrawAnalyse = (function (_super) {
                 else if (zhouqi_tv > 6) {
                     score.fischerdata.stvscore = 2;
                 }
-                var accnum = _this.countAcc(analysis.start, analysis.end);
-                score.fischerdata.accvalue = accnum;
-                if (accnum == 0) {
+                score.fischerdata.accvalue = acc_num;
+                if (acc_num == 0) {
                     score.fischerdata.accscore = 0;
                 }
-                else if (_this.inRange(accnum, 1, 4)) {
+                else if (_this.inRange(acc_num, 1, 4)) {
                     score.fischerdata.accscore = 1;
                 }
-                else if (accnum > 4) {
+                else if (acc_num > 4) {
                     score.fischerdata.accscore = 2;
                 }
-                var ld = analysis.ldtimes = _this.countDec(analysis.start, analysis.end, 'LD');
-                var vd = analysis.vdtimes = _this.countDec(analysis.start, analysis.end, 'VD');
-                var ed = analysis.edtimes = _this.countDec(analysis.start, analysis.end, 'ED');
-                if (ld > 0) {
+                if (ldtimes > 0) {
                     score.fischerdata.decscore = 0;
                     score.fischerdata.decvalue = 'LD';
                 }
-                else if (vd > 0) {
+                else if (vdtimes > 0) {
                     score.fischerdata.decscore = 1;
                     score.fischerdata.decvalue = 'VD';
                 }
                 else {
-                    if (ed > 0) {
+                    if (edtimes > 0) {
                         score.fischerdata.decvalue = 'ED';
                     }
                     else {
@@ -438,8 +433,7 @@ var DrawAnalyse = (function (_super) {
                 else if (zhouqi_tv > 6) {
                     score.cstdata.stvscore = 2;
                 }
-                var accnum = _this.countAcc(analysis.start, analysis.end);
-                if (accnum == 0) {
+                if (acc_num == 0) {
                     score.cstdata.accscore = 0;
                     score.cstdata.accvalue = '无';
                 }
@@ -451,18 +445,15 @@ var DrawAnalyse = (function (_super) {
                     score.cstdata.accscore = 2;
                     score.cstdata.accvalue = '散在性';
                 }
-                var ld = analysis.ldtimes = _this.countDec(analysis.start, analysis.end, 'LD');
-                var vd = analysis.vdtimes = _this.countDec(analysis.start, analysis.end, 'VD');
-                var ed = analysis.edtimes = _this.countDec(analysis.start, analysis.end, 'ED');
-                if (ld > 0) {
+                if (ldtimes > 0) {
                     score.cstdata.decscore = 0;
                     score.cstdata.decvalue = '晚期';
                 }
-                else if (ed > 0) {
+                else if (edtimes > 0) {
                     score.cstdata.decscore = 0;
                     score.cstdata.decvalue = '其他';
                 }
-                else if (vd > 0) {
+                else if (vdtimes > 0) {
                     score.cstdata.decscore = 1;
                     score.cstdata.decvalue = '变异减速';
                 }
@@ -494,15 +485,14 @@ var DrawAnalyse = (function (_super) {
                         score.sogcdata.ltvscore = 2;
                     }
                 }
-                else if (analysis.ltv >= 26 || analysis.isSinusoid) {
+                else if (analysis.ltv >= 26 || analysis.sinusoid) {
                     score.sogcdata.ltvscore = 2;
                 }
                 else {
                     score.sogcdata.ltvscore = 0;
                 }
-                var accnum = _this.countAcc(analysis.start, analysis.end);
-                score.sogcdata.accvalue = accnum;
-                if (accnum >= 2) {
+                score.sogcdata.accvalue = acc_num;
+                if (acc_num >= 2) {
                     score.sogcdata.accscore = 0;
                 }
                 else {
@@ -516,13 +506,11 @@ var DrawAnalyse = (function (_super) {
                         score.sogcdata.accscore = 3;
                     }
                 }
-                var vd = analysis.vdtimes = _this.countDec(analysis.start, analysis.end, 'VD');
-                var ed = analysis.edtimes = _this.countDec(analysis.start, analysis.end, 'ED');
-                if (ed > 0) {
+                if (edtimes > 0) {
                     score.sogcdata.decvalue = 'ed';
                     score.sogcdata.decscore = 2;
                 }
-                else if (vd > 0) {
+                else if (vdtimes > 0) {
                     var all_1 = analysis.dec.filter(function (_) { return _.type === 'vd' && _.start >= analysis.start && _.end <= analysis.end; });
                     var gt60 = all_1.find(function (_) { return _.duration > 60; });
                     var btw = all_1.find(function (_) { return _this.inRange(_.duration, 30, 60); });
@@ -577,9 +565,9 @@ var DrawAnalyse = (function (_super) {
                     score.cstoctdata.ltvscore = 1;
                 }
                 else if (_this.inRange(analysis.ltv, 6, 25)) {
-                    score.cstoctdata.ltvscore = 2;
+                    score.cstoctdata.ltvscore = 0;
                 }
-                if (analysis.isSinusoid) {
+                if (!analysis.sinusoid) {
                     score.cstoctdata.sinusoidscore = 0;
                     score.cstoctdata.sinusoidvalue = '无';
                 }
@@ -587,31 +575,27 @@ var DrawAnalyse = (function (_super) {
                     score.cstoctdata.sinusoidscore = 2;
                     score.cstoctdata.sinusoidvalue = '有';
                 }
-                var accnum = _this.countAcc(analysis.start, analysis.end);
-                if (accnum == 0) {
-                    score.cstoctdata.accscore = 0;
-                    score.cstoctdata.accvalue = '有';
-                }
-                else if (_this.inRange(accnum, 1, 2)) {
-                    score.cstoctdata.accvalue = '刺激胎儿后仍缺失';
-                    score.cstoctdata.accscore = 1;
-                }
-                else if (accnum > 2) {
+                if (acc_num == 0) {
                     score.cstoctdata.accvalue = '无';
                     score.cstoctdata.accscore = 2;
                 }
-                var ld = analysis.ldtimes = _this.countDec(analysis.start, analysis.end, 'LD');
-                var vd = analysis.vdtimes = _this.countDec(analysis.start, analysis.end, 'VD');
-                var ed = analysis.edtimes = _this.countDec(analysis.start, analysis.end, 'ED');
-                score.cstoctdata.ldvalue = ld || '无';
-                score.cstoctdata.vdvalue = vd || '无';
-                score.cstoctdata.edvalue = ed || '无';
-                if (ld > 0) {
+                else if (_this.inRange(acc_num, 1, 2)) {
+                    score.cstoctdata.accvalue = '刺激胎儿后仍缺失';
+                    score.cstoctdata.accscore = 1;
+                }
+                else if (acc_num > 2) {
+                    score.cstoctdata.accscore = 0;
+                    score.cstoctdata.accvalue = '有';
+                }
+                score.cstoctdata.ldvalue = ldtimes || '无';
+                score.cstoctdata.vdvalue = vdtimes || '无';
+                score.cstoctdata.edvalue = edtimes || '无';
+                if (ldtimes > 0) {
                     score.cstoctdata.decscore = 0;
                     score.cstoctdata.decvalue = 'LD';
                     score.cstoctdata.ldscore = 1;
                 }
-                else if (vd > 0) {
+                else if (vdtimes > 0) {
                     score.cstoctdata.decscore = 1;
                     score.cstoctdata.decvalue = 'VD';
                     score.cstoctdata.vdscore = 1;
@@ -631,7 +615,7 @@ var DrawAnalyse = (function (_super) {
                     });
                 }
                 else {
-                    if (ed > 0) {
+                    if (edtimes > 0) {
                         score.cstoctdata.decvalue = 'ED';
                         score.cstoctdata.edscore = 1;
                     }
@@ -654,7 +638,6 @@ var DrawAnalyse = (function (_super) {
                 }
                 score.cstoctdata.result = resultMap[score.cstoctdata.total];
             }
-            console.log('xxx', analysisData);
             return (_this.analysisData = analysisData);
         };
         _this.suit = suit;
@@ -664,15 +647,22 @@ var DrawAnalyse = (function (_super) {
         this.analysisData = null;
     };
     DrawAnalyse.prototype.setData = function (r) {
-        console.log('setData', r);
+        if (!r.analysis || !this.suit.data)
+            return;
+        var fmIndex = r.analysis.fm || [];
+        var fm = this.suit.data.fm;
+        var autoFmValue = this.autoFm ? 1 : 0;
         r.analysis.acc = r.analysis.acc && r.analysis.acc.map(function (_) { return (__assign(__assign({}, _), { duration: _.dataClean ? _.duration : _.duration / 4, dataClean: true })); });
         r.analysis.dec = r.analysis.dec && r.analysis.dec.map(function (_) { return (__assign(__assign({}, _), { duration: _.dataClean ? _.duration : _.duration / 4, dataClean: true })); }).filter(function (_) { return _.reliability >= 90 || _.user; });
         this._acc = r.analysis.acc.map(function (_) { return _.index; });
         this._dec = r.analysis.dec.map(function (_) { return _.index; });
         this.analysisData = r;
+        fmIndex.forEach(function (_) {
+            fm[_] = autoFmValue;
+            fm[_ - 1] = autoFmValue;
+        });
     };
     DrawAnalyse.prototype.drawBaseline = function (cur, color, yspan, xspan, max, basetop) {
-        console.log('base', cur);
         var _a = this, context2D = _a.context2D, width = _a.width, height = _a.height, analyseData = _a.analysisData;
         width = Math.floor(width);
         context2D && context2D.clearRect(0, 0, width, height);
@@ -740,6 +730,7 @@ var DrawAnalyse = (function (_super) {
             start = this.analysisData.analysis.start;
             end = this.analysisData.analysis.end;
         }
+        console.log('analyse', type, start, end, data);
         suit.drawSelect.$selectrpend = data.analysis.end = end;
         suit.drawSelect.$selectrpstart = data.analysis.start = start;
         var newData = this.ctgscore(type);
@@ -828,7 +819,6 @@ var DrawAnalyse = (function (_super) {
         var target = this.pointToEdit;
         var user = target.user;
         target.type = type;
-        console.log('markDecPoint', type);
         if (type == "ld" || type == "vd" || type == "ed") {
             target.remove = false;
         }

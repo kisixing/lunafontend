@@ -3,7 +3,7 @@ import { Iconfig, RequestOptions } from './types';
 import getErrData from './getErrData';
 import Request from './Request';
 import store from "store";
-import { TOKEN_KEY } from "@lianmed/utils";
+import { formatDate, formatTime, TOKEN_KEY } from "@lianmed/utils";
 import reasons from './reasons'
 import C from "crypto-js/aes";
 import { enc } from "crypto-js";
@@ -93,7 +93,7 @@ class R extends Request {
     res()
 
   })
-  configFromLocation(url = location.href) {
+  configFromLocation = (url = location.href) => {
     const _ = new URL(url)
     const key = _.searchParams.get(SEARCH_KEY)
     let c
@@ -111,10 +111,49 @@ class R extends Request {
     _.searchParams.append(SEARCH_KEY, enc)
     return _.href
   }
+  fetchPage = <T extends {}>(model: string, data: { current?: number; pageSize?: number;[x: string]: any; }, keyMap: Record<string, string> = {}) => {
+    const r = this._request
+    const { current, pageSize, ...otherParams } = data
+    // moment object to date/time
+    const momentHandleKey = ['mtod_', 'mtot_']
+    const momentHandleFn = [formatDate, formatTime]
+    const params = {
+      ...(Object.entries(otherParams).reduce((p, [k, v]) => {
+        let momentHandleIdx = 0
+        const isMonent = v && v._isAMomentObject && ((momentHandleIdx = momentHandleKey.findIndex(_ => k.startsWith(_))) > -1)
+        k = isMonent ? k.slice(5) : k
+        k = keyMap[k] || k
+        v = (isMonent) ? momentHandleFn[momentHandleIdx](v) : v
+        v = v === null ? undefined : v
+        p[`${k}`] = v
+        return p
+      }, {})),
+      page: (current - 1) || 0,
+      size: pageSize
+    }
+
+    return Promise.all([
+      r.get<T[]>(`/${model}page`, {
+        params,
+      }),
+      r.get<number>(`/${model}/count`, {
+        params,
+      }).catch(() => 20)
+    ]).then(arr => {
+      return {
+        data: arr[0],
+        pagination: {
+          total: arr[1],
+          current,
+          pageSize
+        }
+      }
+    })
+  }
 
 }
 
 const r = new R();
-const { get, post, put, config } = r;
-export { get, post, put, config };
+const { get, post, put, config, fetchPage, delete: del } = r;
+export { get, post, put, del, config, fetchPage };
 export default r;

@@ -19,7 +19,7 @@ export default (bizSn: string, setBizSn: React.Dispatch<React.SetStateAction<str
     const save = useCallback(
         () => {
             setSaveLoading(true)
-            request.post('/rep/save', { data: { bizSn } }).then(r => {
+            request.post<any>('/rep/save', { data: { bizSn } }).then(r => {
                 r.sn && setBizSn(r.sn)
                 event.emit('signed')
                 setSaved(true)
@@ -28,7 +28,7 @@ export default (bizSn: string, setBizSn: React.Dispatch<React.SetStateAction<str
         [bizSn],
     )
     useEffect(() => {
-        request.get('/ca/isEnable').then(r => {
+        request.get<any>('/ca/isEnable').then(r => {
             console.log('ca enable', r)
             setCaEnable(r)
         })

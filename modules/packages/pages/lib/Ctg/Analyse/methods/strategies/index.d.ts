@@ -20,7 +20,11 @@ declare const _default: (key: string, oldData: any, initData: {
         };
         start?: number;
         end?: number;
-        isSinusoid?: boolean;
+        sinusoid?: boolean;
+        _fhr_uptime: number;
+        _acc_num: number;
+        _dec_num: number;
+        _baseline_avg: number;
     };
     score?: import("@lianmed/f_types/lib/obvue/ctg_exams_analyse").ctg_exams_analyse_score;
 }) => any;

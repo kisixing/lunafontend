@@ -349,7 +349,6 @@ var DrawCTG = (function () {
     DrawCTG.prototype.resize = function () {
         var _a = this.suit, width = _a.width, height = _a.height;
         var oldwidth = JSON.parse(JSON.stringify(this.suit.canvasline.width));
-        console.log('resize', oldwidth);
         this.suit.canvasline.width = width;
         this.suit.canvasline.height = height;
         this.suit.canvasgrid.width = width;
@@ -357,7 +356,6 @@ var DrawCTG = (function () {
         this.suit.canvasdata.width = width;
         this.suit.canvasdata.height = height;
         this.yspan = (height - this.scalespan - this.basetop) / (this.max + 100 - this.min);
-        console.log('resize', this.suit.data, this.suit.rightViewPosition, this.suit.toolbarposition, oldwidth, width);
         if (typeof (this.suit.data) != 'undefined') {
             if (this.suit.data.index > width * 2) {
                 this.suit.rightViewPosition = Math.floor(2 * width);
@@ -371,7 +369,7 @@ var DrawCTG = (function () {
                 this.suit.barTool.setBarLeft(Math.floor(this.suit.toolbarposition * width / oldwidth), false);
             }
             else {
-                this.drawdot(width * 2, false, true);
+                this.drawdot(width * 2, false);
             }
         }
         else {
@@ -397,7 +395,6 @@ var DrawCTG = (function () {
     };
     DrawCTG.prototype.drawdot = function (cur, isemit) {
         if (isemit === void 0) { isemit = false; }
-        console.log('fuck cur', cur);
         if (!this.suit.data)
             return;
         var noOffset = this.suit.data['noOffset'];

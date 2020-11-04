@@ -100,6 +100,7 @@ var Suit = (function (_super) {
         _this.alarmHighCount = [];
         _this.alarmLowCount = [];
         _this.isCheckBaelinePoint = false;
+        console.log('suit', _this);
         bindEvents_1.default.call(_this);
         _this.wrap = wrap;
         _this.canvasgrid = canvasgrid;
@@ -174,6 +175,12 @@ var Suit = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Suit.prototype.getAnalyseEndTime = function (interval) {
+        var len = this.data.fhr[0].length;
+        var startTime = this.drawSelect.selectingBarPoint;
+        var targetEndTime = startTime + interval * 240;
+        return len ? (Math.min(targetEndTime, len) || 0) : 0;
+    };
     Suit.prototype.onMov = function () {
         this.getoffline();
     };
@@ -341,7 +348,6 @@ var Suit = (function (_super) {
         var arr = this[key];
         arr.push(0);
         if (arr.length >= 2 * this.ctgconfig.alarm_delay) {
-            console.log("hh" + fetalIndex, arr.length);
             var text = "FHR" + (fetalIndex + 1) + "\u5FC3\u7387\u8FC7\u9AD8";
             this.itemAlarm(text);
             this.lazyEmit('alarmOn', text);
@@ -365,12 +371,10 @@ var Suit = (function (_super) {
     Suit.prototype.checkAlarm = function (fetalIndex, cv) {
         if (this.data.isWorking) {
             if (cv <= 241 && cv > this.ctgconfig.alarm_high) {
-                console.log('心率过高', cv);
                 this.alarmHigh(fetalIndex);
                 return true;
             }
             else if (cv < this.ctgconfig.alarm_low && cv >= 29) {
-                console.log('心率过低', cv);
                 this.alarmLow(fetalIndex);
                 return true;
             }
@@ -552,7 +556,7 @@ var Suit = (function (_super) {
         }
         utils_1.event.emit('suit:keepData');
     };
-    Suit.prototype.initfhrdata = function (data, datacache, offindex) {
+    Suit.prototype.initfhrdata = function (data, localData, offindex) {
         Object.keys(data).forEach(function (key) {
             var oridata = data[key];
             if (!oridata) {
@@ -562,22 +566,21 @@ var Suit = (function (_super) {
                 var hexBits = oridata.substring(0, 2);
                 var data_to_push = parseInt(hexBits, 16);
                 if (key === 'fhr1') {
-                    datacache.fhr[0][i] = data_to_push;
+                    localData.fhr[0][i] = data_to_push;
                 }
                 else if (key === 'fhr2') {
-                    if (datacache.fhr[1])
-                        datacache.fhr[1][i] = data_to_push;
+                    if (localData.fhr[1])
+                        localData.fhr[1][i] = data_to_push;
                 }
                 else if (key === 'fhr3') {
-                    if (datacache.fhr[2])
-                        datacache.fhr[2][i] = data_to_push;
+                    if (localData.fhr[2])
+                        localData.fhr[2][i] = data_to_push;
                 }
                 else if (key === 'toco') {
-                    console.log('initfhrdata', data_to_push);
-                    datacache.toco[i] = data_to_push;
+                    localData.toco[i] = data_to_push;
                 }
                 else if (key === 'fm') {
-                    datacache.fm[i] = data_to_push;
+                    localData.fm[i] = data_to_push;
                 }
                 oridata = oridata.substring(2, oridata.length);
             }

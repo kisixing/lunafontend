@@ -30,7 +30,7 @@ var antd_1 = require("antd");
 var id = 0;
 function Opts(_a) {
     var m = _a.m, o = __rest(_a, ["m"]);
-    return (react_1.default.createElement(antd_1.Select, __assign({ style: { width: 280 } }, o), m.map(function (_a) {
+    return (react_1.default.createElement(antd_1.Select, __assign({ style: { width: 260 } }, o), m.map(function (_a) {
         var n = _a[0], label = _a[1];
         return (react_1.default.createElement(antd_1.Select.Option, { value: "00" + n + "," + label, key: "00" + n + "," + label + "," + ++id }, label));
     })));
@@ -39,7 +39,7 @@ function getDeformedOptions(timeChecked) {
     if (timeChecked === void 0) { timeChecked = false; }
     return {
         S: function (props) {
-            return (react_1.default.createElement(antd_1.Select, __assign({ style: { width: 120 } }, props),
+            return (react_1.default.createElement(antd_1.Select, __assign({ style: { width: 100 } }, props),
                 react_1.default.createElement(antd_1.Select.Option, { value: 0 }, "\u6B63\u5E38"),
                 react_1.default.createElement(antd_1.Select.Option, { value: 1 }, "\u53EF\u7591"),
                 react_1.default.createElement(antd_1.Select.Option, { value: 2 }, "\u5F02\u5E38"),

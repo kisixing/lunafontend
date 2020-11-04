@@ -8,8 +8,7 @@ const notification = require('antd/lib/notification').default
 const message = require('antd/lib/message').default
 import store from 'store'
 
-type RequestType = (url: string, options?: RequestOptions) => Promise<any>;
-
+type RequestType = <T>(url: string, options?: RequestOptions) => Promise<T>;
 const intervalSet: Set<string> = new Set();
 export default class Request {
   public _request: RequestMethod = null;

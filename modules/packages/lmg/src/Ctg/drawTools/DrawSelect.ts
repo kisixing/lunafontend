@@ -27,10 +27,12 @@ export class DrawSelect extends Draw {
     set $selectrpend(value: number) {
         this.selectrpend = value;
         const absLen = (value - this.suit.leftViewposition) / 2;
-        this.endingBar.setLeft(absLen, false);
         this.showselect();
         this.selectflag && this.suit.drawobj.showcur(value);
         this.suit.emit('endTime', value);
+        setTimeout(() => {
+            this.endingBar.setLeft(absLen, false);
+        }, 10);
     }
     get $selectrpstart() {
         return this.selectrpstart;

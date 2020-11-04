@@ -49,6 +49,7 @@ var styled_components_1 = __importDefault(require("styled-components"));
 var MultiParam_1 = require("./MultiParam");
 var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  width:100%;\n  height:100%;\n  display:flex;\n  .btns{\n    display:none\n  }\n  :hover .btns{\n    display:block\n  }\n  .bar {\n    opacity:0;\n    transition:opacity 0.5s;\n  }\n  :hover .bar{\n    opacity:1\n  }\n  .box {\n    flex:1\n  }\n"], ["\n  width:100%;\n  height:100%;\n  display:flex;\n  .btns{\n    display:none\n  }\n  :hover .btns{\n    display:block\n  }\n  .bar {\n    opacity:0;\n    transition:opacity 0.5s;\n  }\n  :hover .bar{\n    opacity:1\n  }\n  .box {\n    flex:1\n  }\n"])));
 exports.default = react_1.memo(react_1.forwardRef(function (props, ref) {
+    console.log('ctg component render');
     var data = props.data, _a = props.mutableSuitObject, mutableSuitObject = _a === void 0 ? { suit: null } : _a, _b = props.suitType, suitType = _b === void 0 ? 0 : _b, _c = props.loading, loading = _c === void 0 ? false : _c, _d = props.onReady, onReady = _d === void 0 ? function (s) { } : _d, audios = props.audios, isFullscreen = props.isFullscreen, style = props.style, others = __rest(props, ["data", "mutableSuitObject", "suitType", "loading", "onReady", "audios", "isFullscreen", "style"]);
     var ismulti = false || (data && data.ismulti);
     var isV3 = false || (data && (data.deviceType === 'V3'));

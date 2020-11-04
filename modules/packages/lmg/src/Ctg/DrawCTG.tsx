@@ -66,7 +66,6 @@ export default class DrawCTG {
   resize() {
     const { width, height } = this.suit;
     const oldwidth = JSON.parse(JSON.stringify(this.suit.canvasline.width));
-    console.log('resize', oldwidth);
     this.suit.canvasline.width = width;
     this.suit.canvasline.height = height;
 
@@ -76,7 +75,6 @@ export default class DrawCTG {
     this.suit.canvasdata.height = height;
 
     this.yspan = (height - this.scalespan - this.basetop) / (this.max + 100 - this.min);
-    console.log('resize', this.suit.data, this.suit.rightViewPosition, this.suit.toolbarposition, oldwidth, width);
     if (typeof (this.suit.data) != 'undefined') {
       if (this.suit.data.index > width * 2) {
         this.suit.rightViewPosition = Math.floor(2 * width);
@@ -88,7 +86,7 @@ export default class DrawCTG {
         }
         this.suit.barTool.setBarLeft(Math.floor(this.suit.toolbarposition * width / oldwidth), false);
       } else {
-        this.drawdot(width * 2, false, true)
+        this.drawdot(width * 2, false)
       }
     } else {
       this.drawgrid(width * 2, false);
@@ -152,7 +150,6 @@ export default class DrawCTG {
     // linecontext.stroke();
   }
   drawdot(cur, isemit = false) {
-    console.log('fuck cur', cur)
 
     if (!this.suit.data) return
     const noOffset = this.suit.data['noOffset']

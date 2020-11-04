@@ -30,7 +30,7 @@ export default (bizSn: string, setPdfBase64: any, setBizSn: React.Dispatch<React
 
     const fetchQrCode = () => {
         setQrCodeBase64Loading(true)
-        request.post('/ca/signreq', { data: { action: "sign", docid: bizSn, msg: empId } })
+        request.post<any>('/ca/signreq', { data: { action: "sign", docid: bizSn, msg: empId } })
             .then(r => {
                 if (r && r.sn) {
                     setBizSn(r.sn)

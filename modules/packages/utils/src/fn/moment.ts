@@ -18,3 +18,7 @@ export function formatTime(s = null) {
     }
     return moment(d).format('YYYY-MM-DD HH:mm:ss')
 }
+export function getMomentObj(s: moment.MomentInput) {
+    return s && moment(s)
+}
+

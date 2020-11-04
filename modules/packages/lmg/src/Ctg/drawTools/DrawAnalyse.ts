@@ -45,15 +45,21 @@ export class DrawAnalyse extends Draw {
     _acc: number[]
     _dec: number[]
     setData(r: obvue.ctg_exams_analyse,) {
-        console.log('setData', r)
+        if (!r.analysis || !this.suit.data) return
+        const fmIndex = r.analysis.fm || []
+        const fm = this.suit.data.fm
+        const autoFmValue = this.autoFm ? 1 : 0
         r.analysis.acc = r.analysis.acc && r.analysis.acc.map(_ => ({ ..._, duration: _.dataClean ? _.duration : _.duration / 4, dataClean: true }))
         r.analysis.dec = r.analysis.dec && r.analysis.dec.map(_ => ({ ..._, duration: _.dataClean ? _.duration : _.duration / 4, dataClean: true })).filter(_ => _.reliability >= 90 || _.user)
         this._acc = r.analysis.acc.map(_ => _.index)
         this._dec = r.analysis.dec.map(_ => _.index)
         this.analysisData = r
+        fmIndex.forEach(_ => {
+            fm[_] = autoFmValue
+            fm[_ - 1] = autoFmValue
+        })
     }
     drawBaseline(cur, color, yspan, xspan, max, basetop) {
-        console.log('base', cur)
         //清空分析画布
         let { context2D, width, height, analysisData: analyseData } = this;
         width = Math.floor(width)
@@ -122,6 +128,7 @@ export class DrawAnalyse extends Draw {
 
     showBase: boolean
     type: AnalyseType
+    autoFm = false
     analyse(type?: AnalyseType, start?: number, end?: number, data = this.analysisData) {
         if (type) {
             this.type = type
@@ -135,6 +142,7 @@ export class DrawAnalyse extends Draw {
             start = this.analysisData.analysis.start
             end = this.analysisData.analysis.end
         }
+        console.log('analyse', type, start, end, data)
         suit.drawSelect.$selectrpend = data.analysis.end = end
         suit.drawSelect.$selectrpstart = data.analysis.start = start
 
@@ -185,7 +193,6 @@ export class DrawAnalyse extends Draw {
                 }
             }
         } else if (_dec.indexOf(index) > -1 || _dec.indexOf(index - 1) > -1) {
-            console.log('drawflag', x, y)
             const target = dec.find(_ => [index, index - 1].includes(_.index))
             target.x = x
             target.y = y
@@ -340,7 +347,14 @@ export class DrawAnalyse extends Draw {
         if (!analysisData) return null
         analysisData = JSON.parse(JSON.stringify(analysisData))
         const { analysis, score } = analysisData
-
+        const { fhrbaselineMinute } = analysis
+        const fhr_uptime = analysis._fhr_uptime = this.fhrDuration(analysis.start, analysis.end);
+        let acc_num = analysis._acc_num = this.countAcc(analysis.start, analysis.end);
+        let vdtimes = analysis.vdtimes = this.countDec(analysis.start, analysis.end, 'VD');//analysis.vdtimes;
+        let ldtimes = analysis.ldtimes = this.countDec(analysis.start, analysis.end, 'LD');//analysis.ldtimes;
+        let edtimes = analysis.edtimes = this.countDec(analysis.start, analysis.end, 'ED');//analysis.edtimes;
+        analysis._baseline_avg = ~~(fhrbaselineMinute.reduce((a, b) => a + b, 0) / fhrbaselineMinute.length)
+        analysis._dec_num = ldtimes + vdtimes + edtimes
         // let timeframe = end-start/4*60;
         let bhr = analysis.bhr;
         //NST(国内) 20分钟
@@ -364,7 +378,6 @@ export class DrawAnalyse extends Draw {
                 score.nstdata.ltvscore = 2;
             }
             // 胎动fhr上升时间
-            let fhr_uptime = this.fhrDuration(analysis.start, analysis.end);
             score.nstdata.accdurationvalue = fhr_uptime;
             if (fhr_uptime < 10) {
                 score.nstdata.accdurationscore = 0;
@@ -393,11 +406,7 @@ export class DrawAnalyse extends Draw {
             } else if (fmnum >= 3) {
                 score.nstdata.fmscore = 2;
             }
-            //kisi add 2020-04-26
-            // 减速
-            analysis.ldtimes = this.countDec(analysis.start, analysis.end, 'LD');//analysis.ldtimes;
-            analysis.vdtimes = this.countDec(analysis.start, analysis.end, 'VD');//analysis.vdtimes;
-            analysis.edtimes = this.countDec(analysis.start, analysis.end, 'ED');//analysis.edtimes;
+
             //@ts-ignore
             score.nstdata.total = score.nstdata.accamplscore + score.nstdata.accdurationscore + score.nstdata.bhrscore + score.nstdata.fmscore + score.nstdata.ltvscore;
             return this.analysisData = analysisData
@@ -434,21 +443,17 @@ export class DrawAnalyse extends Draw {
                 score.krebsdata.stvscore = 2;
             }
             // 加速
-            let accnum = this.countAcc(analysis.start, analysis.end);
-            score.krebsdata.accvalue = accnum;
-            if (accnum == 0) {
+            score.krebsdata.accvalue = acc_num;
+            if (acc_num == 0) {
                 score.krebsdata.accscore = 0;
-            } else if (this.inRange(accnum, 1, 4)) {
+            } else if (this.inRange(acc_num, 1, 4)) {
                 score.krebsdata.accscore = 1;
-            } else if (accnum > 4) {
+            } else if (acc_num > 4) {
                 score.krebsdata.accscore = 2;
             }
             // 减速
-            let ld = analysis.ldtimes = this.countDec(analysis.start, analysis.end, 'LD');//analysis.ldtimes;
-            let vd = analysis.vdtimes = this.countDec(analysis.start, analysis.end, 'VD');//analysis.vdtimes;
-            let ed = analysis.edtimes = this.countDec(analysis.start, analysis.end, 'ED');//analysis.edtimes;
-            console.log(ld, vd, ed);
-            let sum = ld + vd;
+
+            let sum = ldtimes + vdtimes;
             if (sum > 1) {
                 score.krebsdata.decscore = 0;
                 score.krebsdata.decvalue = sum + "";
@@ -457,7 +462,7 @@ export class DrawAnalyse extends Draw {
                 score.krebsdata.decvalue = sum + "";
             } else {
                 score.krebsdata.decscore = 2;
-                if (ed > 0) {
+                if (edtimes > 0) {
                     score.krebsdata.decvalue = "早减";
                 } else {
                     score.krebsdata.decvalue = "无";
@@ -508,27 +513,23 @@ export class DrawAnalyse extends Draw {
                 score.fischerdata.stvscore = 2;
             }
             // 加速
-            let accnum = this.countAcc(analysis.start, analysis.end);
-            score.fischerdata.accvalue = accnum;
-            if (accnum == 0) {
+            score.fischerdata.accvalue = acc_num;
+            if (acc_num == 0) {
                 score.fischerdata.accscore = 0;
-            } else if (this.inRange(accnum, 1, 4)) {
+            } else if (this.inRange(acc_num, 1, 4)) {
                 score.fischerdata.accscore = 1;
-            } else if (accnum > 4) {
+            } else if (acc_num > 4) {
                 score.fischerdata.accscore = 2;
             }
             // 减速
-            let ld = analysis.ldtimes = this.countDec(analysis.start, analysis.end, 'LD');//analysis.ldtimes;
-            let vd = analysis.vdtimes = this.countDec(analysis.start, analysis.end, 'VD');//analysis.vdtimes;
-            let ed = analysis.edtimes = this.countDec(analysis.start, analysis.end, 'ED');//analysis.edtimes;
-            if (ld > 0) {
+            if (ldtimes > 0) {
                 score.fischerdata.decscore = 0;
                 score.fischerdata.decvalue = 'LD';
-            } else if (vd > 0) {
+            } else if (vdtimes > 0) {
                 score.fischerdata.decscore = 1;
                 score.fischerdata.decvalue = 'VD';
             } else {
-                if (ed > 0) {
+                if (edtimes > 0) {
                     score.fischerdata.decvalue = 'ED';
                 } else {
                     score.fischerdata.decvalue = '无';
@@ -570,9 +571,8 @@ export class DrawAnalyse extends Draw {
                 score.cstdata.stvscore = 2;
             }
             // 加速
-            let accnum = this.countAcc(analysis.start, analysis.end);
             // score.cstdata.accvalue = accnum;
-            if (accnum == 0) {
+            if (acc_num == 0) {
                 score.cstdata.accscore = 0;
                 score.cstdata.accvalue = '无';
             } else if (this.cycleAcc() == 1) {
@@ -583,17 +583,15 @@ export class DrawAnalyse extends Draw {
                 score.cstdata.accvalue = '散在性';
             }
             // 减速
-            let ld = analysis.ldtimes = this.countDec(analysis.start, analysis.end, 'LD');//analysis.ldtimes;
-            let vd = analysis.vdtimes = this.countDec(analysis.start, analysis.end, 'VD');//analysis.vdtimes;
-            let ed = analysis.edtimes = this.countDec(analysis.start, analysis.end, 'ED');//analysis.edtimes;
-            if (ld > 0) {
+
+            if (ldtimes > 0) {
                 score.cstdata.decscore = 0;
                 score.cstdata.decvalue = '晚期'; // 晚期
-            } else if (ed > 0) {
+            } else if (edtimes > 0) {
                 //判为其他
                 score.cstdata.decscore = 0;
                 score.cstdata.decvalue = '其他';// 其他
-            } else if (vd > 0) {
+            } else if (vdtimes > 0) {
                 score.cstdata.decscore = 1;
                 score.cstdata.decvalue = '变异减速';// 变异
             } else {
@@ -627,16 +625,15 @@ export class DrawAnalyse extends Draw {
                 } else {
                     score.sogcdata.ltvscore = 2;
                 }
-            } else if (analysis.ltv >= 26 || analysis.isSinusoid) {
+            } else if (analysis.ltv >= 26 || analysis.sinusoid) {
                 score.sogcdata.ltvscore = 2;
             } else {
                 score.sogcdata.ltvscore = 0;
             }
 
             // 加速
-            let accnum = this.countAcc(analysis.start, analysis.end);
-            score.sogcdata.accvalue = accnum;
-            if (accnum >= 2) {
+            score.sogcdata.accvalue = acc_num;
+            if (acc_num >= 2) {
                 score.sogcdata.accscore = 0;
             } else {
                 if (length > 80) {
@@ -656,12 +653,10 @@ export class DrawAnalyse extends Draw {
             // }
             // 减速
             // let ld = analysis.ldtimes = this.countDec(analysis.start, analysis.end, 'LD');//analysis.ldtimes;
-            let vd = analysis.vdtimes = this.countDec(analysis.start, analysis.end, 'VD');//analysis.vdtimes;
-            let ed = analysis.edtimes = this.countDec(analysis.start, analysis.end, 'ED');//analysis.edtimes;
-            if (ed > 0) {
+            if (edtimes > 0) {
                 score.sogcdata.decvalue = 'ed';
                 score.sogcdata.decscore = 2;
-            } else if (vd > 0) {
+            } else if (vdtimes > 0) {
                 const all = analysis.dec.filter(_ => _.type === 'vd' && _.start >= analysis.start && _.end <= analysis.end)
                 const gt60 = all.find(_ => _.duration > 60)
                 const btw = all.find(_ => this.inRange(_.duration, 30, 60))
@@ -713,10 +708,10 @@ export class DrawAnalyse extends Draw {
             } else if (this.inRange(analysis.ltv, 5, 9) || analysis.ltv > 30) {
                 score.cstoctdata.ltvscore = 1;
             } else if (this.inRange(analysis.ltv, 6, 25)) {
-                score.cstoctdata.ltvscore = 2;
+                score.cstoctdata.ltvscore = 0;
             }
             //正弦判断
-            if (analysis.isSinusoid) {
+            if (!analysis.sinusoid) {
                 score.cstoctdata.sinusoidscore = 0;
                 score.cstoctdata.sinusoidvalue = '无';
             } else {
@@ -724,30 +719,27 @@ export class DrawAnalyse extends Draw {
                 score.cstoctdata.sinusoidvalue = '有';
             }
             // 加速
-            let accnum = this.countAcc(analysis.start, analysis.end);
-            if (accnum == 0) {
-                score.cstoctdata.accscore = 0;
-                score.cstoctdata.accvalue = '有';
-
-            } else if (this.inRange(accnum, 1, 2)) {
-                score.cstoctdata.accvalue = '刺激胎儿后仍缺失';
-                score.cstoctdata.accscore = 1;
-            } else if (accnum > 2) {
+            if (acc_num == 0) {
                 score.cstoctdata.accvalue = '无';
                 score.cstoctdata.accscore = 2;
+
+
+            } else if (this.inRange(acc_num, 1, 2)) {
+                score.cstoctdata.accvalue = '刺激胎儿后仍缺失';
+                score.cstoctdata.accscore = 1;
+            } else if (acc_num > 2) {
+                score.cstoctdata.accscore = 0;
+                score.cstoctdata.accvalue = '有';
             }
             // 减速
-            let ld = analysis.ldtimes = this.countDec(analysis.start, analysis.end, 'LD');//analysis.ldtimes;
-            let vd = analysis.vdtimes = this.countDec(analysis.start, analysis.end, 'VD');//analysis.vdtimes;
-            let ed = analysis.edtimes = this.countDec(analysis.start, analysis.end, 'ED');//analysis.edtimes;
-            score.cstoctdata.ldvalue = ld || '无'
-            score.cstoctdata.vdvalue = vd || '无'
-            score.cstoctdata.edvalue = ed || '无'
-            if (ld > 0) {
+            score.cstoctdata.ldvalue = ldtimes || '无'
+            score.cstoctdata.vdvalue = vdtimes || '无'
+            score.cstoctdata.edvalue = edtimes || '无'
+            if (ldtimes > 0) {
                 score.cstoctdata.decscore = 0;
                 score.cstoctdata.decvalue = 'LD';
                 score.cstoctdata.ldscore = 1
-            } else if (vd > 0) {
+            } else if (vdtimes > 0) {
                 score.cstoctdata.decscore = 1;
                 score.cstoctdata.decvalue = 'VD';
                 score.cstoctdata.vdscore = 1
@@ -768,7 +760,7 @@ export class DrawAnalyse extends Draw {
                     }
                 })
             } else {
-                if (ed > 0) {
+                if (edtimes > 0) {
                     score.cstoctdata.decvalue = 'ED';
                     score.cstoctdata.edscore = 1
 
@@ -793,7 +785,6 @@ export class DrawAnalyse extends Draw {
         }
         // genDeformedScore(score.cstoctdata)
         // genDeformedScore(score.sogcdata)
-        console.log('xxx', analysisData)
         return (this.analysisData = analysisData)
 
     }
@@ -880,7 +871,6 @@ export class DrawAnalyse extends Draw {
         const { user } = target
 
         target.type = type;
-        console.log('markDecPoint', type)
         if (type == "ld" || type == "vd" || type == "ed") {
             target.remove = false;
         } else {

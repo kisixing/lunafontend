@@ -28,4 +28,8 @@ function formatTime(s) {
     return moment_1.default(d).format('YYYY-MM-DD HH:mm:ss');
 }
 exports.formatTime = formatTime;
+function getMomentObj(s) {
+    return s && moment_1.default(s);
+}
+exports.getMomentObj = getMomentObj;
 //# sourceMappingURL=moment.js.map

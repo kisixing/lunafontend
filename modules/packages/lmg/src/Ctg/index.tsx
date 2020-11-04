@@ -33,7 +33,7 @@ const Wrapper = styled.div`
   }
 `
 export default memo(forwardRef((props: IProps, ref: Ref<Promise<Suit>>) => {
-
+  console.log('ctg component render')
   const {
     data,
     mutableSuitObject = { suit: null },

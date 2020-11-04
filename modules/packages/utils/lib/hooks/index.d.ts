@@ -1,3 +1,4 @@
+export * from './usePage';
 export declare namespace Hooks {
     const useLogin: (prefix: string, data?: {
         [x: string]: any;
