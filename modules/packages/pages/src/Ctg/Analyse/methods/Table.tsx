@@ -37,6 +37,7 @@ interface IProps {
 const T = forwardRef<FormInstance, IProps>((props, ref) => {
     const { hidden, dataSource, disabled, mark, initData } = props
     const deformed = dataSource.deformed
+    console.log('mark table')
 
     const columns: any = [
         {
@@ -106,7 +107,7 @@ const T = forwardRef<FormInstance, IProps>((props, ref) => {
 
     }, [])
     return (
-        <Form ref={ref} form={form} size="small" style={{ display: hidden ? 'none' : 'block', position: 'relative' }}
+        <Form ref={ref} form={form} size="small" style={{ display: (false && hidden) ? 'none' : 'block', position: 'relative' }}
             initialValues={{ deformed }}
             onValuesChange={(a, b) => {
                 // const vk = Object.entries(b)

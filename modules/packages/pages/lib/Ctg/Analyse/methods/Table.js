@@ -27,6 +27,7 @@ var strategies_1 = __importDefault(require("./strategies"));
 var T = react_1.forwardRef(function (props, ref) {
     var hidden = props.hidden, dataSource = props.dataSource, disabled = props.disabled, mark = props.mark, initData = props.initData;
     var deformed = dataSource.deformed;
+    console.log('mark table');
     var columns = [
         {
             title: '项目',
@@ -72,7 +73,7 @@ var T = react_1.forwardRef(function (props, ref) {
     react_1.useEffect(function () {
         console.log('sst', form);
     }, []);
-    return (react_1.default.createElement(antd_1.Form, { ref: ref, form: form, size: "small", style: { display: hidden ? 'none' : 'block', position: 'relative' }, initialValues: { deformed: deformed }, onValuesChange: function (a, b) {
+    return (react_1.default.createElement(antd_1.Form, { ref: ref, form: form, size: "small", style: { display: (false && hidden) ? 'none' : 'block', position: 'relative' }, initialValues: { deformed: deformed }, onValuesChange: function (a, b) {
             var newData = strategies_1.default(mark, form.getFieldsValue(), initData);
             newData && form.setFieldsValue(newData);
         } },
