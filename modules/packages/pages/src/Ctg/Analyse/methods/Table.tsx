@@ -37,7 +37,6 @@ interface IProps {
 const T = forwardRef<FormInstance, IProps>((props, ref) => {
     const { hidden, dataSource, disabled, mark, initData } = props
     const deformed = dataSource.deformed
-    console.log('mark table')
 
     const columns: any = [
         {
@@ -62,10 +61,10 @@ const T = forwardRef<FormInstance, IProps>((props, ref) => {
             dataIndex: '2'
         },
         false ? null : {
-            width: deformed ? 300 : undefined,
+            width: deformed ? 180 : undefined,
             title: (
-                <Form.Item name={deformed ? 'result' : 'total'} label={deformed ? '结果' : '总分'} style={{ margin: '0 32px', display: 'flex', justifyContent: 'center' }}>
-                    <InputNumber disabled style={{ width: 120, marginRight: 24 }} />
+                <Form.Item name={deformed ? 'result' : 'total'} label={deformed ? '结果' : '总分'} style={{ margin: '0 12px', display: 'flex', justifyContent: 'center' }}>
+                    <InputNumber disabled style={{ width: 80, marginRight: 0 }} />
                 </Form.Item>
             ),
             dataIndex: 'result',
@@ -103,7 +102,6 @@ const T = forwardRef<FormInstance, IProps>((props, ref) => {
 
     const [form] = Form.useForm()
     useEffect(() => {
-        console.log('sst', form)
 
     }, [])
     return (

@@ -34,6 +34,12 @@ const Wrapper = styled.div`
   .bordered {
     border: 1px solid #ddd;
   }
+  ${props => props.primary && styled.css`
+  .ant-form-item-label > label {
+    font-size:12px;
+  }
+`}
+
 `
 interface IProps {
   onDownload: (url: string) => void,
@@ -57,8 +63,10 @@ export const Ctg_Analyse: FC<IProps> = function ({ docid, type = "default", id, 
     reAnalyse,
     startTime,
     endTime,
-    mark, setMark,
-    interval, setInterval,
+    mark,
+    setMark,
+    interval,
+    setInterval,
     mapFormToMark,
     analysis_ref,
     old_ref,
@@ -115,24 +123,26 @@ export const Ctg_Analyse: FC<IProps> = function ({ docid, type = "default", id, 
   return (
     <Wrapper ref={wrap} >
       <div style={{ height: `calc(100% - 420px - 6px - 40px)`, marginBottom: 6, boxShadow: '#ddd 0px 0px 2px 2px', width: '100%', display: 'flex' }}>
-        {
-          showHistory && (
-            <div style={{ borderLeft: '1px solid #ddd', padding: 2, display: 'flex', flexDirection: 'column' }}>
-              <HistoryList historyList={historyList} currentHistory={currentHistory} setCurrentHistory={setCurrentHistory} />
-            </div>
-          )
-        }
+
         <Ctg style={{ minHeight: 200, overflow: 'hidden', flex: 1 }} suitType={1} ref={ref} loading={loading || fakeHistoryLoading} data={ctgData} />
       </div>
       <Row style={{ flexDirection: `row${showHistory ? '-reverse' : ''}` as any, height: 420, }}>
-        <Col className="bordered" span={17} style={{ height: '100%', }} >
+
+        <Col className="bordered" span={16} style={{ height: '100%', }} >
           <Score disabled={disabled} endTime={endTime} initData={initData}  {...others} fetal={fetal} setFetal={n => {
             setFetal(n)
             setFetalCb()
           }} ctgData={ctgData} docid={note} />
 
         </Col>
-        <Col span={7} style={{ height: '100%' }} >
+        <Col span={8} style={{ height: '100%', display: 'flex' }} >
+          {
+            showHistory && (
+              <div style={{ borderLeft: '1px solid #ddd', padding: 2, display: 'flex', flexDirection: 'column' }}>
+                <HistoryList historyList={historyList} currentHistory={currentHistory} setCurrentHistory={setCurrentHistory} />
+              </div>
+            )
+          }
           <Analyse ref={analysis_ref} isRemote={isRemote} showHistory={showHistory} />
         </Col>
       </Row>

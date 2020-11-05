@@ -1,8 +1,8 @@
-import { MutableRefObject } from 'react';
-import { FormInstance } from 'antd/lib/form';
+import { ctg_exams_analyse_score } from '@lianmed/f_types/lib/obvue/ctg_exams_analyse';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import { AnalyseType } from '@lianmed/lmg/lib/interface';
-import { ctg_exams_analyse_score } from '@lianmed/f_types/lib/obvue/ctg_exams_analyse';
+import { FormInstance } from 'antd/lib/form';
+import { MutableRefObject } from 'react';
 export declare const MARKS: AnalyseType[];
 declare const _default: (suit: MutableRefObject<Promise<Suit>>, docid: string, fetal: any, ctgData: {
     fhr1?: string;

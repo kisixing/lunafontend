@@ -143,7 +143,7 @@ exports.Ctg_Analyse = function (props) {
                         react_1.default.createElement(antd_1.Checkbox, { checked: isEditBase, onChange: function (e) { return setIsEditBase(e.target.checked); }, style: {} }, "\u4FEE\u6539\u57FA\u7EBF")))),
             react_1.default.createElement("div", { style: {} },
                 false && react_1.default.createElement(antd_1.Alert, { message: "\u9009\u6BB5\u65F6\u95F4\u8FC7\u77ED", style: { background: 'red', color: '#fff', display: 'inline-block', border: 0, padding: '1px 4px', marginRight: 10 } }),
-                react_1.default.createElement(antd_1.Button, { size: "small", style: {}, onClick: history, disabled: btnDisabled }, "\u5386\u53F2\u5206\u6790"),
+                !!showHistory || react_1.default.createElement(antd_1.Button, { size: "small", style: {}, onClick: history, disabled: btnDisabled }, "\u5386\u53F2\u5206\u6790"),
                 react_1.default.createElement(antd_1.Button, { size: "small", style: {}, disabled: !note, onClick: function () { return setDisabled(!disabled); } }, disabled ? '修改评分' : '确认'),
                 react_1.default.createElement(antd_1.Button, { size: "small", onClick: function () {
                         request_1.default.get(getPrintUrl('/ctg-exams-analysis-pdf-preview')).then(function (r) {
@@ -152,7 +152,7 @@ exports.Ctg_Analyse = function (props) {
                         }).finally(function () { return setPadBase64Loading(false); });
                         setPadBase64Loading(true);
                     }, style: {}, type: "primary", disabled: btnDisabled || !initData, loading: padBase64Loading }, "\u6253\u5370\u9884\u89C8"),
-                react_1.default.createElement(antd_1.Button, { size: "small", type: "primary", onClick: submit, disabled: btnDisabled || !initData }, currentHistory ? '保存修改' : '保存'))),
+                react_1.default.createElement(antd_1.Button, { size: "small", type: "primary", onClick: submit, disabled: btnDisabled || !initData || currentHistory }, currentHistory ? '保存修改' : '保存'))),
         react_1.default.createElement(antd_1.Modal, { getContainer: false, centered: true, visible: visible, closable: false, okText: "\u6253\u5370", cancelText: "\u53D6\u6D88", onCancel: function () { return setVisible(false); }, onOk: function () {
                 onDownload(getPrintUrl('/ctg-exams-analysis-pdf'));
                 setVisible(false);

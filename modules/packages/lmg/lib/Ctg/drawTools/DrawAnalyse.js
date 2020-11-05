@@ -735,6 +735,7 @@ var DrawAnalyse = (function (_super) {
         suit.drawSelect.$selectrpstart = data.analysis.start = start;
         var newData = this.ctgscore(type);
         suit.drawobj.drawdot((suit.type > 0 && suit.viewposition < suit.width * 2) ? suit.width * 2 : suit.viewposition, false);
+        console.log('setFormData', type, data, newData);
         utils_1.event.emit('suit:afterAnalyse', newData);
         return newData;
     };

@@ -33,7 +33,7 @@ const Setting = forwardRef<FormInstance, { isRemote?: boolean, disabled?: boolea
 
 
   return (
-    <div style={{ height: '100%', overflowY: 'auto' }} className="bordered">
+    <div style={{ height: '100%', overflowY: 'auto', flex: 1 }} className="bordered">
 
 
       <Form ref={ref} size="small" style={{ padding: '0px 6px' }} form={form} labelCol={{ xs: 9 }} wrapperCol={{ xs: 15 }} labelAlign="left"

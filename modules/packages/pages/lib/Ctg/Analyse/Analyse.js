@@ -42,7 +42,7 @@ var Setting = react_1.forwardRef(function (props, ref) {
         formatter: function (v) { return v && "" + v + t; },
         parser: function (v) { return v.replace(t, ''); }
     }); };
-    return (react_1.default.createElement("div", { style: { height: '100%', overflowY: 'auto' }, className: "bordered" },
+    return (react_1.default.createElement("div", { style: { height: '100%', overflowY: 'auto', flex: 1 }, className: "bordered" },
         react_1.default.createElement(antd_1.Form, { ref: ref, size: "small", style: { padding: '0px 6px' }, form: form, labelCol: { xs: 9 }, wrapperCol: { xs: 15 }, labelAlign: "left", initialValues: {
                 diagnosistxt: null,
                 wave: null,

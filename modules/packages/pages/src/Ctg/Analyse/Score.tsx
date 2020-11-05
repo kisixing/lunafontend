@@ -1,6 +1,6 @@
 import { obvue } from "@lianmed/f_types";
 import { Button } from "antd";
-import React, { useMemo } from 'react';
+import React from 'react';
 import Methods from './methods';
 
 const intervals = [20, 40, 80]
@@ -47,7 +47,6 @@ const ScoringMethod = (props: IProps) => {
 
 
 
-
   const onChange = e => {
     // const mark = e.target.value
     setMark(e.target.value)
@@ -58,36 +57,8 @@ const ScoringMethod = (props: IProps) => {
 
 
 
-  const IntervalRadio = useMemo(() => {
-    return (
-      <span style={{ marginRight: 10 }}> 时长：
-        <select disabled={!docid} onChange={e => {
-          const i = Number(e.target.value) || 20
-          setInterval(i)
 
-        }} value={interval}>
-          {
-            intervals.map(value => (
-              <option value={value} key={value}>{value + '分钟'}</option>
-            ))
-          }
-        </select>
-      </span>
-    )
-  }, [interval, docid])
-  const FetalSelect = useMemo(() => {
-    return (
-      <span style={{ marginRight: 10 }}> 胎心率：
-        <select disabled={!docid} onChange={e => setFetal(e.target.value)} value={fetal}>
-          {
-            Array(+ctgData.fetalnum).fill(0).map((_, i) => (
-              <option value={i + 1} key={i + 1}>{`FHR${i + 1}`}</option>
-            ))
-          }
-        </select>
-      </span>
-    )
-  }, [ctgData, fetal, setFetal, docid])
+
 
   const StartTime = () => {
     return <span style={{ marginRight: 10 }}>开始时间：{(startTime / 240).toFixed(1)}分</span>
@@ -95,41 +66,49 @@ const ScoringMethod = (props: IProps) => {
   const EndTime = () => {
     return <span style={{ marginRight: 10 }}>结束时间：{(endTime / 240).toFixed(1)}分</span>
   }
-  const R = useMemo(
-    () => {
-      return (
-        <>
-          <span>方法：</span>
 
-
-          <select disabled={!docid} onChange={onChange} value={mark} style={{ width: 90 }}>
-            {
-              MARKS.map(_ => (
-                <option value={_} key={_}>{_}</option>
-              ))
-            }
-          </select>
-        </>
-
-      )
-    },
-    [mark, docid],
-  )
   return (
     <div style={{ borderRight: 0 }} className="bordered">
       <div className="divider" style={{ padding: '8px 20px', margin: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <StartTime />
           <EndTime />
-          {
-            R
-          }
-          {
-            IntervalRadio
-          }
-          {
-            FetalSelect
-          }
+          <span>
+            <span>方法：</span>
+            <select disabled={!docid} onChange={onChange} value={mark} style={{ width: 90 }}>
+              {
+                MARKS.map(_ => (
+                  <option value={_} key={_}>{_}</option>
+                ))
+              }
+            </select>
+          </span>
+          <span style={{ marginRight: 10 }}>
+            <span>
+              时长：
+            </span>
+            <select disabled={!docid} onChange={e => {
+              const i = Number(e.target.value) || 20
+              setInterval(i)
+
+            }} value={interval}>
+              {
+                intervals.map(value => (
+                  <option value={value} key={value}>{value + '分钟'}</option>
+                ))
+              }
+            </select>
+          </span>
+          <span style={{ marginRight: 10 }}>
+            <span>胎心率：</span>
+            <select disabled={!docid} onChange={e => setFetal(e.target.value)} value={fetal}>
+              {
+                Array(+ctgData.fetalnum).fill(0).map((_, i) => (
+                  <option value={i + 1} key={i + 1}>{`FHR${i + 1}`}</option>
+                ))
+              }
+            </select>
+          </span>
           {
             showHistory && <span>
               分析版本：

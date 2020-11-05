@@ -27,7 +27,6 @@ var strategies_1 = __importDefault(require("./strategies"));
 var T = react_1.forwardRef(function (props, ref) {
     var hidden = props.hidden, dataSource = props.dataSource, disabled = props.disabled, mark = props.mark, initData = props.initData;
     var deformed = dataSource.deformed;
-    console.log('mark table');
     var columns = [
         {
             title: '项目',
@@ -49,9 +48,9 @@ var T = react_1.forwardRef(function (props, ref) {
             dataIndex: '2'
         },
         false ? null : {
-            width: deformed ? 300 : undefined,
-            title: (react_1.default.createElement(antd_1.Form.Item, { name: deformed ? 'result' : 'total', label: deformed ? '结果' : '总分', style: { margin: '0 32px', display: 'flex', justifyContent: 'center' } },
-                react_1.default.createElement(antd_1.InputNumber, { disabled: true, style: { width: 120, marginRight: 24 } }))),
+            width: deformed ? 180 : undefined,
+            title: (react_1.default.createElement(antd_1.Form.Item, { name: deformed ? 'result' : 'total', label: deformed ? '结果' : '总分', style: { margin: '0 12px', display: 'flex', justifyContent: 'center' } },
+                react_1.default.createElement(antd_1.InputNumber, { disabled: true, style: { width: 80, marginRight: 0 } }))),
             dataIndex: 'result',
             render: function (a, _a) {
                 var key = _a.key, R = _a.R;
@@ -71,7 +70,6 @@ var T = react_1.forwardRef(function (props, ref) {
         .map(function (_) { return (__assign(__assign({}, _), { align: 'center' })); });
     var form = antd_1.Form.useForm()[0];
     react_1.useEffect(function () {
-        console.log('sst', form);
     }, []);
     return (react_1.default.createElement(antd_1.Form, { ref: ref, form: form, size: "small", style: { display: (false && hidden) ? 'none' : 'block', position: 'relative' }, initialValues: { deformed: deformed }, onValuesChange: function (a, b) {
             var newData = strategies_1.default(mark, form.getFieldsValue(), initData);

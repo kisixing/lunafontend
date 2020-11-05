@@ -25,11 +25,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var react_1 = require("react");
 var request_1 = __importDefault(require("@lianmed/request"));
-var tableData_1 = require("./methods/tableData");
-var store_1 = __importDefault(require("store"));
 var utils_1 = require("@lianmed/utils");
+var react_1 = require("react");
+var store_1 = __importDefault(require("store"));
+var tableData_1 = require("./methods/tableData");
 var service_1 = require("./service");
 exports.MARKS = Object.keys(tableData_1.tableData);
 var AUTOFM_KEY = 'autofm';
@@ -194,11 +194,6 @@ exports.default = (function (suit, docid, fetal, ctgData) {
         fetchData()
             .then(function (r) {
             suit.current.then(function (s) {
-                var analysisData = s.drawAnalyse.analysisData;
-                if (analysisData) {
-                    r.analysis.acc = analysisData.analysis.acc;
-                    r.analysis.dec = analysisData.analysis.dec;
-                }
                 r.score = getEmptyScore();
                 setInitData(r);
                 setCurrentHistory(null);
@@ -218,7 +213,6 @@ exports.default = (function (suit, docid, fetal, ctgData) {
         var cur = mapFormToMark[mark + "_ref"];
         cur.current && cur.current.setFieldsValue(f);
         old_ref.current[mark] = f;
-        console.log('setFormData', analysis, score);
         var stv = analysis.stv, ucdata = analysis.ucdata, acc = analysis.acc, dec = analysis.dec, fhrbaselineMinute = analysis.fhrbaselineMinute, others = __rest(analysis, ["stv", "ucdata", "acc", "dec", "fhrbaselineMinute"]);
         analysis_ref.current && analysis_ref.current.setFieldsValue(__assign(__assign({ stv: stv }, ucdata), others));
     }
@@ -275,6 +269,7 @@ exports.default = (function (suit, docid, fetal, ctgData) {
         reAnalyse: reAnalyse,
         startTime: startTime, endTime: endTime, setStartTime: setStartTime, interval: interval,
         setInterval: function (i) {
+            console.log('setFormData setInterval', mark, interval);
             store_1.default.set(INTERVAL_KEY, i);
             setInterval(i);
             reAnalyse();
@@ -320,11 +315,15 @@ exports.default = (function (suit, docid, fetal, ctgData) {
                 setFakeHistoryLoading(false);
             }, 700);
             var diagnosis = i.diagnosis, analysis = i.analysis, result = i.result;
+            console.log('result', result);
             if (analysis) {
                 (_a = suit.current) === null || _a === void 0 ? void 0 : _a.then(function (s) {
                     var _a;
                     (_a = analysis_ref.current) === null || _a === void 0 ? void 0 : _a.setFieldsValue(diagnosis);
                     s.drawAnalyse.analyse(result === null || result === void 0 ? void 0 : result.type, result === null || result === void 0 ? void 0 : result.startTime, result === null || result === void 0 ? void 0 : result.endTime, analysis);
+                    setMark(result === null || result === void 0 ? void 0 : result.type);
+                    setStartTime(result.startTime);
+                    setInterval(~~((result.endTime - result.startTime) / 240));
                 });
             }
         },

@@ -50,7 +50,8 @@ var useAnalyse_1 = __importStar(require("./useAnalyse"));
 var useCtgData_1 = require("./useCtgData");
 exports.useCtgData = useCtgData_1.useCtgData;
 exports.ANALYSE_SUCCESS_TYPE = "(●'◡'●)";
-var Wrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  height:100%;\n  .divider {\n    // border-radius:2px;\n    background:#aaa !important;\n    color:#444 !important;\n    padding-left:6px;\n    margin: 2px 0;\n  }\n  .divider:not(:first-child){\n    margin-top:16px;\n  }\n  button {\n    // margin:0 6px 6px 0\n    margin-right:6px;\n  }\n  .bordered {\n    border: 1px solid #ddd;\n  }\n"], ["\n  height:100%;\n  .divider {\n    // border-radius:2px;\n    background:#aaa !important;\n    color:#444 !important;\n    padding-left:6px;\n    margin: 2px 0;\n  }\n  .divider:not(:first-child){\n    margin-top:16px;\n  }\n  button {\n    // margin:0 6px 6px 0\n    margin-right:6px;\n  }\n  .bordered {\n    border: 1px solid #ddd;\n  }\n"])));
+var Wrapper = styled_components_1.default.div(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  height:100%;\n  .divider {\n    // border-radius:2px;\n    background:#aaa !important;\n    color:#444 !important;\n    padding-left:6px;\n    margin: 2px 0;\n  }\n  .divider:not(:first-child){\n    margin-top:16px;\n  }\n  button {\n    // margin:0 6px 6px 0\n    margin-right:6px;\n  }\n  .bordered {\n    border: 1px solid #ddd;\n  }\n  ", "\n\n"], ["\n  height:100%;\n  .divider {\n    // border-radius:2px;\n    background:#aaa !important;\n    color:#444 !important;\n    padding-left:6px;\n    margin: 2px 0;\n  }\n  .divider:not(:first-child){\n    margin-top:16px;\n  }\n  button {\n    // margin:0 6px 6px 0\n    margin-right:6px;\n  }\n  .bordered {\n    border: 1px solid #ddd;\n  }\n  ",
+    "\n\n"])), function (props) { return props.primary && styled_components_1.default.css(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  .ant-form-item-label > label {\n    font-size:12px;\n  }\n"], ["\n  .ant-form-item-label > label {\n    font-size:12px;\n  }\n"]))); });
 exports.Ctg_Analyse = function (_a) {
     var docid = _a.docid, _b = _a.type, type = _b === void 0 ? "default" : _b, id = _a.id, note = _a.note, _c = _a.onDownload, onDownload = _c === void 0 ? function (url) { } : _c, _d = _a.showHistory, showHistory = _d === void 0 ? false : _d;
     note = note ? note : docid;
@@ -96,19 +97,19 @@ exports.Ctg_Analyse = function (_a) {
         disabled: disabled });
     return (react_1.default.createElement(Wrapper, { ref: wrap },
         react_1.default.createElement("div", { style: { height: "calc(100% - 420px - 6px - 40px)", marginBottom: 6, boxShadow: '#ddd 0px 0px 2px 2px', width: '100%', display: 'flex' } },
-            showHistory && (react_1.default.createElement("div", { style: { borderLeft: '1px solid #ddd', padding: 2, display: 'flex', flexDirection: 'column' } },
-                react_1.default.createElement(HistoryList_1.default, { historyList: historyList, currentHistory: currentHistory, setCurrentHistory: setCurrentHistory }))),
             react_1.default.createElement(lmg_1.Ctg, { style: { minHeight: 200, overflow: 'hidden', flex: 1 }, suitType: 1, ref: ref, loading: loading || fakeHistoryLoading, data: ctgData })),
         react_1.default.createElement(antd_1.Row, { style: { flexDirection: "row" + (showHistory ? '-reverse' : ''), height: 420, } },
-            react_1.default.createElement(antd_1.Col, { className: "bordered", span: 17, style: { height: '100%', } },
+            react_1.default.createElement(antd_1.Col, { className: "bordered", span: 16, style: { height: '100%', } },
                 react_1.default.createElement(Score_1.default, __assign({ disabled: disabled, endTime: endTime, initData: initData }, others, { fetal: fetal, setFetal: function (n) {
                         setFetal(n);
                         setFetalCb();
                     }, ctgData: ctgData, docid: note }))),
-            react_1.default.createElement(antd_1.Col, { span: 7, style: { height: '100%' } },
+            react_1.default.createElement(antd_1.Col, { span: 8, style: { height: '100%', display: 'flex' } },
+                showHistory && (react_1.default.createElement("div", { style: { borderLeft: '1px solid #ddd', padding: 2, display: 'flex', flexDirection: 'column' } },
+                    react_1.default.createElement(HistoryList_1.default, { historyList: historyList, currentHistory: currentHistory, setCurrentHistory: setCurrentHistory }))),
                 react_1.default.createElement(Analyse_1.default, { ref: analysis_ref, isRemote: isRemote, showHistory: showHistory }))),
         react_1.default.createElement(Toolbar_1.default, __assign({}, toolbarProps))));
 };
 exports.default = exports.Ctg_Analyse;
-var templateObject_1;
+var templateObject_1, templateObject_2;
 //# sourceMappingURL=index.js.map

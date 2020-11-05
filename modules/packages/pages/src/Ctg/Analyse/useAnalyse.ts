@@ -1,16 +1,15 @@
 
-import { useState, useEffect, useRef, MutableRefObject, useCallback } from 'react';
-import request from "@lianmed/request";
-import { _R } from "@lianmed/utils";
-import { FormInstance } from 'antd/lib/form';
 import { obvue } from "@lianmed/f_types";
+import { ctg_exams_analyse_score } from '@lianmed/f_types/lib/obvue/ctg_exams_analyse';
 import { Suit } from '@lianmed/lmg/lib/Ctg/Suit';
 import { AnalyseType } from '@lianmed/lmg/lib/interface';
-import { tableData } from './methods/tableData';
-import store from "store";
-import { ctg_exams_analyse_score } from '@lianmed/f_types/lib/obvue/ctg_exams_analyse';
+import request from "@lianmed/request";
 import { event } from '@lianmed/utils';
+import { FormInstance } from 'antd/lib/form';
+import { MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
+import store from "store";
 import { historyItem } from "./data";
+import { tableData } from './methods/tableData';
 import { queryHistory } from './service';
 export const MARKS = Object.keys(tableData) as AnalyseType[]
 const AUTOFM_KEY = 'autofm'
@@ -203,11 +202,11 @@ export default (suit: MutableRefObject<Promise<Suit>>, docid: string, fetal: any
         fetchData()
             .then(r => {
                 suit.current.then(s => {
-                    const analysisData = s.drawAnalyse.analysisData
-                    if (analysisData) {
-                        r.analysis.acc = analysisData.analysis.acc
-                        r.analysis.dec = analysisData.analysis.dec
-                    }
+                    // const analysisData = s.drawAnalyse.analysisData
+                    // if (analysisData) {
+                    //     r.analysis.acc = analysisData.analysis.acc
+                    //     r.analysis.dec = analysisData.analysis.dec
+                    // }
                     r.score = getEmptyScore()
 
                     setInitData(r)
@@ -232,7 +231,6 @@ export default (suit: MutableRefObject<Promise<Suit>>, docid: string, fetal: any
         const cur: MutableRefObject<FormInstance> = mapFormToMark[`${mark}_ref`]
         cur.current && cur.current.setFieldsValue(f);
         old_ref.current[mark] = f
-        console.log('setFormData', analysis, score)
         const { stv, ucdata, acc, dec, fhrbaselineMinute, ...others } = analysis
         analysis_ref.current && analysis_ref.current.setFieldsValue({ stv, ...ucdata, ...others })
     }
@@ -302,6 +300,8 @@ export default (suit: MutableRefObject<Promise<Suit>>, docid: string, fetal: any
         reAnalyse,
         startTime, endTime, setStartTime, interval,
         setInterval(i) {
+            console.log('setFormData setInterval', mark, interval)
+
             store.set(INTERVAL_KEY, i)
             setInterval(i)
             reAnalyse()
@@ -351,12 +351,16 @@ export default (suit: MutableRefObject<Promise<Suit>>, docid: string, fetal: any
                 setFakeHistoryLoading(false)
             }, 700);
             const { diagnosis, analysis, result } = i
+            console.log('result', result)
             if (analysis) {
                 suit.current?.then(s => {
                     // s.drawAnalyse.showBase = true
                     // s.drawAnalyse.autoFm = true
                     analysis_ref.current?.setFieldsValue(diagnosis)
                     s.drawAnalyse.analyse(result?.type as any, result?.startTime, result?.endTime, analysis)
+                    setMark(result?.type)
+                    setStartTime(result.startTime)
+                    setInterval(~~((result.endTime - result.startTime) / 240))
                     // suit.isCheckBaelinePoint = true
                 })
             }

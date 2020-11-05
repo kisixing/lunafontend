@@ -151,6 +151,8 @@ export class DrawAnalyse extends Draw {
         //kisi 2020-03-05 
         let newData = this.ctgscore(type)
         suit.drawobj.drawdot((suit.type > 0 && suit.viewposition < suit.width * 2) ? suit.width * 2 : suit.viewposition, false);
+        console.log('setFormData', type, data, newData)
+
         event.emit('suit:afterAnalyse', newData)
         return newData
     }

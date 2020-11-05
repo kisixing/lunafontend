@@ -235,7 +235,9 @@ export const Ctg_Analyse: FC<IToolbarProps> = function (props) {
                 <div style={{}}>
                     {false && <Alert message="选段时间过短" style={{ background: 'red', color: '#fff', display: 'inline-block', border: 0, padding: '1px 4px', marginRight: 10 }} />}
 
-                    <Button size="small" style={{}} onClick={history} disabled={btnDisabled}>历史分析</Button>
+                    {
+                        !!showHistory || <Button size="small" style={{}} onClick={history} disabled={btnDisabled}>历史分析</Button>
+                    }
                     <Button size="small" style={{}} disabled={!note} onClick={() => setDisabled(!disabled)}>{disabled ? '修改评分' : '确认'}</Button>
                     <Button size="small" onClick={() => {
                         request.get<any>(getPrintUrl('/ctg-exams-analysis-pdf-preview')).then(r => {
@@ -245,7 +247,7 @@ export const Ctg_Analyse: FC<IToolbarProps> = function (props) {
                         setPadBase64Loading(true)
 
                     }} style={{}} type="primary" disabled={btnDisabled || !initData} loading={padBase64Loading}>打印预览</Button>
-                    <Button size="small" type="primary" onClick={submit} disabled={btnDisabled || !initData}>{currentHistory ? '保存修改' : '保存'}</Button>
+                    <Button size="small" type="primary" onClick={submit} disabled={btnDisabled || !initData || currentHistory}>{currentHistory ? '保存修改' : '保存'}</Button>
                 </div>
             </div>
             <Modal getContainer={false} centered visible={visible} closable={false} okText="打印" cancelText="取消" onCancel={() => setVisible(false)} onOk={() => {
