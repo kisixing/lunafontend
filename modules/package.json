@@ -47,6 +47,6 @@
     "shx": "^0.3.2",
     "sm2tsservice": "^3.2.6",
     "typescript": "^3.5.2",
-    "webpack": "4.40.2"
+    "webpack": "5.94.0"
   }
 }
